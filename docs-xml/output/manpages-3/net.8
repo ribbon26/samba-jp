@@ -1,0 +1,651 @@
+.\"     Title: net
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 10/29/2008
+.\"    Manual: 
+.\"    Source: 
+.\"
+.TH "NET" "8" "10/29/2008" "" ""
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+net - Samba およびリモート CIFS サーバの管理ツール
+.SH "SYNOPSIS"
+.HP 1
+net {<ads|rap|rpc>} [\-h] [\-w\ workgroup] [\-W\ myworkgroup] [\-U\ user] [\-I\ ip\-address] [\-p\ port] [\-n\ myname] [\-s\ conffile] [\-S\ server] [\-l] [\-P] [\-d\ debuglevel] [\-V]
+.SH "解説"
+.PP
+このツールは、\fBsamba\fR(7)スイートの一部である。
+.PP
+Samba の net ユーティリティは Windows や DOS に存在する NET コマンドと同様の位置づけのものである。 先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。 ADS は Active Directory が、RAP は従来の (Windows 9x / Windows NT 3\.x) クライアントが、 RPC は Windows NT 4\.0 および Windows 2000 によって使用されている。 この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。 すべてのコマンドがすべてのプロトコル上で使用できるわけではない。
+.SH "オプション"
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\.
+.RE
+.PP
+\-w target\-workgroup
+.RS 4
+操作対象とするワークグループやドメインを指定する。 このオプションか、サーバの IP アドレスもしくは名前のいずれかは指定する必要がある。
+.RE
+.PP
+\-W workgroup
+.RS 4
+クライアントのワークグループやドメインを指定する。
+.RE
+.PP
+\-U user
+.RS 4
+アクセスを行なうユーザ名を指定する。
+.RE
+.PP
+\-I ip\-address
+.RS 4
+操作対象のサーバの IP アドレスを指定する。 このオプションか、 操作対象のワークグループもしくは対象のサーバ名のいずれかを指定する必要がある。
+.RE
+.PP
+\-p port
+.RS 4
+操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。 デフォルトではまず 445 を試行し、ついで 139 を試行する。
+.RE
+.PP
+\-n <primary NetBIOS name>
+.RS 4
+This option allows you to override the NetBIOS name that Samba uses for itself\. This is identical to setting the
+\fInetbios name\fR
+parameter in the
+\fIsmb\.conf\fR
+file\. However, a command line setting will take precedence over settings in
+\fIsmb\.conf\fR\.
+.RE
+.PP
+\-s <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\. See
+\fIsmb\.conf\fR
+for more information\. The default configuration file name is determined at compile time\.
+.RE
+.PP
+\-S server
+.RS 4
+操作対象のサーバ名を指定する。 このオプションか、操作対象のワークグループもしくは IP アドレスのいずれかを指定する必要がある。
+.RE
+.PP
+\-l
+.RS 4
+情報を表示する際に、各項目の詳細情報を表示する。
+.RE
+.PP
+\-P
+.RS 4
+ローカルサーバのコンピュータアカウントを用いて別のサーバに対する問い合わせを行なう。
+.RE
+.SH "コマンド"
+.SS "CHANGESECRETPW"
+.PP
+このコマンドにより、Samba のコンピュータアカウントのパスワードを外部のアプリケーションから Active Directory に格納済のものに設定させることが可能となる。 何が行なわれるかを理解しない限り、このコマンドを用いないこと。 このコマンドを用いるには、強制フラグ (\-f) を併せて設定する必要がある。 コマンドプロンプトのインタフェースは存在しない。 情報は全て、コマンドラインなどを経由して標準入力経由で引き渡され、コンピュータアカウントのパスワードとして格納される。 警告無しに以前のコンピュータアカウントのパスワードが上書きされてしまうため、このコマンドは注意して用いること。
+.SS "TIME"
+.PP
+NET TIME
+コマンドにより、リモートサーバの時刻を表示させたり、ローカルサーバの時刻をリモートサーバの時刻に同期させたりすることが可能となる。
+.SS "TIME"
+.PP
+オプションを指定しなかった場合、
+NET TIME
+コマンドはリモートのサーバの時刻を表示する。
+.SS "TIME SYSTEM"
+.PP
+リモートマシンの時刻を
+/bin/date
+が認識できる形式で表示する。
+.SS "TIME SET"
+.PP
+ローカルサーバの日付と時刻を
+/bin/date
+コマンドを用いてリモートサーバの日付と時刻に設定させる。
+.SS "TIME ZONE"
+.PP
+リモートマシンの時間帯を GMT からの差分で時間単位で表示する。
+.SS "[RPC|ADS] JOIN [TYPE] [\-U username[%password]] [options]"
+.PP
+ドメインに参加する。サーバ上にコンピュータアカウントがすでに存在しており、 [TYPE] が MEMBER の場合、マシンの参加は自動的に行なわれる (コンピュータアカウントがサーバマネージャで作成済の場合)。 それ以外の場合は、パスワードの入力が求められ、新しいコンピュータアカウントが作成される。
+.PP
+[TYPE] は、ドメインに参加するコンピュータのタイプを指定するもので、 PDC, BDC, MEMBER のいずれかの値をとる。
+.SS "[RPC] OLDJOIN [options]"
+.PP
+ドメインに参加する。従来の方式によるドメイン参加を行なう場合は、 OLDJOIN オプションを使用すること。 参加を行なうには、事前にサーバマネージャでコンピュータアカウントを作成しておくことが必要である。
+.SS "[RPC|ADS] USER"
+.SS "[RPC|ADS] USER"
+.PP
+ユーザの一覧を出力する。
+.SS "[RPC|ADS] USER DELETE target"
+.PP
+指定したユーザを削除する。
+.SS "[RPC|ADS] USER INFO target"
+.PP
+指定したユーザの所属するグループ一覧を出力する。
+.SS "[RPC|ADS] USER RENAME oldname newname"
+.PP
+指定したユーザの名前を変更する。
+.SS "[RPC|ADS] USER ADD name [password] [-F user flags] [-C comment]"
+.PP
+指定したユーザを追加する。
+.SS "[RPC|ADS] GROUP"
+.SS "[RPC|ADS] GROUP [misc options] [targets]"
+.PP
+グループの一覧を表示する。
+.SS "[RPC|ADS] GROUP DELETE name [その他のオプション]"
+.PP
+指定したグループを削除する。
+.SS "[RPC|ADS] GROUP ADD name [-C comment]"
+.PP
+指定したグループを作成する。
+.SS "[RAP|RPC] SHARE"
+.SS "[RAP|RPC] SHARE [その他のオプション] [targets]"
+.PP
+指定したサーバが公開しているすべてのリソース(ネットワーク共有)の一覧を出力する。
+.SS "[RAP|RPC] SHARE ADD name=serverpath [-C comment] [-M maxusers] [targets]"
+.PP
+サーバに共有を追加する (公開を有効にする)。Maxusers は共有に同時に接続できるユーザの数を指定する。
+.SS "SHARE DELETE sharenam"
+.PP
+指定した共有を削除する。
+.SS "[RPC|RAP] FILE"
+.SS "[RPC|RAP] FILE"
+.PP
+リモートサーバ上でオープンされているファイルの一覧を出力する。
+.SS "[RPC|RAP] FILE CLOSE fileid"
+.PP
+リモートサーバ上にある
+\fIfileid\fR
+で指定したファイルをクローズする。
+.SS "[RPC|RAP] FILE INFO fileid"
+.PP
+指定した
+\fIfileid\fR
+のファイルの情報を出力する。 現在表示されるのは、以下の情報である: file\-id, username, lock, path, permission
+.SS "[RAP|RPC] FILE USER"
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+.SS "SESSION"
+.SS "RAP SESSION"
+.PP
+オプションなしの場合、 SESSION は指定したサーバ上のすべてのアクティブな SMB/CIFS セッションの一覧を表示する。
+.SS "RAP SESSION DELETE|CLOSE CLIENT_NAME"
+.PP
+指定したセッションをクローズする。
+.SS "RAP SESSION INFO CLIENT_NAME"
+.PP
+は指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。
+.SS "RAP SERVER \fIDOMAIN\fR"
+.PP
+ドメインもしくはワークグループ内のサーバの一覧を出力する。 デフォルトの対象はローカルドメインである。
+.SS "RAP DOMAIN"
+.PP
+現在ネットワークで表示されているドメインおよびワークグループの一覧を出力する。
+.SS "RAP PRINTQ"
+.SS "RAP PRINTQ LIST QUEUE_NAME"
+.PP
+サーバ上の指定された印刷キューおよび印刷ジョブの一覧を出力する。
+\fIQUEUE_NAME\fR
+が省略された場合、キューの一覧が出力される。
+.SS "RAP PRINTQ DELETE JOBID"
+.PP
+指定された ID の印刷ジョブを削除する。
+.SS "RAP VALIDATE \fIuser\fR [\fIpassword\fR]"
+.PP
+指定したユーザがリモートサーバにログオン可能かどうかを確認する。 コマンドラインでパスワードが指定されなかった場合は、入力を求められる。
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+.SS "RAP GROUPMEMBER"
+.SS "RAP GROUPMEMBER LIST GROUP"
+.PP
+指定したグループのメンバ一覧を出力する。
+.SS "RAP GROUPMEMBER DELETE GROUP USER"
+.PP
+グループからメンバを削除する。
+.SS "RAP GROUPMEMBER ADD GROUP USER"
+.PP
+グループにメンバを追加する。
+.SS "RAP ADMIN \fIcommand\fR"
+.PP
+指定した
+\fIcommand\fR
+をリモートサーバ上で実行する。 OS/2 サーバに対してのみ機能する。
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+.SS "RAP SERVICE"
+.SS "RAP SERVICE START NAME [arguments...]"
+.PP
+リモートサーバ上の指定したサービスを起動する。現在実装されていない。
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+
+.SS "RAP SERVICE STOP"
+.PP
+リモートサーバ上の指定したサービスを停止する。
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+.SS "RAP PASSWORD \fIUSER\fR \fIOLDPASS\fR \fINEWPASS\fR"
+.PP
+
+\fIUSER\fR
+のパスワードを
+\fIOLDPASS\fR
+から
+\fINEWPASS\fR
+に変更する。
+.SS "LOOKUP"
+.SS "LOOKUP HOST HOSTNAME [TYPE]"
+.PP
+指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。 タイプのデフォルトは 0x20 (workstation (訳注: server の誤り)) である。
+.SS "LOOKUP LDAP [DOMAIN"
+.PP
+指定した
+\fIDOMAIN\fR
+の LDAP サーバの IP アドレスを検索する。デフォルトはローカルドメインが対象となる。
+.SS "LOOKUP KDC [REALM]"
+.PP
+指定した
+\fIREALM\fR
+の KDC の IP アドレスを検索する。 デフォルトはローカルなレルム(realm)が対象となる。
+.SS "LOOKUP DC [DOMAIN]"
+.PP
+指定した
+\fIDOMAIN\fR
+のドメインコントローラの IP アドレスを検索する。 デフォルトはローカルドメインが対象となる。
+.SS "LOOKUP MASTER DOMAIN"
+.PP
+指定した
+\fIDOMAIN\fR
+もしくはワークグループのマスタブラウザの IP アドレスを検索する。 デフォルトはローカルドメインが対象となる。
+.SS "CACHE"
+.PP
+Samba は「gencache」という汎用のキャッシュインタフェースを用いている。 これは \'NET CACHE\' コマンドにより制御可能である。
+.PP
+タイムアウトに関するパラメータはすべて、以下のサフィックスをサポートしている:
+.IP "" 4
+s \- 秒
+.IP "" 4
+m \- 分
+.IP "" 4
+h \- 時
+.IP "" 4
+d \- 日
+.IP "" 4
+w \- 週
+
+.SS "CACHE ADD key data time-out"
+.PP
+指定した key と data の組合せを time\-out の期限でキャッシュに追加する。
+.SS "CACHE DEL key"
+.PP
+key をキャッシュから削除する。
+.SS "CACHE SET key data time-out"
+.PP
+既存のキャッシュエントリの data を更新する。
+.SS "CACHE SEARCH PATTERN"
+.PP
+キャッシュデータの中から指定されたパターンを検索する。
+.SS "CACHE LIST"
+.PP
+現在キャッシュに格納されているアイテムの一覧を表示する。
+.SS "CACHE FLUSH"
+.PP
+現在キャッシュに格納されているアイテムをすべて消去する。
+.SS "GETLOCALSID [DOMAIN]"
+.PP
+指定されたドメインの SID を表示する。 パラメータが省略された場合、ローカルサーバが所属するドメインの SID を表示する。
+.SS "SETLOCALSID S\-1\-5\-21\-x\-y\-z"
+.PP
+ローカルサーバが所属するドメインの SID を指定した SID に設定する。
+.SS "GROUPMAP"
+.PP
+Windows のグループ ID と UNIX のグループ ID との対応づけを行なう。 パラメータは「parameter=value」の形式で指定する。共通のオプションを以下に示す:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+unixgroup \- UNIX のグループ名
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+ntgroup \- Windows NT のグループ名 (SID が解決可能である必要がある。)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+rid \- 符号なし 32 ビット整数
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+sid \- 「S\-1\-\.\.\.」形式の完全な SID
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+type \- グループのタイプ。「domain」、「local」もしくは「builtin のいずれか。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+comment \- 任意の文字列によるグループの説明
+.sp
+.RE
+.SS "GROUPMAP ADD"
+.PP
+新しいグループマップのエントリを追加する:
+.sp
+.RS 4
+.nf
+net groupmap add {rid=int|sid=string} unixgroup=string \e
+      [type={domain|local}] [ntgroup=string] [comment=string]
+.fi
+.RE
+.sp
+
+.SS "GROUPMAP DELETE"
+.PP
+グループマップのエントリを削除する。 複数のエントリがマッチした場合、最初にマッチしたエントリが削除される。
+.PP
+net groupmap delete {ntgroup=string|sid=SID}
+.SS "GROUPMAP MODIFY"
+.PP
+既存のグループマップのエントリを変更する。
+.PP
+
+.sp
+.RS 4
+.nf
+net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \e
+       [comment=string] [type={domain|local}]
+.fi
+.RE
+.sp
+
+.SS "GROUPMAP LIST"
+.PP
+存在しているグループマップのエントリの一覧を表示する。
+.PP
+net groupmap list [verbose] [ntgroup=string] [sid=SID]
+.SS "MAXRID"
+.PP
+ローカルサーバ上で (有効な「passdb backend」パラメータにより) 現在使用可能な RID の最大値を出力する。
+.SS "RPC INFO"
+.PP
+リモートサーバが所属するドメインの、ドメイン名、ドメインの SID 、ユーザおよびグループ数といった情報を出力する。
+.SS "[RPC|ADS] TESTJOIN"
+.PP
+ドメインへの参加が現在可能であるかどうかを確認する。
+.SS "[RPC|ADS] CHANGETRUSTPW"
+.PP
+ドメイン間信頼のパスワードを強制的に変更する。
+.SS "RPC TRUSTDOM"
+.SS "RPC TRUSTDOM ADD DOMAIN"
+.PP
+
+\fIDOMAIN\fR
+のドメイン間信頼アカウントをリモートサーバに追加する。
+.SS "RPC TRUSTDOM DEL DOMAIM"
+.PP
+
+\fIDOMAIN\fR
+のドメイン間信頼アカウントをリモートサーバから削除する。
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+Note
+.PP
+Currently NOT implemented\.
+
+.SS "RPC TRUSTDOM ESTABLISH DOMAIN"
+.PP
+信頼するドメインとの間の信頼関係を締結する。 ドメイン間信頼アカウントが、リモートの PDC 上にすでに作成されていることが必須である。
+.SS "RPC TRUSTDOM REVOKE DOMAIN"
+.PP
+信頼されたドメインとの間の信頼関係を破棄する。
+.SS "RPC TRUSTDOM LIST"
+.PP
+現在のドメイン間の信頼関係を一覧表示する。
+.SS "RPC RIGHTS"
+.PP
+このサブコマンドは、 Samba のユーザー権利の割当の表示、管理に用いられる。 現在のところ、以下の 3 つのオプションが利用できる:
+\fIlist\fR、
+\fIgrant\fR、
+\fIrevoke\fR。 Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba\-HOWTO\-Collection を参照のこと。
+.SS "RPC ABORTSHUTDOWN"
+.PP
+リモートサーバのシャットダウンを中止する。
+.SS "SHUTDOWN [\-t timeout] [\-r] [\-f] [\-C message]"
+.PP
+リモートサーバをシャットダウンする。
+.PP
+\-r
+.RS 4
+シャットダウン後に再起動する。
+.RE
+.PP
+\-f
+.RS 4
+全てのアプリケーションを強制的に終了させる。
+.RE
+.PP
+\-t timeout
+.RS 4
+システムをシャットダウンさせる前のタイムアウト時間を指定する。システムに対話的ログオンしているユーザは、この期間にシャットダウンをキャンセルすることができる。
+.RE
+.PP
+\-C message
+.RS 4
+シャットダウンの通知を行なう際に、指定したメッセージを画面上に表示する。
+.RE
+.SS "RPC SAMDUMP"
+.PP
+リモートサーバの SAM データベースを表示する。 これは PDC もしくは BDC 上で実行する必要がある。
+.SS "RPC VAMPIRE"
+.PP
+リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 BDC 上でのみ実行することが可能である。
+.SS "RPC GETSID"
+.PP
+ドメインの SID を取得して、ローカルの
+\fIsecrets\.tdb\fR
+に格納する。
+.SS "ADS LEAVE"
+.PP
+リモートホストを所属しているドメインから外す。
+.SS "ADS STATUS"
+.PP
+Active Directory 環境において、ローカルマシンのコンピュータアカウントの状態を表示する。 表示内容は、デバッグ情報のようなものであり、開発者向けのものである。 一般のユーザは
+NET ADS TESTJOIN
+を使うべきである。
+.SS "ADS PRINTER"
+.SS "ADS PRINTER INFO [PRINTER] [SERVER]"
+.PP
+
+\fISERVER\fR
+上にある
+\fIPRINTER\fR
+を検索する。 プリンタ名のデフォルトは「*」であり、サーバ名のデフォルトはローカルホスト名である。
+.SS "ADS PRINTER PUBLISH PRINTER"
+.PP
+指定したプリンタを Active Directory に対して公開する。
+.SS "ADS PRINTER REMOVE PRINTER"
+.PP
+指定したプリンタを Active Directory のディレクトリから削除する。
+.SS "ADS SEARCH \fIEXPRESSION\fR \fIATTRIBUTES\.\.\.\fR"
+.PP
+Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP フィールドの一覧である。
+.PP
+設定例:
+\fBnet ads search \'(objectCategory=group)\' sAMAccountName\fR
+.SS "ADS DN \fIDN\fR \fI(attributes)\fR"
+.PP
+Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP フィールドの一覧である。
+.PP
+設定例:
+\fBnet ads dn \'CN=administrator,CN=Users,DC=my,DC=domain\' SAMAccountName\fR
+.SS "ADS WORKGROUP"
+.PP
+指定された Kerberos レルムのワークグループ名を表示する。
+.SS "USERSHARE"
+.PP
+Samba 3\.0\.23 より、root 以外のユーザが「net usershare」コマンドを用いてユーザ定義共有を公開する機能が追加された。
+.PP
+これを行なうには、まず smb\.conf の [global] セクションに以下を追加する必要がある: usershare path = /usr/local/samba/lib/usershares ついで /usr/local/samba/lib/usershares ディレクトリを作成し、所有者を root に、所有グループをユーザ定義共有の作成を許可したい UNIX グループ、例えば「serverops」とする。 /usr/local/samba/lib/usershares のパーミッションは 01770 に設定する。 (所有者と所有グループには完全なアクセス権があり、その他にはアクセス権が全くない。さらにスティッキービットにより、ディレクトリ中のファイルについて、名前の変更や削除が行なえるのはファイルの所有者のみとなる) 最後に、smb\.conf の [global] セクションに以下のような行を追加することで、作成可能なユーザ定義共有の最大数を smbd に設定する: usershare max shares = 100 これにより、最大 100 のユーザ定義共有を設定可能となる。 これにより、「serverops」という UNIX グループのメンバは必要に応じて以下のコマンドを実行することで、ユーザ定義共有を作成することが可能となる。
+.PP
+ユーザ定義共有に関するコマンドを以下に示す:
+.IP "" 4
+net usershare add sharename path [comment] [acl] [guest_ok=[y|n]] \- to add or change a user defined share\.
+.IP "" 4
+net usershare delete sharename \- to delete a user defined share\.
+.IP "" 4
+net usershare info [\-l|\-\-long] [wildcard sharename] \- to print info about a user defined share\.
+.IP "" 4
+net usershare list [\-l|\-\-long] [wildcard sharename] \- to list user defined shares\.
+
+.SS "USERSHARE ADD sharename path [comment] [acl] [guest_ok=[y|n]]"
+.PP
+sharename というユーザ定義共有の新規作成もしくは修正(上書き)を行なう。
+.PP
+「path」には、公開するディレクトリのシステム上での絶対パス名を指定する。 公開可能なディレクトリには幾つかの制約がある。 グローバルな smb\.conf のパラメータである「usershare owner only」、「usershare prefix allow list」、「usershare prefix deny list」を参照のこと。
+.PP
+オプションの「comment」パラメータは、クライアントから共有を参照した際に表示されるコメント文字列を指定する。
+.PP
+オプションの「acl」フィールドは、共有単位でどのユーザに読み取りや書き込みのアクセス許可を与えるかを指定する。 ゲストアクセスは、 smb\.conf の「usershare allow guests」パラメータを有効にしない限り行なえない。 ユーザ定義共有の ACL の指定は「user:permission」という形式で行なわれる。user はシステムで有効なユーザ名であり、permission は「F」、「R」、「D」のいずれかである。 「F」は「フルコントロール」、すなわち読み取りと書き込み権を示す。「D」は「拒否」を示し、ユーザの共有へのアクセスを許可しない。「R」は「読み取り専用」、すなわちこの共有への読み取りアクセスのみの許可を示す (ファイルへの書き込みやファイルやディレクトリの新規作成は行なえない)。
+.PP
+「acl」オプションが指定されなかった場合のデフォルトは「Everyone:R」である。これは、認証された全てのユーザが読み取り専用のアクセス権を有することを意味する。
+.PP
+オプションの「guest_ok」パラメータは、smb\.conf 中の同名のパラメータと同じ意味を持ち、該当のユーザ定義共有に対するゲストアクセスを許可する。 このパラメータは、 smb\.conf 中でグローバルパラメータの「usershare allow guests」が有効になっている時のみ設定できる。
+
+既存のユーザ定義共有を修正するコマンドは個別に用意されておらず、
+「net usershare add [sharename]」コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
+Samba の smbd デーモンは、接続のあったタイミングでユーザ定義共有の変更を検知するのため、変更は即座に反映される。ユーザ定義共有の追加、削除、変更により、smbd の再起動を行なう必要はない。
+.SS "USERSHARE DELETE sharename"
+.PP
+指定されたユーザ定義共有を削除する。 Samba smbd デーモンは即座にこの変更を検知するが、削除された共有にその時点で接続中のユーザが切断されることはない。
+.SS "USERSHARE INFO [-l|--long] [wildcard sharename]"
+.PP
+指定されたパターンに合致するユーザによって所有されている、もしくは全てのユーザ定義共有の情報が表示される。
+.PP
+net usershare info は、実行したユーザが作成したユーザ定義共有の詳細情報を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。 「\-l」もしくは「\-\-long」オプションが指定されていた場合、他のユーザが作成したユーザ定義共有の情報も表示する。
+.PP
+各共有についての情報は以下のような形式で設定される: [foobar] path=/home/jeremy comment=testme usershare_acl=Everyone:F guest_ok=n これは、「net usershare add」コマンドで現状設定可能なユーザ定義共有の設定一覧である。
+.SS "USERSHARE LIST [-l|--long] wildcard sharename"
+.PP
+実行したユーザが所有し、指定されたワイルドカードにマッチする、もしくは全てのユーザのユーザ定義共有の一覧を表示する。
+.PP
+net usershare list は、実行したユーザが作成したユーザ定義共有の一覧を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。 「\-l」もしくは「\-\-long」オプションが指定されていた場合、他のユーザが作成したユーザ定義共有の情報も表示する。
+.SS "HELP [COMMAND]"
+.PP
+指定されたコマンドの使用方法の情報を提供する。
+.SH "バージョン"
+.PP
+このマニュアルページは Samba 3\.0 用のものである。
+.SH "作者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが 開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発された。
+.PP
+net マニュアルページは Jelmer Vernoij によって執筆された。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.0\.23 \- Samba 3\.0\.24 対応のものである。
+.PP
+このドキュメントの Samba 3\.0\.0 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+たかはし もとのぶ (monyo@samba\.gr\.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+山田 史朗 (shiro@miraclelinux\.com)
+.sp
+.RE
+によって行なわれた。
+.PP
+Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。

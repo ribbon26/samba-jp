@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_streams_xattr.8">
+
+<refmeta>
+	<refentrytitle>vfs_streams_xattr</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_streams_xattr</refname>
+	<refpurpose>posix xattrs 形式で代替データを保存する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = streams_xattr</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは 
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> スイートの一部です。</para>
+
+	<para><command>vfs_streams_xattr</command> は NTFS 代替データストリームの
+	保存を可能にする。標準 posix ファイルシステムはファイル毎の多重データストリームの概念を
+	サポートしないので、streams_xattr モジュールは posix 拡張属性(xattrs)内にデータを
+	保存する。これらの属性名は 
+	user.DosStream."ADS-NAME" である。</para>
+
+	<para>有効にされたこのモジュールによって共有されたファイルシステムは xattrs を
+	サポートしなければならない。</para>
+
+	<para>ほとんどのファイルシステムで xattrs に厳しいサイズ制限があることに注意すること。
+	だからこのモジュールは IE のような小さいゾーン情報をストリームに保存するアプリケーション
+	上では動作するだろうが、ADS に大量のデータを保存するアプリケーションでは
+	動作しないだろう。</para>
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="vfs objects">streams_xattr</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>AUTHOR</title>
+
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+
+</refsect1>
+
+</refentry>

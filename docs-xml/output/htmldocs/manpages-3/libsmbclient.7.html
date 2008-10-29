@@ -1,0 +1,54 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>libsmbclient</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="libsmbclient.7"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>libsmbclient &#8212; &#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12502;&#12521;&#12454;&#12470;&#12398;&#12383;&#12417;&#12398;&#25313;&#24373;&#12521;&#12452;&#12502;&#12521;&#12522;&#12391;&#12354;&#12426;&#12289;&#19968;&#33324;&#30340;&#12394;&#12502;&#12521;&#12454;&#12472;&#12531;&#12464;&#12398; API &#12434;&#23455;&#35013;&#12377;&#12427;&#12290;</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">Browser URL:</code><p>
+        smb://[[[domain:]user[:password@]]server[/share[/path[/file]]]] [?options]
+    </p></p></div></div><div class="refsect1" lang="en"><a name="id2517188"></a><h2>&#35299;&#35500;</h2><p>
+	&#12371;&#12398;&#12484;&#12540;&#12523;&#12399; <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> &#12473;&#12452;&#12540;&#12488;&#12398;&#19968;&#37096;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+	<code class="literal">libsmbclient</code> is a library toolset that permits applications to manipulate CIFS/SMB network
+	resources using many of the standards POSIX functions available for manipulating local UNIX/Linux files. It
+	permits much more than just browsing, files can be opened and read or written, permissions changed, file times
+	modified, attributes and ACL's can be manipulated, and so on. Of course, its functionality includes all the
+	capabilities commonly called browsing.
+	</p><p>
+	<code class="literal">libsmbclient</code> can not be used directly from the command line, instead it provides an
+	extension of the capabilities of tools such as file managers and browsers.  This man page describes the
+	configuration options for this tool so that the user may obtain greatest utility of use.
+	</p></div><div class="refsect1" lang="en"><a name="id2517236"></a><h2>OPTIONS</h2><p>
+	What the URLs mean:
+	</p><div class="variablelist"><dl><dt><span class="term">smb://</span></dt><dd><p>
+			Shows all workgroups or domains that are visible in the network. The behavior matches
+			that of the Microsoft Windows Explorer.
+			</p><p>
+			The method of locating the list of workgroups (domains also) varies depending on the setting of
+			the context variable <code class="literal">(context-&gt;options.browse_max_lmb_count)</code>. It is the
+			responsibility of the application that calls this library to set this to a sensible value.  This
+			is a compile-time option. This value determines the maximum number of local master browsers to
+			query for the list of workgroups.  In order to ensure that the list is complete for those present
+			on the network, all master browsers must be querried. If there are a large number of workgroups
+			on the network, the time spent querying will be significant. For small networks (just a few
+			workgroups), it is suggested to set this value to 0, instructing libsmbclient to query all local
+			master browsers. In an environment that has many workgroups a more reasonable setting may be around 3.
+			</p></dd><dt><span class="term">smb://name/</span></dt><dd><p>
+			This command causes libsmbclient to perform a name look-up. If the NAME&lt;1D&gt; or
+			NAME&lt;1B&gt; exists (workgroup name), libsmbclient will list all servers in the
+			workgroup (or domain). Otherwise, a name look-up for the NAME&lt;20&gt; (machine name)
+			will be performed, and the list of shared resources on the server will be displayed.
+			</p></dd></dl></div><p>
+	When libsmbclient is invoked by an application it searches for a directory called
+	<code class="filename">.smb</code> in the $HOME directory that is specified in the users shell
+	environment. It then searches for a file called <code class="filename">smb.conf</code> which,
+	if present, will fully over-ride the system <code class="filename">/etc/samba/smb.conf</code> file. If
+	instead libsmbclient finds a file called <code class="filename">~/.smb/smb.conf.append</code>,
+	it will read the system <code class="filename">/etc/samba/smb.conf</code> and then append the
+	contents of the <code class="filename">~/.smb/smb.conf.append</code> to it.
+	</p><p>
+	<code class="literal">libsmbclient</code> will check the users shell environment for the <code class="literal">USER</code>
+	parameter and will use its value when if the <code class="literal">user</code> parameter was not included
+	in the URL.
+	</p></div><div class="refsect1" lang="en"><a name="id2478074"></a><h2>PROGRAMMERS GUIDE</h2><p>
+	Watch this space for future updates.
+	</p></div><div class="refsect1" lang="en"><a name="id2478084"></a><h2>VERSION</h2><p>
+	This man page is correct for version 3.0 of the Samba suite.
+	</p></div><div class="refsect1" lang="en"><a name="id2478096"></a><h2>&#20316;&#32773;</h2><p>&#12458;&#12522;&#12472;&#12490;&#12523;&#12398; Samba &#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12392;&#38306;&#36899;&#12377;&#12427;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12399;&#12289;Andrew
+      Tridgell &#12395;&#12424;&#12387;&#12390;&#20316;&#12425;&#12428;&#12383;&#12290;Samba &#12399;&#29694;&#22312;&#12289;Linux &#12459;&#12540;&#12493;&#12523;&#12364;&#38283;&#30330;&#12373;&#12428;&#12390;&#12356;&#12427;&#12424;&#12358;&#12394;&#26041;&#27861;&#12391;&#12398;&#12458;&#12540;&#12503;&#12531;&#12477;&#12540;&#12473;&#12503;&#12525;&#12472;&#12455;&#12463;&#12488;&#12391;&#12354;&#12427; Samba Team &#12395;&#12424;&#12387;&#12390;&#38283;&#30330;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;</p><p>
+	libsmbclient &#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12506;&#12540;&#12472;&#12399; John H Terpstra &#12395;&#12424;&#12387;&#12390;&#26360;&#12363;&#12428;&#12383;&#12290;
+	</p></div><div class="refsect1" lang="en"><a name="id2478123"></a><h2>&#26085;&#26412;&#35486;&#35379;</h2><p>&#12371;&#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12506;&#12540;&#12472;&#12399; Samba 3.0.23 - Samba 3.0.24  &#23550;&#24540;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;</p><p>Samba 3.0.23 - Samba 3.0.24 &#23550;&#24540;&#12398;&#32763;&#35379;&#12399;&#12289;&#12383;&#12363;&#12399;&#12375;&#12418;&#12392;&#12398;&#12406; (monyo@samba.gr.jp) &#12395;&#12424;&#12387;&#12390;&#34892;&#12394;&#12431;&#12428;&#12383;&#12290;</p></div></div></body></html>
