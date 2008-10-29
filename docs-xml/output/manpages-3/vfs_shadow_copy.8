@@ -11,30 +11,30 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-vfs_shadow_copy - Make a Samba share read only for a specified time period
+vfs_shadow_copy - Samba の共有を指定した時間帯に read only とする(訳注: これはコピペミスであり、実際は「シャドウコピー機能を実現する。」などとすべきである。)
 .SH "SYNOPSIS"
 .HP 1
 vfs objects = shadow_copy
-.SH "DESCRIPTION"
+.SH "詳細"
 .PP
-This VFS module is part of the
+この VFS モジュールは
 \fBsamba\fR(7)
-suite\.
-.PP
-The
-vfs_shadow_copy
-VFS module functionality that is similar to Microsoft Shadow Copy services\. When setup properly, this module allows Microsoft Shadow Copy clients to browse "shadow copies" on Samba shares\.
-.PP
-This module is stackable\.
-.SH "CONFIGURATION"
+スイートの一部である。
 .PP
 vfs_shadow_copy
-relies on a filesystem snapshot implementation\. Many common filesystems have native support for this\.
+VFS モジュールは Microsoft のシャドウコピーサービスと似た機能を提供する。 適切に設定された場合、このモジュールにより Microsoft シャドウコピークライアントから Samba の共有上にある "シャドウコピー" を参照することが可能となる。
 .PP
-Filesystem snapshots must be mounted on specially named directories in order to be recognized by
-vfs_shadow_copy\. The snapshot mount points must be immediate children of a the directory being shared\.
+このモジュールはスタッカブルである。
+.SH "設定"
 .PP
-The snapshot naming convention is @GMT\-YYYY\.MM\.DD\-hh\.mm\.ss, where:
+vfs_shadow_copy
+はファイルシステムのスナップショットの実装が必要である。 一般的なファイルシステムの多くが標準でこれをサポートしている。
+.PP
+ファイルシステムのシャドウコピーを
+vfs_shadow_copy
+が認識するためには、 特定の名称のディレクトリにマウントされる必要がある。 スナップショットのマウントポイントは共有ディレクトリの直下である必要がある。
+.PP
+スナップショットの名前形式は @GMT\-YYYY\.MM\.DD\-hh\.mm\.ss である必要がある。
 .sp
 .RS 4
 .ie n \{\
@@ -45,7 +45,7 @@ The snapshot naming convention is @GMT\-YYYY\.MM\.DD\-hh\.mm\.ss, where:
 .IP \(bu 2.3
 .\}
 YYYY
-is the 4 digit year
+には4桁で年を指定する
 .RE
 .sp
 .RS 4
@@ -57,7 +57,7 @@ is the 4 digit year
 .IP \(bu 2.3
 .\}
 MM
-is the 2 digit month
+は2桁で月を指定する
 .RE
 .sp
 .RS 4
@@ -69,7 +69,7 @@ is the 2 digit month
 .IP \(bu 2.3
 .\}
 DD
-is the 2 digit day
+は2桁で日を指定するis the 2 digit day
 .RE
 .sp
 .RS 4
@@ -81,7 +81,7 @@ is the 2 digit day
 .IP \(bu 2.3
 .\}
 hh
-is the 2 digit hour
+は2桁で時間を指定する
 .RE
 .sp
 .RS 4
@@ -93,7 +93,7 @@ is the 2 digit hour
 .IP \(bu 2.3
 .\}
 mm
-is the 2 digit minute
+は2桁で分を指定する
 .RE
 .sp
 .RS 4
@@ -105,15 +105,15 @@ is the 2 digit minute
 .IP \(bu 2.3
 .\}
 ss
-is the 2 digit second\.
+は2桁で秒を指定する
 .sp
 .RE
 .PP
-The
+
 vfs_shadow_copy
-snapshot naming convention can be produced with the following
+のスナップショットの名前形式は、
 \fBdate\fR(1)
-command:
+コマンドを用いて生成できる:
 .sp
 .RS 4
 .nf
@@ -121,9 +121,9 @@ command:
 	
 .fi
 .RE
-.SH "EXAMPLES"
+.SH "設定例"
 .PP
-Add shadow copy support to user home directories:
+ユーザーのホームディレクトリでシャドウコピーをサポートするには以下の設定を行なう:
 .sp
 .RS 4
 .nf
@@ -131,16 +131,34 @@ Add shadow copy support to user home directories:
 	\fIvfs objects = shadow_copy\fR
 .fi
 .RE
-.SH "CAVEATS"
+.SH "注意"
 .PP
-This is not a backup, archival, or version control solution\.
+これはバックアップ、アーカイブ、バージョン管理のための機能ではないことに注意。
 .PP
-With Samba or Windows servers,
+Samba と Windows 双方とも
 vfs_shadow_copy
-is designed to be an end\-user tool only\. It does not replace or enhance your backup and archival solutions and should in no way be considered as such\. Additionally, if you need version control, implement a version control system\.
-.SH "VERSION"
+はエンドユーザのための機能として設計されている。 これはバックアップやアーカイ機能を代替、もしくは拡張するものではなく、 そのような認識をしてはならない。 バージョン管理機能が必要な場合は、バージョン管理機能を実装する必要がある。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
+このマニュアルページは Samba 3\.0\.25 用のものである。
 .SH "AUTHOR"
 .PP
 The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.4 対応のものである。
+.PP
+このドキュメントの Samba 3\.2\.4 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+たかはしもとのぶ (monyo@samba\.gr\.jp)
+.sp
+.RE
+によって行なわれた。
