@@ -5,6 +5,9 @@
 <refmeta>
 	<refentrytitle>mount.cifs</refentrytitle>
 	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">System管理ツール</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
 </refmeta>
 
 
@@ -24,17 +27,17 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>解説</title>
+	<title>説明</title>
 
 	<para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
 	<para>mount.cifs は Linux の CIFS ファイルシステムをマウントする。
 	これは通常、"-t cifs" オプションが指定された場合に
 	<citerefentry><refentrytitle>mount</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry> によって間接的に呼び出される。
 	このコマンドは Linux 上でしか動作せず、カーネルが CIFS
-	ファイルシステムをサポートしていなければいけない。CFS プロトコルは SMB
+	ファイルシステムをサポートしていなければいけない。CIFS プロトコルは SMB
 	プロトコルの後継プロトコルであり、Samba の他にもほとんどの Windows 
 	サーバや他の商用サーバ、ネットワーク・ストレージ機器などで
 	サポートされている。</para>
@@ -51,13 +54,12 @@
 		で区切られた key=value の組み合わせで指定される。
 		ここで列挙されているオプション以外でも、CIFS
 	ファイルシステムのカーネルモジュール (cifs.ko) がサポートしているオプションを指定することもできる。
-		マウントに失敗した場合は、カーネルのログを参照して無効な
-		オプションがないか探してみるといいだろう。
+		認識されないcifs マウントオプションは、そのままcifs vfs ca-ネルもジュールに渡され、
+		カーネルのログに記録される。
 	</para>
 
-	<para><emphasis>mount.cifs</emphasis> はデーモンである。
-	マウント後は、マウントしたリソースが (通常 umount ユーティリティで)
-	アンマウントされるまで実行されたままになる。
+	<para><emphasis>mount.cifs</emphasis> はcifsdという名のスレッドをを起動するcifs vfs を引き起こす。マウント後は、
+	マウントしたリソースが (通常 umount ユーティリティで)アンマウントされるまで実行されたままになる。
 	</para>
 
 </refsect1>
@@ -128,8 +130,21 @@
 
 		<listitem><para>マウント先のファイルの所有者として用いる uid
 		を設定する。 これはユーザ名でも数値の uid でも指定できる。
-		対象となるサーバが CIFS Unix extensions をサポートする場合、
-		このパラメータは無視される。</para></listitem>
+		対象となるサーバが、適切に設定されたSambaサーバのように、CIFS Unix extensions を
+		サポートする場合、サーバはuid,gidとモードを提供するので、このパラメータはサーバと
+		クライアントのuidとgid番号づけが異なるまで、このパラメータは指定されるべきでない。
+		もしもサーバとクライアントが同じドメイン(すなわち、winbindまたはnss_ldapが実行中)で、
+		サーバがUnix Extensionをサポートする場合、uidとgidはサーバ(とuidとgid)から検索されるのでマウント時に指定してはいけない。
+		CIFS Unix extensionsをサポートしないサーバのために、存在するファイルを検索した時に
+		返る既定値のuid(とgid)マウントオプションは、"uid="(またはgid)マウントオプションが
+		指定されるまで、(ユーザのマウント時にsetuidが構成されている場合を除きroot)
+		マウントを実行する、uid(gid)である。新しく作成されたファイルとディレクトリのuid(gid)の
+		ため、すなわち、サーバ共有の最後のマウント後に作成されたファイルは、クライアントのメモリ
+		に中に残っているinodeと同じだけ、期待されたuid(gid)はキャッシュされる。(Windowsのように)
+		uid/gid 所有者をレポートしないサーバのために、クライアントでパーミッションもチェック出来、
+		自然な形でクライアント上でfile_modeとdir_modeを指定することでクライアントサイドでパーミッション
+		チェックを有効にする。mount.cifs ヘルパは、非数値形式でuid(またはgid)を指定するときは、
+		バージョン1.10またはそれ以降のバージョンが必要であることに注意。</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
@@ -137,8 +152,7 @@
 
 		<listitem><para>マウント先のファイルの所有者として用いる gid
 		を設定する。 これはグループ名でも数値の gid でも指定できる。
-		対象となるサーバが CIFS Unix extensions をサポートする場合、
-		このパラメータは無視される。
+		その他の注意事項は上記uidと同じである。
 		</para></listitem>
 	</varlistentry>
 
