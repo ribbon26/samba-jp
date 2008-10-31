@@ -1,11 +1,11 @@
 .\"     Title: libsmbclient
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/29/2008
+.\"      Date: 10/31/2008
 .\"    Manual: 
 .\"    Source: 
 .\"
-.TH "LIBSMBCLIENT" "7" "10/29/2008" "" ""
+.TH "LIBSMBCLIENT" "7" "10/31/2008" "" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -23,55 +23,43 @@ smb://[[[domain:]user[:password@]]server[/share[/path[/file]]]] [?options]
 スイートの一部である。
 .PP
 
-libsmbclient
-is a library toolset that permits applications to manipulate CIFS/SMB network resources using many of the standards POSIX functions available for manipulating local UNIX/Linux files\. It permits much more than just browsing, files can be opened and read or written, permissions changed, file times modified, attributes and ACL\'s can be manipulated, and so on\. Of course, its functionality includes all the capabilities commonly called browsing\.
+libsmbclientは、ローカルなUNIX/Linuxファイルを操作するために有効なたくさんの標準POSIX関数を使う CIFS/SMBネットワークリソースを操作するためのアプリケーションを許可するライブラリツールセットである。これは、ブラウズ、 ファイルのオープン/クローズ、読み書き、アクセス権変更、ファイルの時刻変更、属性とACLの操作やその他などを許可する。もちろん、 この機能は一般的にブラウジングと呼ばれる機能のすべてを含む。
 .PP
 
 libsmbclient
-can not be used directly from the command line, instead it provides an extension of the capabilities of tools such as file managers and browsers\. This man page describes the configuration options for this tool so that the user may obtain greatest utility of use\.
-.SH "OPTIONS"
+は、コマンド行からは直接使えないが、その代わりに、ファイルマネージャとブラウザのような ツールの機能の拡張を提供する。このマニュアルページにはそのツールのための構成方法を説明するので、ユーザーはとても優れた機能を 持つユーティリティを得ることができる。
+.SH "オプション"
 .PP
-What the URLs mean:
+URLの意味は以下のとおり:
 .PP
 smb://
 .RS 4
-Shows all workgroups or domains that are visible in the network\. The behavior matches that of the Microsoft Windows Explorer\.
+ネットワーク中で有効なすべてのワークグループかドメインを表示する。動作はマイクロソフトのWindows エクスプローラと一致する。
 .sp
-The method of locating the list of workgroups (domains also) varies depending on the setting of the context variable
-(context\->options\.browse_max_lmb_count)\. It is the responsibility of the application that calls this library to set this to a sensible value\. This is a compile\-time option\. This value determines the maximum number of local master browsers to query for the list of workgroups\. In order to ensure that the list is complete for those present on the network, all master browsers must be querried\. If there are a large number of workgroups on the network, the time spent querying will be significant\. For small networks (just a few workgroups), it is suggested to set this value to 0, instructing libsmbclient to query all local master browsers\. In an environment that has many workgroups a more reasonable setting may be around 3\.
+ワークグループ(とドメインも)のリストを位置付ける方法は、(context\->options\.browse_max_lmb_count)
+コンテキスト変数の設定方法に依存して変わる。これは,これを賢明な値に設定する、ライブラリを呼び出すアプリケーションの レスポンス性である。これはコンパイル時オプションである。この値はワークグループのリスト問い合わせのために ローカルマスタブラウザの最大値を決める。それを確かにするために、存在するネットワーク上でリストは完全にされ、 すべてのマスタブラウザは問い合わせを受けなければならない。もしも、ネットワーク上に大量のワークグループがあると、 問い合わせ時間はとても大きくなる。小さなネットワーク(数個のワークグループ)のためには、この値を0に設定することを 推奨し、それはlibsmbclientにすべてのローカルマスタブラウザに問い合わせを行うようにさせる。たくさんのワーク グループを持つ環境中では、より適切な設定は3のあたりである。
 .RE
 .PP
 smb://name/
 .RS 4
-This command causes libsmbclient to perform a name look\-up\. If the NAME<1D> or NAME<1B> exists (workgroup name), libsmbclient will list all servers in the workgroup (or domain)\. Otherwise, a name look\-up for the NAME<20> (machine name) will be performed, and the list of shared resources on the server will be displayed\.
+このコマンドは名前検索の実行をlibsmbclientにさせる。もしも、NAME<1D>かNAME<1B> が存在するならば(ワークグループ名)、libsmbclientはワークグループ(またはドメイン)中のすべての サーバをリストする。それ以外は、NAME<20>(マシン名)のための名前検索が実行され、サーバ上の 共有リソースのリストが表示される。
 .RE
 .PP
-When libsmbclient is invoked by an application it searches for a directory called
-\fI\.smb\fR
-in the $HOME directory that is specified in the users shell environment\. It then searches for a file called
+libsmbclientがアプリケーションによって起動されたならば、ユーザのシェル環境中で指定された$HOME ディレクトリ 中にある、\fI\.smb\fRと呼ばれるディレクトリを探す。次に、
 \fIsmb\.conf\fR
-which, if present, will fully over\-ride the system
-\fI/etc/samba/smb\.conf\fR
-file\. If instead libsmbclient finds a file called
-\fI~/\.smb/smb\.conf\.append\fR, it will read the system
-\fI/etc/samba/smb\.conf\fR
-and then append the contents of the
-\fI~/\.smb/smb\.conf\.append\fR
-to it\.
+というファイルを探し、存在すれば、システムの\fI/etc/samba/smb\.conf\fRファイルを完全に 上書きする。もしも、その代わりに\fI~/\.smb/smb\.conf\.append\fRというファイルをlibsmbclient が見つけたならば、システムの\fI/etc/samba/smb\.conf\fRファイルを読み込み、次に、
+\fI~/\.smb/smb\.conf\.append\fRの内容を継ぎ足す。
 .PP
 
 libsmbclient
-will check the users shell environment for the
-USER
-parameter and will use its value when if the
-user
-parameter was not included in the URL\.
-.SH "PROGRAMMERS GUIDE"
+は、
+USERパラメータのためにユーザのシェル環境をチェックし、 もしもuserパラメータがURLに含まれていないならば、その値を使う。
+.SH "プログラマーズガイド"
 .PP
-Watch this space for future updates\.
-.SH "VERSION"
+招来の更新のためにこの場所をウォッチして欲しい。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0 of the Samba suite\.
+このマニュアルページはSamba3\.0スイートのために修正された。
 .SH "作者"
 .PP
 オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作られた。Samba は現在、Linux カーネルが開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発されている。
@@ -79,6 +67,8 @@ This man page is correct for version 3\.0 of the Samba suite\.
 libsmbclient のマニュアルページは John H Terpstra によって書かれた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.23 \- Samba 3\.0\.24 対応のものである。
+このマニュアルページは Samba 3\.2\.4 対応のものである。
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+.PP
+Samba 3\.2\.4 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
