@@ -61,37 +61,35 @@
 			</para>
 
 			<para>
-			The method of locating the list of workgroups (domains also) varies depending on the setting of
-			the context variable <literal>(context-&gt;options.browse_max_lmb_count)</literal>. It is the
-			responsibility of the application that calls this library to set this to a sensible value.  This
-			is a compile-time option. This value determines the maximum number of local master browsers to
-			query for the list of workgroups.  In order to ensure that the list is complete for those present
-			on the network, all master browsers must be querried. If there are a large number of workgroups
-			on the network, the time spent querying will be significant. For small networks (just a few
-			workgroups), it is suggested to set this value to 0, instructing libsmbclient to query all local
-			master browsers. In an environment that has many workgroups a more reasonable setting may be around 3.
+			ワークグループ(とドメインも)のリストを位置付ける方法は、<literal>(context-&gt;options.browse_max_lmb_count)</literal>
+			コンテキスト変数の設定方法に依存して変わる。これは,これを賢明な値に設定する、ライブラリを呼び出すアプリケーションの
+			レスポンス性である。これはコンパイル時オプションである。この値はワークグループのリスト問い合わせのために
+			ローカルマスタブラウザの最大値を決める。それを確かにするために、存在するネットワーク上でリストは完全にされ、
+			すべてのマスタブラウザは問い合わせを受けなければならない。もしも、ネットワーク上に大量のワークグループがあると、
+			問い合わせ時間はとても大きくなる。小さなネットワーク(数個のワークグループ)のためには、この値を0に設定することを
+			推奨し、それはlibsmbclientにすべてのローカルマスタブラウザに問い合わせを行うようにさせる。たくさんのワーク
+			グループを持つ環境中では、より適切な設定は3のあたりである。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 			<term>smb://name/</term>
 			<listitem><para>
-			This command causes libsmbclient to perform a name look-up. If the NAME&lt;1D&gt; or
-			NAME&lt;1B&gt; exists (workgroup name), libsmbclient will list all servers in the
-			workgroup (or domain). Otherwise, a name look-up for the NAME&lt;20&gt; (machine name)
-			will be performed, and the list of shared resources on the server will be displayed.
+			このコマンドは名前検索の実行をlibsmbclientにさせる。もしも、NAME&lt;1D&gt;かNAME&lt;1B&gt;
+			が存在するならば(ワークグループ名)、libsmbclientはワークグループ(またはドメイン)中のすべての
+			サーバをリストする。それ以外は、NAME&lt;20&gt;(マシン名)のための名前検索が実行され、サーバ上の
+			共有リソースのリストが表示される。
 			</para></listitem>
 		</varlistentry>
 	</variablelist>
 
 	<para>
-	When libsmbclient is invoked by an application it searches for a directory called
-	<filename>.smb</filename> in the $HOME directory that is specified in the users shell
-	environment. It then searches for a file called <filename>smb.conf</filename> which,
-	if present, will fully over-ride the system <filename>/etc/samba/smb.conf</filename> file. If
-	instead libsmbclient finds a file called <filename>~/.smb/smb.conf.append</filename>,
-	it will read the system <filename>/etc/samba/smb.conf</filename> and then append the
-	contents of the <filename>~/.smb/smb.conf.append</filename> to it.
+	libsmbclientがアプリケーションによって起動されたならば、ユーザのシェル環境中で指定された$HOME ディレクトリ
+	中にある、<filename>.smb</filename>と呼ばれるディレクトリを探す。次に、 <filename>smb.conf</filename> 
+	というファイルを探し、存在すれば、システムの<filename>/etc/samba/smb.conf</filename>ファイルを完全に
+	上書きする。もしも、その代わりに<filename>~/.smb/smb.conf.append</filename>というファイルをlibsmbclient
+	が見つけたならば、システムの<filename>/etc/samba/smb.conf</filename>ファイルを読み込み、次に、
+	<filename>~/.smb/smb.conf.append</filename>の内容を継ぎ足す。
 	</para>
 
 	<para>
