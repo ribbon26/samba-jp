@@ -1,11 +1,11 @@
 .\"     Title: mount.cifs
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
-.\"    Manual: 
-.\"    Source: 
+.\"      Date: 11/01/2008
+.\"    Manual: System管理ツール
+.\"    Source: Samba 3.2
 .\"
-.TH "MOUNT\.CIFS" "8" "10/31/2008" "" ""
+.TH "MOUNT\.CIFS" "8" "11/01/2008" "Samba 3\.2" "System管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -15,15 +15,15 @@ mount.cifs - Common Internet File System (CIFS) を使用したマウント
 .SH "SYNOPSIS"
 .HP 1
 mount\.cifs {service} {mount\-point} [\-o\ options]
-.SH "解説"
+.SH "説明"
 .PP
 このツールは
 \fBsamba\fR(7)
-スイートの一部である。
+システムの一部である。
 .PP
 mount\.cifs は Linux の CIFS ファイルシステムをマウントする。 これは通常、"\-t cifs" オプションが指定された場合に
 \fBmount\fR(8)
-によって間接的に呼び出される。 このコマンドは Linux 上でしか動作せず、カーネルが CIFS ファイルシステムをサポートしていなければいけない。CFS プロトコルは SMB プロトコルの後継プロトコルであり、Samba の他にもほとんどの Windows サーバや他の商用サーバ、ネットワーク・ストレージ機器などで サポートされている。
+によって間接的に呼び出される。 このコマンドは Linux 上でしか動作せず、カーネルが CIFS ファイルシステムをサポートしていなければいけない。CIFS プロトコルは SMB プロトコルの後継プロトコルであり、Samba の他にもほとんどの Windows サーバや他の商用サーバ、ネットワーク・ストレージ機器などで サポートされている。
 .PP
 mount\.cifs ユーティリティは、UNC 名 (公開されたネットワークリソース)に ローカルディレクトリの
 \fImount\-point\fR
@@ -31,10 +31,10 @@ mount\.cifs ユーティリティは、UNC 名 (公開されたネットワー�
 .PP
 
 \fImount\.cifs\fR
-のオプションはカンマ「,」 で区切られた key=value の組み合わせで指定される。 ここで列挙されているオプション以外でも、CIFS ファイルシステムのカーネルモジュール (cifs\.ko) がサポートしているオプションを指定することもできる。 マウントに失敗した場合は、カーネルのログを参照して無効な オプションがないか探してみるといいだろう。
+のオプションはカンマ「,」 で区切られた key=value の組み合わせで指定される。 ここで列挙されているオプション以外でも、CIFS ファイルシステムのカーネルモジュール (cifs\.ko) がサポートしているオプションを指定することもできる。 認識されないcifs マウントオプションは、そのままcifs vfs ca\-ネルもジュールに渡され、 カーネルのログに記録される。
 .PP
 \fImount\.cifs\fR
-はデーモンである。 マウント後は、マウントしたリソースが (通常 umount ユーティリティで) アンマウントされるまで実行されたままになる。
+はcifsdという名のスレッドをを起動するcifs vfs を引き起こす。マウント後は、 マウントしたリソースが (通常 umount ユーティリティで)アンマウントされるまで実行されたままになる。
 .SH "オプション"
 .PP
 user=\fIarg\fR
@@ -82,12 +82,12 @@ credentials=\fIfilename\fR
 .PP
 uid=\fIarg\fR
 .RS 4
-マウント先のファイルの所有者として用いる uid を設定する。 これはユーザ名でも数値の uid でも指定できる。 対象となるサーバが CIFS Unix extensions をサポートする場合、 このパラメータは無視される。
+マウント先のファイルの所有者として用いる uid を設定する。 これはユーザ名でも数値の uid でも指定できる。 対象となるサーバが、適切に設定されたSambaサーバのように、CIFS Unix extensions を サポートする場合、サーバはuid,gidとモードを提供するので、このパラメータはサーバと クライアントのuidとgid番号づけが異なるまで、このパラメータは指定されるべきでない。 もしもサーバとクライアントが同じドメイン(すなわち、winbindまたはnss_ldapが実行中)で、 サーバがUnix Extensionをサポートする場合、uidとgidはサーバ(とuidとgid)から検索されるのでマウント時に指定してはいけない。 CIFS Unix extensionsをサポートしないサーバのために、存在するファイルを検索した時に 返る既定値のuid(とgid)マウントオプションは、"uid="(またはgid)マウントオプションが 指定されるまで、(ユーザのマウント時にsetuidが構成されている場合を除きroot) マウントを実行する、uid(gid)である。新しく作成されたファイルとディレクトリのuid(gid)の ため、すなわち、サーバ共有の最後のマウント後に作成されたファイルは、クライアントのメモリ に中に残っているinodeと同じだけ、期待されたuid(gid)はキャッシュされる。(Windowsのように) uid/gid 所有者をレポートしないサーバのために、クライアントでパーミッションもチェック出来、 自然な形でクライアント上でfile_modeとdir_modeを指定することでクライアントサイドでパーミッション チェックを有効にする。mount\.cifs ヘルパは、非数値形式でuid(またはgid)を指定するときは、 バージョン1\.10またはそれ以降のバージョンが必要であることに注意。
 .RE
 .PP
 gid=\fIarg\fR
 .RS 4
-マウント先のファイルの所有者として用いる gid を設定する。 これはグループ名でも数値の gid でも指定できる。 対象となるサーバが CIFS Unix extensions をサポートする場合、 このパラメータは無視される。
+マウント先のファイルの所有者として用いる gid を設定する。 これはグループ名でも数値の gid でも指定できる。 その他の注意事項は上記uidと同じである。
 .RE
 .PP
 port=\fIarg\fR
@@ -95,24 +95,29 @@ port=\fIarg\fR
 CIFS サポートの手続きを行うためのサーバの ポート番号を指定する。もしサーバが指定されたポート番号を 開いていない場合や、この値が指定されなかった場合には、 デフォルトである 445 が試され、それでもレスポンスがなかった 場合は 139 が試される。
 .RE
 .PP
+servern=\fIarg\fR
+.RS 4
+サーバへのセッションのセットアップを試みる時に使う、サーバのnetbios 名(RFC1001名)を指定する。新しいサーバをマウントするためにもまれに必要で、 このオプションは、ほとんどの新しいサーバと違って、ポート139越えで既定値の サーバ名をサポートしない古いサーバ(例えばOS/2やWindows 98 と Windows ME) をマウントする時に必要となる。サーバ名は最大15文字までで、通常大文字である。
+.RE
+.PP
 netbiosname=\fIarg\fR
 .RS 4
-ポート 139 でサーバにマウントされる場合、 RFC1001 の NetBIOS セッション初期化中に クライアントの NetBIOS コンピュータ名として用いられる名前を指定する。
+ポート 139 でサーバにマウントされる場合、 RFC1001 の NetBIOS セッション初期化中に クライアントの NetBIOS コンピュータ名として用いられるRFC1001 netbios マシン名を指定する。
 .RE
 .PP
 file_mode=\fIarg\fR
 .RS 4
-サーバが CIFS Unix extensions を サポートしていない場合、指定された値がローカルで使用される デフォルトのファイルモードを上書きする。
+サーバが CIFS Unix extensions をサポートしていない場合、 これは既定値のファイルモードを上書きする。
 .RE
 .PP
 dir_mode=\fIarg\fR
 .RS 4
-サーバが CIFS Unix extensions を サポートしていない場合、指定された値がローカルで使用される デフォルトのディレクトリモードを上書きする。
+サーバが CIFS Unix extensions をサポートしていない場合、 これは既定値のディレクトリモードを上書きする。
 .RE
 .PP
 ip=\fIarg\fR
 .RS 4
-対象のホスト名か IP アドレスを指定する。
+対象IP アドレスを指定する。このオプションは、もしも、要求された UNC名のサーバ名部分が解決できる時に自動的に設定されるので、ユーザによって指定することはまれである。
 .RE
 .PP
 domain=\fIarg\fR
@@ -142,7 +147,7 @@ read\-write でマウントする。
 .PP
 setuids
 .RS 4
-CIFS Unix extension が有効化された場合、 クライアントは新規に作成するファイル、ディレクトリ、デバイス (create / mkdir / mknod) に対して、ローカルプロセスの実効 uid および gid を設定しようとする。 CIFS Unix Extension が無効な場合、新規に作成されるファイルやディレクトリには、 マウント時に指定されたデフォルトの uid と gid を設定する代わりに、 新規ファイルの uid と gid をローカルにキャッシュする。これは、inode がリロードされる度に (つまりユーザが共有を再マウントする度に) ファイルの uid が変更されることを意味する。
+CIFS Unix extension がサーバとの間で有効化された場合、 クライアントは新規に作成するファイル、ディレクトリ、デバイス (create / mkdir / mknod) に対して、ローカルプロセスの実効 uid および gid を設定しようとする。 CIFS Unix Extension が無効な場合、新規に作成されるファイルやディレクトリには、 マウント時に指定されたデフォルトの uid と gid を設定する代わりに、 新規ファイルの uid と gid をローカルにキャッシュする。これは、inode がリロードされる度に (つまりユーザが共有を再マウントする度に) ファイルの uid が変更されることを意味する。
 .RE
 .PP
 nosetuids
@@ -152,12 +157,12 @@ nosetuids
 .PP
 perm
 .RS 4
-Client does permission checks (vfs_permission check of uid and gid of the file against the mode and desired operation), Note that this is in addition to the normal ACL check on the target machine done by the server software\. Client permission checking is enabled by default\.
+クライアントはパーミッションの検査を行わない(ファイルに対するuid/gidへのモードと 希望する操作のvfs_permission チェック)。サーバソフトウェアによって行われる ターゲットマシンの通常のACL検査も追加されることに注意。クライアントのパーミッション 検査は既定値で有効である。
 .RE
 .PP
 noperm
 .RS 4
-Client does not do permission checks\. This can expose files on this mount to access by other users on the local client system\. It is typically only needed when the server supports the CIFS Unix Extensions but the UIDs/GIDs on the client and server system do not match closely enough to allow access by the user doing the mount\. Note that this does not affect the normal ACL check on the target machine done by the server software (of the server ACL against the user name provided at mount time)\.
+クライアントはパーミッション検査を行わない。これは、ローカル クライアントシステム上の他のユーザによりアクセスするためにこのマウント上でファイルを さらすことが出来る。これは、サーバがCIFS Unix Extensionsをサポートしているが、 クライアントとサーバシステム上のUID/GIDがユーザのマウント操作によってアクセス するために密接になっているのに一致していない時にのみ通常必要である。 サーバソフトウェア(マウント時に提供されるユーザ名に対するACL)によってターゲット マシンで通常のACL検査を行うことへの影響はないことに注意。
 .RE
 .PP
 directio
@@ -187,7 +192,7 @@ nointr
 .PP
 hard
 .RS 4
-CIFS でマウントされたファイルシステムにアクセスしているプログラムは、サーバがクラッシュすると、ハングアップする。 server crashes\.
+CIFS でマウントされたファイルシステムにアクセスしているプログラムは、サーバがクラッシュすると、ハングアップする。
 .RE
 .PP
 soft
@@ -199,7 +204,7 @@ noacl
 .RS 4
 サーバがサポートしていた場合でも、POSIX ACL 機能を無効にする。
 .sp
-CIFS クライアントは、バージョン3\.10 以降の Samba サーバに対して POSIX ACL の取得や設定 (getfacl や setfacl) を行なうことができる。 POSIX ACL の設定を行なうには、XATTR (拡張属性)のサポートに加え、CIFS モジュールのビルドの際、CIFS 設定オプション中の POSIX サポートを有効にしていることが必要である。 POSIX ACL サポートはマウントの際に「noacl」を指定することでマウントtaNIに無効化することが可能である。
+CIFS クライアントは、バージョン3\.10(訳注:3\.0\.10?) 以降の Samba サーバに対して POSIX ACL の取得や設定 (getfacl や setfacl) を行なうことができる。 POSIX ACL の設定を行なうには、XATTR (拡張属性)のサポートに加え、CIFS モジュールのビルドの際、CIFS 設定オプション中の POSIX サポートを有効にしていることが必要である。 POSIX ACL サポートはマウントの際に「noacl」を指定することでマウントtaNIに無効化することが可能である。
 .RE
 .PP
 nocase
@@ -219,7 +224,7 @@ sec=
 .sp -1
 .IP \(bu 2.3
 .\}
-none 空のユーザ名で接続を行なう。
+none 空のユーザ名(名前なし)で接続を行なう。
 .RE
 .sp
 .RS 4
@@ -263,7 +268,7 @@ ntlm NTLM パスワードハッシュを用いる (デフォルト) 。
 .sp -1
 .IP \(bu 2.3
 .\}
-ntlmi NTLM パスワードハッシュと署名を用いる (if /proc/fs/cifs/PacketSigningEnabled on or if server requires signing also can be the default)
+ntlmi NTLM パスワードハッシュと署名を用いる (もしも /proc/fs/cifs/PacketSigningEnabled がonか、もしも、サーバが書名を 要求する異が既定値ならば)
 .RE
 .sp
 .RS 4
@@ -285,7 +290,7 @@ ntlmv2 NTLMv2 パスワードハッシュを用いる。
 .sp -1
 .IP \(bu 2.3
 .\}
-ntlmv2i NTLMv2 パスワードハッシュといパケット署名を用いる。
+ntlmv2i NTLMv2 パスワードハッシュとパケット署名を用いる。
 .sp
 .RE
 NB: この sec パラメータは開発中であり、cifs カーネルモジュール 1\.40 以降で利用可能となる予定である。
@@ -298,12 +303,12 @@ nobrl
 .PP
 sfu
 .RS 4
-CIFS Unix Extension が無効となっている場合に、デバイスファイルと fifo ファイルを Services for Unix (SFU) と互換性のある形式で作成する。 In addition retrieve bits 10\-12 of the mode via the SETFILEBITS extended attribute (as SFU does)\. In the future the bottom 9 bits of the mode mode also will be emulated using queries of the security descriptor (ACL)\. [NB: requires version 1\.39 or later of the CIFS VFS\. To recognize symlinks and be able to create symlinks in an SFU interoperable form requires version 1\.40 or later of the CIFS VFS kernel module\.
+CIFS Unix Extension が無効となっている場合に、デバイスファイルと fifo ファイルを Services for Unix (SFU) と互換性のある形式で作成する。 さらに追加で(SFUが行うように)、SETFILEBITS拡張属性経由のビット10\-12 を検索する。 将来は、modeモードの下9ビットもセキュリティデスクリプタ(ACL)の問い合わせとして エミュレートする予定である。[NB: CIFS VFSのバージョン1\.39か素励行が必要である。SFU互換形式でシンボリックリンクの認識と作成を行うためには、CIFS VFSカーネルモジュールのバージョン1\.40かそれ以降が必要である。]
 .RE
 .PP
 serverino
 .RS 4
-inode 番号 (一意で永続的なファイル識別子) として、クライアント側で一時的に自動生成された inode 番号ではなく、サーバ側から返却された番号を用いる。 サーバ側の inode 番号を用いることで、ハードリンクされたファイル (同じ inode 番号を持っている) の処理が簡素化される他、inode 番号を永続的にすることが可能となる (ソフトウェアによっては有用である)。 the server does not guarantee that the inode numbers are unique if multiple server side mounts are exported under a single share (since inode numbers on the servers might not be unique if multiple filesystems are mounted under the same shared higher level directory)\. CIFS Unix Extension をサポートしている全てのサーバがサーバ側の inode 番号を返却するとは限らない。 Windows 2000 以降のサーバは、これをサポートしている (ただしローカルサーバのファイルシステムではこれを必要としていない)。 サーバ側で inode 番号の返却がサポートされていない場合、このパラメータは意味を持たない。
+inode 番号 (一意で永続的なファイル識別子) として、クライアント側で一時的に自動生成された inode 番号ではなく、サーバ側から返却された番号を用いる。 サーバ側の inode 番号を用いることで、ハードリンクされたファイル (同じ inode 番号を持っている) の処理が簡素化される他、inode 番号を永続的にすることが可能となる (ソフトウェアによっては有用である)。 もしも、1つの共有配下で複数のサーバサイドのマウントがエクスポートされるときに、 inode番号の一意性をサーバは認めない(サーバ上のinode番号は、もしもファイルシステムが、 より上位のディレクトリで同じ共有下でマウントされていた場合、一意にならないため) CIFS Unix Extension をサポートしている全てのサーバがサーバ側の inode 番号を返却するとは限らない。 Windows 2000 以降のサーバは、これをサポートしている (ただしローカルサーバのファイルシステムではこれを必要としていない)。 サーバ側で inode 番号の返却がサポートされていない場合、このパラメータは意味を持たない。
 .RE
 .PP
 noserverino
@@ -318,12 +323,12 @@ nouser_xattr
 .PP
 rsize=\fIarg\fR
 .RS 4
-ネットワークからの読み取りサイズのデフォルト値
+ネットワークからの読み取りサイズのデフォルト値(通常16K)。クライアント は現在CIFSMaxBufSize以上のrsizeを使えない。CIFSMaxBufSizeの既定値は16Kで、 cifs\.koモジュールをインストールする時に(kerenelによって最大kmallocサイズの 変更が許される時)変更可能である。CIFSMaxValueをとても大きな値に設定すると、 いくつかの場合において、メモリはたくさんつかうが、パフォーマンスを減少させられる。 127K(オリジナルのCIFSプロトコルの最大値)より大きなrsizeをつかうためには、サーバが 新しいUnix Capability フラグ(特大の読み込み用)をサポートしている必要がある。 それは、たとえば新しいサーバ(Samba 3\.0\.26以降)である。rsizeは最低2048から 最大130048(127KまたはCIFSMaxBufSizeのどちらか小さい方)で設定可能である。
 .RE
 .PP
 wsize=\fIarg\fR
 .RS 4
-ネットワークへの書き込みサイズのデフォルト値
+ネットワークへの書き込みサイズのデフォルト値(既定値では57334）。 現在CIFS我認めている最大wsizeは57344(4096バイトページの14倍)である。
 .RE
 .PP
 \-\-verbose
@@ -332,10 +337,15 @@ wsize=\fIarg\fR
 .sp
 mount \-t cifs //server/share /mnt \-\-verbose \-o user=username
 .RE
+.SH "サービスの形式とデリミタ"
+.PP
+サービス名中で通常のスラッシュ(/)をデリミタとして使うことは一般的である。Windowsのパスの構成の中に埋め込むことが認められないため、これは"汎用デリミタ"と考えることが出来、クライアントは無条件にバックスラッシュ(\e)に変換する。逆にいえば、バックスラッシュ文字は、POSIXによって、パス要素として認められていて、同じ方法で自動的に変換されない。
+.PP
+mount\.cifs は、それが可能であれば、バックスラッシュを通常のスラッシュに変換しようとするが、共有名のあとの任意のパス要素には行えない。
 .SH "環境変数"
 .PP
 \fIUSER\fR
-環境変数にはクライアントで使用される ユーザ名が含まれる。 この変数にはユーザ名とパスワードの両方を username%password のフォーマットで設定することができる。
+環境変数にはサーバに対して認証を行うときに使う利用者の ユーザ名が含まれる。 この変数にはユーザ名とパスワードの両方を username%password のフォーマットで設定することができる。
 .PP
 \fIPASSWD\fR
 環境変数にはクライアントで使用される パスワードが含まれる。
@@ -361,7 +371,7 @@ CIFS VFS の設定の変更やデバッグ情報を取得する機能は Linux �
 バグ報告に対してまず行われる返答は、とりあえず最新のバージョンで 試してみるような提案である。まず最初にそのこと (最新バージョンへの更新) を試したうえで、バグを報告するときは関連するソフトウェアのバージョン情報 (最低限でも mount\.cifs (mount\.cifs \-V の結果)、カーネル (/proc/version の内容)) と接続しようとしているサーバの形式を含めること。
 .SH "バージョン"
 .PP
-このマニュアルページは CIFS vfs ファイルシステム 1\.39 (おおよそ Linux カーネル 2\.6\.15) 用である。
+このマニュアルページは CIFS vfs ファイルシステム 1\.52 (おおよそ Linux カーネル 2\.6\.24) 用である。
 .SH "関連項目"
 .PP
 Linux カーネルソースツリーの Documentation/filesystems/cifs\.txt と fs/cifs/README には追加のオプションや情報がある。
@@ -387,3 +397,5 @@ Linux CIFS Mailing list
 このドキュメントの Samba 3\.0\.0 対応の翻訳は、山田 史朗 (shiro@miraclelinux\.com)によって行なわれた。
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+.PP
+Samba 3\.2\.4 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
