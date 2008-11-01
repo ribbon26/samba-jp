@@ -2,9 +2,12 @@
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="net.8">
 
-<refmeta>
+refmeta>
 	<refentrytitle>net</refentrytitle>
 	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
 </refmeta>
 
 
@@ -35,10 +38,10 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>解説</title>
+	<title>説明</title>
 
 	<para>このツールは、<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry>スイートの一部である。</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para>Samba の net ユーティリティは Windows や DOS に存在する
 	NET コマンドと同様の位置づけのものである。
@@ -121,6 +124,7 @@
 		</para></listitem>
 		</varlistentry>
 
+		&stdarg.server.debug;
 	</variablelist>
 </refsect1>
 
@@ -178,7 +182,7 @@ Active Directory に格納済のものに設定させることが可能となる
 </refsect2>
 
 <refsect2>
-<title>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [options]</title>
+<title>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN] [createcomputer=OU][options]</title>
 
 <para>
 ドメインに参加する。サーバ上にコンピュータアカウントがすでに存在しており、
@@ -190,6 +194,18 @@ Active Directory に格納済のものに設定させることが可能となる
 <para>
 [TYPE] は、ドメインに参加するコンピュータのタイプを指定するもので、
 PDC, BDC, MEMBER のいずれかの値をとる。
+</para>
+
+<para>
+[UPN] (ADSのみ)ドメインに参加する時のプリンシパル名属性を設定する。既定値の形式は
+host/netbiosname@REALMである。
+</para>
+
+<para>
+[OU] (ADSのみ)指定したOU中にあらかじめコンピュータアカウントを作成する。
+OU文字列はRDNなしで、'/'をデリミタとして、初めから最後まで読まれる。
+シェルとLDAPの両方で'\'がエスケープとして使われるため、その文字その物を
+渡すためには、二重に書くか、4重に書く必要があり、デリミタとしては扱われない。
 </para>
 </refsect2>
 
@@ -316,9 +332,12 @@ OLDJOIN オプションを使用すること。
 </refsect3>
 
 <refsect3>
-<title>[RAP|RPC] FILE USER</title>
+<title>[RAP|RPC] FILE USER <replaceable>user</replaceable></title>
 
-&not.implemented;
+<para>
+<replaceable>user</replaceable>で指定した、オープンしているファイルを表示する。
+<command>net rap file user</command>はSambaサーバに対して動作しない事に手注意。
+</para>
 
 </refsect3>
 
@@ -594,10 +613,19 @@ OS/2 サーバに対してのみ機能する。
 </refsect2>
 
 <refsect2>
+<title>GETDOMAINSID</title>
+
+<para>現在のローカルサーバのSIDと現在のドメインのSIDを表示する。</para>
+
+<title>SETDOMAINSID</title>
+
+<para>現在のドメインのSIDを設定する。</para>
+
+<refsect2>
 <title>GROUPMAP</title>
 
 <para>Windows のグループ ID と UNIX のグループ ID との対応づけを行なう。
-パラメータは「parameter=value」の形式で指定する。共通のオプションを以下に示す:</para>
+共通のオプションを以下に示す:</para>
 
 <itemizedlist>
 <listitem><para>unixgroup - UNIX のグループ名</para></listitem>
@@ -695,6 +723,12 @@ net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
 <para>
 <replaceable>DOMAIN</replaceable> のドメイン間信頼アカウントをリモートサーバに追加する。
 </para>
+これは実際、アカウントフラグ <constant>'I'</constant> (ドメイン間信頼アカウント)を伴う、
+<replaceable>DOMAIN$</replaceable> と言う名のSambaアカウントである。
+もしも、localhostに対してコマンドが使われるならば、
+<command>smbpasswd -a -i DOMAIN</command>と同じ影響を及ぼす。
+両コマンドとも適切なUNIXアカウントを必要とする事に注意。
+</para>
 
 </refsect3>
 
@@ -703,9 +737,7 @@ net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
 
 <para>
 <replaceable>DOMAIN</replaceable> のドメイン間信頼アカウントをリモートサーバから削除する。
-</para>
-
-&not.implemented;
+これは、<command>smbpasswd -x DOMAIN$</command>と同じである。</para>
 
 </refsect3>
 
@@ -793,14 +825,13 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 <title>RPC SAMDUMP</title>
 
 <para>リモートサーバの SAM データベースを表示する。
-これは PDC もしくは BDC 上で実行する必要がある。 <!-- 
-Is that correct? - Jelmer --></para>
+これは PDC もしくはドメインに参加したSamba BDC 上で実行する必要がある。</para>
 </refsect2>
 
 <refsect2>
 <title>RPC VAMPIRE</title>
 
-<para>リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 BDC 上でのみ実行することが可能である。
+<para>リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 ドメインに参加したBDC 上で、PDCに対してのみ実行することが可能である。
 </para>
 
 </refsect2>
@@ -885,6 +916,265 @@ DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP
 </refsect2>
 
 <refsect2>
+<title>SAM CREATEBUILTINGROUP &lt;NAME&gt;</title>
+
+<para>
+BUILTINグループを(再)作成する。
+このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在迫っていされるグループ名である: Administrators,
+Users, Guests, Power Users, Account Operators, Server Operators, Print
+Operators, Backup Operators, Replicator, RAS Servers, Pre-Windows 2000
+compatible Access.
+
+このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM CREATELOCALGROUP &lt;NAME&gt;</title>
+
+<para>
+ローカルグループを作成する(別名である)。
+
+このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM DELETELOCALGROUP &lt;NAME&gt;</title>
+
+<para>
+存在するローカルグループを削除する(別名である)。
+
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM MAPUNIXGROUP &lt;NAME&gt;</title>
+
+<para>
+同じ名前を持つドメイングループと、存在するUnixグループをマップし、Domainグループにする。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM UNMAPUNIXGROUP &lt;NAME&gt;</title>
+
+<para>
+存在するグループマップエントリを削除する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;</title>
+
+<para>
+ローカルグループへメンバを追加する。グループは名前でのみ指定でき、メンバは名前かSIDで指定出来る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM LISTMEM &lt;GROUP&gt;</title>
+
+<para>
+ローカルグループメンバを表示する。グループは名前で指定しなければならない。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]</title>
+
+<para>
+名前による一まとまりのアカウントを表示する。もしもverboseが指定されていたら、
+ridとdescriptionも各々のアカウントに対して提供される。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SHOW &lt;NAME&gt;</title>
+
+<para>
+対応するアカウントの、完全な DOMAIN\\NAME のSIDとタイプを表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;</title>
+
+<para>
+アカウントに対するホームディレクトリを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;</title>
+
+<para>
+アカウントに対するプロファイルパスを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;</title>
+
+<para>
+ユーザまたはグループアカウントに対するコメントを設定する。
+</para>
+
+</refsect2>
+
+<title>SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;</title>
+
+<para>
+ユーザアカウントに対するフルネームを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;</title>
+
+<para>
+ユーザアカウントに対するログオンスクリプトを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;</title>
+
+<para>
+ユーザアカウントに対するホームドライブを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;</title>
+
+<para>
+ログイン可能なユーザアカウントをワークステーションに対して設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET DISABLE &lt;NAME&gt;</title>
+
+<para>
+ユーザアカウントに対して"無効"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PWNOTREQ &lt;NAME&gt;</title>
+
+<para>
+ユーザアカウントに対して"パスワード不要"フラグを設定する。
+</para>
+
+</refsect2>
+
+<title>SAM SET AUTOLOCK &lt;NAME&gt;</title>
+
+<para>
+ユーザアカウントに対して"autolock"フラグを設定する。
+</para>
+
+</refsect2>
+
+<title>SAM SET PWNOEXP &lt;NAME&gt;</title>
+
+<para>
+ユーザアカウントに対して"無期限のパスワード"フラグを設定する。
+</para>
+
+</refsect2>
+
+<title>SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]</title>
+
+<para>
+ユーザアカウントに対して"パスワードの変更が必要"フラグを設定する。
+</para>
+
+</refsect2>
+
+<title>SAM POLICY LIST</title>
+
+<para>
+有効なアカウントポリシーを表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM POLICY SHOW &lt;account policy&gt;</title>
+
+<para>
+アカウントポリシーの値を表示する。.
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM POLICY SET &lt;account policy&gt; &lt;value&gt;</title>
+
+<para>
+アカウントポリシーに値を設定する。
+有効な値は、 "forever", "never", "off", か数字である。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM PROVISION</title>
+
+<para>
+もしも、ldapsam:editposixが設定されて、winbinddが動作中の時有効である。
+ldapのDIT上の、基本的なアカウント(Administrator)とグループ(Domain Users, Domain Admins, Domain Guests)とともに、ldap DITを 適切にpopulateする。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP DUMP &lt;local tdb file name&gt;</title>
+
+<para>
+指定したローカルのtdbファイル中にあるマッピングをダンプする。このコマンドは、
+idmap_tdbバックエンドによって生成されたマップのダンプにのみ有用である。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP RESTORE [input file]</title>
+
+<para>
+指定したファイルか標準入りょcuからマッピングをリストアする。
+</para>
+
+</refsect2>
+
+<title>IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;</title>
+
+<para>
+指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバに対してバインドするユーザDNのパスワードとして使われる。
+</para>
+
+</refsect2>
+
+<refsect2>
 <title>USERSHARE</title>
 
 <para>
@@ -913,10 +1203,10 @@ usershare max shares = 100
 <para>ユーザ定義共有に関するコマンドを以下に示す:
 
 <simplelist>
-<member>net usershare add sharename path [comment] [acl] [guest_ok=[y|n]] - to add or change a user defined share.</member>
-<member>net usershare delete sharename - to delete a user defined share.</member>
-<member>net usershare info [-l|--long] [wildcard sharename] - to print info about a user defined share.</member>
-<member>net usershare list [-l|--long] [wildcard sharename] - to list user defined shares.</member>
+<member>net usershare add sharename path [comment] [acl] [guest_ok=[y|n]] - ユーザ定義の共有の追加または変更</member>
+<member>net usershare delete sharename - ユーザ定義の共有の削除</member>
+<member>net usershare info [-l|--long] [wildcard sharename] - ユーザ定義の共有の情報の出力</member>
+<member>net usershare list [-l|--long] [wildcard sharename] - ユーザ定義の共有の一覧出力</member>
 </simplelist>
 
 </para>
@@ -1012,6 +1302,172 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
 </refsect2>
 
 <refsect2>
+<title>CONF</title>
+
+<para>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出きるようになった。この設定データは新しい"net conf"コマンドで編集できる。
+</para>
+
+<para>
+この設定データの配布は
+The deployment of this configuration data can be activated in two levels from the<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
+レジストリからの共有定義は[global]セクション中で<parameter>registry shares</parameter>を<quote>yes</quote>にすることで有効にでき、
+グローバルオプションは、複合設定の場合、[global]セクション中で<smbconfoption name="include">registry</smbconfoption>を設定することで、
+レジストリのみの設定の場合は、[global]セクション中で、<smbconfoption name="config backend">registry</smbconfoption>を設定することで有効になる。
+詳細は<citerefentry><refentrytitle>smb.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>マニュアルページを参照のこと。 </para>
+
+<para>conf コマンドは以下のとおり:
+<simplelist>
+<member>net conf list - smb.conf風の形式で完全な設定をダンプ</member>
+<member>net conf import - smb.conf形式で設定をインポート</member>
+<member>net conf listshares - レジストリ共有のリスト</member>
+<member>net conf drop - レジストリから全部の設定を削除</member>
+<member>net conf showshare - レジストリ共有の定義を表示</member>
+<member>net conf addshare - 新しいレジストリ共有を作成</member>
+<member>net conf delshare - レジストリ共有を削除</member>
+<member>net conf setparm - パラメータを格納</member>
+<member>net conf getparm - パラメータの値を検索</member>
+<member>net conf delparm - パラメータを削除</member>
+<member>net conf getincludes - 共有定義のインクルードを表示</member>
+<member>net conf setincludes - 共有のためのインクルードを設定</member>
+<member>net conf delincludes - 共有定義からインクルードを削除</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>CONF LIST</title>
+
+<para>
+smb.conf風の形式でレジストリ中にある設定データを標準出力に出力する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF IMPORT <replaceable>[--test|-T]</replaceable> <replaceable>filename</replaceable> <replaceable>[section]</replaceable></title>
+
+<para>
+このコマンドは、smb.conf形式で、ファイルから設定情報をインポートする。もしも、
+レジストリ中に存在するセクションが入力ファイル中に存在するならば、その内容は
+置き換えられる。入力ファイル中に対となるものがない、レジストリ中のセクションは
+何ら影響はない。もしも、それらを削除したいならば、"net conf drop" か
+ "net conf delshare"を使うこと。
+任意ではあるが、その、指定したセクションに対するimportコマンドの影響を避けるためにあるセクションを指定してもよい。テストモードはパラメータ"-T"をコマンド行に
+指定することで有効に出来る。テストモードでは、レジストリに対する変更は行われず、
+設定の結果が代わりに標準出力に出力される。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF LISTSHARES</title>
+
+<para>
+レジストリ中で定義された共有名の一覧を表示する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF DROP</title>
+
+<para>
+レジストリから完全に設定データを削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF SHOWSHARE <replaceable>sharename</replaceable></title>
+
+<para>
+指定したセクションまたは共有の定義を表示する。レジストリから、global設定オプションを検索するために、"global"を共有名として指定するのは有効である。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF ADDSHARE <replaceable>sharename</replaceable> <replaceable>path</replaceable> [<replaceable>writeable={y|N}</replaceable> [<replaceable>guest_ok={y|N}</replaceable> [<replaceable>comment</replaceable>]]] </title>
+
+<para>レジストリ中に新しい共有定義を作成する。
+共有名とパス両方が必要である。共有名は"global"としては<emphasis>いけない</emphasis> 。
+そのほか、とても一般的なオプション、"writeable", "guest ok" と "comment"
+も指定出来る。同じ結果は、一連の"net conf setparm"コマンドによって得てもよい。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF DELSHARE <replaceable>sharename</replaceable></title>
+
+<para>
+レジストリから共有定義を削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF SETPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable> <replaceable>value</replaceable></title>
+
+<para>
+パラメータをレジストリに格納する。セクションはglobalか共有名である。
+セクションは、模試も存在しないならば、作成される。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF GETPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable></title>
+
+<para>
+レジストリ中のパラメータを表示する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF DELPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable></title>
+
+<para>
+レジストリ中のパラメータを削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF GETINCLUDES <replaceable>section</replaceable></title>
+
+<para>
+(globalまたは共有の)提供されたセクションの、includeのリストを得る。
+</para>
+
+<para>
+データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、
+共有ごとにパラメータのインスタンスは1つだけである。
+また、テキストファイル中の指定したような順番は認められない。すべての真の
+パラメータに対して、これは完全に問題がないが、includeディレクティブは
+smb.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ
+との間での場所の指定はとても重要である。これは単純なsmbconfデータもデルによって
+は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての
+共有パラメータの後に評価される。
+</para>
+
+<para>
+さらに、現在、レジストリ構成からファイルのみインクルード出来る。将来は、
+他のレジストリキーから設定データをインクルード出来る予定である。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF SETINCLUDES <replaceable>section</replaceable> [<replaceable>filename</replaceable>]+</title>
+
+<para>
+(globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。
+ファイル名は %Iのような通常のsmb.confマクロを含んでいてもよい。
+</para>
+</refsect3>
+
+<refsect3>
+<title>CONF DELINCLUDES <replaceable>section</replaceable></title>
+
+<para>
+(globalか共有の)提供されたセクションからincludeリストを削除する。
+</para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
 <title>HELP [COMMAND]</title>
 
 <para>指定されたコマンドの使用方法の情報を提供する。</para>
@@ -1023,7 +1479,7 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルページは Samba 3.0 用のものである。</para>
+	<para>このマニュアルページは Samba 3 用のものである。</para>
 </refsect1>
 
 <refsect1>
@@ -1048,6 +1504,7 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
