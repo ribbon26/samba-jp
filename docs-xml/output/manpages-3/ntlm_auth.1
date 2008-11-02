@@ -1,11 +1,11 @@
 .\"     Title: ntlm_auth
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
-.\"    Manual: 
-.\"    Source: 
+.\"      Date: 11/02/2008
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.2
 .\"
-.TH "NTLM_AUTH" "1" "10/31/2008" "" ""
+.TH "NTLM_AUTH" "1" "11/02/2008" "Samba 3\.2" "ユーザコマンド"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -15,7 +15,7 @@ ntlm_auth - Winbind 機構の NTLM 認証機能を外部から利用可能とす
 .SH "SYNOPSIS"
 .HP 1
 ntlm_auth [\-d\ debuglevel] [\-l\ logdir] [\-s\ <smb\ config\ file>]
-.SH "解説"
+.SH "説明"
 .PP
 このツールは
 \fBsamba\fR(7)
@@ -130,7 +130,7 @@ Username (訳注: domain の誤りだと思われる)
 Full\-Username
 .RS 4
 完全なユーザ名。これは Samba の
-\fI\%smb.conf.5.html#\fR
+\fIunix charset\fR
 でエンコードされているとみなされる。 また、ディリミタには
 \fIwinbind separator\fR
 が用いられる。
@@ -233,29 +233,44 @@ NTLM チャレンジ (HEXADECIMAL エンコード)
 .sp
 コマンドラインでこの指定がない場合、必要時にはプロンプトが表示される。
 .sp
-For the NTLMSSP based server roles, this paramter specifies the expected password, allowing testing without winbindd operational\.
+NTLMSSPベースのサーバロールのために、このパラメータは拡張 されたパスワードを指定し、winbinddの動作なしでテストすることを可能 にする。
 .RE
 .PP
 \-\-request\-lm\-key
 .RS 4
-Retreive LM session key
+LMセッションキーの検索
 .RE
 .PP
 \-\-request\-nt\-key
 .RS 4
-Request NT key
+NTキーの要求
 .RE
 .PP
 \-\-diagnostics
 .RS 4
-Perform Diagnostics on the authentication chain\. Uses the password from
-\-\-password
-or prompts for one\.
+認証チェーン城での診断の実行。
+\-\-passwordによるパスワードを使うか、 パスワード要求のプロンプトを出す。
 .RE
 .PP
 \-\-require\-membership\-of={SID|Name}
 .RS 4
-Require that a user be a member of specified group (either name or SID) for authentication to succeed\.
+成功のために、認証のために指定したグループ (かSIDの名前)のメンバとなるユーザを要求する。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\. The default value if this parameter is not specified is 0\.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\. At level 0, only critical errors and serious warnings will be logged\. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\.
+.sp
+Note that specifying this parameter here will override the
+\fIlog level\fR
+parameter in the
+\fIsmb\.conf\fR
+file\.
 .RE
 .PP
 \-V
@@ -281,11 +296,10 @@ will be appended (e\.g\. log\.smbclient, log\.smbd, etc\.\.\.)\. The log file is
 .RS 4
 Print a summary of command line options\.
 .RE
-.SH "EXAMPLE SETUP"
+.SH "セットアップ例"
 .PP
-To setup ntlm_auth for use by squid 2\.5, with both basic and NTLMSSP authentication, the following should be placed in the
-\fIsquid\.conf\fR
-file\.
+基本とNTLMSSP認証の両方でsquid 2\.5用に設定するには、
+\fIsquid\.conf\fRファイル中に以下を設定する。
 .sp
 .RS 4
 .nf
@@ -303,13 +317,10 @@ auth_param basic credentialsttl 2 hours
 .br
 Note
 .PP
-This example assumes that ntlm_auth has been installed into your path, and that the group permissions on
-\fIwinbindd_privileged\fR
-are as described above\.
+この例は、ntlm_authのパスが通っていることと、それが、上記で説明 されている、\fIwinbindd_privileged\fR上のグループ パーミッションが設定されていることを仮定している。
 .PP
-To setup ntlm_auth for use by squid 2\.5 with group limitation in addition to the above example, the following should be added to the
-\fIsquid\.conf\fR
-file\.
+上記の例で、グループ制限を追加して、squid 2\.5用にntlm_auth をセットアップするには、以下の記述を、\fIsquid\.conf\fR
+に書く。
 .sp
 .RS 4
 .nf
@@ -317,33 +328,22 @@ auth_param ntlm program ntlm_auth \-\-helper\-protocol=squid\-2\.5\-ntlmssp \-\-
 auth_param basic program ntlm_auth \-\-helper\-protocol=squid\-2\.5\-basic \-\-require\-membership\-of=\'WORKGROUP\eDomain Users\'
 .fi
 .RE
-.SH "TROUBLESHOOTING"
+.SH "トラブルシューティング"
 .PP
-If you\'re experiencing problems with authenticating Internet Explorer running under MS Windows 9X or Millenium Edition against ntlm_auth\'s NTLMSSP authentication helper (\-\-helper\-protocol=squid\-2\.5\-ntlmssp), then please read
-the Microsoft Knowledge Base article #239869 and follow instructions described there\.
-.SH "VERSION"
+もしも、ntlm_authの、NTLMSSP認証ヘルパ (\-\-helper\-protocol=squid\-2\.5\-ntlmssp) に対して、MS Windows 9X または Millenium Edition 配下で MSIEを動かして認証の問題が発生したら、
+の、Microsoft Knowledge Baseの#239869を見て，そこに書いてある ことを実行すること。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0 of the Samba suite\.
+このマニュアルページは Samba 3 対応のものである。
 .SH "AUTHOR"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアと関連ユーティリティは、 Andrew Tridgellによって作成された。 現在 Samba は、Samba Team によってLinux カーネルの 開発と同様に、オープンソースプロジェク トとして開発されている。
 .PP
-The ntlm_auth manpage was written by Jelmer Vernooij and Andrew Bartlett\.
+The ntlm_authのマニュアルページは Jelmer Vernooij と Andrew Bartlett によって書かれた。
 .SH "日本語訳"
 .PP
 このマニュアルページは Samba 3\.0\.23 \- Samba 3\.0\.24 対応のものである。
 .PP
-このドキュメントの Samba 3\.0\.24 対応の翻訳は
-.sp
-.RS 4
-.ie n \{\
-\h'-04'\(bu\h'+03'\c
-.\}
-.el \{\
-.sp -1
-.IP \(bu 2.3
-.\}
-たかはしもとのぶ (monyo@samba\.gr\.jp)
-.sp
-.RE
-によって行なわれた。
+このドキュメントの Samba 3\.0\.24 対応の翻訳は たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+.PP
+このドキュメントの Samba 3\.2\.4 対応の翻訳は 太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
