@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="smbd.8">
 
 <refmeta>
@@ -10,7 +13,7 @@
 
 <refnamediv>
 	<refname>smbd</refname>
-	<refpurpose>server to provide SMB/CIFS services to clients</refpurpose>
+	<refpurpose>SMB/CIFS サービスをクライアントへ提供するサーバ</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -25,101 +28,105 @@
 		<arg choice="opt">-b</arg>
 		<arg choice="opt">-d &lt;debug level&gt;</arg>
 		<arg choice="opt">-l &lt;log directory&gt;</arg>
-		<arg choice="opt">-p &lt;port number(s)&gt;</arg>
+		<arg choice="opt">-p &lt;port number&gt;</arg>
 		<arg choice="opt">-O &lt;socket option&gt;</arg>
 		<arg choice="opt">-s &lt;configuration file&gt;</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
-	<para>This program is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<title>解説</title>
+	<para>このプログラムは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
 
-	<para><command>smbd</command> is the server daemon that 
-	provides filesharing and printing services to Windows clients. 
-	The server provides filespace and printer services to
-	clients using the SMB (or CIFS) protocol. This is compatible 
-	with the LanManager protocol, and can service LanManager 
-	clients.  These include MSCLIENT 3.0 for DOS, Windows for 
-	Workgroups, Windows 95/98/ME, Windows NT, Windows 2000, 
-	OS/2, DAVE for Macintosh, and smbfs for Linux.</para>
+	<para><command>smbd</command> は、Windows クライアントにファイル共有と印刷サービスを提供するサーバデーモンである。
+	サーバは SMB (または CIFS) プロトコルを使用するクライアントに
+	ファイル・スペースと印刷サービスを提供する。サーバは 
+	LanManager プロトコルと互換性があり、LanManager クライアントに
+	対するサービスが可能である。クライアントには MSCLIENT 3.0 for 
+	DOS、Windows for Workgroups、Windows 95/98/Me、Windows 2000、
+	Windows NT、OS/2、DAVE for Macintosh、smbfs for Linux が含まれる。</para>
 
-	<para>An extensive description of the services that the 
-	server can provide is given in the man page for the 
-	configuration file controlling the attributes of those 
-	services (see <citerefentry><refentrytitle>smb.conf</refentrytitle>
-	<manvolnum>5</manvolnum></citerefentry>.  This man page will not describe the 
-	services, but will concentrate on the administrative aspects 
-	of running the server.</para>
+	<para>サーバが提供できるサービスについての詳細な記述は、
+	それらサービスの属性を制御する設定ファイルの
+	マニュアルページにある
+	(<citerefentry><refentrytitle>smb.conf</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry>を参照)。このマニュアルページでは
+	サービスについて記述せず、サーバを動作させる上での
+	管理の面にしぼって記述する。</para>
 
-	<para>Please note that there are significant security 
-	implications to running this server, and the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-	<manvolnum>5</manvolnum></citerefentry> manual page should be regarded as mandatory reading before 
-	proceeding with installation.</para>
+	<para>このサーバを動作させることは
+	重要なセキュリティーとの関係があること、そして <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+	のマニュアルページはインストールを進める前に
+	必ず読むべきものであることに注意すること。</para>
 
-	<para>A session is created whenever a client requests one. 
-	Each client gets a copy of the server for each session. This 
-	copy then services all connections made by the client during 
-	that session. When all connections from its client are closed, 
-	the copy of the server for that client terminates.</para>
+	<para>セッションはクライアントに要求されるたびに作られる。
+	各クライアントは各セッション毎にサーバプロセスのコピーを得る。
+	このコピーはセッションの間、クライアントによるすべての
+	接続を提供する。クライアントのすべての接続が切断されると、
+	そのクライアントに対するサーバのコピーは終了する。</para>
 
-	<para>The configuration file, and any files that it includes, 
-	are automatically reloaded every minute, if they change.  You 
-	can force a reload by sending a SIGHUP to the server.  Reloading 
-	the configuration file will not affect connections to any service 
-	that is already established.  Either the user will have to 
-	disconnect from the service, or <command>smbd</command> killed and restarted.</para>
+	<para>設定ファイルとそれに含まれるファイルが変更されると、
+	1分ごとに自動的に再読込される。サーバに SIGHUP を送ることにより
+	再読み込みを強制することもできる。設定ファイルの再読込は、
+	すでに確立されているサービスの接続には影響しない。
+	ユーザがサービスから切断するか、<command>smbd</command>
+	を終了して再起動するまで設定ファイルの変更は反映されない。</para>
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 		<varlistentry>
 		<term>-D</term>
-		<listitem><para>If specified, this parameter causes 
-		the server to operate as a daemon. That is, it detaches 
-		itself and runs in the background, fielding requests 
-		on the appropriate port. Operating the server as a
-		daemon is the recommended way of running <command>smbd</command> for 
-		servers that provide more than casual use file and 
-		print services.  This switch is assumed if <command>smbd
-		</command> is executed on the command line of a shell.
+		<listitem><para>このパラメータが指定されると、
+		サーバはデーモンとして動作することになる。つまり、自身を分離して
+		バックグラウンドで走らせ、適切なポートに対する要求を
+		処理するようになる。 臨時にファイルおよび印刷サービスを提供する
+		サーバとして利用する以外の場合は、サーバをデーモンとして
+		起動するのが <command>smbd</command> の起動方法として推奨される。
+		<command>smbd</command> がシェルのコマンドラインから
+		実行されたときはこのスイッチが指定されたと見なされる。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-F</term>
-		<listitem><para>If specified, this parameter causes
-		the main <command>smbd</command> process to not daemonize,
-		i.e. double-fork and disassociate with the terminal.
-		Child processes are still created as normal to service
-		each connection request, but the main process does not
-		exit. This operation mode is suitable for running
-		<command>smbd</command> under process supervisors such
-		as <command>supervise</command> and <command>svscan</command>
-		from Daniel J. Bernstein's <command>daemontools</command>
-		package, or the AIX process monitor.
+		<listitem><para>
+		このパラメータを指定すると、
+		<command>smbd</command>
+		のメインプロセスはデーモン化しなくなる。
+		つまり、
+		2 回の <command>fork(2)</command> と端末からの切り離しを行なわない。
+		通常通り接続要求を処理するための子プロセスが生成されるが、
+		メインプロセスは終了しない。
+		この動作方式は、
+		Daniel J. Bernstein 作の <command>daemontools</command>
+		パッケージに含まれる
+		<command>supervise</command> と <command>svscan</command>
+		や、
+		AIX のプロセスモニターなど、プロセス監視の下で
+		<command>smbd</command>
+		を動作させるのに都合がよい。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-S</term>
-		<listitem><para>If specified, this parameter causes
-		<command>smbd</command> to log to standard output rather
-		than a file.</para></listitem>
+		<listitem><para>このパラメータが指定されると、<command>smbd</command> は
+		ファイルではなく標準出力にログを出力する。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-i</term>
-		<listitem><para>If this parameter is specified it causes the
-		server to run "interactively", not as a daemon, even if the
-		server is executed on the command line of a shell. Setting this
-		parameter negates the implicit deamon mode when run from the
-		command line. <command>smbd</command> also logs to standard
-		output, as if the <command>-S</command> parameter had been
-		given.
+		<listitem><para>このパラメータが指定されると、
+		サーバはコマンドラインでデーモンとして実行されていたとしても
+		デーモンではなく、"対話形式"で動作する。
+		このパラメータを設定することにより、コマンドラインからの起動により暗黙
+		的にデーモンモードとなることを無効にする。
+		また、<command>-S</command> パラメータが指定されているかのように、
+		<command>smbd</command> は標準出力にログを出力する。
 		</para></listitem>
 		</varlistentry>
 		
@@ -128,276 +135,191 @@
 
 		<varlistentry>
 		<term>-b</term>
-		<listitem><para>Prints information about how 
-		Samba was built.</para></listitem>
+		<listitem><para>どのようにSambaがビルドされたか表示する。
+		</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-p &lt;port number(s)&gt;</term>
-		<listitem><para><replaceable>port number(s)</replaceable> is a 
-		space or comma-separated list of TCP ports smbd should listen on.
-		The default value is taken from the <smbconfoption name="ports"/> parameter in &smb.conf;</para>
-
-		<para>The default ports are 139 (used for SMB over NetBIOS over TCP)
-			and port 445 (used for plain SMB over TCP).
-	</para></listitem>
+		<term>-p &lt;port number&gt;</term>
+		<listitem><para><replaceable>port number</replaceable> は
+		正の整数値である。このパラメータが指定されていないときの
+		デフォルト値は 139 である。</para>
 		
+		<para>この数字は、クライアント・ソフトウェアからサーバへの
+		接続を確立するときに使用されるポート番号である。
+		SMB over TCP の標準的な(well-knownな)ポート番号は 139 
+		であり、それ故にこれがデフォルト値である。あなたが
+		root ではないふつうのユーザでサーバを動作させたいならば、
+		多くのシステムでは 1024 より大きいポート番号を
+		使わなければならない。- あなたがこの状況にいるかどうかは、
+		あなたのシステムの管理者に尋ねるとよい。
+		</para>
+		
+		<para>たいていのクライアントからサーバを
+		利用できるようにしたくてもポートを 139 以外に
+		構成しなければならないときは、ポート 139 にポート・
+		リダイレクト・サービスが必要になる。詳しくは 
+		rfc1002.txt の 4.3.5 節に概略が述べられている。</para>
+		
+		<para>このパラメータは、上記の状況を除いては
+		通常指定しない。</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>FILES</title>
+	<title>関連ファイル</title>
 
 	<variablelist>
 		<varlistentry>
 		<term><filename>/etc/inetd.conf</filename></term>
-		<listitem><para>If the server is to be run by the 
-		<command>inetd</command> meta-daemon, this file 
-		must contain suitable startup information for the 
-		meta-daemon. 
+		<listitem><para>サーバを
+		<command>inetd</command> メタ・デーモンによって動作させるには、このファイルに
+		メタ・デーモン用の適切な起動情報を含める必要がある。
 		</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
 		<term><filename>/etc/rc</filename></term>
-		<listitem><para>or whatever initialization script your 
-		system uses).</para>
+		<listitem><para>(あるいは、あなたのシステムが
+		使用する初期化スクリプト)</para>
 
-		<para>If running the server as a daemon at startup, 
-		this file will need to contain an appropriate startup 
-		sequence for the server. </para></listitem>
+		<para>システム起動時にデーモンとしてサーバを動作させるなら、
+		このファイルにサーバのための適切な起動手続きを
+		含める必要がある。</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
 		<term><filename>/etc/services</filename></term>
-		<listitem><para>If running the server via the 
-		meta-daemon <command>inetd</command>, this file 
-		must contain a mapping of service name (e.g., netbios-ssn) 
-		to service port (e.g., 139) and protocol type (e.g., tcp). 
+		<listitem><para> <command>inetd</command> メタ・デーモンを
+		介してサーバを動作させるなら、このファイルにサービスポート
+		(例:139)とプロトコルタイプ(例:tcp)に対するサービス名
+		(例:netbios-ssn)のマッピングを含める必要がある。
 		</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
 		<term><filename>/usr/local/samba/lib/smb.conf</filename></term>
-		<listitem><para>This is the default location of the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> server configuration file. Other common places that systems 
-		install this file are <filename>/usr/samba/lib/smb.conf</filename> 
-		and <filename>/etc/samba/smb.conf</filename>.</para>
+		<listitem><para>このファイルはサーバの設定ファイルである <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> のデフォルトの位置である。その他、システムがこのファイルをインストール
+		しそうな場所としては、 <filename>/usr/samba/lib/smb.conf</filename> 
+		や <filename>/etc/samba/smb.conf</filename> がある。</para>
 		
-		<para>This file describes all the services the server 
-		is to make available to clients. See <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> for more information.</para>
+		<para>このファイルにはサーバがクライアントから利用できるようにする
+		全てのサービスを記述する。さらなる情報は <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> を参照のこと。</para>
 		</listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>LIMITATIONS</title>
-	<para>On some systems <command>smbd</command> cannot change uid back 
-	to root after a setuid() call.  Such systems are called 
-	trapdoor uid systems. If you have such a system, 
-	you will be unable to connect from a client (such as a PC) as 
-	two different users at once. Attempts to connect the
-	second user will result in access denied or 
-	similar.</para>
+	<title>制限</title>
+	<para>いくつかのシステム上において、<command>smbd</command> は
+	setuid() を呼び出した後に uid を root に戻すことができない。この種のシステムは、トラップドア uid システムと呼ばれる。
+	そのようなシステムの場合、異なる二人のユーザとして (PC のような)
+	クライアントから同時に接続を行うことができない。
+	二人目のユーザ接続の試みは、「アクセス拒否」
+	または類似の結果となる。</para>
 </refsect1>
 
 <refsect1>
-	<title>ENVIRONMENT VARIABLES</title>
+	<title>環境変数</title>
 
 	<variablelist>
 		<varlistentry>
 		<term><envar>PRINTER</envar></term>
-		<listitem><para>If no printer name is specified to 
-		printable services, most systems will use the value of 
-		this variable (or <constant>lp</constant> if this variable is 
-		not defined) as the name of the printer to use. This 
-		is not specific to the server, however.</para></listitem>
+		<listitem><para>プリント・サービスでプリンタの名前が
+		指定されていないとき、多くのシステムでは使用するプリンタ名として、
+		この変数の値が(もしくは変数が定義されていないなら<constant>lp</constant> が)利用される。しかしながら
+		これはサーバの特性であるという訳ではない。</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 
 <refsect1>
-        <title>PAM INTERACTION</title>
-	<para>Samba uses PAM for authentication (when presented with a plaintext 
-	password), for account checking (is this account disabled?) and for
-	session management.  The degree too which samba supports PAM is restricted
-	by the limitations of the SMB protocol and the <smbconfoption name="obey pam restrictions"/> <citerefentry><refentrytitle>smb.conf</refentrytitle>
-	<manvolnum>5</manvolnum></citerefentry> paramater.  When this is set, the following restrictions apply:
+        <title>PAM との相互作用</title>
+	<para>Samba はアカウントチェック(アカウントが無効か?)や
+	セッション管理のため(平文のパスワードが提供されたときに)
+	認証に PAM を使う。samba の PAM をサポートする程度は、
+	SMBプロトコルと<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>の
+	<smbconfoption><name>obey pam restrictions</name></smbconfoption>の制限によって限定される。これが設定されると、以下の制限が適用される。
 	</para>
 
 	<itemizedlist>
-	<listitem><para><emphasis>Account Validation</emphasis>:  All accesses to a 
-	samba server are checked 
-	against PAM to see if the account is vaild, not disabled and is permitted to 
-	login at this time.  This also applies to encrypted logins.
+	<listitem><para><emphasis>アカウントの妥当性確認</emphasis>:  Samba
+	サーバに対するすべてのアクセスは、アカウントが妥当か、無効になっていないか、
+	その時間にログインが許可されているかを PAM と照らし合わせて
+	チェックされる。これは暗号化されたログインにも当てはまる。
 	</para></listitem>
 
-	<listitem><para><emphasis>Session Management</emphasis>:  When not using share 
-	level secuirty, users must pass PAM's session checks before access 
-	is granted.  Note however, that this is bypassed in share level secuirty.  
-	Note also that some older pam configuration files may need a line 
-	added for session support. 
+	<listitem><para><emphasis>セッション管理</emphasis>:  共有レベルのセキュリティ
+	(訳注:smb.conf での security = share を指す)を使用していない場合、
+	ユーザはアクセスが許可される前に PAM のセッションチェックをパスしなくてはいけない。
+	一方、共有レベルのセキュリティではこれはスキップされることに注意。
+	また、いくつかの古い pam 設定ファイルではセッションをサポートするために
+	行の追加が必要かも知れないことにも注意。
 	</para></listitem>
 	</itemizedlist>
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of 
-	the Samba suite.</para>
+	<para>このマニュアルページは Samba スイートのバージョン
+	3.0 用になっている。</para>
 </refsect1>
 
 <refsect1>
-	<title>DIAGNOSTICS</title>
+	<title>診断</title>
 
-	<para>Most diagnostics issued by the server are logged 
-	in a specified log file. The log file name is specified 
-	at compile time, but may be overridden on the command line.</para>
+	<para>サーバによって出力されたほとんどの診断は、指定されたログファイルに
+	記録される。ログファイルの名前はコンパイル時に指定されるが、
+	コマンドラインで変更することもできる。</para>
 
-	<para>The number and nature of diagnostics available depends 
-	on the debug level used by the server. If you have problems, set 
-	the debug level to 3 and peruse the log files.</para>
+	<para>利用できる診断の数と性質は、サーバで使用されるデバッグ・レベルに
+	依存する。もし問題を抱えているなら、デバッグ・レベルを 
+	3 に設定してログファイルに目を通すこと。</para>
 
-	<para>Most messages are reasonably self-explanatory. Unfortunately, 
-	at the time this man page was created, there are too many diagnostics 
-	available in the source code to warrant describing each and every 
-	diagnostic. At this stage your best bet is still to grep the 
-	source code and inspect the conditions that gave rise to the 
-	diagnostics you are seeing.</para>
+	<para>ほとんどのメッセージは充分に自明であろう。あいにく、
+	このマニュアルページ作成時にはあまりにもさまざまな診断メッセージが
+	存在しているため、診断メッセージをすべて記述することを保証できない。
+	そのような場合にもっともよい方法は、ソースコードを検索
+	(grep)することであり、着目している診断メッセージを引き起こした条件を
+	探すことである。</para>
 </refsect1>
 
 <refsect1>
-	<title>TDB FILES</title>
+	<title>シグナル</title>
 
-	<para>Samba stores it's data in several TDB (Trivial Database) files, usually located in <filename>/var/lib/samba</filename>.</para>
-	
-	<para>
-	(*) information persistent across restarts (but not
-	necessarily important to backup).
-	</para>
+	<para><command>smbd</command> に SIGHUP を送ることで、
+	<filename>smb.conf</filename> の内容を短時間の内に
+	再読み込みさせることができる。</para>
 
-<variablelist>
-<varlistentry><term>account_policy.tdb*</term>
-<listitem>
-<para>NT account policy settings such as pw expiration, etc...</para>
-</listitem>
-</varlistentry>
+	<para><command>smbd</command> のプロセスをシャットダウンさせるのに、
+	最後の手段として以外には <command>SIGKILL (-9)</command> は
+	<emphasis>使わない</emphasis> ことを推奨する。共有メモリのエリアが不整合なままに
+	なってしまうことがあるためである。<command>smbd</command>
+	を安全に終了させる方法は、SIGTERM (-15) を送って、<command>smbd</command>
+	自身が終了するのを待つことである。</para>
 
-<varlistentry><term>brlock.tdb</term>
-<listitem><para>byte range locks</para></listitem>
-</varlistentry>
+	<para><citerefentry><refentrytitle>smbcontrol</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+	を使うと <command>smbd</command> のデバッグ・ログ・レベルを上げたり下げたりできる
+	(SIGUSR[1|2] シグナルは Samba 2.2 ではもはや使用されない)。
+	これにより、低いログ・レベルで動作している間に発生する
+	一時的な問題を診断することができる。</para>
 
-<varlistentry><term>browse.dat</term>
-<listitem><para>browse lists</para></listitem>
-</varlistentry>
-
-<varlistentry><term>connections.tdb</term>
-<listitem><para>share connections (used to enforce max connections, etc...)</para></listitem>
-</varlistentry>
-
-<varlistentry><term>gencache.tdb</term>
-<listitem><para>generic caching db</para></listitem>
-</varlistentry>
-
-<varlistentry><term>group_mapping.tdb*</term>
-<listitem><para>group mapping information</para></listitem>
-</varlistentry>
-
-<varlistentry><term>locking.tdb</term>
-<listitem><para>share modes &amp; oplocks</para></listitem>
-</varlistentry>
-
-<varlistentry><term>login_cache.tdb*</term>
-<listitem><para>bad pw attempts</para></listitem>
-</varlistentry>
-
-<varlistentry><term>messages.tdb</term>
-<listitem><para>Samba messaging system</para></listitem>
-</varlistentry>
-
-<varlistentry><term>netsamlogon_cache.tdb*</term>
-<listitem><para>cache of user net_info_3 struct	from net_samlogon() request (as a domain member)</para></listitem>
-</varlistentry>
-
-<varlistentry><term>ntdrivers.tdb*</term>
-<listitem><para>installed printer drivers</para></listitem>
-</varlistentry>
-
-<varlistentry><term>ntforms.tdb*</term>
-<listitem><para>installed printer forms</para></listitem>
-</varlistentry>
-
-<varlistentry><term>ntprinters.tdb*</term>
-<listitem><para>installed printer information</para></listitem>
-</varlistentry>
-
-<varlistentry><term>printing/</term>
-<listitem><para>directory containing tdb per print queue of cached lpq output</para></listitem>
-</varlistentry>
-
-<varlistentry><term>registry.tdb</term>
-<listitem><para>Windows registry skeleton (connect via regedit.exe)</para></listitem>
-</varlistentry>
-
-<varlistentry><term>sessionid.tdb</term>
-<listitem><para>session information (e.g. support for 'utmp = yes')</para></listitem>
-</varlistentry>
-
-<varlistentry><term>share_info.tdb*</term>
-<listitem><para>share acls</para></listitem>
-</varlistentry>
-
-<varlistentry><term>winbindd_cache.tdb</term>
-<listitem><para>winbindd's cache of user lists, etc...</para></listitem>
-</varlistentry>
-
-<varlistentry><term>winbindd_idmap.tdb*</term>
-<listitem><para>winbindd's local idmap db</para></listitem>
-</varlistentry>
-
-<varlistentry><term>wins.dat*</term>
-<listitem><para>wins database when 'wins support = yes'</para></listitem>
-</varlistentry>
-
-</variablelist>
-
+	<para>デバッグ書き込みを送る <command>smbd</command> のシグナル・
+	ハンドラは再入可能になっていない。ゆえにシグナルを発行するときは、
+	<command>smbd</command> が SMB 待ちの状態になるまで待つ必要がある。
+	select 呼び出しの前にシグナルのブロッキングを解除し、呼び出しの後で再び
+	ブロッキングすればシグナル・ハンドラを安全にすることができるが、
+	これはパフォーマンスに影響するだろう。</para>
 </refsect1>
 
 <refsect1>
-	<title>SIGNALS</title>
-
-	<para>Sending the <command>smbd</command> a SIGHUP will cause it to 
-	reload its <filename>smb.conf</filename> configuration 
-	file within a short period of time.</para>
-
-	<para>To shut down a user's <command>smbd</command> process it is recommended 
-	that <command>SIGKILL (-9)</command> <emphasis>NOT</emphasis> 
-	be used, except as a last resort, as this may leave the shared
-	memory area in an inconsistent state. The safe way to terminate 
-	an <command>smbd</command> is to send it a SIGTERM (-15) signal and wait for 
-	it to die on its own.</para>
-
-	<para>The debug log level of <command>smbd</command> may be raised
-	or lowered using <citerefentry><refentrytitle>smbcontrol</refentrytitle>
-	<manvolnum>1</manvolnum></citerefentry> program (SIGUSR[1|2] signals are no longer 
-	used since Samba 2.2). This is to allow transient problems to be diagnosed, 
-	whilst still running at a normally low log level.</para>
-
-	<para>Note that as the signal handlers send a debug write, 
-	they are not re-entrant in <command>smbd</command>. This you should wait until 
-	<command>smbd</command> is in a state of waiting for an incoming SMB before 
-	issuing them. It is possible to make the signal handlers safe 
-	by un-blocking the signals before the select call and re-blocking 
-	them after, however this would affect performance.</para>
-</refsect1>
-
-<refsect1>
-	<title>SEE ALSO</title>
+	<title>関連項目</title>
 	<para><citerefentry><refentrytitle>hosts_access</refentrytitle>
 	<manvolnum>5</manvolnum></citerefentry>, <citerefentry><refentrytitle>inetd</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>nmbd</refentrytitle>
@@ -406,27 +328,27 @@
 	<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>testparm</refentrytitle>
 	<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>testprns</refentrytitle>
 	<manvolnum>1</manvolnum></citerefentry>, and the 
-	Internet RFC's	<filename>rfc1001.txt</filename>, <filename>rfc1002.txt</filename>. 
-	In addition the CIFS (formerly SMB) specification is available 
-	as a link from the Web page <ulink noescape="1" url="http://samba.org/cifs/"> 
-	http://samba.org/cifs/</ulink>.</para>
+	およびインターネット RFC の	<filename>rfc1001.txt</filename>, <filename>rfc1002.txt</filename>. 
+	加えて CIFS(以前は SMB)の仕様は以下のWebページから入手できる:
+	<ulink noescape="1" url="http://samba.org/cifs/"> http://samba.org/cifs/</ulink>.</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 	
-	<para>The original Samba software and related utilities 
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar 
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
+	開発されているような方法でのオープンソースプロジェクトである 
+	Samba Team によって開発されている。</para>
 	
-	<para>The original Samba man pages were written by Karl Auer. 
-	The man page sources were converted to YODL format (another 
-	excellent piece of Open Source software, available at <ulink url="ftp://ftp.icce.rug.nl/pub/unix/">
-	ftp://ftp.icce.rug.nl/pub/unix/</ulink>) and updated for the Samba 2.0 
-	release by Jeremy Allison.  The conversion to DocBook for 
-	Samba 2.2 was done by Gerald Carter. The conversion to DocBook XML 4.2 for
-	Samba 3.0 was done by Alexander Bokovoy.</para>
+	<para>オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。
+	マニュアルページは YODL 形式(別の、優秀なオープンソースソフトウェアで、 
+	(<ulink url="ftp://ftp.icce.rug.nl/pub/unix/">ftp://ftp.icce.rug.nl/pub/unix/</ulink>にある)
+	で変換され、Jeremy Allison によって Samba 2.0 リリースのために更新された。
+	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。
+	Samba 3.0 のための DocBook XML 4.2 形式への変換は Alexander Bokovoy が行った。
+	</para>
 </refsect1>
 
 </refentry>
+

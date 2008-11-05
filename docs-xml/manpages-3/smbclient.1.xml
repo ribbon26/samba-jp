@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="EUC-JP"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="smbclient.1">
 
 <refmeta>
@@ -10,32 +13,11 @@
 
 <refnamediv>
 	<refname>smbclient</refname>
-	<refpurpose>ftp-like client to access SMB/CIFS resources 
-	on servers</refpurpose>
+	<refpurpose>サーバ上の SMB/CIFS リソースにアクセスする ftp
+	のようなクライアント</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-	<cmdsynopsis>
-		<command>smbclient</command>
-		<arg choice="opt">-b &lt;buffer size&gt;</arg>
-		<arg choice="opt">-d debuglevel</arg>
-		<arg choice="opt">-L &lt;netbios name&gt;</arg>
-		<arg choice="opt">-U username</arg>
-		<arg choice="opt">-I destinationIP</arg>
-		<arg choice="opt">-M &lt;netbios name&gt;</arg>
-		<arg choice="opt">-m maxprotocol</arg>
-		<arg choice="opt">-A authfile</arg>
-		<arg choice="opt">-N</arg>
-		<arg choice="opt">-i scope</arg>
-		<arg choice="opt">-O &lt;socket options&gt;</arg>
-		<arg choice="opt">-p port</arg>
-		<arg choice="opt">-R &lt;name resolve order&gt;</arg>
-		<arg choice="opt">-s &lt;smb config file&gt;</arg>
-		<arg choice="opt">-k</arg>
-		<arg choice="opt">-P</arg>
-		<arg choice="opt">-c &lt;command&gt;</arg>
-	</cmdsynopsis>
-		
 	<cmdsynopsis>
 		<command>smbclient</command>
 		<arg choice="req">servicename</arg>
@@ -49,7 +31,8 @@
 		<arg choice="opt">-m maxprotocol</arg>
 		<arg choice="opt">-A authfile</arg>
 		<arg choice="opt">-N</arg>
-		<arg choice="opt">-l logdir</arg>
+		<arg choice="opt">-l logfile</arg>
+		<arg choice="opt">-L &lt;netbios name&gt;</arg>
 		<arg choice="opt">-I destinationIP</arg>
 		<arg choice="opt">-E</arg>
 		<arg choice="opt">-c &lt;command string&gt;</arg>
@@ -64,250 +47,215 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
 
-	<para><command>smbclient</command> is a client that can 
-	'talk' to an SMB/CIFS server. It offers an interface
-	similar to that of the ftp program (see <citerefentry><refentrytitle>ftp</refentrytitle>
-	<manvolnum>1</manvolnum></citerefentry>).  
-	Operations include things like getting files from the server 
-	to the local machine, putting files from the local machine to 
-	the server, retrieving directory information from the server 
-	and so on. </para>
+	<para><command>smbclient</command> は SMB/CIFS サーバと「会話」をする
+	ことができるクライアントである。ftp プログラム (<citerefentry>
+	<refentrytitle>ftp</refentrytitle><manvolnum>1</manvolnum>
+	</citerefentry>を参照) とよく似たインターフェースを提供し、
+	サーバからローカルマシンへファイルをダウンロードしたり、
+	ローカルマシンからサーバへとファイルをアップロードしたり、
+	サーバからディレクトリ情報を取得するなどの動作を行う。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 	
 	<variablelist>
 		<varlistentry>
 		<term>servicename</term>
-		<listitem><para>servicename is the name of the service 
-		you want to use on the server. A service name takes the form
-		<filename>//server/service</filename> where <parameter>server
-		</parameter> is the NetBIOS name of the SMB/CIFS server 
-		offering the desired service and <parameter>service</parameter> 
-		is the name of the service offered.  Thus to connect to 
-		the service "printer" on the SMB/CIFS server "smbserver",
-		you would use the servicename <filename>//smbserver/printer
-		</filename></para>
+		<listitem><para>servicename は利用したいサービスのサーバ上での
+		名前である。サービス名は <filename>//server/service</filename>
+		のような形をとり、<parameter>server</parameter> は利用したい
+		サービスを提供している SMB/CIFS サーバの NetBIOS 名であり、
+		<parameter>service</parameter> は提供されているサービスの名前である。
+		したがって、SMB/CIFS サーバ "smbserver" の "printer"
+		というサービスに接続するには、<filename>//smbserver/printer
+		</filename> というサービス名を使用する。</para>
 
-		<para>Note that the server name required is NOT necessarily 
-		the IP (DNS) host name of the server !  The name required is 
-		a NetBIOS server name, which may or may not be the
-		same as the IP hostname of the machine running the server.
-		</para>
+		<para>必要とされるサーバ名が、一概にサーバの IP (DNS)
+		ホスト名であるとは限らないことに注意! 必要とされる名前は NetBIOS
+		名であり、その名前はサーバの動作しているマシンの IP
+		ホスト名と同じかも知れないし、 異なっているかも知れない。</para>
 
-		<para>The server name is looked up according to either 
-		the <parameter>-R</parameter> parameter to <command>smbclient</command> or 
-		using the name resolve order parameter in 
-		the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> file, 
-		allowing an administrator to change the order and methods 
-		by which server names are looked up. </para></listitem>
+		<para>サーバ名を解決する方法は、<command>smbclient</command>
+		の <parameter>-R</parameter> オプションか、<citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry> ファイル中の name resolve order パラメータに
+		よって決定される。
+		このパラメータにより、管理者が、名前解決の順番や方式を変更する
+		ことが可能になっている。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>password</term>
-		<listitem><para>The password required to access the specified 
-		service on the specified server. If this parameter is 
-		supplied, the <parameter>-N</parameter> option (suppress 
-		password prompt) is assumed. </para>
+		<listitem><para>指定したサーバのサービスへアクセスするために
+		必要なパスワードである。このパラメータが指定された場合、
+		<parameter>-N</parameter> オプション (パスワードプロンプトの抑止)
+		が自動的に設定される。</para>
 
-		<para>There is no default password. If no password is supplied 
-		on the command line (either by using this parameter or adding 
-		a password to the <parameter>-U</parameter> option (see 
-		below)) and the <parameter>-N</parameter> option is not 
-		specified, the client will prompt for a password, even if 
-		the desired service does not require one. (If no password is 
-		required, simply press ENTER to provide a null password.)
-		</para>
+		<para>デフォルトのパスワードはない。 (このパラメータを用いるか、
+		<parameter>-U</parameter> オプション (以下を参照) でパスワードが
+		指定されなかった事により) パスワードがコマンドラインから指定されず、
+		<parameter>-N</parameter> オプションも指定されていない場合、
+		サーバがパスワードを要求しているかどうかに関わらず、
+		クライアントはパスワード入力を求める。
+		(パスワードが必要でない場合は、 単に ENTER キーを入力する事で、
+		空のパスワードを渡せばよい。)</para>
 
-		<para>Note: Some servers (including OS/2 and Windows for 
-		Workgroups) insist on an uppercase password. Lowercase 
-		or mixed case passwords may be rejected by these servers. 		
-		</para>
+		<para>注意: ある種のサーバ (OS/2、Windows for Workgroup など) は、
+		大文字のパスワードを要求する。小文字や、大文字小文字の混じった
+		パスワードは拒否されるであろう。</para>
 
-		<para>Be cautious about including passwords in scripts.
+		<para>パスワードをスクリプト中に記述するときは、十分注意すること。
 		</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
 		<term>-R &lt;name resolve order&gt;</term> 
-		<listitem><para>This option is used by the programs in the Samba 
-		suite to determine what naming services and in what order to resolve 
-		host names to IP addresses. The option takes a space-separated 
-		string of different name resolution options.</para>
+		<listitem><para>このオプションは、Samba スイートのプログラムによって、ホスト名と IP アドレスの名前解決のためにどのようなネーミングサービスをどのような順序で使用するかを決めるのに使用される。このオプションには、名前解決オプションを文字列のかたちで指定する。複数を指定する場合はスペースで区切る。</para>
 
-		<para>The options are :"lmhosts", "host", "wins" and "bcast". They 
-		cause names to be resolved as follows:</para>
+		<para>指定できるのは、"lmhosts"、"host"、"wins"、"bcast"である。それぞれにおいて、名前解決は次のように行われる。</para>
 
 		<itemizedlist>
-			<listitem><para><constant>lmhosts</constant>: Lookup an IP 
-			address in the Samba lmhosts file. If the line in lmhosts has 
-			no name type attached to the NetBIOS name (see 
-			the <citerefentry><refentrytitle>lmhosts</refentrytitle>
-			<manvolnum>5</manvolnum></citerefentry> for details) then
-			any name type matches for lookup.</para>
+			<listitem><para><constant>lmhosts</constant>: Samba lmhosts ファイルで IP アドレスが検索される。lmhosts の行に NetBIOS 名にアタッチされるネームタイプがない場合(詳細については <citerefentry><refentrytitle>lmhosts</refentrytitle>
+	    <manvolnum>5</manvolnum></citerefentry> を参照)、ネームタイプがどれであるかは検索結果に影響しなくなる。</para>
 			</listitem>
 			
-			<listitem><para><constant>host</constant>: Do a standard host 
-			name to IP address resolution, using the system <filename>/etc/hosts
-			</filename>, NIS, or DNS lookups. This method of name resolution 
-			is operating system dependent, for instance on IRIX or Solaris this 
-			may be controlled by the <filename>/etc/nsswitch.conf</filename> 
-			file).  Note that this method is only used if the NetBIOS name 
-			type being queried is the 0x20 (server) name type, otherwise 
-			it is ignored.</para>
+			<listitem><para><constant>host</constant>: システムの <filename>/etc/hosts
+            </filename>、NIS、DNS ルックアップを使用した、ホスト名 - IP アドレス間の標準の名前解決が行われる。名前解決の方法の詳細な部分は、IRIX、Solaris といった OS によって変わる。<filename>/etc/nsswitch.conf</filename> で制御できる場合もある。この方法は、検索される NetBIOS 名のタイプが 0x20 (サーバ) である時にのみ使用できる点に注意。さもなければ指定しても無視される。</para>
 			</listitem>
 			
-			<listitem><para><constant>wins</constant>: Query a name with 
-			the IP address listed in the <parameter>wins server</parameter>
-			parameter.  If no WINS server has
-			been specified this method will be ignored.</para>
+			<listitem><para><constant>wins</constant>: <parameter>wins server</parameter> パラメータに指定された IP アドレスを持つ名前が検索される。WINS サーバが指定されていなければ、無視される。</para>
 			</listitem>
 			
-			<listitem><para><constant>bcast</constant>: Do a broadcast on 
-			each of the known local interfaces listed in the 
-			<parameter>interfaces</parameter>
-			parameter. This is the least reliable of the name resolution 
-			methods as it depends on the target host being on a locally 
-			connected subnet.</para>
+			<listitem><para><constant>bcast</constant>: <parameter>interfaces</parameter> パラメータに指定された既知のローカル･インターフェースそれぞれについてブロードキャストを行う。ターゲット・ホストがローカル接続サブネット上にある場合にしか使えないので、最も信頼性の低い名前解決法。</para>
 			</listitem>
 		</itemizedlist>
 
-		<para>If this parameter is not set then the name resolve order 
-		defined in the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> file parameter  
-		(name resolve order) will be used. </para>
+		<para>このパラメータが設定されなかった場合、名前解決方法の使用順序は、<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> ファイルのパラメータ (name resolve order) に指定されたとおりになる。</para>
 
-		<para>The default order is lmhosts, host, wins, bcast and without 
-		this parameter or any entry in the <parameter>name resolve order
-		</parameter> parameter of the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> file the name resolution
-		methods will be attempted in this order. </para></listitem>
+		<para>デフォルトの優先順位は、lmhosts、host、wins、bcast となる。このパラメータがない場合、あるいは<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> ファイルの <parameter>name resolve order
+		</parameter> パラメータにエントリがない場合、この順序で名前解決方法が試行される。</para></listitem>
 		</varlistentry>
-		
 		
 		<varlistentry>
 		<term>-M NetBIOS name</term>
-		<listitem><para>This options allows you to send messages, using 
-		the "WinPopup" protocol, to another computer. Once a connection is 
-		established you then type your message, pressing ^D (control-D) to 
-		end. </para>
+		<listitem><para>このオプションを指定すると、"WinPopup"
+		プロトコルを使って、別のコンピュータへメッセージを送信する事が
+		できる。接続が確立してから任意のメッセージを入力する。
+		終了するには、^D (control-D) を入力する。</para>
 
-		<para>If the receiving computer is running WinPopup the user will 
-		receive the message and probably a beep. If they are not running 
-		WinPopup the message will be lost, and no error message will 
-		occur. </para>
+		<para>受信したコンピュータで WinPopup が起動していれば、
+		ユーザはおそらくビープ音とともに、メッセージを受信する事になる。
+		WinPopup が起動していないとメッセージは失われ、
+		なんのエラーメッセージも表示されない。</para>
 
-		<para>The message is also automatically truncated if the message 
-		is over 1600 bytes, as this is the limit of the protocol. 
-		</para>
+		<para>1600 byte を越えるメッセージは、プロトコルの仕様による
+		制限のため、自動的に切り捨てられる。</para>
 
-		<para>
-		One useful trick is to cat the message through <command>smbclient</command>. For example:
-<programlisting>
-<command>cat mymessage.txt | smbclient -M FRED </command>
-</programlisting>
-		will send the message in the file <filename>mymessage.txt</filename> to the machine FRED.
-		</para>
+		<para>便利な使用例として、<command>smbclient</command>
+		を通してメッセージを cat する方法を紹介しよう。例えば: <command>
+		cat mymessage.txt | smbclient -M FRED </command> とすると、
+		<filename>mymessage.txt</filename> ファイルの内容をメッセージ
+		としてマシン FRED に送ることができる。</para>
 
-		<para>You may also find the <parameter>-U</parameter> and 
-		<parameter>-I</parameter> options useful, as they allow you to 
-		control the FROM and TO parts of the message. </para>
+		<para>また <parameter>-U</parameter> や <parameter>-I</parameter>
+		オプションも、メッセージの FROM や TO に相当する設定を指定したい場合は、
+		便利なこともある。</para>
 
-		<para>See the <parameter>message command</parameter> parameter in the <citerefentry><refentrytitle>smb.conf</refentrytitle>
-		<manvolnum>5</manvolnum></citerefentry> for a description of how to handle incoming 
-		WinPopup messages in Samba. </para>
+		<para>Samba で WinPopup メッセージを受け取る方法は、<citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry> の <parameter>message command</parameter>
+		パラメータを参照のこと。</para>
 
-		<para><emphasis>Note</emphasis>: Copy WinPopup into the startup group 
-		on your WfWg PCs if you want them to always be able to receive 
-		messages. </para></listitem>
+		<para><emphasis>注意</emphasis>: WfWg PC で常にメッセージを
+		受信できるようにしたいなら、startup グループに WinPopup
+		をコピーすること。</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
 		<term>-p port</term>
-		<listitem><para>This number is the TCP port number that will be used 
-		when making connections to the server. The standard (well-known)
-		TCP port number for an SMB/CIFS server is 139, which is the 
-		default. </para></listitem>
+		<listitem><para>この値は、サーバへ接続するときに利用する TCP
+		のポート番号である。SMB/CIFS サーバ用の標準の (well-known) TCP
+		ポート番号は 139 であり、これがデフォルト値となる。</para></listitem>
 		</varlistentry>
 		
-		<varlistentry>
-		<term>-P</term>
-		<listitem><para>
-		Make queries to the external server using the machine account of the local server.
-		</para></listitem>
-		</varlistentry>
 		
 		&stdarg.help;
 		
 		<varlistentry>
 		<term>-I IP-address</term>
-		<listitem><para><replaceable>IP address</replaceable> is the address of the server to connect to. 
-		It should be specified in standard "a.b.c.d" notation. </para>
+		<listitem><para><replaceable>IP address</replaceable> は接続する
+		サーバの IP アドレスを表す。これは、標準的な "a.b.c.d"
+		形式で指定する。</para>
 
-		<para>Normally the client would attempt to locate a named 
-		SMB/CIFS server by looking it up via the NetBIOS name resolution 
-		mechanism described above in the <parameter>name resolve order</parameter> 
-		parameter above. Using this parameter will force the client
-		to assume that the server is on the machine with the specified IP 
-		address and the NetBIOS name component of the resource being 
-		connected to will be ignored. </para>
+		<para>通常クライアントは前述した <parameter>name resolve order
+		</parameter> パラメータ中で記述した NetBIOS 名の解決メカニズムを
+		用いて検索する事により、その SMB/CIFS サーバのアドレスを
+		解決しようとする。このパラメータを使うことで、クライアントは、
+		強制的に指定された IP アドレスをサーバの IP アドレスとみなし、
+		接続しようとしているリソースの NetBIOS 名を上書きする。</para>
 
-		<para>There is no default for this parameter. If not supplied, 
-		it will be determined automatically by the client as described 
-		above. </para></listitem>
+		<para>このパラメータのデフォルト値はない。
+		このパラメータが指定されなければ、アドレスは前述したようにして
+		クライアントが自動的に決定する。</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>-E</term>
-		<listitem><para>This parameter causes the client to write messages 
-		to the standard error stream (stderr) rather than to the standard 
-		output stream. </para>
+		<listitem><para>このパラメータは、クライアントがメッセージを
+		標準出力ではなく、標準エラー出力 (stderr) に出力するようにする。</para>
 		
-		<para>By default, the client writes messages to standard output 
-		- typically the user's tty. </para></listitem>
+		<para>デフォルトでは、クライアントはメッセージを標準出力 -
+		一般的にはユーザの tty - に出力する。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>-L</term>
-		<listitem><para>This option allows you to look at what services 
-		are available on a server. You use it as <command>smbclient -L 
-		host</command> and a list should appear.  The <parameter>-I
-		</parameter> option may be useful if your NetBIOS names don't 
-		match your TCP/IP DNS host names or if you are trying to reach a 
-		host on another network. </para></listitem>
+		<listitem><para>このオプションを指定すると、サーバ上で利用可能な
+		サービスを一覧することができる。<command>smbclient -L host</command>
+		のようにして使うと、サービスの一覧が表示される。
+		NetBIOS 名が TCP/IP の DNS のホスト名に一致しない場合や、
+		別のネットワーク上のホストの情報を表示しようとしている場合は、
+		<parameter>-I</parameter> オプションが役にたつ。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>-t terminal code</term>
-		<listitem><para>This option tells <command>smbclient</command> how to interpret 
-		filenames coming from the remote server. Usually Asian language 
-		multibyte UNIX implementations use different character sets than 
-		SMB/CIFS servers (<emphasis>EUC</emphasis> instead of <emphasis>
-		SJIS</emphasis> for example). Setting this parameter will let 
-		<command>smbclient</command> convert between the UNIX filenames and 
-		the SMB filenames correctly. This option has not been seriously tested 
-		and may have some problems. </para>
+		<listitem><para>このオプションは、<command>smbclient</command> 
+		に対してリモートサーバが表示するファイル名をどのように変換すべきかを
+		指定する。通常、アジア言語のマルチバイト文字の UNIX 上での実装は、
+		SMB/CIFS サーバと異なる文字セットを使用している (例えば <emphasis>
+		SJIS</emphasis> ではなく <emphasis>EUC</emphasis>、というように)。
+		このパラメータを設定することで、<command>smbclient</command> は
+		UNIX 上のファイル名と SMB サーバ上のファイル名との変換を正しく
+		行うようになる。このオプションは厳格にテストされたものではなく、
+		多少問題があるかも知れない。</para>
 
-		<para>The terminal codes include CWsjis, CWeuc, CWjis7, CWjis8,
-		CWjunet, CWhex, CWcap. This is not a complete list, check the Samba 
-		source code for the complete list. </para></listitem>
+		<para>terminal code には CWsjis, CWeuc, CWjis7, CWjis8, CWjunet,
+		CWhex, CWcap がある。これらは全てではなく、完全なリストは、
+		Samba のソースコードをチェックして欲しい。</para></listitem>
 		</varlistentry>
+		
 			
 		<varlistentry>	
 		<term>-b buffersize</term>
-		<listitem><para>This option changes the transmit/send buffer 
-		size when getting or putting a file from/to the server. The default 
-		is 65520 bytes. Setting this value smaller (to 1200 bytes) has been 
-		observed to speed up file transfers to and from a Win9x server. 
-		</para></listitem>
+		<listitem><para>このオプションはサーバとファイルの送受信を
+		行なうときの送受信バッファのサイズを変更する。 デフォルト値は
+		65520 バイトである。この値を (最小 1200 バイトまで) 小さくすることで、
+		Windows 9x サーバとのファイルの転送がスピードアップすることが
+		確認されている。</para></listitem>
 		</varlistentry>
 		
 		&popt.common.samba;
@@ -316,494 +264,542 @@
 		
 		<varlistentry>
 		<term>-T tar options</term>
-		<listitem><para>smbclient may be used to create <command>tar(1)
-		</command> compatible backups of all the files on an SMB/CIFS
-		share. The secondary tar flags that can be given to this option 
-		are : </para>
+		<listitem><para>smbclient は SMB/CIFS 共有上の全てのファイルに
+		おいて、<command>tar(1)</command> 互換のバックアップを行う事が
+		できる。このオプションに設定可能な副次的な tar
+		フラグは以下のとおり。</para>
 		
 		<itemizedlist>
-			<listitem><para><parameter>c</parameter> - Create a tar file on UNIX. 
-			Must be followed by the name of a tar file, tape device
-			or "-" for standard output. If using standard output you must 
-			turn the log level to its lowest value -d0 to avoid corrupting 
-			your tar file. This flag is mutually exclusive with the 
-			<parameter>x</parameter> flag. </para></listitem>
+			<listitem><para><parameter>c</parameter> - UNIX 上で tar
+			ファイルを作成する。このオプションの後には tar
+			ファイルの名前、テープデバイス、もしくは標準出力を意味する
+			"-" のいずれかを指定しなければならない。
+			標準出力を指定した場合、ログレベルを最低の -d0 にして、
+			tar ファイルの出力が破壊されないようにすること。
+			このフラグは <parameter>x</parameter> フラグと互いに
+			排他的な関係にある。</para></listitem>
 			
-			<listitem><para><parameter>x</parameter> - Extract (restore) a local 
-			tar file back to a share. Unless the -D option is given, the tar 
-			files will be restored from the top level of the share. Must be 
-			followed by the name of the tar file, device or "-" for standard 
-			input. Mutually exclusive with the <parameter>c</parameter> flag. 
-			Restored files have their creation times (mtime) set to the
-			date saved in the tar file. Directories currently do not get 
-			their creation dates restored properly. </para></listitem>
+			<listitem><para><parameter>x</parameter> - ローカルの tar
+			ファイルを共有に展開 (リストア) する。-D オプションが
+			指定されていないと、tar ファイルは共有の最上位
+			ディレクトリからリストアされる。
+			このオプションの後には tar ファイルの名前、デバイスの名前、
+			あるいは 標準入力を意味する "-" を指定しなければならない。
+			このフラグは <parameter>c</parameter> フラグと互いに
+			排他的な関係にある。リストアされたファイルは、作成日時
+			(mtime) が tar ファイルに保存された時点の日付になる。
+			また、現在ディレクトリについては、作成日時が正しく
+			リストアされない。</para></listitem>
 			
-			<listitem><para><parameter>I</parameter> - Include files and directories. 
-			Is the default behavior when filenames are specified above. Causes 
-			files to be included in an extract or create (and therefore 
-			everything else to be excluded). See example below.  Filename globbing 
-			works  in one of two ways.  See <parameter>r</parameter> below. </para></listitem>
+			<listitem><para><parameter>I</parameter> - 指定したファイルと
+			ディレクトリを処理の対象にする。このオプションは、ファイル名が
+			指定されている場合のデフォルトの動作であり、tar ファイルを
+			展開または作成する時に、指定されたものだけを処理の対象にする
+			(従って、それ以外のものは全て除外される)。
+			下記の例を参照のこと。ファイル名のワイルドカード指定機能は、
+			二つある方式のどちらかを使う。下記の <parameter>r</parameter>
+			オプションを参照のこと。</para></listitem>
 			
-			<listitem><para><parameter>X</parameter> - Exclude files and directories. 
-			Causes files to be excluded from an extract or create. See 
-			example below.  Filename globbing works in one of two ways now. 
-			See <parameter>r</parameter> below. </para></listitem>
+			<listitem><para><parameter>X</parameter> - 指定したファイルと
+			ディレクトリを 処理の対象から除外する。このオプションは tar
+			ファイルを展開または作成する時に、指定されたものを処理の対象から
+			除外する。下記の例を参照のこと。 ファイル名のワイルドカード
+			指定機能は、二つある方式のどちらかを使う。下記の <parameter>r
+			</parameter> オプションを参照のこと。</para></listitem>
 			
-			<listitem><para><parameter>F</parameter> - File containing a list of files and directories.
-			The <parameter>F</parameter> causes the name following the tarfile to
-			create to be read as a filename that contains a list of files and directories to 
-			be included in an extract or create (and therefore everything else to be excluded).
-			See example below. Filename globbing works in one of two ways.
-			See <parameter>r</parameter> below.
-			</para></listitem>
+			<listitem><para><parameter>b</parameter> - ブロックサイズ。
+			このオプションの後には有効な (1 以上の) ブロックサイズを
+			指定しなければならない。このオプションにより、tar ファイルは、
+			ブロックサイズ*TBLOCK (通常 512 バイト) ブロックの単位で
+			書き出されるようになる。</para></listitem>
 			
-			<listitem><para><parameter>b</parameter> - Blocksize. Must be followed 
-			by a valid (greater than zero) blocksize.  Causes tar file to be 
-			written out in blocksize*TBLOCK (usually 512 byte) blocks. 
-			</para></listitem>
-			
-			<listitem><para><parameter>g</parameter> - Incremental. Only back up 
-			files that have the archive bit set. Useful only with the 
-			<parameter>c</parameter> flag. </para></listitem>
+			<listitem><para><parameter>g</parameter> - インクリメンタル
+			(増分)。 アーカイブビットが立っているファイルだけをバックアップ
+			する。 <parameter>c</parameter> フラグが指定されている時のみ
+			意味をもつ。</para></listitem>
 
-			<listitem><para><parameter>q</parameter> - Quiet. Keeps tar from printing 
-			diagnostics as it works.  This is the same as tarmode quiet. 
-			</para></listitem>
+			<listitem><para><parameter>q</parameter> - 表示の抑止(quiet)。
+			動作中の状態メッセージの表示を抑止する。これは、tar モードでも
+			同様である。</para></listitem>
 			
-			<listitem><para><parameter>r</parameter> - Regular expression include
-			or exclude.  Uses regular  expression matching for 
-			excluding or excluding files if  compiled with HAVE_REGEX_H. 
-			However this mode can be very slow. If  not compiled with 
-			HAVE_REGEX_H, does a limited wildcard match on '*' and  '?'. 
-			</para></listitem>
+			<listitem><para><parameter>r</parameter> - 正規表現。
+			HAVE_REGEX_H フラグを設定してコンパイルした場合は、処理対象に
+			含めるか除外するファイルを指定する為に正規表現を使うことができる。
+			(訳注: 原文では "excluding or excluding files" となっているが、
+			"including or excluding files" の誤りだと思われる)
+			しかし、このモードは非常に遅い。HAVE_REGEX_H フラグなしで
+			コンパイルされた場合は、 * と ? を用いる 限定的なワイルドカードが
+			使用できる。</para></listitem>
 			
-			<listitem><para><parameter>N</parameter> - Newer than. Must be followed 
-			by the name of a file whose date is compared against files found 
-			on the share during a create. Only files newer than the file 
-			specified are backed up to the tar file. Useful only with the 
-			<parameter>c</parameter> flag. </para></listitem>
+			<listitem><para><parameter>N</parameter> - 更新(newer)。
+			このオプションの後には、ファイル名を指定する必要がある。
+			そのファイルの日付と作成中に共有上で見付かったファイルの日付とが
+			比較される。指定されたファイルより新しいファイルだけが tar
+			ファイルにバックアップされる。 <parameter>c</parameter>
+			フラグが指定されている時のみ意味をもつ。</para></listitem>
 			
-			<listitem><para><parameter>a</parameter> - Set archive bit. Causes the 
-			archive bit to be reset when a file is backed up. Useful with the 
-			<parameter>g</parameter> and <parameter>c</parameter> flags. 
+			<listitem><para><parameter>a</parameter> - アーカイブビットを
+			セットする。ファイルがバックアップされた時点でアーカイブビットが
+			クリアされる。 <parameter>g</parameter> および <parameter>c
+			</parameter> フラグが設定されている時のみ意味をもつ。
 			</para></listitem>
 		</itemizedlist>
 			
-		<para><emphasis>Tar Long File Names</emphasis></para>
+		<para><emphasis>Tar における長いファイル名</emphasis></para>
 			
-		<para><command>smbclient</command>'s tar option now supports long 
-		file names both on backup and restore. However, the full path 
-		name of the file must be less than 1024 bytes.  Also, when
-		a tar archive is created, <command>smbclient</command>'s tar option places all 
-		files in the archive with relative names, not absolute names. 
-		</para>
-
-		<para><emphasis>Tar Filenames</emphasis></para>
+		<para><command>smbclient</command> の tar オプションは、 現在
+		バックアップとリストアの両方で長いファイル名をサポートしている。しかし、
+		ファイルのフルパス名は 1024 バイト以下である必要がある。また tar
+		アーカイブが作成された時、 <command>smbclient</command> の tar
+		オプションはそのアーカイブ内の全てのファイルを絶対ファイル名ではなく、
+		相対ファイル名で記録する。</para>
 			
-		<para>All file names can be given as DOS path names (with '\\' 
-		as the component separator) or as UNIX path names (with '/' as 
-		the component separator). </para>
+		<para><emphasis>Tar ファイル名</emphasis></para>
 			
-		<para><emphasis>Examples</emphasis></para>
+		<para>全てのファイルには、DOS のパス名('\'をパス名の区切りとする)
+		を付与するか、UNIX のパス名 ('/'をパス名の区切りとする) を付与する
+		ことができる。</para>
+			
+		<para><emphasis>例</emphasis></para>
 		
-		<para>Restore from tar file <filename>backup.tar</filename> into myshare on mypc 
-		(no password on share). </para>
+		<para>tar ファイルの <filename>backup.tar</filename> を mypc 上の
+		myshare (パスワードなし) にリストアする。</para>
 		
 		<para><command>smbclient //mypc/yshare "" -N -Tx backup.tar
 		</command></para>
 		
-		<para>Restore everything except <filename>users/docs</filename>
+		<para><filename>users/docs</filename> 以外の全てをリストアする。
 		</para>
 		
 		<para><command>smbclient //mypc/myshare "" -N -TXx backup.tar 
 		users/docs</command></para>
 		
-		<para>Create a tar file of the files beneath <filename>
-		users/docs</filename>. </para>
+		<para><filename>users/docs</filename> 配下のファイルを含む tar
+		ファイルを作成する。</para>
 		
 		<para><command>smbclient //mypc/myshare "" -N -Tc
 		backup.tar users/docs </command></para>
 		
-		<para>Create the same tar file as above, but now use 
-		a DOS path name. </para>
+		<para>上記と同じ tar ファイルを作成するが、DOS のパス名を使用する。
+		</para>
 		
-		<para><command>smbclient //mypc/myshare "" -N -tc backup.tar 
-		users\edocs </command></para>
+		<para><command>smbclient //mypc/myshare "" -N -Tc backup.tar 
+		users\\edocs </command></para>
 		
-		<para>Create a tar file of the files listed in the file <filename>tarlist</filename>.</para>
+		<para>(訳注: 原文は -tc となっているが、-Tc が正しいと思われる。また、
+		\ はコマンドライン上では \\ とする必要がある。)</para>
 		
-		<para><command>smbclient //mypc/myshare "" -N -TcF
-		backup.tar tarlist</command></para>
-		
-		<para>Create a tar file of all the files and directories in 
-		the share. </para>
+		<para>共有上にある全てのファイルとディレクトリを含む tar
+		ファイルを作成する。</para>
 		
 		<para><command>smbclient //mypc/myshare "" -N -Tc backup.tar *
 		</command></para>
 		</listitem>
 		</varlistentry>
 		
+		
 		<varlistentry>
 		<term>-D initial directory</term>
-		<listitem><para>Change to initial directory before starting. Probably 
-		only of any use with the tar -T option. </para></listitem>
+		<listitem><para>動作を開始する前に、ディレクトリ initial directory
+		に移動する。おそらく、利用されるのは tar オプション -T が指定された
+		ときだけだろう。
+		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>-c command string</term>
-		<listitem><para>command string is a semicolon-separated list of 
-		commands to be executed instead of prompting from stdin. <parameter>
-		-N</parameter> is implied by <parameter>-c</parameter>.</para>
+		<listitem><para>command string はセミコロンで区切ったコマンドの
+		リストである。このコマンドは、標準入力から受け取るコマンドの代わりに
+		実行される。<parameter>-N</parameter> オプションが <parameter>-c
+		</parameter> オプションによって、暗黙の内に設定される。</para>
 
-		<para>This is particularly useful in scripts and for printing stdin 
-		to the server, e.g. <command>-c 'print -'</command>. </para></listitem>
+		<para>このオプションが特に役立つのは、スクリプトで利用したり、
+		標準入力を例えば <command>-c 'print -'</command> のようにして
+		サーバに出力したりする場合である。
+		</para></listitem>
 		</varlistentry>
-
 	</variablelist>
 </refsect1>
 
 
 <refsect1>
-	<title>OPERATIONS</title>
+	<title>オペレーション(操作)</title>
 
-	<para>Once the client is running, the user is presented with 
-	a prompt : </para>
+	<para>クライアントが起動すると、ユーザには以下のようなプロンプトが表示される。
+	</para>
 
 	<para><prompt>smb:\&gt; </prompt></para>
 
-	<para>The backslash ("\\") indicates the current working directory 
-	on the server, and will change if the current working directory 
-	is changed. </para>
+	<para>バックスラッシュ ("\\") はサーバ上の現在の作業ディレクトリを示しており、
+	作業ディレクトリを変えるとこの表示も変わる。</para>
 
-	<para>The prompt indicates that the client is ready and waiting to 
-	carry out a user command. Each command is a single word, optionally 
-	followed by parameters specific to that command. Command and parameters 
-	are space-delimited unless these notes specifically
-	state otherwise. All commands are case-insensitive.  Parameters to 
-	commands may or may not be case sensitive, depending on the command. 
-	</para>
+	<para>このプロンプトは、クライアントの準備ができ、ユーザのコマンド実行を
+	待機している事を示している。各コマンドは、一つの単語であるが、コマンドによっては、
+	コマンド固有のパラメータを指定する事もできる。コマンドとパラメータは、
+	特に注釈がない限り、スペースで区切られる。
+	全てのコマンドは大文字小文字を識別しない。
+	コマンドのパラメータは、コマンドによって大文字と小文字が区別されたり
+	されなかったりする。</para>
 
-	<para>You can specify file names which have spaces in them by quoting 
-	the name with double quotes, for example "a long file name". </para>
+	<para>スペースが含まれているファイル名は、名前をダブルクオート文字で、例えば、
+	"a long file name" のように括る事で指定できる。</para>
 
-	<para>Parameters shown in square brackets (e.g., "[parameter]") are 
-	optional.  If not given, the command will use suitable defaults. Parameters 
-	shown in angle brackets (e.g., "&lt;parameter&gt;") are required.
-	</para>
+	<para>大括弧 ("[" と "]") で括られて示されているパラメータ (例えば "[parameter]")
+	は、オプションである。指定されなかった場合、コマンドは適切なデフォルト値を用いる。
+	不等号記号 ("&lt;" と "&gt;") で括られて示されているパラメータ (例えば
+	"&lt;parameter&gt;") は、必須である。</para>
 
 
-	<para>Note that all commands operating on the server are actually 
-	performed by issuing a request to the server. Thus the behavior may 
-	vary from server to server, depending on how the server was implemented. 
-	</para>
+	<para>サーバ上でのコマンドの実行は、実際にサーバに対して要求を発行する事で
+	実行される事に注意してほしい。従って、その動作はサーバ間で異なる場合があり、
+	サーバの実装方法に依存している。</para>
 
-	<para>The commands available are given here in alphabetical order. </para>
+	<para>利用できるコマンドを以下にアルファベット順で紹介する。</para>
 
 	<variablelist>
 		<varlistentry>
 		<term>? [command]</term>
-		<listitem><para>If <replaceable>command</replaceable> is specified, the ? command will display 
-		a brief informative message about the specified command.  If no 
-		command is specified, a list of available commands will
-		be displayed. </para></listitem>
+		<listitem><para><replaceable>command</replaceable> を指定すると、?
+		コマンドは指定されたコマンドについての簡潔で有益な説明を表示する。
+		command を指定しないと、利用できるコマンドの一覧が表示される。
+		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>! [shell command]</term>
-		<listitem><para>If <replaceable>shell command</replaceable> is specified, the !  
-		command will execute a shell locally and run the specified shell 
-		command. If no command is specified, a local shell will be run. 
+		<listitem><para><replaceable>shell command</replaceable> を指定すると、
+		! コマンドはローカルでシェルを起動し、指定されたシェルコマンドを起動する。
+		コマンドを指定しないと、ローカルなシェルが起動する。
 		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>altname file</term>
-		<listitem><para>The client will request that the server return
-		the "alternate" name (the 8.3 name) for a file or directory.
+		<listitem><para>クライアントは、ファイルまたはディレクトリの "代わり"
+		の名前 (8.3形式の名前) を返すようにサーバに要求する。
 		</para></listitem>
 		</varlistentry>
 		
-		<varlistentry>
-		<term>case_sensitive</term>
-		<listitem><para>Toggles the setting of the flag in SMB packets that
-		tells the server to treat filenames as case sensitive. Set to OFF by
-		default (tells file server to treat filenames as case insensitive). Only
-		currently affects Samba 3.0.5 and above file servers with the case sensitive
-		parameter set to auto in the smb.conf.
-		</para></listitem>
-		</varlistentry>
 		
 		<varlistentry>
 		<term>cancel jobid0 [jobid1] ... [jobidN]</term>
-		<listitem><para>The client will request that the server cancel
-		the printjobs identified by the given numeric print job ids.
+		<listitem><para>クライアントは、与えられたジョブ ID の印刷ジョブを
+		キャンセルするようにサーバに要求する。
 		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>chmod file mode in octal</term>
-		<listitem><para>This command depends on the server supporting the CIFS
-		UNIX extensions and will fail if the server does not. The client requests that the server
-		change the UNIX permissions to the given octal mode, in standard UNIX format.
+		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。クライアントは、UNIX
+		での標準形式である 8 進数での UNIX パーミッションに変更するように
+		サーバに要求する。 
 		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>chown file uid gid</term>
-		<listitem><para>This command depends on the server supporting the CIFS
-		UNIX extensions and will fail if the server does not. The client requests that the server
-		change the UNIX user and group ownership to the given decimal values. Note there is
-		currently no way to remotely look up the UNIX uid and gid values for a given name.
-		This may be addressed in future versions of the CIFS UNIX extensions.
+		<listitem><para>このコマンドはサーバのCIFS UNIX拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。クライアントは、与えられた
+		10進数のユーザID、グループIDに所有者を変更するようにサーバに要求する。
+		現在は、与えられた名前からリモートの uid と gid を検索する方法は
+		ないことに注意。これは、将来のバージョンの CIFS UNIX 拡張によって
+		対応されるかもしれない。
 		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>cd [directory name]</term>
-		<listitem><para>If "directory name" is specified, the current 
-		working directory on the server will be changed to the directory 
-		specified. This operation will fail if for any reason the specified 
-		directory is inaccessible. </para>
-
-		<para>If no directory name is specified, the current working 
-		directory on the server will be reported. </para></listitem>
+		<listitem><para>"directory name" を指定すると、 サーバ上の現在の
+		作業ディレクトリが指定されたディレクトリになる。
+		何らかの理由で指定されたディレクトリにアクセスできないと、
+		操作は失敗する。
+		</para>
+		
+		<para>ディレクトリ名を指定しないと、 サーバ上の現在の作業ディレクトリが
+		表示される。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>del &lt;mask&gt;</term>
-		<listitem><para>The client will request that the server attempt 
-		to delete all files matching <replaceable>mask</replaceable> from the current working 
-		directory on the server. </para></listitem>
+		<listitem><para>クライアントがサーバに対し、サーバ上の現在の
+		作業ディレクトリで <replaceable>mask</replaceable> に一致するすべての
+		ファイルを削除するように要求する。
+		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>dir &lt;mask&gt;</term>
-		<listitem><para>A list of the files matching <replaceable>mask</replaceable> in the current 
-		working directory on the server will be retrieved from the server 
-		and displayed. </para></listitem>
+		<listitem><para>サーバ上の現在の作業ディレクトリで、<replaceable>mask
+		</replaceable> に一致するファイルの一覧をサーバから入手し、表示する。
+		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>exit</term>
-		<listitem><para>Terminate the connection with the server and exit 
-		from the program. </para></listitem> 
+		<listitem><para>サーバとの接続を終了し、プログラムを終了する。
+		</para></listitem> 
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>get &lt;remote file name&gt; [local file name]</term>
-		<listitem><para>Copy the file called <filename>remote file name</filename> from 
-		the server to the machine running the client. If specified, name 
-		the local copy <filename>local file name</filename>.  Note that all transfers in 
-		<command>smbclient</command> are binary. See also the 
-		lowercase command. </para></listitem>
+		<listitem><para><filename>remote file name</filename> という名前の
+		ファイルをサーバからクライアントを実行しているマシンへコピーする。
+		<filename>local file name</filename> が指定されていると、
+		それがローカルにコピーされるファイルの名前となる。
+		<command>smbclient</command> によるファイルの転送は、すべて binary
+		モードで行われることに注意してほしい。lowercase コマンドも参照のこと。
+		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>help [command]</term>
-		<listitem><para>See the ? command above. </para></listitem>
+		<listitem><para>前述の ? コマンドを参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>lcd [directory name]</term>
-		<listitem><para>If <replaceable>directory name</replaceable> is specified, the current 
-		working directory on the local machine will be changed to 
-		the directory specified. This operation will fail if for any 
-		reason the specified directory is inaccessible. </para>
+		<listitem><para><replaceable>directory name</replaceable> を指定すると、
+		ローカルマシン上の現在の作業ディレクトリが指定されたディレクトリになる。
+		何らかの理由で指定されたディレクトリにアクセスできないと、
+		操作は失敗する。</para>
 		
-		<para>If no directory name is specified, the name of the 
-		current working directory on the local machine will be reported. 
+		<para>ディレクトリ名を指定しないと、ローカルマシン上の現在の
+		作業ディレクトリが表示される。 
 		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
-		<term>link target linkname</term>
-		<listitem><para>This command depends on the server supporting the CIFS
-		UNIX extensions and will fail if the server does not. The client requests that the server
-		create a hard link between the linkname and target files. The linkname file
-		must not exist.
+		<term>link source destination</term>
+		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。クライアントは、source と
+		destination ファイルの間にハードリンクを作成するようにサーバに要求する。
+		source ファイルが存在してはいけない。
 		</para></listitem>
 		</varlistentry>
+
+
 
 		<varlistentry>
 		<term>lowercase</term>
-		<listitem><para>Toggle lowercasing of filenames for the get and 
-		mget commands. </para>
+		<listitem><para>get および mget コマンドにおいて、ファイル名を
+		小文字化するかどうかの設定を切り換える。</para>
 				
-		<para>When lowercasing is toggled ON, local filenames are converted 
-		to lowercase when using the get and mget commands. This is
-		often useful when copying (say) MSDOS files from a server, because 
-		lowercase filenames are the norm on UNIX systems. </para></listitem>
+		<para>小文字化を ON にすると、 get および mget コマンドを使ったときに、
+		ローカルのファイル名が小文字に変換される。これは、サーバから (いわゆる)
+		MS-DOS 形式の名前を持つファイルをコピーするときに役立つ。
+		UNIX システムでは、ファイル名を小文字にするのが一般的であるためである。
+		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>ls &lt;mask&gt;</term>
-		<listitem><para>See the dir command above. </para></listitem>
+		<listitem><para>前述の dir コマンドを参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>mask &lt;mask&gt;</term>
-		<listitem><para>This command allows the user to set up a mask 
-		which will be used during recursive operation of the mget and 
-		mput commands. </para>
+		<listitem><para>このコマンドは、mget と mput コマンドが再帰的な操作を
+		行うときに用いるマスクを設定する。</para>
 
-		<para>The masks specified to the mget and mput commands act as 
-		filters for directories rather than files when recursion is 
-		toggled ON. </para>
+		<para>再帰モードが ON のとき、 mget と mput コマンドに指定するマスクは
+		ファイルに対するフィルタとしてではなく、ディレクトリに対するフィルタ
+		として働く。</para>
 		
-		<para>The mask specified with the mask command is necessary 
-		to filter files within those directories. For example, if the
-		mask specified in an mget command is "source*" and the mask 
-		specified with the mask command is "*.c" and recursion is 
-		toggled ON, the mget command will retrieve all files matching 
-		"*.c" in all directories below and including all directories 
-		matching "source*" in the current working directory. </para>
+		<para>mask コマンドで指定するマスクは、それらのディレクトリ配下の
+		ファイルをフィルタするために必要となる。たとえば、mget コマンドが
+		"source*" のときに mask が指定されており、mask コマンドで指定されたマスクが
+		"*.c" で、再帰モードが ON であったとする。すると mget コマンドは、
+		現在の作業ディレクトリ中の "source*" に一致するすべてのディレクトリ配下で、
+		"*.c" に一致するすべてのファイルを取得する。</para>
 
-		<para>Note that the value for mask defaults to blank (equivalent 
-		to "*") and remains so until the mask command is used to change it. 
-		It retains the most recently specified value indefinitely. To 
-		avoid unexpected results it would be wise to change the value of 
-		mask back to "*" after using the mget or mput commands. </para></listitem>
+		<para>デフォルトでは mask の値は空 ('*' と同等) になっており、 mask
+		コマンドを使って変更されるまで変わらない。mask の値は、最後に
+		指定された値を保ち続ける。
+		予想外の結果を招かないように、mget か mput コマンドを使った後には、
+		mask の値を '*' に戻しておくことが賢明である。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>md &lt;directory name&gt;</term>
-		<listitem><para>See the mkdir command. </para></listitem>
+		<listitem><para>mkdir コマンドを参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>mget &lt;mask&gt;</term>
-		<listitem><para>Copy all files matching <replaceable>mask</replaceable> from the server to 
-		the machine running the client. </para>
+		<listitem><para><replaceable>mask</replaceable> に一致するすべての
+		ファイルを、サーバからクライアントを実行しているマシンにコピーする。
+		</para>
 
-		<para>Note that <replaceable>mask</replaceable> is interpreted differently during recursive 
-		operation and non-recursive operation - refer to the recurse and 
-		mask commands for more information. Note that all transfers in 
-		<command>smbclient</command> are binary. See also the lowercase command. </para></listitem>
+		<para>再帰モードになっているかどうかによって、<replaceable>mask
+		</replaceable> の解釈が異なることに注意。詳細は recurse と mask
+		コマンドを参照のこと。<command>smbclient</command> によるファイルの転送は、
+		すべて binary モードで行われることに注意してほしい。
+		lowercase も参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>mkdir &lt;directory name&gt;</term>
-		<listitem><para>Create a new directory on the server (user access 
-		privileges permitting) with the specified name. </para></listitem>
+		<listitem><para>指定された名前の新しいディレクトリを (ユーザのアクセスが
+		許可されている) サーバ上に作成する。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>mput &lt;mask&gt;</term>
-		<listitem><para>Copy all files matching <replaceable>mask</replaceable> in the current working 
-		directory on the local machine to the current working directory on 
-		the server. </para>
-		
-		<para>Note that <replaceable>mask</replaceable> is interpreted differently during recursive 
-		operation and non-recursive operation - refer to the recurse and mask 
-		commands for more information. Note that all transfers in <command>smbclient</command> 
-		are binary. </para></listitem>
+		<listitem><para>ローカルマシン上の現在の作業ディレクトリ内で <replaceable>
+		mask</replaceable> に一致するすべてのファイルを、サーバ上の現在の
+		作業ディレクトリにコピーする。</para>
+
+		<para>再帰モードになっているかどうかによって、<replaceable>mask
+		</replaceable> の解釈が異なることに注意。詳細は、recurse と mask
+		コマンドを参照のこと。<command>smbclient</command> によるファイルの転送は、
+		すべて binary モードで行われることに注意してほしい。
+		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>print &lt;file name&gt;</term>
-		<listitem><para>Print the specified file from the local machine 
-		through a printable service on the server. </para></listitem>
+		<listitem><para>指定したローカルマシン上のファイルを、サーバ上の
+		印刷サービスを使って印刷する。</para>
+
+		<para>printmode コマンドも参照のこと。</para></listitem>
 		</varlistentry>
+		
+		
+		
+		<varlistentry>
+		<term>printmode &lt;graphics or text&gt;</term>
+		<listitem><para>印刷モードを、バイナリデータ (グラフィカルな情報など)
+		用、またはテキスト用に設定する。設定後の print コマンドで、
+		現在設定されている印刷モードが利用される。</para></listitem>
+		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>prompt</term>
-		<listitem><para>Toggle prompting for filenames during operation 
-		of the mget and mput commands. </para>
+		<listitem><para>mget と mput コマンドの操作において、ファイル名の確認を
+		行うかどうかの設定を切り換える。</para>
 
-		<para>When toggled ON, the user will be prompted to confirm 
-		the transfer of each file during these commands. When toggled 
-		OFF, all specified files will be transferred without prompting. 
+		<para>この設定が ON であると、これらのコマンドの実行中、各ファイルごとに
+		転送するかどうかをユーザに確認する。設定が OFF であると、指定された
+		すべてのファイルが確認なしに転送される。
 		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>put &lt;local file name&gt; [remote file name]</term>
-		<listitem><para>Copy the file called <filename>local file name</filename> from the 
-		machine running the client to the server. If specified,
-		name the remote copy <filename>remote file name</filename>. Note that all transfers 
-		in <command>smbclient</command> are binary. See also the lowercase command. 
+		<listitem><para><filename>local file name</filename> という名前の
+		ファイルをクライアントを実行しているマシンからサーバにコピーする。
+		<filename>remote file name</filename> が指定されていると、それがサーバに
+		コピーされるファイルの名前となる。
+		<command>smbclient</command> によるファイルの転送は、すべて binary
+		モードで行われることに注意してほしい。lowercase コマンドも参照のこと。
 		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>queue</term>
-		<listitem><para>Displays the print queue, showing the job id, 
-		name, size and current status. </para></listitem>
+		<listitem><para>印刷のキューを表示し、印刷ジョブの ID、名前、サイズ、
+		現在の状態が見られる。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>quit</term>
-		<listitem><para>See the exit command. </para></listitem>
+		<listitem><para>exit コマンドを参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>rd &lt;directory name&gt;</term>
-		<listitem><para>See the rmdir command. </para></listitem>
+		<listitem><para>rmdir コマンドを参照のこと。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>recurse</term>
-		<listitem><para>Toggle directory recursion for the commands mget 
-		and mput. </para>
+		<listitem><para>mget と mput コマンドにおいて、ディレクトリを再帰的に
+		辿るかどうかの設定を切り換える。</para>
 		
-		<para>When toggled ON, these commands will process all directories 
-		in the source directory (i.e., the directory they are copying
-		from ) and will recurse into any that match the mask specified 
-		to the command. Only files that match the mask specified using 
-		the mask command will be retrieved. See also the mask command. 
+		<para>この設定が ON であると、それらのコマンドは、対象となるディレクトリ
+		(すなわち、コピー元となるディレクトリ) 内のすべてのディレクトリを処理し、
+		コマンドに指定した mask に一致するディレクトリを再帰的に辿る。
+		ファイルは、mask コマンドを使って指定したマスクに一致するものだけが、
+		処理の対象となる。 mask コマンドも参照のこと。
 		</para>
 
-		<para>When recursion is toggled OFF, only files from the current 
-		working directory on the source machine that match the mask specified 
-		to the mget or mput commands will be copied, and any mask specified 
-		using the mask command will be ignored. </para></listitem>
+		<para>この設定が OFF である場合、コピー元となるマシンの作業ディレクトリから、
+		mget または mput コマンドに指定されたマスクに一致するファイルだけが
+		コピーされる。mask コマンドを使って指定されたマスクは無視される。
+		</para></listitem>
 		</varlistentry>
+		
+		
 		
 		<varlistentry>
 		<term>rm &lt;mask&gt;</term>
-		<listitem><para>Remove all files matching <replaceable>mask</replaceable> from the current 
-		working directory on the server. </para></listitem>
+		<listitem><para><replaceable>mask</replaceable> に一致するすべての
+		ファイルをサーバ上の現在の作業ディレクトリから削除する。
+		</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>rmdir &lt;directory name&gt;</term>
- 		<listitem><para>Remove the specified directory (user access 
-		privileges permitting) from the server. </para></listitem>
+ 		<listitem><para>指定された名前の (ユーザのアクセスが許可されている)
+		ディレクトリをサーバから削除する。</para></listitem>
 		</varlistentry>
+		
 		
 		<varlistentry>
 		<term>setmode &lt;filename&gt; &lt;perm=[+|\-]rsha&gt;</term>
-		<listitem><para>A version of the DOS attrib command to set 
-		file permissions. For example: </para>
+		<listitem><para>DOS 版の attrib コマンドと同等に、ファイルの
+		パーミッションを設定する。 例えば</para>
 
 		<para><command>setmode myfile +r </command></para>
 		
-		<para>would make myfile read only. </para></listitem>
+		<para>は myfile を読み込み専用にする。</para></listitem>
 		</varlistentry>
 
 
-
+		
 		<varlistentry>
-		<term>stat file</term>
-		<listitem><para>This command depends on the server supporting the CIFS
-		UNIX extensions and will fail if the server does not. The client requests the
-		UNIX basic info level and prints out the same info that the Linux stat command
-		would about the file. This includes the size, blocks used on disk, file type,
-		permissions, inode number, number of links and finally the three timestamps
-		(access, modify and change). If the file is a special file (symlink, character or
-		block device, fifo or socket) then extra information may also be printed.
-		</para></listitem>
-		</varlistentry>
-
-
-
-		<varlistentry>
-		<term>symlink target linkname</term>
-		<listitem><para>This command depends on the server supporting the CIFS
-		UNIX extensions and will fail if the server does not. The client requests that the server
-		create a symbolic hard link between the target and linkname files. The linkname file
-		must not exist. Note that the server will not create a link to any path that lies 
-		outside the currently connected share. This is enforced by the Samba server.
+		<term>symlink source destination</term>
+		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。クライアントは、source と
+		destination ファイルの間にシンボリックリンクを作成するようにサーバに
+		要求する。source ファイルは存在してはいけない。
+		サーバは現在接続している共有の外をさすリンクは作成しないことに注意。
+		これは Samba server によって強制される。
 		</para></listitem>
 		</varlistentry>
 
@@ -811,31 +807,37 @@
 
 		<varlistentry>
 		<term>tar &lt;c|x&gt;[IXbgNa]</term>
-		<listitem><para>Performs a tar operation - see the <parameter>-T
-		</parameter> command line option above. Behavior may be affected 
-		by the tarmode command (see below). Using g (incremental) and N 
-		(newer) will affect tarmode settings. Note that using the "-" option 
-		with tar x may not work - use the command line option instead. 
+		<listitem><para>tar 作業を行う。 前述の <parameter>-T</parameter>
+		コマンドラインオプションを参照のこと。このコマンドの動作は tarmode
+		コマンド (下記を参照) に影響される。
+		パラメータ g (増分) と N (更新) を使うと、tarmode の設定に影響を及ぼす。
+		tar x (展開) 時のオプションに "-" (標準入力) を使っても動作しないだろう。
+		かわりにコマンドラインオプションで使うようにすること。
 		</para></listitem>
 		</varlistentry>
 		
 		
 		<varlistentry>
 		<term>blocksize &lt;blocksize&gt;</term>
-		<listitem><para>Blocksize. Must be followed by a valid (greater 
-		than zero) blocksize. Causes tar file to be written out in 
-		<replaceable>blocksize</replaceable>*TBLOCK (usually 512 byte) blocks. </para></listitem>
+		<listitem><para>ブロックサイズ。このオプションの後には有効な
+		(1 以上の) ブロックサイズを指定しなければならない。
+		このオプションにより、tar ファイルは、
+		<replaceable>blocksize</replaceable>*TBLOCK (通常 512 バイト)
+		ブロックの単位で書き出されるようになる。
+		</para></listitem>
 		</varlistentry>
 		
 		
 		<varlistentry>
 		<term>tarmode &lt;full|inc|reset|noreset&gt;</term>
-		<listitem><para>Changes tar's behavior with regard to archive 
-		bits. In full mode, tar will back up everything regardless of the 
-		archive bit setting (this is the default mode). In incremental mode, 
-		tar will only back up files with the archive bit set. In reset mode, 
-		tar will reset the archive bit on all files it backs up (implies 
-		read/write share). </para></listitem>
+		<listitem><para>アーカイブビットに関する tar の動作を設定する。
+		full (完全) モードでは、tar はアーカイブビットの状態に関わらず、
+		すべてをバックアップする (これがデフォルトのモード)。
+		incremental(増分) モードでは、tar はアーカイブビットが設定された
+		ファイルだけをバックアップする。
+		reset モードでは、tar はバックアップしたファイルのアーカイブビットを
+		クリアする (読み書きできる共有において)。
+		</para></listitem>
 		</varlistentry>
 		
 		
@@ -843,104 +845,114 @@
 </refsect1>
 
 <refsect1>
-	<title>NOTES</title>
+	<title>注意</title>
 
-	<para>Some servers are fussy about the case of supplied usernames, 
-	passwords, share names (AKA service names) and machine names. 
-	If you fail to connect try giving all parameters in uppercase. 
+	<para>サーバによっては、与えられたユーザ名、パスワード、共有名
+	(サービス名とも言う)、マシン名などの大文字小文字を厳格に識別する。
+	サーバへの接続が失敗したときは、すべてのパラメータを大文字にして
+	試してみよう。
 	</para>
 	
-	<para>It is often necessary to use the -n option when connecting 
-	to some types of servers. For example OS/2 LanManager insists 
-	on a valid NetBIOS name being used, so you need to supply a valid 
-	name that would be known to the server.</para>
+	<para>ある種のサーバに接続するときには、-n オプションを使わなければ
+	ならないような場合がよくある。たとえば OS/2 の LanManager では、有効な
+	NetBIOS 名が使われていなければならない。
+	よって、サーバが知っている有効な名前を与える必要がある。</para>
 
-	<para>smbclient supports long file names where the server 
-	supports the LANMAN2 protocol or above. </para>
+	<para>サーバが LANMAN2 かそれ以降のプロトコルをサポートしている場合、
+	smbclient は長いファイル名をサポートする。</para>
 </refsect1>
 
 <refsect1>
-	<title>ENVIRONMENT VARIABLES</title>
+	<title>環境変数</title>
 
-	<para>The variable <envar>USER</envar> may contain the 
-	username of the person  using the client. This information is 
-	used only if the protocol  level is high enough to support 
-	session-level passwords.</para>
+	<para>変数 <envar>USER</envar> の値は、クライアントが使用するユーザの名前となる。
+	この情報は、プロトコルのレベルが充分高く、セッションレベルのパスワードを
+	サポートしている場合にだけ利用される。</para>
 
+	<para>変数 <envar>PASSWD</envar> の値は、クライアントが使用するユーザの
+	パスワードとなる。この情報は、プロトコルのレベルが充分高く、セッションレベルの
+	パスワードをサポートしている場合にだけ利用される。</para>
 
-	<para>The variable <envar>PASSWD</envar> may contain 
-	the password of the person using the client.  This information is 
-	used only if the protocol level is high enough to support 
-	session-level passwords. </para>
-
-	<para>The variable <envar>LIBSMB_PROG</envar> may contain 
-	the path, executed with system(), which the client should connect 
-        to instead of connecting to a server.  This functionality is primarily
-        intended as a development aid, and works best when using a LMHOSTS 
-        file</para>
+	<para>変数 <envar>LIBSMB_PROG</envar> にはサーバへの接続に代わりクライアントが
+	接続する、system() で起動されるパスを設定する。この機能は aid の開発を主用途とし、
+	LMHOSTS ファイルの利用時に効果を発揮する。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>INSTALLATION</title>
+	<title>インストール</title>
 
-	<para>The location of the client program is a matter for 
-	individual system administrators. The following are thus
-	suggestions only. </para>
+	<para>クライアントプログラムをどこに置くべきかは、各システム管理者が
+	判断すべき問題である。よって、以下はただの提案である。</para>
 
-	<para>It is recommended that the smbclient software be installed
-	in the <filename>/usr/local/samba/bin/</filename> or <filename>
-	/usr/samba/bin/</filename> directory, this directory readable 
-	by all, writeable only by root. The client program itself should 
-	be executable by all. The client should <emphasis>NOT</emphasis> be 
-	setuid or setgid! </para>
+	<para>クライアントソフトウェアは <filename>/usr/local/samba/bin</filename>
+	か <filename>/usr/samba/bin</filename> にインストールし、ディレクトリは
+	全ユーザから読み出し可能で root のみ書き込み可能にすることが推奨される。
+	クライアントプログラム自身はすべてのユーザから実行可能にするべきである。
+	クライアントを setuid や setgid しないように!
+	</para>
 
-	<para>The client log files should be put in a directory readable 
-	and writeable only by the user. </para>
+	<para>クライアントのログファイルは、そのユーザだけが読み書き可能な
+	ディレクトリに置くこと。</para>
 
-	<para>To test the client, you will need to know the name of a 
-	running SMB/CIFS server. It is possible to run <citerefentry><refentrytitle>smbd</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> as an ordinary user - running that server as a daemon 
-	on a user-accessible port (typically any port number over 1024)
-	would provide a suitable test server. </para>
+	<para>クライアントをテストするには、動作している SMB/CIFS サーバの名前を
+	知らなくてはならない。<citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> は一般ユーザでも起動することが
+	できるので、ユーザが利用できるポート (たいていは 1024 より大きいポート番号
+	ならどこでもよい) でデーモンとしてサーバを起動することで、
+	適切なテスト環境となるだろう。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>DIAGNOSTICS</title>
+	<title>診断</title>
 
-	<para>Most diagnostics issued by the client are logged in a 
-	specified log file. The log file name is specified at compile time, 
-	but may be overridden on the command line. </para>
+	<para>クライアントによって出されたほとんどの診断メッセージは、
+	指定されたログファイルに記録される。ログファイルの名前はコンパイル時に
+	指定されるが、コマンドラインで変更することもできる。</para>
 
-	<para>The number and nature of diagnostics available depends 
-	on the debug level used by the client. If you have problems, 
-	set the debug level to 3 and peruse the log files. </para>
+	<para>利用できる診断メッセージの量と内容は、クライアントで設定された
+	デバッグレベルに依存する。問題を抱えているなら、デバッグレベルを 3
+	に設定してログファイルに目を通してほしい。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3 of the Samba suite.</para>
+	<para>このマニュアルページは Samba スィートのバージョン 3.0 用である。
+	(訳注: 原文では 2.2 用となっているが、3.0 に使用されるパラメータの項目が
+	増えているため、3.0 とした。)</para>
 </refsect1>
 
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 	
-	<para>The original Samba software and related utilities 
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar 
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作られた。Samba は現在、Linux カーネルが開発されているような
+	方法でのオープンソースプロジェクトである Samba Team によって開発されている。
+	</para>
 	
-	<para>The original Samba man pages were written by Karl Auer. 
-	The man page sources were converted to YODL format (another 
-	excellent piece of Open Source software, available at <ulink url="ftp://ftp.icce.rug.nl/pub/unix/">
-	ftp://ftp.icce.rug.nl/pub/unix/</ulink>) and updated for the Samba 2.0 
-	release by Jeremy Allison.  The conversion to DocBook for 
-	Samba 2.2 was done by Gerald Carter. The conversion to DocBook XML 4.2 for Samba 3.0
-	was done by Alexander Bokovoy.</para>
+	<para>オリジナルの Samba のマニュアルページは Karl Auer によって書かれた。
+	マニュアルページのソースは YODL 形式(別の、優秀なオープンソースソフトウェアで、
+	<ulink url="ftp://ftp.icce.rug.nl/pub/unix/">ftp://ftp.icce.rug.nl/pub/unix/</ulink>
+	にある)で変換され、Jeremy Allison によって Samba 2.0 リリースのために更新された。
+	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。 
+	Samba 3.0 のための DocBook XML 4.2 形式の変換は Alexander Bokovoy によって行われた。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+
+	<itemizedlist>
+		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>佐藤 文優</para></listitem>
+		<listitem><para>はせがわ ようすけ</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
 </refsect1>
 
 </refentry>
+

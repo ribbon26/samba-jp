@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="smbspool.8">
 
 <refmeta>
@@ -10,7 +13,7 @@
 
 <refnamediv>
 	<refname>smbspool</refname>
-	<refpurpose>send a print file to an SMB printer</refpurpose>
+	<refpurpose>印刷ファイルを SMB プリンタへ送信する</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -26,105 +29,103 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
 
-	<para>smbspool is a very small print spooling program that 
-	sends a print file to an SMB printer. The command-line arguments 
-	are position-dependent for compatibility with the Common UNIX 
-	Printing System, but you can use smbspool with any printing system 
-	or from a program or script.</para>
+	<para>smbspoolは印刷ファイルをSMBプリンタに送るための
+	とても小さい印刷スプール用プログラムである。
+	Common UNIX Printing System との互換性のため
+	コマンドライン引数は位置に依存するが、smbspool を任意の印刷システムで使ったり
+	プログラムやスクリプトから使ったりすることもできる。</para>
 
 	<para><emphasis>DEVICE URI</emphasis></para>
 
-	<para>smbspool specifies the destination using a Uniform Resource 
-	Identifier ("URI") with a method of "smb". This string can take 
-	a number of forms:</para>
+	<para>smbspool は印刷先を Uniform Resource Identifier ("URI") を用いて指定する。
+	手段は "smb" を用いる。この文字列はいくつかの形式を取ることができる:</para>
 
 	<itemizedlist>
-		<listitem><para>smb://server[:port]/printer</para></listitem>
-		<listitem><para>smb://workgroup/server[:port]/printer</para></listitem>
-		<listitem><para>smb://username:password@server[:port]/printer</para></listitem>
-		<listitem><para>smb://username:password@workgroup/server[:port]/printer</para></listitem>
+		<listitem><para>smb://server/printer</para></listitem>
+		<listitem><para>smb://workgroup/server/printer</para></listitem>
+		<listitem><para>smb://username:password@server/printer</para></listitem>
+		<listitem><para>smb://username:password@workgroup/server/printer</para></listitem>
 	</itemizedlist>
 
-	<para>smbspool tries to get the URI from the environment variable
-	<envar>DEVICE_URI</envar>. If <envar>DEVICE_URI</envar> is not present, 
-	smbspool will use argv[0] if that starts with <quote>smb://</quote> 
-	or argv[1] if that is not the case.</para>
+	<para>smbspool は argv[0] から URI を得ようとする。
+	もし argv[0] がプログラム名であったら環境変数 <envar>
+	DEVICE_URI</envar> を参照する。</para>
 
-	<para>Programs using the <command>exec(2)</command> functions can 
-	pass the URI in argv[0], while shell scripts must set the 
-	<envar>DEVICE_URI</envar> environment variable prior to
-	running smbspool.</para>
+	<para><command>exec(2)</command> を使うプログラムは
+	argv[0] に URI を渡すことができる。一方シェルスクリプトは 
+	smbspool を起動する以前に環境変数<envar>DEVICE_URI</envar>
+	を設定しなければならない。</para>
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<itemizedlist>
-		<listitem><para>The job argument (argv[1]) contains the 
-		job ID number and is presently not used by smbspool.
+		<listitem><para>job 引数 (argv[1]) にはジョブID番号が入るが、
+		現在 smbspool では使われていない。
 		</para></listitem>
 
-		<listitem><para>The user argument (argv[2]) contains the 
-		print user's name and is presently not used by smbspool.
+		<listitem><para>user 引数 (argv[2]) には印刷ユーザの名前が入るが、
+		現在 smbspool では使われていない。
 		</para></listitem>
 
-		<listitem><para>The title argument (argv[3]) contains the 
-		job title string and is passed as the remote file name 
-		when sending the print job.</para></listitem>
+		<listitem><para>title 引数 (argv[3]) には
+		ジョブのタイトル文字列が入り、印刷ジョブを送信する時に
+		リモートファイル名として渡される。</para></listitem>
 
-		<listitem><para>The copies argument (argv[4]) contains 
-		the number of copies to be printed of the named file. If 
-		no filename is provided then this argument is not used by 
-		smbspool.</para></listitem>
+		<listitem><para>copies 引数 (argv[4]) には
+		名前が指定されたファイルを印刷する部数が入る。
+		もしファイル名が指定されていなければ smbspool は
+		この引数を使用しない。</para></listitem>
 
-		<listitem><para>The options argument (argv[5]) contains 
-		the print options in a single string and is currently 
-		not used by smbspool.</para></listitem>
+		<listitem><para>option 引数 (argv[5]) には
+		印刷オプションが単一文字列で入るが、現在 
+		smbspool では使われていない。</para></listitem>
 
-		<listitem><para>The filename argument (argv[6]) contains the 
-		name of the file to print. If this argument is not specified 
-		then the print file is read from the standard input.</para>
+		<listitem><para>filename 引数 (argv[6]) には
+		印刷するファイルの名前が入る。もしこの引数が指定されなければ
+		印刷ファイルは標準入力から読み込まれる。</para>
 		</listitem>
 	</itemizedlist>
 </refsect1>
 
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of the Samba suite.</para>
+	<para>このマニュアルページはバージョン3.0の
+	Samba スイート用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>SEE ALSO</title>
+	<title>関連項目</title>
 	<para><citerefentry><refentrytitle>smbd</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> and <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> and <citerefentry><refentrytitle>Samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>.</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 
-	<para><command>smbspool</command> was written by Michael Sweet 
-	at Easy Software Products.</para>
+<para><command>smbspool</command> は、Easy Software Products の Michael Sweet によって書かれた。</para>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+    Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
+    開発されているような方法でのオープンソースプロジェクトである 
+    Samba Team によって開発されている。</para>
 	
-	<para>The original Samba software and related utilities 
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar 
-	to the way the Linux kernel is developed.</para>
-	
-	<para>The original Samba man pages were written by Karl Auer. 
-	The man page sources were converted to YODL format (another 
-	excellent piece of Open Source software, available at <ulink url="ftp://ftp.icce.rug.nl/pub/unix/">
-	ftp://ftp.icce.rug.nl/pub/unix/</ulink>) and updated for the Samba 2.0 
-	release by Jeremy Allison.  The conversion to DocBook for 
-	Samba 2.2 was done by Gerald Carter. The conversion to DocBook XML 4.2
-	for Samba 3.0 was done by Alexander Bokovoy.</para>
+	<para>オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。
+	マニュアルページは YODL 形式(別の、優秀なオープンソースソフトウェアで、
+	<ulink url="ftp://ftp.icce.rug.nl/pub/unix/">ftp://ftp.icce.rug.nl/pub/unix/</ulink>にある)
+	で変換され、Jeremy Allison によって Samba 2.0 リリースのために更新された。
+	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。
+	Samba 3.0 のための DocBook XML 4.2 形式への変換は Alexander Bokovoy が行った。</para>
 </refsect1>
 
 </refentry>
+

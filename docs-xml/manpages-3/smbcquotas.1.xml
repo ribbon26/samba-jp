@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="smbcquotas.1">
 
 <refmeta>
@@ -10,7 +13,7 @@
 
 <refnamediv>
 	<refname>smbcquotas</refname>
-	<refpurpose>Set or get QUOTAs of NTFS 5 shares</refpurpose>
+	<refpurpose>NTFS 5 共有の Quota 情報を取得・設定する</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -40,69 +43,74 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このプログラムは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である.</para>
 
-	<para>The <command>smbcquotas</command> program manipulates NT Quotas on SMB file shares. </para>
+	<para><command>smbcquotas</command> プログラムは SMB ファイル共有に対して
+	NT Quota の操作を行う。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
-	<para>The following options are available to the <command>smbcquotas</command> program. </para>
+	<para><command>smbcquotas</command> プログラムは下記のオプションを提供する
+	:</para>
 
 
 	<variablelist>
 		<varlistentry>
 		<term>-u user</term>
-		<listitem><para> Specifies the user of whom the quotas are get or set.
-		By default the current user's username will be used.</para></listitem>
+		<listitem><para> Quota の情報の取得や設定を行うユーザを指定する。
+		デフォルトでは、カレントユーザが使用される。</para></listitem>
 		</varlistentry>
 		
 		
 		
 		<varlistentry>
 		<term>-L</term>
-		<listitem><para>Lists all quota records of the share.</para></listitem>
+		<listitem><para>共有の Quota のレコードを全て表示する。
+		</para></listitem>
 		</varlistentry>
 
 		
 		
 		<varlistentry>
 		<term>-F</term>
-		<listitem><para>Show the share quota status and default limits.</para></listitem>
+		<listitem><para>共有の Quota のステータスとデフォルトの制限を表示する。
+		</para></listitem>
 		</varlistentry>
 		
 		
 		
 		<varlistentry>
 		<term>-S QUOTA_SET_COMMAND</term>
-		<listitem><para>This command sets/modifies quotas for a user or on the share,
-		depending on the QUOTA_SET_COMMAND parameter which is described later.</para></listitem>
+		<listitem><para>このコマンドはユーザか共有の Quota の設定や変更を行う。
+		ユーザか共有かどちらに対して操作が行われるかは、後述される
+		QUOTA_SET_COMMAND により決まる。</para></listitem>
 		</varlistentry>
 
 		
 		<varlistentry>
 		<term>-n</term>
-		<listitem><para>This option displays all QUOTA information in numeric 
-		format.  The default is to convert SIDs to names and QUOTA limits 
-		to a readable string format.</para></listitem>
+		<listitem><para>このオプションは全ての Quota 情報を数値化した値で
+		表示する。デフォルトでは SID を名前に、Quota の上限を文字列に変換する。
+		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-t</term>
 		<listitem><para>
-		Don't actually do anything, only validate the correctness of the arguments.
+		実際に処理は行わず、指定した引数の正当性を検証する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-v</term>
 		<listitem><para>
-		Be verbose.
+		冗長モードにする。
 		</para></listitem>
 		</varlistentry>
 				
@@ -116,27 +124,35 @@
 <refsect1>
 	<title>QUOTA_SET_COMAND</title>
 
-	<para>The format of an ACL is one or more ACL entries separated by 
-	either commas or newlines.  An ACL entry is one of the following: </para>
+	<para>ACL の文法は、一つ以上の ACL のエントリがカンマ (,) や 改行 (\n)
+	で区切られている。ACL エントリは、次のうちのいずれかになる :</para>
 
 	<para>
-	for setting user quotas for the user specified by -u or the current username:
+	-u で指定されたユーザかカレントユーザ特有の Quota 制限を設定する :
 	</para>
 
 	<para><userinput>
 	UQLIM:&lt;username&gt;:&lt;softlimit&gt;/&lt;hardlimit&gt;
+	<!--
+	    以下のように記述されていたが、これは間違い。(fumiya)
+	    UQLIM:&lt;username&gt;&lt;softlimit&gt;&lt;hardlimit&gt;
+	-->
 	</userinput></para>
 
 	<para>
-	for setting the default quotas for a share:
+	共有のデフォルトの Quota 制限を設定する :
 	</para>
 
 	<para><userinput>
 	FSQLIM:&lt;softlimit&gt;/&lt;hardlimit&gt;
+	<!--
+	    以下のように記述されていたが、これは間違い。(fumiya)
+	    FSQLIM:&lt;softlimit&gt;&lt;hardlimit&gt;
+	-->
 	</userinput></para>
 
 	<para>
-	for changing the share quota settings:
+	共有の Quota 設定を変更する :
 	</para>
 
 	<para><userinput>
@@ -145,34 +161,44 @@
 </refsect1>
 
 <refsect1>
-	<title>EXIT STATUS</title>
+	<title>終了ステータス</title>
 
-	<para>The <command>smbcquotas</command> program sets the exit status
-	depending on the success or otherwise of the operations performed.
-	The exit status may be one of the following values. </para>
+	<para><command>smbcquotas</command> コマンドは操作の成功か、それ以外かにより
+	exit status をセットする。exit status は以下のうちのいずれかである :
+	</para>
 
-	<para>If the operation succeeded, smbcquotas returns an exit
-	status of 0.  If <command>smbcquotas</command> couldn't connect to the specified server,
-	or when there was an error getting or setting the quota(s), an exit status
-	of 1 is returned.  If there was an error parsing any command line
-	arguments, an exit status of 2 is returned. </para>
+	<para>操作が成功した場合、smbcquotas は exit status として 0 を返す。
+	もし <command>smbcquotas</command> が指定されたサーバに接続できなかった場合や、
+	Quota の情報を取得やセットしようとしてエラーが出た場合、exit status の 1
+	が返される。もしコマンドラインの引数の構文解析に対してエラーがあった場合、
+	exit status の 2 が返される。</para>
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of the Samba suite.</para>
+	<para>この man page は version 3.0 の Samba システム用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
 
-	<para><command>smbcquotas</command> was written by Stefan Metzmacher.</para>
+	<para><command>smbcquotas</command> は Stefan Metzmacher によって書かれた。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+
+	<itemizedlist>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
 </refsect1>
 
 </refentry>
+

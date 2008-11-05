@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="tdbbackup.8">
 
 <refmeta>
@@ -10,7 +13,8 @@
 
 <refnamediv>
 	<refname>tdbbackup</refname>
-	<refpurpose>tool for backing up and for validating the integrity of samba .tdb files</refpurpose>
+	<refpurpose>Samba の .tdb ファイルのバックアップや整合性の確認を行うツール
+	</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -23,45 +27,45 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>1</manvolnum></citerefentry> suite.</para>
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry> システムの一部である。</para>
 
-	<para><command>tdbbackup</command> is a tool that may be used to backup samba .tdb
-	files. This tool may also be used to verify the integrity of the .tdb files prior
-	to samba startup or during normal operation. If it finds file damage and it finds 
-	a prior backup the backup file will be restored. 
+	<para><command>tdbbackup</command> は Samba の .tdb ファイルのバックアップを
+	とるために使用される。また Samba の起動前にこのツールを使うことで、ファイルの
+	破損が確認された場合には、以前のバックアップファイルから復元することもできる。
 	</para>
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
 		<varlistentry>
 		<term>-h</term>
 		<listitem><para>
-		Get help information.
+		help を表示する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-s suffix</term>
 		<listitem><para>
-		The <command>-s</command> option allows the adminisistrator to specify a file
-		backup extension. This way it is possible to keep a history of tdb backup
-		files by using a new suffix for each backup.
+		<command>-s</command> オプションは Administrator にバックアップファイルの
+		拡張子を指定できる権限を与える。これにより、Administrator
+		はバックアップのたびに新しいサフィックスをつけることができ、TDB
+		のバックアップの履歴を管理することが可能になる。
 		</para> </listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-v</term>
 		<listitem><para>
-		The <command>-v</command> will check the database for damages (currupt data)
-		which if detected causes the backup to be restored.
+		<command>-v</command> はデータベースに対しダメージ (破損したデータ)
+		がないか確認し、もしダメージが発見された場合はバックアップから復元する。
 		</para></listitem>
 		</varlistentry>
 
@@ -70,64 +74,75 @@
 
 
 <refsect1>
-	<title>COMMANDS</title>
+	<title>コマンド</title>
 
 	<para><emphasis>GENERAL INFORMATION</emphasis></para>
 
 	<para>
-	The <command>tdbbackup</command> utility can safely be run at any time. It was designed so
-	that it can be used at any time to validate the integrity of tdb files, even during Samba
-	operation. Typical usage for the command will be:
+	<command>tdbbackup</command> は Samba が終了してからすぐに実行されるべきである。
+	開いているデータベースに対しては使ってはならない。典型的な使用方法は :
 	</para>
 
 	<para>tdbbackup [-s suffix] *.tdb</para>
 
 	<para>
-	Before restarting samba the following command may be run to validate .tdb files:
+	Samba を再起動する前に以下のコマンドを実行することで .tdb
+	ファイルの整合性を確認できる :
 	</para>
 
 	<para>tdbbackup -v [-s suffix] *.tdb</para>
 
 	<para>
-	Samba .tdb files are stored in various locations, be sure to run backup all
-	.tdb file on the system. Important files includes:
+	Samba の .tdb ファイルはいろいろな場所に保存されているため、システムにある全ての
+	.tdb ファイルをバックアップをとるようにする。重要なファイルは :
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		<command>secrets.tdb</command> - usual location is in the /usr/local/samba/private
-		directory, or on some systems in /etc/samba.
+		<command>secrets.tdb</command> - 通常のディレクトリの位置は
+		/usr/local/samba/private で、システムによっては /etc/samba になる。
 		</para></listitem>
 
 		<listitem><para>
-		<command>passdb.tdb</command> - usual location is in the /usr/local/samba/private
-		directory, or on some systems in /etc/samba.
+		<command>passdb.tdb</command> - 通常のディレクトリの位置は
+		/usr/local/samba/private で、システムによっては /etc/samba になる。
 		</para></listitem>
 
 		<listitem><para>
-		<command>*.tdb</command> located in the /usr/local/samba/var directory or on some
-		systems in the /var/cache or /var/lib/samba directories.
+		<command>*.tdb</command> 通常のディレクトリの位置は
+		/usr/local/samba/var で、システムによっては /var/cache や
+		/var/lib/samba になる。
 		</para></listitem>
 	</itemizedlist>
 
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of the Samba suite.</para>
+	<para>この man page は version 3.0 の Samba システム用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 
 	<para>
-	The original Samba software and related utilities were created by Andrew Tridgell.
-	Samba is now developed by the Samba Team as an Open Source project similar to the way
-	the Linux kernel is developed.
+	オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell
+	によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
 	</para> 
 
-	<para>The tdbbackup man page was written by John H Terpstra.</para>
+	<para>tdbbackup の man page は John H Terpstra によって作成された。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+
+	<itemizedlist>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
 </refsect1>
 
 </refentry>
+

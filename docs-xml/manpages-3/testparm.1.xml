@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+				  
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="testparm.1">
 
 <refmeta>
@@ -10,8 +13,7 @@
 
 <refnamediv>
 	<refname>testparm</refname>
-	<refpurpose>check an smb.conf configuration file for 
-	internal correctness</refpurpose>
+	<refpurpose>smb.conf ファイル内部の設定の正当性を検証</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -28,43 +30,43 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このプログラムは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
-	<para><command>testparm</command> is a very simple test program 
-	to check an <citerefentry><refentrytitle>smbd</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> configuration file for 
-	internal correctness. If this program reports no problems, you 
-	can use the configuration file with confidence that <command>smbd
-	</command> will successfully load the configuration file.</para>
+	<para><command>testparm</command> は <citerefentry><refentrytitle>smbd
+	</refentrytitle><manvolnum>8</manvolnum></citerefentry> 構成ファイル内部の
+	正当性を検査するための非常に簡単なテストプログラムである。
+	このプログラムが問題なしと報告した場合、<command>smbd</command>
+	による構成ファイルのロードが成功することが確実な形で、
+	構成ファイルを使用することができる。</para>
 
 
-	<para>Note that this is <emphasis>NOT</emphasis> a guarantee that 
-	the services specified in the configuration file will be 
-	available or will operate as expected. </para>
+	<para>ただし、構成ファイルに指定されたサービスが期待通りに動作するか、
+	有効になるかということは保証<emphasis>されない</emphasis>ことに注意されたい。</para>
 
-	<para>If the optional host name and host IP address are 
-	specified on the command line, this test program will run through 
-	the service entries reporting whether the specified host
-	has access to each service. </para>
+	<para> コマンドラインのオプションでホスト名と IP アドレスが指定されると、
+	テストプログラムはサービスエントリに対して動作し、
+	指定したホストが各サービスを利用する権利を持つかどうかを報告する。
+	</para>
 
-	<para>If <command>testparm</command> finds an error in the <filename>
-	smb.conf</filename> file it returns an exit code of 1 to the calling 
-	program, else it returns an exit code of 0. This allows shell scripts 
-	to test the output from <command>testparm</command>.</para>
+	<para><command>testparm</command> は <filename>smb.conf</filename>
+	にエラーを見つけると呼び出したプログラムに 1 を、エラーがなければ 0
+	の終了コードを返す。これにより、シェル・スクリプトは <command>testparm
+	</command> からの出力をテストできる。</para>
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 		<varlistentry>
 		<term>-s</term>
-		<listitem><para>Without this option, <command>testparm</command> 
-		will prompt for a carriage return after printing the service 
-		names and before dumping the service definitions.</para></listitem>
+		<listitem><para>このオプションが指定されない場合、<command>testparm
+		</command> はサービス名を表示した後でプロンプトを表示し、
+		リターンキーが押されると、サービスの定義をダンプする。
+		</para></listitem>
 		</varlistentry>
 
 		&stdarg.help;
@@ -72,114 +74,91 @@
 		
 		<varlistentry>
 		<term>-L servername</term>
-		<listitem><para>Sets the value of the %L macro to <replaceable>servername</replaceable>.
-		This is useful for testing include files specified with the 
-		%L macro. </para></listitem>
+		<listitem><para>%L マクロの値を <replaceable>servername</replaceable>
+		に設定する。これは、%L マクロによって指定される include file
+		を試験するのに有効である。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-v</term>
-		<listitem><para>If this option is specified, testparm 
-		will also output all options that were not used in <citerefentry>
+		<listitem><para>このオプションが指定されると、<citerefentry>
 		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
-		</citerefentry> and are thus set to their defaults.</para></listitem>
+		</citerefentry> の中で指定されていないパラメータのデフォルト値を
+ 		表示する。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-t encoding</term>
 		<listitem><para>
-		Output data in specified encoding.
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
-		<term>--parameter-name parametername</term>
-		<listitem><para>
-		Dumps the named parameter.  If no section-name is set the view
-		is limited by default to the global section.
-
-		It is also possible to dump a parametrical option.  Therfore
-		the option has to be separated by a colon from the
-		parametername.
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
-		<term>--section-name sectionname</term>
-		<listitem><para>
-		Dumps the named section.
+		指定された encoding でデータを出力する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>configfilename</term>
-		<listitem><para>This is the name of the configuration file 
-		to check. If this parameter is not present then the 
-		default <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
-		</citerefentry> file will be checked. 	
+		<listitem><para>これはチェックする構成ファイルの名前である。
+		このパラメータを指定しないと、デフォルトの <citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry>	ファイルがチェックされる。
 		</para></listitem>
 		</varlistentry>
 
 
 		<varlistentry>
 		<term>hostname</term>
-		<listitem><para>If this parameter and the following are 
-		specified, then <command>testparm</command> will examine the <parameter>hosts
-		allow</parameter> and <parameter>hosts deny</parameter> 
-		parameters in the <citerefentry>
-		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
-		</citerefentry> file to 
-		determine if the hostname with this IP address would be
-		allowed access to the <command>smbd</command> server.  If 
-		this parameter is supplied, the hostIP parameter must also
-		be supplied.</para></listitem>
+		<listitem><para>このパラメータとそれに続くパラメータが指定されると、
+		<command>testparm</command> は <citerefentry><refentrytitle>smb.conf
+		</refentrytitle><manvolnum>5</manvolnum></citerefentry> 中の
+		<parameter>hosts allow</parameter> と <parameter>hosts deny</parameter>
+		パタメータを使って、指定された IP アドレス の hostname が <command>
+		smbd</command> サーバにアクセス可能を許可されているかを判断する。
+		このパラメータを指定した場合、次の hostIP パラメータも指定すること。
+		</para></listitem>
 		</varlistentry>
 
 
 		<varlistentry>
 		<term>hostIP</term>
-		<listitem><para>This is the IP address of the host specified 
-		in the previous parameter.  This address must be supplied 
-		if the hostname parameter is supplied. </para></listitem>
+		<listitem><para>これは前のパラメータで指定したホストの IP
+		アドレスである。このアドレスは、hostname パラメータを指定した場合
+		必ず指定すること。</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>FILES</title>
+	<title>関連ファイル</title>
 
 	<variablelist>
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
 		</citerefentry></term>
-		<listitem><para>This is usually the name of the configuration 
-		file used by <citerefentry><refentrytitle>smbd</refentrytitle><manvolnum>8</manvolnum>
-		</citerefentry>. 
+		<listitem><para>これは通常 <citerefentry><refentrytitle>smbd
+		</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		が使用する構成ファイルの名前である。 
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>DIAGNOSTICS</title>
+	<title>診断</title>
 
-	<para>The program will issue a message saying whether the 
-	configuration file loaded OK or not. This message may be preceded by 
-	errors and warnings if the file did not load. If the file was 
-	loaded OK, the program then dumps all known service details 
-	to stdout. </para>
+	<para>このプログラムは構成ファイルのロードが正常に完了したか否かを報告する。
+	ファイルがロードされなかった場合、エラーと警告の出力が優先される。
+	ファイルのロードが完了したら、プログラムは設定されているすべてのサービスの
+	詳細を標準出力に出力する。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of 
-	the Samba suite.</para>
+	<para>この man page は version 3.0 の Samba システム用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>SEE ALSO</title>
+	<title>関連項目</title>
 	<para><citerefentry>
 		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
 		</citerefentry>, <citerefentry>
@@ -188,20 +167,32 @@
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 	
-	<para>The original Samba software and related utilities 
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar 
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
 	
-	<para>The original Samba man pages were written by Karl Auer. 
-	The man page sources were converted to YODL format (another 
-	excellent piece of Open Source software, available at <ulink noescape="1" url="ftp://ftp.icce.rug.nl/pub/unix/">
-	ftp://ftp.icce.rug.nl/pub/unix/</ulink>) and updated for the Samba 2.0 
-	release by Jeremy Allison.  The conversion to DocBook for 
-	Samba 2.2 was done by Gerald Carter. The conversion to DocBook XML 4.2
-	for Samba 3.0 was done by Alexander Bokovoy.</para>
+	<para>オリジナルのSambaマニュアルは、Karl Auer によって執筆された。
+	マニュアルのソースは Jeremy Allison によって YODL 形式に変換され、
+	Samba 2.0 リリース用に更新された。(YODL はオープンソース・ソフトウエアの
+	優れた作品である <ulink noescape="1" url="ftp://ftp.icce.rug.nl/pub/unix/">
+	ftp://ftp.icce.rug.nl/pub/unix/</ulink>より入手可能。) Samba 2.2 における
+	DocBook 形式への変換は Gerald Carterによって 行なわれた。Samba 3.0 における
+	DocBook XML 4.2 形式への変換は Alexander Bokovoy によって行われた。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+
+	<itemizedlist>
+		<listitem><para>はせがわようすけ</para></listitem>
+		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>佐藤 文優</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
 </refsect1>
 
 </refentry>
+

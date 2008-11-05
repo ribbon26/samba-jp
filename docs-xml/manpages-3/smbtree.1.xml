@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+
+<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
+]>
 <refentry id="smbtree.1">
 
 <refmeta>
@@ -10,7 +13,7 @@
 
 <refnamediv>
 	<refname>smbtree</refname>
-	<refpurpose>A text based smb network browser
+	<refpurpose>テキストベースの SMB ネットワークブラウザ
 	</refpurpose>
 </refnamediv>
 
@@ -24,69 +27,88 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>解説</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このツールは、<citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
 
-	<para><command>smbtree</command> is a smb browser program 
-	in text mode. It is similar to the "Network Neighborhood" found 
-	on Windows computers. It prints a tree with all 
-	the known domains, the servers in those domains and 
-	the shares on the servers.
+	<para><command>smbtree</command>
+	はテキストモードの SMB ネットワークブラウザである。
+	Windows にある「ネットワークコンピュータ」あるいは「マイネットワーク」
+	と類似の機能を持ち、
+	既知のドメイン、そのドメインに属するサーバー、
+	そしてサーバー上の共有のすべてをツリーで表示する。
 	</para>
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 		<varlistentry>
 		<term>-b</term>
-		<listitem><para>Query network nodes by sending requests 
-		as broadcasts instead of querying the local master browser.
-		</para></listitem>
+		<listitem><para>
+		<!--
+		以下のように記述されているが、実際には
+		ローカルマスターブラウザに問い合わせているので、
+		括弧の部分は翻訳から削除。
+		    ... querying the (domain) master browser.
+		-->
+		マスターブラウザに問い合わせるのではなく、
+		ネットワークノードにブロードキャストを送信することで問い合わせる。
+		</para>
+		<para><!--この para は訳注:-->
+		デフォルトではクライアントが属するドメインの
+		(ローカル) マスターブラウザに問い合わせようとし、
+		マスターブラウザが見つからなければブロードキャストを利用して別のドメインのマスターブラウザを探そうとする。
+		<!--
+		MYDOMAIN<1d> を解決しようとして、解決できれば
+		そいつからドメイン一覧を得る。解決できなければ、
+		__MSBROWSE__<01> をブロードキャストし、最後(?)に
+		応答した相手からドメイン一覧を得る。
+		-->
+		</para>
+		</listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-D</term>
-		<listitem><para>Only print a list of all 
-		the domains known on broadcast or by the 
-		master browser</para></listitem>
+		<listitem><para>
+		ブロードキャストあるいはマスターブラウザから得たドメインの一覧だけを表示する。
+		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-S</term>
-		<listitem><para>Only print a list of 
-		all the domains and servers responding on broadcast or 
-		known by the master browser. 
+		<listitem><para>
+		ブロードキャストあるいはマスターブラウザから得たドメインと応答したサーバーの一覧だけを表示する。
 		</para></listitem>
 		</varlistentry>
 
 		&popt.common.samba;
 		&popt.common.credentials;
 		&stdarg.help;
-		
+
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.0 of the Samba 
-	suite.</para>
+	<para>このマニュアルページは、Samba スイートのバージョン 3.0 用に記述されている。</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
-	
-	<para>The original Samba software and related utilities 
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar 
-	to the way the Linux kernel is developed.</para>
-	
-	<para>The smbtree man page was written by Jelmer Vernooij. </para>
+	<title>作者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。 Samba は現在、Linux
+	カーネルが開発されているような方法でのオープンソースプロジェクトである
+	Samba Team によって開発されている。</para>
+
+	<para>smbtree のマニュアルページは Jelmer Vernooij により書かれた。</para>
 </refsect1>
 
 </refentry>
+
