@@ -5,12 +5,15 @@
 <refmeta>
 	<refentrytitle>winbindd</refentrytitle>
 	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
 </refmeta>
 
 
 <refnamediv>
 	<refname>winbindd</refname>
-	<refpurpose>NT サーバからの名前解決を行う NSS デーモン</refpurpose>
+	<refpurpose>NT サーバからの名前解決を行う Name Service Switch (NSS)デーモン</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -27,7 +30,7 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 
 	<para>このプログラムは、<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
@@ -38,7 +41,7 @@
 	PAM を利用する任意のアプリケーション、
 	<command>ntlm_auth</command> および Samba 自身に対する各種サービスを提供する。</para>
 
-	<para> NSS 機能によって使用されていない場合でも、
+	<para> NSS 機能を使用しない場合でも、
 	winbindd はドメインコントローラとの通信を行い、
 	<command>smbd</command> 、<command>ntlm_auth</command> 、
 	PAM モジュールの <command>pam_winbind.so</command> に対するサービスを提供する。
@@ -79,6 +82,14 @@
 
 	<variablelist>
 		<varlistentry>
+		<term>-D</term>
+		<listitem><para>もしも指定されたならば、このパラメータは、サーバをデーモンとして動かす。
+		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
+		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
 		<term>hosts</term>
 		<listitem><para>
 		これは、 IRIX でのみ有効である。
@@ -117,8 +128,10 @@
 <programlisting>
 passwd:         files winbind
 group:          files winbind
-## IRIX においてのみ有効。Linux ユーザは libnss_wins.so を用いること。
+## IRIX においてのみ有効。hostを解決するためにwinbindを使う:
 hosts:          files dns winbind
+## その他のNSSが有効のシステムでは、以下のように libnss_wins.soを使う:
+hosts:          files dns wins
 </programlisting></para>
 
 	<para>
@@ -169,6 +182,7 @@ hosts:		files wins
 		</para></listitem>
 		</varlistentry>
 
+		&stdarg.server.debug;
 		&popt.common.samba;
 		&stdarg.help;
 
@@ -229,7 +243,7 @@ hosts:		files wins
 	ID は解決された順に順番に割り当てられるが、
 	クライアントがユーザやグループの列挙コマンドを実行すれば、存在するすべてのユーザとグループのマッピングが行われる。
 	割り当てられた UNIX 側の ID は、
-	Samba のロックディレクトリ配下のデータベースファイルに格納され、利用される。
+	Samba のロックディレクトリ配下のデータベースファイルに格納され、記憶される。
 	</para>
 
 	<para><emphasis>警告:</emphasis>
@@ -241,10 +255,10 @@ hosts:		files wins
 	</para>
 
         <para>
-	konof /データベースを LDAP などで共有するオプションについては、
+	このデータベースを LDAP などで共有するオプションについては、
         <filename>smb.conf</filename> ファイルの
-	<smbconfoption><name>idmap
-        backend</name></smbconfoption> パラメータを参照のこと。
+	<smbconfoption name="idmap domains"/>か、古い
+	<smbconfoption name="idmap backend"></smbconfoption> パラメータを参照のこと。
 	</para>
 </refsect1>
 
@@ -280,6 +294,12 @@ hosts:		files wins
 		<smbconfoption name="template shell"/></para></listitem>
 		<listitem><para>
 		<smbconfoption name="winbind use default domain"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind: rpc only"/>
+		このパラメータを設定すると、ドメインコントローラから情報を
+		検索するため、LDAPの変わりにwinbindがRPCを使うことを強制
+		する。
+		</para></listitem>
 	</itemizedlist>
 </refsect1>
 
@@ -332,9 +352,6 @@ auth  required    /lib/security/pam_unix.so \
 	<para><command>net join -S PDC -U Administrator</command></para>
  
 	<para>
-	<parameter>-S</parameter> に続くサーバ名は、
-	プライマリドメインコントローラ (PDC) のコンピュータ名か
-	IP アドレスを指定する。
 	<parameter>-U</parameter> に続くユーザ名は、
 	PDC 上で administrator 権限を持つドメインのユーザであれば誰でもよい。
 	「PDC」の部分は、実際の PDC の IP もしくは名前に置き換えること。
@@ -490,14 +507,13 @@ auth  required    /lib/security/pam_unix.so \
 		へのアクセスは制限されており、
 		デフォルトでは、
 		「root」グループに属するユーザだけがアクセスできる。
-		管理者が
-		<filename>$LOCKDIR/winbindd_privilaged</filename> (訳注: privilaged → privileged: 以下も同様)
+		管理者が $LOCKDIR/winbindd_privileged
 		のグループパーミッションを変更することで、
 		「squid」などのプログラムが ntlm_auth を利用できるようにすることなどが可能である。
-		<filename>$LOCKDIR/winbindd_privilaged</filename> ディレクトリと
-		<filename>$LOCKDIR/winbindd_privilaged/pipe</filename>
-		ファイルの両方の所有者が root 以外の場合、クライアントは
-		winbindd デーモンとの接続を行なわない。
+		<filename>$LOCKDIR/winbindd_privileged</filename> ディレクトリと
+		<filename>$LOCKDIR/winbindd_privileged/pipe</filename>
+		ファイルの両方の所有者が root 以外の場合、winbindクライアントは
+		winbindd デーモンとの接続を行なわない事に注意。
 		</para></listitem>
 		</varlistentry>
 
@@ -512,11 +528,10 @@ auth  required    /lib/security/pam_unix.so \
 		<listitem><para>
 		Windows NT の RID から
 		UNIX の ユーザ/グループ ID へのマッピング情報の保管場所。
-		ロックディレクトリ (<filename>$LOCKDIR</filename>) は、
-		Samba のコンパイル時に
+		ロックディレクトリは、Samba のコンパイル時に
 		<parameter>--with-lockdir</parameter>
 		オプションを用いて指定する。
-		<!--ディレクトリの-->デフォルトは
+		このディレクトリの既定値は
 		<filename>/usr/local/samba/var/locks</filename>
 		である。
 		</para></listitem>
@@ -534,7 +549,7 @@ auth  required    /lib/security/pam_unix.so \
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルは、Samba システムのバージョン 3.0 に適用される。</para>
+	<para>このマニュアルは、Samba システムのバージョン 3 に適用される。</para>
 </refsect1>
 
 <refsect1>
@@ -570,13 +585,14 @@ auth  required    /lib/security/pam_unix.so \
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</para>
+	<para>このマニュアルページは Samba 3.2.4 対応のものである。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
 	<para>さとうふみやす</para>
 	</itemizedlist>	
         によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.0.24 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)似よって行われた。</para>
 
 </refsect1>
 
