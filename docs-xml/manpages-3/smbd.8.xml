@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
-				  
-<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
-]>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="smbd.8">
 
 <refmeta>
 	<refentrytitle>smbd</refentrytitle>
 	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
 </refmeta>
 
 
@@ -35,9 +35,9 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>解説</title>
+	<title>説明</title>
 	<para>このプログラムは <citerefentry><refentrytitle>Samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para><command>smbd</command> は、Windows クライアントにファイル共有と印刷サービスを提供するサーバデーモンである。
 	サーバは SMB (または CIFS) プロトコルを使用するクライアントに
@@ -130,6 +130,7 @@
 		</para></listitem>
 		</varlistentry>
 		
+		&stdarg.server.debug;
 		&popt.common.samba;
 		&stdarg.help;
 
@@ -140,30 +141,22 @@
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-p &lt;port number&gt;</term>
-		<listitem><para><replaceable>port number</replaceable> は
-		正の整数値である。このパラメータが指定されていないときの
-		デフォルト値は 139 である。</para>
+		<term>-p|--port&lt;port number(s)&gt;</term>
+		<listitem><para><replaceable>port number(s)</replaceable> は
+		空白か、コンマで分離された、smbdがリッスンするTCPポート番号のリストである。
+		既定値は&smb.conf;中の<smbconfoption name="ports"/>パラメータからとられる。</para>
 		
-		<para>この数字は、クライアント・ソフトウェアからサーバへの
-		接続を確立するときに使用されるポート番号である。
-		SMB over TCP の標準的な(well-knownな)ポート番号は 139 
-		であり、それ故にこれがデフォルト値である。あなたが
-		root ではないふつうのユーザでサーバを動作させたいならば、
-		多くのシステムでは 1024 より大きいポート番号を
-		使わなければならない。- あなたがこの状況にいるかどうかは、
-		あなたのシステムの管理者に尋ねるとよい。
-		</para>
-		
-		<para>たいていのクライアントからサーバを
-		利用できるようにしたくてもポートを 139 以外に
-		構成しなければならないときは、ポート 139 にポート・
-		リダイレクト・サービスが必要になる。詳しくは 
-		rfc1002.txt の 4.3.5 節に概略が述べられている。</para>
-		
-		<para>このパラメータは、上記の状況を除いては
-		通常指定しない。</para></listitem>
+		<para>既定値は 139(NetBIOS over TCP上のSMBを使う場合)と445(TCP上での普通のSMBを使う場合)である。</para></listitem>
 		</varlistentry>
+
+		<varlistentry>
+		<term>-P|--profiling-level&lt;profiling level&gt;</term>
+		<listitem><para><replaceable>profiling level</replaceable> は
+		収集するプロファイリングデータのレベルを指定する数値である。0はプロファイリングを
+		停止、1はプロファイリングカウンタのみONにする。2は完全なプロファイリングをONにし、3はすべてのプロファイリングデータをリセットする。
+		</para></listitem>
+		</varlistentry>
+
 	</variablelist>
 </refsect1>
 
@@ -267,8 +260,7 @@
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルページは Samba スイートのバージョン
-	3.0 用になっている。</para>
+	<para>このマニュアルページは Samba バージョン	3用にである。</para>
 </refsect1>
 
 <refsect1>
@@ -288,6 +280,103 @@
 	そのような場合にもっともよい方法は、ソースコードを検索
 	(grep)することであり、着目している診断メッセージを引き起こした条件を
 	探すことである。</para>
+</refsect1>
+
+<refsect1>
+	<title>TDB FILES</title>
+
+	<para>Samba stores it's data in several TDB (Trivial Database) files, usually located in <filename>/var/lib/samba</filename>.</para>
+	
+	<para>
+	(*) information persistent across restarts (but not
+	necessarily important to backup).
+	</para>
+
+<variablelist>
+<varlistentry><term>account_policy.tdb*</term>
+<listitem>
+<para>NT account policy settings such as pw expiration, etc...</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term>brlock.tdb</term>
+<listitem><para>byte range locks</para></listitem>
+</varlistentry>
+
+<varlistentry><term>browse.dat</term>
+<listitem><para>browse lists</para></listitem>
+</varlistentry>
+
+<varlistentry><term>connections.tdb</term>
+<listitem><para>share connections (used to enforce max connections, etc...)</para></listitem>
+</varlistentry>
+
+<varlistentry><term>gencache.tdb</term>
+<listitem><para>generic caching db</para></listitem>
+</varlistentry>
+
+<varlistentry><term>group_mapping.tdb*</term>
+<listitem><para>group mapping information</para></listitem>
+</varlistentry>
+
+<varlistentry><term>locking.tdb</term>
+<listitem><para>share modes &amp; oplocks</para></listitem>
+</varlistentry>
+
+<varlistentry><term>login_cache.tdb*</term>
+<listitem><para>bad pw attempts</para></listitem>
+</varlistentry>
+
+<varlistentry><term>messages.tdb</term>
+<listitem><para>Samba messaging system</para></listitem>
+</varlistentry>
+
+<varlistentry><term>netsamlogon_cache.tdb*</term>
+<listitem><para>cache of user net_info_3 struct	from net_samlogon() request (as a domain member)</para></listitem>
+</varlistentry>
+
+<varlistentry><term>ntdrivers.tdb*</term>
+<listitem><para>installed printer drivers</para></listitem>
+</varlistentry>
+
+<varlistentry><term>ntforms.tdb*</term>
+<listitem><para>installed printer forms</para></listitem>
+</varlistentry>
+
+<varlistentry><term>ntprinters.tdb*</term>
+<listitem><para>installed printer information</para></listitem>
+</varlistentry>
+
+<varlistentry><term>printing/</term>
+<listitem><para>directory containing tdb per print queue of cached lpq output</para></listitem>
+</varlistentry>
+
+<varlistentry><term>registry.tdb</term>
+<listitem><para>Windows registry skeleton (connect via regedit.exe)</para></listitem>
+</varlistentry>
+
+<varlistentry><term>sessionid.tdb</term>
+<listitem><para>session information (e.g. support for 'utmp = yes')</para></listitem>
+</varlistentry>
+
+<varlistentry><term>share_info.tdb*</term>
+<listitem><para>share acls</para></listitem>
+</varlistentry>
+
+<varlistentry><term>winbindd_cache.tdb</term>
+<listitem><para>winbindd's cache of user lists, etc...</para></listitem>
+</varlistentry>
+
+<varlistentry><term>winbindd_idmap.tdb*</term>
+<listitem><para>winbindd's local idmap db</para></listitem>
+</varlistentry>
+
+<varlistentry><term>wins.dat*</term>
+<listitem><para>wins database when 'wins support = yes'</para></listitem>
+</varlistentry>
+
+</variablelist>
+
 </refsect1>
 
 <refsect1>
