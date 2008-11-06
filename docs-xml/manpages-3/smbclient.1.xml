@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
-				  
-<!ENTITY % globalentities SYSTEM '../global.ent'> %globalentities;
-]>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="smbclient.1">
 
 <refmeta>
 	<refentrytitle>smbclient</refentrytitle>
 	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">ユーザコマンド</refmiscinfo>
+	<refmiscinfo class="version">3.2</refmiscinfo>
 </refmeta>
-
 
 <refnamediv>
 	<refname>smbclient</refname>
@@ -20,10 +19,33 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>smbclient</command>
+		<arg choice="opt">-b &lt;buffer size&gt;</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-e</arg>
+		<arg choice="opt">-L &lt;netbios name&gt;</arg>
+		<arg choice="opt">-U username</arg>
+		<arg choice="opt">-I destinationIP</arg>
+		<arg choice="opt">-M &lt;netbios name&gt;</arg>
+		<arg choice="opt">-m maxprotocol</arg>
+		<arg choice="opt">-A authfile</arg>
+		<arg choice="opt">-N</arg>
+		<arg choice="opt">-i scope</arg>
+		<arg choice="opt">-O &lt;socket options&gt;</arg>
+		<arg choice="opt">-p port</arg>
+		<arg choice="opt">-R &lt;name resolve order&gt;</arg>
+		<arg choice="opt">-s &lt;smb config file&gt;</arg>
+		<arg choice="opt">-k</arg>
+		<arg choice="opt">-P</arg>
+		<arg choice="opt">-c &lt;command&gt;</arg>
+	</cmdsynopsis>
+
+	<cmdsynopsis>
+		<command>smbclient</command>
 		<arg choice="req">servicename</arg>
 		<arg choice="opt">password</arg>
 		<arg choice="opt">-b &lt;buffer size&gt;</arg>
 		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-e</arg>
 		<arg choice="opt">-D Directory</arg>
 		<arg choice="opt">-U username</arg>
 		<arg choice="opt">-W workgroup</arg>
@@ -31,8 +53,7 @@
 		<arg choice="opt">-m maxprotocol</arg>
 		<arg choice="opt">-A authfile</arg>
 		<arg choice="opt">-N</arg>
-		<arg choice="opt">-l logfile</arg>
-		<arg choice="opt">-L &lt;netbios name&gt;</arg>
+		<arg choice="opt">-l log-basename</arg>
 		<arg choice="opt">-I destinationIP</arg>
 		<arg choice="opt">-E</arg>
 		<arg choice="opt">-c &lt;command string&gt;</arg>
@@ -47,10 +68,10 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>解説</title>
+	<title>説明</title>
 
 	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> スイートの一部である。</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para><command>smbclient</command> は SMB/CIFS サーバと「会話」をする
 	ことができるクライアントである。ftp プログラム (<citerefentry>
@@ -119,7 +140,8 @@
 		<term>-R &lt;name resolve order&gt;</term> 
 		<listitem><para>このオプションは、Samba スイートのプログラムによって、ホスト名と IP アドレスの名前解決のためにどのようなネーミングサービスをどのような順序で使用するかを決めるのに使用される。このオプションには、名前解決オプションを文字列のかたちで指定する。複数を指定する場合はスペースで区切る。</para>
 
-		<para>指定できるのは、"lmhosts"、"host"、"wins"、"bcast"である。それぞれにおいて、名前解決は次のように行われる。</para>
+	　　 <para>指定できるのは、"lmhosts"、"host"、"wins"、"bcast"である。それぞれにおいて、
+名前解決は次のように行われる。</para>
 
 		<itemizedlist>
 			<listitem><para><constant>lmhosts</constant>: Samba lmhosts ファイルで IP アドレスが検索される。lmhosts の行に NetBIOS 名にアタッチされるネームタイプがない場合(詳細については <citerefentry><refentrytitle>lmhosts</refentrytitle>
@@ -162,7 +184,7 @@
 
 		<para>便利な使用例として、<command>smbclient</command>
 		を通してメッセージを cat する方法を紹介しよう。例えば: <command>
-		cat mymessage.txt | smbclient -M FRED </command> とすると、
+		smbclient -M FRED &lt; mymessage.txt</command> とすると、
 		<filename>mymessage.txt</filename> ファイルの内容をメッセージ
 		としてマシン FRED に送ることができる。</para>
 
@@ -186,8 +208,14 @@
 		のポート番号である。SMB/CIFS サーバ用の標準の (well-known) TCP
 		ポート番号は 139 であり、これがデフォルト値となる。</para></listitem>
 		</varlistentry>
-		
-		
+
+		<varlistentry>
+		<term>-P</term>
+		<listitem><para>
+		ローカルサーバのマシンアカウントを使い、外部サーバに対して問い合わせを行う。
+		</para></listitem>
+		</varlistentry>
+
 		&stdarg.help;
 		
 		<varlistentry>
@@ -215,7 +243,7 @@
 		<listitem><para>このパラメータは、クライアントがメッセージを
 		標準出力ではなく、標準エラー出力 (stderr) に出力するようにする。</para>
 		
-		<para>デフォルトでは、クライアントはメッセージを標準出力 -
+		<para>既定値では、クライアントはメッセージを標準出力 -
 		一般的にはユーザの tty - に出力する。</para></listitem>
 		</varlistentry>
 		
@@ -257,7 +285,20 @@
 		Windows 9x サーバとのファイルの転送がスピードアップすることが
 		確認されている。</para></listitem>
 		</varlistentry>
-		
+
+		<varlistentry>
+		<term>-e</term>
+		<listitem><para>このコマンド行パラメータは、UNIX格調をサポートするリモート
+		サーバを要求する。
+		コネクション要求は暗号化される。これは、Samba3.2のための新しい機能であり、
+		Samba3.2以降のサーバでのみ動作する。GSSAPIを使用してSMB暗号化をネゴシエートする。
+		もしも、ドメイン/ユーザ名/パスワード の3つ組が与えられた場合、暗号化
+		ネゴシエーション(kerberosまたはNTLMv1/v2)のため、与えられた証明書を使う。
+		もしも暗号化がネゴシエートできなかった場合、接続は失敗する。
+		</para></listitem>
+		</varlistentry>
+
+		&stdarg.client.debug;
 		&popt.common.samba;
 		&popt.common.credentials;
 		&popt.common.connection;
@@ -306,6 +347,14 @@
 			除外する。下記の例を参照のこと。 ファイル名のワイルドカード
 			指定機能は、二つある方式のどちらかを使う。下記の <parameter>r
 			</parameter> オプションを参照のこと。</para></listitem>
+			
+			<listitem><para><parameter>F</parameter> - ファイルとディレクトリの一覧を含むファイルである。
+			<parameter>F</parameter>オプションは、展開または作成時に含まれる
+ファイルとディレクトリのリストを含むファイル名として作成するためのtarファイルの名前となる。
+			(and therefore everything else to be excluded).
+			以下の例を参照のこと。ファイル名の globbingは２つの方法のどちらかで動作する。
+			下記の<parameter>r</parameter>オプションを参照のこと。
+			</para></listitem>
 			
 			<listitem><para><parameter>b</parameter> - ブロックサイズ。
 			このオプションの後には有効な (1 以上の) ブロックサイズを
@@ -356,7 +405,7 @@
 			
 		<para><emphasis>Tar ファイル名</emphasis></para>
 			
-		<para>全てのファイルには、DOS のパス名('\'をパス名の区切りとする)
+		<para>全てのファイルには、DOS のパス名('\\'をパス名の区切りとする)
 		を付与するか、UNIX のパス名 ('/'をパス名の区切りとする) を付与する
 		ことができる。</para>
 			
@@ -476,6 +525,12 @@
 		</para></listitem>
 		</varlistentry>
 		
+		<varlistentry>
+		<term>allinfo file</term>
+		<listitem><para>クライアントは、ファイルまたはディレクトリについてのすべての
+		存在する情報(streamを含む)をサーバが返す要求を出す。
+		</para></listitem>
+		</varlistentry>
 		
 		<varlistentry>
 		<term>altname file</term>
@@ -483,8 +538,24 @@
 		の名前 (8.3形式の名前) を返すようにサーバに要求する。
 		</para></listitem>
 		</varlistentry>
-		
-		
+
+		<varlistentry>
+		<term>archive &lt;number&gt;</term>
+		<listitem><para>ファイル上で操作を行うときにアーカイブレベルを設定する。
+		0はアーカイブビットを無視、1はこのビットを設定するようにのみファイルを操作し、
+		2は操作時にこのビットを設定し、操作終了後にビットを解除するのみ行い、
+		3はすべてのファイルに対して操作時に設定を行い、操作終了後にビットを解除する。
+		既定値は0である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>blocksize &lt;number&gt;</term>
+		<listitem><para>操作時のブロックサイズパラメータを設定する。既定値は20である。
+		tarファイルの出力をblocksize*TBLOCK(通常512バイト)ユニットごとに行うようにする。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>cancel jobid0 [jobid1] ... [jobidN]</term>
 		<listitem><para>クライアントは、与えられたジョブ ID の印刷ジョブを
@@ -492,8 +563,25 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
-		
+		<varlistentry>
+		<term>case_sensitive</term>
+		<listitem><para>サーバに対して、ファイル名の大文字小文字の区別を行うことを
+		告げるSMBパケット中のフラグのOn/Offを行う。既定値では、OFFに設定される
+(ファイルサーバに対してファイル名の大文字小文字の区別を行わない事を告げる)。
+		smb.conf中で case sensitive parameter が設定されているSamba 3.0.5以降
+		のサーバにのみ、現在影響する。
+		</para></listitem>
+		</varlistentry>
+
+		<term>cd &lt;directory name&gt;</term>
+		<listitem><para>もしも、"ディレクトリ名"が指定されたならば、サーバ上の
+		現在の作業ディレクトリは指定されたディレクトリに変更される。この操作は、
+		そのディレクトリがアクセス不能の場合失敗する。</para>
+
+		<para>もしも、ディレクトリ名が指定されない場合は、サーバ上の現在の作業
+ディレクトリが表示される。</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>chmod file mode in octal</term>
 		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
@@ -502,8 +590,6 @@
 		サーバに要求する。 
 		</para></listitem>
 		</varlistentry>
-		
-		
 		
 		<varlistentry>
 		<term>chown file uid gid</term>
@@ -516,21 +602,13 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
-		
 		<varlistentry>
-		<term>cd [directory name]</term>
-		<listitem><para>"directory name" を指定すると、 サーバ上の現在の
-		作業ディレクトリが指定されたディレクトリになる。
-		何らかの理由で指定されたディレクトリにアクセスできないと、
-		操作は失敗する。
-		</para>
-		
-		<para>ディレクトリ名を指定しないと、 サーバ上の現在の作業ディレクトリが
-		表示される。</para></listitem>
+		<term>close &lt;fileid&gt;</term>
+		<listitem><para>openコマンドで開いたファイルを明示的にクローズする。
+		Samba内部のテストプロセスでのみ使用する。
+		</para></listitem>
 		</varlistentry>
-		
-		
+
 		<varlistentry>
 		<term>del &lt;mask&gt;</term>
 		<listitem><para>クライアントがサーバに対し、サーバ上の現在の
@@ -547,7 +625,18 @@
 		</para></listitem>
 		</varlistentry>
 		
+		<varlistentry>
+		<term>du &lt;filename&gt;</term>
+		<listitem><para>ディレクトリの表示を行い、次に、現在のディスクの使用量と共有上の空きスペースを表示する。
+		</para></listitem>
+		</varlistentry>
 		
+		<varlistentry>
+		<term>echo &lt;number&gt; &lt;data&gt;</term>
+		<listitem><para>pingを行うため、SMBecho要求をサーバに対して送る。Samba内部のテストのためにのみ使われる。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>exit</term>
 		<listitem><para>サーバとの接続を終了し、プログラムを終了する。
@@ -566,14 +655,37 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
-		
+		<varlistentry>
+		<term>getfacl &lt;filename&gt;</term>
+		<listitem><para>サーバがUNIX拡張をサポートしている事を要求する。ファイル上のPOSIX ACLを要求し、表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>hardlink &lt;src&gt; &lt;dest&gt;</term>
+		<listitem><para>WindowsのCIFS文法をつかって、サーバ上にハードリンクを作成する。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>help [command]</term>
 		<listitem><para>前述の ? コマンドを参照のこと。</para></listitem>
 		</varlistentry>
 		
-		
+		<varlistentry>
+		<term>history</term> <listitem><para>コマンド履歴を表示する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>iosize &lt;bytes&gt;</term>
+		<listitem><para>ファイル送受信の際、smbclientは既定値で64512バイトの
+		内部メモリバッファを使用する。このコマンドは、16384(0x4000)バイトから
+		16776960(0xFFFF00)バイトの範囲で、このサイズを変更することが出来る。
+		接続されたサーバに対してより効率的な読み書き要求を使うことをsmbclientが
+		行うように試みるので、より大きなサイズはより効率的なデータ転送を意味する。
+		</para></listitem>
+		</varlistentry>
+	
 		<varlistentry>
 		<term>lcd [directory name]</term>
 		<listitem><para><replaceable>directory name</replaceable> を指定すると、
@@ -588,15 +700,34 @@
 		
 		
 		<varlistentry>
-		<term>link source destination</term>
+		<term>link target linkname</term>
 		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
-		サーバがサポートしていない場合は失敗する。クライアントは、source と
-		destination ファイルの間にハードリンクを作成するようにサーバに要求する。
-		source ファイルが存在してはいけない。
+		サーバがサポートしていない場合は失敗する。クライアントは、targetと
+		linknameファイルの間にハードリンクを作成するようにサーバに要求する。
+		linknameファイルが存在してはいけない。
 		</para></listitem>
 		</varlistentry>
 
+		<varlistentry>
+		<term>listconnect</term>
+		<listitem><para>DFSのために、現在保持している接続状況を表示する。
+		</para></listitem>
+		</varlistentry>
 
+		<varlistentry>
+		<term>lock &lt;filenum&gt; &lt;r|w&gt; &lt;hex-start&gt; &lt;hex-len&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。与えられたレンジ上で与えられたタイプの
+		POSIX fcntlロックを設定する事を試みる。Samba内部のテスト用のみに使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>logon &lt;username&gt; &lt;password&gt;</term>
+		<listitem><para>再度ログオンすることにより、このセッションのための新しい
+		vuidを確立する。新しいvuidを表示する。Samba内部のテスト用のみに使われる。
+		</para></listitem>
+		</varlistentry>
 
 		<varlistentry>
 		<term>lowercase</term>
@@ -634,7 +765,7 @@
 		現在の作業ディレクトリ中の "source*" に一致するすべてのディレクトリ配下で、
 		"*.c" に一致するすべてのファイルを取得する。</para>
 
-		<para>デフォルトでは mask の値は空 ('*' と同等) になっており、 mask
+		<para>既定値では mask の値は空 ('*' と同等) になっており、 mask
 		コマンドを使って変更されるまで変わらない。mask の値は、最後に
 		指定された値を保ち続ける。
 		予想外の結果を招かないように、mget か mput コマンドを使った後には、
@@ -682,25 +813,67 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
+		<varlistentry>
+		<term>posix</term>
+		<listitem><para>CIFS UNIX拡張をサポートするかをリモートサーバに問い合わせし、
+		提供されている機能一覧を表示する。もしもそうであれば、(もしも可能であれば)
+		大きなファイルの読み書きとPOSIXパス名の処理をONにする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_encrypt &lt;domain&gt; &lt;username&gt; &lt;password&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、そうでなければ失敗する。このコネクション上でSMB暗号化の
+		ネゴシエーションを試みる。もしもsmbclientがkerberos証明書 (-k)で接続され
+		ていたならば、このコマンドの引数は無視され、kerberos証明書はGSSAPIの書名と
+		sealingの代わりに使われる。最初の接続時にsmbclentに対して暗号化を
+		強制する -e オプションも参照のこと。
+		このコマンドはSamba 3.2から新規に導入された。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_open &lt;filename&gt; &lt;octal mode&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX拡張を使ってリモートファイルを
+		オープンし、ファイルIDを表示する。
+		Samba内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_mkdir &lt;directoryname&gt; &lt;octal mode&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX拡張を使って与えられたモードで、
+		リモートディレクトリを作成する。
+		Samba内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_rmdir &lt;directoryname&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX拡張を使って
+リモートディレクトリを削除する。
+		Samba内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_unlink &lt;filename&gt;</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX拡張を使って
+リモートファイルを削除する。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>print &lt;file name&gt;</term>
 		<listitem><para>指定したローカルマシン上のファイルを、サーバ上の
-		印刷サービスを使って印刷する。</para>
-
-		<para>printmode コマンドも参照のこと。</para></listitem>
+		印刷サービスを使って印刷する。</para></listitem>
 		</varlistentry>
-		
-		
-		
-		<varlistentry>
-		<term>printmode &lt;graphics or text&gt;</term>
-		<listitem><para>印刷モードを、バイナリデータ (グラフィカルな情報など)
-		用、またはテキスト用に設定する。設定後の print コマンドで、
-		現在設定されている印刷モードが利用される。</para></listitem>
-		</varlistentry>
-		
-		
+	
 		<varlistentry>
 		<term>prompt</term>
 		<listitem><para>mget と mput コマンドの操作において、ファイル名の確認を
@@ -722,28 +895,23 @@
 		<command>smbclient</command> によるファイルの転送は、すべて binary
 		モードで行われることに注意してほしい。lowercase コマンドも参照のこと。
 		</para></listitem>
-		</varlistentry>
-		
-		
-		
+		</varlistentry>	
+
 		<varlistentry>
 		<term>queue</term>
 		<listitem><para>印刷のキューを表示し、印刷ジョブの ID、名前、サイズ、
 		現在の状態が見られる。</para></listitem>
 		</varlistentry>
 		
-		
 		<varlistentry>
 		<term>quit</term>
 		<listitem><para>exit コマンドを参照のこと。</para></listitem>
 		</varlistentry>
 		
-		
 		<varlistentry>
 		<term>rd &lt;directory name&gt;</term>
 		<listitem><para>rmdir コマンドを参照のこと。</para></listitem>
 		</varlistentry>
-		
 		
 		<varlistentry>
 		<term>recurse</term>
@@ -763,8 +931,13 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
-		
+		<varlistentry>
+		<term>rename &lt;old filename&gt; &lt;new filename&gt;</term>
+		<listitem><para>サーバ上の現在の作業ディレクトリ上の
+		<replaceable>old filename</replaceable>を
+		<replaceable>new filename</replaceable>に改名する。</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>rm &lt;mask&gt;</term>
 		<listitem><para><replaceable>mask</replaceable> に一致するすべての
@@ -772,13 +945,11 @@
 		</para></listitem>
 		</varlistentry>
 		
-		
 		<varlistentry>
 		<term>rmdir &lt;directory name&gt;</term>
  		<listitem><para>指定された名前の (ユーザのアクセスが許可されている)
 		ディレクトリをサーバから削除する。</para></listitem>
 		</varlistentry>
-		
 		
 		<varlistentry>
 		<term>setmode &lt;filename&gt; &lt;perm=[+|\-]rsha&gt;</term>
@@ -789,21 +960,35 @@
 		
 		<para>は myfile を読み込み専用にする。</para></listitem>
 		</varlistentry>
-
-
 		
 		<varlistentry>
-		<term>symlink source destination</term>
-		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
-		サーバがサポートしていない場合は失敗する。クライアントは、source と
-		destination ファイルの間にシンボリックリンクを作成するようにサーバに
-		要求する。source ファイルは存在してはいけない。
-		サーバは現在接続している共有の外をさすリンクは作成しないことに注意。
-		これは Samba server によって強制される。
+		<term>showconnect</term>
+		<listitem><para>DFSのために現在有効な接続情報を表示する。
 		</para></listitem>
 		</varlistentry>
 
+		<varlistentry>
+		<term>stat file</term>
+		<listitem><para>このコマンドはサーバがCIFS UNIX拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。クライアントはUNIXベースの情報レベルを
+		要求し、ファイルについてのLinux statコマンドと同じ情報を出力する。これには
+		サイズ、ディスクで使用されているブロック数、ファイルのタイプ、パーミッション、
+		inode番号、リンクの数と最後に3つの時刻情報(アクセス、変更と更新)が含まれる。
+		もしもファイルがスペシャルファイル(シンボリックリンク、文字またはブロックデバイス、
+		fifoあるいはソケット)の場合は、拡張情報も出力される。
+		</para></listitem>
+		</varlistentry>
 
+		<varlistentry>
+		<term>symlink target linkname</term>
+		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。クライアントは、target と
+		linkname ファイルの間にシンボリックリンクを作成するようにサーバに
+		要求する。linkname ファイルは存在してはいけない。
+		サーバは現在接続している共有の外を指すリンクは作成しないことに注意。
+		これは Samba server によって強制される。
+		</para></listitem>
+		</varlistentry>
 
 		<varlistentry>
 		<term>tar &lt;c|x&gt;[IXbgNa]</term>
@@ -815,8 +1000,7 @@
 		かわりにコマンドラインオプションで使うようにすること。
 		</para></listitem>
 		</varlistentry>
-		
-		
+
 		<varlistentry>
 		<term>blocksize &lt;blocksize&gt;</term>
 		<listitem><para>ブロックサイズ。このオプションの後には有効な
@@ -826,7 +1010,6 @@
 		ブロックの単位で書き出されるようになる。
 		</para></listitem>
 		</varlistentry>
-		
 		
 		<varlistentry>
 		<term>tarmode &lt;full|inc|reset|noreset&gt;</term>
@@ -839,8 +1022,30 @@
 		クリアする (読み書きできる共有において)。
 		</para></listitem>
 		</varlistentry>
+
+		<varlistentry>
+		<term>unlock &lt;filenum&gt; &lt;hex-start&gt; &lt;hex-len&gt;</term>
+		<listitem><para>このコマンドはサーバの CIFS UNIX 拡張のサポートに依存し、
+		サーバがサポートしていない場合は失敗する。与えられたレンジでPOSIX fcntl
+		ロックの解除を試みる。
+		Samba内部のテストのみに用いられる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>volume</term>
+		<listitem><para>共有のボリューム名を表示する。
+		</para></listitem>
+		</varlistentry>
 		
-		
+		<varlistentry>
+		<term>vuid &lt;number&gt;</term>
+		<listitem><para>与えられた任意の番号に対するプロトコル中の現在使われている
+		vuidを変更する。引数が与えられないと、現在使われているvuidを表示する。
+		Samba内部のテストのみに用いられる。
+		</para></listitem>
+		</varlistentry>
+
 	</variablelist>
 </refsect1>
 
@@ -920,9 +1125,7 @@
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルページは Samba スィートのバージョン 3.0 用である。
-	(訳注: 原文では 2.2 用となっているが、3.0 に使用されるパラメータの項目が
-	増えているため、3.0 とした。)</para>
+	<para>このマニュアルページは Samba スィートのバージョン 3.2 用である。</para>
 </refsect1>
 
 
@@ -945,13 +1148,17 @@
 
 <refsect1>
 	<title>日本語訳</title>
-
+	<para>このマニュアルページは Samba 3.2.4  対応のものである。</para>
+        <para>このドキュメントの Samba 3.0.0 - Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>佐藤 文優</para></listitem>
 		<listitem><para>はせがわ ようすけ</para></listitem>
 		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
 	</itemizedlist>	
+        によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.2.4 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)似よって行われた。</para>
+
 </refsect1>
 
 </refentry>
