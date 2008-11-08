@@ -1,11 +1,11 @@
 .\"     Title: vfs_gpfs
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
-.\"    Manual: System Administration tools
+.\"      Date: 11/06/2008
+.\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "VFS_GPFS" "8" "10/31/2008" "Samba 3\.2" "System Administration tools"
+.TH "VFS_GPFS" "8" "11/06/2008" "Samba 3\.2" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -15,15 +15,15 @@ vfs_gpfs - gpfs に特化した Samba の機能拡張を行なう。like acls an
 .SH "SYNOPSIS"
 .HP 1
 vfs objects = gpfs
-.SH "詳細"
+.SH "説明"
 .PP
 この VFS モジュールは
 \fBsamba\fR(7)
-スイートの一部である。
+システムの一部である。
 .PP
 
 gpfs
-VFS モジュールは、Samba が GPFS と適切に連携する上で必要となる様々な GPFS エクステンションの module is the home for all gpfs extensions that Samba requires for proper integration with GPFS\. It uses the GPL library interfaces provided by GPFS\.
+VFS モジュールは、Samba が GPFS と適切に連携する上で必要となる様々な GPFS エクステンションの モジュールのベースである。 GPFSによって提供されるGPLライブラリインタフェースを使う。
 .PP
 現在のところ、gpfs VFS モジュールは以下のエクステンションのみを提供している:
 .sp
@@ -35,7 +35,7 @@ VFS モジュールは、Samba が GPFS と適切に連携する上で必要と�
 .sp -1
 .IP \(bu 2.3
 .\}
-NFSv4 ACL インタフェース with configurable options for GPFS
+GPFSのために設定可能なNFSv4 ACL インタフェース
 .RE
 .sp
 .RS 4
@@ -61,16 +61,16 @@ GPFS による lease サポート
 .sp
 .RE
 .PP
-注意:このモジュールは POSIX ACL の挙動を模しているため、chown によるパーミッションの変更が可能である。 しかし、 Samba は現在のところ、この動作をサポートしていない。 このモジュールによる chown を禁止するには、Samba よりも下位の ファイルシステム側の責任となる。 point in time, to restrict the chown via this module as such restrictions are the responsibility of the underlying filesystem than of Samba\.
+注意:このモジュールは POSIX ACL の挙動を模しているため、chown によるパーミッションの変更が可能である。 しかし、 Samba は現在のところ、この動作をサポートしていない。 このモジュールによる chown を禁止するには、Samba よりも下位の ファイルシステム側の責任となる。
 .PP
-This module is stackable\.
-.SH "OPTIONS"
+このモジュールはスタック可能である。
+.SH "オプション"
 .PP
 nfs4:mode = [ simple | special ]
 .RS 4
-Enable/Disable substitution of special IDs on GPFS\. This parameter should not affect the windows users in anyway\. It only ensures that Samba sets the special IDs \- OWNER@ and GROUP@ ( mappings to simple uids ) that are relevant to GPFS\.
+GPFS上の特別なIDの置き換えを有効/無効にする。このパラメータはどのような方法でも windowsのユーザに影響を与えるべきでない。これは、Sambaに、GPFSに関連のある OWNER@とGROUP@(単純なuidへのマッピング)である特別なIDを設定することのみを 確実にする。
 .sp
-The following MODEs are understood by the module:
+以下のモードはモジュールによって解釈される:
 .sp
 .RS 4
 .ie n \{\
@@ -80,8 +80,8 @@ The following MODEs are understood by the module:
 .sp -1
 .IP \(bu 2.3
 .\}
-simple(default)
-\- do not use special IDs in GPFS ACEs
+simple(既定値)
+\- GPFS　ACE中で特別なIDを使わない
 .RE
 .sp
 .RS 4
@@ -93,16 +93,16 @@ simple(default)
 .IP \(bu 2.3
 .\}
 special
-\- use special IDs in GPFS ACEs\.
+\- GPFS ACE中で特別なIDを使う
 .sp
 .RE
 .RE
 .PP
 nfs4:acedup = [dontcare|reject|ignore|merge]
 .RS 4
-This parameter configures how Samba handles duplicate ACEs encountered in GPFS ACLs\. GPFS allows/creates duplicate ACE for different bits for same ID\.
+このパラメータはGPFS ACL中で遭遇した、重複したACEをSambaがどのように取り扱う かを設定する。 GPFSは同じIDのために異なったbitのために重複したACEを認めるか作成する。
 .sp
-Following is the behaviour of Samba for different values :
+以下は、異なった値のための、Sambaの動作である:
 .sp
 .RS 4
 .ie n \{\
@@ -112,7 +112,7 @@ Following is the behaviour of Samba for different values :
 .sp -1
 .IP \(bu 2.3
 .\}
-dontcare (default)
+dontcare (既定値)
 \- copy the ACEs as they come
 .RE
 .sp
@@ -156,11 +156,11 @@ merge
 .PP
 nfs4:chown = [yes|no]
 .RS 4
-This parameter allows enabling or disabling the chown supported by the underlying filesystem\. This parameter should be enabled with care as it might leave your system insecure\.
+このパラメータはファイルシステムの基礎によってサポートされる、 chownを有効または無効にする事を認める。このパラメータは、それが使うシステムの セキュリティを低下させるかもしれない事に注意して有効にすべきである。
 .sp
-Some filesystems allow chown as a) giving b) stealing\. It is the latter that is considered a risk\.
+いくつかのファイルシステムでは、chown を a) giving b) stealingと することを認めている。これは、リスクとして考える後の方である。
 .sp
-Following is the behaviour of Samba for different values :
+以下は異なった値に対するSambaの動作である:
 .sp
 .RS 4
 .ie n \{\
@@ -171,7 +171,7 @@ Following is the behaviour of Samba for different values :
 .IP \(bu 2.3
 .\}
 yes
-\- Enable chown if as supported by the under filesystem
+\- ファイルシステム下でサポートするようなchownを有効にする。
 .RE
 .sp
 .RS 4
@@ -182,14 +182,14 @@ yes
 .sp -1
 .IP \(bu 2.3
 .\}
-no (default)
-\- Disable chown
+no (既定値)
+\- chownを無効にする
 .sp
 .RE
 .RE
-.SH "EXAMPLES"
+.SH "使用例"
 .PP
-A GPFS mount can be exported via Samba as follows :
+GPFS mount は以下のように、Samba経由でエクスポートできる:
 .sp
 .RS 4
 .nf
@@ -200,21 +200,20 @@ A GPFS mount can be exported via Samba as follows :
 	\fInfs4: acedup = merge\fR
 .fi
 .RE
-.SH "CAVEATS"
+.SH "警告"
 .PP
-The gpfs gpl libraries are required by
-gpfs
-VFS module during both compilation and runtime\. Also this VFS module is tested to work on SLES 9/10 and RHEL 4\.4
-.SH "VERSION"
+gpfs gplライブラリは、コンパイルと実行時にgpfs
+VFS モジュールに必要である。 また、このVFSモジュールは SLES 9/10 と RHEL 4\.4で動作テストが行われている。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
-.SH "AUTHOR"
+このマニュアルページは Samba バージョン 3\.2\.25用である。
+.SH "著者"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
 .PP
-The GPFS VFS module was created with contributions from Volker Lendecke and the developers at IBM\.
+GPFS VFSモジュールはVolker LendeckeとIBMの開発者によって寄贈され、作成された。
 .PP
-This manpage was created by the IBM FSCC team
+このマニュアルページは、IBM FSCCチームによって作成された。
 .SH "日本語訳"
 .PP
 このマニュアルページは Samba 3\.2\.4 対応のものである。
@@ -230,6 +229,17 @@ This manpage was created by the IBM FSCC team
 .IP \(bu 2.3
 .\}
 たかはしもとのぶ (monyo@samba\.gr\.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+太田俊哉 (ribbon@samba\.gr\.jp)
 .sp
 .RE
 によって行なわれた。

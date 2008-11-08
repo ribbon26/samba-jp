@@ -1,11 +1,11 @@
 .\"     Title: smbcacls
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
-.\"    Manual: 
-.\"    Source: 
+.\"      Date: 11/06/2008
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.2
 .\"
-.TH "SMBCACLS" "1" "10/31/2008" "" ""
+.TH "SMBCACLS" "1" "11/06/2008" "Samba 3\.2" "ユーザコマンド"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -15,11 +15,10 @@ smbcacls - Windows NT 上のファイルやディレクトリの ACL の取得�
 .SH "SYNOPSIS"
 .HP 1
 smbcacls {//server/share} {filename} [\-D\ acls] [\-M\ acls] [\-a\ acls] [\-S\ acls] [\-C\ name] [\-G\ name] [\-\-numeric] [\-t] [\-U\ username] [\-h] [\-d]
-.SH "解説"
+.SH "説明"
 .PP
 このツールは
-\fBsamba\fR(7)
-スイートの一部である。
+\fBsamba\fR(7)システムの一部である。
 .PP
 smbcacls
 は、SMB ファイル共有内の ACL (Access Control Lists) を操作するプログラムである。
@@ -86,6 +85,22 @@ ACL リストで指定された ACL を追加する。既存の ACL は変更さ
 Print a summary of command line options\.
 .RE
 .PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\. The default value if this parameter is not specified is 0\.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\. At level 0, only critical errors and serious warnings will be logged\. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\.
+.sp
+Note that specifying this parameter here will override the
+\fIlog level\fR
+parameter in the
+\fIsmb\.conf\fR
+file\.
+.RE
+.PP
 \-V
 .RS 4
 Prints the program version number\.
@@ -124,7 +139,7 @@ OWNER と GROUP はオブジェクトの所有者およびグループの sid �
 .PP
 ACL は SID に対して与えられるパーミッションを指定する。この SID も S\-1\-x\-y\-z の形式で指定するか、名前で指定することが可能で、後者の場合、 ファイルやディレクトリが存在するサーバによって解析される。 type, flag, mask の値は、SIDに対して与えられたアクセスの種類を指定する。
 .PP
-type は 0 か 1 の値をとり、これは SID に対する許可および拒否に対応する(訳注: 実際は type は ALLOWED か DENIED を指定し、それぞれ SID に対するアクセス許可および拒否に対応する、が正しい(fumiya))。 flag の値はファイルの ACL の場合通常 0 であり、ディレクトリの ACL の場合は通常 9 か 2 である。 共通的な flags は以下の通りである:
+typeは SID に対する許可および拒否に対応する(訳注: 実際は type は ALLOWED か DENIED を指定し、それぞれ SID に対するアクセス許可および拒否に対応する、が正しい(fumiya))。 flag の値はファイルの ACL の場合通常 0 であり、ディレクトリの ACL の場合は通常 9 か 2 である。 共通的な flags は以下の通りである:
 .sp
 .RS 4
 .ie n \{\
@@ -295,7 +310,7 @@ smbcacls
 が指定したサーバに接続できなかったか、 ACL を取得または設定する際にエラーが発生した場合、戻り値として 1 が返される。 コマンドライン引数の解析に失敗した場合は、戻り値として 2 が返される。
 .SH "バージョン"
 .PP
-このマニュアルページは Samba バージョン 3\.0 用である。
+このマニュアルページは Samba バージョン 3用である。
 .SH "作者"
 .PP
 オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
@@ -306,7 +321,7 @@ smbcacls
 Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は、 Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.0 \- Samba 3\.0\.24 対応のものである。
+このマニュアルページは Samba 3\.0\.0 \- Samba 3\.2\.4 対応のものである。
 .PP
 このドキュメントの Samba 3\.0\.0 \- Samba 3\.0\.24 対応の翻訳は
 .sp
