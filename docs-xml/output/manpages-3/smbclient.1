@@ -1,0 +1,1034 @@
+.\"     Title: smbclient
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 11/08/2008
+.\"    Manual: ã\(bbã\(14ã\(psã\(S3ãã\(S3ã
+.\"    Source: Samba 3.2
+.\"
+.TH "SMBCLIENT" "1" "11/08/2008" "Samba 3\.2" "ã\(bbã\(14ã\(psã\(S3ãã\(S3ã"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+smbclient - ã\(mcã\(14ãä\(acã\(rg SMB/CIFS ã\(Ofã\(12ã\(14ã\(S1ã\(Foã\(ctã\(a-ã\(Fcã\(S1ãã ftp ã\(rgããã\(Ofã\(a-ã\(coã\(Csã\(ctã\(S3ã
+.SH "SYNOPSIS"
+.HP 1
+smbclient [\-b\ <buffer\ size>] [\-d\ debuglevel] [\-e] [\-L\ <netbios\ name>] [\-U\ username] [\-I\ destinationIP] [\-M\ <netbios\ name>] [\-m\ maxprotocol] [\-A\ authfile] [\-N] [\-i\ scope] [\-O\ <socket\ options>] [\-p\ port] [\-R\ <name\ resolve\ order>] [\-s\ <smb\ config\ file>] [\-k] [\-P] [\-c\ <command>]
+.HP 1
+smbclient {servicename} [password] [\-b\ <buffer\ size>] [\-d\ debuglevel] [\-e] [\-D\ Directory] [\-U\ username] [\-W\ workgroup] [\-M\ <netbios\ name>] [\-m\ maxprotocol] [\-A\ authfile] [\-N] [\-l\ log\-basename] [\-I\ destinationIP] [\-E] [\-c\ <command\ string>] [\-i\ scope] [\-O\ <socket\ options>] [\-p\ port] [\-R\ <name\ resolve\ order>] [\-s\ <smb\ config\ file>] [\-T<c|x>IXFqgbNan] [\-k]
+.SH "è\(Of\(noæ"
+.PP
+ãã\(rgãã\(14ã\(Foã\(a-
+\fBSamba\fR(7)ã\(mdã\(S1ãã\ ã\(rgä\(acé\(adã\(scããã
+.PP
+smbclient
+ã\(a- SMB/CIFS ã\(mcã\(14ãã\(adãä\(14è\(co\(+-ãããã ãã\(adãã\(scããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(scãããftp ãã\%ã\(deã\(coã\ (\fBftp\fR(1)ãåç\(sc) ã\(adããä\(14\(14ãã\(Csã\(S3ã\(r?ã\(14ãã\(scã\(14ã\(S1ãæä\(34ãã ã\(mcã\(14ãããã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ã\(acãã\(r!ã\(Csã\(Foããã\(bbã\(S3ã\%ã\(14ããããã ã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ããã\(mcã\(14ãã\(acã\(adãã\(r!ã\(Csã\(Foãã\(ctããã\%ã\(14ããããã ã\(mcã\(14ããããã\(Poã\(noã\(a-ãã\(Ofæå\ \(+-ãåå\(34ããã\(Ofã\(coã\(rgåä\(12ãè\(r!ãã
+.SH "ã\(Ofãã\(mdã\(scã\(S3"
+.PP
+servicename
+.RS 4
+servicename ã\(a-å\(coç\(adãããã\(mcã\(14ãã\(S1ã\(rgã\(mcã\(14ãä\(acã\(scã\(rg ååã\(scãããã\(mcã\(14ãã\(S1åã\(a-
+\fI//server/service\fR
+ã\(rgããã\(Ofå\(12\(ctãã\(adãã\fIserver\fR
+ã\(a-å\(coç\(adããã ã\(mcã\(14ãã\(S1ãæä\(34ãã\(bbãã SMB/CIFS ã\(mcã\(14ãã\(rg NetBIOS åã\(scããã
+\fIservice\fR
+ã\(a-æä\(34ããã\(bbããã\(mcã\(14ãã\(S1ã\(rgååã\(scããã ãããã\(Poã\(bbãSMB/CIFS ã\(mcã\(14ã "smbserver" ã\(rg "printer" ã\(adããã\(mcã\(14ãã\(S1ã\(Foæ\(Yeç\(psããã\(Foã\(a-ã\fI//smbserver/printer \fR
+ã\(adããã\(mcã\(14ãã\(S1åãä\(12\(r?ç\(adããã
+.sp
+å\(r?è\(bbã\(adãããã\(mcã\(14ãåããä\(acæ\(bbã\(Foã\(mcã\(14ãã\(rg IP (DNS) ãã\(S1ãåã\(scããã\(adã\(a-éãã\(Ofããã\(adã\(Foæ\(S3\(adæ! å\(r?è\(bbã\(adãããååã\(a- NetBIOS åã\(scããããã\(rgååã\(a-ã\(mcã\(14ãã\(rgåä\(12ãã\(bbãããã\(mdã\(S3ã\(rg IP ãã\(S1ãåã\(adåãããç\(Yeãã\(Ofããã ç\(deã\(Ofã\(Poã\(bbããããç\(Yeãã\(Ofãã
+.sp
+ã\(mcã\(14ãåãè\(sc\(Poæ\(+-\(Omããæ\(S1æ\(S3ã\(a-ãsmbclient
+ã\(rg
+\fI\-R\fR
+ã\(Ofãã\(mdã\(scã\(S3ãã\fBsmb.conf\fR(5)
+ãã\(r!ã\(Csã\(Foä\(ac\%ã\(rg name resolve order ãã\(coã\(r!ã\(14ã\(r?ã\(Fo ãã\(Poã\(bbæ\(+-\(Omå\(rgãããã ãã\(rgãã\(coã\(r!ã\(14ã\(r?ã\(Foãããç\(rg\(r!çèããååè\(sc\(Poæ\(+-\(Omã\(rgé\ ç\(Ofãæ\(S1å\(14ãå\(Csæ\(aaãã ãã\(adãå\(a-è\(12ã\(Foã\(Ofã\(Poã\(bbããã
+.RE
+.PP
+password
+.RS 4
+æå\(rgããã\(mcã\(14ãã\(rgã\(mcã\(14ãã\(S1ã\(acã\(ctã\(a-ã\(Fcã\(S1ããããã\(Fo å\(r?è\(bbã\(Ofãã\(S1ã\(a-ã\(14ãã\(scããããã\(rgãã\(coã\(r!ã\(14ã\(r?ãæå\(rgãããå\ \(aaåã
+\fI\-N\fR
+ã\(Ofãã\(mdã\(scã\(S3 (ãã\(S1ã\(a-ã\(14ããã\%ã\(S3ããã\(rgææ\%\(ct) ãè\(Ofåçã\(Foè\(ad\%å\(rgãããã
+.sp
+ããã\(coã\(Foãã\(rgãã\(S1ã\(a-ã\(14ãã\(a-ã\(Ofãã (ãã\(rgãã\(coã\(r!ã\(14ã\(r?ãç\(adãããã
+\fI\-U\fR
+ã\(Ofãã\(mdã\(scã\(S3 (ä\(Fc\(Yeä\(acãåç\(sc) ã\(scãã\(S1ã\(a-ã\(14ãã æå\(rgããã\(Ofãã\(Poãä\(Omã\(Foãã) ãã\(S1ã\(a-ã\(14ããã\(S3ãã\(S3ãã\(coã\(Csã\(S3ããæå\(rgãããã
+\fI\-N\fR
+ã\(Ofãã\(mdã\(scã\(S3ãæå\(rgããã\(bbãã\(Ofãå\ \(aaåã ã\(mcã\(14ãããã\(S1ã\(a-ã\(14ããè\(bbæ\(+-ãã\(bbãããã\(coããã\(Foé\(ctãããã ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãã\(S1ã\(a-ã\(14ãå\(Yeåãæ\(+-ããã (ãã\(S1ã\(a-ã\(14ããå\(r?è\(bbã\(scã\(Ofãå\ \(aaåã\(a-ã åã\(Fo ENTER ã\%ã\(14ãå\(Yeåããä\(Omã\(scã ç\(co\(Omã\(rgãã\(S1ã\(a-ã\(14ããæ\(ac\(r!ãã\(deããã)
+.sp
+æ\(S3\(adæ: ããç\(ad\(rgã\(rgã\(mcã\(14ã (OS/2ãWindows for Workgroup ã\(Ofã\(co) ã\(a-ã å\(Cs\(scæå\%ã\(rgãã\(S1ã\(a-ã\(14ããè\(bbæ\(+-ãããå\(deæå\%ããå\(Cs\(scæå\%å\(deæå\%ã\(rgæ\(md\(mdãã\(Poã ãã\(S1ã\(a-ã\(14ãã\(a-æå\(bbãããã\(scãããã
+.sp
+ãã\(S1ã\(a-ã\(14ããã\(S1ã\(a-ã\(Ofããä\(ac\%ã\(Foè\(adè\(r?\(deããã\(adãã\(a-ãååæ\(S3\(adæãããã\(adã
+.RE
+.PP
+\-R <name resolve order>
+.RS 4
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a-ãSamba ã\(S1ã\(Csã\(14ãã\(rgãã\%ã\(deã\(coã\ ã\(Foãã\(Poã\(bbããã\(S1ãåã\(ad IP ã\(ctãã\(noã\(S1ã\(rgååè\(sc\(Poæ\(+-\(Omã\(rgããã\(Foã\(coã\(rgããã\(Ofãã\(14ãã\(S3ã\(deã\(mcã\(14ãã\(S1ãã\(coã\(rgããã\(Ofé\ å\(Omã\(scä\(12\(r?ç\(adããããæ\(+-\(Omããã\(rgã\(Foä\(12\(r?ç\(adãããããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(Foã\(a-ãååè\(sc\(Poæ\(+-\(Omã\(Ofãã\(mdã\(scã\(S3ãæå\%åã\(rgããã\(r!ã\(scæå\(rgãããè\(Csæ\(deãæå\(rgããå\ \(aaåã\(a-ã\(S1ãã\(14ã\(S1ã\(scå\(Omåãã
+.sp
+
+
+	ãã æå\(rgã\(scããã\(rgã\(a-ã"lmhosts"ã"host"ã"wins"ã"bcast"ã\(scãããããããã\(Foããã\(bbã ååè\(sc\(Poæ\(+-\(Omã\(a-æ\(no\(r!ã\(rgããã\(Foè\(r!ãããã
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBlmhosts\fR: Samba lmhosts ãã\(r!ã\(Csã\(Foã\(sc IP ã\(ctãã\(noã\(S1ãæ\(Csç\(aa\(ctããããlmhosts ã\(rgè\(r!ã\(Fo NetBIOS åã\(Foã\(ctã\(r?ããããããã\(14ã\ ã\(r?ã\(Csããã\(Ofãå\ \(aaå(è\(co\(S3ç\(aa\(deã\(Foã\(Csãã\(bbã\(a-
+\fBlmhosts\fR(5)
+ãåç\(sc)ããã\(14ã\ ã\(r?ã\(Csããã\(coãã\(scãããã\(a-æ\(Csç\(aa\(ctç\(mcæã\(Foå\(12\(+-é\(r?ãã\(Ofãã\(Ofãã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBhost\fR: ã\(mdã\(S1ãã\ ã\(rg
+\fI/etc/hosts \fRãNISãDNS ã\(Foãã\(a-ã\(ctãããä\(12\(r?ç\(adããããã\(S1ãå \- IP ã\(ctãã\(noã\(S1éã\(rgæ\(adæ\(Omã\(rgååè\(sc\(Poæ\(+-\(Omãè\(r!ããããååè\(sc\(Poæ\(+-\(Omã\(rgæ\(S1æ\(S3ã\(rgè\(co\(S3ç\(aa\(deã\(Ofé\(adåã\(a-ãIRIXãSolaris ã\(adãã\(Poã OS ã\(Foãã\(Poã\(bbå\(Csããã\fI/etc/nsswitch\.conf\fR
+ã\(scå\(pså\(34\(r!ã\(scããå\ \(aaåãããããã\(rgæ\(S1æ\(S3ã\(a-ãæ\(Csç\(aa\(ctããã NetBIOS åã\(rgã\(r?ã\(Csãã 0x20 (ã\(mcã\(14ã) ã\(scããæã\(Foã\(rgã\(r?ä\(12\(r?ç\(adã\(scããç\(S1ã\(Foæ\(S3\(adæãããã\(Ofããã\(deæå\(rgãã\(bbãç\(r!è\(bbãããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBwins\fR:
+\fIwins server\fR
+ãã\(coã\(r!ã\(14ã\(r?ã\(Foæå\(rgããã IP ã\(ctãã\(noã\(S1ãæã\(Csååãæ\(Csç\(aa\(ctããããWINS ã\(mcã\(14ããæå\(rgããã\(bbãã\(Ofããã\(deãç\(r!è\(bbãããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBbcast\fR:
+\fIinterfaces\fR
+ãã\(coã\(r!ã\(14ã\(r?ã\(Foæå\(rgãããæ\(ctç\(Yeã\(rgã\%ã\(14ã\(Foã\(Foï\(12\(Yeã\(Csã\(S3ã\(r?ã\(14ãã\(scã\(14ã\(S1ããããã\(Foã\(Csãã\(bbãã\%ã\(14ãã\%ã\(Poã\(S1ããè\(r!ããã\(r?ã\(14ã\(S2ããã\(Fcãã\(S1ããã\%ã\(14ã\(Foã\(Foæ\(Yeç\(psã\(mcããããä\(acã\(Foããå\ \(aaåã\(Foããä\(12\(r?ãã\(Ofãã\(rgã\(scãæãä\(r?\(r!é\ \(14æ\(scã\(rgä\(12ãååè\(sc\(Poæ\(+-\(Omæ\(S3ã
+.sp
+.RE
+ãã\(rgãã\(coã\(r!ã\(14ã\(r?ãè\(ad\%å\(rgããã\(Ofãã\(Poãå\ \(aaåãååè\(sc\(Poæ\(+-\(Omæ\(S1æ\(S3ã\(rgä\(12\(r?ç\(adé\ å\(Omã\(a-ã\fBsmb.conf\fR(5)
+ãã\(r!ã\(Csã\(Foã\(rgãã\(coã\(r!ã\(14ã\(r? (name resolve order) ã\(Foæå\(rgãããã\(adããã\(Foã\(Ofãã
+.sp
+ããã\(coã\(Foãã\(rgå\(Ofåé\ ä\(12ã\(a-ãlmhostsãhostãwinsãbcast ã\(adã\(Ofãããã\(rgãã\(coã\(r!ã\(14ã\(r?ãã\(Ofãå\ \(aaåããããã\(a-\fBsmb.conf\fR(5)
+ãã\(r!ã\(Csã\(Foã\(rg
+\fIname resolve order \fR
+ãã\(coã\(r!ã\(14ã\(r?ã\(Foã\(adã\(S3ãã\(Ofãã\(Ofãå\ \(aaåããã\(rgé\ å\(Omã\(scååè\(sc\(Poæ\(+-\(Omæ\(S1æ\(S3ãè\(co\(bbè\(r!ãããã
+.RE
+.PP
+\-M NetBIOS name
+.RS 4
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ãæå\(rgããã\(adã"WinPopup" ãã\%ãã\(S3ã\(Foãä\(12\(r?ã\(Poã\(bbãå\(Yeã\(rgã\(S3ã\(S3ãã\(Yeã\(14ã\(r?ã\(acã\(r!ãã\(Fcã\(14ã\(acãéä\(r?\(r!ããä\(Omã ã\(scãããæ\(Yeç\(psãç\(ct\(Omç\(Foãã\(bbããä\(Fc\(Fcæã\(rgã\(r!ãã\(Fcã\(14ã\(acãå\(Yeåããã ç\(mcä\(Omããã\(Foã\(a-ã^D (control\-D) ãå\(Yeåããã
+.sp
+åä\(r?\(r!ããã\(S3ã\(S3ãã\(Yeã\(14ã\(r?ã\(sc WinPopup ãè\(mc\(mdåãã\(bbããã\(deã ã\(bbã\(14ã\(psã\(a-ãããããã\(14ãé\(S3ã\(adã\(adãã\(Foãã\(r!ãã\(Fcã\(14ã\(acãåä\(r?\(r!ããä\(Omã\(Foã\(Ofãã WinPopup ãè\(mc\(mdåãã\(bbãã\(Ofãã\(adã\(r!ãã\(Fcã\(14ã\(acã\(a-å\(Cs\(+-ããã ã\(Ofãã\(rgã\(adã\(coã\(14ã\(r!ãã\(Fcã\(14ã\(acãè\(r!\(adç\(Cs\(Omããã\(Ofãã
+.sp
+1600 byte ãè\(psããã\(r!ãã\(Fcã\(14ã\(acã\(a-ããã\%ãã\(S3ã\(Foã\(rgä\(Fcæ\(scã\(Foãã å\(pséã\(rgãããè\(Ofåçã\(Foåãæ\(adã\(bbãããã
+.sp
+ä\(34\(r?å\(coã\(Ofä\(12\(r?ç\(adä\(34ã\(adãã\(bbãsmbclient
+ãéãã\(bbã\(r!ãã\(Fcã\(14ã\(acã cat ããæ\(S1æ\(S3ãç\(aa\(S1ä\(Fcããããä\(34ãã\(de:
+smbclient \-M FRED < mymessage\.txt
+ã\(adããã\(adã
+\fImymessage\.txt\fR
+ãã\(r!ã\(Csã\(Foã\(rgåå\(rg\(S1ãã\(r!ãã\(Fcã\(14ã\(ac ã\(adãã\(bbãã\(mdã\(S3 FRED ã\(Foéããã\(adãã\(scããã
+.sp
+ã\(34ã
+\fI\-U\fR
+ã
+\fI\-I\fR
+ã\(Ofãã\(mdã\(scã\(S3ããã\(r!ãã\(Fcã\(14ã\(acã\(rg FROM ã TO ã\(Foç\(acå\(12ããè\(ad\%å\(rgãæå\(rgãããå\ \(aaåã\(a-ã ä\(34\(r?å\(coã\(Ofãã\(adãããã
+.sp
+Samba ã\(sc WinPopup ã\(r!ãã\(Fcã\(14ã\(acãåãåãæ\(S1æ\(S3ã\(a-ã\fBsmb.conf\fR(5)
+ã\(rg
+\fImessage command\fR
+ãã\(coã\(r!ã\(14ã\(r?ãåç\(scã\(rgãã\(adã
+.sp
+\fIæ\(S3\(adæ\fR: WfWg PC ã\(scå\(ac\(acã\(Foã\(r!ãã\(Fcã\(14ã\(acã åä\(r?\(r!ã\(scããããã\(Foãããã\(Ofããstartup ã\(deã\(Foã\(14ãã\(Fo WinPopup ãã\(S3ãã\(14ãããã\(adã
+.RE
+.PP
+\-p port
+.RS 4
+ãã\(rgå\(Csã\(a-ãã\(mcã\(14ãã\(acæ\(Yeç\(psããã\(adãã\(Foå\(coç\(adãã TCP ã\(rgãã\(14ãç\(Ofå\(mdã\(scãããSMB/CIFS ã\(mcã\(14ãç\(adã\(rgæ\(adæ\(Omã\(rg (well\-known) TCP ãã\(14ãç\(Ofå\(mdã\(a- 139 ã\(scããããããããã\(coã\(Foãå\(Csã\(adã\(Ofãã
+.RE
+.PP
+\-P
+.RS 4
+ã\%ã\(14ã\(Foã\(Foã\(mcã\(14ãã\(rgãã\(mdã\(S3ã\(ctã\(Foã\(bbã\(S3ããä\(12\(r?ããå\(Csé\(adã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbåãåãããè\(r!ãã
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\.
+.RE
+.PP
+\-I IP\-address
+.RS 4
+\fIIP address\fR
+ã\(a-æ\(Yeç\(psãã ã\(mcã\(14ãã\(rg IP ã\(ctãã\(noã\(S1ãè\(r!\(adããããã\(a-ãæ\(adæ\(Omçã\(Of "a\.b\.c\.d" å\(12\(ctå\(14ã\(scæå\(rgããã
+.sp
+éå\(ac\(acã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-åè\(r?\(deãã
+\fIname resolve order \fR
+ãã\(coã\(r!ã\(14ã\(r?ä\(ac\%ã\(scè\(adè\(r?\(deãã NetBIOS åã\(rgè\(sc\(Poæ\(+-\(Omã\(r!ã\(Foãã\(Omã\ ã ç\(adãã\(bbæ\(Csç\(aa\(ctããä\(Omã\(Foããããã\(rg SMB/CIFS ã\(mcã\(14ãã\(rgã\(ctãã\(noã\(S1ã è\(sc\(Poæ\(+-\(Omãããã\(adããããã\(rgãã\(coã\(r!ã\(14ã\(r?ãä\(12\(r?ããã\(adã\(scãã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ã å\(14\(mdå\(psçã\(Foæå\(rgããã IP ã\(ctãã\(noã\(S1ãã\(mcã\(14ãã\(rg IP ã\(ctãã\(noã\(S1ã\(adã\(r?ã\(Ofãã æ\(Yeç\(psãããã\(adãã\(bbããã\(Ofã\(12ã\(14ã\(S1ã\(rg NetBIOS åãä\(acæ\(acãããã
+.sp
+ãã\(rgãã\(coã\(r!ã\(14ã\(r?ã\(rgããã\(coã\(Foãå\(Csã\(a-ã\(Ofãã ãã\(rgãã\(coã\(r!ã\(14ã\(r?ãæå\(rgããã\(Ofããã\(deãã\(ctãã\(noã\(S1ã\(a-åè\(r?\(deããããã\(Foãã\(bb ã\(a-ã\(coã\(Csã\(ctã\(S3ããè\(Ofåçã\(Foæ\(+-\(Omå\(rgããã
+.RE
+.PP
+\-E
+.RS 4
+ãã\(rgãã\(coã\(r!ã\(14ã\(r?ã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ããã\(r!ãã\(Fcã\(14ã\(acã æ\(adæ\(Omå\(Omåã\(scã\(a-ã\(Ofããæ\(adæ\(Omã\(adã\(coã\(14å\(Omå (stderr) ã\(Foå\(Omåããããã\(Foããã
+.sp
+æ\(ctå\(rgå\(Csã\(scã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ã\(r!ãã\(Fcã\(14ã\(acãæ\(adæ\(Omå\(Omå \- ä\(acè\(noçã\(Foã\(a-ã\(bbã\(14ã\(psã\(rg tty \- ã\(Foå\(Omåããã
+.RE
+.PP
+\-L
+.RS 4
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ãæå\(rgããã\(adãã\(mcã\(14ãä\(acã\(scå\(coç\(adå\(a-è\(12ã\(Of ã\(mcã\(14ãã\(S1ãä\(acè\(bb\(scãããã\(adãã\(scãããsmbclient \-L host
+ã\(rgããã\(Foãã\(bbä\(12\(r?ãã\(adãã\(mcã\(14ãã\(S1ã\(rgä\(acè\(bb\(scãè\(r!\(adç\(Cs\(Omãããã NetBIOS åã TCP/IP ã\(rg DNS ã\(rgãã\(S1ãåã\(Foä\(acè\(aaãã\(Ofãå\ \(aaåãã å\(Yeã\(rgãããã\(a-ã\(14ã\(a-ä\(acã\(rgãã\(S1ãã\(rgæå\ \(+-ãè\(r!\(adç\(Cs\(Omãããã\(adãã\(bbããå\ \(aaåã\(a-ã
+\fI\-I\fR
+ã\(Ofãã\(mdã\(scã\(S3ãå\(12\(S1ã\(Foãã\(Csã
+.RE
+.PP
+\-t terminal code
+.RS 4
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a-ãsmbclient
+ã\(Foå\(a-\(34ãã\(bbã\(Ofã\(ctã\(14ãã\(mcã\(14ããè\(r!\(adç\(Cs\(Omãããã\(r!ã\(Csã\(Foåãã\(coã\(rgããã\(Foå\(Csæãã\(S1ããã æå\(rgãããéå\(ac\(acãã\(ctã\(acã\(ctè\(adè\(Ofã\(rgãã\(Foããã\(Csãæå\%ã\(rg UNIX ä\(acã\(scã\(rgå\(rgè\(Poã\(a-ã SMB/CIFS ã\(mcã\(14ãã\(adç\(deã\(Ofãæå\%ã\(Fcãããä\(12\(r?ç\(adãã\(bbãã (ä\(34ãã\(de
+\fI SJIS\fR
+ã\(scã\(a-ã\(Ofã
+\fIEUC\fRãã\(adããããã\(Fo)ã ãã\(rgãã\(coã\(r!ã\(14ã\(r?ãè\(ad\%å\(rgãããã\(adã\(scãsmbclient
+ã\(a- UNIX ä\(acã\(rgãã\(r!ã\(Csã\(Foåã\(ad SMB ã\(mcã\(14ãä\(acã\(rgãã\(r!ã\(Csã\(Foåã\(adã\(rgå\(Csæãæ\%\(Poãã è\(r!ãããã\(Foã\(Ofãããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a-å\(S3æ\ \(14ã\(Foãã\(S1ãããããã\(rgã\(scã\(a-ã\(Ofãã å\(Cså\(deåé\(r!ãããããç\(Yeãã\(Ofãã
+.sp
+terminal code ã\(Foã\(a- CWsjis, CWeuc, CWjis7, CWjis8, CWjunet, CWhex, CWcap ãããããããã\(a-å\(adã\(bbã\(scã\(a-ã\(Ofããå\(rgå\(adã\(Ofã\(Ofã\(S1ãã\(a-ã Samba ã\(rgã\(12ã\(14ã\(S1ã\(S3ã\(14ãããã\(scãã\(a-ãã\(bbæ\(no\(S2ããã
+.RE
+.PP
+\-b buffersize
+.RS 4
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a-ã\(mcã\(14ãã\(adãã\(r!ã\(Csã\(Foã\(rgéåä\(r?\(r!ã è\(r!ã\(Ofãã\(adãã\(rgéåä\(r?\(r!ãããã\(r!ã\(rgã\(mcã\(Csã\(Omãå\(Csæ\(aaããã ããã\(coã\(Foãå\(Csã\(a- 65520 ãã\(Csãã\(scããããã\(rgå\(Csã (æå\(de 1200 ãã\(Csãã\(34ã\(sc) å\(deãããããã\(adã\(scã Windows 9x ã\(mcã\(14ãã\(adã\(rgãã\(r!ã\(Csã\(Foã\(rgè\(Fc\(ctéãã\(S1ãã\(14ãã\(ctãããããã\(adã ç\(ct\(Omè\(Ofããã\(bbããã
+.RE
+.PP
+\-e
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãè\(r!ãã\(coã\(r!ã\(14ã\(r?ã\(a-ãUNIXæ\ \(14è\(Of\(r?ãã\(mcãã\(14ãããã\(Ofã\(ctã\(14ã ã\(mcã\(14ããè\(bbæ\(+-ããã ã\(S3ãã\(a-ã\(mdã\(scã\(S3è\(bbæ\(+-ã\(a-æå\(mdåããããããã\(a-ãSamba3\.2ã\(rgããã\(rgæ\(deããæ\(coè\(12ã\(scããã Samba3\.2ä\(Fc\(Yeéã\(rgã\(mcã\(14ãã\(scã\(rgã\(r?åä\(12ãããGSSAPIãä\(12\(r?ç\(adãã\(bbSMBæå\(mdåããã\(aaã\(mdã\(adã\(14ãããã ãããããã\(r!ã\(Csã\(S3/ã\(bbã\(14ã\(pså/ãã\(S1ã\(a-ã\(14ã ã\(rg3ã\(Csç\(mcãä\(acããããå\ \(aaåãæå\(mdå ãã\(aaã\(mdã\(adã\(14ã\(mdã\(scã\(S3(kerberosã\(34ãã\(a-NTLMv1/v2)ã\(rgãããä\(acããããè\(ad\(14ææ\(acãä\(12\(r?ãã ãããæå\(mdåããã\(aaã\(mdã\(adã\(14ãã\(scãã\(Ofãã\(Poãå\ \(aaåãæ\(Yeç\(psã\(a-å\(Cs\(+-æããã
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\. The default value if this parameter is not specified is 1\.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\. At level 0, only critical errors and serious warnings will be logged\. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\.
+.sp
+Note that specifying this parameter here will override the
+\fIlog level\fR
+parameter in the
+\fIsmb\.conf\fR
+file\.
+.RE
+.PP
+\-V
+.RS 4
+Prints the program version number\.
+.RE
+.PP
+\-s <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\. See
+\fIsmb\.conf\fR
+for more information\. The default configuration file name is determined at compile time\.
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+Base directory name for log/debug files\. The extension
+\fB"\.progname"\fR
+will be appended (e\.g\. log\.smbclient, log\.smbd, etc\.\.\.)\. The log file is never removed by the client\.
+.RE
+.PP
+\-N
+.RS 4
+If specified, this parameter suppresses the normal password prompt from the client to the user\. This is useful when accessing a service that does not require a password\.
+.sp
+Unless a password is specified on the command line or this parameter is specified, the client will request a password\.
+.sp
+If a password is specified on the command line and this option is also defined the password on the command line will be silently ingnored and no password will be used\.
+.RE
+.PP
+\-k
+.RS 4
+Try to authenticate with kerberos\. Only useful in an Active Directory environment\.
+.RE
+.PP
+\-A|\-\-authentication\-file=filename
+.RS 4
+This option allows you to specify a file from which to read the username and password used in the connection\. The format of the file is
+.sp
+.sp
+.RS 4
+.nf
+username = <value>
+password = <value>
+domain   = <value>
+.fi
+.RE
+.sp
+Make certain that the permissions on the file restrict access from unwanted users\.
+.RE
+.PP
+\-U|\-\-user=username[%password]
+.RS 4
+Sets the SMB username or username and password\.
+.sp
+If %password is not specified, the user will be prompted\. The client will first check the
+\fBUSER\fR
+environment variable, then the
+\fBLOGNAME\fR
+variable and if either exists, the string is uppercased\. If these environmental variables are not found, the username
+\fBGUEST\fR
+is used\.
+.sp
+A third option is to use a credentials file which contains the plaintext of the username and password\. This option is mainly provided for scripts where the admin does not wish to pass the credentials on the command line or via environment variables\. If this method is used, make certain that the permissions on the file restrict access from unwanted users\. See the
+\fI\-A\fR
+for more details\.
+.sp
+Be cautious about including passwords in scripts\. Also, on many systems the command line of a running process may be seen via the
+ps
+command\. To be safe always allow
+rpcclient
+to prompt for a password and type it in directly\.
+.RE
+.PP
+\-n <primary NetBIOS name>
+.RS 4
+This option allows you to override the NetBIOS name that Samba uses for itself\. This is identical to setting the
+\fInetbios name\fR
+parameter in the
+\fIsmb\.conf\fR
+file\. However, a command line setting will take precedence over settings in
+\fIsmb\.conf\fR\.
+.RE
+.PP
+\-i <scope>
+.RS 4
+This specifies a NetBIOS scope that
+nmblookup
+will use to communicate with when generating NetBIOS names\. For details on the use of NetBIOS scopes, see rfc1001\.txt and rfc1002\.txt\. NetBIOS scopes are
+\fIvery\fR
+rarely used, only set this parameter if you are the system administrator in charge of all the NetBIOS systems you communicate with\.
+.RE
+.PP
+\-W|\-\-workgroup=domain
+.RS 4
+Set the SMB domain of the username\. This overrides the default domain which is the domain defined in smb\.conf\. If the domain specified is the same as the servers NetBIOS name, it causes the client to log on using the servers local SAM (as opposed to the Domain SAM)\.
+.RE
+.PP
+\-O socket options
+.RS 4
+TCP socket options to set on the client socket\. See the socket options parameter in the
+\fIsmb\.conf\fR
+manual page for the list of valid options\.
+.RE
+.PP
+\-T tar options
+.RS 4
+smbclient ã\(a- SMB/CIFS å\(+-æä\(acã\(rgå\(adã\(bbã\(rgãã\(r!ã\(Csã\(Foã\(Fo ããã\(bbãtar(1)
+ä\(Omæã\(rgããã\(a-ã\(ctãããè\(r!ãä\(Omã ã\(scããããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(Foè\(ad\%å\(rgå\(a-è\(12ã\(Ofå\(a-æ\(no\(r!çã\(Of tar ãã\(coã\(deã\(a-ä\(Fc\(Yeä\(acã\(rgã\(adããã
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIc\fR
+\- UNIX ä\(acã\(sc tar ãã\(r!ã\(Csã\(Foãä\(12æããããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(rgå\(34ã\(Foã\(a- tar ãã\(r!ã\(Csã\(Foã\(rgååããã\(14ãããã\(Csã\(S1ããããã\(a-æ\(adæ\(Omå\(Omåãæå\(S3ãã "\-" ã\(rgãããããæå\(rgãã\(Ofããã\(deã\(Ofãã\(Ofãã æ\(adæ\(Omå\(Omåãæå\(rgããå\ \(aaåãã\%ã\(deã\(noãã\(Foãæä\(12ã\(rg \-d0 ã\(Foãã\(bbã tar ãã\(r!ã\(Csã\(Foã\(rgå\(Omåãç\ \(aaå\(Poããã\(Ofãããã\(Foãããã\(adã ãã\(rgãã\(coã\(deã\(a-
+\fIx\fR
+ãã\(coã\(deã\(adä\(Omãã\(Fo æä\(Fcçã\(Ofé\(ctä\(r?ã\(Foããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIx\fR
+\- ã\%ã\(14ã\(Foã\(Foã\(rg tar ãã\(r!ã\(Csã\(Foãå\(+-æã\(Foå\(+-é (ã\(Ofã\(S1ãã\(ct) ããã\-D ã\(Ofãã\(mdã\(scã\(S3ã æå\(rgããã\(bbãã\(Ofãã\(adãtar ãã\(r!ã\(Csã\(Foã\(a-å\(+-æã\(rgæä\(acä\(12 ãã\(Poã\(noã\(a-ãã\(Ofããã\(Ofã\(S1ãã\(ctãããã ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(rgå\(34ã\(Foã\(a- tar ãã\(r!ã\(Csã\(Foã\(rgååãããã\(Csã\(S1ã\(rgååã ãããã\(a- æ\(adæ\(Omå\(Yeåãæå\(S3ãã "\-" ãæå\(rgãã\(Ofããã\(deã\(Ofãã\(Ofãã ãã\(rgãã\(coã\(deã\(a-
+\fIc\fR
+ãã\(coã\(deã\(adä\(Omãã\(Fo æä\(Fcçã\(Ofé\(ctä\(r?ã\(Foãããã\(Ofã\(S1ãã\(ctããããã\(r!ã\(Csã\(Foã\(a-ãä\(12ææ\(Yeæ (mtime) ã tar ãã\(r!ã\(Csã\(Foã\(Foä\(r?å\%ãããæç\(S1ã\(rgæ\(Yeä\(Fcã\(Foã\(Ofãã ã\(34ããç\(34å\(adãã\(Poã\(noã\(a-ãã\(Ofã\(Foã\(Csãã\(bbã\(a-ãä\(12ææ\(Yeæãæ\%\(Poãã ã\(Ofã\(S1ãã\(ctããã\(Ofãã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fII\fR
+\- æå\(rgãããã\(r!ã\(Csã\(Foã\(ad ãã\(Poã\(noã\(a-ãã\(Ofãå\(bbçã\(rgå\(a-\(34è\(+-\(r!ã\(Foããããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a-ããã\(r!ã\(Csã\(Foåã æå\(rgããã\(bbããå\ \(aaåã\(rgããã\(coã\(Foãã\(rgåä\(12ã\(scãããtar ãã\(r!ã\(Csã\(Foã å\(+-éã\(34ãã\(a-ä\(12æããæã\(Foãæå\(rgããããã\(rgã\ ããå\(bbçã\(rgå\(a-\(34è\(+-\(r!ã\(Foãã (å\(34ã\(Poã\(bbãããä\(Fc\(Yeå\(Csã\(rgãã\(rgã\(a-å\(adã\(bbé\(Cså\(Csããã)ã ä\(acè\(adã\(rgä\(34ãåç\(scã\(rgãã\(adããã\(r!ã\(Csã\(Foåã\(rgã\(a-ã\(Csã\(Foãã\(Foã\(14ãæå\(rgæ\(coè\(12ã\(a-ã ä\(Omã\(Csããæ\(S1å\(14ã\(rgã\(coã\(r!ãããä\(12\(r?ããä\(acè\(adã\(rg
+\fIr\fR
+ã\(Ofãã\(mdã\(scã\(S3ãåç\(scã\(rgãã\(adã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIX\fR
+\- æå\(rgãããã\(r!ã\(Csã\(Foã\(ad ãã\(Poã\(noã\(a-ãã\(Ofã å\(bbçã\(rgå\(a-\(34è\(+-\(r!ããé\(Cså\(Csããããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(a- tar ãã\(r!ã\(Csã\(Foãå\(+-éã\(34ãã\(a-ä\(12æããæã\(Foãæå\(rgããããã\(rgãå\(bbçã\(rgå\(a-\(34è\(+-\(r!ãã é\(Cså\(Csãããä\(acè\(adã\(rgä\(34ãåç\(scã\(rgãã\(adã ãã\(r!ã\(Csã\(Foåã\(rgã\(a-ã\(Csã\(Foãã\(Foã\(14ã æå\(rgæ\(coè\(12ã\(a-ãä\(Omã\(Csããæ\(S1å\(14ã\(rgã\(coã\(r!ãããä\(12\(r?ããä\(acè\(adã\(rg
+\fIr \fR
+ã\(Ofãã\(mdã\(scã\(S3ãåç\(scã\(rgãã\(adã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIF\fR
+\- ãã\(r!ã\(Csã\(Foã\(adãã\(Poã\(noã\(a-ãã\(Ofã\(rgä\(acè\(bb\(scãå\(Foããã\(r!ã\(Csã\(Foã\(scããã
+\fIF\fRã\(Ofãã\(mdã\(scã\(S3ã\(a-ãå\(+-éã\(34ãã\(a-ä\(12ææã\(Foå\(Foã\(34ãã ãã\(r!ã\(Csã\(Foã\(adãã\(Poã\(noã\(a-ãã\(Ofã\(rgã\(Ofã\(S1ããå\(Foããã\(r!ã\(Csã\(Foåã\(adãã\(bbä\(12æããããã\(rgtarãã\(r!ã\(Csã\(Foã\(rgååã\(adã\(Ofãã (and therefore everything else to be excluded)\. ä\(Fc\(Yeä\(acã\(rgä\(34ãåç\(scã\(rgãã\(adããã\(r!ã\(Csã\(Foåã\(rg globbingã\(a-ï\(14ã\(Csã\(rgæ\(S1æ\(S3ã\(rgã\(coã\(r!ããã\(scåä\(12ããã ä\(acè\(adã\(rg\fIr\fRã\(Ofãã\(mdã\(scã\(S3ãåç\(scã\(rgãã\(adã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIb\fR
+\- ãã\%ãã\(a-ã\(mcã\(Csã\(Omã ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(rgå\(34ã\(Foã\(a-æå\(S1ã\(Of (1 ä\(Fc\(Yeä\(acã\(rg) ãã\%ãã\(a-ã\(mcã\(Csã\(Omã æå\(rgãã\(Ofããã\(deã\(Ofãã\(Ofãããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(Foãããtar ãã\(r!ã\(Csã\(Foã\(a-ã ãã\%ãã\(a-ã\(mcã\(Csã\(Om*TBLOCK (éå\(ac\(ac 512 ãã\(Csã) ãã\%ãã\(a-ã\(rgåä\(12ã\(sc æ\(acãå\(Omãããããã\(Foã\(Ofãã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIg\fR
+\- ã\(Csã\(S3ã\(a-ã\(Ofã\(r!ã\(S3ã\(r?ã\(Fo (å\(ctå)ã ã\(ctã\(14ã\(Foã\(Csãããããç\(Foã\(Poã\(bbãããã\(r!ã\(Csã\(Foã\ ããããã\(a-ã\(ctãã ããã
+\fIc\fR
+ãã\(coã\(deãæå\(rgããã\(bbããæã\(rgã\(r? æå\(S3ããã\(Csã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIq\fR
+\- è\(r!\(adç\(Cs\(Omã\(rgææ\%\(ct(quiet)ã åä\(12ä\(ac\%ã\(rgç\(psæã\(r!ãã\(Fcã\(14ã\(acã\(rgè\(r!\(adç\(Cs\(Omãææ\%\(ctãããããã\(a-ãtar ã\(ctã\(14ãã\(scã åæ\(scã\(scããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIr\fR
+\- æ\%\(Poè\(bbè\(r!\(adç\(34ã HAVE_REGEX_H ãã\(coã\(deãè\(ad\%å\(rgãã\(bbã\(S3ã\(S3ãã\(Csã\(Foããå\ \(aaåã\(a-ãå\(bbçå\(a-\(34è\(+-\(r!ã\(Fo å\(Foãããé\(Cså\(Csãããã\(r!ã\(Csã\(Foãæå\(rgããç\(Omã\(Foæ\%\(Poè\(bbè\(r!\(adç\(34ãä\(12\(r?ããã\(adãã\(scããã (è\(ad\(S3æ\(S3\(ad: åæã\(scã\(a- "excluding or excluding files" ã\(adã\(Ofã\(Poã\(bbãããã "including or excluding files" ã\(rgè\(Of\(Csãã\ ã\(adæããã) ãããããã\(rgã\(ctã\(14ãã\(a-éå\(ac\(acã\(FoéããHAVE_REGEX_H ãã\(coã\(deã\(Ofãã\(sc ã\(S3ã\(S3ãã\(Csã\(Foãããå\ \(aaåã\(a-ã * ã\(ad ? ãç\(adãã éå\(rgçã\(Ofã\(a-ã\(Csã\(Foãã\(Foã\(14ãã ä\(12\(r?ç\(adã\(scããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIN\fR
+\- æ\(aaæ\(de(newer)ã ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(rgå\(34ã\(Foã\(a-ããã\(r!ã\(Csã\(Foåãæå\(rgããå\(r?è\(bbãããã ãã\(rgãã\(r!ã\(Csã\(Foã\(rgæ\(Yeä\(Fcã\(adä\(12æä\(ac\%ã\(Foå\(+-æä\(acã\(scè\(bbä\(Fcãã\(Poããã\(r!ã\(Csã\(Foã\(rgæ\(Yeä\(Fcã\(adã æ\(a-è\(14ããããæå\(rgããããã\(r!ã\(Csã\(Foããæ\(deãããã\(r!ã\(Csã\(Foã\ ãã tar ãã\(r!ã\(Csã\(Foã\(Foããã\(a-ã\(ctãããããã
+\fIc\fR
+ãã\(coã\(deãæå\(rgããã\(bbããæã\(rgã\(r?æå\(S3ããã\(Csã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIa\fR
+\- ã\(ctã\(14ã\(Foã\(Csããããã ã\(Fcããããããã\(r!ã\(Csã\(Foãããã\(a-ã\(ctãããããæç\(S1ã\(scã\(ctã\(14ã\(Foã\(Csããããã ã\(a-ã\(Ofã\(ctãããã
+\fIg\fR
+ããã\(S3
+\fIc \fR
+ãã\(coã\(deãè\(ad\%å\(rgããã\(bbããæã\(rgã\(r?æå\(S3ããã\(Csã
+.sp
+.RE
+\fITar ã\(Foãããé\(mdããã\(r!ã\(Csã\(Foå\fR
+.sp
+smbclient
+ã\(rg tar ã\(Ofãã\(mdã\(scã\(S3ã\(a-ã ç\(34å\(ad ããã\(a-ã\(ctããã\(adã\(Ofã\(S1ãã\(ctã\(rgä\(ac\(r!æ\(S1ã\(scé\(mdããã\(r!ã\(Csã\(Foåãã\(mcãã\(14ããã\(bbããããããã ãã\(r!ã\(Csã\(Foã\(rgãã\(Foãã\(S1åã\(a- 1024 ãã\(Csãä\(Fc\(Yeä\(acã\(scããå\(r?è\(bbããããã\(34ã tar ã\(ctã\(14ã\(Foã\(Csããä\(12æãããæã
+smbclient
+ã\(rg tar ã\(Ofãã\(mdã\(scã\(S3ã\(a-ãã\(rgã\(ctã\(14ã\(Foã\(Csãåã\(rgå\(adã\(bbã\(rgãã\(r!ã\(Csã\(Foãç\(mc\(pså\(a-\(34ãã\(r!ã\(Csã\(Foåã\(scã\(a-ã\(Ofãã ç\(acå\(a-\(34ãã\(r!ã\(Csã\(Foåã\(scè\(adé\(S2ããã
+.sp
+\fITar ãã\(r!ã\(Csã\(Foå\fR
+.sp
+å\(adã\(bbã\(rgãã\(r!ã\(Csã\(Foã\(Foã\(a-ãDOS ã\(rgãã\(S1å(\'\e\e\'ããã\(S1åã\(rgå\(Omåãã\(adãã) ãä\(Fcä\(acããããUNIX ã\(rgãã\(S1å (\'/\'ããã\(S1åã\(rgå\(Omåãã\(adãã) ãä\(Fcä\(acãã ãã\(adãã\(scããã
+.sp
+\fIä\(34\fR
+.sp
+tar ãã\(r!ã\(Csã\(Foã\(rg
+\fIbackup\.tar\fR
+ã mypc ä\(acã\(rg myshare (ãã\(S1ã\(a-ã\(14ãã\(Ofã) ã\(Foã\(Ofã\(S1ãã\(ctããã
+.sp
+smbclient //mypc/yshare "" \-N \-Tx backup\.tar
+.sp
+\fIusers/docs\fR
+ä\(Fc\(Yeå\(Csã\(rgå\(adã\(bbãã\(Ofã\(S1ãã\(ctããã
+.sp
+smbclient //mypc/myshare "" \-N \-TXx backup\.tar users/docs
+.sp
+\fIusers/docs\fR
+éä\(acã\(rgãã\(r!ã\(Csã\(Foãå\(Foã tar ãã\(r!ã\(Csã\(Foãä\(12æããã
+.sp
+smbclient //mypc/myshare "" \-N \-Tc backup\.tar users/docs
+.sp
+ä\(acè\(adã\(adåã tar ãã\(r!ã\(Csã\(Foãä\(12æããããDOS ã\(rgãã\(S1åãä\(12\(r?ç\(adããã
+.sp
+smbclient //mypc/myshare "" \-N \-Tc backup\.tar users\e\eedocs
+.sp
+(è\(ad\(S3æ\(S3\(ad: åæã\(a- \-tc ã\(adã\(Ofã\(Poã\(bbãããã\-Tc ãæ\%\(Poããã\(adæããããã\(34ãã \e ã\(a-ã\(S3ãã\(S3ãã\(coã\(Csã\(S3ä\(acã\(scã\(a- \e\e ã\(adããå\(r?è\(bbãããã)
+.sp
+å\(+-æä\(acã\(Foããå\(adã\(bbã\(rgãã\(r!ã\(Csã\(Foã\(adãã\(Poã\(noã\(a-ãã\(Ofãå\(Foã tar ãã\(r!ã\(Csã\(Foãä\(12æããã
+.sp
+smbclient //mypc/myshare "" \-N \-Tc backup\.tar *
+.RE
+.PP
+\-D initial directory
+.RS 4
+åä\(12ãéå\(scããåã\(Foããã\(Poã\(noã\(a-ãã\(Of initial directory ã\(Foç\(sc\(Fcåããããããããå\(coç\(adãããã\(rgã\(a- tar ã\(Ofãã\(mdã\(scã\(S3 \-T ãæå\(rgããã ã\(adãã\ ãã\ ããã
+.RE
+.PP
+\-c command string
+.RS 4
+command string ã\(a-ã\(Fcãã\(S3ã\%ã\(S3ã\(scå\(Omåã\(Poãã\(S3ãã\(S3ãã\(rg ã\(Ofã\(S1ãã\(scããããã\(rgã\(S3ãã\(S3ãã\(a-ãæ\(adæ\(Omå\(Yeåããåãåãã\(S3ãã\(S3ãã\(rgä\(Fc\(Poããã\(Fo å\(rgè\(r!ãããã\fI\-N\fR
+ã\(Ofãã\(mdã\(scã\(S3ã
+\fI\-c \fR
+ã\(Ofãã\(mdã\(scã\(S3ã\(Foãã\(Poã\(bbãæé\(Fcã\(rgåã\(Foè\(ad\%å\(rgãããã
+.sp
+ãã\(rgã\(Ofãã\(mdã\(scã\(S3ãç\(S1ã\(Foå\(12\(S1ç\(Foã\(Csã\(rgã\(a-ãã\(S1ã\(a-ã\(Ofããã\(scå\(coç\(adãããã æ\(adæ\(Omå\(Yeåãä\(34ãã\(de
+\-c \'print \-\'
+ã\(rgããã\(Foãã\(bb ã\(mcã\(14ãã\(Foå\(Omåãããããå\ \(aaåã\(scããã
+.RE
+.SH "ã\(Ofãã\(noã\(14ã\(mdã\(scã\(S3(æä\(12)"
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ããè\(mc\(mdåããã\(adãã\(bbã\(14ã\(psã\(Foã\(a-ä\(Fc\(Yeä\(acã\(rgããã\(Ofãã\%ã\(S3ãããè\(r!\(adç\(Cs\(Omãããã
+.PP
+smb:\e>
+.PP
+ããã\(a-ã\(S1ã\(coãã\(mdã\(Ye ("\e\e") ã\(a-ã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofãç\(Cs\(Omãã\(bbããã ä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofãå\(Csããã\(adãã\(rgè\(r!\(adç\(Cs\(Omãå\(Csããã
+.PP
+ãã\(rgãã\%ã\(S3ããã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(rgæ\(Omåãã\(scããã\(bbã\(14ã\(psã\(rgã\(S3ãã\(S3ãå\(rgè\(r!ã å\(34æ\(coãã\(bbããä\(Omãç\(Cs\(Omãã\(bbãããåã\(S3ãã\(S3ãã\(a-ãä\(acã\(Csã\(rgåè\(Ofã\(scããããã\(S3ãã\(S3ãã\(Foãã\(Poã\(bbã\(a-ã ã\(S3ãã\(S3ãå\(Omæã\(rgãã\(coã\(r!ã\(14ã\(r?ãæå\(rgããä\(Omãã\(scãããã\(S3ãã\(S3ãã\(adãã\(coã\(r!ã\(14ã\(r?ã\(a-ã ç\(S1ã\(Foæ\(S3\(adéãã\(Ofãéããã\(S1ãã\(14ã\(S1ã\(scå\(Omåãããã å\(adã\(bbã\(rgã\(S3ãã\(S3ãã\(a-å\(Cs\(scæå\%å\(deæå\%ãè\%å\(Yeãã\(Ofãã ã\(S3ãã\(S3ãã\(rgãã\(coã\(r!ã\(14ã\(r?ã\(a-ãã\(S3ãã\(S3ãã\(Foãã\(Poã\(bbå\(Cs\(scæå\%ã\(adå\(deæå\%ãå\(Omå\(Yeãããã ããã\(Ofãã\(Poããããã
+.PP
+ã\(S1ãã\(14ã\(S1ãå\(Foã\(34ãã\(bbãããã\(r!ã\(Csã\(Foåã\(a-ãååãããã\(Foã\(a-ã\(Ofã\(14ãæå\%ã\(scãä\(34ãã\(deã "a long file name" ã\(rgããã\(Foæ\(noãä\(Omã\(scæå\(rgã\(scããã
+.PP
+å\(Cs\(scæ\(noå\(14\(sc ("[" ã\(ad "]") ã\(scæ\(noããã\(bbç\(Cs\(Omããã\(bbãããã\(coã\(r!ã\(14ã\(r? (ä\(34ãã\(de "[parameter]") ã\(a-ãã\(Ofãã\(mdã\(scã\(S3ã\(scãããæå\(rgããã\(Ofãã\(Poãå\ \(aaåãã\(S3ãã\(S3ãã\(a-é\(coåã\(Ofããã\(coã\(Foãå\(Csãç\(adããã ä\(acç\%å\(mdè\(adå\(md ("<" ã\(ad ">") ã\(scæ\(noããã\(bbç\(Cs\(Omããã\(bbãããã\(coã\(r!ã\(14ã\(r? (ä\(34ãã\(de "<parameter>") ã\(a-ãå\(r?é\ ã\(scããã
+.PP
+ã\(mcã\(14ãä\(acã\(scã\(rgã\(S3ãã\(S3ãã\(rgå\(rgè\(r!ã\(a-ãå\(rgéã\(Foã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbè\(bbæ\(+-ãç\(Omè\(r!ããä\(Omã\(sc å\(rgè\(r!ãããä\(Omã\(Foæ\(S3\(adæãã\(bbã\(Fcãããå\(34ã\(Poã\(bbããã\(rgåä\(12ã\(a-ã\(mcã\(14ãéã\(scç\(deã\(Ofãå\ \(aaåãããã ã\(mcã\(14ãã\(rgå\(rgè\(Poæ\(S1æ\(S3ã\(Foä\(34å\%ãã\(bbããã
+.PP
+å\(coç\(adã\(scããã\(S3ãã\(S3ããä\(Fc\(Yeä\(acã\(Foã\(ctã\(Foãã\(r!ãããé\ ã\(scç\(aa\(S1ä\(Fcããã
+.PP
+? [command]
+.RS 4
+\fIcommand\fR
+ãæå\(rgããã\(adã? ã\(S3ãã\(S3ãã\(a-æå\(rgãããã\(S3ãã\(S3ãã\(Foã\(Csãã\(bbã\(rgç\(de\(r!æ\(12ã\(scæçã\(Ofè\(Of\(noæãè\(r!\(adç\(Cs\(Omããã command ãæå\(rgãã\(Ofãã\(adãå\(coç\(adã\(scããã\(S3ãã\(S3ãã\(rgä\(acè\(bb\(scãè\(r!\(adç\(Cs\(Omãããã
+.RE
+.PP
+! [shell command]
+.RS 4
+\fIshell command\fR
+ãæå\(rgããã\(adã ! ã\(S3ãã\(S3ãã\(a-ã\%ã\(14ã\(Foã\(Foã\(scã\(mdã\(scã\(Foãè\(mc\(mdåããæå\(rgãããã\(mdã\(scã\(Foã\(S3ãã\(S3ããè\(mc\(mdåããã ã\(S3ãã\(S3ããæå\(rgãã\(Ofãã\(adãã\%ã\(14ã\(Foã\(Foã\(Ofã\(mdã\(scã\(Foãè\(mc\(mdåããã
+.RE
+.PP
+allinfo file
+.RS 4
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ããã\(r!ã\(Csã\(Foã\(34ãã\(a-ãã\(Poã\(noã\(a-ãã\(Ofã\(Foã\(Csãã\(bbã\(rgãã\(S1ã\(bbã\(rg å\%å\(adããæå\ \(+-(streamãå\(Foã)ãã\(mcã\(14ããè\(r?ãè\(bbæ\(+-ãå\(Omãã
+.RE
+.PP
+altname file
+.RS 4
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ããã\(r!ã\(Csã\(Foã\(34ãã\(a-ãã\(Poã\(noã\(a-ãã\(Ofã\(rg "ä\(Fc\(Poãã" ã\(rgåå (8\.3å\(12\(ctå\(14ã\(rgåå) ãè\(r?ãããã\(Foã\(mcã\(14ãã\(Foè\(bbæ\(+-ããã
+.RE
+.PP
+archive <number>
+.RS 4
+ãã\(r!ã\(Csã\(Foä\(acã\(scæä\(12ãè\(r!ãã\(adãã\(Foã\(ctã\(14ã\(Foã\(Csãã\(noãã\(Foãè\(ad\%å\(rgããã 0ã\(a-ã\(ctã\(14ã\(Foã\(Csãããããç\(r!è\(bbã1ã\(a-ãã\(rgããããè\(ad\%å\(rgããããã\(Foã\(rgã\(r?ãã\(r!ã\(Csã\(Foãæä\(12ãã 2ã\(a-æä\(12æã\(Foãã\(rgããããè\(ad\%å\(rgããæä\(12ç\(mcä\(Omå\(34ã\(Foããããè\(sc\(Poé\(Csããã\(rgã\(r?è\(r!ãã 3ã\(a-ãã\(S1ã\(bbã\(rgãã\(r!ã\(Csã\(Foã\(Foå\(a-\(34ãã\(bbæä\(12æã\(Foè\(ad\%å\(rgãè\(r!ããæä\(12ç\(mcä\(Omå\(34ã\(Foããããè\(sc\(Poé\(Csããã æ\(ctå\(rgå\(Csã\(a-0ã\(scããã
+.RE
+.PP
+blocksize <number>
+.RS 4
+æä\(12æã\(rgãã\%ãã\(a-ã\(mcã\(Csã\(Omãã\(coã\(r!ã\(14ã\(r?ãè\(ad\%å\(rgãããæ\(ctå\(rgå\(Csã\(a-20ã\(scããã tarãã\(r!ã\(Csã\(Foã\(rgå\(Omåãblocksize*TBLOCK(éå\(ac\(ac512ãã\(Csã)ã\(bbããããã\(adã\(Foè\(r!ãããã\(Foããã
+.RE
+.PP
+cancel jobid0 [jobid1] \.\.\. [jobidN]
+.RS 4
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãä\(acããããã\(acã\(scã ID ã\(rgå\(deå\(mdã\(acã\(scãã ã\%ã\(Poã\(S3ã\(Fcã\(Foããããã\(Foã\(mcã\(14ãã\(Foè\(bbæ\(+-ããã
+.RE
+.PP
+case_sensitive
+.RS 4
+ã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbããã\(r!ã\(Csã\(Foåã\(rgå\(Cs\(scæå\%å\(deæå\%ã\(rgå\(Omå\(Yeãè\(r!ããã\(adã åããSMBãã\(+-ããä\(ac\%ã\(rgãã\(coã\(deã\(rgOn/Offãè\(r!ããæ\(ctå\(rgå\(Csã\(scã\(a-ãOFFã\(Foè\(ad\%å\(rgããã (ãã\(r!ã\(Csã\(Foã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbãã\(r!ã\(Csã\(Foåã\(rgå\(Cs\(scæå\%å\(deæå\%ã\(rgå\(Omå\(Yeãè\(r!ãã\(Ofãä\(Omãåãã)ã smb\.confä\(ac\%ã\(sc case sensitive parameter ãè\(ad\%å\(rgããã\(bbããSamba 3\.0\.5ä\(Fc\(Yeé ã\(rgã\(mcã\(14ãã\(Foã\(rgã\(r?ãç\(34å\(adå\(12\(+-é\(r?ããã
+.RE
+.PP
+cd <directory name>
+.RS 4
+ãããã"ãã\(Poã\(noã\(a-ãã\(Ofå"ãæå\(rgãããã\(Ofãã\(deãã\(mcã\(14ãä\(acã\(rg ç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofã\(a-æå\(rgããããã\(Poã\(noã\(a-ãã\(Ofã\(Foå\(Csæ\(aaãããããã\(rgæä\(12ã\(a-ã ãã\(rgãã\(Poã\(noã\(a-ãã\(Ofãã\(ctã\(a-ã\(Fcã\(S1ä\(acè\(12ã\(rgå\ \(aaåå\(Cs\(+-æããã
+.sp
+ãããããã\(Poã\(noã\(a-ãã\(Ofåãæå\(rgããã\(Ofãå\ \(aaåã\(a-ãã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\% ãã\(Poã\(noã\(a-ãã\(Ofãè\(r!\(adç\(Cs\(Omãããã
+.RE
+.PP
+chmod file mode in octal
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ãã\(rg CIFS UNIX æ\(r!å\(14\(mcã\(rgã\(mcãã\(14ãã\(Foä\(34å\%ãã ã\(mcã\(14ããã\(mcãã\(14ããã\(bbãã\(Ofãå\ \(aaåã\(a-å\(Cs\(+-æãããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãUNIX ã\(scã\(rgæ\(adæ\(Omå\(12\(ctå\(14ã\(scãã 8 é\(S2æ\(deã\(scã\(rg UNIX ãã\(14ããã\(mdã\(scã\(S3ã\(Foå\(Csæ\(aaããããã\(Fo ã\(mcã\(14ãã\(Foè\(bbæ\(+-ããã
+.RE
+.PP
+chown file uid gid
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ãã\(rgCIFS UNIXæ\(r!å\(14\(mcã\(rgã\(mcãã\(14ãã\(Foä\(34å\%ãã ã\(mcã\(14ããã\(mcãã\(14ããã\(bbãã\(Ofãå\ \(aaåã\(a-å\(Cs\(+-æãããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãä\(acãããã 10é\(S2æ\(deã\(rgã\(bbã\(14ã\(psIDãã\(deã\(Foã\(14ãIDã\(Foææèãå\(Csæ\(aaããããã\(Foã\(mcã\(14ãã\(Foè\(bbæ\(+-ããã ç\(34å\(adã\(a-ãä\(acããããååããã\(Ofã\(ctã\(14ãã\(rg uid ã\(ad gid ãæ\(Csç\(aa\(ctããæ\(S1æ\(S3ã\(a- ã\(Ofããã\(adã\(Foæ\(S3\(adæãããã\(a-ãå\(deæ\(Yeã\(rgãã\(14ã\(acã\(scã\(S3ã\(rg CIFS UNIX æ\(r!å\(14\(mcã\(Foãã\(Poã\(bb å\(a-\(34å\(r?ãããããããã\(Ofãã
+.RE
+.PP
+close <fileid>
+.RS 4
+openã\(S3ãã\(S3ãã\(scéãããã\(r!ã\(Csã\(Foãæç\(Cs\(Omçã\(Foã\(a-ã\%ã\(14ã\(Omããã Sambaåé\(adã\(rgãã\(S1ããã\%ã\(Fcã\(S1ã\(scã\(rgã\(r?ä\(12\(r?ç\(adããã
+.RE
+.PP
+del <mask>
+.RS 4
+ã\(a-ã\(coã\(Csã\(ctã\(S3ããã\(mcã\(14ãã\(Foå\(a-\(34ããã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rg ä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofã\(sc
+\fImask\fR
+ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rg ãã\(r!ã\(Csã\(Foãåé\(Csããããã\(Foè\(bbæ\(+-ããã
+.RE
+.PP
+dir <mask>
+.RS 4
+ã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofã\(scã\fImask \fR
+ã\(Foä\(acè\(aaãããã\(r!ã\(Csã\(Foã\(rgä\(acè\(bb\(scãã\(mcã\(14ãããå\(Yeæããè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+du <filename>
+.RS 4
+ãã\(Poã\(noã\(a-ãã\(Ofã\(rgè\(r!\(adç\(Cs\(Omãè\(r!ããæ\(no\(r!ã\(Foãç\(34å\(adã\(rgãã\(Poã\(S1ã\(a-ã\(rgä\(12\(r?ç\(adéã\(adå\(+-æä\(acã\(rgç\(co\(Omãã\(S1ãã\(14ã\(S1ãè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+echo <number> <data>
+.RS 4
+pingãè\(r!ããããSMBechoè\(bbæ\(+-ãã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbéããSambaåé\(adã\(rgãã\(S1ãã\(rgããã\(Foã\(rgã\(r?ä\(12\(r?ãããã
+.RE
+.PP
+exit
+.RS 4
+ã\(mcã\(14ãã\(adã\(rgæ\(Yeç\(psãç\(mcä\(Omãããã\%ã\(deã\(coã\ ãç\(mcä\(Omããã
+.RE
+.PP
+get <remote file name> [local file name]
+.RS 4
+\fIremote file name\fR
+ã\(adããååã\(rg ãã\(r!ã\(Csã\(Foãã\(mcã\(14ãããã\(a-ã\(coã\(Csã\(ctã\(S3ããå\(rgè\(r!ãã\(bbãããã\(mdã\(S3ã\(acã\(S3ãã\(14ããã
+\fIlocal file name\fR
+ãæå\(rgããã\(bbããã\(adã ãããã\%ã\(14ã\(Foã\(Foã\(Foã\(S3ãã\(14ããããã\(r!ã\(Csã\(Foã\(rgååã\(adã\(Ofãã
+smbclient
+ã\(Foãããã\(r!ã\(Csã\(Foã\(rgè\(Fc\(ctéã\(a-ããã\(S1ã\(bb binary ã\(ctã\(14ãã\(scè\(r!ããããã\(adã\(Foæ\(S3\(adæãã\(bbã\(Fcãããlowercase ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+getfacl <filename>
+.RS 4
+ã\(mcã\(14ããUNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbããä\(Omãè\(bbæ\(+-ããããã\(r!ã\(Csã\(Foä\(acã\(rgPOSIX ACLãè\(bbæ\(+-ããè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+hardlink <src> <dest>
+.RS 4
+Windowsã\(rgCIFSææ\(S3ãã\(Csãã\(Poã\(bbãã\(mcã\(14ãä\(acã\(Foãã\(14ãã\(Ofã\(S3ã\(a-ãä\(12æããã
+.RE
+.PP
+help [command]
+.RS 4
+åè\(r?\(deã\(rg ? ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+history
+.RS 4
+ã\(S3ãã\(S3ãå\(+-\(Yeæ\%\(aaãè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+iosize <bytes>
+.RS 4
+ãã\(r!ã\(Csã\(Foéåä\(r?\(r!ã\(rgéãsmbclientã\(a-æ\(ctå\(rgå\(Csã\(sc64512ãã\(Csãã\(rg åé\(adã\(r!ã\(ctã\(Ofãããã\(r!ãä\(12\(r?ç\(adããããã\(rgã\(S3ãã\(S3ãã\(a-ã16384(0x4000)ãã\(Csããã 16776960(0xFFFF00)ãã\(Csãã\(rgç\(a-å\(S2ã\(scããã\(rgã\(mcã\(Csã\(Omãå\(Csæ\(aaãããã\(adãå\(Omæ\(Yeãã æ\(Yeç\(psãããã\(mcã\(14ãã\(Foå\(a-\(34ãã\(bbããå\(S1ççã\(Ofè\(Of\%ã\(r?æ\(acãè\(bbæ\(+-ãä\(12\(r?ããã\(adãsmbclientã è\(r!ãããã\(Foè\(co\(bbã\(r?ãã\(rgã\(scãããå\(Cs\(scãã\(Ofã\(mcã\(Csã\(Omã\(a-ããå\(S1ççã\(Ofãã\(14ã\(r?è\(Fc\(ctéãæå\(S3ããã
+.RE
+.PP
+lcd [directory name]
+.RS 4
+\fIdirectory name\fR
+ãæå\(rgããã\(adã ã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofãæå\(rgããããã\(Poã\(noã\(a-ãã\(Ofã\(Foã\(Ofãã ä\(12ããã\(rgçç\(+-ã\(scæå\(rgããããã\(Poã\(noã\(a-ãã\(Ofã\(Foã\(ctã\(a-ã\(Fcã\(S1ã\(scãã\(Ofãã\(adã æä\(12ã\(a-å\(Cs\(+-æããã
+.sp
+ãã\(Poã\(noã\(a-ãã\(Ofåãæå\(rgãã\(Ofãã\(adãã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ä\(acã\(rgç\(34å\(adã\(rg ä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofãè\(r!\(adç\(Cs\(Omãããã
+.RE
+.PP
+link target linkname
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ãã\(rg CIFS UNIX æ\(r!å\(14\(mcã\(rgã\(mcãã\(14ãã\(Foä\(34å\%ãã ã\(mcã\(14ããã\(mcãã\(14ããã\(bbãã\(Ofãå\ \(aaåã\(a-å\(Cs\(+-æãããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãtargetã\(ad linknameãã\(r!ã\(Csã\(Foã\(rgéã\(Foãã\(14ãã\(Ofã\(S3ã\(a-ãä\(12æããããã\(Foã\(mcã\(14ãã\(Foè\(bbæ\(+-ããã linknameãã\(r!ã\(Csã\(Foãå\%å\(adãã\(bbã\(a-ããã\(Ofãã
+.RE
+.PP
+listconnect
+.RS 4
+DFSã\(rgããã\(Foãç\(34å\(adä\(r?æãã\(bbããæ\(Yeç\(psç\(psæ\(S3ãè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+lock <filenum> <r|w> <hex\-start> <hex\-len>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããä\(acããããã\(noã\(S3ã\(acä\(acã\(scä\(acããããã\(r?ã\(Csãã\(rg POSIX fcntlã\%ãã\(a-ãè\(ad\%å\(rgããä\(Omãè\(co\(bbã\(r?ããSambaåé\(adã\(rgãã\(S1ãç\(adã\(rgã\(r?ã\(Foä\(12\(r?ãããã
+.RE
+.PP
+logon <username> <password>
+.RS 4
+åå\(Om\(bbã\%ã\(deã\(Ofã\(S3ãããã\(adã\(Foããããã\(rgã\(Fcãã\(mdã\(scã\(S3ã\(rgããã\(rgæ\(deãã vuidãç\(ct\(Omç\(Foãããæ\(deããvuidãè\(r!\(adç\(Cs\(OmãããSambaåé\(adã\(rgãã\(S1ãç\(adã\(rgã\(r?ã\(Foä\(12\(r?ãããã
+.RE
+.PP
+lowercase
+.RS 4
+get ããã\(S3 mget ã\(S3ãã\(S3ãã\(Foããã\(bbããã\(r!ã\(Csã\(Foåã å\(deæå\%åãããã\(coããã\(rgè\(ad\%å\(rgãåãæããã
+.sp
+å\(deæå\%åã ON ã\(Foããã\(adã get ããã\(S3 mget ã\(S3ãã\(S3ããä\(12\(r?ã\(Poãã\(adãã\(Foã ã\%ã\(14ã\(Foã\(Foã\(rgãã\(r!ã\(Csã\(Foåãå\(deæå\%ã\(Foå\(Csæããããããã\(a-ãã\(mcã\(14ããã (ãããã) MS\-DOS å\(12\(ctå\(14ã\(rgååãæã\(Csãã\(r!ã\(Csã\(Foãã\(S3ãã\(14ããã\(adãã\(Foå\(12\(S1ç\(Foã\(Csã UNIX ã\(mdã\(S1ãã\ ã\(scã\(a-ããã\(r!ã\(Csã\(Foåãå\(deæå\%ã\(Foããã\(rgãä\(acè\(noçã\(scããããã\(scããã
+.RE
+.PP
+ls <mask>
+.RS 4
+åè\(r?\(deã\(rg dir ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+mask <mask>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ãmget ã\(ad mput ã\(S3ãã\(S3ããåå\(ac\(deçã\(Ofæä\(12ã è\(r!ãã\(adãã\(Foç\(adãããã\(S1ã\(a-ãè\(ad\%å\(rgããã
+.sp
+åå\(ac\(deã\(ctã\(14ãã ON ã\(rgã\(adãã mget ã\(ad mput ã\(S3ãã\(S3ãã\(Foæå\(rgãããã\(S1ã\(a-ã\(a- ãã\(r!ã\(Csã\(Foã\(Foå\(a-\(34ãããã\(Poã\(Foã\(r?ã\(adãã\(bbã\(scã\(a-ã\(Ofãããã\(Poã\(noã\(a-ãã\(Ofã\(Foå\(a-\(34ãããã\(Poã\(Foã\(r? ã\(adãã\(bbåãã
+.sp
+mask ã\(S3ãã\(S3ãã\(scæå\(rgãããã\(S1ã\(a-ã\(a-ããããã\(rgãã\(Poã\(noã\(a-ãã\(Oféä\(acã\(rg ãã\(r!ã\(Csã\(Foããã\(Poã\(Foã\(r?ããããã\(Foå\(r?è\(bbã\(adã\(Ofãããã\(adãã\(deãmget ã\(S3ãã\(S3ãã "source*" ã\(rgã\(adãã\(Fo mask ãæå\(rgããã\(bbãããmask ã\(S3ãã\(S3ãã\(scæå\(rgããããã\(S1ã\(a-ã "*\.c" ã\(scãåå\(ac\(deã\(ctã\(14ãã ON ã\(scãã\(Poãã\(adãããããã\(ad mget ã\(S3ãã\(S3ãã\(a-ã ç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofä\(ac\%ã\(rg "source*" ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rgãã\(Poã\(noã\(a-ãã\(Oféä\(acã\(scã "*\.c" ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rgãã\(r!ã\(Csã\(Foãåå\(34ããã
+.sp
+æ\(ctå\(rgå\(Csã\(scã\(a- mask ã\(rgå\(Csã\(a-ç\(co\(Om (\'*\' ã\(adåç\%) ã\(Foã\(Ofã\(Poã\(bbããã mask ã\(S3ãã\(S3ããä\(12\(r?ã\(Poã\(bbå\(Csæ\(aaãããã\(34ã\(scå\(Csããã\(Ofããmask ã\(rgå\(Csã\(a-ãæå\(34ã\(Fo æå\(rgãããå\(Csãä\(r?ã\(r!ç\(psããã ä\(Omæ\(S3å\(Csã\(rgç\(mcæãæãã\(Ofãããã\(Foãmget ã mput ã\(S3ãã\(S3ããä\(12\(r?ã\(Poãå\(34ã\(Foã\(a-ã mask ã\(rgå\(Csã \'*\' ã\(Foæ\(Fcãã\(bbãããã\(adãè\(S3\(ctæã\(scããã
+.RE
+.PP
+md <directory name>
+.RS 4
+mkdir ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+mget <mask>
+.RS 4
+\fImask\fR
+ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rg ãã\(r!ã\(Csã\(Foããã\(mcã\(14ãããã\(a-ã\(coã\(Csã\(ctã\(S3ããå\(rgè\(r!ãã\(bbãããã\(mdã\(S3ã\(Foã\(S3ãã\(14ããã
+.sp
+åå\(ac\(deã\(ctã\(14ãã\(Foã\(Ofã\(Poã\(bbãããã\(coããã\(Foãã\(Poã\(bbã\fImask \fR
+ã\(rgè\(sc\(Poéãç\(deã\(Ofããã\(adã\(Foæ\(S3\(adæãè\(co\(S3ç\(aa\(deã\(a- recurse ã\(ad mask ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adãsmbclient
+ã\(Foãããã\(r!ã\(Csã\(Foã\(rgè\(Fc\(ctéã\(a-ã ãã\(S1ã\(bb binary ã\(ctã\(14ãã\(scè\(r!ããããã\(adã\(Foæ\(S3\(adæãã\(bbã\(Fcããã lowercase ãåç\(scã\(rgãã\(adã
+.RE
+.PP
+mkdir <directory name>
+.RS 4
+æå\(rgãããååã\(rgæ\(deãããã\(Poã\(noã\(a-ãã\(Ofã (ã\(bbã\(14ã\(psã\(rgã\(ctã\(a-ã\(Fcã\(S1ã è\(ad\(+-å\(a-ããã\(bbãã) ã\(mcã\(14ãä\(acã\(Foä\(12æããã
+.RE
+.PP
+mput <mask>
+.RS 4
+ã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofåã\(sc
+\fI mask\fR
+ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rgãã\(r!ã\(Csã\(Foããã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rg ä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofã\(Foã\(S3ãã\(14ããã
+.sp
+åå\(ac\(deã\(ctã\(14ãã\(Foã\(Ofã\(Poã\(bbãããã\(coããã\(Foãã\(Poã\(bbã\fImask \fR
+ã\(rgè\(sc\(Poéãç\(deã\(Ofããã\(adã\(Foæ\(S3\(adæãè\(co\(S3ç\(aa\(deã\(a-ãrecurse ã\(ad mask ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adãsmbclient
+ã\(Foãããã\(r!ã\(Csã\(Foã\(rgè\(Fc\(ctéã\(a-ã ãã\(S1ã\(bb binary ã\(ctã\(14ãã\(scè\(r!ããããã\(adã\(Foæ\(S3\(adæãã\(bbã\(Fcããã
+.RE
+.PP
+posix
+.RS 4
+CIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ãããããã\(Ofã\(ctã\(14ãã\(mcã\(14ãã\(Foåãåãããã æä\(34ããã\(bbããæ\(coè\(12ä\(acè\(bb\(scãè\(r!\(adç\(Cs\(Omããããããããã\(scããã\(deã(ãããå\(a-è\(12ã\(scããã\(de) å\(Cs\(scãã\(Ofãã\(r!ã\(Csã\(Foã\(rgè\(Of\%ã\(r?æ\(acãã\(adPOSIXãã\(S1åã\(rgå\(bbçãONã\(Foããã
+.RE
+.PP
+posix_encrypt <domain> <username> <password>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ããããã\(scã\(Ofããã\(deå\(Cs\(+-æããããã\(rgã\(S3ãã\(a-ã\(mdã\(scã\(S3ä\(acã\(scSMBæå\(mdåã\(rg ãã\(aaã\(mdã\(adã\(14ã\(mdã\(scã\(S3ãè\(co\(bbã\(r?ãããããsmbclientãkerberosè\(ad\(14ææ\(ac (\-k)ã\(scæ\(Yeç\(psãã ã\(bbããã\(Ofãã\(deããã\(rgã\(S3ãã\(S3ãã\(rgå\(14æ\(deã\(a-ç\(r!è\(bbãããkerberosè\(ad\(14ææ\(acã\(a-GSSAPIã\(rgæ\(acåã\(ad sealingã\(rgä\(Fc\(Poããã\(Foä\(12\(r?ããããæåã\(rgæ\(Yeç\(psæã\(Fosmbclentã\(Foå\(a-\(34ãã\(bbæå\(mdåã å\(14\(mdå\(psãã \-e ã\(Ofãã\(mdã\(scã\(S3ãåç\(scã\(rgãã\(adã ãã\(rgã\(S3ãã\(S3ãã\(a-Samba 3\.2ããæ\(deè\(bbã\(Foå\(deå\(Yeãããã
+.RE
+.PP
+posix_open <filename> <octal mode>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããCIFS UNIXæ\(r!å\(14\(mcãä\(12\(r?ã\(Poã\(bbã\(Ofã\(ctã\(14ããã\(r!ã\(Csã\(Foã ã\(Ofã\(14ãã\(S3ãããã\(r!ã\(Csã\(FoIDãè\(r!\(adç\(Cs\(Omããã Sambaåé\(adã\(rgãã\(S1ãç\(adã\(rgã\(r?ã\(Foä\(12\(r?ç\(adãããã
+.RE
+.PP
+posix_mkdir <directoryname> <octal mode>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããCIFS UNIXæ\(r!å\(14\(mcãä\(12\(r?ã\(Poã\(bbä\(acããããã\(ctã\(14ãã\(scã ã\(Ofã\(ctã\(14ããã\(Poã\(noã\(a-ãã\(Ofãä\(12æããã Sambaåé\(adã\(rgãã\(S1ãç\(adã\(rgã\(r?ã\(Foä\(12\(r?ç\(adãããã
+.RE
+.PP
+posix_rmdir <directoryname>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããCIFS UNIXæ\(r!å\(14\(mcãä\(12\(r?ã\(Poã\(bb ã\(Ofã\(ctã\(14ããã\(Poã\(noã\(a-ãã\(Ofãåé\(Csããã Sambaåé\(adã\(rgãã\(S1ãç\(adã\(rgã\(r?ã\(Foä\(12\(r?ç\(adãããã
+.RE
+.PP
+posix_unlink <filename>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããCIFS UNIXæ\(r!å\(14\(mcãä\(12\(r?ã\(Poã\(bb ã\(Ofã\(ctã\(14ããã\(r!ã\(Csã\(Foãåé\(Csããã
+.RE
+.PP
+print <file name>
+.RS 4
+æå\(rgããã\%ã\(14ã\(Foã\(Foãã\(mdã\(S3ä\(acã\(rgãã\(r!ã\(Csã\(Foããã\(mcã\(14ãä\(acã\(rg å\(deå\(mdã\(mcã\(14ãã\(S1ãä\(12\(r?ã\(Poã\(bbå\(deå\(mdããã
+.RE
+.PP
+prompt
+.RS 4
+mget ã\(ad mput ã\(S3ãã\(S3ãã\(rgæä\(12ã\(Foããã\(bbããã\(r!ã\(Csã\(Foåã\(rgç\(ct\(Omè\(Ofã è\(r!ããã\(coããã\(rgè\(ad\%å\(rgãåãæããã
+.sp
+ãã\(rgè\(ad\%å\(rgã ON ã\(scããã\(adããããã\(rgã\(S3ãã\(S3ãã\(rgå\(rgè\(r!ä\(ac\%ãåãã\(r!ã\(Csã\(Foãã\(adã\(Fo è\(Fc\(ctéãããã\(coãããã\(bbã\(14ã\(psã\(Foç\(ct\(Omè\(Ofãããè\(ad\%å\(rgã OFF ã\(scããã\(adãæå\(rgããã ãã\(S1ã\(bbã\(rgãã\(r!ã\(Csã\(Foãç\(ct\(Omè\(Ofã\(Ofãã\(Foè\(Fc\(ctéãããã
+.RE
+.PP
+put <local file name> [remote file name]
+.RS 4
+\fIlocal file name\fR
+ã\(adããååã\(rg ãã\(r!ã\(Csã\(Foãã\(a-ã\(coã\(Csã\(ctã\(S3ããå\(rgè\(r!ãã\(bbãããã\(mdã\(S3ããã\(mcã\(14ãã\(Foã\(S3ãã\(14ããã
+\fIremote file name\fR
+ãæå\(rgããã\(bbããã\(adããããã\(mcã\(14ãã\(Fo ã\(S3ãã\(14ããããã\(r!ã\(Csã\(Foã\(rgååã\(adã\(Ofãã
+smbclient
+ã\(Foãããã\(r!ã\(Csã\(Foã\(rgè\(Fc\(ctéã\(a-ããã\(S1ã\(bb binary ã\(ctã\(14ãã\(scè\(r!ããããã\(adã\(Foæ\(S3\(adæãã\(bbã\(Fcãããlowercase ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+queue
+.RS 4
+å\(deå\(mdã\(rgã\%ã\(Yeã\(14ãè\(r!\(adç\(Cs\(Omããå\(deå\(mdã\(acã\(scãã\(rg IDãååãã\(mcã\(Csã\(Omã ç\(34å\(adã\(rgç\(psæãè\(bbãããã
+.RE
+.PP
+quit
+.RS 4
+exit ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+rd <directory name>
+.RS 4
+rmdir ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.RE
+.PP
+recurse
+.RS 4
+mget ã\(ad mput ã\(S3ãã\(S3ãã\(Foããã\(bbããã\(Poã\(noã\(a-ãã\(Ofãåå\(ac\(deçã\(Fo è\(34\(r?ããã\(coããã\(rgè\(ad\%å\(rgãåãæããã
+.sp
+ãã\(rgè\(ad\%å\(rgã ON ã\(scããã\(adããããã\(rgã\(S3ãã\(S3ãã\(a-ãå\(a-\(34è\(+-\(r!ã\(adã\(Ofããã\(Poã\(noã\(a-ãã\(Of (ãã\(Ofãã\(r!ãã\(S3ãã\(14åã\(adã\(Ofããã\(Poã\(noã\(a-ãã\(Of) åã\(rgãã\(S1ã\(bbã\(rgãã\(Poã\(noã\(a-ãã\(Ofãå\(bbçãã ã\(S3ãã\(S3ãã\(Foæå\(rgãã mask ã\(Foä\(acè\(aaãããã\(Poã\(noã\(a-ãã\(Ofãåå\(ac\(deçã\(Foè\(34\(r?ãã ãã\(r!ã\(Csã\(Foã\(a-ãmask ã\(S3ãã\(S3ããä\(12\(r?ã\(Poã\(bbæå\(rgãããã\(S1ã\(a-ã\(Foä\(acè\(aaãããã\(rgã\ ããã å\(bbçã\(rgå\(a-\(34è\(+-\(r!ã\(adã\(Ofãã mask ã\(S3ãã\(S3ããåç\(scã\(rgãã\(adã
+.sp
+ãã\(rgè\(ad\%å\(rgã OFF ã\(scããå\ \(aaåãã\(S3ãã\(14åã\(adã\(Ofããã\(mdã\(S3ã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofããã mget ã\(34ãã\(a- mput ã\(S3ãã\(S3ãã\(Foæå\(rgããããã\(S1ã\(a-ã\(Foä\(acè\(aaãããã\(r!ã\(Csã\(Foã\ ãã ã\(S3ãã\(14ããããmask ã\(S3ãã\(S3ããä\(12\(r?ã\(Poã\(bbæå\(rgããããã\(S1ã\(a-ã\(a-ç\(r!è\(bbãããã
+.RE
+.PP
+rename <old filename> <new filename>
+.RS 4
+ã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofä\(acã\(rg
+\fIold filename\fRã
+\fInew filename\fRã\(Foæ\(S1åããã
+.RE
+.PP
+rm <mask>
+.RS 4
+\fImask\fR
+ã\(Foä\(acè\(aaãããã\(S1ã\(bbã\(rg ãã\(r!ã\(Csã\(Foãã\(mcã\(14ãä\(acã\(rgç\(34å\(adã\(rgä\(12æ\(Ye\%ãã\(Poã\(noã\(a-ãã\(Ofããåé\(Csããã
+.RE
+.PP
+rmdir <directory name>
+.RS 4
+æå\(rgãããååã\(rg (ã\(bbã\(14ã\(psã\(rgã\(ctã\(a-ã\(Fcã\(S1ãè\(ad\(+-å\(a-ããã\(bbãã) ãã\(Poã\(noã\(a-ãã\(Ofãã\(mcã\(14ãããåé\(Csããã
+.RE
+.PP
+setmode <filename> <perm=[+|\e\-]rsha>
+.RS 4
+DOS çã\(rg attrib ã\(S3ãã\(S3ãã\(adåç\%ã\(Foããã\(r!ã\(Csã\(Foã\(rg ãã\(14ããã\(mdã\(scã\(S3ãè\(ad\%å\(rgããã ä\(34ãã\(de
+.sp
+setmode myfile +r
+.sp
+ã\(a- myfile ãè\(Of\%ã\(r?è\(34\(14ã\(r?å\(deç\(adã\(Foããã
+.RE
+.PP
+showconnect
+.RS 4
+DFSã\(rgããã\(Foç\(34å\(adæå\(S1ã\(Ofæ\(Yeç\(psæå\ \(+-ãè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+stat file
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ããCIFS UNIXæ\(r!å\(14\(mcãã\(mcãã\(14ããã\(bbãããã\(Fo ä\(34å\%ãããããããã\(scã\(Ofããã\(deå\(Cs\(+-æãããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-UNIXãã\(14ã\(S1ã\(rgæå\ \(+-ã\(noãã\(Foã è\(bbæ\(+-ãããã\(r!ã\(Csã\(Foã\(Foã\(Csãã\(bbã\(rgLinux statã\(S3ãã\(S3ãã\(adåãæå\ \(+-ãå\(Omåãããããã\(Foã\(a- ã\(mcã\(Csã\(Omããã\(Poã\(S1ã\(a-ã\(scä\(12\(r?ç\(adããã\(bbãããã\%ãã\(a-æ\(deããã\(r!ã\(Csã\(Foã\(rgã\(r?ã\(Csãããã\(14ããã\(mdã\(scã\(S3ã inodeç\(Ofå\(mdãã\(Ofã\(S3ã\(a-ã\(rgæ\(deã\(adæå\(34ã\(Fo3ã\(Csã\(rgæå\(Fcæå\ \(+-(ã\(ctã\(a-ã\(Fcã\(S1ãå\(Csæ\(aaã\(adæ\(aaæ\(de)ãå\(Foã\(34ããã ããããã\(r!ã\(Csã\(Foãã\(S1ãã\(mdã\(Poã\(Foãã\(r!ã\(Csã\(Fo(ã\(mdã\(S3ãã\(Ofãã\(a-ã\(Ofã\(S3ã\(a-ãæå\%ã\(34ãã\(a-ãã\%ãã\(a-ããã\(Csã\(S1ã fifoãããã\(a-ã\(12ã\(+-ãã)ã\(rgå\ \(aaåã\(a-ãæ\(r!å\(14\(mcæå\ \(+-ãå\(Omåãããã
+.RE
+.PP
+symlink target linkname
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ãã\(rg CIFS UNIX æ\(r!å\(14\(mcã\(rgã\(mcãã\(14ãã\(Foä\(34å\%ãã ã\(mcã\(14ããã\(mcãã\(14ããã\(bbãã\(Ofãå\ \(aaåã\(a-å\(Cs\(+-æãããã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(a-ãtarget ã\(ad linkname ãã\(r!ã\(Csã\(Foã\(rgéã\(Foã\(mdã\(S3ãã\(Ofãã\(a-ã\(Ofã\(S3ã\(a-ãä\(12æããããã\(Foã\(mcã\(14ãã\(Fo è\(bbæ\(+-ãããlinkname ãã\(r!ã\(Csã\(Foã\(a-å\%å\(adãã\(bbã\(a-ããã\(Ofãã ã\(mcã\(14ãã\(a-ç\(34å\(adæ\(Yeç\(psãã\(bbããå\(+-æã\(rgå\(Csãæãã\(Ofã\(S3ã\(a-ã\(a-ä\(12æãã\(Ofããã\(adã\(Foæ\(S3\(adæã ããã\(a- Samba server ã\(Foãã\(Poã\(bbå\(14\(mdå\(psãããã
+.RE
+.PP
+tar <c|x>[IXbgNa]
+.RS 4
+tar ä\(12æ\(Ye\%ãè\(r!ãã åè\(r?\(deã\(rg
+\fI\-T\fR
+ã\(S3ãã\(S3ãã\(coã\(Csã\(S3ã\(Ofãã\(mdã\(scã\(S3ãåç\(scã\(rgãã\(adããã\(rgã\(S3ãã\(S3ãã\(rgåä\(12ã\(a- tarmode ã\(S3ãã\(S3ã (ä\(acè\(adãåç\(sc) ã\(Foå\(12\(+-é\(r?ãããã ãã\(coã\(r!ã\(14ã\(r? g (å\(ctå) ã\(ad N (æ\(aaæ\(de) ãä\(12\(r?ãã\(adãtarmode ã\(rgè\(ad\%å\(rgã\(Foå\(12\(+-é\(r?ãåã\(14ãã tar x (å\(+-é) æã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(Fo "\-" (æ\(adæ\(Omå\(Yeå) ãä\(12\(r?ã\(Poã\(bbãåä\(12ãã\(Ofãã\ ããã ãããã\(Foã\(S3ãã\(S3ãã\(coã\(Csã\(S3ã\(Ofãã\(mdã\(scã\(S3ã\(scä\(12\(r?ãããã\(Foãããã\(adã
+.RE
+.PP
+blocksize <blocksize>
+.RS 4
+ãã\%ãã\(a-ã\(mcã\(Csã\(Omããã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(rgå\(34ã\(Foã\(a-æå\(S1ã\(Of (1 ä\(Fc\(Yeä\(acã\(rg) ãã\%ãã\(a-ã\(mcã\(Csã\(Omãæå\(rgãã\(Ofããã\(deã\(Ofãã\(Ofãã ãã\(rgã\(Ofãã\(mdã\(scã\(S3ã\(Foãããtar ãã\(r!ã\(Csã\(Foã\(a-ã
+\fIblocksize\fR*TBLOCK (éå\(ac\(ac 512 ãã\(Csã) ãã\%ãã\(a-ã\(rgåä\(12ã\(scæ\(acãå\(Omãããããã\(Foã\(Ofãã
+.RE
+.PP
+tarmode <full|inc|reset|noreset>
+.RS 4
+ã\(ctã\(14ã\(Foã\(Csããããã\(Foé\(ctãã tar ã\(rgåä\(12ãè\(ad\%å\(rgããã full (å\(rgå\(ad) ã\(ctã\(14ãã\(scã\(a-ãtar ã\(a-ã\(ctã\(14ã\(Foã\(Csããããã\(rgç\(psæã\(Foé\(ctãããã ãã\(S1ã\(bbãããã\(a-ã\(ctãããã (ãããããã\(coã\(Foãã\(rgã\(ctã\(14ã)ã incremental(å\(ctå) ã\(ctã\(14ãã\(scã\(a-ãtar ã\(a-ã\(ctã\(14ã\(Foã\(Csãããããè\(ad\%å\(rgããã ãã\(r!ã\(Csã\(Foã\ ããããã\(a-ã\(ctããããã reset ã\(ctã\(14ãã\(scã\(a-ãtar ã\(a-ããã\(a-ã\(ctãããããã\(r!ã\(Csã\(Foã\(rgã\(ctã\(14ã\(Foã\(Csããããã ã\(a-ã\(Ofã\(ctãã (è\(Of\%ã\(r?æ\(acãã\(scããå\(+-æã\(Foããã\(bb)ã
+.RE
+.PP
+unlock <filenum> <hex\-start> <hex\-len>
+.RS 4
+ãã\(rgã\(S3ãã\(S3ãã\(a-ã\(mcã\(14ãã\(rg CIFS UNIX æ\(r!å\(14\(mcã\(rgã\(mcãã\(14ãã\(Foä\(34å\%ãã ã\(mcã\(14ããã\(mcãã\(14ããã\(bbãã\(Ofãå\ \(aaåã\(a-å\(Cs\(+-æãããä\(acããããã\(noã\(S3ã\(acã\(scPOSIX fcntl ã\%ãã\(a-ã\(rgè\(sc\(Poé\(Csãè\(co\(bbã\(r?ãã Sambaåé\(adã\(rgãã\(S1ãã\(rgã\(r?ã\(Foç\(adããããã
+.RE
+.PP
+volume
+.RS 4
+å\(+-æã\(rgãã\(Ofã\(Yeã\(14ã\ åãè\(r!\(adç\(Cs\(Omããã
+.RE
+.PP
+vuid <number>
+.RS 4
+ä\(acããããä\(Fc\(Fcæã\(rgç\(Ofå\(mdã\(Foå\(a-\(34ãããã\%ãã\(S3ã\(Foä\(ac\%ã\(rgç\(34å\(adä\(12\(r?ããã\(bbãã vuidãå\(Csæ\(aaãããå\(14æ\(deãä\(acãããã\(Ofãã\(adãç\(34å\(adä\(12\(r?ããã\(bbããvuidãè\(r!\(adç\(Cs\(Omããã Sambaåé\(adã\(rgãã\(S1ãã\(rgã\(r?ã\(Foç\(adããããã
+.RE
+.SH "æ\(S3\(adæ"
+.PP
+ã\(mcã\(14ãã\(Foãã\(Poã\(bbã\(a-ãä\(acããããã\(bbã\(14ã\(psåããã\(S1ã\(a-ã\(14ããå\(+-æå (ã\(mcã\(14ãã\(S1åã\(adãè\(adã)ããã\(mdã\(S3åã\(Ofã\(coã\(rgå\(Cs\(scæå\%å\(deæå\%ãå\(S3æ\ \(14ã\(Foè\%å\(Yeããã ã\(mcã\(14ãã\(acã\(rgæ\(Yeç\(psãå\(Cs\(+-æããã\(adãã\(a-ããã\(S1ã\(bbã\(rgãã\(coã\(r!ã\(14ã\(r?ãå\(Cs\(scæå\%ã\(Foãã\(bb è\(co\(bbãã\(bbã\(r?ããã
+.PP
+ããç\(ad\(rgã\(rgã\(mcã\(14ãã\(Foæ\(Yeç\(psããã\(adãã\(Foã\(a-ã\-n ã\(Ofãã\(mdã\(scã\(S3ãä\(12\(r?ãã\(Ofããã\(de ã\(Ofãã\(Ofãããã\(Ofå\ \(aaåãããããããã\(adãã\(de OS/2 ã\(rg LanManager ã\(scã\(a-ãæå\(S1ã\(Of NetBIOS åãä\(12\(r?ããã\(bbãã\(Ofããã\(deã\(Ofãã\(Ofãã ãã\(Poã\(bbãã\(mcã\(14ããç\(Yeã\(Poã\(bbããæå\(S1ã\(Ofååãä\(acããå\(r?è\(bbãããã
+.PP
+ã\(mcã\(14ãã LANMAN2 ãããä\(Fc\(Yeéã\(rgãã\%ãã\(S3ã\(Foãã\(mcãã\(14ããã\(bbããå\ \(aaåã smbclient ã\(a-é\(mdããã\(r!ã\(Csã\(Foåãã\(mcãã\(14ãããã
+.SH "ç\(deå\(ctå\(Csæ\(de"
+.PP
+å\(Csæ\(de
+\fBUSER\fR
+ã\(rgå\(Csã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ããä\(12\(r?ç\(adããã\(bbã\(14ã\(psã\(rgååã\(adã\(Ofãã ãã\(rgæå\ \(+-ã\(a-ããã\%ãã\(S3ã\(Foã\(rgã\(noãã\(Foãååé\(Foããã\(Fcãã\(mdã\(scã\(S3ã\(noãã\(Foã\(rgãã\(S1ã\(a-ã\(14ãã ã\(mcãã\(14ããã\(bbããå\ \(aaåã\(Foã\ ãå\(coç\(adãããã
+.PP
+å\(Csæ\(de
+\fBPASSWD\fR
+ã\(rgå\(Csã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ããä\(12\(r?ç\(adããã\(bbã\(14ã\(psã\(rg ãã\(S1ã\(a-ã\(14ãã\(adã\(Ofãããã\(rgæå\ \(+-ã\(a-ããã\%ãã\(S3ã\(Foã\(rgã\(noãã\(Foãååé\(Foããã\(Fcãã\(mdã\(scã\(S3ã\(noãã\(Foã\(rg ãã\(S1ã\(a-ã\(14ããã\(mcãã\(14ããã\(bbããå\ \(aaåã\(Foã\ ãå\(coç\(adãããã
+.PP
+å\(Csæ\(de
+\fBLIBSMB_PROG\fR
+ã\(Foã\(a-ã\(mcã\(14ãã\(acã\(rgæ\(Yeç\(psã\(Foä\(Fc\(Poããã\(a-ã\(coã\(Csã\(ctã\(S3ãã æ\(Yeç\(psãããsystem() ã\(scè\(mc\(mdåããããã\(S1ãè\(ad\%å\(rgããããã\(rgæ\(coè\(12ã\(a- aid ã\(rgéç\(Omãä\(ac\(Fcç\(adéã\(adãã LMHOSTS ãã\(r!ã\(Csã\(Foã\(rgå\(coç\(adæã\(Foå\(S1æãç\(Omæ\(rgããã
+.SH "ã\(Csã\(S3ã\(S1ãã\(14ã\(Fo"
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ããã\%ã\(deã\(coã\ ãã\(coãã\(Foç\(12\(rgãã\(S1ããã\(a-ãåã\(mdã\(S1ãã\ ç\(rg\(r!çèã å\(Csæ\%ãã\(S1ãåé\(r!ã\(scããããã\(Poã\(bbãä\(Fc\(Yeä\(acã\(a-ãã\ ã\(rgææ\(r!ã\(scããã
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(12ããã\(bbã\(scã\(ctã\(a-
+\fI/usr/local/samba/bin\fR
+ã
+\fI/usr/samba/bin\fR
+ã\(Foã\(Csã\(S3ã\(S1ãã\(14ã\(Foãããã\(Poã\(noã\(a-ãã\(Ofã\(a- å\(adã\(bbã\(14ã\(psããè\(Of\%ã\(r?å\(Omãå\(a-è\(12ã\(sc root ã\(rgã\(r?æ\(acãè\(34\(14ã\(r?å\(a-è\(12ã\(Foãããã\(adãæ\(adå\(Ye\(adãããã ã\(a-ã\(coã\(Csã\(ctã\(S3ããã\%ã\(deã\(coã\ è\(Ofè\(Om\(Foã\(a-ãã\(S1ã\(bbã\(rgã\(bbã\(14ã\(psããå\(rgè\(r!å\(a-è\(12ã\(Foããã\(S1ãã\(scããã ã\(a-ã\(coã\(Csã\(ctã\(S3ãã setuid ã setgid ãã\(Ofãããã\(Fo!
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(rgã\%ã\(deãã\(r!ã\(Csã\(Foã\(a-ããã\(rgã\(bbã\(14ã\(psã\ ããè\(Of\%ã\(r?æ\(acãå\(a-è\(12ã\(Of ãã\(Poã\(noã\(a-ãã\(Ofã\(Foç\(12\(rgããã\(adã
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãããã\(S1ãããã\(Foã\(a-ãåä\(12ãã\(bbãã SMB/CIFS ã\(mcã\(14ãã\(rgååã ç\(Yeãã\(Ofãã\(bbã\(a-ã\(Ofãã\(Ofãã\fBsmbd\fR(8)
+ã\(a-ä\(acè\(noã\(bbã\(14ã\(psã\(scãè\(mc\(mdåãããã\(adã ã\(scããã\(rgã\(scãã\(bbã\(14ã\(psãå\(coç\(adã\(scãããã\(14ã (ããã\(bbãã\(a- 1024 ããå\(Cs\(scãããã\(14ãç\(Ofå\(md ã\(Ofãã\(coãã\(scããã) ã\(scãã\(14ã\(ctã\(S3ã\(adãã\(bbã\(mcã\(14ããè\(mc\(mdåãããã\(adã\(scã é\(coåã\(Ofãã\(S1ãç\(deå\(ctã\(adã\(Ofãã\ ããã
+.SH "è\(ad\(Omæ\%"
+.PP
+ã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(Foãã\(Poã\(bbå\(Omãããã\(Fcã\(adãã\(coã\(rgè\(ad\(Omæ\%ã\(r!ãã\(Fcã\(14ã\(acã\(a-ã æå\(rgãããã\%ã\(deãã\(r!ã\(Csã\(Foã\(Foè\(adé\(S2ããããã\%ã\(deãã\(r!ã\(Csã\(Foã\(rgååã\(a-ã\(S3ã\(S3ãã\(Csã\(Foæã\(Fo æå\(rgãããããã\(S3ãã\(S3ãã\(coã\(Csã\(S3ã\(scå\(Csæ\(aaãããã\(adãã\(scããã
+.PP
+å\(coç\(adã\(scããè\(ad\(Omæ\%ã\(r!ãã\(Fcã\(14ã\(acã\(rgéã\(adåå\(rg\(S1ã\(a-ãã\(a-ã\(coã\(Csã\(ctã\(S3ãã\(scè\(ad\%å\(rgããã ãããã\(deã\(noãã\(Foã\(Foä\(34å\%ãããåé\(r!ãæ\(+-ãã\(bbããã\(Ofãããããã\(deã\(noãã\(Foã 3 ã\(Foè\(ad\%å\(rgãã\(bbã\%ã\(deãã\(r!ã\(Csã\(Foã\(Foç\(rgãéãã\(bbã\(Fcããã
+.SH "ãã\(14ã\(acã\(scã\(S3"
+.PP
+ãã\(rgããã\(Yeã\(ctã\(Foãã\(14ã\(acã\(a- Samba ã\(S1ã\(Poã\(14ãã\(rgãã\(14ã\(acã\(scã\(S3 3\.2 ç\(adã\(scããã
+.SH "ä\(12è"
+.PP
+ã\(Ofã\(Ofã\(acãã\(Foã\(rg Samba ã\(12ããã\(bbã\(scã\(ctã\(adé\(cté\(Poããã\(bbã\(14ãã\(Poã\(Ofãã\(Poã\(a-ãAndrew Tridgell ã\(Foãã\(Poã\(bbä\(12ããããSamba ã\(a-ç\(34å\(adãLinux ã\(Foã\(14ãã\(Foãéç\(Omããã\(bbããããã\(Of æ\(S1æ\(S3ã\(scã\(rgã\(Ofã\(14ãã\(S3ã\(12ã\(14ã\(S1ãã\%ã\(acã\(scã\(a-ãã\(scãã Samba Team ã\(Foãã\(Poã\(bbéç\(Omããã\(bbããã
+.PP
+ã\(Ofã\(Ofã\(acãã\(Foã\(rg Samba ã\(rgããã\(Yeã\(ctã\(Foãã\(14ã\(acã\(a- Karl Auer ã\(Foãã\(Poã\(bbæ\(acãããã ããã\(Yeã\(ctã\(Foãã\(14ã\(acã\(rgã\(12ã\(14ã\(S1ã\(a- YODL å\(12\(ctå\(14(å\(Yeã\(rgãå\(Ofç\(scã\(Ofã\(Ofã\(14ãã\(S3ã\(12ã\(14ã\(S1ã\(12ããã\(bbã\(scã\(ctã\(scã
+ftp://ftp\.icce\.rug\.nl/pub/unix/
+ã\(Foãã)ã\(scå\(CsæãããJeremy Allison ã\(Foãã\(Poã\(bb Samba 2\.0 ã\(Ofã\(Ofã\(14ã\(S1ã\(rgããã\(Foæ\(aaæ\(deãããã Samba 2\.2 ã\(rgããã\(rg DocBook å\(12\(ctå\(14ã\(acã\(rgå\(Csæã\(a- Gerald Carter ãè\(r!ã\(Poãã Samba 3\.0 ã\(rgããã\(rg DocBook XML 4\.2 å\(12\(ctå\(14ã\(rgå\(Csæã\(a- Alexander Bokovoy ã\(Foãã\(Poã\(bbè\(r!ãããã
+.SH "æ\(Yeæ\(noè\(Ofè\(ad\(S3"
+.PP
+ãã\(rgããã\(Yeã\(ctã\(Foãã\(14ã\(acã\(a- Samba 3\.2\.4 å\(a-\(34å\(r?ã\(rgãã\(rgã\(scããã
+.PP
+ãã\(rgãã\%ã\(Yeã\(r!ã\(S3ãã\(rg Samba 3\.0\.0 \- Samba 3\.0\.24 å\(a-\(34å\(r?ã\(rgç\(r?\(Fcè\(ad\(S3ã\(a-
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+é\(Foæ\(co å\(Omä\(r?\(r! (monyo@samba\.gr\.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+ä\(12è\(Cs æå\(Of
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+ã\(a-ããã ãããã
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+å\(+-\(+-ç\(de å\(S2æ (shiro@miraclelinux\.com)
+.sp
+.RE
+ã\(Foãã\(Poã\(bbè\(r!ã\(Ofãããã
+.PP
+ãã\(rgãã\%ã\(Yeã\(r!ã\(S3ãã\(rg Samba 3\.2\.4 å\(a-\(34å\(r?ã\(rgç\(r?\(Fcè\(ad\(S3ã\(a- å\(Cs\(Ofç\(deä\(r?å(ribbon@samba\.gr\.jp)ä\(14\(14ãã\(Poã\(bbè\(r!ãããã
