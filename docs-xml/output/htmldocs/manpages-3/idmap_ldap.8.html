@@ -1,48 +1,48 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>idmap_ldap</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="idmap_ldap.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>idmap_ldap &#8212; Samba's idmap_ldap Backend for Winbind</p></div><div class="refsynopsisdiv"><h2>DESCRIPTION</h2><p>The idmap_ldap plugin provides a means for Winbind to
-	store and retrieve SID/uid/gid mapping tables in an LDAP directory
-	service.  The module implements both the "idmap" and
-	"idmap alloc" APIs.
-	</p></div><div class="refsect1" lang="en"><a name="id2517194"></a><h2>IDMAP OPTIONS</h2><div class="variablelist"><dl><dt><span class="term">ldap_base_dn = DN</span></dt><dd><p>
-			Defines the directory base suffix to use when searching for
-			SID/uid/gid mapping entries.  If not defined, idmap_ldap will default
-			to using the "ldap idmap suffix" option from smb.conf.
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>idmap_ldap</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="idmap_ldap.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>idmap_ldap &#8212; Winbind用Sambaのidmap_ldapバックエンド</p></div><div class="refsynopsisdiv"><h2>説明</h2><p>idmap_ldap プラグインは、 LDAP ディレクトリサービスにある
+	SID/uid/gid のマッピングテーブルに対して、 Winbind から格納／
+	呼び出しを行う手段を提供する。このモジュールは "idmap"
+	と "idmap alloc" API の両方を実装している。
+	</p></div><div class="refsect1" lang="en"><a name="id2517204"></a><h2>IDMAP オプション</h2><div class="variablelist"><dl><dt><span class="term">ldap_base_dn = DN</span></dt><dd><p>
+			SID/uid/gid マッピングエントリの検索を行う際に使用する、
+			ディレクトリの base suffix を定義する。定義されていない場合、
+			idmap_ldap はデフォルトで smb.conf の "ldap idmap suffix"
+			オプションの値を使用する。
 		</p></dd><dt><span class="term">ldap_user_dn = DN</span></dt><dd><p>
-			Defines the user DN to be used for authentication. If absent an
-			anonymous bind will be performed.
+			認証の際に使用する user DN を定義する。
+			未定義の場合は匿名バインドが実行される。
 		</p></dd><dt><span class="term">ldap_url = ldap://server/</span></dt><dd><p>
-			Specifies the LDAP server to use when searching for existing
-			SID/uid/gid map entries. If not defined, idmap_ldap will
-			assume that ldap://localhost/ should be used.
+			既存の SID/uid/gid マップのエントリを検索する際に使用する LDAP 
+			サーバーを指定する。未定義の場合、 ldap://localhost/ が使われる。
 		</p></dd><dt><span class="term">range = low - high</span></dt><dd><p>
-			Defines the available matching uid and gid range for which the
-			backend is authoritative.  Note that the range commonly matches
-			the allocation range due to the fact that the same backend will
-			store and retrieve SID/uid/gid mapping entries.  If the parameter
-			is absent, Winbind fail over to use the "idmap uid" and
-			"idmap gid" options from smb.conf.
-                </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2477961"></a><h2>IDMAP ALLOC OPTIONS</h2><div class="variablelist"><dl><dt><span class="term">ldap_base_dn = DN</span></dt><dd><p>
-			Defines the directory base suffix under which new SID/uid/gid mapping
-			entries should be stored.  If not defined, idmap_ldap will default
-			to using the "ldap idmap suffix" option from smb.conf.
+			バックエンドが権威を持つと規定されている、 uid と gid の利用可能な
+			マッチング範囲を定義する。事実上同じバックエンドが SID/uid/gid
+			マッピングのエントリを格納／呼び出しするため、通常その範囲は
+			割り当て範囲と同じになる。指定がない場合 Winbind はフェイル
+			オーバーして、 smb.conf の "idmap uid" と
+			"idmap gid" オプションを使用する。
+                </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2478016"></a><h2>IDMAP 割り当てオプション</h2><div class="variablelist"><dl><dt><span class="term">ldap_base_dn = DN</span></dt><dd><p>
+			そのディレクトリの中で、新しい SID/uid/gid マッピングのエントリを
+			格納するべき base suffix を定義する。指定がない場合、 idmap_ldap は
+			デフォルトとして smb.conf の "ldap idmap suffix"
+			オプションを使用する。
 		</p></dd><dt><span class="term">ldap_user_dn = DN</span></dt><dd><p>
-			Defines the user DN to be used for authentication. If absent an
-			anonymous bind will be performed.
+			認証の際に使用するuser DNを定義する。
+			未定義の場合は匿名バインドが実行される。
 		</p></dd><dt><span class="term">ldap_url = ldap://server/</span></dt><dd><p>
-			Specifies the LDAP server to which modify/add/delete requests should
-			be sent.  If not defined, idmap_ldap will assume that ldap://localhost/
-			should be used.
+			modify/add/delete リクエストを送信する宛先としての LDAP サーバー
+			を指定する。未定義の場合 ldap://localhost/ が使われる。
 		</p></dd><dt><span class="term">range = low - high</span></dt><dd><p>
-			Defines the available matching uid and gid range from which
-			winbindd can allocate for users and groups.  If the parameter
-			is absent, Winbind fail over to use the "idmap uid"
-			and "idmap gid" options from smb.conf.
-                </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2478027"></a><h2>EXAMPLES</h2><p>
-	The follow sets of a LDAP configuration which uses a slave server
-	running on localhost for fast fetching SID/gid/uid mappings, it
-	implies correct configuration of referrals.
-	The idmap alloc backend is pointed directly to the master to skip
-	the referral (and consequent reconnection to the master) that the
-	slave would return as allocation requires writing on the master.
+			winbindd からユーザとグループに対して割り当てができる uid と
+			 gid の利用可能範囲を定義する。指定がない場合 Winbind はフェイル
+			オーバーして、 smb.conf の "idmap uid" と
+			"idmap gid" オプションを使用する。
+                </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2478110"></a><h2>使用例</h2><p>
+	以下の LDAP 設定の例は、SID/gid/uid マッピングを高速に検索するために
+	localhost 上で動作しているスレーブサーバーのものであり、紹介(referral)
+	の設定が正しくなされていることを暗に示している。
+	idmap 割当て用バックエンドは直接マスターを指しており、紹介（とそれに
+	続くマスターへの再接続）はスキップされる。これにより、スレーブは
+	割り当て要求の結果としてマスター側で書き込まれたものを返してくれる。
 	</p><pre class="programlisting">
 	[global]
 	    idmap domains = ALLDOMAINS
@@ -56,14 +56,17 @@
 	    idmap alloc config:ldap_base_dn = ou=idmap,dc=example,dc=com
 	    idmap alloc config:ldap_url     = ldap://master.example.com/
 	    idmap alloc config:range        = 10000 - 50000
-	</pre></div><div class="refsynopsisdiv"><h2>NOTE</h2><p>In order to use authentication against ldap servers you may
-	need to provide a DN and a password. To avoid exposing the password
-	in plain text in the configuration file we store it into a security
-	store. The "net idmap " command is used to store a secret
-	for the DN specified in a specific idmap domain.
-	</p></div><div class="refsect1" lang="en"><a name="id2478074"></a><h2>AUTHOR</h2><p>
-	The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.
-	</p></div></div></body></html>
+	</pre></div><div class="refsynopsisdiv"><h2>備考</h2><p>LDAP サーバーに対して認証を使用するには DN とパスワードを
+	指定する必要があるだろう。設定ファイル中に平文で指定された
+	パスワードが晒されてしまうことを防ぐために、これらはセキュリティ
+	ストアの中に格納される。特定の idmap ドメインにおいて、指定された
+	DN に対する秘密のパスワードを格納するには "net idmap " 
+	コマンドを使用する。
+	</p></div><div class="refsect1" lang="en"><a name="id2478205"></a><h2>作者</h2><p>
+	オリジナルの Samba ソフトウェアとそれらに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によってオープンソースプロジェクトとして
+	開発されている。
+	</p></div><div class="refsect1" lang="en"><a name="id2478226"></a><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4  対応のものである。</p><p>このドキュメントの Samba 3.2.4 対応の翻訳は
+	</p><div class="itemizedlist"><ul type="disc"><li><p>堀田 倫英(hotta@net-newbie.com)</p></li></ul></div><p>	
+        によって行なわれた。</p></div></div></body></html>
