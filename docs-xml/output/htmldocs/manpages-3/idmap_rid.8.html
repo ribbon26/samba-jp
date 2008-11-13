@@ -1,19 +1,20 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>idmap_rid</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="idmap_rid.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>idmap_rid &#8212; Samba's idmap_rid Backend for Winbind</p></div><div class="refsynopsisdiv"><h2>DESCRIPTION</h2><p>The idmap_rid backend provides a way to use an algorithmic
-	mapping scheme to map UIDs/GIDs and SIDs. No database is required
-	in this case as the mapping is deterministic.</p></div><div class="refsect1" lang="en"><a name="id2517201"></a><h2>IDMAP OPTIONS</h2><div class="variablelist"><dl><dt><span class="term">range = low - high</span></dt><dd><p>
-			Defines the available matching uid and gid range for which the
-			backend is authoritative. Note that the range acts as a filter.
-			If algorithmically determined UID or GID fall outside the
-			range, they are ignored and the corresponding map is discarded.
-			It is intended as a way to avoid accidental UID/GID overlaps
-			between local and remotely defined IDs.
-		</p></dd><dt><span class="term">base_rid = INTEGER</span></dt><dd><p>
-			Defines the base integer used to build SIDs out of an UID or a GID,
-			and to rebase the UID or GID to be obtained from a SID. User RIDs
-			by default start at 1000 (512 hexadecimal), this means a good value
-			for base_rid can be 1000 as the resulting ID is calculated this way:
-			ID = RID - BASE_RID + LOW RANGE ID.
-		</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2517245"></a><h2>EXAMPLES</h2><p>This example shows how to configure 2 domains with idmap_rid</p><pre class="programlisting">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>idmap_rid</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="idmap_rid.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>idmap_rid &#8212; SambaのWinbind用idmap_ridバックエンド</p></div><div class="refsynopsisdiv"><h2>説明</h2><p>idmap_rid バックエンドは、UID や GID と SID を対応付けるための
+	方法のひとつとして、アルゴリズム的なマッピングの仕組みを提供する。
+	このケースでは決定論的なマッピングを行うため、データベースを必要
+	としない。</p></div><div class="refsect1" lang="en"><a name="id2517212"></a><h2>IDMAP オプション</h2><div class="variablelist"><dl><dt><span class="term">range = low - high</span></dt><dd><p>
+			バックエンドが権威を持つと規定されている、uid と gid の利用可能な
+			マッチング範囲を定義する。この範囲はフィルターとして動作することに
+			注意されたい。UID と GID の計算結果がアルゴリズム的にこの範囲外
+			になってしまった場合、これらは無視され、対応するマップは破棄される。
+			このオプションは、UID や GID がたまたまローカルとリモートでそれぞれ
+			定義された ID と重複してしまうのを避けるために用意されている。
+		</p></dd><dt><span class="term">base_rid = 数字</span></dt><dd><p>
+			UID や GID から SID を生成したり、取得したSID から UID や GID を
+			求めたりするためのベースとなる整数を指定する。ユーザの RID は
+			デフォルトでは 1000 (16進では512) から始まる。このため、base_rid
+			の好ましい値は 1000 となる。これにより結果としての ID は
+			ID = RID - BASE_RID + LOW RANGE ID として算出できる。
+		</p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2517245"></a><h2>使用例</h2><p>この例では idmap_rid で２つのドメインを設定している。</p><pre class="programlisting">
 	[global]
 	    idmap domains = MAIN TRUSTED1
 
@@ -24,9 +25,11 @@
 	    idmap config TRUSTED1:backend  = rid
 	    idmap config TRUSTED1:base_rid = 1000
 	    idmap config TRUSTED1:range    = 50000 - 99999
-	</pre></div><div class="refsect1" lang="en"><a name="id2477972"></a><h2>AUTHOR</h2><p>
-	The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.
-	</p></div></div></body></html>
+	</pre></div><div class="refsect1" lang="en"><a name="id2478035"></a><h2>作者</h2><p>
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
+	</p></div><div class="refsect1" lang="en"><a name="id2478055"></a><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4  対応のものである。</p><p>このドキュメントの Samba 3.2.4 対応の翻訳は
+	</p><div class="itemizedlist"><ul type="disc"><li><p>堀田 倫英(hotta@net-newbie.com)</p></li></ul></div><p>
+		によって行なわれた。</p></div></div></body></html>
