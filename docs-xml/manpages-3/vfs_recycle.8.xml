@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="vfs_recycle.8">
 
@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_recycle</refname>
-	<refpurpose>Samba VFS recycle bin</refpurpose>
+	<refpurpose>Samba VFS ごみ箱</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -23,29 +23,29 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 
-	<para>This VFS module is part of the
+	<para>このVFSモジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<manvolnum>7</manvolnum></citerefentry> suite.の一部である</para>
 
-	<para>The <command>vfs_recycle</command> intercepts file deletion
-	requests and moves the affected files to a temporary repository
-	rather than deleting them immediately. This gives the same effect
-	as the Recycle Bin on Windows computers. </para>
+	<para>The <command>vfs_recycle</command>はファイル削除要求に割り込み、
+	直接ファイルを削除するのではなく、一時エリアに移動させる。
+	これによりWindowsのごみ箱と同様の機能を提供する。
+	</para>
 
-	<para>The Recycle Bin will not appear in Windows Explorer
-	views of the network file system (share) nor on any mapped
-	drive. Instead, a directory called .recycle will be automatically
-	created when the first file is deleted and recycle:repository is
-	not configured. If recycle:repository is configured, the name
-	of the created directory depends on recycle:repository. Users
-	can recover files from the recycle bin. If the recycle:keeptree
-	option has been specified, deleted files will be found in a path
-	identical with that from which the file was deleted.  </para>
+	<para>ごみ箱(Recycle Bin)はWindowsのエクスプローラーのネットワークファイルシステム
+	や、マップドライブの表示上には現れない。
+	その代わり、.recycleディレクトリが初めてファイルを削除したときに自動的に作成される
+	(recycle:repositoryが指定されていない場合)
+	
+	recycle:repositoryが設定されている場合、新たに作成されるディレクトリ名はrecycle:repository
+	で指定されたものになる。
+	
+	もしrecycle:keeptreeオプションが設定されている場合、パスとともに保存される
+	 </para>
 
-
-	<para>This module is stackable.</para>
+	<para>このモジュールはスタッカブルである</para>
 
 </refsect1>
 
@@ -58,34 +58,35 @@
 		<varlistentry>
 		<term>recycle:repository = PATH</term>
 		<listitem>
-		<para>Path of the directory where deleted files should be moved.
+		<para>削除されたファイルをどこに移動するか指定する.
 		</para>
-		<para>If this option is not set, the default path .recycle
-		is used. </para>
+		<para>オプションが指定されていない場合、初期値として .recycleが用いられる
+		</para>
 		</listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>recycle:directory_mode = MODE</term>
 		<listitem>
-		<para>Set MODE to the octal mode the recycle repository
-		should be created with.  The recycle repository will be
-		created when first file is deleted. If recycle:subdir_mode
-		is not set, MODE also applies to subdirectories.
+		<para>
+		ごみ箱(recycle repository)ディレクトリを作成する場合のmodeを8進で指定する。
+		ごみ箱ディレクトリは初めてファイルが削除されるときに作成する。
 		</para>
-		<para>If this option is not set, the default mode
-		0700 is used. </para>
+		<para>
+		もしrecycle:subdir_modeが指定されていない場合、0700を使用する。
+		</para>
 		</listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>recycle:subdir_mode = MODE</term>
 		<listitem>
-		<para>Set MODE to the octal mode with which
-		sub directories of the recycle repository should be created.
+		<para>
+		ごみ箱の中のサブディレクトリを作成する場合のmodeを8進で指定する。
 		</para>
-		<para>If this option is not set, subdirectories
-		will be created with the mode from recycle:directory_mode.
+		<para>
+		このオプションが指定されていない場合、サブディレクトリの作成はrecycle:directory_mode
+		を使用する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -93,9 +94,8 @@
 		<varlistentry>
 		<term>recycle:keeptree = BOOL</term>
 		<listitem>
-		<para>Specifies whether the directory structure should
-		be preserved or whether the files in a directory that is being
-		deleted should be kept separately in the repository.
+		<para>
+		ディレクトリ構造を残したままファイルを削除するか、別のリポジトリ(ごみ箱)として管理するかを指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -103,10 +103,12 @@
 		<varlistentry>
 		<term>recycle:versions = BOOL</term>
 		<listitem>
-		<para>If this option is True, two files with the same
-		name that are deleted will both be kept in the repository.
-		Newer deleted versions of a file will be called
+		<para>
+		このオプションをtrueと指定すると、同一の名前を持つ2つのファイルが削除された場合
+		した場合、リポジトリの中に両方のファイルを保存する。
+		新しく削除したファイルは
 		&quot;Copy #x of filename&quot;.
+		となる。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -114,8 +116,8 @@
 		<varlistentry>
 		<term>recycle:touch = BOOL</term>
 		<listitem>
-		<para>Specifies whether a file's access date should be
-		updated when the file is moved to the repository.
+		<para>
+		ファイルのアクセス日付をごみ箱に移動した日付にアップデートするか否かを指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -123,8 +125,8 @@
 		<varlistentry>
 		<term>recycle:touch_mtime = BOOL</term>
 		<listitem>
-		<para>Specifies whether a file's last modified date should be
-		updated when the file is moved to the repository.
+		<para>
+		ファイルの最終変更日付をごみ箱に移動した日付にアップデートするか否かを指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -132,9 +134,8 @@
 		<varlistentry>
 		<term>recycle:minsize = BYTES</term>
 		<listitem>
-		<para>Files that are smaller than the number of bytes
-		specified by this parameter will not be put into the
-		repository.
+		<para>
+		ごみ箱に移動するファイルサイズの下限を指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -142,9 +143,8 @@
 		<varlistentry>
 		<term>recycle:maxsize = BYTES</term>
 		<listitem>
-		<para>Files that are larger than the number of bytes
-		specified by this parameter will not be put into the
-		repository.
+		<para>
+		ごみ箱に移動するファイルサイズの上限を指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -152,9 +152,9 @@
 		<varlistentry>
 		<term>recycle:exclude = LIST</term>
 		<listitem>
-		<para>List of files that should not be put into the
-		repository when deleted, but deleted in the normal way.
-		Wildcards such as * and ? are supported.
+		<para>
+		削除要求があった時、ごみ箱に移動せず通常のように削除するファイルを指定する。
+		*や?といったワイルドカードをサポートする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -162,9 +162,9 @@
 		<varlistentry>
 		<term>recycle:exclude_dir = LIST</term>
 		<listitem>
-		<para>List of directories whose files should not be put
-		into the repository when deleted, but deleted in the
-		normal way. Wildcards such as * and ? are supported.
+		<para>
+		削除要求があった時、ごみ箱に移動せず通常のように削除するディレクトリを指定する。
+		*や?といったワイルドカードをサポートする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -172,9 +172,9 @@
 		<varlistentry>
 		<term>recycle:noversions = LIST</term>
 		<listitem>
-		<para>Specifies a list of paths (wildcards such as *
-		and ? are supported) for which no versioning should
-		be used. Only useful when recycle:versions is enabled.
+		<para>
+		バージョン管理せず、直接削除すべきパス(*屋?のようなワイルドカードをサポートする)
+		を指定する。recycle:versionsが有効のときだけ使用される。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -183,10 +183,11 @@
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>例</title>
 
-	<para>Log operations on all shares using the LOCAL1 facility
-	and NOTICE priority:</para>
+	<para>
+	すべての共有のログで、LOCAL1ファシリティー、NOTICEプライオリティーを使用する
+	</para>
 
 <programlisting>
         <smbconfsection name="[global]"/>
@@ -200,18 +201,26 @@
 <refsect1>
 	<title>VERSION</title>
 
-	<para>This man page is correct for version 3.0.25 of the Samba suite.
+	<para>このマニュアルはSamba suite バージョン3.0.25に対応している
 	</para>
 </refsect1>
 
 <refsect1>
 	<title>AUTHOR</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
 
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
 </refsect1>
 
 </refentry>
