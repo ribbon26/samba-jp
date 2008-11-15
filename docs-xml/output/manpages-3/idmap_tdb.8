@@ -1,35 +1,35 @@
 .\"     Title: idmap_tdb
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/13/2008
-.\"    Manual: ã\(mdã\(S1ãã\ ç\(rg\(r!çãã\(14ã\(Fo
+.\"      Date: 11/15/2008
+.\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "IDMAP_TDB" "8" "11/13/2008" "Samba 3\.2" "ã\(mdã\(S1ãã\ ç\(rg\(r!çãã\(14ã\(Fo"
+.TH "IDMAP_TDB" "8" "11/15/2008" "Samba 3\.2" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-idmap_tdb - Sambaã\(rgWinbindç\(adidmap_tdbããã\(a-ã\(adã\(S3ã
-.SH "è\(Of\(noæ"
+idmap_tdb - SambaのWinbind用idmap_tdbバックエンド
+.SH "説明"
 .PP
-idmap_tdb ãã\(coã\(deã\(Csã\(S3ã\(a- winbindd ã SID/uid/gid ãããã\(S3ã\(deãã\(14ãã\(Fo ãä\(r?å\%ããã\(rgã\(Foä\(12\(r?ãããããã\(coã\(Foãã\(rgããã\(a-ã\(adã\(S3ãã\(scããã"idmap" ã\(ad "idmap alloc" API ã\(rgä\(ac\(r!æ\(S1ãå\(rgè\(Poãã\(bbããã
-.SH "IDMAP ã\(Ofãã\(mdã\(scã\(S3"
-.PP
-range = low \- high
-.RS 4
-ããã\(a-ã\(adã\(S3ããæ\(ad\(coå\(adãæã\(Csã\(adè\(bbå\(rgããã\(bbããã uid ã\(ad gid ã\(rgå\(coç\(adå\(a-è\(12ã\(Of ãããã\(S3ã\(deç\(a-å\(S2ãå\(rgç\(34\(coãããä\(Omå\(rgä\(acåãããã\(a-ã\(adã\(S3ãã SID/uid/gid ãããã\(S3ã\(deã\(rgã\(adã\(S3ãã\(Ofãæ\ \(14ç\(aaï\(14å\(14ã\(S3å\(Omããããããéå\(ac\(acãã\(rgç\(a-å\(S2ã\(a- å\(S2ãå\(12ã\(bbç\(a-å\(S2ã\(adåãã\(Foã\(Ofããæå\(rgãã\(Ofãå\ \(aaå Winbind ã\(a-ãã\(scã\(Csã\(Fo ã\(Ofã\(14ãã\(14ãã\(bbã smb\.conf ã\(rg "idmap uid" ã\(ad "idmap gid" ã\(Ofãã\(mdã\(scã\(S3ãä\(12\(r?ç\(adããã
-.RE
-.SH "IDMAP ALLOC ã\(Ofãã\(mdã\(scã\(S3"
+idmap_tdb プラグインは winbindd が SID/uid/gid マッピングテーブル を保存するのに使われるデフォルトのバックエンドであり、"idmap" と "idmap alloc" API の両方を実装している。
+.SH "IDMAP オプション"
 .PP
 range = low \- high
 .RS 4
-winbindd ããã\(bbã\(14ã\(psã\(adã\(deã\(Foã\(14ãã\(Foå\(a-\(34ãã\(bbå\(S2ãå\(12ã\(bbãã\(scãã uid ã\(ad gid ã\(rgå\(coç\(adå\(a-è\(12ç\(a-å\(S2ãå\(rgç\(34\(coãããæå\(rgãã\(Ofãå\ \(aaå Winbind ã\(a-ãã\(scã\(Csã\(Fo ã\(Ofã\(14ãã\(14ãã\(bbã smb\.conf ã\(rg "idmap uid" ã\(ad "idmap gid" ã\(Ofãã\(mdã\(scã\(S3ãä\(12\(r?ç\(adããã
+バックエンドが権威を持つと規定されている、 uid と gid の利用可能な マッチング範囲を定義する。事実上同じバックエンドが SID/uid/gid マッピングのエントリを格納／呼び出しするため、通常その範囲は 割り当て範囲と同じになる。指定がない場合 Winbind はフェイル オーバーして、 smb\.conf の "idmap uid" と "idmap gid" オプションを使用する。
 .RE
-.SH "ä\(12\(r?ç\(adä\(34"
+.SH "IDMAP ALLOC オプション"
 .PP
-ä\(Fc\(Yeä\(acã\(rgä\(34ã\(a-ãidmap ã\(rgè\(ad\%å\(rgã\(adãã\(bb "idmap backend = tdb" ãä\(12\(r?ãã\(adããã 3\.0\.25 ä\(Fc\(Yeåã\(rgããã\(coã\(Foãã\(adåç\%ã\(rgè\(ad\%å\(rgã\(scããã
+range = low \- high
+.RS 4
+winbindd からユーザとグループに対して割り当てができる uid と gid の利用可能範囲を定義する。指定がない場合 Winbind はフェイル オーバーして、 smb\.conf の "idmap uid" と "idmap gid" オプションを使用する。
+.RE
+.SH "使用例"
+.PP
+以下の例は、idmap の設定として "idmap backend = tdb" を使うという、 3\.0\.25 以前のデフォルトと同等の設定である。
 .sp
 .RS 4
 .nf
@@ -44,14 +44,14 @@ winbindd ããã\(bbã\(14ã\(psã\(adã\(deã\(Foã\(14ã�
 	
 .fi
 .RE
-.SH "ä\(12è"
+.SH "作者"
 .PP
-ã\(Ofã\(Ofã\(acãã\(Foã\(rg Samba ã\(12ããã\(bbã\(scã\(ctã\(adããã\(Foé\(cté\(Poããã\(bbã\(14ãã\(Poã\(Ofãã\(Poã\(14ã\(a-ã Andrew Tridgell ã\(Foãã\(Poã\(bbä\(12ããããSamba ã\(a-ç\(34å\(adãLinux ã\(Foã\(14ãã\(Foéç\(Omã\(ad åæ\(scã\(rgæ\(S1æ\(S3ã\(scãSamba Team ã\(Foããã\(Ofã\(14ãã\(S3ã\(12ã\(14ã\(S1ãã\%ã\(acã\(scã\(a-ãã\(adãã\(bb éç\(Omããã\(bbããã
-.SH "æ\(Yeæ\(noè\(Ofè\(ad\(S3"
+オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、 Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と 同様の方法で、Samba Team によりオープンソースプロジェクトとして 開発されている。
+.SH "日本語訳"
 .PP
-ãã\(rgããã\(Yeã\(ctã\(Foãã\(14ã\(acã\(a- Samba 3\.2\.4 å\(a-\(34å\(r?ã\(rgãã\(rgã\(scããã
+このマニュアルページは Samba 3\.2\.4 対応のものである。
 .PP
-ãã\(rgãã\%ã\(Yeã\(r!ã\(S3ãã\(rg Samba 3\.2\.4 å\(a-\(34å\(r?ã\(rgç\(r?\(Fcè\(ad\(S3ã\(a-
+このドキュメントの Samba 3\.2\.4 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -61,7 +61,7 @@ winbindd ããã\(bbã\(14ã\(psã\(adã\(deã\(Foã\(14ã�
 .sp -1
 .IP \(bu 2.3
 .\}
-å\ ç\(de å\(Foè\(+-(hotta@net\-newbie\.com)
+堀田 倫英(hotta@net\-newbie\.com)
 .sp
 .RE
-ã\(Foãã\(Poã\(bbè\(r!ã\(Ofãããã
+によって行なわれた。

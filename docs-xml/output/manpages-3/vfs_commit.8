@@ -1,41 +1,38 @@
 .\"     Title: vfs_commit
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
+.\"      Date: 11/15/2008
 .\"    Manual: System Administration tools
 .\"    Source: Samba 3.2
 .\"
-.TH "VFS_COMMIT" "8" "10/31/2008" "Samba 3\.2" "System Administration tools"
+.TH "VFS_COMMIT" "8" "11/15/2008" "Samba 3\.2" "System Administration tools"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-vfs_commit - flush dirty data at specified intervals
+vfs_commit - 書き込み済みデータを特定の間隔でフラッシュする
 .SH "SYNOPSIS"
 .HP 1
 vfs objects = commit
-.SH "DESCRIPTION"
+.SH "説明"
 .PP
-This VFS module is part of the
-\fBsamba\fR(7)
-suite\.
-.PP
-The
-vfs_commit
-VFS module keeps track of the amount of data written to a file and synchronizes it to disk when a specified amount accumulates\.
+このVFSモジュールは
+\fBsamba\fR(7)スイートの一部である\.
 .PP
 vfs_commit
-is useful in two circumstances\. First, if you have very precious data, the impact of unexpected power loss can be minimized by a small commit:dthresh value\. Secondly, write performance can be improved on some systems by flushing file data early and at regular intervals\.
+VFS モジュールはファイルに書き込まれた多くのデータ を管理し、指定された単位でファイに書き込む(同期する)。
 .PP
-This module is stackable\.
-.SH "OPTIONS"
+vfs_commitは次の2つの状況で役に立つ。 第一に、非常に重要なデータが大量にある場合、commit:dthreshに小さな値を指定すれば 予期しない電源断に対して被害を最小にとどめることができる。 第二に、あるシステムでは書き込みデータを早期にフラッシュすることで パフォーマンスを向上することができる。
+.PP
+このモジュールはスタッカブルである。
+.SH "オプション"
 .PP
 commit:dthresh = BYTES
 .RS 4
-Synchronize file data each time the specified number of bytes has been written\.
+指定されたバイト数が書き込まれるたびにファイルを同期する
 .sp
-The following suffixes may be applied to BYTES:
+以下のサフィックスが使用可能
 .sp
 .RS 4
 .ie n \{\
@@ -46,7 +43,7 @@ The following suffixes may be applied to BYTES:
 .IP \(bu 2.3
 .\}
 K
-\- BYTES is a number of kilobytes
+\- BYTES はKByte表記
 .RE
 .sp
 .RS 4
@@ -58,7 +55,7 @@ K
 .IP \(bu 2.3
 .\}
 M
-\- BYTES is a number of megabytes
+\- BYTES はMByte表記
 .RE
 .sp
 .RS 4
@@ -70,13 +67,13 @@ M
 .IP \(bu 2.3
 .\}
 G
-\- BYTES is a number of gigabytes
+\- BYTES はGByte表記
 .sp
 .RE
 .RE
-.SH "EXAMPLES"
+.SH "例"
 .PP
-Synchronize the file data on the [precious] share after every 512 kilobytes (524288 bytes) of data is written:
+512 KBytes(524288 bytes)データを書き込むたびに、ファイルを同期する
 .sp
 .RS 4
 .nf
@@ -88,12 +85,28 @@ Synchronize the file data on the [precious] share after every 512 kilobytes (524
 .RE
 .SH "CAVEATS"
 .PP
-On some systems, the data synchronization performed by
-commit
-may reduce performance\.
-.SH "VERSION"
+一部のシステムでは、commitによるデータ同期を行うと パフォーマンスを損なうことになる。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
+このヘルプはSambaスイート　3\.0\.25に対応している
 .SH "AUTHOR"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.0\.25\-3\.2\.4対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\.co\.jp)
+.sp
+.RE
+によって行なわれた。

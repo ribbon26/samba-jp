@@ -1,52 +1,49 @@
 .\"     Title: vfs_readahead
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 10/31/2008
+.\"      Date: 11/15/2008
 .\"    Manual: System Administration tools
 .\"    Source: Samba 3.2
 .\"
-.TH "VFS_READAHEAD" "8" "10/31/2008" "Samba 3\.2" "System Administration tools"
+.TH "VFS_READAHEAD" "8" "11/15/2008" "Samba 3\.2" "System Administration tools"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-vfs_readahead - pre-load the kernel buffer cache
+vfs_readahead - ã\(Foã\(14ãã\(Foãããã\(r!ã\%ã\(Poãã\(mdã\(Yeããã\(Ofã\%ã\(14ããã
 .SH "SYNOPSIS"
 .HP 1
 vfs objects = readahead
-.SH "DESCRIPTION"
+.SH "è\(Of\(noæ"
 .PP
-This VFS module is part of the
-\fBsamba\fR(7)
-suite\.
+ãã\(rgVFSã\(ctã\(acã\(Yeã\(14ã\(Foã\(a-
+\fBsamba\fR(7)ã\(S1ã\(Csã\(14ãã\(rgä\(acé\(adã\(scããã
 .PP
-This
-vfs_readahead
-VFS module detects read requests at multiples of a given offset (hex 0x80000 by default) and then tells the kernel via either the readahead system call (on Linux) or the posix_fadvise system call to pre\-fetch this data into the buffer cache\.
+ãã\(rgvfs_readahead
+VFS ã\(ctã\(acã\(Yeã\(14ã\(Foã\(a- ä\(acããããã\(Ofãã\(Fcãã(åæå\(Csã\(a-16é\(S2ã\(sc0x80000)ã\(rgåæ\(deã\(adãã\(bbreadè\(bbæ\(+-ãæ\(Cså\(Omããã ããã\(bbreadaheadã\(mdã\(S1ãã\ ã\(S3ã\(14ã\(Fo(Linuxã\(rgå\ \(aaå)ããposix_fadviseã\(mdã\(S1ãã\ ã\(S3ã\(14ã\(Foãç\(adãã\(bb ã\(Foã\(14ãã\(Foã\(Foéç\(Yeãããã\(rgãã\(14ã\(r?ããããã\(r!ã\%ã\(Poãã\(mdã\(Yeã\(rgãã\(Ofãã\(scããã\(rgéã\(Foç\(adããã
 .PP
-This module is useful for Windows Vista clients reading data using the Windows Explorer program, which asynchronously does multiple file read requests at offset boundaries of 0x80000 bytes\.
+ãã\(rgã\(ctã\(acã\(Yeã\(14ã\(Foã\(a-Windows Vista ã\(a-ã\(coã\(Csã\(ctã\(S3ããã\(adã\(a-ã\(S1ãã\%ã\(14ã\(coã\(14ã\(scãã\(14ã\(r?ãè\(Of\%ã\(r?è\(34\(14ãéã\(Fo æç\(adã\(scãããã\(adã\(a-ã\(S1ãã\%ã\(14ã\(coã\(14ã\(a-0x80000ã\(rgåæ\(deãã\(adã\(Foéåæãã\(r!ã\(Csã\(Foè\(Of\%ã\(r?è\(34\(14ã\(r?è\(bbæ\(+-ãããã\(Ofã ããããã\(rgã\(Ofãã\(mdã\(scã\(S3ãæç\(adã\(Foã\(Ofãã
 .PP
-The offset multiple used is given by the readahead:offset option, which defaults to 0x80000\.
+ã\(Ofãã\(Fcããã\(rgåæ\(deã\(a-readahead:offsetã\(Ofãã\(mdã\(scã\(S3ã\(scæå\(rgãããåæå\(Csã\(a- 0x80000ã\(scããã
 .PP
-The size of the disk read operations performed by
-vfs_readahead
-is determined by the readahead:length option\. By default this is set to the same value as the readahead:offset option and if not set explicitly will use the current value of readahead:offset\.
+
+vfs_readaheadã\(scè\(r!ããããã\(Poã\(S1ã\(a-ã\(Ofã\(14ãå\(bbçã\(rgã\(mcã\(Csã\(Omã\(a- readahead:length ã\(Ofãã\(mdã\(scã\(S3ã\(scæå\(rgããã ãã\(rgãã\(coã\(r!ã\(14ã\(r?ã\(rgæ\(adæ\(Omè\(ad\%å\(rgã\(a-readahead:offsetã\(adåä\(acã\(rgå\(Csã\(Foã\(Ofããæç\(ct\(Omã\(Foå\(Csãæå\(rg ããã\(bbãã\(Ofããã\(deãreadahead:offsetã\(adåãå\(Csãä\(12\(r?ç\(adãããã
 .PP
-This module is stackable\.
+ãã\(rgã\(ctã\(acã\(Yeã\(14ã\(Foã\(a-ã\(S1ã\(r?ãã\(Foãã\(Foã\(scãã
 .SH "OPTIONS"
 .PP
 readahead:offset = BYTES
 .RS 4
-The offset multiple that causes readahead to be requested of the kernel buffer cache\.
+ã\(Ofãã\(Fcããéã\(scãã\(Foã\(14ãã\(Foãããã\(r!ã\(14ã\%ã\(Poãã\(mdã\(Yeã\(Foè\(bbæ\(+-ããåã\(Foã\(Ofãæ\(deå\(Cs
 .RE
 .PP
 readahead:length = BYTES
 .RS 4
-The number of bytes requested to be read into the kernel buffer cache on each readahead call\.
+readaheadã\(S3ã\(14ã\(Foã\(scã\(Foã\(14ãã\(Foãããã\(r!ã\%ã\(Poãã\(mdã\(Yeããè\(Of\%ã\(r?è\(34\(14ããã\(Csãæ\(deãæå\(rgãã
 .RE
 .PP
-The following suffixes may be applied to BYTES:
+ä\(Fc\(Yeä\(acã\(rgã\(mcãã\(Poãã\(a-ã\(S1ãBYTESæå\(rgã\(Foä\(12\(r?ç\(adã\(scãã
 .sp
 .RS 4
 .ie n \{\
@@ -57,7 +54,7 @@ The following suffixes may be applied to BYTES:
 .IP \(bu 2.3
 .\}
 K
-\- BYTES is a number of kilobytes
+\- KByteã\(scæå\(rgãã
 .RE
 .sp
 .RS 4
@@ -69,7 +66,7 @@ K
 .IP \(bu 2.3
 .\}
 M
-\- BYTES is a number of megabytes
+\- MByteã\(scæå\(rgãã
 .RE
 .sp
 .RS 4
@@ -81,8 +78,8 @@ M
 .IP \(bu 2.3
 .\}
 G
-\- BYTES is a number of gigabytes
-.SH "EXAMPLES"
+\- GByteã\(scæå\(rgãã
+.SH "ä\(34"
 .sp
 .RS 4
 .nf
@@ -90,9 +87,27 @@ G
 	\fIvfs objects = readahead\fR
 .fi
 .RE
-.SH "VERSION"
+.SH "ãã\(14ã\(acã\(scã\(S3"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
+ãã\(rgãã\(Foãã\(a-Sambaã\(S1ã\(Csã\(14ãã3\.0\.25ã\(Foå\(a-\(34å\(r?ãã\(bbãã
 .SH "AUTHOR"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+ã\(Ofã\(Ofã\(acãã\(Foã\(rg Samba ã\(12ããã\(bbã\(scã\(ctã\(adé\(cté\(Poããã\(bbã\(14ãã\(Poã\(Ofãã\(Poã\(a-ãAndrew Tridgell ã\(Foãã\(Poã\(bbä\(12æããããç\(34å\(ad Samba ã\(a- Samba Team ã\(Fo ãã\(Poã\(bbãLinuxã\(Foã\(14ãã\(Foã\(rgéç\(Omã\(adåæ\(scã\(rgã\(Ofã\(14ãã\(S3ã\(12ã\(14ã\(S1ãã\%ã\(acã\(scã\(a-ã ã\(adãã\(bbéç\(Omãè\(r!ã\(Ofããã\(bbããã
+.SH "æ\(Yeæ\(noè\(Ofè\(ad\(S3"
+.PP
+ãã\(rgãã\%ã\(Yeã\(r!ã\(S3ãã\(a-ãSamba 3\.0\.25\-3\.2\.4å\(a-\(34å\(r?ã\(rgãã\(rgã\(scããã
+.PP
+ãã\(rgãã\%ã\(Yeã\(r!ã\(S3ãã\(rgç\(r?\(Fcè\(ad\(S3ã\(a-
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+å\(S1\(S3ç\(deç\(Ye\(Yeå\(ac (shouji@microft\.co\.jp)
+.sp
+.RE
+ã\(Foãã\(Poã\(bbè\(r!ã\(Ofãããã
