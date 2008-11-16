@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="vfs_prealloc.8">
 
@@ -23,19 +23,19 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 
-	<para>This VFS module is part of the
+	<para>このVFSモジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>The <command>vfs_prealloc</command> VFS module preallocates
-	files to a specified size each time a new file is created. This
-	is useful in environments where files are of a predetermined
-	size will be written to a disk subsystem where extending file
-	allocations is expensive.  </para>
+	<para><command>vfs_prealloc</command>VFSモジュールはファイルが作成されるたびに
+	あらかじめ指定されたサイズを割り当てることができる。この機能はディスクサブシステムに
+	あらかじめ決まったサイズごとに書き込み、ファイルサイズを拡張することが負荷になるような
+	環境に対して有効である。
+	</para>
 
-	<para>This module is stackable.</para>
+	<para>このモジュールはスタッカブルである</para>
 
 </refsect1>
 
@@ -48,15 +48,16 @@
 		<varlistentry>
 		<term>prealloc:EXT = BYTES</term>
 		<listitem>
-		<para>Preallocate all files with the extension EXT to
-		the size specified by BYTES.
+		<para>
+		すべてのファイルに対して、EXTという拡張子を付けて、BYTESで指定されたサイズを
+		割り当てる。
 		</para>
 
-		<para>The following suffixes may be applied to BYTES:</para>
+		<para>以下のサフィックスがBYTESに指定可能</para>
 		<itemizedlist>
-		<listitem><para><command>K</command> - BYTES is a number of kilobytes</para></listitem>
-		<listitem><para><command>M</command> - BYTES is a number of megabytes</para></listitem>
-		<listitem><para><command>G</command> - BYTES is a number of gigabytes</para></listitem>
+		<listitem><para><command>K</command> - BYTES はKBytes単位</para></listitem>
+		<listitem><para><command>M</command> - BYTES はMBytes単位</para></listitem>
+		<listitem><para><command>G</command> - BYTES はGBytes単位</listitem>
 		</itemizedlist>
 
 		</listitem>
@@ -66,14 +67,14 @@
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>例</title>
 
-	<para>A process writes TIFF files to a Samba share, and the
-	is known these files will almost always be around 4 megabytes
-	(4194304 bytes): </para>
+	<para>
+	TIFFファイルをSamba共有に書き込む処理で、ファイルサイズが4MBytes近辺であるとわかっているとき
+	</para>
 
 <programlisting>
-        <smbconfsection name="[frames]"/>
+    <smbconfsection name="[frames]"/>
 	<smbconfoption name="path">/data/frames</smbconfoption>
 	<smbconfoption name="vfs objects">prealloc</smbconfoption>
 	<smbconfoption name="prealloc:tiff">4M</smbconfoption>
@@ -81,27 +82,36 @@
 </refsect1>
 
 <refsect1>
-	<title>CAVEATS</title>
-	<para><command>vfs_prealloc</command> is not supported on all
-	platforms and filesystems. Currently only XFS filesystems on
-	Linux and IRIX are supported.
+	<title>注意</title>
+	<para><command>vfs_prealloc</command>はすべてのプラットフォームとファイルシステム
+	をサポートしているわけではない。現状ではLinuxとIRIXのXFSファイルシステムのみ、サポートしている。
 	</para>
 </refsect1>
 
 <refsect1>
 	<title>VERSION</title>
-	<para>This man page is correct for version 3.0.25 of the Samba suite.
+
+	<para>このヘルプはSambaシステム3.0.25に対応している
 	</para>
 </refsect1>
 
 <refsect1>
 	<title>AUTHOR</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
 
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 3.0.25-3.2.4対応のものである。</para>	
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
 </refsect1>
 
 </refentry>
