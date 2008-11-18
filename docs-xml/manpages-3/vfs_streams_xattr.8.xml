@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_streams_xattr</refname>
-	<refpurpose>posix xattrs 形式で代替データを保存する</refpurpose>
+	<refpurpose>代替データストリームを POSIX の拡張属性に格納する。</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -29,18 +29,20 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
-	<para><command>vfs_streams_xattr</command> は ファイルシステム中にNTFS 代替
-データストリームの保存を可能にする。標準 posix ファイルシステムはファイル毎の多重データ
-	ストリームの概念をサポートしないので、streams_xattr モジュールは posix 拡張
-	属性(xattrs)内にデータを保存する。これらの属性名はuser.DosStream."ADS-NAME" である。</para>
+	<para> <command>vfs_streams_xattr</command> により NTFS の代替データストリームをファイルシステムに格納することが可能となる。
+	一般的な POSIX ファイルシステムは複数のデータストリームをファイルに付与する機能をサポートしていないため、
+	streams_xattr モジュールは、このデータを POSIX の拡張属性 (xattrs) に格納する。
+	この属性の名称は、user.DosStream."代替データストリーム名" である。</para>
 
-	<para>有効にされたこのモジュールによって共有されたファイルシステムは xattrs を
-	サポートしなければならない。</para>
+	<para>このモジュールを有効にして共有を行なうファイルシステムでは、拡張属性をサポートしている必要がある。
+	</para>
 
-	<para>ほとんどのファイルシステムで xattrs に厳しいサイズ制限があることに注意すること。
-	だからこのモジュールは IE のような小さいゾーン情報をストリームに保存するアプリケーション
-	上では動作するだろうが、ADS に大量のデータを保存するアプリケーションでは
-	動作しないだろう。</para>
+	<para>
+	ほとんどのファイルシステムには、拡張属性のサイズに制約がある。
+	そのため、このモジュールは 、小さいゾーン情報のデータをストリームに格納する
+	Internet Explorer のようなアプリケーションでは機能するが、
+	大量のデータを代替データストリームに格納するアプリケーションでは機能かもしれない。
+	</para>
 </refsect1>
 
 <refsect1>
