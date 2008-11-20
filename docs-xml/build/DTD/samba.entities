@@ -239,59 +239,48 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 <!ENTITY stdarg.resolve.order '
 <varlistentry>
 <term>-R &lt;name resolve order&gt;</term> 
-<listitem><para>This option is used to determine what naming 
-services and in what order to resolve 
-host names to IP addresses. The option takes a space-separated 
-string of different name resolution options.</para>
+<listitem><para>このオプションは、ホスト名と IP アドレスの名前解決のために
+どのようなネーミングサービスをどのような順序で使用するかを決めるのに使用される。
+このオプションには、異なった名前解決オプションを空白で区切って並べる。</para>
 
-<para>The options are: "lmhosts", "host", "wins" and "bcast". 
-They cause names to be resolved as follows :</para>
+<para>指定できるオプションは "lmhosts", "host", "wins" と "bcast" である。
+それぞれにおいて、名前解決は次のように行われる :</para>
 
 <itemizedlist>
 <listitem><para><constant>lmhosts</constant>: 
-Lookup an IP address in the Samba lmhosts file. If the 
-line in lmhosts has no name type attached to the 
-NetBIOS name 
-(see the <citerefentry><refentrytitle>lmhosts</refentrytitle>
- <manvolnum>5</manvolnum></citerefentry>	for details) 
-then any name type matches for lookup.
+Samba lmhosts ファイルで IP アドレスが検索される。lmhosts の行に NetBIOS名に
+アタッチされるネームタイプがない場合(詳細については<citerefentry><refentrytitle>
+lmhosts</refentrytitle> <manvolnum>5</manvolnum></citerefentry>を参照)、
+ネームタイプがどれであるかは検索結果に影響しなくなる。
 </para></listitem>
 
 <listitem><para><constant>host</constant>: 
-Do a standard host name to IP address resolution, using
-the system <filename>/etc/hosts</filename>, NIS, or DNS
-lookups. This method of name resolution is operating 
-system dependent, for instance on IRIX or Solaris this 
-may be controlled by the <filename>/etc/nsswitch.conf
-</filename> file).  Note that this method is only used 
-if the NetBIOS name type being queried is the 0x20 
-(server) name type, otherwise it is ignored.
+システムの <filename>/etc/hosts</filename> 、NIS、DNS ルックアップを使用した、
+ホスト名 - IP アドレス間の標準の名前解決が行われる。名前解決の方法の詳細な部分は、
+IRIX、Solaris といった OS によって変わる。<filename>/etc/nsswitch.conf
+</filename>で制御できる場合もある。この方法は、検索される NetBIOS 名のタイプが
+ 0x20 (サーバ) である時にのみ使用できる点に注意。さもなければ指定しても無視される。
 </para></listitem>
 
 <listitem><para><constant>wins</constant>: 
-Query a name with the IP address listed in the 
-<parameter>wins server</parameter> parameter.  If no 
-WINS server has been specified this method will be 
-ignored.
+<parameter>wins server</parameter>パラメータに指定された IP アドレスを持つ
+名前が検索される。WINS サーバが指定されていなければ、無視される。
 </para></listitem>
 
 <listitem><para><constant>bcast</constant>: 
-Do a broadcast on each of the known local interfaces 
-listed in the <parameter>interfaces</parameter>
-parameter. This is the least reliable of the name 
-resolution methods as it depends on the target host 
-being on a locally connected subnet.
+<parameter>interfaces</parameter>パラメータに指定された既知のローカル･
+インターフェースそれぞれについてブロードキャストを行う。ターゲット・ホストが
+ローカル接続サブネット上にある場合にしか使えないので、最も信頼性の低い名前解決法。
 </para></listitem>
 </itemizedlist>
 
-<para>If this parameter is not set then the name resolve order 
-defined in the &smb.conf; file parameter  
-(<smbconfoption><name>name resolve order</name></smbconfoption>) will be used.
+<para>このパラメータが設定されなかった場合、名前解決方法の使用順序は &smb.conf;
+ファイル中のパラメータ(<smbconfoption><name>name resolve order</name></smbconfoption>)に指定されたとおりになる。
 </para>
 
-<para>The default order is lmhosts, host, wins, bcast. Without 
-this parameter or any entry in the <smbconfoption><name>name resolve order</name></smbconfoption> parameter of the &smb.conf; file, the name 
-resolution methods will be attempted in this order. </para></listitem>
+<para>既定値の順番は、 lmhosts, host, wins, bcastである。このパラメータが
+ない場合、あるいは  &smb.conf; ファイル中の、 <smbconfoption><name>name resolve order</name></smbconfoption>パラメータにエントリがない場合、この順序で
+名前解決方法が試行される。</para></listitem>
 </varlistentry>'>
 
 <!ENTITY stdarg.netbios.name '
