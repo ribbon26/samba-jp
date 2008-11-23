@@ -1,78 +1,74 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/21/2008
-.\"    Manual: File Formats and Conventions
+.\"      Date: 11/23/2008
+.\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.2
 .\"
-.TH "SMB\.CONF" "5" "11/21/2008" "Samba 3\.2" "File Formats and Conventions"
+.TH "SMB\.CONF" "5" "11/23/2008" "Samba 3\.2" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-smb.conf - The configuration file for the Samba suite
-.SH "SYNOPSIS"
+smb.conf - Samba の設定ファイル
+.SH "概要"
 .PP
-The
 \fIsmb\.conf\fR
-file is a configuration file for the Samba suite\.
+ファイルは Samba システムの設定ファイルである。\fIsmb\.conf \fR
+には、Samba システムの各プログラムが実行時に参照する設定情報が記述される。
 \fIsmb\.conf\fR
-contains runtime configuration information for the Samba programs\. The
-\fIsmb\.conf\fR
-file is designed to be configured and administered by the
-\fBswat\fR(8)
-program\. The complete description of the file format and possible parameters held within are here for reference purposes\.
-.SH "FILE FORMAT"
+ファイルは、\fBswat\fR(8)
+プログラムによって設定、 管理されるように設計されている。 以下参照目的で、ファイルの形式と設定可能なパラメータに関して網羅的に記述する。
+.SH "ファイルの形式"
 .PP
-The file consists of sections and parameters\. A section begins with the name of the section in square brackets and continues until the next section begins\. Sections contain parameters of the form:
+ファイルはセクションとパラメータから構成される。セクションは、 大括弧(\(lq[\(rq
+と
+\(lq]\(rq) で囲まれたセクション名で始まり、次のセクションが始まるまで 続く。セクション内には以下の形式でパラメータが記述される:
 .sp
 .RS 4
 .nf
-\fIname\fR = \fIvalue \fR
+\fIパラメータ名（パラメータ）\fR = \fIパラメータ値（値）\fR
 .fi
 .RE
 .PP
-The file is line\-based \- that is, each newline\-terminated line represents either a comment, a section name or a parameter\.
+ファイルは行を基本単位とし、改行で終了する各行は、コメント、 セクション名、パラメータのいずれかを表す。
 .PP
-Section and parameter names are not case sensitive\.
+セクション名およびパラメータ名は大文字と小文字を区別しない。
 .PP
-Only the first equals sign in a parameter is significant\. Whitespace before or after the first equals sign is discarded\. Leading, trailing and internal whitespace in section and parameter names is irrelevant\. Leading and trailing whitespace in a parameter value is discarded\. Internal whitespace within a parameter value is retained verbatim\.
+パラメータを示す行では、最初の 「=」 文字に重要な意味がある。 最初の 「=」 文字の前後の空白文字は破棄される。 セクション名およびパラメータ名の先頭、 途中、末尾にある空白文字は 無視される。パラメータ値の先頭と末尾にある空白文字も無視される。 ただし、パラメータ値の途中にある空白文字はそのまま意味を持つ。
 .PP
-Any line beginning with a semicolon (\(lq;\(rq) or a hash (\(lq#\(rq) character is ignored, as are lines containing only whitespace\.
+セミコロン (\(lq:\(rq)、シャープ (\(lq#\(rq) で始まる行や、空白のみの行は 無視される。
 .PP
-Any line ending in a
 \(lq\e\(rq
-is continued on the next line in the customary UNIX fashion\.
+文字で終わる行は、UNIX の慣習通り次の行へ継続する。
 .PP
-The values following the equals sign in parameters are all either a string (no quotes needed) or a boolean, which may be given as yes/no, 1/0 or true/false\. Case is not significant in boolean values, but is preserved in string values\. Some items such as create masks are numeric\.
-.SH "SECTION DESCRIPTIONS"
+「=」文字に続くパラメータ値には、文字列 (引用符で囲む必要はない)、または真偽値を表す、yes/no、0/1、true/false のいずれかを記述する。真偽値の場合、大文字と小文字は同じ意味だが、 記述されたとおりの文字列が保存される。 create mask など、幾つかのパラメータ値は数値となる。
+.SH "セクションの説明"
 .PP
-Each section in the configuration file (except for the [global] section) describes a shared resource (known as a
-\(lqshare\(rq)\. The section name is the name of the shared resource and the parameters within the section define the shares attributes\.
+設定ファイル中の ([global] セクションを除く) 各セクションでは、 共有リソース (単に\(lq共有\(rqとも呼ぶ (訳注: 「サービス」とも呼ばれる)) の設定が行なわれる。 セクション名は共有リソース名となり、 セクション内のパラメータは共有の設定に利用される。
 .PP
-There are three special sections, [global], [homes] and [printers], which are described under
-\fIspecial sections\fR\. The following notes apply to ordinary section descriptions\.
+[global]、[homes]、[printers] という 3 つの特殊なセクションに ついては、\fI特殊なセクション\fR
+で説明する。 以下の説明は、通常のセクションについてのものである。
 .PP
-A share consists of a directory to which access is being given plus a description of the access rights which are granted to the user of the service\. Some housekeeping options are also specifiable\.
+共有の設定としては、大きくアクセスを許可するディレクトリの設定と それを利用するユーザに対するアクセス許可の設定とがある。 その他いくつかの補助的なオプションの指定も可能である。
 .PP
-Sections are either file share services (used by the client as an extension of their native file systems) or printable services (used by the client to access print services on the host running the server)\.
+セクションは、ファイル共有サービス (クライアントからファイルシステムの延長として利用される) とプリントサービス (クライアントからサーバ上で動作している 印刷サービスにアクセスするために利用される) のいずれかに分類される。
 .PP
-Sections may be designated
-\fIguest\fR
-services, in which case no password is required to access them\. A specified UNIX
-\fIguest account\fR
-is used to define access privileges in this case\.
+セクションは、パスワードなしでアクセスできる
+\fIゲスト\fR
+サービスとして構成することもできる。 この場合、UNIX 側で指定された\fIゲストアカウント\fRの権限でアクセスが 行なわれる。
 .PP
-Sections other than guest services will require a password to access them\. The client provides the username\. As older clients only provide passwords and not usernames, you may specify a list of usernames to check against the password using the
-user =
-option in the share definition\. For modern clients such as Windows 95/98/ME/NT/2000, this should not be necessary\.
+ゲストサービス以外のセクションにアクセスするにはパスワードが 必要である。通常クライアントからはユーザ名も提供されるが、 年代物のクライアントはパスワードのみでユーザ名を提供しないため、
+\(lquser =\(rq
+パラメータで指定したユーザのリストを用いてパスワードの検証を 行なうことも可能である。Windows 95/98/Me/NT/2000 のような最近の クライアントでは、このパラメータは不要である。
 .PP
-The access rights granted by the server are masked by the access rights granted to the specified or guest UNIX user by the host system\. The server does not grant more access than the host system grants\.
+Samba より与えられたアクセス権は、システムより UNIX ユーザ (またはゲストユーザ) に与えられたアクセス権によって制限されることに注意して欲しい。 Samba はシステムが許可する以上のアクセス権を許可することはできない。
 .PP
-The following sample section defines a file space share\. The user has write access to the path
-\fI/home/bar\fR\. The share is accessed via the share name
-foo:
+以下の簡単なセクションは、ファイル共有を定義するものである。 ユーザは
+\fI/home/bar\fR
+に対して書き込みができる。 共有は、foo
+という共有名でアクセス可能である:
 .sp
 .RS 4
 .nf
@@ -82,9 +78,8 @@ foo:
 .fi
 .RE
 .PP
-The following sample section defines a printable share\. The share is read\-only, but printable\. That is, the only write access permitted is via calls to open, write to and close a spool file\. The
-\fIguest ok\fR
-parameter means access will be permitted as the default guest user (specified elsewhere):
+以下の簡単なセクションは印刷サービスを定義するものである。 共有は読み取りのみであるが、印刷可能である。これは、 スプールファイルのオープン、書き込み、クローズという作業についてのみ書き込みが許可されるということである。\fIguest ok\fR
+パラメータは、(別途定義された) デフォルトのゲストユーザとしてアクセスが許可されていることを意味する:
 .sp
 .RS 4
 .nf
@@ -96,17 +91,17 @@ parameter means access will be permitted as the default guest user (specified el
 .fi
 .RE
 .sp
-.SH "SPECIAL SECTIONS"
-.SS "The [global] section"
+.SH "特殊なセクション"
+.SS "[global] セクション"
 .PP
-Parameters in this section apply to the server as a whole, or are defaults for sections that do not specifically define certain items\. See the notes under PARAMETERS for more information\.
-.SS "The [homes] section"
+このセクション中のパラメータは、サーバ全体に対して、 もしくは各セクションで項目が定義していないときの既定値として 適用される。詳細な情報はパラメータ(PARAMETERS)の節を参照のこと。
+.SS "[homes] セクション"
 .PP
-If a section called [homes] is included in the configuration file, services connecting clients to their home directories can be created on the fly by the server\.
+homes セクションが設定ファイル中にあると、 接続してきたユーザのホームディレクトリを共有するサービスが 必要時にサーバによって作成されるようになる。
 .PP
-When the connection request is made, the existing sections are scanned\. If a match is found, it is used\. If no match is found, the requested section name is treated as a username and looked up in the local password file\. If the name exists and the correct password has been given, a share is created by cloning the [homes] section\.
+接続の要求が行なわれると、存在するセクションが検索される。 要求に合致するセクションが見つかった場合はそのセクションが 利用される。見つからなかった場合は、 要求されたセクション名をユーザ名とみなしてローカルのパスワードファイルが検索される。 ファイル中に名前が存在して、パスワードが適切だった場合、 [homes] セクションの設定を引き継ぐ形で共有が作成される。
 .PP
-Some modifications are then made to the newly created share:
+新しく作成される共有に対しては、 幾つかの変更が行なわれる:
 .sp
 .RS 4
 .ie n \{\
@@ -116,7 +111,7 @@ Some modifications are then made to the newly created share:
 .sp -1
 .IP \(bu 2.3
 .\}
-The share name is changed from homes to the located username\.
+共有名は、homes からユーザ名に変更される。
 .RE
 .sp
 .RS 4
@@ -127,28 +122,24 @@ The share name is changed from homes to the located username\.
 .sp -1
 .IP \(bu 2.3
 .\}
-If no path was given, the path is set to the user\'s home directory\.
+path パラメータが設定されていなかった場合、 ディレクトリのパスはユーザのホームディレクトリに設定される。
 .sp
 .RE
 .PP
-If you decide to use a
-\fIpath =\fR
-line in your [homes] section, it may be useful to use the %S macro\. For example:
-.sp
-.RS 4
-.nf
+\fIpath = \fR
+行を [homes] セクションに記述した場合、"%S" マクロを用いると便利になる 場合があるかも知れない。以下に一例を示す:
+.PP
 \fBpath = /data/pchome/%S\fR
-.fi
-.RE
-.sp
-is useful if you have different home directories for your PCs than for UNIX access\.
 .PP
-This is a fast and simple way to give a large number of clients access to their home directories with a minimum of fuss\.
+これは、UNIX からのアクセスと PC からのアクセスとでホームディレクトリが異なる場合に便利である。
 .PP
-A similar process occurs if the requested section name is
-\(lqhomes\(rq, except that the share name is not changed to that of the requesting user\. This method of using the [homes] section works well if different users share a client PC\.
+これは多数のクライアントに対するホームディレクトリの 提供を最小の手間で素早く簡単に実現する方法である。
 .PP
-The [homes] section can specify all the parameters a normal service section can specify, though some make more sense than others\. The following is a typical and suitable [homes] section:
+要求されたセクション名が
+\(lqhomes\(rq
+の場合にも同様の処理が行われるが、共有名が要求したユーザの 名前に変更されることはない。 [homes] セクションを使用する 方法は、複数のユーザがクライアント PC を共有する場合に 便利である。
+.PP
+[homes] セクションでは、通常のサービスで指定可能な すべてのパラメータを指定できるが、幾つかのものは他の セクションと少し違った意味になる。以下は典型的な [homes] セクションの例である:
 .sp
 .RS 4
 .nf
@@ -157,24 +148,25 @@ The [homes] section can specify all the parameters a normal service section can 
 .fi
 .RE
 .PP
-An important point is that if guest access is specified in the [homes] section, all home directories will be visible to all clients
-\fIwithout a password\fR\. In the very unlikely event that this is actually desirable, it is wise to also specify
-\fIread only access\fR\.
+重要な点として、[homes] セクションでゲストアクセスを許可した場合、 全てのホームディレクトリが全てのクライアントから
+\fIパスワードなしで\fR
+アクセス可能になるという点が挙げられる。 ほとんどあり得ないと思うが、もしこの設定を実際に行なうのであれば、\fI読み取り専用\fR
+アクセスの設定にしておくことが好ましいであろう。
 .PP
-The
+自動的に作成されるホームディレクトリの
 \fIbrowseable\fR
-flag for auto home directories will be inherited from the global browseable flag, not the [homes] browseable flag\. This is useful as it means setting
+パラメータの値は、[homes] セクションの browseable パラメータからではなく、[global] セクションの browseable パラメータより継承される。これは、 [homes] セクションで
 \fIbrowseable = no\fR
-in the [homes] section will hide the [homes] share but make any auto home directories visible\.
-.SS "The [printers] section"
+を指定して [homes] 共有を不可視にしても、自動的に作成されるホームディレクトリを表示させるようにするための仕様である。
+.SS "[printers] セクション"
 .PP
-This section works like [homes], but for printers\.
+このセクションは、プリンタ用の [homes] セクションに 相当する。
 .PP
-If a [printers] section occurs in the configuration file, users are able to connect to any printer specified in the local host\'s printcap file\.
+[printers] セクションが設定されていると、ユーザは、 ローカルホストの printcap ファイルで設定されている各プリンタに接続することが可能となる。
 .PP
-When a connection request is made, the existing sections are scanned\. If a match is found, it is used\. If no match is found, but a [homes] section exists, it is used as described above\. Otherwise, the requested section name is treated as a printer name and the appropriate printcap file is scanned to see if the requested section name is a valid printer share name\. If a match is found, a new printer share is created by cloning the [printers] section\.
+接続の要求が行なわれると、存在するセクションが検索される。 要求に合致するセクションが見つかった場合はそのセクションが利用される。 見つからなかった場合、[homes] セクションがあれば前述した処理が行なわれる。 それでも要求が解決できない場合は、 要求されたセクション名をプリンタ名とみなし、 適切な pritcap ファイルが検索され、 要求されたセクション名をプリンタ共有名とみなすかどうかの 確認が行なわれる。ファイル中に名前が存在した場合は、 [printers] セクションの設定を引き継ぐ形でプリンタ共有が 作成される。
 .PP
-A few modifications are then made to the newly created share:
+新しく作成される共有に対しては、 幾つかの変更が行なわれる:
 .sp
 .RS 4
 .ie n \{\
@@ -184,7 +176,7 @@ A few modifications are then made to the newly created share:
 .sp -1
 .IP \(bu 2.3
 .\}
-The share name is set to the located printer name
+共有名には、実際のプリンタ名が設定される。
 .RE
 .sp
 .RS 4
@@ -195,7 +187,7 @@ The share name is set to the located printer name
 .sp -1
 .IP \(bu 2.3
 .\}
-If no printer name was given, the printer name is set to the located printer name
+プリンタ名が設定されていない場合、 プリンタ名として実際のプリンタ名が設定される。
 .RE
 .sp
 .RS 4
@@ -206,13 +198,13 @@ If no printer name was given, the printer name is set to the located printer nam
 .sp -1
 .IP \(bu 2.3
 .\}
-If the share does not permit guest access and no username was given, the username is set to the located printer name\.
+共有がゲストアクセスを許可しておらず、 username パラメータも指定されていない場合、username に実際のプリンタ名が設定される。
 .sp
 .RE
 .PP
-The [printers] service MUST be printable \- if you specify otherwise, the server will refuse to load the configuration file\.
+[printers] サービスは、必ず printable にすること。 それ以外の設定を行なうと、サーバが設定ファイルの読み取りを 拒否してしまう。
 .PP
-Typically the path specified is that of a world\-writeable spool directory with the sticky bit set on it\. A typical [printers] entry looks like this:
+通常指定されるパスは、sticky ビットが設定され、 誰でも書き込み可能になっているスプールディレクトリである。 典型的な [printers] のエントリは次のようになる:
 .sp
 .RS 4
 .nf
@@ -223,7 +215,7 @@ Typically the path specified is that of a world\-writeable spool directory with 
 .fi
 .RE
 .PP
-All aliases given for a printer in the printcap file are legitimate printer names as far as the server is concerned\. If your printing subsystem doesn\'t work like that, you will have to set up a pseudo\-printcap\. This is a file consisting of one or more lines like this:
+printcap ファイル中で定義されているすべてのプリンタの エイリアス(別名)は、プリンタ名として認識される。 印刷システムが printcap ファイルのような機構を使用して いないのであれば、仮の printcap ファイルを設定する必要がある。 このファイルは以下のような形式の行で構成される:
 .sp
 .RS 4
 .nf
@@ -231,9 +223,9 @@ alias|alias|alias|alias\.\.\.
 .fi
 .RE
 .PP
-Each alias should be an acceptable printer name for your printing subsystem\. In the [global] section, specify the new file as your printcap\. The server will only recognize names found in your pseudo\-printcap, which of course can contain whatever aliases you like\. The same technique could be used simply to limit access to a subset of your local printers\.
+各エイリアスは、印刷システムが処理可能なプリンタ名で ある必要がある。[global] セクションで、別のファイルを printcap ファイルとして指定することで、仮想的な printcap ファイル中にある名前のみがサーバに認識される。 もちろんこのファイル中には任意のエイリアスを記述することが 可能である。このテクニックは、ローカルプリンタの一部のみに アクセスを制限する機能を簡単に実現するためにも利用できる。
 .PP
-An alias, by the way, is defined as any component of the first entry of a printcap record\. Records are separated by newlines, components (if there are more than one) are separated by vertical bar symbols (|)\.
+なお、エイリアスとは printcap ファイル中の各レコードの 最初のエントリに続く各要素をさす。 各レコードは改行コードで区切られ、各要素は (複数個存在する場合) 縦棒 (|) で区切られる。
 .sp
 .it 1 an-trap
 .nr an-no-space-flag 1
@@ -241,57 +233,58 @@ An alias, by the way, is defined as any component of the first entry of a printc
 .br
 Note
 .PP
-On SYSV systems which use lpstat to determine what printers are defined on the system you may be able to use
+lpstat コマンドによりシステムで定義されている プリンタの一覧を取得可能な SYSV 系のシステムでは、
 printcap name = lpstat
-to automatically obtain a list of printers\. See the
-printcap name
-option for more details\.
-.SH "USERSHARES"
+とすることで、 プリンタの一覧を取得することが可能である。 詳細は、printcap name
+オプションを参照のこと。
+.SH "ユーザ定義共有"
 .PP
-Starting with Samba version 3\.0\.23 the capability for non\-root users to add, modify, and delete their own share definitions has been added\. This capability is called
-\fIusershares\fR
-and is controlled by a set of parameters in the [global] section of the smb\.conf\. The relevant parameters are :
+Samba 3\.0\.23 より、root 以外のユーザが共有の追加、修正、削除を行なうことを可能とする機能が追加された。 この機能を
+\fIユーザ定義共有(usershares)\fR
+と呼び、 smb\.conf の
+
+セクションで定義される一連のパラメータによって制御される。 関連するパラメータを以下に示す :
 .PP
 usershare allow guests
 .RS 4
-Controls if usershares can permit guest access\.
+ユーザ定義共有でゲストアクセスを許可するかどうかを制御する。
 .RE
 .PP
 usershare max shares
 .RS 4
-Maximum number of user defined shares allowed\.
+作成を許可するユーザ定義共有の最大数を制御する。
 .RE
 .PP
 usershare owner only
 .RS 4
-If set only directories owned by the sharing user can be shared\.
+有効にすると、ユーザが所有しているディレクトリのみが共有可能となる。
 .RE
 .PP
 usershare path
 .RS 4
-Points to the directory containing the user defined share definitions\. The filesystem permissions on this directory control who can create user defined shares\.
+ユーザ定義共有を作成可能なディレクトリを指定する。 実際にユーザ定義共有を作成可能かどうかは、ファイルシステム上のディレクトリのパーミッションに依存する。
 .RE
 .PP
 usershare prefix allow list
 .RS 4
-Comma\-separated list of absolute pathnames restricting what directories can be shared\. Only directories below the pathnames in this list are permitted\.
+共有を許可するディレクトリの絶対パス名をコンマで区切って列挙する。 ここで指定されたパス名から始まるディレクトリのみが共有を許可される。
 .RE
 .PP
 usershare prefix deny list
 .RS 4
-Comma\-separated list of absolute pathnames restricting what directories can be shared\. Directories below the pathnames in this list are prohibited\.
+共有を拒否するディレクトリの絶対パス名をコンマで区切って列挙する。 ここで指定されたパス名から始まるディレクトリは共有を拒否される。
 .RE
 .PP
 usershare template share
 .RS 4
-Names a pre\-existing share used as a template for creating new usershares\. All other share parameters not specified in the user defined share definition are copied from this named share\.
+新しいユーザ定義共有を作成する際のテンプレートとなる既存の共有を指定する。 ユーザ定義共有の定義時に指定されなかったすべての共有に関するパラメータは、この共有のものが用いられる。
 .RE
 .PP
-To allow members of the UNIX group
+UNIX グループ
 foo
-to create user defined shares, create the directory to contain the share definitions as follows:
+のメンバにユーザ定義共有の作成を許可したい場合は、 共有の定義ファイルを格納するディレクトリを以下のように作成する:
 .PP
-Become root:
+root 権限で以下を実施:
 .sp
 .RS 4
 .nf
@@ -301,356 +294,330 @@ chmod 1770 /usr/local/samba/lib/usershares
 .fi
 .RE
 .PP
-Then add the parameters
+ついで、以下のパラメータ
 .sp
 .RS 4
 .nf
 	\fIusershare path = /usr/local/samba/lib/usershares\fR
-	\fIusershare max shares = 10\fR # (or the desired number of shares)
+	\fIusershare max shares = 10\fR # (もしくは必要な共有数)
 .fi
 .RE
-.sp
-to the global section of your
-\fIsmb\.conf\fR\. Members of the group foo may then manipulate the user defined shares using the following commands\.
+.PP
+を
+\fIsmb\.conf\fRの global セクションに追加。 これにより foo グループのメンバは、以下のコマンドでユーザ定義共有を作成することが可能となる。
 .PP
 net usershare add sharename path [comment] [acl] [guest_ok=[y|n]]
 .RS 4
-To create or modify (overwrite) a user defined share\.
+これにより、ユーザ定義共有を作成もしくは修正(上書き)する。
 .RE
 .PP
 net usershare delete sharename
 .RS 4
-To delete a user defined share\.
+ユーザ定義共有を削除する。
 .RE
 .PP
 net usershare list wildcard\-sharename
 .RS 4
-To list user defined shares\.
+ユーザ定義共有を一覧する。
 .RE
 .PP
 net usershare info wildcard\-sharename
 .RS 4
-To print information about user defined shares\.
+ユーザ定義共有の情報を表示する。
 .RE
-.SH "PARAMETERS"
+.SH "パラメータ"
 .PP
-Parameters define the specific attributes of sections\.
+パラメータはセクションの属性を定義するものである。
 .PP
-Some parameters are specific to the [global] section (e\.g\.,
-\fIsecurity\fR)\. Some parameters are usable in all sections (e\.g\.,
-\fIcreate mask\fR)\. All others are permissible only in normal sections\. For the purposes of the following descriptions the [homes] and [printers] sections will be considered normal\. The letter
-\fIG\fR
-in parentheses indicates that a parameter is specific to the [global] section\. The letter
-\fIS\fR
-indicates that a parameter can be specified in a service specific section\. All
-\fIS\fR
-parameters can also be specified in the [global] section \- in which case they will define the default behavior for all services\.
+幾つかのパラメータ (\fIsecurity\fR
+など) は、 [global] セクションで指定する。また幾つかのパラメータ (\fIcreate mask\fR
+など) は、すべてのセクションで 利用可能である。それ以外のパラメータは、通常のセクションでのみ 利用できる。以下の説明では、[homes] と [printers] セクションを "通常の" セクションとして扱う。(\fIG\fR) がついたパラメータは、 [global] セクションでのみ指定できる。(\fIS\fR) がついたパラメータは、個々のサービスを表すセクションで指定できる。 ただし、(\fIS\fR) がついたパラメータは、[global] セクション中で指定することも可能である。この場合、それらはすべての サービスに対するデフォルト値として機能する。
 .PP
-Parameters are arranged here in alphabetical order \- this may not create best bedfellows, but at least you can find them! Where there are synonyms, the preferred synonym is described, others refer to the preferred synonym\.
-.SH "VARIABLE SUBSTITUTIONS"
+パラメータはアルファベット順に説明されている。 最良の順序とはいえないが、少なくとも目的のパラメータを見つけることは できるだろう。同義語がある場合は、主として用いるべき表記の部分で 説明が行なわれ、他はその表記への参照になっている。
+.SH "変数による置換"
 .PP
-Many of the strings that are settable in the config file can take substitutions\. For example the option
-\(lqpath = /tmp/%u\(rq
-is interpreted as
-\(lqpath = /tmp/john\(rq
-if the user connected with the username john\.
+設定ファイルに記述可能な文字列の多くには、変数による置換を利用できる。 たとえば、\(lqpath = /tmp/%u\(rq
+は、john というユーザ名でユーザが 接続すると、\(lqpath = /tmp/john\(rq
+として解釈される。
 .PP
-These substitutions are mostly noted in the descriptions below, but there are some general substitutions which apply whenever they might be relevant\. These are:
+これら置換の詳細については、各々のパラメータの説明にて 解説するが、どのパラメータに対しても適用される共通の変数置換もいくつか 存在する。それらを以下に記載する:
 .PP
 %U
 .RS 4
-session username (the username that the client wanted, not necessarily the same as the one they got)\.
+セッションのユーザ名 (クライアントが接続時に 送信したものであるが、実際に接続したユーザ名と同じであるとは 限らない)。
 .RE
 .PP
 %G
 .RS 4
-primary group name of %U\.
+%U のプライマリグループ。
 .RE
 .PP
 %h
 .RS 4
-the Internet hostname that Samba is running on\.
+Samba が動作しているマシンの インターネットホスト名。
 .RE
 .PP
 %m
 .RS 4
-the NetBIOS name of the client machine (very useful)\.
+クライアントマシンの NetBIOS 名 (とても便利)。
 .sp
-This parameter is not available when Samba listens on port 445, as clients no longer send this information\. If you use this macro in an include statement on a domain that has a Samba domain controller be sure to set in the [global] section
-\fIsmb ports = 139\fR\. This will cause Samba to not listen on port 445 and will permit include functionality to function as it did with Samba 2\.x\.
+Samba がポート 445 で待機している場合、クライアントがこの情報を送信しないため、この変数は利用できない。 Samba がドメインコントローラであるドメインで include パラメータにおいてこの変数を用いている場合などは、 [global] セクションで
+\fIsmb ports = 139\fR
+の設定を行なうこと。 これにより Samba はポート 445 で待機しなくなり、Samba 2\.X で実現していた include 機能が利用できる。
 .RE
 .PP
 %L
 .RS 4
-the NetBIOS name of the server\. This allows you to change your config based on what the client calls you\. Your server can have a
-\(lqdual personality\(rq\.
+サーバの NetBIOS 名。これを用いることで、 クライアントから呼ばれた名前に応じて設定を変更することが 可能となる。これによりサーバは
+\(lq二つの顔\(rq
+を持つことができる。
 .RE
 .PP
 %M
 .RS 4
-the Internet name of the client machine\.
+クライアントマシンのインターネットホスト名。
 .RE
 .PP
 %R
 .RS 4
-the selected protocol level after protocol negotiation\. It can be one of CORE, COREPLUS, LANMAN1, LANMAN2 or NT1\.
+プロトコルのネゴシエーションを経て選択された プロトコルレベル。これは CORE、COREPLUS、LANMAN1、LANMAN2、NT1 のいずれかの値をとる。
 .RE
 .PP
 %d
 .RS 4
-the process id of the current server process\.
+サーバプロセスのプロセス ID。
 .RE
 .PP
 %a
 .RS 4
-The architecture of the remote machine\. It currently recognizes Samba (\fBSamba\fR), the Linux CIFS file system (\fBCIFSFS\fR), OS/2, (\fBOS2\fR), Windows for Workgroups (\fBWfWg\fR), Windows 9x/ME (\fBWin95\fR), Windows NT (\fBWinNT\fR), Windows 2000 (\fBWin2K\fR), Windows XP (\fBWinXP\fR), Windows XP 64\-bit(\fBWinXP64\fR), Windows 2003 including 2003R2 (\fBWin2K3\fR), and Windows Vista (\fBVista\fR)\. Anything else will be known as
-\fBUNKNOWN\fR\.
+リモートマシンのアーキテクチャ。 現在認識できるのは Samba (\fBSamba\fR)、 Linux の CIFS ファイルシステム (\fBCIFSFS\fR)、 OS/2 (\fBOS2\fR)、 Windows for Workgroups (\fBWfWg\fR)、 Windows 9x/Me (\fBWin95\fR)、 Windows NT (\fBWinNT\fR)、 Windows 2000 (\fBWin2K\fR)、 Windows XP (\fBWinXP\fR)、 Windows XP 64\-bit(\fBWinXP64\fR), 2003R2 (\fBWin2K3\fR)を含むWindows Server 2003 (\fBWin2K3\fR)と, Windows Vista (\fBVista\fR) である。 それ以外のものは
+\(lqUNKNOWN\(rq
+となる。
 .RE
 .PP
 %I
 .RS 4
-the IP address of the client machine\.
+クライアントマシンの IP アドレス。
 .RE
 .PP
 %i
 .RS 4
-the local IP address to which a client connected\.
+クライアントが接続してきたサーバの IP アドレス。
 .RE
 .PP
 %T
 .RS 4
-the current date and time\.
+現在の日付と時間。
 .RE
 .PP
 %D
 .RS 4
-name of the domain or workgroup of the current user\.
+現ユーザが所属するドメインかワークグループ名。
 .RE
 .PP
 %w
 .RS 4
-the winbind separator\.
+Winbind のセパレータ
 .RE
 .PP
 %$(\fIenvvar\fR)
 .RS 4
-the value of the environment variable
-\fIenvar\fR\.
+環境変数\fIenvvar\fRの値。
 .RE
 .PP
-The following substitutes apply only to some configuration options (only those that are used when a connection has been established):
+以下の置換マクロは (すでに接続が確立されている場合に) いくつかの 設定オプションに対して有効なものである:
 .PP
 %S
 .RS 4
-the name of the current service, if any\.
+現在のサービス名 (存在する場合)。
 .RE
 .PP
 %P
 .RS 4
-the root directory of the current service, if any\.
+現在のサービスのトップディレクトリ (存在する場合)。
 .RE
 .PP
 %u
 .RS 4
-username of the current service, if any\.
+現在のサービスのユーザ名 (存在する場合)。
 .RE
 .PP
 %g
 .RS 4
-primary group name of %u\.
+%u のプライマリグループ。
 .RE
 .PP
 %H
 .RS 4
-the home directory of the user given by %u\.
+%u で指定されたユーザのホームディレクトリ。
 .RE
 .PP
 %N
 .RS 4
-the name of your NIS home directory server\. This is obtained from your NIS auto\.map entry\. If you have not compiled Samba with the
+NIS のホームディレクトリサーバの名前。 これは NIS の auto\.map エントリから取得される。Samba が
 \fI\-\-with\-automount\fR
-option, this value will be the same as %L\.
+オプションをつけて コンパイルされていない場合、このオプションは %L と同じになる。
 .RE
 .PP
 %p
 .RS 4
-the path of the service\'s home directory, obtained from your NIS auto\.map entry\. The NIS auto\.map entry is split up as
-%N:%p\.
+NIS auto\.map エントリから取得された サーバの ホームディレクトリのパス。NIS auto\.map エントリは
+%N:%p
+のように分割されている。
 .RE
 .PP
-There are some quite creative things that can be done with these substitutions and other
+これらの置換操作とその他の
 \fIsmb\.conf\fR
-options\.
-.SH "NAME MANGLING"
+のパラメータを組み合わせると、非常に凝った動作を設定できる。
+.SH "名前の短縮(NAME MANGLING)"
 .PP
-Samba supports
-name mangling
-so that DOS and Windows clients can use files that don\'t conform to the 8\.3 format\. It can also be set to adjust the case of 8\.3 format filenames\.
+Samba は、DOS や Windows クライアントが 8\.3 形式に準拠しない 名前のファイルを扱うことができるように
+\(lq名前の短縮\(rq
+機能を提供している。この機能により、8\.3 形式のファイル名についても 文字の case (大文字、小文字) を調整可能である。
 .PP
-There are several options that control the way mangling is performed, and they are grouped here rather than listed separately\. For the defaults look at the output of the testparm program\.
+短縮時の動作を制御するパラメータが幾つか存在しており、 それらは個々に解説を行なわず、ここでまとめて説明を行なう。 デフォルト値は testparm コマンドの出力を参照のこと。
 .PP
-These options can be set separately for each service\.
+以下のオプションは、すべて共有毎に設定できる (もちろん全体に対しても設定できる)。
 .PP
-The options are:
+オプションは以下の通りである:
 .PP
 case sensitive = yes/no/auto
 .RS 4
-controls whether filenames are case sensitive\. If they aren\'t, Samba must do a filename search and match on passed names\. The default setting of auto allows clients that support case sensitive filenames (Linux CIFSVFS and smbclient 3\.0\.5 and above currently) to tell the Samba server on a per\-packet basis that they wish to access the file system in a case\-sensitive manner (to support UNIX case sensitive semantics)\. No Windows or DOS system supports case\-sensitive filename so setting this option to auto is that same as setting it to no for them\. Default
-\fIauto\fR\.
+ファイル名の case を識別するかどうかを制御する。 識別を行なわない場合、Samba は指定された名前に合致する ファイル名の有無を検索することが必要になる。デフォルトは
+\fIauto\fR
+であり、ファイル名の case を識別するクライアント(現在のところ Linux CIFSVFS や Samba 3\.0\.5 以降の smbclient) に対しては、case を識別する(UNIX の case を識別する挙動に準拠する) ファイルシステム上の Samba サーバにアクセスしているものとして通知する。 Windows および DOS システムでは case を識別するファイル名はサポートされておらず、このパラメータを auto に設定した場合、no の設定で動作する。 デフォルトは
+\fIauto\fR
+である。
 .RE
 .PP
 default case = upper/lower
 .RS 4
-controls what the default case is for new filenames (ie\. files that don\'t currently exist in the filesystem)\. Default
-\fIlower\fR\. IMPORTANT NOTE: This option will be used to modify the case of
-\fIall\fR
-incoming client filenames, not just new filenames if the options
-\fIcase sensitive = yes\fR,
-\fIpreserve case = No\fR,
+新しく作成されるファイル(現在ファイルシステム上に存在していないファイル)のファイル名のデフォルトの case を制御する。 デフォルトは
+\fIlower\fR
+である。 重要:
+\fIcase sensitive = yes\fR、
+\fIpreserve case = No\fR、
 \fIshort preserve case = No\fR
-are set\. This change is needed as part of the optimisations for directories containing large numbers of files\.
+の場合、このオプションにより、新しく作られるファイル名だけではなく、クライアントから渡される
+\fIすべての\fR
+ファイル名の case が変更されることに注意。 非常に多くのファイルを格納するディレクトリの最適化作業の一貫として、この設定変更が必要となる。
 .RE
 .PP
 preserve case = yes/no
 .RS 4
-controls whether new files (ie\. files that don\'t currently exist in the filesystem) are created with the case that the client passes, or if they are forced to be the
-default
-case\. Default
-\fIyes\fR\.
+新しく作成されるファイル(現在ファイルシステム上に存在していないファイル)のファイル名について、クライアントから 渡された case で作成するか、デフォルトの case で作成するかを制御する。 デフォルトは
+\fIyes\fRである。
 .RE
 .PP
 short preserve case = yes/no
 .RS 4
-controls if new files (ie\. files that don\'t currently exist in the filesystem) which conform to 8\.3 syntax, that is all in upper case and of suitable length, are created upper case, or if they are forced to be the
-default
-case\. This option can be used with
-preserve case = yes
-to permit long filenames to retain their case, while short names are lowercased\. Default
-\fIyes\fR\.
+すべて大文字で適切な長さの 8\.3 形式に 準拠した新しく作成されるファイル(現在ファイルシステム上に存在していないファイル)のファイル名について、大文字で作成するか、
+デフォルト
+の case で作成するかを制御する。 このオプションにより、preserve case = yes
+で長いファイル名が case を保持する設定の時であっても、 短いファイル名は小文字で作成するといったことが可能になる。 デフォルトは
+\fIyes\fR
+である。
 .RE
 .PP
-By default, Samba 3\.0 has the same semantics as a Windows NT server, in that it is case insensitive but case preserving\. As a special case for directories with large numbers of files, if the case options are set as follows, "case sensitive = yes", "case preserve = no", "short preserve case = no" then the "default case" option will be applied and will modify all filenames sent from the client when accessing this share\.
-.SH "NOTE ABOUT USERNAME/PASSWORD VALIDATION"
+Samba 3\.0 のデフォルトは、Windows NT のサーバと同様に動作する。 すなわち、case を識別しないが case は保持する。 ただし、大量のファイルが存在するディレクトリにおいては、case 関連のパラメータを "case sensitive = yes"、"case preserve = no"、"short preserve case = no" に設定するとよいであろう。 これにより、"default case" パラメータが有効になり、クライアントから送信されるすべてのファイル名が変更される。 (訳注: 上記設定は、case sensitive = yes によりファイル名の検索を抑止することで、パフォーマンスを向上させようとする意図だと思われる)
+.SH "ユーザ名とパスワード認証についての注意"
 .PP
-There are a number of ways in which a user can connect to a service\. The server uses the following steps in determining if it will allow a connection to a specified service\. If all the steps fail, the connection request is rejected\. However, if one of the steps succeeds, the following steps are not checked\.
+ユーザがサービスに接続するための方法は幾つかある。サーバは、 以下のステップを踏みサービスに対して接続を許可するかどうかを確認する。 すべてのステップが失敗した場合、接続要求は拒否される。 いずれかのステップで成功した場合、それ以降のステップは行なわれない。
 .PP
-If the service is marked
+サービスが
 \(lqguest only = yes\(rq
-and the server is running with share\-level security (\(lqsecurity = share\(rq, steps 1 to 5 are skipped\.
+となっており、 サーバが共有レベルのセキュリティ (\(lqsecurity = share\(rq) で構成されている場合、ステップ 1 から 5 は省かれる。
 .sp
 .RS 4
-\h'-04' 1.\h'+02'If the client has passed a username/password pair and that username/password pair is validated by the UNIX system\'s password programs, the connection is made as that username\. This includes the
+\h'-04' 1.\h'+02'クライアントからユーザ名とパスワードが 提供されており、それが UNIX システムのパスワード機構によって 認証された場合、そのユーザ名を使った接続が行なわれる。この ステップは
 \e\eserver\eservice%\fIusername\fR
-method of passing a username\.
+形式でユーザ名が提供された場合にも行なわれることに注意。
 .RE
 .sp
 .RS 4
-\h'-04' 2.\h'+02'If the client has previously registered a username with the system and now supplies a correct password for that username, the connection is allowed\.
+\h'-04' 2.\h'+02'クライアントからシステムに登録されている ユーザ名が提供された場合、そのユーザ名に対する適切な パスワードが提供されれば、接続が許可される。
 .RE
 .sp
 .RS 4
-\h'-04' 3.\h'+02'The client\'s NetBIOS name and any previously used usernames are checked against the supplied password\. If they match, the connection is allowed as the corresponding user\.
+\h'-04' 3.\h'+02'クライアントの NetBIOS 名および以前に使われた ユーザ名について提供されたパスワードとの確認が行なわれ、 合致すれば、対応するユーザ名を使った接続が許可される。
 .RE
 .sp
 .RS 4
-\h'-04' 4.\h'+02'If the client has previously validated a username/password pair with the server and the client has passed the validation token, that username is used\.
+\h'-04' 4.\h'+02'クライアントが既にユーザ名とパスワードを 提供してサーバに認証されており、その際の認証トークンが 提示された場合、そのユーザ名が使われる。
 .RE
 .sp
 .RS 4
-\h'-04' 5.\h'+02'If a
-user =
-field is given in the
+\h'-04' 5.\h'+02'user =
+フィールドが
 \fIsmb\.conf\fR
-file for the service and the client has supplied a password, and that password matches (according to the UNIX system\'s password checking) with one of the usernames from the
+ファイルで 該当サービスに対して設定されており、クライアントから提供された パスワードが (UNIX システムのパスワード認証により)
 user =
-field, the connection is made as the username in the
-user =
-line\. If one of the usernames in the
-user =
-list begins with a
-@, that name expands to a list of names in the group of the same name\.
+行に記述されたユーザ名のいずれかのものと 合致した場合、接続は、user =
+行で設定された ユーザ名で行なわれる。user =
+リスト中のユーザ名の 中に
+@
+ではじまるものがあった場合、それはその名前の グループに所属するユーザ名のリストに展開される。
 .RE
 .sp
 .RS 4
-\h'-04' 6.\h'+02'If the service is a guest service, a connection is made as the username given in the
+\h'-04' 6.\h'+02'サービスがゲストサービスの場合、 提供されたパスワードがなんであっても、そのサービスの
 guest account =
-for the service, irrespective of the supplied password\.
+で指定されたユーザ名で接続が 行なわれる。
 .RE
-.SH "REGISTRY-BASED CONFIGURATION"
+.SH "レジストリベースの設定方法"
 .PP
-Starting with Samba version 3\.2\.0, the capability to store Samba configuration in the registry is available\. The configuration is stored in the registry key
-\fIHKLM\eSoftware\eSamba\esmbconf\fR\. There are two levels of registry configuration:
+Sambaのバージョン 3\.2\.0 から、レジストリ中にSambaの設定を 格納する機能が有効になった。Sambaの設定は、レジストリキー
+\fIHKLM\eSoftware\eSamba\esmbconf\fR中に格納される。 レジストリベースの設定は2つのレベルがある。
 .sp
 .RS 4
-\h'-04' 1.\h'+02'Share definitions stored in registry are used\. This is triggered by setting the global parameter
-\fIregistry shares\fR
-to
-\(lqyes\(rq
-in
-\fIsmb\.conf\fR\.
+\h'-04' 1.\h'+02'レジストリに共有の定義を格納する。 これは、\fIsmb\.conf\fR中のグローバル パラメータ\fIregistry shares\fR
+を\(lqyes\(rqに設定することで利用可能になる。
 .sp
-The registry shares are loaded not at startup but on demand at runtime by
-\fIsmbd\fR\. Shares defined in
-\fIsmb\.conf\fR
-take priority over shares of the same name defined in registry\.
+レジストリ定義の共有はスタートアップ時にはロードされ ないが、\fIsmbd\fRによって、実行時に動的に ロードされる。\fIsmb\.conf\fR中の共有定義 はレジストリ中での同じ名前の共有定義に優先する。
 .RE
 .sp
 .RS 4
-\h'-04' 2.\h'+02'Global
-\fIsmb\.conf\fR
-options stored in registry are used\. This can be activated in two different ways:
+\h'-04' 2.\h'+02'グローバルな\fIsmb\.conf\fR
+オプションをレジストリに格納する。これは,以下の2つの異なった 方法で有効にできる:
 .sp
-Firstly, a registry only configuration is triggered by setting
-\fIconfig backend = registry\fR
-in the [global] section of
-\fIsmb\.conf\fR\. This resets everything that has been read from config files to this point and reads the content of the global configuration section from the registry\. This is the recommended method of using registry based configuration\.
+1番めは、\fIsmb\.conf\fR中の [global]セクション中の\fIconfig backend = registry\fRを設定することで、レジストリのみの 設定を有効にできる。これは,この時点まで読み込んだ設定ファイ ルの内容をすべてリセットし、レジストリからグローバルセク ションの内容を読む。これは、レジストリベースの設定方法を使う 時の推奨方法である。
 .sp
-Secondly, a mixed configuration can be activated by a special new meaning of the parameter
-\fIinclude = registry\fR
-in the [global] section of
-\fIsmb\.conf\fR\. This reads the global options from registry with the same priorities as for an include of a text file\. This may be especially useful in cases where an initial configuration is needed to access the registry\.
+2番目は\fIsmb\.conf\fRの[global] セクション中の、特別に新しい意味を持つ、\fIinclude = registry\fRパラメータによって有効にできる 混成設定方法である。これは,テキストファイルをインクルード するのと同じような優先度で、レジストリからグローバルオプ ションを読む。これは,初期設定がレジストリにアクセスするのに 必要な場合に特に有益である。
 .sp
-Activation of global registry options automatically activates registry shares\. So in the registry only case, shares are loaded on demand only\.
+グローバルレジストリオプションの有効化は、レジストリ ベースの共有が有効になることで自動的に行われる。そのため、 レジストリのみの場合、共有は要求時にのみロードされる。
 .RE
 .sp
 .RE
 .PP
-Note: To make registry\-based configurations foolproof at least to a certain extent, the use of
+レジストリベースの設定を特定のエクステントで少なくとも安全に 行うために、レジストリ設定内では、\fIlock directory\fRと
+\fIconfig backend\fRの使用は無効化 されることに注意。（ Note: To make registry\-based configurations foolproof at least to a certain extent, the use of
 \fIlock directory\fR
 and
 \fIconfig backend\fR
-inside the registry configuration has been disabled: Especially by changing the
+inside the registry configuration has been disabled:) 特に、レジストリ設定内で、\fIlock directory\fRを 変更することにより、デーモンがロードされて有効になったとき、 設定を見ることのできない，壊れた設定を作成することになる。 (Especially by changing the
 \fIlock directory\fR
-inside the registry configuration, one would create a broken setup where the daemons do not see the configuration they loaded once it is active\.
+inside the registry configuration, one would create a broken setup where the daemons do not see the configuration they loaded once it is active\.)
 .PP
-The registry configuration can be accessed with tools like
-\fIregedit\fR
-or
-\fInet (rpc) registry\fR
-in the key
-\fIHKLM\eSoftware\eSamba\esmbconf\fR\. More conveniently, the
-\fIconf\fR
-subcommand of the
-\fBnet\fR(8)
-utility offers a dedicated interface to read and write the registry based configuration locally, i\.e\. directly accessing the database file, circumventing the server\.
-.SH "EXPLANATION OF EACH PARAMETER"
-<xi:include></xi:include>.SH "WARNINGS"
+レジストリベースの設定は、キー\fIHKLM\eSoftware\eSamba\esmbconf\fRを
+\fIregedit\fRや\fInet (rpc) registry\fRを使ってアクセスすることもできる。 利便性のため、\fBnet\fR(8)ユーティリティ の\fIconf\fRサブコマンドが、レジストリ ベースの設定をローカルに読み書きするための特別なインタフェース として提供されている。すなわち、データベースファイルに直接 アクセスし、サーバを迂回できる。
+.SH "各パラメータの説明"
+<xi:include></xi:include>.SH "注意"
 .PP
-Although the configuration file permits service names to contain spaces, your client software may not\. Spaces will be ignored in comparisons anyway, so it shouldn\'t be a problem \- but be aware of the possibility\.
+設定ファイルでは、スペースを含むサービス名も利用できるが、 クライアント側のソフトウェアで禁止されているかもしれない。 文字列比較を行なう際にスペースは常に無視されるため、 問題は発生しないはずであるが、可能性は考慮しておく必要がある。
 .PP
-On a similar note, many clients \- especially DOS clients \- limit service names to eight characters\.
+同様の注意事項として、多くのクライアント、特に DOS クライアントでは、サービス名が最長8文字に制限されている。
 \fBsmbd\fR(8)
-has no such limitation, but attempts to connect from such clients will fail if they truncate the service names\. For this reason you should probably keep your service names down to eight characters in length\.
+にはそのような制限はなく、 こうしたクライアントからの接続要求は、サービス名が切り捨てられてしまう ために失敗することになる。このため、サービス名の長さは、最大 8 文字に制限すべきである。
 .PP
-Use of the
+
 [homes]
-and
+および
 [printers]
-special sections make life for an administrator easy, but the various combinations of default attributes can be tricky\. Take extreme care when designing these sections\. In particular, ensure that the permissions on spool directories are correct\.
-.SH "VERSION"
+という特殊セクションにより、 管理者の負担を軽減することができるが、デフォルトの設定の組合せ方に よっては、予期しない設定が行なわれる可能性もある。これらのセクションの 設定を行なう際には、特に注意深く行なうこと。特にスプールディレクトリの パーミッションが適切であることを確認しておくこと。
+.SH "バージョン"
 .PP
-This man page is correct for version 3 of the Samba suite\.
-.SH "SEE ALSO"
+このマニュアルページは Samba 3\.0 対応のものである。
+.SH "関連項目"
 .PP
 
 \fBsamba\fR(7),
@@ -661,10 +628,17 @@ This man page is correct for version 3 of the Samba suite\.
 \fBsmbclient\fR(1),
 \fBnmblookup\fR(1),
 \fBtestparm\fR(1),
-\fBtestprns\fR(1)\.
-.SH "AUTHOR"
+\fBtestprns\fR(1)
+.SH "作者"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が 行なわれている。
 .PP
-The original Samba man pages were written by Karl Auer\. The man page sources were converted to YODL format (another excellent piece of Open Source software, available at
-ftp://ftp\.icce\.rug\.nl/pub/unix/) and updated for the Samba 2\.0 release by Jeremy Allison\. The conversion to DocBook for Samba 2\.2 was done by Gerald Carter\. The conversion to DocBook XML 4\.2 for Samba 3\.0 was done by Alexander Bokovoy\.
+オリジナルの Samba マニュアルページは Karl Auer によって 作成された。マニュアルページは YODL 形式 (ftp://ftp\.icce\.rug\.nl/pub/unix/
+で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.4対応のものである。
+.PP
+Samba 3\.0\.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+.PP
+Samba 3\.2\.4 対応の翻訳は、 太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。

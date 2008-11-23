@@ -1,115 +1,116 @@
 .\"     Title: smbget
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/21/2008
-.\"    Manual: User Commands
+.\"      Date: 11/23/2008
+.\"    Manual: ユーザーコマンド
 .\"    Source: Samba 3.2
 .\"
-.TH "SMBGET" "1" "11/21/2008" "Samba 3\.2" "User Commands"
+.TH "SMBGET" "1" "11/23/2008" "Samba 3\.2" "ユーザーコマンド"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-smbget - wget-like utility for download files over SMB
+smbget - SMB 経由でファイルをダウンロードするための wget ライクな ユーティリティー
 .SH "SYNOPSIS"
 .HP 1
 smbget [\-a,\ \-\-guest] [\-r,\ \-\-resume] [\-R,\ \-\-recursive] [\-u,\ \-\-username=STRING] [\-p,\ \-\-password=STRING] [\-w,\ \-\-workgroup=STRING] [\-n,\ \-\-nonprompt] [\-d,\ \-\-debuglevel=INT] [\-D,\ \-\-dots] [\-P,\ \-\-keep\-permissions] [\-o,\ \-\-outputfile] [\-f,\ \-\-rcfile] [\-q,\ \-\-quiet] [\-v,\ \-\-verbose] [\-b,\ \-\-blocksize] [\-?,\ \-\-help] [\-\-usage] {smb://host/share/path/to/file} [smb://url2/] [\.\.\.]
-.SH "DESCRIPTION"
+.SH "説明"
 .PP
-This tool is part of the
+このツールは
 \fBsamba\fR(7)
-suite\.
+スイートの一部である。
 .PP
-smbget is a simple utility with wget\-like semantics, that can download files from SMB servers\. You can specify the files you would like to download on the command\-line\.
+smbget は SMB サーバからファイルをダウンロードできる、wget ライクな 使い勝手を持つシンプルなユーティリティーである。ダウンロードしたい ファイルをコマンドラインで指定することができる。
 .PP
-The files should be in the smb\-URL standard, e\.g\. use smb://host/share/file for the UNC path
-\fI\e\e\e\eHOST\e\eSHARE\e\efile\fR\.
-.SH "OPTIONS"
+ファイルは smb\-URL の書式で指定する。たとえば UNC パスで
+\fI\e\e\e\eHOST\e\eSHARE\e\efile\fR
+というファイルであれば、 smb://host/share/file のように指定する。
+.SH "オプション"
 .PP
 \-a, \-\-guest
 .RS 4
-Work as user guest
+guest ユーザとして接続する
 .RE
 .PP
 \-r, \-\-resume
 .RS 4
-Automatically resume aborted files
+前回中断したファイルから自動的に処理を継続する
 .RE
 .PP
 \-R, \-\-recursive
 .RS 4
-Recursively download files
+ファイルを再帰的にダウンロードする
 .RE
 .PP
 \-u, \-\-username=STRING
 .RS 4
-Username to use
+使用するユーザ名
 .RE
 .PP
 \-p, \-\-password=STRING
 .RS 4
-Password to use
+使用するパスワード
 .RE
 .PP
 \-w, \-\-workgroup=STRING
 .RS 4
-Workgroup to use (optional)
+使用するワークグループ（オプション）
 .RE
 .PP
 \-n, \-\-nonprompt
 .RS 4
-Don\'t ask anything (non\-interactive)
+ユーザに対して問い合わせを行わない（非会話型）
 .RE
 .PP
 \-d, \-\-debuglevel=INT
 .RS 4
-Debuglevel to use
+使用するデバッグレベル
 .RE
 .PP
 \-D, \-\-dots
 .RS 4
-Show dots as progress indication
+プログラムの進行状況をドットで表示する
 .RE
 .PP
 \-P, \-\-keep\-permissions
 .RS 4
-Set same permissions on local file as are set on remote file\.
+リモートファイルと同じパーミッションを ローカルファイルに適用する。
 .RE
 .PP
 \-o, \-\-outputfile
 .RS 4
-Write the file that is being download to the specified file\. Can not be used together with \-R\.
+出力ファイル名として別のファイル名を指定する。\-R と同時には指定できない。
 .RE
 .PP
 \-f, \-\-rcfile
 .RS 4
-Use specified rcfile\. This will be loaded in the order it was specified \- e\.g\. if you specify any options before this one, they might get overriden by the contents of the rcfile\.
+指定された rcfile を使う。これはオプションで指定された順に読み込まれる。 つまりこの前に何かのオプションを指定した場合、そのオプションは rcfile の内容で上書きされる。
 .RE
 .PP
 \-q, \-\-quiet
 .RS 4
-Be quiet
+処理中にメッセージを出力しない
 .RE
 .PP
 \-v, \-\-verbose
 .RS 4
-Be verbose
+冗長表示を行う
 .RE
 .PP
 \-b, \-\-blocksize
 .RS 4
-Number of bytes to download in a block\. Defaults to 64000\.
+ダウンロードする際の読み込み単位（バイト）。 デフォルトは 64000。
 .RE
 .PP
 \-?, \-\-help
 .RS 4
-Show help message
+ヘルプメッセージを表示する
 .RE
 .PP
 \-\-usage
 .RS 4
-Display brief usage message
+使用法の概要を表示する
 .RE
 .SH "SMB URLS"
 .PP
@@ -132,7 +133,7 @@ smb:// means all the workgroups
 smb://name/ means, if \fIname\fR is a workgroup, all the servers in this workgroup, or if \fIname\fR is a server, all the shares on this server\.
 .fi
 .RE
-.SH "EXAMPLES"
+.SH "実行例"
 .sp
 .RS 4
 .nf
@@ -146,13 +147,13 @@ smbget \-Rr smb://rhonwyn/isos
 smbget \-Rr smb://rhonwyn/
 .fi
 .RE
-.SH "BUGS"
+.SH "バグ"
 .PP
 Permission denied is returned in some cases where the cause of the error is unknown (such as an illegally formatted smb:// url or trying to get a directory without \-R turned on)\.
-.SH "VERSION"
+.SH "バージョン"
 .PP
 This man page is correct for version 3 of the Samba suite\.
-.SH "AUTHOR"
+.SH "作者"
 .PP
 The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
 .PP

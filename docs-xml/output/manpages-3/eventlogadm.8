@@ -1,66 +1,64 @@
 .\"     Title: eventlogadm
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/21/2008
-.\"    Manual: System Administration tools
+.\"      Date: 11/23/2008
+.\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "EVENTLOGADM" "8" "11/21/2008" "Samba 3\.2" "System Administration tools"
+.TH "EVENTLOGADM" "8" "11/23/2008" "Samba 3\.2" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-eventlogadm - push records into the Samba event log store
+eventlogadm - Samba のイベントログ格納領域にレコードを書き込む
 .SH "SYNOPSIS"
 .HP 1
 eventlogadm [\fB\-d\fR] [\fB\-h\fR] \fB\-o\fR\ addsource\ \fIEVENTLOG\fR\ \fISOURCENAME\fR\ \fIMSGFILE\fR
 .HP 1
 eventlogadm [\fB\-d\fR] [\fB\-h\fR] \fB\-o\fR\ write\ \fIEVENTLOG\fR
-.SH "DESCRIPTION"
+.SH "説明"
 .PP
-This tool is part of the
+このツールは
 \fBsamba\fR(1)
-suite\.
+の一部として提供されている。
 .PP
 eventlogadm
-is a filter that accepts formatted event log records on standard input and writes them to the Samba event log store\. Windows client can then manipulate these record using the usual administration tools\.
-.SH "OPTIONS"
+は特定の形式に従ったイベントログのレコードを標準入力から読み込み、 それらを Samba のイベントログ格納領域に書き込む。こうすることで、 Windows クライアントから通常の管理ツールを使ってこれらのレコードを 操作できるようになる。
+.SH "オプション"
 .PP
 \fB\-d\fR
 .RS 4
-The
+
 \-d
-option causes
-eventlogadm
-to emit debugging information\.
+オプションを指定すると、
+eventlogadmはデバッグ情報を出力する。
 .RE
 .PP
 \fB\-o\fR addsource \fIEVENTLOG\fR \fISOURCENAME\fR \fIMSGFILE\fR
 .RS 4
-The
+
 \-o addsource
-option creates a new event log source\.
+オプションは、新しいイベントログの ソースを生成する。
 .RE
 .PP
 \fB\-o\fR write \fIEVENTLOG\fR
 .RS 4
-The
+
 \-o write
-reads event log records from standard input and writes them to theSamba event log store named by EVENTLOG\.
+はイベントログのレコードを標準入力から 読み込み、それらを EVENTLOG で指定された名前の Samba のイベントログ 格納領域に書き込む。
 .RE
 .PP
 \fB\-h\fR
 .RS 4
-Print usage information\.
+使用法を表示する
 .RE
-.SH "EVENTLOG RECORD FORMAT"
+.SH "EVENTLOG レコードフォーマット"
 .PP
-For the write operation,
-eventlogadm
-expects to be able to read structured records from standard input\. These records are a sequence of lines, with the record key and data separated by a colon character\. Records are separated by at least one or more blank line\.
+書き込みの際、eventlogadm
+は標準入力から書式に従ったレコードが読み込めることを期待している。 これらのレコードは、レコードキーとデータがコロン(:)で区切られた 行の並びである。各レコードは、少なくとも１個以上の空行で区切られている 必要がある。
 .PP
-The event log record field are:
+イベントログのフィールドは以下の通り：
 .sp
 .RS 4
 .ie n \{\
@@ -72,9 +70,9 @@ The event log record field are:
 .\}
 
 LEN
-\- This field should be 0, since
+\-
 eventlogadm
-will calculate this value\.
+はこの フィールドの値を自動計算するので、このフィールドには 0 をセットする。
 .RE
 .sp
 .RS 4
@@ -87,7 +85,7 @@ will calculate this value\.
 .\}
 
 RS1
-\- This must be the value 1699505740\.
+\- 1699505740 という値をセットする。
 .RE
 .sp
 .RS 4
@@ -100,7 +98,7 @@ RS1
 .\}
 
 RCN
-\- This field should be 0\.
+\- 0 をセットする。
 .RE
 .sp
 .RS 4
@@ -113,7 +111,7 @@ RCN
 .\}
 
 TMG
-\- The time the eventlog record was generated; format is the number of seconds since 00:00:00 January 1, 1970, UTC\.
+\- イベントログが生成された時刻。 00:00:00 January 1, 1970, UTC からの 累積秒数をセットする。
 .RE
 .sp
 .RS 4
@@ -126,7 +124,7 @@ TMG
 .\}
 
 TMW
-\- The time the eventlog record was written; format is the number of seconds since 00:00:00 January 1, 1970, UTC\.
+\- イベントログが書き込まれた時刻。 00:00:00 January 1, 1970, UTC からの 累積秒数をセットする。
 .RE
 .sp
 .RS 4
@@ -139,7 +137,7 @@ TMW
 .\}
 
 EID
-\- The eventlog ID\.
+\- イベントログ ID
 .RE
 .sp
 .RS 4
@@ -152,7 +150,7 @@ EID
 .\}
 
 ETP
-\- The event type \-\- one of "INFO", "ERROR", "WARNING", "AUDIT SUCCESS" or "AUDIT FAILURE"\.
+\- イベントログのタイプで、以下のいずれか： "INFO", "ERROR", "WARNING", "AUDIT SUCCESS" or "AUDIT FAILURE"\.
 .RE
 .sp
 .RS 4
@@ -165,7 +163,7 @@ ETP
 .\}
 
 ECT
-\- The event category; this depends on the message file\. It is primarily used as a means of filtering in the eventlog viewer\.
+\- イベントカテゴリ：これはマシンファイルに依存する。 主にイベントビューワ－におけるフィルタ条件として使われる。
 .RE
 .sp
 .RS 4
@@ -178,7 +176,7 @@ ECT
 .\}
 
 RS2
-\- This field should be 0\.
+\- 0 をセットする。
 .RE
 .sp
 .RS 4
@@ -191,7 +189,7 @@ RS2
 .\}
 
 CRN
-\- This field should be 0\.
+\- 0 をセットする。
 .RE
 .sp
 .RS 4
@@ -204,7 +202,7 @@ CRN
 .\}
 
 USL
-\- This field should be 0\.
+\- 0 をセットする。
 .RE
 .sp
 .RS 4
@@ -217,7 +215,7 @@ USL
 .\}
 
 SRC
-\- This field contains the source name associated with the event log\. If a message file is used with an event log, there will be a registry entry for associating this source name with a message file DLL\.
+\- このフィールドはイベントログに関連付けられるソースを指定する。 イベントログとしてメッセージファイルが指定された場合、 メッセージファイルの DLL に対してこのソース名が関連付けられた レジストリーエントリーがあるはずである。
 .RE
 .sp
 .RS 4
@@ -230,7 +228,7 @@ SRC
 .\}
 
 SRN
-\- he name of the machine on which the eventlog was generated\. This is typically the host name\.
+\- イベントログが生成されたマシンの名前。これは通常ホスト名となる。
 .RE
 .sp
 .RS 4
@@ -243,7 +241,7 @@ SRN
 .\}
 
 STR
-\- The text associated with the eventlog\. There may be more than one string in a record\.
+\- イベントログに関連付けられたテキスト。 １つのレコードに複数の文字列を持つこともできる。
 .RE
 .sp
 .RS 4
@@ -256,11 +254,12 @@ STR
 .\}
 
 DAT
-\- This field should be left unset\.
-.SH "EXAMPLES"
+\- このフィールドはセットしないようにする。
+.SH "記述例"
 .PP
-An example of the record format accepted by
-eventlogadm:
+
+eventlogadm
+で認識できるレコードフォーマットの例：
 .sp
 .RS 4
 .nf
@@ -283,7 +282,7 @@ eventlogadm:
 .fi
 .RE
 .PP
-Set up an eventlog source, specifying a message file DLL:
+メッセージファイルの DLL を指定して、イベントログのソースをセットする：
 .sp
 .RS 4
 .nf
@@ -293,19 +292,37 @@ Set up an eventlog source, specifying a message file DLL:
 .fi
 .RE
 .PP
-Filter messages from the system log into an event log:
+システムログからのフィルターメッセージをイベントログとして指定する：
 .sp
 .RS 4
 .nf
 	tail \-f /var/log/messages | \e\e
-		my_program_to_parse_into_eventlog_records | \e\e
+		入力をパースしてイベントログのレコードにするプログラム | \e\e
 	      	eventlogadm SystemLogEvents
 	
 .fi
 .RE
-.SH "VERSION"
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
-.SH "AUTHOR"
+このマニュアルは Samba スイートのバージョン 3\.0\.25 に適合する。
+.SH "作者"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアおよび関連するユーティリティーは、 Andrew Tridgell によって書かれた。現在は Samba は Samba Team によって Linux カーネルの開発と同様に、オープンソースプロジェクトとして 開発されている。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.4 対応のものである。
+.PP
+このドキュメントの Samba 3\.2\.4 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+堀田 倫英(hotta@net\-newbie\.com)
+.sp
+.RE
+によって行なわれた。
