@@ -589,14 +589,8 @@ Sambaのバージョン 3\.2\.0 から、レジストリ中にSambaの設定を 
 .sp
 .RE
 .PP
-レジストリベースの設定を特定のエクステントで少なくとも安全に 行うために、レジストリ設定内では、\fIlock directory\fRと
-\fIconfig backend\fRの使用は無効化 されることに注意。（ Note: To make registry\-based configurations foolproof at least to a certain extent, the use of
-\fIlock directory\fR
-and
-\fIconfig backend\fR
-inside the registry configuration has been disabled:) 特に、レジストリ設定内で、\fIlock directory\fRを 変更することにより、デーモンがロードされて有効になったとき、 設定を見ることのできない，壊れた設定を作成することになる。 (Especially by changing the
-\fIlock directory\fR
-inside the registry configuration, one would create a broken setup where the daemons do not see the configuration they loaded once it is active\.)
+レジストリベースの設定に伴うシステムの破壊を限定的にするために、 レジストリでの設定中では、\fIlock directory\fRと
+\fIconfig backend\fRの使用は無効化 されることに注意。 特に、レジストリでの設定中に、\fIlock directory\fRを 変更してしまい、それがいったん有効化されてしまうと、 デーモンからはそれの設定自体が見えなくなる、壊れた設定を作成することになる。
 .PP
 レジストリベースの設定は、キー\fIHKLM\eSoftware\eSamba\esmbconf\fRを
 \fIregedit\fRや\fInet (rpc) registry\fRを使ってアクセスすることもできる。 利便性のため、\fBnet\fR(8)ユーティリティ の\fIconf\fRサブコマンドが、レジストリ ベースの設定をローカルに読み書きするための特別なインタフェース として提供されている。すなわち、データベースファイルに直接 アクセスし、サーバを迂回できる。
