@@ -4,39 +4,39 @@
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 	<para>
-	���Υѥ�᡼���ϡ�DOS ���ɤߤȤ�����°���� UNIX �Υե����륷���ƥ���б��դ�����ˡ�����椹�롣
+	このパラメータは、DOS の読みとり専用属性を UNIX のファイルシステムに対応付ける方法を制御する。
 	</para>
 
 	<para>
-	���Υѥ�᡼���ˤ� 3 �Ȥ�����ͤ���ꤹ�뤳�Ȥ���ǽ�Ǥ��롣����ˤ�ꡢ
-	<smbconfoption name="store dos attributes"/> �� <constant>No</constant>���⤷���ϳ�ĥ°����¸�ߤ��ʤ��Ķ��ˤ����ơ�
+	このパラメータには 3 とおりの値を指定することが可能である。これにより、
+	<smbconfoption name="store dos attributes"/> が <constant>No</constant>、もしくは拡張属性が存在しない環境において、
 	<citerefentry><refentrytitle>smbd</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> ���ե�������ɤߤȤ�����°����ɽ��������ˡ�����椹�뤳�Ȥ���ǽ�Ǥ��롣
-	<smbconfoption name="store dos attributes"/> �� <constant>yes</constant> �ξ�硢���Υѥ�᡼����<emphasis>̵�뤵���</emphasis>��
-	����� Samba 3.0.21 �ǿ��ߤ��줿�ѥ�᡼���Ǥ��롣
+	<manvolnum>8</manvolnum></citerefentry> がファイルの読みとり専用属性を表示する方法を制御することが可能である。
+	<smbconfoption name="store dos attributes"/> が <constant>yes</constant> の場合、このパラメータは<emphasis>無視される</emphasis>。
+	これは Samba 3.0.21 で新設されたパラメータである。
 	</para>
 
-    <para>3 �Ȥ�����ͤ�ʲ��˼���:</para>
+    <para>3 とおりの値を以下に示す:</para>
 
     <itemizedlist>
 		<listitem><para>
-		<constant>Yes</constant> - �ɤߤȤ����Ѥ� DOS °���ϡ�UNIX �Υѡ��ߥå����ӥåȤˤ�����桼�������ʤ����ͭ�Ԥν񤭹��߸��ӥåȤ�ȿž���������б��դ����롣
-		��ͭ�Ԥν񤭹��߸��ӥåȤ����ꤵ��Ƥ��ʤ���硢�ե�����ˤ��ɤߤȤ�����°�����ղä���Ƥ����ΤȤߤʤ���롣�⤷�⡢�ɤ߼�����Ѥ�DOS°�������ꤵ��Ƥ���硢
-���롼�פȤ���¾�ν񤭹��߸��ӥåȤϥ��������ꤵ��롣ACL��ν񤭹��ߥӥåȤ�Samba�ˤ�ä�̵�뤵��롣�⤷�⡢�ɤ߼�����Ѥ�DOS°�������ꤵ��Ƥ��ʤ��ä���硢Samba��ñ�ˤ���ν�ͭ�Ԥν񤭹��ߥӥåȤ����ꤹ�롣
+		<constant>Yes</constant> - 読みとり専用の DOS 属性は、UNIX のパーミッションビットにおけるユーザ、すなわち所有者の書き込み権ビットに反転した形で対応付けられる。
+		所有者の書き込み権ビットが設定されていない場合、ファイルには読みとり専用属性が付加されているものとみなされる。もしも、読み取り専用のDOS属性が設定されてた場合、
+グループとその他の書き込み権ビットはゼロに設定される。ACL中の書き込みビットはSambaによって無視される。もしも、読み取り専用のDOS属性が設定されていなかった場合、Sambaは単にそれの所有者の書き込みビットを設定する。
 		</para></listitem>
 
 		<listitem><para>
-		<constant>Permissions</constant> - �ɤߤȤ����Ѥ� DOS °���ϡ���³���Ƥ���桼�����Ф���ͭ���ʥѡ��ߥå������б��դ����롣
-		����ϡ�<citerefentry><refentrytitle>smbd</refentrytitle>
+		<constant>Permissions</constant> - 読みとり専用の DOS 属性は、接続しているユーザに対する有効なパーミッションに対応付けられる。
+		これは、<citerefentry><refentrytitle>smbd</refentrytitle>
 		<manvolnum>8</manvolnum></citerefentry>
-		�� UNIX �Υѡ��ߥå���󤪤�� (¸�ߤ��Ƥ����) POSIX �� ACL ���ɤߤȤ뤳�Ȥˤ���ǧ����롣
-		��³���Ƥ���桼���˥ե�������Խ�����ѡ��ߥå���󤬤ʤ���硢�ե�����ˤ��ɤߤȤ�����°�����ղä���Ƥ����ΤȤߤʤ���롣
+		が UNIX のパーミッションおよび (存在していれば) POSIX の ACL を読みとることにより確認される。
+		接続しているユーザにファイルを編集するパーミッションがない場合、ファイルには読みとり専用属性が付加されているものとみなされる。
 		</para></listitem>
 
 		<listitem><para>
-		<constant>No</constant> - �ɤߤȤ����� DOS °���ϡ��ѡ��ߥå������б��դ���줺��
-		<smbconfoption name="store dos attributes"/> �ѥ�᡼���ˤ�äƤΤ���Ϳ����롣
-		����ϡ��ޥ������� CD ��ͭ������ˤ����������Τ�ʤ���
+		<constant>No</constant> - 読みとり専用 DOS 属性は、パーミッションに対応付けられず、
+		<smbconfoption name="store dos attributes"/> パラメータによってのみ付与される。
+		これは、マウント中の CD を共有する場合にも便利かも知れない。
 		</para></listitem>
     </itemizedlist>
 
