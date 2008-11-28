@@ -1,33 +1,29 @@
 .\"     Title: vfs_full_audit
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/21/2008
+.\"      Date: 11/25/2008
 .\"    Manual: System Administration tools
 .\"    Source: Samba 3.2
 .\"
-.TH "VFS_FULL_AUDIT" "8" "11/21/2008" "Samba 3\.2" "System Administration tools"
+.TH "VFS_FULL_AUDIT" "8" "11/25/2008" "Samba 3\.2" "System Administration tools"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-vfs_full_audit - record Samba VFS operations in the system log
+vfs_full_audit - Samba VFS　の動作をsystem logに記録する
 .SH "SYNOPSIS"
 .HP 1
 vfs objects = full_audit
-.SH "DESCRIPTION"
+.SH "説明"
 .PP
-This VFS module is part of the
-\fBsamba\fR(7)
-suite\.
+このVFSモジュールは
+\fBsamba\fR(7)システムの一部である\.
 .PP
-The
-vfs_full_audit
-VFS module records selected client operations to the system log using
-\fBsyslog\fR(3)\.
+vfs_full_auditVFSモジュールは指定したクライアントの 動きを\fBsyslog\fR(3)でシステムログに記録する。
 .PP
 vfs_full_audit
-is able to record the complete set of Samba VFS operations:
+はSamba VFSの動作すべてを記録することが可能である。
 .IP "" 4
 aio_cancel
 .IP "" 4
@@ -217,12 +213,10 @@ utime
 .IP "" 4
 write
 .PP
-In addition to these operations,
-vfs_full_audit
-recognizes the special operation names "all" and "none ", which refer to all the VFS operations and none of the VFS operations respectively\.
+これらの動作に加え、
+vfs_full_auditは"all" and "none "という オプションを使用することができる。これらはすべてのVFS動作に対し有効になり、 ここのVFS動作に対して指定することはできない。
 .PP
-vfs_full_audit
-records operations in fixed format consisting of fields separated by \'|\' characters\. The format is:
+vfs_full_auditは動作を\'|\'をセパレーターとして 固定フォーマットで記録する。 記録フォーマットは
 .sp
 .RS 4
 .nf
@@ -231,7 +225,7 @@ records operations in fixed format consisting of fields separated by \'|\' chara
 .fi
 .RE
 .PP
-The record fields are:
+各フィールドは:
 .sp
 .RS 4
 .ie n \{\
@@ -242,7 +236,7 @@ The record fields are:
 .IP \(bu 2.3
 .\}
 PREFIX
-\- the result of the full_audit:prefix string after variable substitutions
+\- full_audit:prefix文字と、可変長の解説
 .RE
 .sp
 .RS 4
@@ -254,7 +248,7 @@ PREFIX
 .IP \(bu 2.3
 .\}
 OPERATION
-\- the name of the VFS operation
+\- VFSの名称
 .RE
 .sp
 .RS 4
@@ -266,7 +260,7 @@ OPERATION
 .IP \(bu 2.3
 .\}
 RESULT
-\- whether the operation succeeded or failed
+\- 動作が成功したか、失敗したか
 .RE
 .sp
 .RS 4
@@ -278,45 +272,43 @@ RESULT
 .IP \(bu 2.3
 .\}
 FILE
-\- the name of the file or directory the operation was performed on
+\- 動作が行われたファイルやディレクトリの名称
 .sp
 .RE
 .PP
-This module is stackable\.
+このモジュールはスタッカブルである。
 .SH "OPTIONS"
 .PP
 vfs_full_audit:prefix = STRING
 .RS 4
-Prepend audit messages with STRING\. STRING is processed for standard substitution variables listed in
-\fBsmb.conf\fR(5)\. The default prefix is "%u|%I"\.
+STRINGで監査メッセージを結合する。STRINGは
+\fBsmb.conf\fR(5)に記載された指定を置き換える 初期値は"%u|%I"\.
 .RE
 .PP
 vfs_full_audit:success = LIST
 .RS 4
-LIST is a list of VFS operations that should be recorded if they succeed\. Operations are specified using the names listed above\.
+LISTはVFSオペレーションのリストで、動作が成功したときに記録を残すものを表す。 オペレーションは上に示したリストにある名前で指定する。
 .RE
 .PP
 vfs_full_audit:failure = LIST
 .RS 4
-LIST is a list of VFS operations that should be recorded if they failed\. Operations are specified using the names listed above\.
+LISTはVFSオペレーションのリストで、動作が失敗したときに記録を残すものを表す。 オペレーションは上に示したリストにある名前で指定する。
 .RE
 .PP
 full_audit:facility = FACILITY
 .RS 4
-Log messages to the named
-\fBsyslog\fR(3)
-facility\.
+
+\fBsyslog\fR(3)のfacilityを指定する
 .RE
 .PP
 full_audit:priority = PRIORITY
 .RS 4
-Log messages with the named
-\fBsyslog\fR(3)
-priority\.
+
+\fBsyslog\fR(3)のpriorityを指定する
 .RE
-.SH "EXAMPLES"
+.SH "例"
 .PP
-Log file and directory open operations on the [records] share using the LOCAL7 facility and ALERT priority, including the username and IP address:
+[records]共有の中のファイルやディレクトリをオープンしたときにログを残す。 その際、LOCAL7ファシリティーと、ALERTプライオリティーを使用し、 ユーザー名とIPアドレスも記録する:
 .sp
 .RS 4
 .nf
@@ -330,9 +322,27 @@ Log file and directory open operations on the [records] share using the LOCAL7 f
 	\fIfull_audit:priority = ALERT\fR
 .fi
 .RE
-.SH "VERSION"
+.SH "バージョン"
 .PP
-This man page is correct for version 3\.0\.25 of the Samba suite\.
+このヘルプはSambaシステム　3\.0\.25に対応している
 .SH "AUTHOR"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\.
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.0\.25\-3\.2\.4対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\.co\.jp)
+.sp
+.RE
+によって行なわれた。
