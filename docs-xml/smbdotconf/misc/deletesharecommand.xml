@@ -9,8 +9,12 @@
 	<filename moreinfo="none">smb.conf</filename> に存在しているサービスの定義を削除するための外部のプログラムやスクリプトを指定するために用いられる。
 	<parameter moreinfo="none">delete share command</parameter> を適切に実行するためには、
 	管理者は root アカウント(uid == 0) で
-	<command moreinfo="none">smbd</command> に接続しておく必要がある。(訳注: SeDiskOperatorPrivilege 権限のあるアカウントでも可能)
+	<command moreinfo="none">smbd</command> に接続しておく必要がある。
 	</para>
+
+<para>接続中のアカウントが <literal>SeDiskOperatorPrivilege</literal>
+権限を持っている場合、<parameter moreinfo="none">change share</parameter>
+パラメータで定義されたスクリプトは root 権限で実行される。</para>
 		
 	<para>
 	スクリプト実行時には <command moreinfo="none">smbd</command> が以下の2つのパラメータを設定して自動的に
@@ -24,7 +28,7 @@
 		</listitem>
 			
 	<listitem><para><parameter moreinfo="none">shareName</parameter>
-		- 存在しているサービス名
+		- 既存のサービス名
 		</para>
 		</listitem>
 	</itemizedlist>
