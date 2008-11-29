@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/28/2008
+.\"      Date: 11/29/2008
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.2
 .\"
-.TH "SMB\.CONF" "5" "11/28/2008" "Samba 3\.2" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "11/29/2008" "Samba 3\.2" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -718,7 +718,7 @@ Example:
 add port command (G)
 .PP
 .RS 4
-Samba 3\.0\.23 introduced support for adding printer ports remotely using the Windows "Add Standard TCP/IP Port Wizard"\. This option defines an external program to be executed when smbd receives a request to add a new Port to the system\. The script is passed two parameters:
+Samba 3\.0\.23 では、Windows の「Add Standard TCP/IP Port ウィザード」によるリモートからのプリンタポートの追加がサポートされた。 このオプションは、smbd がシステムに対する新しいポートの追加要求を受信した際に、 実行される外部のコマンドを定義する。 スクリプトは以下の 2 つのパラメータをとる。
 .sp
 .RS 4
 .ie n \{\
@@ -728,7 +728,7 @@ Samba 3\.0\.23 introduced support for adding printer ports remotely using the Wi
 .sp -1
 .IP \(bu 2.3
 .\}
-\fIport name\fR
+\fIポートの名称\fR
 .RE
 .sp
 .RS 4
@@ -742,7 +742,7 @@ Samba 3\.0\.23 introduced support for adding printer ports remotely using the Wi
 \fIdevice URI\fR
 .sp
 .RE
-The deviceURI is in the for of socket://<hostname>[:<portnumber>] or lpd://<hostname>/<queuename>\.
+deviceURI は socket://<hostname>[:<portnumber>] もしくは lpd://<hostname>/<queuename> のように指定する。
 .sp
 Default:
 \fI\fIadd port command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -751,21 +751,21 @@ Example:
 \fI\fIadd port command\fR\fR\fI = \fR\fI/etc/samba/scripts/addport\.sh\fR\fI \fR
 .RE
 
-addprinter command (G)
+add printer command (G)
 .PP
 .RS 4
-With the introduction of MS\-RPC based printing support for Windows NT/2000 clients in Samba 2\.2, The MS Add Printer Wizard (APW) icon is now also available in the "Printers\.\.\." folder displayed a share listing\. The APW allows for printers to be add remotely to a Samba or Windows NT/2000 print server\.
+Samba 2\.2における Windows NT/2000 クライアントに対応した MS\-RPC ベースの印刷サポートの実装にともない、 共有の一覧に表示される"Printers\.\.\. " フォルダ中の 「プリンタの追加」ウィザード(Add Printer Wizard (APW))アイコンを利用することが可能になった。 APWにより、SambaやWindows NT/ 2000プリンタサーバに別のマシンからのプリンタ追加が可能となった。
 .sp
-For a Samba host this means that the printer must be physically added to the underlying printing system\. The
-\fIaddprinter command\fR
-defines a script to be run which will perform the necessary operations for adding the printer to the print system and to add the appropriate service definition to the
+Sambaホストの場合、これは、下位レイヤの印刷システムにプリンタを物理的に追加できる必要があるということである。
+\fIadd printer command\fR
+は、 印刷システムにプリンタを追加するとともに、
 \fIsmb\.conf\fR
-file in order that it can be shared by
-\fBsmbd\fR(8)\.
+ファイルに対して、
+\fBsmbd\fR(8)
+によって共有が行なわれるサービスのエントリを適切に追加するのに必要な処理を行なうスクリプトを設定する。
 .sp
-The
-\fIaddprinter command\fR
-is automatically invoked with the following parameter (in order):
+\fIadd printer command\fR
+は 以下のパラメータを(順番に)付加して自動的に実行される:
 .sp
 .RS 4
 .ie n \{\
@@ -833,27 +833,24 @@ is automatically invoked with the following parameter (in order):
 \fIWindows 9x driver location\fR
 .sp
 .RE
-All parameters are filled in from the PRINTER_INFO_2 structure sent by the Windows NT/2000 client with one exception\. The "Windows 9x driver location" parameter is included for backwards compatibility only\. The remaining fields in the structure are generated from answers to the APW questions\.
+すべてのパラメータは、一つの例外を除き、 Windows NT/2000 クライアントから送信される PRINTER_INFO_2 構造体から取得される。 「Windows 9x driver location」パラメータは、下位互換性を保つためにのみ提供される。 それ以外の構造体のフィールドは、APWの質問に対する回答から生成される。
 .sp
-Once the
-\fIaddprinter command\fR
-has been executed,
+
+\fIadd printer command\fR
+が実行されると、
 smbd
-will reparse the
-\fI smb\.conf\fR
-to determine if the share defined by the APW exists\. If the sharename is still invalid, then
-smbd
-will return an ACCESS_DENIED error to the client\.
+は、
+\fIsmb\.conf\fR
+を再度読み込んで、 APWで設定された共有がすでに存在していないかを確認する。 共有名が不正な場合、smbd
+は、 クライアントに対して ACCESS_DENIED エラーを返却する。
 .sp
-The
-\fIaddprinter command\fR
-program can output a single line of text, which Samba will set as the port the new printer is connected to\. If this line isn\'t output, Samba won\'t reload its printer shares\.
+「add printer command」は Samba が新しいプリンタが接続するポートとして設定した文字列からなる1行を返却する。 返却されない場合、Samba は印刷共有の再読み込みを行なわない。
 .sp
 Default:
-\fI\fIaddprinter command\fR\fR\fI = \fR\fI\fR\fI \fR
+\fI\fIadd printer command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
 Example:
-\fI\fIaddprinter command\fR\fR\fI = \fR\fI/usr/bin/addprinter\fR\fI \fR
+\fI\fIadd printer command\fR\fR\fI = \fR\fI/usr/bin/addprinter\fR\fI \fR
 .RE
 
 add share command (G)
@@ -869,7 +866,10 @@ Samba 2\.2\.0 では、 Windows NT 4\.0 のサーバーマネージャーを用�
 smbd
 に対して root アカウント(uid = 0)を利用して接続する必要がある。
 .sp
-(訳注: SeDiskOperatorPrivilege 権限のあるアカウントでも可能)
+接続したアカウントが
+SeDiskOperatorPrivilege
+を持っている場合、\fIchange share\fR
+パラメータで定義されたスクリプトは root 権限で実行される。
 .sp
 コマンド実行時に、smbd
 は自動的に以下の 5 つの引数を付加して
@@ -1421,9 +1421,9 @@ Default:
 change notify (S)
 .PP
 .RS 4
-This parameter specifies whether Samba should reply to a client\'s file change notify requests\.
+このパラメータは、Samba がクライアントからのファイル変更通知要求に対して 返信するべきかどうかを指定する。
 .sp
-You should never need to change this parameter
+このパラメータを変更する必要はないはずである
 .sp
 Default:
 \fI\fIchange notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -1672,7 +1672,7 @@ Default:
 cluster addresses (G)
 .PP
 .RS 4
-With this parameter you can add additional addresses nmbd will register with a WINS server\. These addresses are not necessarily present on all nodes simultaneously, but they will be registered with the WINS server so that clients can contact any of the nodes\.
+このパラメータを使うと、nmbd が WINS サーバに登録する追加のアドレスを 付加することができる。これらのアドレス(群)は、すべてのノード上で 同時に存在しなければならないわけではないが、これらは WINS サーバに 登録されるため、クライアントはこれらのうちのどのノードにも接続できる。
 .sp
 Default:
 \fI\fIcluster addresses\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -1684,11 +1684,11 @@ Example:
 clustering (G)
 .PP
 .RS 4
-This parameter specifies whether Samba should contact ctdb for accessing its tdb files and use ctdb as a backend for its messaging backend\.
+このパラメータは、Samba が ctdb に接続して tdb ファイルにアクセスし、 さらにメッセージ処理のバックエンドとして ctdb を使うべきかどうかを 指定する。
 .sp
-Set this parameter to
+ctdb が動作している状態でクラスタ構成を取る場合にのみ、 このパラメータを
 yes
-only if you have a cluster setup with ctdb running\.
+にすること。
 .sp
 Default:
 \fI\fIclustering\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -1824,8 +1824,9 @@ Example:
 ctdbd socket (G)
 .PP
 .RS 4
-If you set
-clustering=yes, you need to tell Samba where ctdbd listens on its unix domain socket\. The default path as of ctdb 1\.0 is /tmp/ctdb\.socket which you have to explicitly set for Samba in smb\.conf\.
+
+clustering=yes
+の指定を行う場合は、 ctdbd がどの unix ドメインソケットを監視するのかを、Samba に対して 教えてやる必要がある。ctdb 1\.0 におけるデフォルトのパスは /tmp/ctdb\.socket であるが、これを smb\.conf で明示してやらなければならない。
 .sp
 Default:
 \fI\fIctdbd socket\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -1837,39 +1838,43 @@ Example:
 cups options (S)
 .PP
 .RS 4
-This parameter is only applicable if
+このパラメータは
 \fIprinting\fR
-is set to
-\fBcups\fR\. Its value is a free form string of options passed directly to the cups library\.
+が
+\fBcups\fR
+に設定されている場合のみ有効である。 この値は、 CUPS ライブラリに直接渡されるオプションを記述した任意の形式の文字列である。
 .sp
-You can pass any generic print option known to CUPS (as listed in the CUPS "Software Users\' Manual")\. You can also pass any printer specific option (as listed in "lpoptions \-d printername \-l") valid for the target queue\. Multiple parameters should be space\-delimited name/value pairs according to the PAPI text option ABNF specification\. Collection values ("name={a=\.\.\. b=\.\.\. c=\.\.\.}") are stored with the curley brackets intact\.
+CUPS で有効な一般の印刷オプション ( CUPS の「Spftware Users\' Manual」に記載されているもの ) はすべて設定できる。 また、設定対象のキューで有効な ( 「lpoptions \-d printername \-l」で表示される ) 任意のプリンタ固有のオプションも設定できる。
 .sp
-You should set this parameter to
-\fBraw\fR
-if your CUPS server
+Windows クライアントが Samba を経由して印刷を行なう際に CUPS サーバの
 \fIerror_log\fR
-file contains messages such as "Unsupported format \'application/octet\-stream\'" when printing from a Windows client through Samba\. It is no longer necessary to enable system wide raw printing in
-\fI/etc/cups/mime\.{convs,types}\fR\.
+ファイルに 「Unsupported format \'application/octet\-stream\'」といったメッセージが含まれている場合、 このパラメータを
+\fBraw\fR
+に設定するとよい。 現在では
+\fI/etc/cups/mime\.{convs,types}\fR
+において、 システム全体で raw 印刷を有効にする必要はない。
 .sp
 Default:
 \fI\fIcups options\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
 Example:
-\fI\fIcups options\fR\fR\fI = \fR\fI"raw media=a4"\fR\fI \fR
+\fI\fIcups options\fR\fR\fI = \fR\fI"raw,media=a4,job\-sheets=secret,secret"\fR\fI \fR
 .RE
 
 cups server (G)
 .PP
 .RS 4
-This parameter is only applicable if
+このパラメータは
 \fIprinting\fR
-is set to
-\fBcups\fR\.
+が
+\fBcups\fR
+に設定されている場合のみ有効である。
 .sp
-If set, this option overrides the ServerName option in the CUPS
-\fIclient\.conf\fR\. This is necessary if you have virtual samba servers that connect to different CUPS daemons\.
+このパラメータが設定されると、CUPS の
+\fIclient\.conf\fR
+で設定された ServerName オプションの値が置き換えられる。 これは、仮想 Samba サーバ毎に異なる CUPS デーモンに接続する際に必要である。
 .sp
-Optionally, a port can be specified by separating the server name and port number with a colon\. If no port was specified, the default port for IPP (631) will be used\.
+なお、サーバ名に引続きコロンの後ろにポート番号を記述することで、ポー ト番号を指定することも可能である。 ポートの指定が行なわれ名張った場合、IPP のデフォルトポート (631) が用いられる。
 .sp
 Default:
 \fI\fIcups server\fR\fR\fI = \fR\fI""\fR\fI \fR
@@ -2001,21 +2006,21 @@ Default:
 default devmode (S)
 .PP
 .RS 4
-This parameter is only applicable to
-\fIprintable\fR
-services\. When smbd is serving Printer Drivers to Windows NT/2k/XP clients, each printer on the Samba server has a Device Mode which defines things such as paper size and orientation and duplex settings\. The device mode can only correctly be generated by the printer driver itself (which can only be executed on a Win32 platform)\. Because smbd is unable to execute the driver code to generate the device mode, the default behavior is to set this field to NULL\.
+このパラメータは、\fIprintable\fR
+サービスにのみ適用される。 smbd が、Windows NT/2000/XP クライアントに対してプリンタドライバを提供する際に、 Samba サーバ上の各プリンタでは、用紙サイズ、 orientation, duplex, settings といった情報が定義されたデバイスモード(device mode)という値を設定する必要がある。 デバイスモードの適切な値は、プリンタドライバ自身のみが生成することができる (この処理は、Win32 プラットフォームでのみ実行することができる)。 smbd はデバイスモードを生成するドライバのコードを実行できないため、 このフィールドのデフォルト値としては、NULL が設定される。
 .sp
-Most problems with serving printer drivers to Windows NT/2k/XP clients can be traced to a problem with the generated device mode\. Certain drivers will do things such as crashing the client\'s Explorer\.exe with a NULL devmode\. However, other printer drivers can cause the client\'s spooler service (spoolsv\.exe) to die if the devmode was not created by the driver itself (i\.e\. smbd generates a default devmode)\.
+Windows NT/2000/XP クライアントに対してプリンタドライバを提供する上での問題点の多くは、 デバイスモードの生成に関するものである。 ドライバによっては、デバイスモードとして NULL を設定すると、 クライアント側の Explorer\.exe をクラッシュさせるものがある。 また、デバイスモードがドライバ自身によって生成されていないと（たとえば smbd がデフォルトのデバイスモードを生成するなど）、 クライアントのスプーラサービス(spoolsv\.exe)を停止させてしまうものもある。
 .sp
-This parameter should be used with care and tested with the printer driver in question\. It is better to leave the device mode to NULL and let the Windows client set the correct values\. Because drivers do not do this all the time, setting
+このパラメータは、熟慮の上、プリンタドライバのテストを行なった上で用いること。 デバイスモードを NULL のままにしておき、Windows クライアントに適切な値を設定される方が好ましい。 ただし、ドライバが常にこの処理を行なうとは限らないため、
 default devmode = yes
-will instruct smbd to generate a default one\.
+の設定を行なうことで、smbd にデフォルトのデバイスモードを生成するような指示を行なうことができるようになっている。
 .sp
-For more information on Windows NT/2k printing and Device Modes, see the
-MSDN documentation\.
+Windows NT/2000 の印刷システムやデバイスモードに関する詳細な情報については、
+MSDN documentation
+を参照のこと。
 .sp
 Default:
-\fI\fIdefault devmode\fR\fR\fI = \fR\fIyes\fR\fI \fR
+\fI\fIdefault devmode\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 default
@@ -2081,27 +2086,23 @@ Default:
 deleteprinter command (G)
 .PP
 .RS 4
-With the introduction of MS\-RPC based printer support for Windows NT/2000 clients in Samba 2\.2, it is now possible to delete a printer at run time by issuing the DeletePrinter() RPC call\.
+Samba 2\.2における Windows NT/2000 クライアントに対応した MS\-RPC ベースの印刷サポートの実装にともない、 DeletePrinter() RPC呼び出しを発行することにより、 実行中にプリンタを削除することが可能になった。
 .sp
-For a Samba host this means that the printer must be physically deleted from the underlying printing system\. The
+Samba ホスト上では、 実際の印刷システム上から物理的にプリンタが削除される。
 \fIdeleteprinter command\fR
-defines a script to be run which will perform the necessary operations for removing the printer from the print system and from
-\fIsmb\.conf\fR\.
+パラメータには、 プリンタを印刷システムと\fIsmb\.conf\fRから削除するために 必要な操作を実行するためのスクリプトを設定する。
 .sp
-The
 \fIdeleteprinter command\fR
-is automatically called with only one parameter:
-\fIprinter name\fR\.
+は
+\fI「プリンタ名」\fRのみをパラメータに設定されて自動的に呼び出される。
 .sp
-Once the
 \fIdeleteprinter command\fR
-has been executed,
+が実行されると、
 smbd
-will reparse the
-\fI smb\.conf\fR
-to check that the associated printer no longer exists\. If the sharename is still valid, then
-smbd
-will return an ACCESS_DENIED error to the client\.
+は削除対象のプリンタを無効にするために、
+\fIsmb\.conf\fR
+を読み直す。 共有名が依然として有効な場合、smbd
+はクライアントに ACCESS_DENIED エラーを返却する。
 .sp
 Default:
 \fI\fIdeleteprinter command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -2132,7 +2133,12 @@ Samba 2\.2\.0 では、Windows NT 4\.0 のサーバマネージャから動的�
 \fIdelete share command\fR
 を適切に実行するためには、 管理者は root アカウント(uid == 0) で
 smbd
-に接続しておく必要がある。(訳注: SeDiskOperatorPrivilege 権限のあるアカウントでも可能)
+に接続しておく必要がある。
+.sp
+接続中のアカウントが
+SeDiskOperatorPrivilege
+権限を持っている場合、\fIchange share\fR
+パラメータで定義されたスクリプトは root 権限で実行される。
 .sp
 スクリプト実行時には
 smbd
@@ -2163,7 +2169,7 @@ smbd
 .IP \(bu 2.3
 .\}
 \fIshareName\fR
-\- 存在しているサービス名
+\- 既存のサービス名
 .sp
 .RE
 このパラメータはファイル共有を削除する際にのみ利用される。 印刷共有の削除については、
@@ -2280,7 +2286,7 @@ dfree スクリプト(実行可能にする必要がある)を以下に示す:
 .nf
  
 #!/bin/sh
-df $1 | tail \-1 | awk \'{print $2" "$4}\'
+df $1 | tail \-1 | awk \'{print $(NF\-4),$(NF\-2)}\'
 .fi
 .RE
 .sp
@@ -2380,8 +2386,8 @@ Default:
 disable spoolss (G)
 .PP
 .RS 4
-Enabling this parameter will disable Samba\'s support for the SPOOLSS set of MS\-RPC\'s and will yield identical behavior as Samba 2\.0\.x\. Windows NT/2000 clients will downgrade to using Lanman style printing commands\. Windows 9x/ME will be unaffected by the parameter\. However, this will also disable the ability to upload printer drivers to a Samba server via the Windows NT Add Printer Wizard or by using the NT printer properties dialog window\. It will also disable the capability of Windows NT/2000 clients to download print drivers from the Samba host upon demand\.
-\fIBe very careful about enabling this parameter\.\fR
+このパラメータを有効にすることで、 Samba の SPOOLSS MS\-RPC サポートを無効にし、Samba 2\.0\.x と同様の動作をさせることが可能となる。 Windows NT/2000 クライアントは、Lanman 形式の印刷コマンドを利用することも可能である。 Windows 9x/Me は、このパラメータに影響されない。 なお、このパラメータを有効にすると、NT のプリンタプロパティを利用した、 Windows NTのプリンタ追加ウィザードによる Sambaマシンへのプリンタドライバのアップロード機能が無効になる。 また、Windows NT/2000 クライアントが、必要に応じて Samba マシンからプリンタドライバをダウンロードする機能も同時に無効になる。
+\fIこのパラメータを有効にする際は、充分注意すること。\fR
 .sp
 Default:
 \fI\fIdisable spoolss\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -2630,11 +2636,10 @@ Default:
 enumports command (G)
 .PP
 .RS 4
-The concept of a "port" is fairly foreign to UNIX hosts\. Under Windows NT/2000 print servers, a port is associated with a port monitor and generally takes the form of a local port (i\.e\. LPT1:, COM1:, FILE:) or a remote port (i\.e\. LPD Port Monitor, etc\.\.\.)\. By default, Samba has only one port defined\-\-\fB"Samba Printer Port"\fR\. Under Windows NT/2000, all printers must have a valid port name\. If you wish to have a list of ports displayed (smbd
-does not use a port name for anything) other than the default
-\fB"Samba Printer Port"\fR, you can define
-\fIenumports command\fR
-to point to a program which should generate a list of ports, one per line, to standard output\. This listing will then be used in response to the level 1 and 2 EnumPorts() RPC\.
+ここでいう「ポート(port)」の概念は、 UNIXのものと大きく異なる。Windows NT/2000のプリントサーバにおいて、 ポートはポートモニタと関連付けられ、通常ローカルポート(LPT1:、COM1:、 FILE:)やリモートポート(LPD Port Monitorなど)といった名称をもつ。 Sambaのデフォルトでは、
+\fB「Samba Printer Port」\fR
+というポートのみが定義されている。 Windows NT/2000においては、すべてのプリンタに適切なポート名がある。 デフォルトの\fB「Samba Printer Port」 \fR以外のポート名をポートの一覧に表示させたい場合 (smbdはポート名を全く使用していない)、 標準出力に対してポート名のリストを1行に一つずつ生成するようなプログラムを
+\fIenumports command\fRで定義することができる。 この一覧はレベル1および2のEnumPorts() RPCのレスポンス中で利用される。
 .sp
 Default:
 \fI\fIenumports command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -2821,18 +2826,18 @@ Example:
 force printername (S)
 .PP
 .RS 4
-When printing from Windows NT (or later), each printer in
+Windows NT （以降）の OS から印刷を行なう場合、
 \fIsmb\.conf\fR
-has two associated names which can be used by the client\. The first is the sharename (or shortname) defined in smb\.conf\. This is the only printername available for use by Windows 9x clients\. The second name associated with a printer can be seen when browsing to the "Printers" (or "Printers and Faxes") folder on the Samba server\. This is referred to simply as the printername (not to be confused with the
-\fIprinter name\fR
-option)\.
+中の各プリンタには、 クライアントから使用可能な名前が 2 つある。 最初のものは smb\.conf で定義された共有名(短い名前)である。 Windows 9x クライアントからは、このプリンタ名しか使用できない。 プリンタに割り当てられたもう一つの名前は、Samba サーバの「プリンタ」 (プリンタとFAX)フォルダ」を参照すると表示されるものである。 これは、(\fIprinter name\fR
+オプションと混同しないように) 単にプリンタ名と記載する。
 .sp
-When assigning a new driver to a printer on a remote Windows compatible print server such as Samba, the Windows client will rename the printer to match the driver name just uploaded\. This can result in confusion for users when multiple printers are bound to the same driver\. To prevent Samba from allowing the printer\'s printername to differ from the sharename defined in smb\.conf, set
-\fIforce printername = yes\fR\.
+Samba を含む Windows 互換のリモートのプリンタサーバ上で、 プリンタに対して新しいドライバが割り当てられた際、 Windows クライアントは、そのドライバの名前に合致するように、プリンタ名を変更する。 これは、複数のプリンタに同じドライバを割り当てているユーザを混乱させる結果となる。 Samba において、プリンタのプリンタ名を smb\.conf で定義された共有名と異なる名称にすることを禁止したい場合は、
+\fIforce printername = yes\fR
+と設定すること。
 .sp
-Be aware that enabling this parameter may affect migrating printers from a Windows server to Samba since Windows has no way to force the sharename and printername to match\.
+Windows では、プリンタ名と共有名を強制的に一致させることができないため、 このパラメータを有効にすると、Windows サーバから Samba サーバへプリンタの移行を行なう際に問題が発生するので注意。
 .sp
-It is recommended that this parameter\'s value not be changed once the printer is in use by clients as this could cause a user not be able to delete printer connections from their local Printers folder\.
+プリンタがクライアントにより使用を開始された後にこのパラメータの値を変更することは、 ユーザが自身の「プリンタ」フォルダからプリンタを削除することができなくなるため、推奨しない。
 .sp
 Default:
 \fI\fIforce printername\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -3572,10 +3577,16 @@ Example:
 include (G)
 .PP
 .RS 4
-このパラメータにより、ある設定ファイル中に別の設定ファイルを挿入することが可能となる。 挿入されるファイルは、挿入された場所に記述されたかのように、 そのままの形で挿入される。
+このパラメータを使うと、ある設定ファイル中に別の設定ファイルを挿入できる。 挿入されるファイルは、挿入された場所に記述されたかのように、 そのままの形で挿入される。
 .sp
 このパラメータには、\fI%u\fR、
 \fI%P\fR、\fI%S\fRパラメータを除き、標準の変数置換が適用される。
+.sp
+
+\fIinclude = registry\fR
+というパラメータには特殊な意味が ある。これはカレントディレクトリから
+\fIregistry\fR
+という 名前のファイルをインクルードする\fIのではなく\fR、 レジストリーからグローバル設定を読み込む。詳細はレジストリーベースの設定 に関する章を参照されたい。注意：このオプションはレジストリー共有を自動的に 有効にする。
 .sp
 Default:
 \fI\fIinclude\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -3728,13 +3739,14 @@ Example:
 iprint server (G)
 .PP
 .RS 4
-This parameter is only applicable if
-\fIprinting\fR
-is set to
-\fBiprint\fR\.
+このパラメータは、\fIprinting\fR
+が
+\fBiprint\fR
+に設定されている場合のみ有効である。
 .sp
-If set, this option overrides the ServerName option in the CUPS
-\fIclient\.conf\fR\. This is necessary if you have virtual samba servers that connect to different CUPS daemons\.
+設定されている場合、CUPS の
+\fIclient\.conf\fR
+で指定された ServerName オプションの値がこのパラメータによって上書きされる。 複数の仮想 Samba サーバが起動している環境で各々が異なる CUPS デーモンに接続している環境では、このパラメータが必要となる。
 .sp
 Default:
 \fI\fIiprint server\fR\fR\fI = \fR\fI""\fR\fI \fR
@@ -3760,12 +3772,12 @@ Example:
 \fI\fIkeepalive\fR\fR\fI = \fR\fI600\fR\fI \fR
 .RE
 
-kernel change notify (G)
+kernel change notify (S)
 .PP
 .RS 4
 このパラメータは、Samba がカーネルに対してディレクトリの変更 通知を要求するか指定でき、この機能を使用すれば、サーバ上にある データに変更があった場合に SMB クライアントがその結果を 反映できるようになる。
 .sp
-このパラメータは使用しているカーネルが F_NOTIFY fcntl を使用してユーザプログラムに対しての変更の通知をサポートしている 場合にのみ使用される。
+このパラメータは使用しているカーネルが inotify インターフェース を使用してユーザプログラムに対しての変更の通知をサポートしている 場合にのみ使用される。
 .sp
 Default:
 \fI\fIkernel change notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -4282,9 +4294,9 @@ Example:
 load printers (G)
 .PP
 .RS 4
-A boolean variable that controls whether all printers in the printcap will be loaded for browsing by default\. See the
+このパラメータは、printcapファイル中で定義されたすべてのプリンタをデフォルトでブラウジング可能とするかどうかを制御する真偽値パラメータである。 詳細は、
 \fIprinters\fR
-section for more details\.
+セクションを参照のこと。
 .sp
 Default:
 \fI\fIload printers\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -4329,9 +4341,11 @@ lock directory\.
 lock directory (G)
 .PP
 .RS 4
-このオプションにより、ロックファイルが置かれるディレクトリが指定される。 ロックファイルは
+このオプションでは、ロックファイルを置くためのディレクトリを 指定する。ロックファイルは
 \fImax connections\fR
 オプションにより利用される。
+.sp
+注意：レジストリ設定の中では、このオプションは指定できない。
 .sp
 Default:
 \fI\fIlock directory\fR\fR\fI = \fR\fI${prefix}/var/locks\fR\fI \fR
@@ -4786,23 +4800,21 @@ Example:
 lppause command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to stop printing or spooling a specific print job\.
+このパラメータには、 指定した印刷ジョブの印刷やスプーリングを停止させるためにサーバホスト上で実行されるコマンドを指定する。
 .sp
-This command should be a program or script which takes a printer name and job number to pause the print job\. One way of implementing this is by using job priorities, where jobs having a too low priority won\'t be sent to the printer\.
+このコマンドは、プリンタ名と停止させる印刷ジョブの番号を引数にとり、印刷ジョブを一時停止させるプログラムやスクリプトでなければならない。 これを実装する方法の一つは、非常に低い優先権を持つジョブはプリンタに送られないというジョブの優先権の仕様を利用するものである。
 .sp
-If a
 \fI%p\fR
-is given then the printer name is put in its place\. A
+変数は、 プリンタ名に置換される。
 \fI%j\fR
-is replaced with the job number (an integer)\. On HPUX (see
-\fIprinting=hpux \fR), if the
+はジョブ番号(整数)に置換される。 HPUX の場合(\fIprinting=hpux\fRを参照のこと)、
 \fI\-p%p\fR
-option is added to the lpq command, the job will show up with the correct status, i\.e\. if the job priority is lower than the set fence priority it will have the PAUSED status, whereas if the priority is equal or higher it will have the SPOOLED or PRINTING status\.
+オプションを lpq コマンドに付加することで、正しいステータスが表示される。 たとえば、ジョブの優先権が設定されたフェンス優先権より低いならジョブは停止状態であるが、 優先権が等しいかより高いならスプール状態または印刷中の状態となる。
 .sp
-Note that it is good practice to include the absolute path in the lppause command as the PATH may not be available to the server\.
+サーバの PATH 環境変数が利用できないかもしれないことを考慮して、 lppause command を絶対パスで記述する癖をつけておくと良い。
 .sp
 Default:
-\fI\fIlppause command\fR\fR\fI = \fR\fI # Currently no default value is given to this string, unless the value of the \fIprinting\fR parameter is \fBSYSV\fR, in which case the default is : lp \-i %p\-%j \-H hold or if the value of the \fIprinting\fR parameter is \fBSOFTQ\fR, then the default is: qstat \-s \-j%j \-h\. \fR\fI \fR
+\fI\fIlppause command\fR\fR\fI = \fR\fI # 現在のところデフォルト値は設定されていない。 ただし、\fIprinting\fR パラメータの値が ただし、\fIprinting\fR パラメータの値が \fBSYSV\fR の場合は lp \-i %p\-%j \-H hold、 \fBSOFTQ\fR の場合は qstat \-s \-j%j \-h がデフォルト値となる。\fR\fI \fR
 .sp
 Example:
 \fI\fIlppause command\fR\fR\fI = \fR\fI/usr/bin/lpalt %p\-%j \-p0\fR\fI \fR
@@ -4811,60 +4823,57 @@ Example:
 lpq cache time (G)
 .PP
 .RS 4
-This controls how long lpq info will be cached for to prevent the
+このパラメータは、
 lpq
-command being called too often\. A separate cache is kept for each variation of the
+コマンドが頻繁に呼び出されるのを防ぐため、lpr の情報(出力)をキャッシュする期間を制御する。 システムが使用する
 lpq
-command used by the system, so if you use different
+コマンドの種別毎にキャッシュが行なわれる。そのため、ユーザ毎に異なった
 lpq
-commands for different users then they won\'t share cache information\.
+コマンドを使用する場合、 キャッシュ情報は共有されない。
 .sp
-The cache files are stored in
+キャッシュファイルは
 \fI/tmp/lpq\.xxxx\fR
-where xxxx is a hash of the
+に保存される。 xxxx は使用している
 lpq
-command in use\.
+コマンドのハッシュ値となる。
 .sp
-The default is 30 seconds, meaning that the cached results of a previous identical
+デフォルトは 10 秒であるため、キャッシュされたデータが10秒以内の場合は、 前回行なわれた同一のlpqの実行結果のキャッシュが用いられる。
 lpq
-command will be used if the cached data is less than 30 seconds old\. A large value may be advisable if your
-lpq
-command is very slow\.
+コマンドのレスポンスが非常に遅い場合は、この値を大きくすることを推奨する。
 .sp
-A value of 0 will disable caching completely\.
+値を 0 にした場合、キャッシュは完全に無効となる。
 .sp
 Default:
-\fI\fIlpq cache time\fR\fR\fI = \fR\fI30\fR\fI \fR
+\fI\fIlpq cache time\fR\fR\fI = \fR\fI10\fR\fI \fR
 .sp
 Example:
-\fI\fIlpq cache time\fR\fR\fI = \fR\fI10\fR\fI \fR
+\fI\fIlpq cache time\fR\fR\fI = \fR\fI30\fR\fI \fR
 .RE
 
 lpq command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to obtain
-lpq\-style printer status information\.
+このパラメータには、
+lpq形式のプリンタ状態情報を得るため、 サーバ上で実行するコマンドを指定する。
 .sp
-This command should be a program or script which takes a printer name as its only parameter and outputs printer status information\.
+このコマンドは、プリンタ名のみを引数としてとり 、 プリンタ状態情報を出力するプログラムやスクリプトでなければならない。
 .sp
-Currently nine styles of printer status information are supported; BSD, AIX, LPRNG, PLP, SYSV, HPUX, QNX, CUPS, and SOFTQ\. This covers most UNIX systems\. You control which type is expected using the
+現在、BSD、AIX、LPRNG、PLP、SYSV、HPUX、QNX、CUPS、SOFTQ という9つの印刷形式がサポートされており、 これにより大部分の UNIX システムがサポートされる。
 \fIprinting =\fR
-option\.
+オプションにより、利用する形式を指定することも可能である。
 .sp
-Some clients (notably Windows for Workgroups) may not correctly send the connection number for the printer they are requesting status information about\. To get around this, the server reports on the first printer service connected to by the client\. This only happens if the connection number sent is invalid\.
+クライアントによっては(特にWindows for Workgroups)、 状態情報を要求しているプリンタの接続番号(connection number)を正しく送らないことがある。 この場合、サーバはクライアントが接続している最初の印刷サービスの状況を報告する。この動作は、 与えられた接続番号が不正な場合にのみ行なわれる。
 .sp
-If a
 \fI%p\fR
-is given then the printer name is put in its place\. Otherwise it is placed at the end of the command\.
+変数は、 プリンタ名に置換される。この変数が指定されなかった場合、プリンタ名はコマンドの最後に付加される。
 .sp
-Note that it is good practice to include the absolute path in the
+サーバの
+\fB$PATH\fR
+環境変数が利用できないかもしれないことを考慮して、
 \fIlpq command\fR
-as the
-\fB$PATH \fR
-may not be available to the server\. When compiled with the CUPS libraries, no
+を絶対パスで記述する癖をつけておくと良い。 CUPS ライブラリを付加してコンパイルした場合は、 smbd が印刷キューのリストを取得するためのライブラリコールを行なうため、
 \fIlpq command\fR
-is needed because smbd will make a library call to obtain the print queue listing\.
+は必要ない。
 .sp
 Default:
 \fI\fIlpq command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -4876,70 +4885,65 @@ Example:
 lpresume command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to restart or continue printing or spooling a specific print job\.
+このパラメータには、 特定の印刷ジョブの印刷やスプールを再開したり続行するためにサーバ上で実行するコマンドを指定する。
 .sp
-This command should be a program or script which takes a printer name and job number to resume the print job\. See also the
+このコマンドは、 プリンタ名とジョブ番号を受け取るとその印刷ジョブを再開するプログラムやスクリプトでなければならない。
 \fIlppause command\fR
-parameter\.
+パラメータも参照のこと。
 .sp
-If a
 \fI%p\fR
-is given then the printer name is put in its place\. A
+変数は、 プリンタ名に置換される。
 \fI%j\fR
-is replaced with the job number (an integer)\.
+はジョブ番号(整数)に置換される。
 .sp
-Note that it is good practice to include the absolute path in the
+サーバの PATH 環境変数が利用できないかもしれないことを考慮して、
 \fIlpresume command\fR
-as the PATH may not be available to the server\.
+を絶対パスで記述することを推奨する。
 .sp
-See also the
 \fIprinting\fR
-parameter\.
+パラメータも参照のこと。
 .sp
-Default: Currently no default value is given to this string, unless the value of the
-\fIprinting\fR
-parameter is
-\fBSYSV\fR, in which case the default is:
+デフォルト: 現在のところ、この設定のデフォルト値は設定されていない。 ただし、\fIprinting\fR
+パラメータの値が
+\fBSYSV\fR
+の場合、 デフォルト値は以下の通り:
 .sp
 lp \-i %p\-%j \-H resume
 .sp
-or if the value of the
-\fIprinting\fR
-parameter is
-\fBSOFTQ\fR, then the default is:
+また、\fIprinting\fR
+パラメータの値が
+\fBSOFTQ\fR
+の場合、デフォルト値は以下の通り:
 .sp
 qstat \-s \-j%j \-r
 .sp
-\fINo default\fR
-.sp
-Example:
-\fI\fIlpresume command\fR\fR\fI = \fR\fI/usr/bin/lpalt %p\-%j \-p2\fR\fI \fR
+Default:
+\fI\fIlpresume command\fR\fR\fI = \fR\fIlpresume command = /usr/bin/lpalt %p\-%j \-p2\fR\fI \fR
 .RE
 
 lprm command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to delete a print job\.
+このパラメータには、 印刷ジョブを削除するためにサーバ上で実行するコマンドを指定する。
 .sp
-This command should be a program or script which takes a printer name and job number, and deletes the print job\.
+このコマンドは、 プリンタ名とジョブ番号を受け取るとその印刷ジョブを削除するプログラムやスクリプトでなければならない。
 .sp
-If a
 \fI%p\fR
-is given then the printer name is put in its place\. A
+変数は、 プリンタ名に置換される。
 \fI%j\fR
-is replaced with the job number (an integer)\.
+はジョブ番号(整数)に置換される。
 .sp
-Note that it is good practice to include the absolute path in the
+サーバの PATH 環境変数が利用できないかもしれないことを考慮して、
 \fIlprm command\fR
-as the PATH may not be available to the server\.
+を絶対パスで記述することを推奨する。
 .sp
-Examples of use are:
+以下に設定例を示す。
 .sp
 .RS 4
 .nf
 lprm command = /usr/bin/lprm \-P%p %j
 
-or
+あるいは
 
 lprm command = /usr/bin/cancel %p\-%j
 .fi
@@ -4947,7 +4951,7 @@ lprm command = /usr/bin/cancel %p\-%j
 .sp
 .sp
 Default:
-\fI\fIlprm command\fR\fR\fI = \fR\fI determined by printing parameter\fR\fI \fR
+\fI\fIlprm command\fR\fR\fI = \fR\fI printing パラメータの設定に依存する \fR\fI \fR
 .RE
 
 machine password timeout (G)
@@ -5429,9 +5433,9 @@ Default:
 max print jobs (S)
 .PP
 .RS 4
-This parameter limits the maximum number of jobs allowable in a Samba printer queue at any given moment\. If this number is exceeded,
+このパラメータにより、 ある時点で Samba の印刷キューに蓄積可能なジョブの最大数が設定される。 設定数を超過すると、
 \fBsmbd\fR(8)
-will remote "Out of Space" to the client\.
+は、 クライアントに「空き領域がない」というエラーを返却する。
 .sp
 Default:
 \fI\fImax print jobs\fR\fR\fI = \fR\fI1000\fR\fI \fR
@@ -5523,7 +5527,7 @@ Example:
 max reported print jobs (S)
 .PP
 .RS 4
-This parameter limits the maximum number of jobs displayed in a port monitor for Samba printer queue at any given moment\. If this number is exceeded, the excess jobs will not be shown\. A value of zero means there is no limit on the number of print jobs reported\.
+このパラメータにより、ある時点で Samba の印刷キューのポートモニタが表示する印刷ジョブの最大数が設定される。 この数値を超過した場合、超過したジョブは表示されない。 0 が設定された場合は、表示される印刷ジョブの制限はなくなる。
 .sp
 Default:
 \fI\fImax reported print jobs\fR\fR\fI = \fR\fI0\fR\fI \fR
@@ -6089,14 +6093,13 @@ Default:
 os2 driver map (G)
 .PP
 .RS 4
-The parameter is used to define the absolute path to a file containing a mapping of Windows NT printer driver names to OS/2 printer driver names\. The format is:
+このパラメータでは、 OS/2 のプリンタドライバ名と Windows NT のプリンタドライバ名とのマッピングが記述されたファイルへの絶対パスを指定する。 ファイル形式は以下のようになっている:
 .sp
 <nt driver name> = <os2 driver name>\.<device name>
 .sp
-For example, a valid entry using the HP LaserJet 5 printer driver would appear as
-HP LaserJet 5L = LASERJET\.HP LaserJet 5L\.
+HP LaserJet 5 のプリンタドライバを例にとった場合、 正しいエントリはHP LaserJet 5L = LASERJET\.HP LaserJet 5Lのようになる。
 .sp
-The need for the file is due to the printer driver namespace problem described in the chapter on Classical Printing in the Samba3\-HOWTO book\. For more details on OS/2 clients, please refer to chapter on other clients in the Samba3\-HOWTO book\.
+このファイルは、 Samba3\-HOWTO 本の Classical Printing 章で記述されているプリンタドライバの名前空間の問題に対応するために用いられる。 OS/2 クライアントに関する詳細については、Samba3\-HOWTO 本の other clients 章を参照のこと。
 .sp
 Default:
 \fI\fIos2 driver map\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -6694,12 +6697,13 @@ printable\.
 printable (S)
 .PP
 .RS 4
-If this parameter is
-\fByes\fR, then clients may open, write to and submit spool files on the directory specified for the service\.
+このパラメータが
+\fByes\fR
+の場合に、 クライアントから指定されたディレクトリにスプールファイルを書き込むことが可能になる。
 .sp
-Note that a printable service will ALWAYS allow writing to the service path (user privileges permitting) via the spooling of print data\. The
+印刷可能(printable)なサービスでは、 (ユーザがUNIX上に権限をもっている限り)印刷データをスプールファイルに書き込むことが常に可能となることに注意。
 \fIread only\fR
-parameter controls only non\-printing access to the resource\.
+パラメータは、 リソースに対する印刷以外のアクセスにのみ影響する。
 .sp
 Default:
 \fI\fIprintable\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -6708,12 +6712,12 @@ Default:
 printcap cache time (G)
 .PP
 .RS 4
-This option specifies the number of seconds before the printing subsystem is again asked for the known printers\. If the value is greater than 60 the initial waiting time is set to 60 seconds to allow an earlier first rescan of the printing subsystem\.
+このオプションにより、印刷サブシステムがプリンタの一覧情報を再確認するまでの時間を秒単位で制御することが可能となる。 この値が 60 より大きい場合、 初回の再確認時間は 60 秒に設定される。 これは、印刷サブシステムが初回の再確認を早期に実行するためである。
 .sp
-Setting this parameter to 0 disables any rescanning for new or removed printers after the initial startup\.
+このパラメータを 0 (デフォルト値) にすると、 起動後に新しいプリンタや削除されたプリンタを再確認する機能が無効化される。
 .sp
 Default:
-\fI\fIprintcap cache time\fR\fR\fI = \fR\fI750\fR\fI \fR
+\fI\fIprintcap cache time\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
 Example:
 \fI\fIprintcap cache time\fR\fR\fI = \fR\fI600\fR\fI \fR
@@ -6726,34 +6730,34 @@ This parameter is a synonym for
 printcap name\.
 .RE
 
-printcap name (G)
+printcap name (S)
 .PP
 .RS 4
-This parameter may be used to override the compiled\-in default printcap name used by the server (usually
-\fI /etc/printcap\fR)\. See the discussion of the
+このパラメータは、 コンパイル時に設定されるデフォルトでサーバが用いる printcap ファイル名 (通常
+\fI/etc/printcap\fR) を上書きにするために使われる。 このパラメータを設定すべき状況については、前述した
 [printers]
-section above for reasons why you might want to do this\.
+セクションに関する説明を参照のこと。
 .sp
-To use the CUPS printing interface set
-printcap name = cups\. This should be supplemented by an addtional setting
+CUPS 印刷インタフェースを利用する際は、printcap name = cups
+という設定を行なうこと。これにより [global] セクションの
 \fIprinting = cups\fR
-in the [global] section\.
+パラメータにより補完される。
 printcap name = cups
-will use the "dummy" printcap created by CUPS, as specified in your CUPS configuration file\.
+により、 CUPS の設定ファイルによって指定された、 CUPS によって作成される「ダミー」の printcap が用いられるようになる。
 .sp
-On System V systems that use
+
 lpstat
-to list available printers you can use
+を利用することで 利用可能なプリンタの一覧を取得できる System V のシステムでは、
 printcap name = lpstat
-to automatically obtain lists of available printers\. This is the default for systems that define SYSV at configure time in Samba (this includes most System V based systems)\. If
-\fI printcap name\fR
-is set to
+と設定することで、利用可能なプリンタの一覧を自動的に取得できる。 (ほとんどの System V ベースのシステムが該当する)では、これがデフォルトである。 これらのシステムで
+\fIprintcap name\fR
+に
 lpstat
-on these systems then Samba will launch
+が設定されると、 Samba は
 lpstat \-v
-and attempt to parse the output to obtain a printer list\.
+を実行し、その出力からプリンタ一覧を取得する。
 .sp
-A minimal printcap file would look something like this:
+最低限の printcap ファイルは下記のようなものである:
 .sp
 .RS 4
 .nf
@@ -6765,19 +6769,18 @@ print5|My Printer 5
 .fi
 .RE
 .sp
-where the \'|\' separates aliases of a printer\. The fact that the second alias has a space in it gives a hint to Samba that it\'s a comment\.
+\'|\' によって、プリンタの別名が区切られる。 ただし、2 番目の別名中に空白があると、 Samba はそれをプリンタのコメントであると判断する。
 .sp
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
 Note
-Under AIX the default printcap name is
-\fI/etc/qconfig\fR\. Samba will assume the file is in AIX
+AIXにおけるデフォルトの printcap ファイルの名前は、
+\fI/etc/qconfig\fRである。printcap ファイルの名前が
 \fIqconfig\fR
-format if the string
-\fIqconfig\fR
-appears in the printcap filename\.
+の場合、Samba はファイルが AIXの
+\fIqconfig\fR形式であると仮定する。
 
 Default:
 \fI\fIprintcap name\fR\fR\fI = \fR\fI/etc/printcap\fR\fI \fR
@@ -6789,72 +6792,68 @@ Example:
 print command (S)
 .PP
 .RS 4
-After a print job has finished spooling to a service, this command will be used via a
+印刷ジョブが、スプールファイルの書き込みを完了した後で、 ここで指定したコマンドが
 system()
-call to process the spool file\. Typically the command specified will submit the spool file to the host\'s printing subsystem, but there is no requirement that this be the case\. The server will not remove the spool file, so whatever command you specify should remove the spool file when it has been processed, otherwise you will need to manually remove old spool files\.
+関数経由でスプールファイルを処理するために、利用される。 通常、指定したコマンドはスプールファイルをホストの印刷サブシステムに送信するが、 そうしなければならないということはない。 サーバはスプールファイルを削除しないので、 指定したコマンドが処理完了後にスプールファイルを削除しなければならない。 さもなければ、古いスプールファイルを手動で削除する必要がある。
 .sp
-The print command is simply a text string\. It will be used verbatim after macro substitutions have been made:
+print command は、単純なテキスト文字列である。 これは、以下のマクロが置換される他はそのまま利用される。
 .sp
-%s, %f \- the path to the spool file name
+%s, %f \- スプールファイル名へのパス
 .sp
-%p \- the appropriate printer name
+%p \- プリンタ名
 .sp
-%J \- the job name as transmitted by the client\.
+%J \- the job クライアントから送信されたジョブ名
 .sp
-%c \- The number of printed pages of the spooled job (if known)\.
+%c \- スプールされたジョブのうち、 すでに印刷されたページ数(検知可能な場合)
 .sp
-%z \- the size of the spooled print job (in bytes)
+%z \- スプールされた印刷ジョブのサイズ (バイト)
 .sp
-The print command
-\fIMUST\fR
-contain at least one occurrence of
+print command には、\fI最低限\fR
 \fI%s\fR
-or
-\fI%f \fR
-\- the
+もしくは
+\fI%f\fR
+の記述が必要である。
 \fI%p\fR
-is optional\. At the time a job is submitted, if no printer name is supplied the
-\fI%p \fR
-will be silently removed from the printer command\.
+については必須ではない。 ジョブの実行時にプリンタ名が指定されていない場合、
+\fI%p\fR
+は単に print command から無視される。
 .sp
-If specified in the [global] section, the print command given will be used for any printable service that does not have its own print command specified\.
+[global] セクション中で指定された print command は、 独自の print command が設定されていない各印刷サービスに適用される。
 .sp
-If there is neither a specified print command for a printable service nor a global print command, spool files will be created but not processed and (most importantly) not removed\.
+印刷サービスに print command の定義がなく、 グローバルな print command の定義もない場合、 スプールファイルは作成されるが処理されず、(これが最も重要だが)削除されない。
 .sp
-Note that printing may fail on some UNIXes from the
+UNIX プラットフォームによっては
 \fBnobody\fR
-account\. If this happens then create an alternative guest account that can print and set the
+アカウントを用いた印刷が失敗する場合があるので注意して欲しい。 この場合、印刷の実行が可能な別のゲストアカウントを作成し、 [global] セクション中の
 \fIguest account\fR
-in the [global] section\.
+に設定すること。
 .sp
-You can form quite complex print commands by realizing that they are just passed to a shell\. For example the following will log a print job, print the file, then remove it\. Note that \';\' is the usual separator for command in shell scripts\.
+シェルで解析できる限りの非常に複雑な print command を記述することが可能である。 以下の例では印刷ジョブを記録し、ファイルを印刷してからそれを削除している。 \';\' はシェルスクリプトにおいて、 通常コマンド間のセパレータとして用いられることに注意。
 .sp
 print command = echo Printing %s >> /tmp/print\.log; lpr \-P %p %s; rm %s
 .sp
-You may have to vary this command considerably depending on how you normally print files on your system\. The default for the parameter varies depending on the setting of the
-\fIprinting\fR
-parameter\.
+システムでファイルを印刷する一般的な方法によっては、 このコマンドを適宜変更する必要があるかもしれない。 パラメータのデフォルト値は、\fIprinting\fR
+パラメータの設定に応じて変化する。
 .sp
-Default: For
-printing = BSD, AIX, QNX, LPRNG or PLP :
+デフォルト:
+printing = BSD, AIX, QNX, LPRNG, PLPの場合:
 .sp
 print command = lpr \-r \-P%p %s
 .sp
-For
-printing = SYSV or HPUX :
+printing = SYSV, HPUXの場合:
 .sp
 print command = lp \-c \-d%p %s; rm %s
 .sp
-For
-printing = SOFTQ :
+printing = SOFTQの場合:
 .sp
 print command = lp \-d%p \-s %s; rm %s
 .sp
-For printing = CUPS : If SAMBA is compiled against libcups, then
+printing = CUPS の場合: Samba が libcups を利用してコンパイルされた場合、
 \fIprintcap = cups\fR
-uses the CUPS API to submit jobs, etc\. Otherwise it maps to the System V commands with the \-oraw option for printing, i\.e\. it uses
-lp \-c \-d%p \-oraw; rm %s\. With
-printing = cups, and if SAMBA is compiled against libcups, any manually set print command will be ignored\.
+は、ジョブの送信などに CUPS API を利用する。 それ以外の場合は、lp \-c \-d%p \-oraw; rm %s
+のように、 System V 系の印刷用コマンドに \-oraw オプションをつけたものに対応づけられる。 Samba が libcups を利用してコンパイルされ、
+printing = cups
+の設定が行なわれた場合、 手動で設定された print コマンドは無視される。
 .sp
 \fINo default\fR
 .sp
@@ -6886,18 +6885,18 @@ printer name\.
 printer name (S)
 .PP
 .RS 4
-This parameter specifies the name of the printer to which print jobs spooled through a printable service will be sent\.
+このパラメータは、印刷サービスに対して印刷ジョブが送られた際に、 それをスプールするプリンタ名を設定する。
 .sp
-If specified in the [global] section, the printer name given will be used for any printable service that does not have its own printer name specified\.
+[global] セクションで設定された場合、 そのプリンタ名は、独自のプリンタ名が指定されていないすべての 印刷サービスで利用される。
 .sp
-The default value of the
+
 \fIprinter name\fR
-may be
+のデフォルト値は 、 大半のシステムで
 lp
-on many systems\.
+である。
 .sp
 Default:
-\fI\fIprinter name\fR\fR\fI = \fR\fInone\fR\fI \fR
+\fI\fIprinter name\fR\fR\fI = \fR\fIなし\fR\fI \fR
 .sp
 Example:
 \fI\fIprinter name\fR\fR\fI = \fR\fIlaserwriter\fR\fI \fR
@@ -6906,36 +6905,30 @@ Example:
 printing (S)
 .PP
 .RS 4
-This parameters controls how printer status information is interpreted on your system\. It also affects the default values for the
-\fIprint command\fR,
-\fIlpq command\fR,
-\fIlppause command \fR,
-\fIlpresume command\fR, and
+このパラメータは、プリンタの状態に関する情報をどのように解釈するかを設定する。 更に、[global] セクションで指定された場合は、
+\fIprint command\fR、
+\fIlpq command\fR、\fIlppause command \fR、\fIlpresume command\fR、
 \fIlprm command\fR
-if specified in the [global] section\.
+のデフォルト値にも影響する。
 .sp
-Currently nine printing styles are supported\. They are
-\fBBSD\fR,
-\fBAIX\fR,
-\fBLPRNG\fR,
-\fBPLP\fR,
-\fBSYSV\fR,
-\fBHPUX\fR,
-\fBQNX\fR,
-\fBSOFTQ\fR, and
-\fBCUPS\fR\.
+現在、
+\fBBSD\fR、\fBAIX\fR、
+\fBLPRNG\fR、\fBPLP\fR、
+\fBSYSV\fR、\fBHPUX\fR、
+\fBQNX\fR、\fBSOFTQ\fR、
+\fBCUPS\fR
+の9つの印刷形式がサポートされている。
 .sp
-To see what the defaults are for the other print commands when using the various options use the
+このオプションを設定した際に、 関連する印刷コマンドのデフォルトがどのように設定されるかを確認する際は、
 \fBtestparm\fR(1)
-program\.
+プログラムを使用すること。
 .sp
-This option can be set on a per printer basis\. Please be aware however, that you must place any of the various printing commands (e\.g\. print command, lpq command, etc\.\.\.) after defining the value for the
+このオプションはプリンタ毎に設定することが可能である。 各種の印刷に関するコマンド (print command や lpq command など) で デフォルトの設定を上書きさせる場合は、
 \fIprinting\fR
-option since it will reset the printing commands to default values\.
+パラメータの設定後に指定する必要があることに注意。
 .sp
-See also the discussion in the
 [printers]
-section\.
+セクションでの説明も参照のこと。
 .sp
 \fINo default\fR
 .RE
@@ -6980,17 +6973,17 @@ Default:
 queuepause command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to pause the printer queue\.
+このパラメータは、印刷キューを一時停止させるために、 サーバ上で実行するコマンドを指定する。
 .sp
-This command should be a program or script which takes a printer name as its only parameter and stops the printer queue, such that no longer jobs are submitted to the printer\.
+このコマンドは、引数としてプリンタ名をとり、 印刷キューにある印刷ジョブの送信を停止させるために印刷キューを停止させる機能を持つ プログラムまたはスクリプトである必要がある。
 .sp
-This command is not supported by Windows for Workgroups, but can be issued from the Printers window under Windows 95 and NT\.
+Windows 95 や Windows NTでは、 「プリンタ」ウインドウからこのコマンドを発行することができるが、 Windows for Workgroups ではこのコマンドがサポートされていない。
 .sp
-If a
+コマンド中に
 \fI%p\fR
-is given then the printer name is put in its place\. Otherwise it is placed at the end of the command\.
+が指定された場合は、プリンタ名がそこに引数として置かれる。 それ以外の場合、プリンタ名はコマンド文字列の最後におかれる。
 .sp
-Note that it is good practice to include the absolute path in the command as the PATH may not be available to the server\.
+サーバ上で PATH 環境変数が設定されていない場合を想定して、 コマンドをフルパスで記述することが推奨される。
 .sp
 \fINo default\fR
 .sp
@@ -7001,17 +6994,17 @@ Example:
 queueresume command (S)
 .PP
 .RS 4
-This parameter specifies the command to be executed on the server host in order to resume the printer queue\. It is the command to undo the behavior that is caused by the previous parameter (\fIqueuepause command\fR)\.
+このパラメータは、印刷キューを再開させるために、 サーバ上で実行するコマンドを指定する。 これは、前述したパラメータ (\fIqueuepause command\fR) によって一時停止された動作を再開させるコマンドになる。
 .sp
-This command should be a program or script which takes a printer name as its only parameter and resumes the printer queue, such that queued jobs are resubmitted to the printer\.
+このコマンドは、引数としてプリンタ名をとり、 印刷キューにある印刷ジョブを再度プリンタへ送信させるために印刷キューを再開する機能を持つ プログラムまたはスクリプトである必要がある。
 .sp
-This command is not supported by Windows for Workgroups, but can be issued from the Printers window under Windows 95 and NT\.
+Windows 95 や Windows NTでは、 「プリンタ」ウインドウからこのコマンドを発行することができるが、 Windows for Workgroups ではこのコマンドがサポートされていない。
 .sp
-If a
+コマンド中に
 \fI%p\fR
-is given then the printer name is put in its place\. Otherwise it is placed at the end of the command\.
+が指定された場合は、プリンタ名がそこに引数として置かれる。 それ以外の場合、プリンタ名はコマンド文字列の最後におかれる。
 .sp
-Note that it is good practice to include the absolute path in the command as the PATH may not be available to the server\.
+サーバ上で PATH 環境変数が設定されていない場合を想定して、 コマンドをフルパスで記述することが推奨される。
 .sp
 Default:
 \fI\fIqueueresume command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -7087,17 +7080,18 @@ Example:
 registry shares (G)
 .PP
 .RS 4
-This turns on or off support for share definitions read from registry\. Shares defined in
+レジストリから参照される共有定義のサポートのオンオフを切り替える。
 \fIsmb\.conf\fR
-take precedence over shares with the same name defined in registry\. See the section on registry\-based configuration for details\.
+で定義された共有は、レジストリ内に同じ名前で 定義されたものより優先する。詳細はレジストリベースの設定の章を参照してほしい。
 .sp
-Note that this parameter defaults to
-\fIno\fR, but it is set to
-\fIyes\fR
-when
+注意：このパラメータはデフォルトでは
+\fIno\fR
+であるが、
 \fIconfig backend\fR
-is set to
-\fIregistry\fR\.
+が
+\fIregistry\fR
+にセットされている場合は\fIyes\fR
+となる。
 .sp
 Default:
 \fI\fIregistry shares\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -7188,7 +7182,7 @@ Default:
 \fI\fIrename user script\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
-reset on zero vc (S)
+reset on zero vc (G)
 .PP
 .RS 4
 この真偽値オプションは、到着したセッションセットアップが、 同一の IP アドレスからの別のセッションを切断するかを制御する。 これは Windows Server 2003 のデフォルトの挙動である。 ネットワークが不安定で、 Windows が、古い接続がファイルを共有モードでオープンしているにも関わらず、再接続を試行してしまうような環境では、このパラメータを yes にする必要があるだろう。 これらのファイルは、新しい接続経由ではアクセスできなくなるが、 クライアントが新しい接続中で 0 VC を送信すると、Windows Server 2003 は同一の IP が送信元のすべての他の接続を切断する。 これにより、ロックされたファイルが再度アクセスできるようになる。 このオプションを有効にすると、ルータで同一 IP アドレスに隠蔽されている接続も切断されてしまうことに注意。
@@ -7891,22 +7885,20 @@ Default:
 show add printer wizard (G)
 .PP
 .RS 4
-With the introduction of MS\-RPC based printing support for Windows NT/2000 client in Samba 2\.2, a "Printers\.\.\." folder will appear on Samba hosts in the share listing\. Normally this folder will contain an icon for the MS Add Printer Wizard (APW)\. However, it is possible to disable this feature regardless of the level of privilege of the connected user\.
+Samba 2\.2 での Windows NT/2000 クライアントに対する MS\-RPC ベースのプリンタサポート機能のサポートによって、 Samba ホスト上の共有一覧で「プリンタ」フォルダが表示されようになっている。 通常、このフォルダにはプリンタの追加ウィザード (MS Add Printer Wizard (APW))のアイコンが存在している。 しかし、接続したユーザの権限に関わらず、 この機能を無効にすることも可能である。
 .sp
-Under normal circumstances, the Windows NT/2000 client will open a handle on the printer server with OpenPrinterEx() asking for Administrator privileges\. If the user does not have administrative access on the print server (i\.e is not root or a member of the
-\fIprinter admin\fR
-group), the OpenPrinterEx() call fails and the client makes another open call with a request for a lower privilege level\. This should succeed, however the APW icon will not be displayed\.
+通常の場合、Windows NT/2000 クライアントは Administrator 権限を持っているかどうかを確認するために、 OpenPrinterEx() 関数により、プリンタサーバ上のハンドルをオープンしようとする。 ユーザにプリンタサーバ上での管理者権限がない場合 (root でなく、\fIprinter admin\fR
+グループのメンバでもない)、 OpenPrinterEx() の呼出は失敗して、 client は低い権限でも可能な別の関数呼出を行なう。 これに成功しても、APW のアイコンは表示されない。
 .sp
-Disabling the
 \fIshow add printer wizard\fR
-parameter will always cause the OpenPrinterEx() on the server to fail\. Thus the APW icon will never be displayed\.
+パラメータを無効にすることにより、サーバ上での OpenPrinterEx() 呼出が常に失敗するようになる。 そのため、APW のアイコンは決して表示されなくなる。
 .sp
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
 Note
-This does not prevent the same user from having administrative privilege on an individual printer\.
+このパラメータは、ユーザが個々のプリンタの管理権限を持つことを制限するものではない。
 
 Default:
 \fI\fIshow add printer wizard\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -8472,13 +8464,12 @@ Default:
 use client driver (S)
 .PP
 .RS 4
-This parameter applies only to Windows NT/2000 clients\. It has no effect on Windows 95/98/ME clients\. When serving a printer to Windows NT/2000 clients without first installing a valid printer driver on the Samba host, the client will be required to install a local printer driver\. From this point on, the client will treat the print as a local printer and not a network printer connection\. This is much the same behavior that will occur when
-disable spoolss = yes\.
+このパラメータは、Windows NT/2000 クライアントに対してのみ影響し、 Windows 95/98/Me クライアントに対しては影響しない。 Windows NT/2000 クライアントに対して、 Samba ホスト上に適切なプリンタドライバをインストールせずに、プリンタ共有を提供する場合、 クライアント側ローカルにプリンタドライバをインストールする必要がある。 このため、クライアントは、そのプリンタをローカルプリンタとして扱い、 ネットワークプリンタとしては扱わなくなる。 これは、disable spoolss = yesにしたときとほぼ同様の動作になる。
 .sp
-The differentiating factor is that under normal circumstances, the NT/2000 client will attempt to open the network printer using MS\-RPC\. The problem is that because the client considers the printer to be local, it will attempt to issue the OpenPrinterEx() call requesting access rights associated with the logged on user\. If the user possesses local administator rights but not root privilege on the Samba host (often the case), the OpenPrinterEx() call will fail\. The result is that the client will now display an "Access Denied; Unable to connect" message in the printer queue window (even though jobs may successfully be printed)\.
+違いが発生するのは、通常の環境下において、 NT/2000 クライアントは MS\-RPC を用いてネットワークプリンタをオープンしようとする点にある。 クライアントはプリンタがローカルにあると判断しているため、 ログオンしているユーザに割り当てられたアクセス権を要求して OpenPrinterEx() 呼出を発行してしまう点が問題となる。 ユーザがローカルで管理者権限を持っているが、Samba ホスト上では root 権限を持っていない場合(これはよくあるケースになる)、 OpenPrinterEx() 呼出は失敗する。 その結果、(印刷ジョブが正常に印刷されているにも関わらず、) クライアント側のプリンタキューのウインドウには、 「Access Denied; Unable to connect」というメッセージが表示される。
 .sp
-If this parameter is enabled for a printer, then any attempt to open the printer with the PRINTER_ACCESS_ADMINISTER right is mapped to PRINTER_ACCESS_USE instead\. Thus allowing the OpenPrinterEx() call to succeed\.
-\fIThis parameter MUST not be able enabled on a print share which has valid print driver installed on the Samba server\.\fR
+このパラメータが有効になっているプリンタに対しては、 PRINTER_ACCESS_ADMINISTER 権限によるプリンタのオープンの試みはすべて、 PRINTER_ACCESS_USE の権限で行なわれ、 これにより、OpenPrinterEx() が成功することになる。
+\fI適切なプリンタドライバがインストールされている Samba サーバ上のプリンタ共有に対して、このパラメータを有効にしてはならない。\fR
 .sp
 Default:
 \fI\fIuse client driver\fR\fR\fI = \fR\fIno\fR\fI \fR
