@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/29/2008
+.\"      Date: 12/01/2008
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.2
 .\"
-.TH "SMB\.CONF" "5" "11/29/2008" "Samba 3\.2" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "12/01/2008" "Samba 3\.2" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -620,10 +620,11 @@ Example:
 acl check permissions (S)
 .PP
 .RS 4
-This boolean parameter controls what
-\fBsmbd\fR(8)does on receiving a protocol request of "open for delete" from a Windows client\. If a Windows client doesn\'t have permissions to delete a file then they expect this to be denied at open time\. POSIX systems normally only detect restrictions on delete by actually attempting to delete the file or directory\. As Windows clients can (and do) "back out" a delete request by unsetting the "delete on close" bit Samba cannot delete the file immediately on "open for delete" request as we cannot restore such a deleted file\. With this parameter set to true (the default) then smbd checks the file system permissions directly on "open for delete" and denies the request without actually deleting the file if the file system permissions would seem to deny it\. This is not perfect, as it\'s possible a user could have deleted a file without Samba being able to check the permissions correctly, but it is close enough to Windows semantics for mostly correct behaviour\. Samba will correctly check POSIX ACL semantics in this case\.
+この真偽値パラメータは、
+\fBsmbd\fR(8)
+が Windows クライアントから「open for delete」というプロトコル要求を受けとった際の挙動を制御する。 Windows クライアントにファイル削除のパーミッションがない場合は、オープン時に失敗することが想定される挙動である。しかし、POSIX システムでは、実際にファイルやディレクトリを削除しようとした段階で、初めて削除のパーミッション確認が行なわれる。 Windows クライアントは「delete on close」ビットを外すことで、削除のリクエストを「取り止める」ことが可能である。 このため、Samba が「open for delete」リクエストが行なわれた時点で該当のファイルを削除してみるといった方策も、 一度削除されたファイルを復活させることはできないため難しい。 このパラメータが true (デフォルト) の場合、smbd は「open for delete」リクエストの際にファイルシステムのパーミッションを直接チェックし、 ファイルシステムのパーミッション上削除できないと考えられる場合、該当のリクエストを拒否するようになる。 これは完全な方法ではなく、Samba がパーミッションを適切に確認できない場合に、ユーザがファイルを削除できてしまう可能性があるが、 大半の場合は Windows と同様の挙動となるであろう。 通常 Samba は POSIX ACL の挙動を適切に確認できるはずである。
 .sp
-If this parameter is set to "false" Samba doesn\'t check permissions on "open for delete" and allows the open\. If the user doesn\'t have permission to delete the file this will only be discovered at close time, which is too late for the Windows user tools to display an error message to the user\. The symptom of this is files that appear to have been deleted "magically" re\-appearing on a Windows explorer refersh\. This is an extremely advanced protocol option which should not need to be changed\. This parameter was introduced in its final form in 3\.0\.21, an earlier version with slightly different semantics was introduced in 3\.0\.20\. That older version is not documented here\.
+このパラメータを「false」に設定した場合、Samba は「open for delete」リクエストの際にパーミッションの確認を行なわずにオープンを許可する。 ユーザにファイルを削除するアクセス許可がない場合は、クローズする時までわからない。 Windows 上のツールにとって、クローズ時点でこれが判明しても遅過ぎるため、ユーザにエラーメッセージが表示されるだろう。 また、削除したように見えたファイルが Windows 側のエクスプローラで再表示すると「魔法のように」復活するといった現象も発生するであろう。 これは非常に高度なプロトコルに関するパラメータであり、通常変更する必要はないはずである。 このパラメータは Samba 3\.0\.21 で現在の形となったが、現在とは若干挙動が異なる古い版は Samba 3\.0\.20 で導入された。古い版の挙動について、ここでは言及していない。
 .sp
 Default:
 \fI\fIacl check permissions\fR\fR\fI = \fR\fITrue\fR\fI \fR
@@ -675,8 +676,9 @@ Default:
 acl map full control (S)
 .PP
 .RS 4
-This boolean parameter controls whether
-\fBsmbd\fR(8)maps a POSIX ACE entry of "rwx" (read/write/execute), the maximum allowed POSIX permission set, into a Windows ACL of "FULL CONTROL"\. If this parameter is set to true any POSIX ACE entry of "rwx" will be returned in a Windows ACL as "FULL CONTROL", is this parameter is set to false any POSIX ACE entry of "rwx" will be returned as the specific Windows ACL bits representing read, write and execute\.
+この真偽値パラメータは、
+\fBsmbd\fR(8)
+が POSIX の ACE エントリでは最大のアクセス権を許可した状態である「rwx(read/write/execute)」を Windows 側の ACL の「フルコントロール」に対応づけるかどうかを制御する。 このパラメータを true に設定した場合、POSIX ACE で「rwx」のエントリに対して、Windows 側の ACL としては「フルコントロール」が返却される。 このパラメータが false に設定された場合、POSIX ACE で「rwx」のエントリに対して、 Windows 側の ACL としては read/write/execute を表すビットを設定したエントリが返却される。
 .sp
 Default:
 \fI\fIacl map full control\fR\fR\fI = \fR\fITrue\fR\fI \fR
@@ -1179,9 +1181,9 @@ Default:
 announce as (G)
 .PP
 .RS 4
-This specifies what type of server
+このパラメータは、
 \fBnmbd\fR(8)
-will announce itself as, to a network neighborhood browse list\. By default this is set to Windows NT\. The valid options are : "NT Server" (which can also be written as "NT"), "NT Workstation", "Win95" or "WfW" meaning Windows NT Server, Windows NT Workstation, Windows 95 and Windows for Workgroups respectively\. Do not change this parameter unless you have a specific need to stop Samba appearing as an NT server as this may prevent Samba servers from participating as browser servers correctly\.
+が、 自身を「ネットワークコンピュータ」中のブラウズリストにアナウンスする際のサーバの種類を指定する。 デフォルトでは Windows NT に設定されている。有効な値は: 「NT Server」(これは「NT」と表記することもできる)、 「NT Workstation」、「Win95」、「WfW」であり、各々 Windows NT Server、 Windows NT Workstation、Windows 95、Windows for Workgroups を意味する。 変更を行なうと、Samba サーバがブラウザサーバ(訳注: ポテンシャルブラウザの意?)に正しく参加できなくなるかも知れないため、 Samba サーバを NT サーバとして表示させたくない特別な理由がない限り、 このパラメータを変更しないこと。
 .sp
 Default:
 \fI\fIannounce as\fR\fR\fI = \fR\fINT Server\fR\fI \fR
@@ -1193,7 +1195,7 @@ Example:
 announce version (G)
 .PP
 .RS 4
-This specifies the major and minor version numbers that nmbd will use when announcing itself as a server\. The default is 4\.9\. Do not change this parameter unless you have a specific need to set a Samba server to be a downlevel server\.
+このパラメータは、 nmbd が自身をサーバとしてアナウンスする際に指定するメジャーおよびマイナーバージョン番号を指定する。 デフォルトは 4\.9 である。 Samba サーバをより下位のサーバとして設定する特別な必要性がない限り、このパラメータは変更しないこと。
 .sp
 Default:
 \fI\fIannounce version\fR\fR\fI = \fR\fI4\.9\fR\fI \fR
@@ -1663,7 +1665,7 @@ Default:
 client use spnego (G)
 .PP
 .RS 4
-This variable controls whether Samba clients will try to use Simple and Protected NEGOciation (as specified by rfc2478) with supporting servers (including WindowsXP, Windows2000 and Samba 3\.0) to agree upon an authentication mechanism\. This enables Kerberos authentication in particular\.
+この値により、Samba クライアントが認証の際に Simple and Protected NEGOciation (RFC2478 で規定) をサポートしたサーバ (Windows XP 、 Windows 2000 、Samba 3\.0 を含む) に対して SPNEGO の使用を試みるかどうかが制御される。 SPNEGO は Kerberos 認証の際に有効となる。
 .sp
 Default:
 \fI\fIclient use spnego\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -2058,11 +2060,11 @@ Example:
 defer sharing violations (G)
 .PP
 .RS 4
-Windows allows specifying how a file will be shared with other processes when it is opened\. Sharing violations occur when a file is opened by a different process using options that violate the share settings specified by other processes\. This parameter causes smbd to act as a Windows server does, and defer returning a "sharing violation" error message for up to one second, allowing the client to close the file causing the violation in the meantime\.
+Windows ではファイルのオープン時に他のプロセスとの共有方法を指定することができる。 あるプロセスがファイルを開こうとした時に指定した共有方法が 別のプロセスによって指定された共有方法と共存できないようなものであった際に 共有違反が発生する。 このパラメータにより、smbd は Windows サーバのように動作するようになり、 「共有違反」のエラーメッセージを 1 秒待ってから返却するようになり、 クライアントはこの間に共有違反を起こしたファイルをクローズすることが可能となる。
 .sp
-UNIX by default does not have this behaviour\.
+UNIX のデフォルトでは、こうした挙動は行なわれない。
 .sp
-There should be no reason to turn off this parameter, as it is designed to enable Samba to more correctly emulate Windows\.
+このパラメータは Samba の挙動をより Windows に近づけるためのものであり、 無効にする必然性はないであろう。
 .sp
 Default:
 \fI\fIdefer sharing violations\fR\fR\fI = \fR\fITrue\fR\fI \fR
@@ -2370,14 +2372,14 @@ Example:
 disable netbios (G)
 .PP
 .RS 4
-Enabling this parameter will disable netbios support in Samba\. Netbios is the only available form of browsing in all windows versions except for 2000 and XP\.
+このパラメータを有効にすると、 Samba の NetBIOS サポート機能が無効になる。 Windows 2000 および Windows XP を除くすべてのバージョンの Windows では、NetBIOS のみを使用できる。
 .sp
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
 Note
-Clients that only support netbios won\'t be able to see your samba server when netbios support is disabled\.
+NetBIOS サポートを無効にすると、 NetBIOS のみをサポートするクライアントからは Samba サーバにアクセスできなくなることに注意。
 
 Default:
 \fI\fIdisable netbios\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -2561,9 +2563,9 @@ Default:
 ea support (S)
 .PP
 .RS 4
-This boolean parameter controls whether
+この真偽値パラメータにより、
 \fBsmbd\fR(8)
-will allow clients to attempt to store OS/2 style Extended attributes on a share\. In order to enable this parameter the underlying filesystem exported by the share must support extended attributes (such as provided on XFS and EXT3 on Linux, with the correct kernel patches)\. On Linux the filesystem must have been mounted with the mount option user_xattr in order for extended attributes to work, also extended attributes must be compiled into the Linux kernel\.
+は、クライアントが共有内に OS/2 形式の拡張属性を格納することを可能とする。 このパラメータを有効にするためには、下位のファイルシステムが (Linux の場合 XFS や EXT3 に対するパッチとして提供されているような) 拡張属性をサポートしていることが必要である。 Linux の場合、拡張属性を有効にするには、カーネルが拡張属性を有効にしてコンパイルされていることに加え、 ファイルシステムのマウントオプションとして user_xattr を指定してマウントする必要がある。
 .sp
 Default:
 \fI\fIea support\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -2572,7 +2574,7 @@ Default:
 enable asu support (G)
 .PP
 .RS 4
-Hosts running the "Advanced Server for Unix (ASU)" product require some special accomodations such as creating a builting [ADMIN$] share that only supports IPC connections\. The has been the default behavior in smbd for many years\. However, certain Microsoft applications such as the Print Migrator tool require that the remote server support an [ADMIN$} file share\. Disabling this parameter allows for creating an [ADMIN$] file share in smb\.conf\.
+「Advanced Server for Unix (ASU)」というプロダクトを実行しているホストでは、 IPC コネクションのみをサポートするビルトインの [ADMIN$] 共有が作成されるなど、 ASU 特有の動作が幾つか存在する。長年、これは smbd のデフォルトの動作でもあった。 ところが、Print Migrator tool というマイクロソフトのアプリケーションでは、 リモートのサーバで [ADMIN$] というファイル共有がサポートされている必要がある。 このパラメータを無効にすることで、smb\.conf に [ADMIN$] というファイル共有を作成することが可能になる。
 .sp
 Default:
 \fI\fIenable asu support\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -2651,12 +2653,13 @@ Example:
 eventlog list (G)
 .PP
 .RS 4
-This option defines a list of log names that Samba will report to the Microsoft EventViewer utility\. The listed eventlogs will be associated with tdb file on disk in the
-\fI$(lockdir)/eventlog\fR\.
+このパラメータは、 Samba がマイクロソフトの「イベントビューア」ユーティリティ経由での表示を可能とするログファイル名の一覧を定義する。 一覧に含まれるログに対しては、ディスク上の
+\fI$(lockdir)/eventlog\fR
+内に、 対応する TDB ファイルが割り当てられる。
 .sp
-The administrator must use an external process to parse the normal Unix logs such as
+管理者は、外部のプロセスを用いて
 \fI/var/log/messages\fR
-and write then entries to the eventlog tdb files\. Refer to the eventlogadm(8) utility for how to write eventlog entries\.
+のような一般の UNIX ログファイルを解析し、 イベントログの TDB ファイルにエントリを書き込む必要がある。 イベントログのエントリを書き込む方法については、eventlogadm(8) ユーティリティを参照のこと。
 .sp
 Default:
 \fI\fIeventlog list\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -3830,9 +3833,9 @@ Default:
 large readwrite (G)
 .PP
 .RS 4
-This parameter determines whether or not
+このパラメータは、Windows 2000で導入された、 さまざまなSMBリクエストにおける新しい64Kのストリーム読みとりおよび書き込みを
 \fBsmbd\fR(8)
-supports the new 64k streaming read and write varient SMB requests introduced with Windows 2000\. Note that due to Windows 2000 client redirector bugs this requires Samba to be running on a 64\-bit capable operating system such as IRIX, Solaris or a Linux 2\.4 kernel\. Can improve performance by 10% with Windows 2000 clients\. Defaults to on\. Not as tested as some other Samba code paths\.
+がサポートするかどうかを制御する。 Windows 2000クライアントのリダイレクタにはバグがあるため、 このパラメータを利用するには、SambaがIRIX、Solaris、Linux 2\.4カーネルのような64ビットのOSで動作している必要がある。 Windows 2000クライアントにおいては、10% のパフォーマンス向上が見込まれる。 デフォルト値は on であるが、他の Samba コードほどにはテストが充分には行われていない。
 .sp
 Default:
 \fI\fIlarge readwrite\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -5148,9 +5151,9 @@ Example:
 map acl inherit (S)
 .PP
 .RS 4
-This boolean parameter controls whether
+この真偽値パラメータにより、
 \fBsmbd\fR(8)
-will attempt to map the \'inherit\' and \'protected\' access control entry flags stored in Windows ACLs into an extended attribute called user\.SAMBA_PAI\. This parameter only takes effect if Samba is being run on a platform that supports extended attributes (Linux and IRIX so far) and allows the Windows 2000 ACL editor to correctly use inheritance with the Samba POSIX ACL mapping code\.
+は Windows の ACL に格納される「inherit」および「protected」の ACE フラグを user\.SAMBA_PAI (訳注: Samba_Posix_Acl_Inheritance) と呼ばれる拡張属性にマッピングすることが可能となる。 このパラメータは Samba が拡張属性をサポートしているプラットフォーム(Linux および IRIX など)で実行されており、Windows 2000 の ACL エディタから Samba 側の POSIX ACL とのマッピングを実現するコードで継承を適切に設定できる場合のみ、有効となる。
 .sp
 Default:
 \fI\fImap acl inherit\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -5411,7 +5414,7 @@ Example:
 max mux (G)
 .PP
 .RS 4
-This option controls the maximum number of outstanding simultaneous SMB operations that Samba tells the client it will allow\. You should never need to set this parameter\.
+このオプションは、 Samba がクライアントに通知する同時に実行可能な SMB オペレーションの最大数を制御する。 このパラメータを設定する必要はないであろう。
 .sp
 Default:
 \fI\fImax mux\fR\fR\fI = \fR\fI50\fR\fI \fR
@@ -5454,9 +5457,9 @@ max protocol\.
 max protocol (G)
 .PP
 .RS 4
-The value of the parameter (a string) is the highest protocol level that will be supported by the server\.
+このパラメータ(文字列)の値は、 サーバがサポートする最上位のプロトコルである。
 .sp
-Possible values are :
+設定可能な値は以下の通りである:
 .sp
 .RS 4
 .ie n \{\
@@ -5466,7 +5469,7 @@ Possible values are :
 .sp -1
 .IP \(bu 2.3
 .\}
-\fBCORE\fR: Earliest version\. No concept of user names\.
+\fBCORE\fR: 最初期のもので、ユーザの概念がない
 .RE
 .sp
 .RS 4
@@ -5477,7 +5480,7 @@ Possible values are :
 .sp -1
 .IP \(bu 2.3
 .\}
-\fBCOREPLUS\fR: Slight improvements on CORE for efficiency\.
+\fBCOREPLUS\fR: ほんの少し CORE に手を加えたものである
 .RE
 .sp
 .RS 4
@@ -5488,9 +5491,9 @@ Possible values are :
 .sp -1
 .IP \(bu 2.3
 .\}
-\fBLANMAN1\fR: First
-\fI modern\fR
-version of the protocol\. Long filename support\.
+\fBLANMAN1\fR: 最初の
+\fI 近代的な\fR
+バージョンであり、 長いファイル名をサポートしている
 .RE
 .sp
 .RS 4
@@ -5501,7 +5504,7 @@ version of the protocol\. Long filename support\.
 .sp -1
 .IP \(bu 2.3
 .\}
-\fBLANMAN2\fR: Updates to Lanman1 protocol\.
+\fBLANMAN2\fR: LANMAN1 プロトコルを改良したものである
 .RE
 .sp
 .RS 4
@@ -5512,10 +5515,10 @@ version of the protocol\. Long filename support\.
 .sp -1
 .IP \(bu 2.3
 .\}
-\fBNT1\fR: Current up to date version of the protocol\. Used by Windows NT\. Known as CIFS\.
+\fBNT1\fR: 最も新しいプロトコルであり、 Windows NT が利用する。CIFSと呼ばれることもある。
 .sp
 .RE
-Normally this option should not be set as the automatic negotiation phase in the SMB protocol takes care of choosing the appropriate protocol\.
+通常、SMB プロトコルによりネゴシエーションを経て適切なプロトコルが選択されるため、 このオプションを設定すべきではない。
 .sp
 Default:
 \fI\fImax protocol\fR\fR\fI = \fR\fINT1\fR\fI \fR
@@ -5569,11 +5572,9 @@ Example:
 max ttl (G)
 .PP
 .RS 4
-This option tells
+このオプションは、
 \fBnmbd\fR(8)
-what the default \'time to live\' of NetBIOS names should be (in seconds) when
-nmbd
-is requesting a name using either a broadcast packet or from a WINS server\. You should never need to change this parameter\. The default is 3 days\.
+がブロードキャストを利用したりWINSサーバを利用したりして NetBIOS 名を要求する際の NetBIOS 名のデフォルトのTTL(time to live)を(秒単位で)設定する。 このパラメータを変更する必要はないであろう。 デフォルトは3日である。
 .sp
 Default:
 \fI\fImax ttl\fR\fR\fI = \fR\fI259200\fR\fI \fR
@@ -5582,11 +5583,10 @@ Default:
 max wins ttl (G)
 .PP
 .RS 4
-This option tells
+このオプションは、
 \fBsmbd\fR(8)
-when acting as a WINS server (\fIwins support = yes\fR) what the maximum \'time to live\' of NetBIOS names that
-nmbd
-will grant will be (in seconds)\. You should never need to change this parameter\. The default is 6 days (518400 seconds)\.
+が WINS サーバとして動作している (\fIwins support = yes\fR)
+nmbdに登録される NetBIOS 名の最大のTTL(time to live)を秒単位で指定する。 このパラメータを変更する必要はないであろう。 デフォルトは6日(518400秒)である。
 .sp
 Default:
 \fI\fImax wins ttl\fR\fR\fI = \fR\fI518400\fR\fI \fR
@@ -5595,7 +5595,7 @@ Default:
 max xmit (G)
 .PP
 .RS 4
-This option controls the maximum packet size that will be negotiated by Samba\. The default is 16644, which matches the behavior of Windows 2000\. A value below 2048 is likely to cause problems\. You should never need to change this parameter from its default value\.
+このオプションにより、 Samba がネゴシエーション時に用いるパケットサイズの最大値が設定される。 デフォルトは 16644 であり、これは Windows 2000 の挙動に合わせた値である。 2048 以下ではおそらく問題が出るだろう。 このパラメータの値をデフォルトから変更する必要はないだろう。
 .sp
 Default:
 \fI\fImax xmit\fR\fR\fI = \fR\fI16644\fR\fI \fR
@@ -5710,15 +5710,15 @@ Example:
 min protocol (G)
 .PP
 .RS 4
-The value of the parameter (a string) is the lowest SMB protocol dialect than Samba will support\. Please refer to the
+このパラメータの値(文字列)は、 Sambaがサポートする最低限のSMBプロトコルの dialect(レベル) を指定する。 有効なプロトコル名の一覧と、その簡単な説明については、
 \fImax protocol\fR
-parameter for a list of valid protocol names and a brief description of each\. You may also wish to refer to the C source code in
+パラメータを参照のこと。クライアントがサポートするプロトコルの dialect 一覧については、
 \fIsource/smbd/negprot\.c\fR
-for a listing of known protocol dialects supported by clients\.
+の Cソースを参照するとよいであろう。
 .sp
-If you are viewing this parameter as a security measure, you should also refer to the
+セキュリティ的な観点では、
 \fIlanman auth\fR
-parameter\. Otherwise, you should never need to change this parameter\.
+パラメータも参照のこと。 それ以外の観点からこのパラメータを変更する必要はないであろう。
 .sp
 Default:
 \fI\fImin protocol\fR\fR\fI = \fR\fICORE\fR\fI \fR
@@ -5745,11 +5745,11 @@ Default:
 min wins ttl (G)
 .PP
 .RS 4
-This option tells
+このオプションは、
 \fBnmbd\fR(8)
-when acting as a WINS server (\fIwins support = yes\fR) what the minimum \'time to live\' of NetBIOS names that
+がWINSサーバとして動作している時に (\fIwins support = yes\fR)、
 nmbd
-will grant will be (in seconds)\. You should never need to change this parameter\. The default is 6 hours (21600 seconds)\.
+に登録された NetBIOS 名の最小の TTL (time to live)を秒単位で指定する。 このパラメータを変更する必要はないであろう。 デフォルトは6時間(21600秒)である。
 .sp
 Default:
 \fI\fImin wins ttl\fR\fR\fI = \fR\fI21600\fR\fI \fR
@@ -5799,9 +5799,9 @@ Example:
 name resolve order (G)
 .PP
 .RS 4
-This option is used by the programs in the Samba suite to determine what naming services to use and in what order to resolve host names to IP addresses\. Its main purpose to is to control how netbios name resolution is performed\. The option takes a space separated string of name resolution options\.
+このオプションは、どの名前サービスを用いて、またどのような順番で、 ホスト名から IP アドレスを解決するかを決定するため、 Samba の各プログラムで利用される。 このオプションの主な目的は、NetBIOS 名前解決をどのように行なうかを指定することである。 オプションは、名前解決オプションをスペースで区切った文字列で指定する。
 .sp
-The options are: "lmhosts", "host", "wins" and "bcast"\. They cause names to be resolved as follows:
+オプションは、「lmhosts」、「host」、「wins」、「bcast」である。 これらは以下に示すように名前解決を実行する:
 .sp
 .RS 4
 .ie n \{\
@@ -5811,9 +5811,8 @@ The options are: "lmhosts", "host", "wins" and "bcast"\. They cause names to be 
 .sp -1
 .IP \(bu 2.3
 .\}
-
 \fBlmhosts\fR
-: Lookup an IP address in the Samba lmhosts file\. If the line in lmhosts has no name type attached to the NetBIOS name (see the manpage for lmhosts for details) then any name type matches for lookup\.
+: Samba の lmhosts ファイルから IP アドレスを検索する。 NetBIOS 名サフィックスの指定されていない行が lmhosts ファイル中にあった場合、 (詳細は、lmhosts ファイルのマニュアルページを参照のこと)、 その行はすべてのサフィックスの検索にマッチする。
 .RE
 .sp
 .RS 4
@@ -5824,12 +5823,10 @@ The options are: "lmhosts", "host", "wins" and "bcast"\. They cause names to be 
 .sp -1
 .IP \(bu 2.3
 .\}
-
 \fBhost\fR
-: Do a standard host name to IP address resolution, using the system
-\fI/etc/hosts \fR, NIS, or DNS lookups\. This method of name resolution is operating system depended for instance on IRIX or Solaris this may be controlled by the
+: システム標準の方法で、\fI/etc/hosts \fR、 NIS 、 DNS への問い合わせを行ない、 ホスト名から IP アドレスへの名前解決を行なう。 名前解決の方法は、OSに依存する。 IRIX や Solaris の場合、
 \fI/etc/nsswitch\.conf\fR
-file\. Note that this method is used only if the NetBIOS name type being queried is the 0x20 (server) name type or 0x1c (domain controllers)\. The latter case is only useful for active directory domains and results in a DNS query for the SRV RR entry matching _ldap\._tcp\.domain\.
+ファイルにより制御される。この方法は、問い合わせされた NetBIOS のサフィックスが 0x20(サーバ) か 0x1c(ドメインコントローラ) の時のみ利用され、それ以外は無効であることに注意。 後者は、アクティブディレクトリドメインでのみ有効である。 この場合、_ldap\._tcp\.domain に対応する　SRV RR エントリを検索するための DNS クエリが行われる。
 .RE
 .sp
 .RS 4
@@ -5841,9 +5838,9 @@ file\. Note that this method is used only if the NetBIOS name type being queried
 .IP \(bu 2.3
 .\}
 \fBwins\fR
-: Query a name with the IP address listed in the
+:
 \fIWINSSERVER\fR
-parameter\. If no WINS server has been specified this method will be ignored\.
+パラメータで指定された IP アドレスに対して名前の問い合わせが行なわれる。 WINS サーバが指定されていない場合、この方法は無視される。
 .RE
 .sp
 .RS 4
@@ -5855,19 +5852,20 @@ parameter\. If no WINS server has been specified this method will be ignored\.
 .IP \(bu 2.3
 .\}
 \fBbcast\fR
-: Do a broadcast on each of the known local interfaces listed in the
+:
 \fIinterfaces\fR
-parameter\. This is the least reliable of the name resolution methods as it depends on the target host being on a locally connected subnet\.
+パラメータで設定された各インタフェースに対してブロードキャストが実行される。 これは解決したいホストがローカルサブネットに接続されていることを前提とするため、 もっとも信頼性の低い名前解決の方法である。
 .sp
 .RE
-The example below will cause the local lmhosts file to be examined first, followed by a broadcast attempt, followed by a normal system hostname lookup\.
+以下の例では、最初にローカルの lmhosts ファイルを調査し、 次にブロードキャストを行ない、 最後にシステム標準のホスト名検索を試行する。
 .sp
-When Samba is functioning in ADS security mode (security = ads) it is advised to use following settings for
-\fIname resolve order\fR:
+Samba が ADS セキュリティモード (security = ads) で動作する場合、
+\fIname resolve order\fR
+の設定は次のようにすべきである:
 .sp
 name resolve order = wins bcast
 .sp
-DC lookups will still be done via DNS, but fallbacks to netbios names will not inundate your DNS servers with needless querys for DOMAIN<0x1c> lookups\.
+この 場合でも、DC は DNS への問い合わせを行なう。 失敗した場合に NetBIOS 名の問い合わせを行なうが、その際無意味な DNS への「DOMAIN<0x1c>」の問い合わせが抑止される。
 .sp
 Default:
 \fI\fIname resolve order\fR\fR\fI = \fR\fIlmhosts host wins bcast\fR\fI \fR
@@ -5935,9 +5933,9 @@ Default:
 nt acl support (S)
 .PP
 .RS 4
-This boolean parameter controls whether
+この真偽値パラメータにより、
 \fBsmbd\fR(8)
-will attempt to map UNIX permissions into Windows NT access control lists\. The UNIX permissions considered are the the traditional UNIX owner and group permissions, as well as POSIX ACLs set on any files or directories\. This parameter was formally a global parameter in releases prior to 2\.2\.2\.
+が UNIX のパーミッションを Windows NT のアクセスコントロールリストにマップするかどうかが決定される。 対象となる UNIX のパーミッションは、 ファイルやディレクトリに設定された伝統的な UNIX の所有者とグループのパーミッションと POSIX ACL である。 このパラメータは、Samba 2\.2\.2 より前のリリースでは、グローバルパラメータであった。
 .sp
 Default:
 \fI\fInt acl support\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -5961,11 +5959,11 @@ Default:
 nt pipe support (G)
 .PP
 .RS 4
-This boolean parameter controls whether
+この真偽値パラメータにより、
 \fBsmbd\fR(8)
-will allow Windows NT clients to connect to the NT SMB specific
+が Windows NT のクライアントに対して、 Windows NT の SMB 固有の
 \fBIPC$\fR
-pipes\. This is a developer debugging option and can be left alone\.
+パイプへの接続を許可するかどうかが制御される。 これは開発者のデバッグオプションであり、意識する必要はない。
 .sp
 Default:
 \fI\fInt pipe support\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -5974,13 +5972,13 @@ Default:
 nt status support (G)
 .PP
 .RS 4
-This boolean parameter controls whether
+この真偽値パラメータは、
 \fBsmbd\fR(8)
-will negotiate NT specific status support with Windows NT/2k/XP clients\. This is a developer debugging option and should be left alone\. If this option is set to
+が、 Windows NT/2000/XP クライアントに対して、 NT 固有のステータスのサポートのネゴシエーションを行なうかどうかを制御する。 これは、開発者のデバッグ用オプションであり、設定を変更すべきではない。 このオプションが
 \fBno\fR
-then Samba offers exactly the same DOS error codes that versions prior to Samba 2\.2\.3 reported\.
+の場合、 Samba は Samba 2\.2\.3 以前と全く同様に、DOS エラーコードを返却する。
 .sp
-You should not need to ever disable this parameter\.
+このオプションを無効にしてはならない。
 .sp
 Default:
 \fI\fInt status support\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -6960,11 +6958,11 @@ Default:
 profile acls (S)
 .PP
 .RS 4
-This boolean parameter was added to fix the problems that people have been having with storing user profiles on Samba shares from Windows 2000 or Windows XP clients\. New versions of Windows 2000 or Windows XP service packs do security ACL checking on the owner and ability to write of the profile directory stored on a local workstation when copied from a Samba share\.
+この真偽値パラメータは、Windows 2000 もしくは Windows XP 用のユーザプロファイルを Samba サーバ上の共有に格納する際に発生する問題に対処するため作成された。 Windows 2000 や Windows XP の新しいサービスパック(訳注: 各々 SP4 と SP1) では、セキュリティの ACL チェックが行なわれるようになり、ローカルのワークステーション上に格納されているプロファイルのコピーを Samba 上の共有にコピーする際に、プロファイルのディレクトリの所有者と書き込み権をチェックするようになった。
 .sp
-When not in domain mode with winbindd then the security info copied onto the local workstation has no meaning to the logged in user (SID) on that workstation so the profile storing fails\. Adding this parameter onto a share used for profile storage changes two things about the returned Windows ACL\. Firstly it changes the owner and group owner of all reported files and directories to be BUILTIN\e\eAdministrators, BUILTIN\e\eUsers respectively (SIDs S\-1\-5\-32\-544, S\-1\-5\-32\-545)\. Secondly it adds an ACE entry of "Full Control" to the SID BUILTIN\e\eUsers to every returned ACL\. This will allow any Windows 2000 or XP workstation user to access the profile\.
+winbindd を用いたドメインモードで運用していない場合、ローカルワークステーション上に複製された、ワークステーションにログオン中ユーザのセキュリティ情報 (SID) は無意味なため、結果としてプロファイルの格納に失敗する。 このパラメータをプロファイルの格納に使用する共有で有効にすることにより、クライアントに返却される Windows の ACL について、以下の 2 点が変更となる。 まず、すべてのファイルおよびディレクトリの所有者とグループの所有者が、各々 BUILTIN\eAdministrators および BUILTIN\eUsers となる (SID は各々 S\-1\-5\-32\-544 と S\-1\-5\-32\-545)。 次に、返却されるすべての ACL に対して BUILTIN\eUsers にフルコントロールの ACE が付加される。 これにより、Windows 2000 および Windows XP のワークステーションのユーザがプロファイルにアクセスできるようになる。
 .sp
-Note that if you have multiple users logging on to a workstation then in order to prevent them from being able to access each others profiles you must remove the "Bypass traverse checking" advanced user right\. This will prevent access to other users profile directories as the top level profile directory (named after the user) is created by the workstation profile code and has an ACL restricting entry to the directory tree to the owning user\.
+ワークステーションに複数のユーザがログオンする環境の場合、別ユーザのプロファイルへのアクセスを禁止するためには、「捜査チェックのバイパス」権利を削除する必要がある。 プロファイルディレクトリのトップ(ユーザ名を含む名称となっている)がワークステーション上で作成される際、所有するユーザ以外のアクセスを禁止するような ACL が設定されるため、この設定により、別のユーザのプロファイルディレクトリへのアクセスを禁止することができる。
 .sp
 Default:
 \fI\fIprofile acls\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -7013,6 +7011,19 @@ Example:
 \fI\fIqueueresume command\fR\fR\fI = \fR\fIenable %p\fR\fI \fR
 .RE
 
+read bmpx (G)
+.PP
+.RS 4
+この真偽値パラメータは、
+\fBsmbd \fR(8)
+に 「Read Block Multiplex」 SMB をサポートさせるかどうかを制御する。 これは、まず使われることがないため、デフォルトは
+\fBno\fR
+になっている。 このパラメータを設定する必要はまずないであろう。
+.sp
+Default:
+\fI\fIread bmpx\fR\fR\fI = \fR\fIno\fR\fI \fR
+.RE
+
 read list (S)
 .PP
 .RS 4
@@ -7053,13 +7064,13 @@ Default:
 read raw (G)
 .PP
 .RS 4
-This parameter controls whether or not the server will support the raw read SMB requests when transferring data to clients\.
+このパラメータは、データをクライアントに転送する際に、 サーバ側で raw read SMB リクエストをサポートするかどうかを設定する。
 .sp
-If enabled, raw reads allow reads of 65535 bytes in one packet\. This typically provides a major performance benefit\.
+有効な場合、 raw read SMB により、1パケットあたり 65535 バイトの読み込みが可能となる。 これは性能の向上に大きく貢献する。
 .sp
-However, some clients either negotiate the allowable block size incorrectly or are incapable of supporting larger block sizes, and for these clients you may need to disable raw reads\.
+ただし、クライアントによっては、ブロックサイズを誤認識したり、 大きなブロックサイズを利用できなかったりするので、その場合は、 raw read を無効にする必要があるだろう。
 .sp
-In general this parameter should be viewed as a system tuning tool and left severely alone\.
+このパラメータは、システムのチューニングパラメータであり、 通常は設定を変更すべきものではない。
 .sp
 Default:
 \fI\fIread raw\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -8036,7 +8047,7 @@ Default:
 smb ports (G)
 .PP
 .RS 4
-Specifies which ports the server should listen on for SMB traffic\.
+サーバが SMB トラヒックを町受けるポートを設定する。
 .sp
 Default:
 \fI\fIsmb ports\fR\fR\fI = \fR\fI445 139\fR\fI \fR
@@ -8292,13 +8303,15 @@ Default:
 svcctl list (G)
 .PP
 .RS 4
-This option defines a list of init scripts that smbd will use for starting and stopping Unix services via the Win32 ServiceControl API\. This allows Windows administrators to utilize the MS Management Console plug\-ins to manage a Unix server running Samba\.
+このパラメータにより、smbd が Win32 の ServiceControl API 経由で UNIX 側のサービスを起動、停止させる際に用いられる起動スクリプトの一覧を定義する。 これにより、Windows の管理者が Microsoft Management Console プラグインを用いて Samba サーバ上が動作する UNIX サービスを制御することが可能となる。
 .sp
-The administrator must create a directory name
+管理者は、Samba の $(libdir) 以下に
 \fIsvcctl\fR
-in Samba\'s $(libdir) and create symbolic links to the init scripts in
-\fI/etc/init\.d/\fR\. The name of the links must match the names given as part of the
-\fIsvcctl list\fR\.
+というディレクトリを作成して、
+\fI/etc/init\.d/\fR
+に存在する起動スクリプトのシンボリックリンクを作成しておく必要がある。 シンボリックリンク名は、
+\fIsvcctl list\fR
+パラメータに記載した名称と同一にしておくこと。
 .sp
 Default:
 \fI\fIsvcctl list\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -8391,9 +8404,9 @@ Example:
 time server (G)
 .PP
 .RS 4
-This parameter determines if
+このパラメータにより、
 \fBnmbd\fR(8)
-advertises itself as a time server to Windows clients\.
+が、 Windows クライアントに対して、自身をタイムサーバとしてアナウンスするかどうかが制御される。
 .sp
 Default:
 \fI\fItime server\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -8416,7 +8429,7 @@ Example:
 unix extensions (G)
 .PP
 .RS 4
-This boolean parameter controls whether Samba implments the CIFS UNIX extensions, as defined by HP\. These extensions enable Samba to better serve UNIX CIFS clients by supporting features such as symbolic links, hard links, etc\.\.\. These extensions require a similarly enabled client, and are of no current use to Windows clients\.
+この真偽値パラメータは、Samba が HP 社によって定義された CIFS の UNIX拡張を利用するかどうかを制御する。 これらの拡張は、UNIX クライアントから UNIX サーバに対して接続する際に有用な CIFS を有効にし、 シンボリックリンクやハードリンクなどを利用可能にする。 これらの拡張により、Samba は UNIX の CIFS クライアントに対して、 シンボリックリンクやハードリンクといった機能を提供することが可能となる。
 .sp
 Default:
 \fI\fIunix extensions\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -8807,9 +8820,9 @@ Default:
 use spnego (G)
 .PP
 .RS 4
-This variable controls controls whether samba will try to use Simple and Protected NEGOciation (as specified by rfc2478) with WindowsXP and Windows2000 clients to agree upon an authentication mechanism\.
+このパラメータの値により、 Samba が Windows 2000 や Windows XP クライアントの間で行なわれる認証の際に Simple and Protected NEGOciation (RFC2478 で規定) の使用を試みるかどうかが制御される。
 .sp
-Unless further issues are discovered with our SPNEGO implementation, there is no reason this should ever be disabled\.
+SPNEGO の実装に問題点が発見されない限り、 これを無効にする必要性はない。
 .sp
 Default:
 \fI\fIuse spnego\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -9406,7 +9419,7 @@ Example:
 write raw (G)
 .PP
 .RS 4
-This parameter controls whether or not the server will support raw write SMB\'s when transferring data from clients\. You should never need to change this parameter\.
+このパラメータは、クライアントからのデータ転送時に、 サーバ側で raw write SMB のサポートを行なうかどうかを制御する。 このパラメータを変更する必要はないだろう。
 .sp
 Default:
 \fI\fIwrite raw\fR\fR\fI = \fR\fIyes\fR\fI \fR
