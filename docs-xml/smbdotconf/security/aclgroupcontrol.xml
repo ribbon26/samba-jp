@@ -1,0 +1,42 @@
+<samba:parameter name="acl group control"
+                 context="S"
+		 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+    POSIX ファイルシステムでは、ファイルまたはディレクトリの所有者とスーパーユーザのみがファイルのパーミッションや ACL を修正できる。
+    このパラメータを有効にすると、Samba はこの制約を無視して、
+    ファイルやディレクトリの <emphasis>プライマリグループ所有者</emphasis> が、
+    ファイルのパーミッションや ACL を修正することを可能とする。
+    </para>
+    <para>
+    Windows サーバでは、グループがファイルやディレクトリの所有者となることができるため、
+    そのグループに所属する誰もがパーミッションを修正することができる。
+    これにより、ディレクトリのグループ所有者が、ファイルシステムのある地点以下のセキュリティ管理を委任することが可能となり、
+    その配下に作成されるファイルやディレクトリについても、そのグループが所有者となる。
+    ACL を変更する権限を複数名が保持しているため、管理性が向上する。
+    </para>
+    <para>
+    このパラメータにより、公開されたディレクトリ階層内で
+    Samba が Windows と類似した制御の制御を行なうことを可能とする。
+    これは、UNIX グループのメンバ全員がグループ所有者となっているファイルやディレクトリのパーミッション制御を行なうことが可能となることを意味する。
+    </para>
+
+    <para>
+    このパラメータは、<smbconfoption name="inherit owner"/> パラメータが有効で、
+    ディレクトリに UNIX の <emphasis>setgid ビット</emphasis> が設定された共有で用いるのが最適であり、
+    共有内に作成される新しいファイルやディレクトリに、
+    親ディレクトリのグループ所有者を継承させることが可能となる。
+    </para>
+
+    <para>
+    このパラメータは、Samba 3.0.23 において、廃止予定の(deprecated)パラメータとなった。
+    現在は <parameter moreinfo="none">dos filemode</parameter> パラメータで、同じ挙動が実装されている。
+   </para>
+</description>
+
+<related>inherit owner</related>
+<related>inherit permissions</related>
+
+<value type="default">no</value>
+</samba:parameter>
