@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 12/02/2008
+.\"      Date: 12/03/2008
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.2
 .\"
-.TH "SMB\.CONF" "5" "12/02/2008" "Samba 3\.2" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "12/03/2008" "Samba 3\.2" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -721,7 +721,7 @@ Example:
 add port command (G)
 .PP
 .RS 4
-Samba 3\.0\.23 では、Windows の「Add Standard TCP/IP Port ウィザード」によるリモートからのプリンタポートの追加がサポートされた。 このオプションは、smbd がシステムに対する新しいポートの追加要求を受信した際に、 実行される外部のコマンドを定義する。 スクリプトは以下の 2 つのパラメータをとる。
+Samba 3\.0\.23 では、Windows の"Add Standard TCP/IP Port ウィザード"によるリモートからのプリンタポートの追加がサポートされた。 このオプションは、smbd がシステムに対する新しいポートの追加要求を受信した際に、 実行される外部のコマンドを定義する。 スクリプトは以下の 2 つのパラメータをとる。
 .sp
 .RS 4
 .ie n \{\
@@ -757,7 +757,7 @@ Example:
 add printer command (G)
 .PP
 .RS 4
-Samba 2\.2における Windows NT/2000 クライアントに対応した MS\-RPC ベースの印刷サポートの実装にともない、 共有の一覧に表示される"Printers\.\.\. " フォルダ中の 「プリンタの追加」ウィザード(Add Printer Wizard (APW))アイコンを利用することが可能になった。 APWにより、SambaやWindows NT/ 2000プリンタサーバに別のマシンからのプリンタ追加が可能となった。
+Samba 2\.2における Windows NT/2000 クライアントに対応した MS\-RPC ベースの印刷サポートの実装にともない、 共有の一覧に表示される"Printers\.\.\. " フォルダ中の "プリンタの追加"ウィザード(Add Printer Wizard (APW))アイコンを利用することが可能になった。 APWにより、SambaやWindows NT/ 2000プリンタサーバに別のマシンからのプリンタ追加が可能となった。
 .sp
 Sambaホストの場合、これは、下位レイヤの印刷システムにプリンタを物理的に追加できる必要があるということである。
 \fIadd printer command\fR
@@ -836,7 +836,7 @@ Sambaホストの場合、これは、下位レイヤの印刷システムにプ
 \fIWindows 9x driver location\fR
 .sp
 .RE
-すべてのパラメータは、一つの例外を除き、 Windows NT/2000 クライアントから送信される PRINTER_INFO_2 構造体から取得される。 「Windows 9x driver location」パラメータは、下位互換性を保つためにのみ提供される。 それ以外の構造体のフィールドは、APWの質問に対する回答から生成される。
+すべてのパラメータは、一つの例外を除き、 Windows NT/2000 クライアントから送信される PRINTER_INFO_2 構造体から取得される。 "Windows 9x driver location"パラメータは、下位互換性を保つためにのみ提供される。 それ以外の構造体のフィールドは、APWの問い合わせに対する回答から生成される。
 .sp
 
 \fIadd printer command\fR
@@ -847,7 +847,7 @@ smbd
 を再度読み込んで、 APWで設定された共有がすでに存在していないかを確認する。 共有名が不正な場合、smbd
 は、 クライアントに対して ACCESS_DENIED エラーを返却する。
 .sp
-「add printer command」は Samba が新しいプリンタが接続するポートとして設定した文字列からなる1行を返却する。 返却されない場合、Samba は印刷共有の再読み込みを行なわない。
+\fIaddprinter command\fRは Samba が新しいプリンタが接続するポートとして設定した 文字列からなる1行を返却する。 返却されない場合、Samba は印刷共有の再読み込みを行なわない。
 .sp
 Default:
 \fI\fIadd printer command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -1458,7 +1458,10 @@ Samba 2\.2\.0 では、Windows NT 4\.0 のサーバマネージャから動的�
 \fIchange share command\fR
 を適切に実行するためには、 管理者は root アカウント(uid == 0) で
 smbd
-に接続しておく必要がある。(訳注: SeDiskOperatorPrivilege 権限のあるアカウントでも可能)
+に接続しておく必要がある。
+.sp
+もしも、接続するアカウントがSeDiskOperatorPrivilege権限を持つならば、
+\fIchange share\fRパラメータ 中で定義されているスクリプトはrootとして実行される。
 .sp
 スクリプト実行時には
 smbd
@@ -1528,7 +1531,7 @@ smbd
 共有への最大同時接続数。
 .sp
 .RE
-このパラメータは、既に存在するファイル共有の設定を修正するためにのみ用いられる。 印刷共有の設定を修正する場合、Samba ホストをブラウズすると表示される「Printers\.\.\.」フォルダから行なうこと。
+このパラメータは、既に存在するファイル共有の設定を修正するためにのみ用いられる。 印刷共有の設定を修正する場合、Samba ホストをブラウズすると表示される"Printers\.\.\."フォルダから行なうこと。
 .sp
 Default:
 \fI\fIchange share command\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -1840,7 +1843,7 @@ cups options (S)
 \fBcups\fR
 に設定されている場合のみ有効である。 この値は、 CUPS ライブラリに直接渡されるオプションを記述した任意の形式の文字列である。
 .sp
-CUPS で有効な一般の印刷オプション ( CUPS の「Spftware Users\' Manual」に記載されているもの ) はすべて設定できる。 また、設定対象のキューで有効な ( 「lpoptions \-d printername \-l」で表示される ) 任意のプリンタ固有のオプションも設定できる。
+CUPS で有効な一般の印刷オプション ( CUPS の「Spftware Users\' Manual」に記載されているもの ) はすべて設定できる。 また、設定対象のキューで有効な ( 「lpoptions \-d printername \-l」で表示される ) 任意のプリンタ固有のオプションも設定できる。 複数のパラメータは、ABNF指定のPAPIテキストオプションに準じた、空白で 分離された名前/値ペアでなければならない。複数の値を持つ場合 ("name={a=\.\.\. b=\.\.\. c=\.\.\.}")は、中括弧がそのままで格納される。
 .sp
 Windows クライアントが Samba を経由して印刷を行なう際に CUPS サーバの
 \fIerror_log\fR
@@ -1854,7 +1857,7 @@ Default:
 \fI\fIcups options\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
 Example:
-\fI\fIcups options\fR\fR\fI = \fR\fI"raw,media=a4,job\-sheets=secret,secret"\fR\fI \fR
+\fI\fIcups options\fR\fR\fI = \fR\fI"raw,media=a4\fR\fI \fR
 .RE
 
 cups server (G)
@@ -1945,13 +1948,13 @@ Default:
 debug prefix timestamp (G)
 .PP
 .RS 4
-With this option enabled, the timestamp message header is prefixed to the debug message without the filename and function information that is included with the
+このオプションを有効にすると、デバッグメッセージにタイムスタンプメッセージ ヘッダが付くようになる。ただし
 \fIdebug timestamp\fR
-parameter\. This gives timestamps to the messages without adding an additional line\.
+に含まれるファイル名や関数情報には付加されない。 タイムスタンプを表すためだけに、新たなデバッグ行が発生することはない。
 .sp
-Note that this parameter overrides the
+注意：このパラメータは
 \fIdebug timestamp\fR
-parameter\.
+を上書きする。
 .sp
 Default:
 \fI\fIdebug prefix timestamp\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -6911,7 +6914,7 @@ printing (S)
 printjob username (S)
 .PP
 .RS 4
-This parameter specifies which user information will be passed to the printing system\. Usually, the username is sent, but in some cases, e\.g\. the domain prefix is useful, too\.
+このパラメータはプリンとシステムにどちらのユーザ情報が渡されるかを 指定する。通常、ユーザ名が送られる。しかし、いくつかの場合、たとえば、 ドメインプレフィックスも一緒にした方が便利な場合もある。
 .sp
 Default:
 \fI\fIprintjob username\fR\fR\fI = \fR\fI%U\fR\fI \fR
@@ -7976,21 +7979,17 @@ Example:
 smb encrypt (S)
 .PP
 .RS 4
-This is a new feature introduced with Samba 3\.2 and above\. It is an extension to the SMB/CIFS protocol negotiated as part of the UNIX extensions\. SMB encryption uses the GSSAPI (SSPI on Windows) ability to encrypt and sign every request/response in a SMB protocol stream\. When enabled it provides a secure method of SMB/CIFS communication, similar to an ssh protected session, but using SMB/CIFS authentication to negotiate encryption and signing keys\. Currently this is only supported by Samba 3\.2 smbclient, and hopefully soon Linux CIFSFS and MacOS/X clients\. Windows clients do not support this feature\.
+これは、Samba3\.2以降で導入された新機能である。これは、UNIX拡張の 一部としてネゴシエートされる、SMB/CIFSプロトコルへの拡張である。 SMB暗号化は、SMBプロトコルストリーム中でのすべてのリクエスト/レスポンス に対し、暗号化と署名を行うために、GSSAPI(Windows上のSSPI)を使う。 それを有効にした時、sshの保護されたセッションのような、セキュアな SMB/CIFS通信を提供するが、暗号化のネゴシエートとキーの署名のために、 SMB/CIFS認証を使う。現在、これは、Samba 3\.2クライアントのみサポート し、そのうちLinuxのCIFSFSとMacOS/Xクライアントで使えるようになるだ ろう。Windowsクライアントはこの機能をサポートしない。
 .sp
-This controls whether the server offers or requires the client it talks to to use SMB encryption\. Possible values are
-\fIauto\fR,
+This controls whether the server offers or requires the client it talks to to use SMB encryption\. 利用できる値は、\fIauto\fR,
 \fImandatory\fR
-and
-\fIdisabled\fR\. This may be set on a per\-share basis, but clients may chose to encrypt the entire session, not just traffic to a specific share\. If this is set to mandatory then all traffic to a share
-\fImust\fR
-must be encrypted once the connection has been made to the share\. The server would return "access denied" to all non\-encrypted requests on such a share\. Selecting encrypted traffic reduces throughput as smaller packet sizes must be used (no huge UNIX style read/writes allowed) as well as the overhead of encrypting and signing all the data\.
+と\fIdisabled\fRである。これは、共有毎に設定できるが、 クライアントはすべてのセッションに暗号化を選んでもよいが、特定の共有 へのトラフィックではない。もしもこれが強制的に設定された場合、すべての 共有へのトラフィックは、その共有への接続が終わった後、暗号化されなければ
+\fIならない\fR。サーバは暗号化されていない共有への要求に 対し、"access denied" を返す。暗号化されたトラフィックを選択すると、 すべてのデータへの暗号化と書名のオーバヘッドと同じように、より小さな パケットサイズを使わねばならない(UNIX風の大きなサイズでの読み出し/書き込み が許可されない)のでスループットが減少する。
 .sp
-If SMB encryption is selected, Windows style SMB signing (see the
-\fIserver signing\fR
-option) is no longer necessary, as the GSSAPI flags use select both signing and sealing of the data\.
+もしもSMB暗号化を選ぶと、Windows風のSMB署名(\fIserver signing\fR
+を参照)はもはや必要でなくなり、GSSAPIフラグがデータの暗号化と署名とシール のために使われる。
 .sp
-When set to auto, SMB encryption is offered, but not enforced\. When set to mandatory, SMB encryption is required and if set to disabled, SMB encryption can not be negotiated\.
+autoに設定すると、SMB暗号化が提供されるが、強制はされない。 mandatoryに設定すると、SMB暗号化が要求され、もしもdisableに設定すると、 SMB暗号化はネゴシエート出来ない。
 .sp
 Default:
 \fI\fIsmb encrypt\fR\fR\fI = \fR\fIauto\fR\fI \fR
