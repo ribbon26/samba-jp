@@ -1,0 +1,43 @@
+<samba:parameter name="smb encrypt"
+                 context="S"
+				 type="enum"
+                 basic="1"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+    <para>これは、Samba3.2以降で導入された新機能である。これは、UNIX拡張の
+	一部としてネゴシエートされる、SMB/CIFSプロトコルへの拡張である。
+	SMB暗号化は、SMBプロトコルストリーム中でのすべてのリクエスト/レスポンス
+	に対し、暗号化と署名を行うために、GSSAPI(Windows上のSSPI)を使う。
+	それを有効にした時、sshの保護されたセッションのような、セキュアな
+	SMB/CIFS通信を提供するが、暗号化のネゴシエートとキーの署名のために、
+	SMB/CIFS認証を使う。現在、これは、Samba 3.2クライアントのみサポート
+	し、そのうちLinuxのCIFSFSとMacOS/Xクライアントで使えるようになるだ
+	ろう。Windowsクライアントはこの機能をサポートしない。
+    </para>
+
+    <para>This controls whether the server offers or requires
+    the client it talks to to use SMB encryption.
+	利用できる値は、<emphasis>auto</emphasis>, <emphasis>mandatory</emphasis> 
+    と<emphasis>disabled</emphasis>である。これは、共有毎に設定できるが、
+	クライアントはすべてのセッションに暗号化を選んでもよいが、特定の共有
+	へのトラフィックではない。もしもこれが強制的に設定された場合、すべての
+	共有へのトラフィックは、その共有への接続が終わった後、暗号化されなければ
+	<emphasis>ならない</emphasis>。サーバは暗号化されていない共有への要求に
+	対し、"access denied" を返す。暗号化されたトラフィックを選択すると、
+	すべてのデータへの暗号化と書名のオーバヘッドと同じように、より小さな
+	パケットサイズを使わねばならない(UNIX風の大きなサイズでの読み出し/書き込み
+	が許可されない)のでスループットが減少する。
+    </para>
+
+    <para>もしもSMB暗号化を選ぶと、Windows風のSMB署名(<smbconfoption name="server signing"/>
+	を参照)はもはや必要でなくなり、GSSAPIフラグがデータの暗号化と署名とシール
+	のために使われる。</para>
+
+    <para>autoに設定すると、SMB暗号化が提供されるが、強制はされない。
+	mandatoryに設定すると、SMB暗号化が要求され、もしもdisableに設定すると、
+	SMB暗号化はネゴシエート出来ない。</para>
+</description>
+
+<value type="default">auto</value>
+</samba:parameter>
