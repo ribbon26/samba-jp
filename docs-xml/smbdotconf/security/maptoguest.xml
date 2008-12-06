@@ -37,7 +37,7 @@
 	    <smbconfoption name="guest account"/> 
             で指定されたアカウントにマッピングする。
             この場合、パスワードをタイプミスすると、
-            なにも言われずに「guest」としてログインしてしまう。
+            なにも言われずに&quot;guest&quot;としてログインしてしまう。
             パスワードをタイプミスしたというメッセージがないため、
             アクセス可能である筈のファイルにできないが理由がわからないという問題が発生する。
             <parameter moreinfo="none">map to guest</parameter> パラメータをこの設定にすると、
@@ -54,12 +54,16 @@
     </itemizedlist>
 
     <para><parameter moreinfo="none">security</parameter> モードが
-    share 以外の場合、「ゲスト」共有サービスを設定する場合は、
+    share 以外の場合、&quot;ゲスト&quot;共有サービスを設定する場合は、
     このパラメータが必須である。これは、サーバがクライアントの認証に成功しない限り、
     要求されるリソースの名前がサーバに送られることは<emphasis>決して</emphasis>なく、
-    サーバが「ゲスト」共有に対する認証の成否を、
+    サーバが&quot;ゲスト&quot;共有に対する認証の成否を、
     適切な時点(共有への接続時)に行なうことができないためである。
-    </para>
+    This parameter is not useful with
+    <parameter moreinfo="none">security = server</parameter> as in this security mode
+    no information is returned about whether a user logon failed due to
+    a bad username or bad password, the same error is returned from a modern server
+    in both cases.    </para>
 
     <para> 以前の Samba のリリースに親しんでいる人のため、
     このパラメータは、local.h 中の <constant>GUEST_SESSSETUP </constant>
