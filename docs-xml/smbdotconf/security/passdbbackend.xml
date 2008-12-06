@@ -5,18 +5,19 @@
 		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 
-    <para>このオプションにより、管理者はパスワードの格納および取得にどのような機構(backend)を使用するかについて指定できる。
-    これにより、再コンパイルなしで機構を取り換えることが可能となる。</para>
+    <para>このオプションにより、管理者はユーザとグループ情報の格納に、どのような
+    機構(backend)を使用するかについて指定できる。これにより、再コンパイルなしで
+    機構を取り換えることが可能となる。</para>
 
-    <para>このパラメータは、機構の名称と、特定の機構に依存した「位置」を示す文字列との 2 つの要素から構成されている。
-    この要素は「:」文字で区切られる。
-    </para>
+    <para>このパラメータは、機構の名称と、特定の機構に依存した「位置」を示す文字列
+      との 2 つの要素から構成されている。
+    この要素は「:」文字で区切られる。</para>
 
     <para>指定可能な機構は以下のとおりである:
 	<itemizedlist>
 	    <listitem>
-		<para><command moreinfo="none">smbpasswd</command> -
-                デフォルトの smbpasswd 機構である。オプションの引数として smbpasswd ファイルの位置を指定する。
+		<para><command moreinfo="none">smbpasswd</command> - 既定値の smbpasswd 
+		  機構である。オプションの引数として smbpasswd ファイルの位置を指定する。
 		</para>
 	    </listitem>
 
@@ -34,9 +35,9 @@
 		<para>LDAP の接続は、可能な場合は暗号化される。
                 これは Start-TLS (<smbconfoption name="ldap ssl"/> を参照のこと) か
                 <parameter moreinfo="none">ldaps://</parameter> を URL 引数中で指定することにより行なわれる。</para>
-                <para>LDAP ライブラリが LDAP URL 表記をサポートしていれば (OpenLDAP はサポートしている)、
-ダブルクォーテーションを使って複数のサーバを指定できる。
-                </para>
+                <para>ダブルクォーテーションを使って複数のサーバを指定できる。
+		  複数のサーバが使用できるか否かは、使用するLDAP ライブラリ上の文法に
+		  依存する。</para>
 	    </listitem>
 	</itemizedlist>
 
@@ -46,9 +47,13 @@
 <programlisting>
 passdb backend = tdbsam:/etc/samba/private/passdb.tdb 
 
-または
+またはOpenLDAPの複数サーバLDAP URLの場合は、
 
 passdb backend = ldapsam:"ldap://ldap-1.example.com ldap://ldap-2.example.com"
+
+あるいは、NetscapeベースのLDAP ライブラリでの複数サーバLDAP URLの場合は、
+
+passdb backend = ldapsam:"ldap://ldap-1.example.com ldap-2.example.com"
 </programlisting>
 </para>
 </description>
