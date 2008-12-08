@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_gpfs</refname>
-	<refpurpose>gpfs に特化した Samba の機能拡張を行なう。like acls and prealloc</refpurpose>
+	<refpurpose>acl や prealloc 機能と同様に gpfs に特化した Samba の機能拡張を行なう。</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -32,22 +32,21 @@
 	<para> <command>gpfs</command> VFS モジュールは、Samba が GPFS
 	と適切に連携する上で必要となる様々な GPFS エクステンションの
 モジュールのベースである。
-	GPFSによって提供されるGPLライブラリインタフェースを使う。
+	このモジュールはGPFSによって提供されるGPLライブラリインタフェースを使う。
 	</para>
 
 	<para>現在のところ、gpfs VFS
 	モジュールは以下のエクステンションのみを提供している:
 	<itemizedlist>
 	<listitem><para>GPFSのために設定可能なNFSv4 ACL インタフェース </para></listitem>
-	<listitem><para>GPFS によるカーネル oplock のサポート</para></listitem>
-	<listitem><para>GPFS による lease サポート</para></listitem>
+	<listitem><para>GPFS 上でのカーネル oplock のサポート</para></listitem>
+	<listitem><para>GPFS 上での lease サポート</para></listitem>
 	</itemizedlist>
 	</para>
 
 	<para><command>注意:</command>このモジュールは POSIX ACL
 	の挙動を模しているため、chown によるパーミッションの変更が可能である。
 	しかし、
-
 	Samba は現在のところ、この動作をサポートしていない。
 	このモジュールによる chown を禁止するには、Samba よりも下位の
 	ファイルシステム側の責任となる。
@@ -75,10 +74,10 @@
 		確実にする。
 		</para>
 
-		<para>以下のモードはモジュールによって解釈される:</para>
+		<para>以下のモードがこのモジュールによって指定可能である:</para>
 		<itemizedlist>
-		<listitem><para><command>simple(既定値)</command> - GPFS　ACE中で特別なIDを使わない</para></listitem>
-		<listitem><para><command>special</command> - GPFS ACE中で特別なIDを使う</para> </listitem>
+		<listitem><para><command>simple(既定値)</command> - GPFSのACE中で特別なIDを使わない</para></listitem>
+		<listitem><para><command>special</command> - GPFSのACE中で特別なIDを使う</para> </listitem>
 		</itemizedlist>
 		</listitem>
 
@@ -89,17 +88,16 @@
 		<term>nfs4:acedup = [dontcare|reject|ignore|merge]</term>
 		<listitem>
 		<para>
-		このパラメータはGPFS ACL中で遭遇した、重複したACEをSambaがどのように取り扱う
-		かを設定する。
-		GPFSは同じIDのために異なったbitのために重複したACEを認めるか作成する。
+		このパラメータはGPFSのACL中で遭遇した、重複したACEをSambaがどのように取り扱うかを設定する。
+		GPFSは同じIDに対して異なったbitを持つ重複したACEを許容し作成する。
 		</para>
 
-		<para>以下は、異なった値のための、Sambaの動作である:</para>
+		<para>以下はそれぞれの値におけるSambaの動作である:</para>
 		<itemizedlist>
-		<listitem><para><command>dontcare (既定値)</command> - copy the ACEs as they come</para></listitem>
-		<listitem><para><command>reject</command> - stop operation and exit with error on ACL set op</para></listitem>
-		<listitem><para><command>ignore</command> - don't include the second matching ACE</para></listitem>
-		<listitem><para><command>merge</command> - bitwise OR the 2 ace.flag fields and 2 ace.mask fields of the 2 duplicate ACEs into 1 ACE</para></listitem>
+		<listitem><para><command>dontcare (既定値)</command> - 重複したACEをそのまま利用する</para></listitem>
+		<listitem><para><command>reject</command> - ACLの設定処理で、処理を中断し、エラーとして終了する</para></listitem>
+		<listitem><para><command>ignore</command> - 2番目にマッチしたACEを無視する</para></listitem>
+		<listitem><para><command>merge</command> - 2つのace.flagフィールド、及び2つのace.maskフィールドをビット演算でORを取り、2つの重複したACEを1つのACEに統合する</para></listitem>
 		</itemizedlist>
 		</listitem>
 		</varlistentry>
@@ -108,14 +106,16 @@
 		<varlistentry>
 		<term>nfs4:chown = [yes|no]</term>
 		<listitem>
-		<para>このパラメータはファイルシステムの基礎によってサポートされる、
-		chownを有効または無効にする事を認める。このパラメータは、それが使うシステムの
-セキュリティを低下させるかもしれない事に注意して有効にすべきである。
-</para>
-		<para>いくつかのファイルシステムでは、chown を a) giving b) stealingと
-することを認めている。これは、リスクとして考える後の方である。</para>
+		<para>このパラメータはファイルシステムのレイヤによって
+		  サポートされる chown を有効または無効に設定する。
+		  このパラメータは、あなたのシステムのセキュリティを
+		  低下させるかもしれない事に注意して有効にすべきである。
+		</para>
+		<para>いくつかのファイルシステムでは、chown の 
+		  a) 許可 b) 拒否 が可能である。
+		  リスクについて考慮されたのが後者である。</para>
 
-		<para>以下は異なった値に対するSambaの動作である: </para>
+		<para>以下はそれぞれの値に対するSambaの動作である: </para>
 		<itemizedlist>
 		<listitem><para><command>yes</command> - ファイルシステム下でサポートするようなchownを有効にする。</para></listitem>
 		<listitem><para><command>no (既定値)</command> - chownを無効にする</para></listitem>
@@ -149,7 +149,7 @@
 
 <refsect1>
 	<title>バージョン</title>
-	<para>このマニュアルページは Samba バージョン 3.2.25用である。</para>
+	<para>このマニュアルページは Samba バージョン 3.0.25用である。</para>
 </refsect1>
 
 <refsect1>
