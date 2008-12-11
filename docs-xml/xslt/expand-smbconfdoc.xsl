@@ -18,7 +18,7 @@
 
 	<xsl:template match="synonym"><xsl:apply-templates/></xsl:template>
 
-	<xsl:template match="related"><xsl:element name="para"><xsl:text>Related command</xsl:text><xsl:apply-templates/></xsl:element></xsl:template>
+	<xsl:template match="related"><xsl:element name="para"><xsl:text>関連コマンド</xsl:text><xsl:apply-templates/></xsl:element></xsl:template>
 
 	<xsl:template match="samba:parameterlist">
 		<xsl:apply-templates>
@@ -69,7 +69,7 @@
 			<xsl:for-each select="value">
 				<xsl:if test="@type = 'example'">
 					<xsl:element name="para">
-						<xsl:text>Example: </xsl:text>
+						<xsl:text>例: </xsl:text>
 						<xsl:element name="emphasis">
 							<xsl:element name="parameter">
 								<xsl:copy-of select="$name"/>
@@ -88,7 +88,7 @@
 			<xsl:for-each select="value">
 				<xsl:if test="@type = 'default'">
 					<xsl:element name="para">
-						<xsl:text>Default: </xsl:text>
+						<xsl:text>既定値: </xsl:text>
 						<xsl:element name="emphasis">
 							<xsl:element name="parameter">
 								<xsl:copy-of select="$name"/>
@@ -108,7 +108,7 @@
 				<xsl:when test="$tdefault = ''">
 					<xsl:element name="para">
 						<xsl:element name="emphasis">
-							<xsl:text>No default</xsl:text>
+							<xsl:text>既定値なし</xsl:text>
 						</xsl:element>	
 					</xsl:element>
 				</xsl:when>
@@ -150,7 +150,7 @@
 					<xsl:element name="varlistentry">
 						<xsl:element name="listitem">
 							<xsl:element name="para">
-								<xsl:text>This parameter is a synonym for </xsl:text>
+								<xsl:text>このパラメータは右記のパラメータの別名である：</xsl:text>
 								<xsl:element name="link">
 									<xsl:attribute name="linkend">
 										<xsl:value-of select="translate(translate(string($name),' ',''), 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
