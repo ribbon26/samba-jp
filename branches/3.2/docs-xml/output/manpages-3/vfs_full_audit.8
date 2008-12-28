@@ -1,0 +1,348 @@
+.\"     Title: vfs_full_audit
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/16/2008
+.\"    Manual: System Administration tools
+.\"    Source: Samba 3.2
+.\"
+.TH "VFS_FULL_AUDIT" "8" "12/16/2008" "Samba 3\.2" "System Administration tools"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+vfs_full_audit - Samba VFS　の動作をsystem logに記録する
+.SH "SYNOPSIS"
+.HP 1
+vfs objects = full_audit
+.SH "説明"
+.PP
+このVFSモジュールは
+\fBsamba\fR(7)システムの一部である\.
+.PP
+vfs_full_auditVFSモジュールは指定したクライアントの 動きを\fBsyslog\fR(3)でシステムログに記録する。
+.PP
+vfs_full_audit
+はSamba VFSの動作すべてを記録することが可能である。
+.IP "" 4
+aio_cancel
+.IP "" 4
+aio_error
+.IP "" 4
+aio_fsync
+.IP "" 4
+aio_read
+.IP "" 4
+aio_return
+.IP "" 4
+aio_suspend
+.IP "" 4
+aio_write
+.IP "" 4
+chdir
+.IP "" 4
+chflags
+.IP "" 4
+chmod
+.IP "" 4
+chmod_acl
+.IP "" 4
+chown
+.IP "" 4
+close
+.IP "" 4
+closedir
+.IP "" 4
+connect
+.IP "" 4
+disconnect
+.IP "" 4
+disk_free
+.IP "" 4
+fchmod
+.IP "" 4
+fchmod_acl
+.IP "" 4
+fchown
+.IP "" 4
+fget_nt_acl
+.IP "" 4
+fgetxattr
+.IP "" 4
+flistxattr
+.IP "" 4
+fremovexattr
+.IP "" 4
+fset_nt_acl
+.IP "" 4
+fsetxattr
+.IP "" 4
+fstat
+.IP "" 4
+fsync
+.IP "" 4
+ftruncate
+.IP "" 4
+get_nt_acl
+.IP "" 4
+get_quota
+.IP "" 4
+get_shadow_copy_data
+.IP "" 4
+getlock
+.IP "" 4
+getwd
+.IP "" 4
+getxattr
+.IP "" 4
+kernel_flock
+.IP "" 4
+lgetxattr
+.IP "" 4
+link
+.IP "" 4
+linux_setlease
+.IP "" 4
+listxattr
+.IP "" 4
+llistxattr
+.IP "" 4
+lock
+.IP "" 4
+lremovexattr
+.IP "" 4
+lseek
+.IP "" 4
+lsetxattr
+.IP "" 4
+lstat
+.IP "" 4
+mkdir
+.IP "" 4
+mknod
+.IP "" 4
+open
+.IP "" 4
+opendir
+.IP "" 4
+pread
+.IP "" 4
+pwrite
+.IP "" 4
+read
+.IP "" 4
+readdir
+.IP "" 4
+readlink
+.IP "" 4
+realpath
+.IP "" 4
+removexattr
+.IP "" 4
+rename
+.IP "" 4
+rewinddir
+.IP "" 4
+rmdir
+.IP "" 4
+seekdir
+.IP "" 4
+sendfile
+.IP "" 4
+set_nt_acl
+.IP "" 4
+set_quota
+.IP "" 4
+setxattr
+.IP "" 4
+stat
+.IP "" 4
+statvfs
+.IP "" 4
+symlink
+.IP "" 4
+sys_acl_add_perm
+.IP "" 4
+sys_acl_clear_perms
+.IP "" 4
+sys_acl_create_entry
+.IP "" 4
+sys_acl_delete_def_file
+.IP "" 4
+sys_acl_free_acl
+.IP "" 4
+sys_acl_free_qualifier
+.IP "" 4
+sys_acl_free_text
+.IP "" 4
+sys_acl_get_entry
+.IP "" 4
+sys_acl_get_fd
+.IP "" 4
+sys_acl_get_file
+.IP "" 4
+sys_acl_get_perm
+.IP "" 4
+sys_acl_get_permset
+.IP "" 4
+sys_acl_get_qualifier
+.IP "" 4
+sys_acl_get_tag_type
+.IP "" 4
+sys_acl_init
+.IP "" 4
+sys_acl_set_fd
+.IP "" 4
+sys_acl_set_file
+.IP "" 4
+sys_acl_set_permset
+.IP "" 4
+sys_acl_set_qualifier
+.IP "" 4
+sys_acl_set_tag_type
+.IP "" 4
+sys_acl_to_text
+.IP "" 4
+sys_acl_valid
+.IP "" 4
+telldir
+.IP "" 4
+unlink
+.IP "" 4
+utime
+.IP "" 4
+write
+.PP
+これらの動作に加え、
+vfs_full_auditは"all" and "none "という オプションを使用することができる。これらはすべてのVFS動作に対し有効になり、 ここのVFS動作に対して指定することはできない。
+.PP
+vfs_full_auditは動作を\'|\'をセパレーターとして 固定フォーマットで記録する。 記録フォーマットは
+.sp
+.RS 4
+.nf
+		smbd_audit: PREFIX|OPERATION|RESULT|FILE
+	
+.fi
+.RE
+.PP
+各フィールドは:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+PREFIX
+\- full_audit:prefix文字と、可変長の解説
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+OPERATION
+\- VFSの名称
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+RESULT
+\- 動作が成功したか、失敗したか
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+FILE
+\- 動作が行われたファイルやディレクトリの名称
+.sp
+.RE
+.PP
+このモジュールはスタッカブルである。
+.SH "OPTIONS"
+.PP
+vfs_full_audit:prefix = STRING
+.RS 4
+STRINGで監査メッセージを結合する。STRINGは
+\fBsmb.conf\fR(5)に記載された指定を置き換える 初期値は"%u|%I"\.
+.RE
+.PP
+vfs_full_audit:success = LIST
+.RS 4
+LISTはVFSオペレーションのリストで、動作が成功したときに記録を残すものを表す。 オペレーションは上に示したリストにある名前で指定する。
+.RE
+.PP
+vfs_full_audit:failure = LIST
+.RS 4
+LISTはVFSオペレーションのリストで、動作が失敗したときに記録を残すものを表す。 オペレーションは上に示したリストにある名前で指定する。
+.RE
+.PP
+full_audit:facility = FACILITY
+.RS 4
+
+\fBsyslog\fR(3)のfacilityを指定する
+.RE
+.PP
+full_audit:priority = PRIORITY
+.RS 4
+
+\fBsyslog\fR(3)のpriorityを指定する
+.RE
+.SH "例"
+.PP
+[records]共有の中のファイルやディレクトリをオープンしたときにログを残す。 その際、LOCAL7ファシリティーと、ALERTプライオリティーを使用し、 ユーザー名とIPアドレスも記録する:
+.sp
+.RS 4
+.nf
+        \fI[records]\fR
+	\fIpath = /data/records\fR
+	\fIvfs objects = full_audit\fR
+	\fIfull_audit:prefix = %u|%I\fR
+	\fIfull_audit:success = open opendir\fR
+	\fIfull_audit:failure = all\fR
+	\fIfull_audit:facility = LOCAL7\fR
+	\fIfull_audit:priority = ALERT\fR
+.fi
+.RE
+.SH "バージョン"
+.PP
+このヘルプはSambaシステム　3\.0\.25に対応している
+.SH "AUTHOR"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.0\.25\-3\.2\.4\-3\.2\.6対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\.co\.jp)
+.sp
+.RE
+によって行なわれた。

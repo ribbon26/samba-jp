@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="cifs.upcall.8">
+
+
+<refmeta>
+        <refentrytitle>cifs.upcall</refentrytitle>
+        <manvolnum>8</manvolnum>
+        <refmiscinfo class="source">Samba</refmiscinfo>
+        <refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+        <refmiscinfo class="version">3.2</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+        <refname>cifs.upcall</refname>
+        <refpurpose>CIFSのためのユーザ空間upcallヘルパ</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+        <cmdsynopsis>
+                <command>cifs.upcall</command>
+                <arg choice="opt">-c</arg>
+                <arg choice="opt">-v</arg>
+                <arg choice="req">keyid</arg>
+        </cmdsynopsis>
+</refsynopsisdiv>
+
+
+<refsect1>
+        <title>説明</title>
+
+        <para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
+        <manvolnum>7</manvolnum></citerefentry>スイートの一部である。</para>
+
+<para>cifs.upcallは、Linux CIFSクライアントファイルシステムのための、ユーザ空間ヘルパプログラムである。kernelが簡単にそれ自身でできない、たくさんの機能がある。このプログラムは、kernelに対してそれらのことを行うcalloutプログラムであり、結果を返す。</para>
+
+<para>cifs.upcallは一般的に、kernelが特定のキータイプのために、request-key<manvolnum>8</manvolnum>を呼び出すとき、動くつもりである。コマンドラインから直接起動できる間、その方法で動かされる事は一般的ではない。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+	<variablelist>
+		<varlistentry>
+		<term>-c</term>
+		<listitem><para>kerberosのupcallを取り扱っている間、"cifs/"で始まるサービスプリンシパルを使う。規定値は、"host/"サービスプリンシパルを使うためになっている。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-v</term>
+		<listitem><para>バージョン番号を印刷して終了する。</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>KEYCTLのための構成方法</title>
+	<para>cifs.upcallはrequest-key callout プログラム経由でkernelから呼ばれるようにデザインされている。これは、どこからと、どのようにこのプログラムを呼び出すかがrequest-keyが語られる事を要求する。現在のcifs.upcallプログラムは2つのキータイプを扱う:</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>cifs.spnego</term>
+		<listitem><para>このキータイプはkerberosセッションキーを検索するためである。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>dns_resolver</term>
+		<listitem><para>このキータイプは、ホスト名をIPアドレスに変換(解決)するためのものである。</para></listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>CIFSのためにこのプログラムを使いやすくするためには、request-key.conf<manvolnum>5</manvolnum>中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:</para>
+<programlisting>
+#OPERATION  TYPE           D C PROGRAM ARG1 ARG2...
+#=========  =============  = = ==========================================
+create	    cifs.spnego    * * /usr/local/sbin/cifs.upcall -c %k
+create      dns_resolver   * * /usr/local/sbin/cifs.upcall %k
+</programlisting>
+<para>
+それぞれのフィールドについての詳細な情報は<citerefentry><refentrytitle>request-key.conf<manvolnum>5</manvolnum></refentrytitle></citerefentry>を参照。</para>
+</refsect1>
+
+<refsect1>
+        <title>参照</title>
+        <para>
+	<citerefentry><refentrytitle>request-key.conf</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry>,
+	<citerefentry><refentrytitle>mount.cifs</refentrytitle>
+        <manvolnum>8</manvolnum></citerefentry>
+	</para>
+</refsect1>
+
+<refsect1>
+        <title>作者</title>
+
+	<para>Igor Mammedovはcifs.upcallプログラムを書いた。</para>
+	<para>Jeff Laytonはこのマニュアルページを書いた。</para>
+	<para>Linux CIFS VFSのメンテナはSteve Frenchである。</para>
+        <para><ulink url="mailto:linux-cifs-client@lists.samba.org">Linux
+		CIFSメーリングリスト</ulink>は、これらのプログラムに対して質問をする事に好まれる場所である。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 3.2.4-3.2.6  対応のものである。</para>
+        <para>このドキュメントの Samba 3.2.4-3.2.6 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+</refentry>

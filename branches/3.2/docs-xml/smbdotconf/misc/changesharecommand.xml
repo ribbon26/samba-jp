@@ -1,0 +1,57 @@
+<samba:parameter name="change share command"
+                 context="G"
+				 type="string"
+                 advanced="1" developer="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>Samba 2.2.0 では、Windows NT 4.0 のサーバマネージャから動的な共有の追加や削除を行なう機能が実現されている。
+	<parameter moreinfo="none">change share command</parameter> は
+	<filename moreinfo="none">smb.conf</filename> に存在しているサービスの定義を修正するための外部のプログラムやスクリプトを指定するために用いられる。
+	<parameter moreinfo="none">change share command</parameter> を適切に実行するためには、
+	管理者は root アカウント(uid == 0) で 
+	<command moreinfo="none">smbd</command> に接続しておく必要がある。	</para>
+
+	<para>
+	もしも、接続するアカウントが<literal>SeDiskOperatorPrivilege</literal>権限を持つならば、
+	<parameter moreinfo="none">change share</parameter>パラメータ
+	中で定義されているスクリプトはrootとして実行される。
+	</para>
+		
+	<para>
+	スクリプト実行時には <command moreinfo="none">smbd</command> が以下の5つのパラメータを設定して自動的に
+	<parameter moreinfo="none">change share command</parameter> を実行する。</para>
+		
+	<itemizedlist>
+	<listitem><para><parameter moreinfo="none">configFile</parameter> - 
+	グローバルな <filename moreinfo="none">smb.conf</filename> ファイルの位置
+	</para></listitem>
+			
+	<listitem><para><parameter moreinfo="none">shareName</parameter> - 
+	新しい共有名
+	</para></listitem>
+			
+	<listitem><para><parameter moreinfo="none">pathName</parameter> - ディスク上に
+	「存在している」ディレクトリのパス名</para></listitem>
+			
+	<listitem><para><parameter moreinfo="none">comment</parameter> - 
+	新しい共有に設定するコメント文字列
+	</para></listitem>
+
+		<listitem>
+			<para><parameter moreinfo="none">max
+			connections</parameter>
+			共有への最大同時接続数。
+			</para>
+		</listitem>
+	</itemizedlist>
+		
+	<para>
+	このパラメータは、既に存在するファイル共有の設定を修正するためにのみ用いられる。
+	印刷共有の設定を修正する場合、Samba ホストをブラウズすると表示される&quot;Printers...&quot;フォルダから行なうこと。</para>
+</description>
+
+<related>add share command</related>
+<related>delete share command</related>
+<value type="default"></value>
+<value type="example">/usr/local/bin/addshare</value>
+</samba:parameter>

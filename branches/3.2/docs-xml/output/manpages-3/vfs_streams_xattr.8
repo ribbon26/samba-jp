@@ -1,0 +1,59 @@
+.\"     Title: vfs_streams_xattr
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/16/2008
+.\"    Manual: システム管理ツール
+.\"    Source: Samba 3.2
+.\"
+.TH "VFS_STREAMS_XATTR" "8" "12/16/2008" "Samba 3\.2" "システム管理ツール"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+vfs_streams_xattr - 代替データストリームを POSIX の拡張属性に格納する。
+.SH "SYNOPSIS"
+.HP 1
+vfs objects = streams_xattr
+.SH "説明"
+.PP
+この VFS モジュールは
+\fBsamba\fR(7)
+システムの一部である。
+.PP
+
+vfs_streams_xattr
+により NTFS の代替データストリームをファイルシステムに格納することが可能となる。 一般的な POSIX ファイルシステムは複数のデータストリームをファイルに付与する機能をサポートしていないため、 streams_xattr モジュールは、このデータを POSIX の拡張属性 (xattrs) に格納する。 この属性の名称は、user\.DosStream\."代替データストリーム名" である。
+.PP
+このモジュールを有効にして共有を行なうファイルシステムでは、拡張属性をサポートしている必要がある。
+.PP
+ほとんどのファイルシステムには、拡張属性のサイズに制約がある。 そのため、このモジュールは 、小さいゾーン情報のデータをストリームに格納する Internet Explorer のようなアプリケーションでは機能するが、 大量のデータを代替データストリームに格納するアプリケーションでは機能しないかもしれない。
+.SH "使用例"
+.sp
+.RS 4
+.nf
+        \fI[share]\fR
+	\fIvfs objects = streams_xattr\fR
+.fi
+.RE
+.SH "AUTHOR"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.4\-3\.2\.6 対応のものである。
+.PP
+このドキュメントの Samba 3\.2\.4\-3\.2\.6 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+たかはしもとのぶ (monyo@samba\.gr\.jp)
+.sp
+.RE
+によって行なわれた。

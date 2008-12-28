@@ -1,0 +1,78 @@
+.\"     Title: vfs_readonly
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/16/2008
+.\"    Manual: System Administration tools
+.\"    Source: Samba 3.2
+.\"
+.TH "VFS_READONLY" "8" "12/16/2008" "Samba 3\.2" "System Administration tools"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+vfs_readonly - 指定された時間、Samba共有を読み込み専用にする
+.SH "SYNOPSIS"
+.HP 1
+vfs objects = readonly
+.SH "説明"
+.PP
+このVFSモジュールは
+\fBsamba\fR(7)システムの一部である。
+.PP
+vfs_readonly
+VFSモジュールは指定された時間、 共有を読み込み専用とする。この間のクライアントからの接続の書き込み アクセスは、アクセス権限によらず、すべて拒否される。
+.PP
+このモジュールはスタッカブルである。
+.SH "OPTIONS"
+.PP
+readonly:period = BEGIN, END
+.RS 4
+クライアントからの接続が、BEGINとENDで指定された間、共有は読み込み専用となる。 日付を指定する構文はGNU
+\fBdate\fR(1)の\-dオプションと同じ。
+.RE
+.SH "EXAMPLES"
+.PP
+すべての共有を読み込み専用とする:
+.sp
+.RS 4
+.nf
+        \fI[global]\fR
+	\fIvfs objects = readonly\fR
+.fi
+.RE
+.PP
+[backup]共有を、業務時間の間読み込み専用とする
+.sp
+.RS 4
+.nf
+        \fI[backup]\fR
+	\fIpath = /readonly\fR
+	\fIvfs objects = readonly\fR
+	\fIreadonly:period = readonly:period = "today 9:00","today 17:00"\fR
+.fi
+.RE
+.SH "VERSION"
+.PP
+このマニュアルはSambaシステムバージョン3\.0\.25に対応している
+.SH "AUTHOR"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.0\.25\-3\.2\.4\-3\.2\.6対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\.co\.jp)
+.sp
+.RE
+によって行なわれた。

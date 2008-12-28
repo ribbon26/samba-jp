@@ -1,0 +1,105 @@
+.\"     Title: vfs_audit
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/16/2008
+.\"    Manual: System Administration tools
+.\"    Source: Samba 3.2
+.\"
+.TH "VFS_AUDIT" "8" "12/16/2008" "Samba 3\.2" "System Administration tools"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+vfs_audit - 選択したSamba VFSモジュールの動作状況をsystem logに保存する
+.SH "SYNOPSIS"
+.HP 1
+vfs objects = audit
+.SH "説明"
+.PP
+このVFSモジュールは
+\fBsamba\fR(7)システムの一部である\.
+.PP
+vfs_audit
+VFSモジュールは指定したクライアントの動作を
+\fBsyslog\fR(3)を使用して、システムログに記録する。
+.PP
+以下のようなSamba VFSの動作が記録される
+.IP "" 4
+connect
+.IP "" 4
+disconnect
+.IP "" 4
+opendir
+.IP "" 4
+mkdir
+.IP "" 4
+rmdir
+.IP "" 4
+open
+.IP "" 4
+close
+.IP "" 4
+rename
+.IP "" 4
+unlink
+.IP "" 4
+chmod
+.IP "" 4
+fchmod
+.IP "" 4
+chmod_acl
+.IP "" 4
+fchmod_acl
+.PP
+このモジュールはスタッカブルである
+.SH "OPTIONS"
+.PP
+audit:facility = FACILITY
+.RS 4
+
+\fBsyslog\fR(3)
+にFACILITYでメッセージを記録する。
+.RE
+.PP
+audit:priority = PRIORITY
+.RS 4
+
+\fBsyslog\fR(3)にPRIORITYでメッセージを記録する。
+.RE
+.SH "EXAMPLES"
+.PP
+すべての共有のログをLOCAL1ファシリティー、NOTICEプライオリティーで記録する。
+.sp
+.RS 4
+.nf
+        \fI[global]\fR
+	\fIvfs objects = audit\fR
+	\fIaudit:facility = LOCAL1\fR
+	\fIaudit:priority = NOTICE\fR
+.fi
+.RE
+.SH "VERSION"
+.PP
+このマニュアルはSambaシステムバージョン3\.0\.25に対応している
+.SH "AUTHOR"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.0\.25\-3\.2\.4\-3\.2\.6対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\.co\.jp)
+.sp
+.RE
+によって行なわれた。

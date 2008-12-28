@@ -1,0 +1,107 @@
+.\"     Title: ldbedit
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 12/16/2008
+.\"    Manual: ユーザーコマンド
+.\"    Source: Samba 3.2
+.\"
+.TH "LDBEDIT" "1" "12/16/2008" "Samba 3\.2" "ユーザーコマンド"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+ldbedit - 好みのエディタで LDB データベースを編集する
+.SH "SYNOPSIS"
+.HP 1
+ldbedit [\-?] [\-\-usage] [\-s\ base|one|sub] [\-b\ basedn] [\-a] [\-e\ editor] [\-H\ LDB\-URL] [expression] [attributes...]
+.SH "説明"
+.PP
+ldbedit は、（tdb ファイル、sqlite ファイルもしくは LDAP サーバ上にある） LDB エントリを編集できるユーティリティである。ldbedit はクエリーに従って LDIF ファイルを生成するので、これを手作業で編集する。最後に LDIF を LDB バックエンドにマージする。
+.SH "オプション"
+.PP
+\-?, \-\-help
+.RS 4
+使用可能なオプションの一覧と、それらについての説明を表示する。
+.RE
+.PP
+\-\-usage
+.RS 4
+使用可能なオプションの一覧を表示する。help オプションと似ているが、 説明部分は表示せず、使用方法を簡潔に表示する。
+.RE
+.PP
+\-H <ldb\-url>
+.RS 4
+tdb データベースに接続するための LDB URL。書式： tdb://\fIfilename\fR。 unix ドメインソケット経由の LDAP 接続用。書式： ldapi://\fIsocket\fR。 （一般的にはリモート側への）TCP 経由の LDAP 接続用。書式： ldap://\fIhostname\fR。 SQLite データベースの場合の書式： sqlite://\fIfilename\fR。
+.RE
+.PP
+\-s one|sub|base
+.RS 4
+使用する検索スコープ。順に１レベル、サブツリーおよび base。
+.RE
+.PP
+\-a, \-all
+.RS 4
+すべてのレコードを編集する。たくさんのレコードに対して同じ変更をする 場合に便利。"objectclass=*" の式と組み合わせて指定しても構わない。
+.RE
+.PP
+\-e editor, \-\-editor editor
+.RS 4
+編集の再に使用するエディタ（ VISUAL / EDITOR 環境変数より優先される）。 このオプションが指定されず、VISUAL / EDITOR いずれの環境変数も設定されない 場合は vi エディタが使われる。
+.RE
+.PP
+\-b basedn
+.RS 4
+使用する base DN を指定する。
+.RE
+.PP
+\-v, \-\-verbose
+.RS 4
+実行しようとする操作に対してより詳しい表示を行う。このオプションが指定 されない場合、変更行に関する概要のみが表示される。
+.RE
+.SH "環境変数"
+.PP
+LDB_URL
+.RS 4
+接続する LDB URL。これより \-H コマンドラインオプションの方が 優先される。
+.RE
+.PP
+VISUAL と EDITOR
+.RS 4
+使用するエディタを指定する。EDITOR より VISUAL の方が優先され、 さらに \-e コマンドラインオプションが優先される。
+.RE
+.SH "バージョン"
+.PP
+このマニュアルは Samba スイートのバージョン 4\.0 に適合する。
+.SH "関連項目"
+.PP
+ldb(7), ldbmodify(1), ldbdel(1), ldif(5), vi(1)
+.SH "作者"
+.PP
+ldb は
+Andrew Tridgell
+によって書かれた。
+.PP
+問題を報告したり何らかの提案をしたい場合は、
+: http://ldb.samba.org/
+Web サイトで現在の連絡先と メンテナー情報を確認してほしい。
+.PP
+このマニュアルページは Jelmer Vernooij により書かれ、 Brad Hards により更新された。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.4\-3\.2\.6 対応のものである。
+.PP
+このドキュメントの Samba 3\.2\.4\-3\.2\.6 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+堀田 倫英(hotta@net\-newbie\.com)
+.sp
+.RE
+によって行なわれた。

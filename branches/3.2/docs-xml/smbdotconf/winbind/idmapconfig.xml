@@ -1,0 +1,69 @@
+<samba:parameter name="idmap config"
+                 context="G"
+		 type="string"
+                 advanced="1" developer="1" hide="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>
+	idmap config のプレフィックスは、Sambaのパラメーターのオプション設定
+	機能を利用して、<smbconfoption name="idmap domains"/>
+	オプションで定義されたそれぞれのドメインを管理する方法を提供する。
+	idmap config プレフィックスに続けて、ドメイン名、コロン、そして
+	選択したバックエンド用の設定を指定しなければならない。
+	全てのドメインで指定可能な3つのオプションがある。
+	</para>
+	<variablelist>  
+		<varlistentry>
+		<term>backend = backend_name</term>
+		<listitem><para>
+		        このドメインでSID/uid/gidのバックエンドとして利用する
+			idmapプラグインの名前を指定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>default = [yes|no]</term>
+		<listitem><para>
+		        ユーザー、グループの探索で、(アカウント SIDや、
+			ドメインSIDの比較で一致した)指定されたドメインに
+			該当者が存在しない場合のデフォルトの
+			ドメイン/バックエンドとして利用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>readonly = [yes|no]</term>
+		<listitem><para>
+			ドメイン内のあらゆるユーザーやグループに対して
+			試みられる(<smbconfoption name="idmap alloc 
+			backend"/> による)uidやgidの割り当てを試みない
+			read onlyのドメインとして扱う。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	次の例はCORPドメインが<citerefentry><refentrytitle>idmap_ad</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> バックエンド
+	で、他の全てのドメインが<citerefentry><refentrytitle>idmap_tdb</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> バックエンドとしてどのように
+	設定されるかを示している。
+	TRUSTEDDOMAINSの文字列は、&quot;idmap config&quot; の設定として
+	参照するための任意のキーであり、実際のドメイン名を表しているわけでは
+	ない。この設定は、明示的に指定されていない他の全てのドメインを包括する
+	ドメインを意味している。
+	</para>
+
+	<programlisting>
+	idmap domains = CORP TRUSTEDDOMAINS
+
+	idmap config CORP:backend  = ad
+	idmap config CORP:readonly = yes
+
+	idmap config TRUSTEDDOMAINS:backend = tdb
+	idmap config TRUSTEDDOMAINS:default = yes
+	idmap config TRUSTEDDOMAINS:range   = 1000 - 9999
+	</programlisting>
+	
+</description>
+</samba:parameter>
