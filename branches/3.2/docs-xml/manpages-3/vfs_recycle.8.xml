@@ -51,7 +51,7 @@
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
@@ -173,7 +173,8 @@
 		<term>recycle:noversions = LIST</term>
 		<listitem>
 		<para>
-		バージョン管理せず、直接削除すべきパス(*や?のようなワイルドカードをサポートする)
+		バージョン管理せず、直接削除すべきパス
+        (*や?のようなワイルドカードをサポートする)
 		を指定する。recycle:versionsが有効のときだけ使用される。
 		</para>
 		</listitem>
@@ -186,27 +187,30 @@
 	<title>設定例</title>
 
 	<para>
-	すべての共有のログで、LOCAL1ファシリティー、NOTICEプライオリティーを使用する（訳注：以下はコピペミスのため、正しくない）
+    <parameter>share</parameter>上の "削除対象" ファイルを、
+    削除する代わりに<parameter>/data/share/.recycle</parameter>に移動する。
 	</para>
 
 <programlisting>
-        <smbconfsection name="[global]"/>
-	<smbconfoption name="vfs objects">recycle</smbconfoption>
-	<smbconfoption name="recycle:facility">LOCAL1</smbconfoption>
-	<smbconfoption name="recycle:priority">NOTICE</smbconfoption>
+    <smbconfsection name="[share]"/>
+    <smbconfoption name="path">/data/share</smbconfoption>
+    <smbconfoption name="vfs objects">recycle</smbconfoption>
+    <smbconfoption name="recycle:repository">.recycle</smbconfoption>
+    <smbconfoption name="recycle:keeptree">yes</smbconfoption>
+    <smbconfoption name="recycle:versions">yes</smbconfoption>
 </programlisting>
 
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
 	<para>このマニュアルはSambaシステムバージョン3.0.25に対応している
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>作者</title>
 
 	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team に
@@ -220,6 +224,7 @@
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+            <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
 		</itemizedlist>	
         によって行なわれた。</para>
 </refsect1>
