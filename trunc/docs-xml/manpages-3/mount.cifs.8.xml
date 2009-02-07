@@ -43,11 +43,15 @@
 	サポートされている。</para>
 
 	<para>
-	mount.cifs ユーティリティは、UNC 名 (公開されたネットワークリソース)に
-	ローカルディレクトリの <emphasis>mount-point</emphasis> を割り当てる。
-	mount.cifs のモードを setuid root にすることで、root
-	以外のユーザも書き込み権限のある共有をディレクトリにマウントすることが
-	可能である。</para>
+    mount.cifs ユーティリティは、<emphasis>service</emphasis> として指定
+    された UNC 名 (公開されたネットワークリソース)にローカルディレクトリの
+    <emphasis>mount-point</emphasis> を割り当てる。
+    <emphasis>service</emphasis> は //server/share という書式で指定する。
+    ここで "server" はサーバの名前もしくは IP アドレス、 "share" は
+    共有の名前である。mount.cifs のモードを setuid root にすることで、root
+    以外のユーザも書き込み権限のある共有をディレクトリにマウントすることが
+    可能である。
+    </para>
 
 	<para>
 	<emphasis>mount.cifs</emphasis> のオプションはカンマ「,」
@@ -69,7 +73,8 @@
 	<variablelist>
 		<varlistentry><term>user=<replaceable>arg</replaceable></term>
 
-		<listitem><para>接続する際に用いるユーザ名を指定する。
+		<listitem><para>
+        接続する際に用いるユーザ名を指定する。
 		指定されていないときは、環境変数 <envar>USER</envar>
 		が使用される。このオプションは、"user%password" や
 		"workgroup/user" もしくは "workgroup/user%password"
@@ -91,7 +96,8 @@
 
 	<varlistentry><term>password=<replaceable>arg</replaceable></term>
 
-		<listitem><para>CIFS のパスワードを指定する。
+		<listitem><para>
+        CIFS のパスワードを指定する。
 		指定されていないときは、環境変数 <emphasis>PASSWD</emphasis>
 		が使用される。パスワードが取得できなければ、guest
 		オプションが指定されていない限り、<emphasis>mount.cifs</emphasis>
@@ -104,17 +110,21 @@
 		PASSWD 環境変数やパスワードを格納したファイル
 		(以下「資格情報ファイル」と呼ぶ。詳しくは後述)もしくはパスワードプロンプトからの入力においては、
 		そのようなパスワードも正しく認識できる。</para>
-	</listitem></varlistentry>
+	    </listitem>
+    </varlistentry>
 
 	<varlistentry><term>credentials=<replaceable>filename</replaceable></term>
 
-		<listitem><para>ユーザ名やパスワードを含む資格情報ファイルを指定する。
+		<listitem><para>
+        ユーザ名やパスワード、およびオプションでワークグループ名を
+        含む資格情報ファイルを指定する。
 		ファイルのフォーマットは以下のとおり:
 		</para>
 
 <programlisting>
 		username=<replaceable>value</replaceable>
 		password=<replaceable>value</replaceable>
+        workgroup=<replaceable>value</replaceable>
 </programlisting>
 		
 		<para>資格情報ファイルを利用することは、
@@ -123,7 +133,8 @@
 		このファイルは適切に保護するように注意すること。
 		</para>
 
-	</listitem></varlistentry>
+	    </listitem>
+    </varlistentry>
 
 	<varlistentry>
 		<term>uid=<replaceable>arg</replaceable></term>
