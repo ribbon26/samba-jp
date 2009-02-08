@@ -1,11 +1,11 @@
 .\"     Title: mount.cifs
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 01/07/2009
+.\"      Date: 02/07/2009
 .\"    Manual: System管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "MOUNT\.CIFS" "8" "01/07/2009" "Samba 3\.2" "System管理ツール"
+.TH "MOUNT\.CIFS" "8" "02/07/2009" "Samba 3\.2" "System管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -25,9 +25,12 @@ mount\.cifs は Linux の CIFS ファイルシステムをマウントする。 
 \fBmount\fR(8)
 によって間接的に呼び出される。 このコマンドは Linux 上でしか動作せず、カーネルが CIFS ファイルシステムをサポートしていなければいけない。CIFS プロトコルは SMB プロトコルの後継プロトコルであり、Samba の他にもほとんどの Windows サーバや他の商用サーバ、ネットワーク・ストレージ機器などで サポートされている。
 .PP
-mount\.cifs ユーティリティは、UNC 名 (公開されたネットワークリソース)に ローカルディレクトリの
+mount\.cifs ユーティリティは、\fIservice\fR
+として指定 された UNC 名 (公開されたネットワークリソース)にローカルディレクトリの
 \fImount\-point\fR
-を割り当てる。 mount\.cifs のモードを setuid root にすることで、root 以外のユーザも書き込み権限のある共有をディレクトリにマウントすることが 可能である。
+を割り当てる。
+\fIservice\fR
+は //server/share という書式で指定する。 ここで "server" はサーバの名前もしくは IP アドレス、 "share" は 共有の名前である。mount\.cifs のモードを setuid root にすることで、root 以外のユーザも書き込み権限のある共有をディレクトリにマウントすることが 可能である。
 .PP
 
 \fImount\.cifs\fR
@@ -67,12 +70,13 @@ CIFS のパスワードを指定する。 指定されていないときは、�
 .PP
 credentials=\fIfilename\fR
 .RS 4
-ユーザ名やパスワードを含む資格情報ファイルを指定する。 ファイルのフォーマットは以下のとおり:
+ユーザ名やパスワード、およびオプションでワークグループ名を 含む資格情報ファイルを指定する。 ファイルのフォーマットは以下のとおり:
 .sp
 .RS 4
 .nf
 		username=\fIvalue\fR
 		password=\fIvalue\fR
+        workgroup=\fIvalue\fR
 .fi
 .RE
 資格情報ファイルを利用することは、
@@ -398,4 +402,4 @@ Linux CIFS Mailing list
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.2\.7 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\.2\.4\-3\.2\.8 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
