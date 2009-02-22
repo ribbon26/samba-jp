@@ -1,11 +1,11 @@
 .\"     Title: cifs.upcall
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 12/16/2008
+.\"      Date: 02/22/2009
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "CIFS\.UPCALL" "8" "12/16/2008" "Samba 3\.2" "システム管理ツール"
+.TH "CIFS\.UPCALL" "8" "02/22/2009" "Samba 3\.2" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -18,37 +18,37 @@ cifs\.upcall [\-c] [\-v] {keyid}
 .SH "説明"
 .PP
 このツールは
-\fBsamba\fR(7)スイートの一部である。
+\fBsamba\fR(7)システムの一部である。
 .PP
-cifs\.upcallは、Linux CIFSクライアントファイルシステムのための、ユーザ空間ヘルパプログラムである。kernelが簡単にそれ自身でできない、たくさんの機能がある。このプログラムは、kernelに対してそれらのことを行うcalloutプログラムであり、結果を返す。
+cifs\.upcallは、Linux CIFSクライアントファイルシステムのためのユーザ空間ヘルパプログラムである。kernelがそれ自身では簡単にはできないような、さまざまな機能をkernelに代わって行う。このプログラムはkernelから呼び出されてこれらの機能を実行し、その結果を(kernelに)返す。
 .PP
-cifs\.upcallは一般的に、kernelが特定のキータイプのために、request\-key(8)を呼び出すとき、動くつもりである。コマンドラインから直接起動できる間、その方法で動かされる事は一般的ではない。
+cifs\.upcallはほとんどの場合、kernelがrequest\-key(8)で特定のキータイプを呼び出す際に実行されることを想定して作られている。コマンドラインから直接起動できるようにはなっているものの、その方法で呼び出される事は基本的に想定していない。
 .SH "オプション"
 .PP
 \-c
 .RS 4
-kerberosのupcallを取り扱っている間、"cifs/"で始まるサービスプリンシパルを使う。規定値は、"host/"サービスプリンシパルを使うためになっている。
+kerberos upcallの処理時は"cifs/"で始まるサービスプリンシパルを使う。デフォルトでは"host/"サービスプリンシパルを使うようになっている。
 .RE
 .PP
 \-v
 .RS 4
-バージョン番号を印刷して終了する。
+バージョン番号を表示して終了する。
 .RE
 .SH "KEYCTLのための構成方法"
 .PP
-cifs\.upcallはrequest\-key callout プログラム経由でkernelから呼ばれるようにデザインされている。これは、どこからと、どのようにこのプログラムを呼び出すかがrequest\-keyが語られる事を要求する。現在のcifs\.upcallプログラムは2つのキータイプを扱う:
+cifs\.upcallは、request\-key callout プログラム経由でkernelから呼ばれるようにデザインされている。このため、request\-keyに対して、どこから、どのようにこのプログラムを呼び出すかを指示してやらなければならない。現在のcifs\.upcallプログラムは2つのキータイプを扱う:
 .PP
 cifs\.spnego
 .RS 4
-このキータイプはkerberosセッションキーを検索するためである。
+このキータイプはkerberosセッションキーを検索する。
 .RE
 .PP
 dns_resolver
 .RS 4
-このキータイプは、ホスト名をIPアドレスに変換(解決)するためのものである。
+このキータイプは、ホスト名をIPアドレスに変換(解決)する。
 .RE
 .PP
-CIFSのためにこのプログラムを使いやすくするためには、request\-key\.conf(5)中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:
+CIFSがこのプログラムを便利に使えるように、request\-key\.conf(5)中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:
 .sp
 .RS 4
 .nf
@@ -59,7 +59,7 @@ create      dns_resolver   * * /usr/local/sbin/cifs\.upcall %k
 .fi
 .RE
 .PP
-それぞれのフィールドについての詳細な情報は\fBrequest-key.conf5\fR()を参照。
+それぞれのフィールドについての詳細は\fBrequest-key.conf5\fR()を参照のこと。
 .SH "参照"
 .PP
 
@@ -73,12 +73,12 @@ Jeff Laytonはこのマニュアルページを書いた。
 .PP
 Linux CIFS VFSのメンテナはSteve Frenchである。
 .PP
-Linux CIFSメーリングリストは、これらのプログラムに対して質問をする事に好まれる場所である。
+Linux CIFSメーリングリストは、これらのプログラムに対して質問をするのにふさわしい場所である。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.2\.4\-3\.2\.6 対応のものである。
+このマニュアルページは Samba 3\.2\.4\-3\.2\.8 対応のものである。
 .PP
-このドキュメントの Samba 3\.2\.4\-3\.2\.6 対応の翻訳は
+このドキュメントの Samba 3\.2\.4\-3\.2\.8 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -89,6 +89,17 @@ Linux CIFSメーリングリストは、これらのプログラムに対して�
 .IP \(bu 2.3
 .\}
 太田俊哉(ribbon@samba\.gr\.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+堀田 倫英(hotta@net\-newbie\.com)
 .sp
 .RE
 によって行なわれた。

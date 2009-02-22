@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 12/16/2008
+.\"      Date: 02/22/2009
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.2
 .\"
-.TH "SMB\.CONF" "5" "12/16/2008" "Samba 3\.2" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "02/22/2009" "Samba 3\.2" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -858,24 +858,20 @@ smbd
 add share command (G)
 .PP
 .RS 4
-Samba 2\.2\.0 では、 Windows NT 4\.0 のサーバーマネージャーを用いて動的に共有を追加したり削除したりする機能が追加された。
+Samba 2\.2\.0 では、Windows NT 4\.0 のサーバーマネージャーを利用して共有設定を を追加・削除する機能が追加された。
 \fIadd share command\fR
-は、 新しいサービスの設定を
-\fIsmb\.conf\fR
-に追加する外部のプログラム、もしくはスクリプトを設定するためのパラメータである。
+は、
+\fIsmb\.conf\fRに新しいサービスの設定を追加 する外部のプログラム、もしくはスクリプトを設定するためのパラメータである。
+.sp
+
 \fIadd share command\fR
 を実行するため、管理者は
 smbd
-に対して root アカウント(uid = 0)を利用して接続する必要がある。
+にroot アカウント(uid = 0)で接続するか、アカウントにSeDiskOperatorPrivilege
+が付与されている必要がある。
+\fIadd share command\fRで指定された スクリプトはroot権限で実行される。
 .sp
-接続したアカウントが
-SeDiskOperatorPrivilege
-を持っている場合、\fIchange share\fR
-パラメータで定義されたスクリプトは root 権限で実行される。
-.sp
-コマンド実行時に、smbd
-は自動的に以下の 5 つの引数を付加して
-\fIadd share command\fRを実行する。
+コマンド実行時に、smbdは自動的に以下の 5 つの引数を付加して\fIadd share command\fRを実行する。
 .sp
 .RS 4
 .ie n \{\
@@ -887,7 +883,7 @@ SeDiskOperatorPrivilege
 .\}
 \fIconfigFile\fR
 \-
-\fIsmb\.conf\fRファイルの場所
+\fIsmb\.conf\fRの場所
 .RE
 .sp
 .RS 4
@@ -938,7 +934,7 @@ SeDiskOperatorPrivilege
 共有への最大同時接続数。
 .sp
 .RE
-このパラメータは、ファイル共有の追加にのみ使われる。 印刷共有の追加については、
+このパラメータは、ファイル共有の追加にのみ使われる。印刷共有の追加については、
 \fIaddprinter command\fR
 を参照のこと。
 .sp
@@ -1447,24 +1443,20 @@ change notify timeout (S)
 change share command (G)
 .PP
 .RS 4
-Samba 2\.2\.0 では、Windows NT 4\.0 のサーバマネージャから動的な共有の追加や削除を行なう機能が実現されている。
+Samba 2\.2\.0 では、Windows NT 4\.0 のサーバーマネージャーを利用して共有設定を を追加・削除する機能が追加された。
 \fIchange share command\fR
-は
-\fIsmb\.conf\fR
-に存在しているサービスの定義を修正するための外部のプログラムやスクリプトを指定するために用いられる。
-\fIchange share command\fR
-を適切に実行するためには、 管理者は root アカウント(uid == 0) で
-smbd
-に接続しておく必要がある。
+は、
+\fIsmb\.conf\fRの既存のサービスの設定を変更 する外部のプログラム、もしくはスクリプトを設定するためのパラメータである。
 .sp
-もしも、接続するアカウントがSeDiskOperatorPrivilege権限を持つならば、
-\fIchange share\fRパラメータ 中で定義されているスクリプトはrootとして実行される。
-.sp
-スクリプト実行時には
-smbd
-が以下の5つのパラメータを設定して自動的に
+
 \fIchange share command\fR
-を実行する。
+を実行するため、管理者は
+smbd
+にroot アカウント(uid = 0)で接続するか、アカウントにSeDiskOperatorPrivilege
+が付与されている必要がある。
+\fIadd share command\fRで指定された スクリプトはroot権限で実行される。
+.sp
+コマンド実行時に、smbdは自動的に以下の 5 つの引数を付加して\fIchange share command\fRを実行する。
 .sp
 .RS 4
 .ie n \{\
@@ -1475,9 +1467,8 @@ smbd
 .IP \(bu 2.3
 .\}
 \fIconfigFile\fR
-\- グローバルな
-\fIsmb\.conf\fR
-ファイルの位置
+\-
+\fIsmb\.conf\fRの場所
 .RE
 .sp
 .RS 4
@@ -1501,7 +1492,7 @@ smbd
 .IP \(bu 2.3
 .\}
 \fIpathName\fR
-\- ディスク上に 「存在している」ディレクトリのパス名
+\- ディスク上に「存在している」ディレクトリへのパス名
 .RE
 .sp
 .RS 4
@@ -1513,7 +1504,7 @@ smbd
 .IP \(bu 2.3
 .\}
 \fIcomment\fR
-\- 新しい共有に設定するコメント文字列
+\- 新しい共有に対するコメント文字列
 .RE
 .sp
 .RS 4
@@ -1528,13 +1519,13 @@ smbd
 共有への最大同時接続数。
 .sp
 .RE
-このパラメータは、既に存在するファイル共有の設定を修正するためにのみ用いられる。 印刷共有の設定を修正する場合、Samba ホストをブラウズすると表示される"Printers\.\.\."フォルダから行なうこと。
+このパラメータは、ファイル共有設定の変更にのみ使われる。印刷共有の設定を 変更にするには、共有されているホストのプリンタフォルダを使用する。
 .sp
 既定値:
 \fI\fIchange share command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
 例:
-\fI\fIchange share command\fR\fR\fI = \fR\fI/usr/local/bin/addshare\fR\fI \fR
+\fI\fIchange share command\fR\fR\fI = \fR\fI/usr/local/bin/changeshare\fR\fI \fR
 .RE
 
 check password script (G)
@@ -3999,16 +3990,17 @@ Samba が読みとり専用の LDAP レプリカに対して、書き込みの�
 ldapsam:editposix (G)
 .PP
 .RS 4
-Editposix is an option that leverages ldapsam:trusted to make it simpler to manage a domain controller eliminating the need to set up custom scripts to add and manage the posix users and groups\. This option will instead directly manipulate the ldap tree to create, remove and modify user and group entries\. This option also requires a running winbindd as it is used to allocate new uids/gids on user/group creation\. The allocation range must be therefore configured\.
+Editposix は ldapsam:trusted を利用してドメインコントローラーの管理をより 簡単にするためのオプションである。これを使えば posix ユーザーやグループの 追加や保守のためのカスタムスクリプトを設定しなくてもすむ。その代わりこの オプションでは、LDAP ツリー上のユーザやグループのエントリーを直接生成、 削除、編集できる。なお、このオプションを使うにあたっては、ユーザ／グループ の生成をする際に新しい uid/gid を割り当てるための winbindd が動いている 必要がある。その割り当て範囲はあらかじめ設定されていなければならない。
 .sp
-To use this option, a basic ldap tree must be provided and the ldap suffix parameters must be properly configured\. On virgin servers the default users and groups (Administrator, Guest, Domain Users, Domain Admins, Domain Guests) can be precreated with the command
-net sam provision\. To run this command the ldap server must be running, Winindd must be running and the smb\.conf ldap options must be properly configured\. The typical ldap setup used with the
+このオプションを使うためには、基本的な LDAP ツリーが提供され、また LDAP サフィックスが適切に設定されていなければならない。構築したてのサーバーでは、
+net sam provision
+コマンドで事前に デフォルトのユーザとグループ (Administrator, Guest, Domain Users, Domain Admins, Domain Guests) を作成できる。このコマンドを動かす際は LDAP サーバーと winbindd が動いており、かつ smb\.conf の LDAP オプション 群が適切に構成されていなければならない。
 \fIldapsam:trusted = yes\fR
-option is usually sufficient to use
+オプションで 使われる典型的な LDAP 構成であれば、通常は
 \fIldapsam:editposix = yes\fR
-as well\.
+を使うのに 十分である。
 .sp
-An example configuration can be the following:
+設定例を以下に示す：
 .sp
 .RS 4
 .nf
@@ -4034,7 +4026,7 @@ An example configuration can be the following:
 .fi
 .RE
 .sp
-This configuration assumes a directory layout like described in the following ldif:
+この設定例では、ディレクトリのレイアウトが以下の LDIF で示すように なっていることを想定している：
 .sp
 .RS 4
 .nf
@@ -4097,17 +4089,13 @@ o Samba を大規模環境に適用させるため、\fIldapsam:trusted = yes\fR
 ldap ssl (G)
 .PP
 .RS 4
-このオプションは、Samba が ldap server に接続する際に、SSL を用いるかどうかを制御するために用いられる。これは、
-\fIconfigure\fR
-スクリプトの
-\-\-with\-ssl
-オプションで有効化される、 Samba の古い SSL サポートとは
-\fI無関係\fR
+このオプションはSambaがLDAPサーバへの接続にSSLを利用するかを 指定する。以前のSambaのバージョンにおいて\fI configureスクリプト\fRの\-\-with\-sslで指定されたSambaの古いSSLサポートとは\fI関係ない。 \fR
 .sp
-である。
-		
-	\fIldap ssl\fR
-の値には、以下の 3 つのうちいずれかを設定すること:
+LDAPサーバとの接続は可能な限り暗号化すべきである。これは、
+\fIStart_tls\fRパラメータを指定する、 または\fIpassdb backend\fRにおけるURLの指定に
+\fIldaps://\fRを指定するか、のいずれか によって設定される。
+.sp
+\fIldap ssl\fRオプションは、２つのうちいずれかを 選択する。
 .sp
 .RS 4
 .ie n \{\
@@ -4118,7 +4106,7 @@ ldap ssl (G)
 .IP \(bu 2.3
 .\}
 \fIOff\fR
-= ディレクトリのクエリ時には決して SSL を用いない。
+= ディレクトリに問い合わせする時SSLを使わない。
 .RE
 .sp
 .RS 4
@@ -4130,29 +4118,11 @@ ldap ssl (G)
 .IP \(bu 2.3
 .\}
 \fIStart_tls\fR
-= ディレクトリサーバと通信する際に、LDAPv3 StartTLS 拡張オプション (RFC2830) を利用する。
-.RE
-.sp
-.RS 4
-.ie n \{\
-\h'-04'\(bu\h'+03'\c
-.\}
-.el \{\
-.sp -1
-.IP \(bu 2.3
-.\}
-\fIOn\fR
-=
-\fIldap server\fR
-に対して、常に ldaps ポートで SSL を用いて接続する。 下位互換である
-\-\-with\-ldapsam
-オプションが configure 時に指定された場合に のみ有効である。
-\fIpassdb backend\fR
-も参照のこと。
+= ディレクトリに問い合わせする際にLDAPv3 StartTLS拡張オプション (RFC2830)を利用する。
 .sp
 .RE
 既定値:
-\fI\fIldap ssl\fR\fR\fI = \fR\fIstart_tls\fR\fI \fR
+\fI\fIldap ssl\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 ldap suffix (G)
@@ -4177,7 +4147,7 @@ ldap suffix は、\fIldap user suffix\fR、
 ldap timeout (G)
 .PP
 .RS 4
-Samba が LDAP サーバに接続しようとした際に、該当サーバがダウンしていたり、該当サーバに到達することができなかったりした場合に Samba が接続待ちでフリーズしてしまわないように、このパラメータでは Samba が接続の確立を待機する時間を秒単位で指定する。 デフォルトは 15 秒であり、この時間内に LDAP サーバは接続要求に対して応答する必要がある。
+このパラメータでは、SambaがLDAP接続においてタイムアウトさせるまでの秒数を指定する。
 .sp
 既定値:
 \fI\fIldap timeout\fR\fR\fI = \fR\fI15\fR\fI \fR
@@ -9405,11 +9375,11 @@ wtmp directory (G)
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.2\.4\-3\.2\.6対応のものである。
+このマニュアルページは Samba 3\.2\.4\-3\.2\.8対応のものである。
 .PP
 Samba 3\.0\.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.2\.6 対応の翻訳は、
+Samba 3\.2\.4\-3\.2\.8 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP
