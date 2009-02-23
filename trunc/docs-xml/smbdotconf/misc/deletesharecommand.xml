@@ -4,43 +4,48 @@
                  advanced="1" developer="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-	<para>Samba 2.2.0 では、Windows NT 4.0 のサーバマネージャから動的な共有の追加や削除を行なう機能が実現されている。
-	<parameter moreinfo="none">delete share command</parameter> は
-	<filename moreinfo="none">smb.conf</filename> に存在しているサービスの定義を削除するための外部のプログラムやスクリプトを指定するために用いられる。
-	<parameter moreinfo="none">delete share command</parameter> を適切に実行するためには、
-	管理者は root アカウント(uid == 0) で
-	<command moreinfo="none">smbd</command> に接続しておく必要がある。
+	<para>
+	Samba 2.2.0 では、Windows NT 4.0 のサーバマネージャーを利用して共有設定を
+	を追加・削除する機能が追加された。
+	<parameter moreinfo="none">delete share command</parameter> は、
+	<filename moreinfo="none">smb.conf</filename>に既存のサービスを削除
+	する外部のプログラム、もしくはスクリプトを設定するためのパラメータである。
 	</para>
 
-<para>接続中のアカウントが <literal>SeDiskOperatorPrivilege</literal>
-権限を持っている場合、<parameter moreinfo="none">change share</parameter>
-パラメータで定義されたスクリプトは root 権限で実行される。</para>
-		
 	<para>
-	スクリプト実行時には <command moreinfo="none">smbd</command> が以下の2つのパラメータを設定して自動的に
-	<parameter moreinfo="none">delete share command</parameter> を実行する。
+	<parameter moreinfo="none">delete share command</parameter>
+	を実行するため、管理者は <command moreinfo="none">smbd</command> にroot
+	アカウント(uid = 0)で接続するか、アカウントに<literal>SeDiskOperatorPrivilege</literal>
+	が付与されている必要がある。
+	<parameter moreinfo="none">delete share command</parameter>で指定された
+	スクリプトはroot権限で実行される。
 	</para>
-		
+
+	<para>
+		コマンド実行時に、<command moreinfo="none">smbd</command>は自動的に以下の
+		2つの引数を付加して<parameter moreinfo="none">delete share command</parameter>を
+		実行する。
+	</para>
+
 	<itemizedlist>
-		<listitem><para><parameter moreinfo="none">configFile</parameter>
-		- グローバルな <filename>smb.conf</filename> ファイルの位置
-		</para>
+		<listitem>
+			<para><parameter moreinfo="none">configFile</parameter> - <filename moreinfo="none">smb.conf</filename>の場所</para>
 		</listitem>
-			
-	<listitem><para><parameter moreinfo="none">shareName</parameter>
-		- 既存のサービス名
-		</para>
+
+		<listitem>
+			<para><parameter moreinfo="none">shareName</parameter> - 既存の共有名 </para>
 		</listitem>
 	</itemizedlist>
-		
+
 	<para>
-	このパラメータはファイル共有を削除する際にのみ利用される。
-	印刷共有の削除については、
-	<smbconfoption name="deleteprinter command"/> を参照のこと。
+	このパラメータは、ファイル共有設定の削除にのみ使われる。印刷共有の設定を
+	削除するときは<smbconfoption name="deleteprinter command"/>を参照のこと。
 	</para>
+	
 </description>
+
 <related>add share command</related>
-<related>delete share command</related>
+<related>change share command</related>
 <value type="default"></value>
 <value type="example">/usr/local/bin/delshare</value>
 </samba:parameter>
