@@ -1,11 +1,11 @@
 .\"     Title: idmap_ad
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 03/03/2009
+.\"      Date: 03/10/2009
 .\"    Manual: システム管理ツール
-.\"    Source: Samba 3.2
+.\"    Source: Samba 3.3
 .\"
-.TH "IDMAP_AD" "8" "03/03/2009" "Samba 3\.2" "システム管理ツール"
+.TH "IDMAP_AD" "8" "03/10/2009" "Samba 3\.3" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -28,18 +28,16 @@ Active Directory に関するユーザとグループ情報を問い合わせる
 .RE
 .SH "使用例"
 .PP
-以下の例は、どのように、プリンシパルと信頼されたADドメインから相対的なidマッピングを 検索するかを示している。Allは規定値をyesに設定するために必要である。もしも、信頼された ドメインが存在するidと競合するならば、それは、あらかじめ解決されていなければならず、 順番が競合したマッピングはその時点で解決されていることについては何らの保証もない。 この例はまた、どのように、BULITINのような内部のバックエンドを使うことが出来る ローカルのid割り当てのために競合しない小さなレンジを残すための方法を示している。
+以下の例は、どのように、プリンシパルと信頼されたADドメインから相対的なidマッピングを 検索するかを示している。もしも、信頼されたドメインが存在するidと競合するならば、 それは、あらかじめ解決されていなければならず、順番が競合したマッピングはその時点 で解決されていることについては何らの保証もない。 この例はまた、どのように、BULITINのような内部のバックエンドを使うことが出来る ローカルのid割り当てのために競合しない小さなレンジを残すための方法を示している。
 .sp
 .RS 4
 .nf
 	[global]
-	idmap domains = ALLDOMAINS
-	idmap config ALLDOMAINS:backend      = ad
-	idmap config ALLDOMAINS:default      = yes
-	idmap config ALLDOMAINS:range        = 10000 \- 300000000
-
-	idmap alloc backend = tdb
-	idmap alloc config:range        = 5000 \- 9999
+	idmap backend = tdb
+	idmap uid = 1000000\-1999999
+	idmap gid = 1000000\-1999999
+	idmap config CORP : backend  = ad
+	idmap config CORP : range = 1000\-999999
 	
 .fi
 .RE
@@ -48,7 +46,7 @@ Active Directory に関するユーザとグループ情報を問い合わせる
 オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が 行なわれている。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.2\.4\-3\.2\.8 対応のものである。
+このマニュアルページは Samba 3\.2\.4\-3\.3\.1 対応のものである。
 .PP
 このドキュメントの翻訳は
 .sp
