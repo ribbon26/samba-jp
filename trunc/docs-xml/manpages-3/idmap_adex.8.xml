@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="idmap_adex.8">
 
@@ -6,62 +6,60 @@
 	<refentrytitle>idmap_adex</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
-	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
 	<refmiscinfo class="version">3.3</refmiscinfo>
 </refmeta>
 
 
 <refnamediv>
 	<refname>idmap_adex</refname>
-	<refpurpose>Samba's idmap_adex Backend for Winbind</refpurpose>
+	<refpurpose>Samba の Winbind 用 idmap_adex バックエンド</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 	<para>
-	  The idmap_adex plugin provides a way for Winbind to read
-	  id mappings from an AD server that uses RFC2307 schema
-	  extensions. This module implements both the idmap and nss_info
-	  APIs and supports domain trustes as well as two-way cross
-	  forest trusts.  It is a read-only plugin requiring that the
-	  administrator provide mappings in advance by adding the
-	  POSIX attribute information to the users and groups objects
-	  in AD.  The most common means of doing this is using &quot;Identity
-	  Services for Unix&quot; support on Windows 2003 R2 and later.
+      idmap_adex プラグインは、RFC2307 スキーマ拡張を使った AD サーバから
+      Winbind が id のマッピング情報を読み込むための手段を提供する。この
+      モジュールでは idmap と nss_info API の両方を実装しており、ドメイン
+      信頼に加えて双方向のクロスフォレスト信頼をサポートしている。AD の 
+      users と groups オブジェクトに POSIX 属性情報を追加することで、
+      あらかじめ管理者が提供するマッピング情報を要求するリードオンリー
+      プラグインとなっている。これを使う一番の目的は、Windows 2003 R2 
+      以降で &quot;Identity Services for Unix&quot; を使うことにある。
 	</para>
 
 	<para>
-	  Note that you must add the uidNumber, gidNumber, and uid
-	  attributes to the partial attribute set of the forest global
-	  catalog servers.  This can be done using the Active Directory Schema
-	  Management MMC plugin (schmmgmt.dll).
+      注意：対象フォレストのグローバルカタログサーバの部分属性に、uidNumber,
+      gidNumber, uid 属性を追加しなければならないことに注意してほしい。
+      この作業を行うには、Active Directory スキーマ管理 MMC プラグイン
+      (schmmgmt.dll)を使う。
 	</para>
 </refsynopsisdiv>
 
 <refsynopsisdiv>
 	<title>NSS_INFO</title>
 	<para>
-	  The nss_info plugin supports reading the unixHomeDirectory,
-	  gidNumber, loginShell, and uidNumber attributes from the user
-	  object and the gidNumber attribute from the group object to
-	  fill in information required by the libc getpwnam() and
-	  getgrnam() family of functions.  Group membership is filled in
-	  according to the Windows group membership and not the
-	  msSFU30PosixMember attribute.
+      nss_info プラグインは、user オブジェクトから unixHomeDirectory,
+      gidNumber, loginShell, uidNumber 属性を、group オブジェクトから
+      gidNumber 属性を読み取って、libc の getpwnam() と getgrnam()
+      ファミリー関数が要求する情報を提供する。グループのメンバーシップは、
+      msSFU30PosixMember 属性ではなく Windows の group メンバーシップ
+      に従って提供される。
 	</para>
 
 	<para>
-	  Username aliases are implement by setting the uid attribute
-	  on the user object.  While group name aliases are implemented
-	  by reading the displayname attribute from the group object.
+      ユーザの別名は、user オブジェクトに uid 属性をセットすることで
+      実装されている。一方、グループの別名は group オブジェクトの
+      displayname 属性を読むという方法で実装されている。
 	</para>
 </refsynopsisdiv>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>実行例</title>
 	<para>
-	  The following example shows how to retrieve idmappings and NSS data
-	  from our principal and trusted AD domains.
+      以下の例では、私たちのプリンシパルと信頼された AD ドメインから
+      id のマッピング情報と NSS データを取り出す方法について示している。
 	</para>
 
 	<programlisting>
@@ -76,14 +74,23 @@
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
 	<para>
-	The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.
+    オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell
+    により書かれた。Samba は現在 Samba チームの元で、Linux のカーネルと
+    同様にオープンソースソフトウェアとして開発されている。
 	</para>
+</refsect1>
+
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 3.3.2  対応のものである。</para>
+        <para>このドキュメントの翻訳は
+    <itemizedlist>
+        <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+    </itemizedlist>
+        によって行なわれた。</para>
 </refsect1>
 
 </refentry>
