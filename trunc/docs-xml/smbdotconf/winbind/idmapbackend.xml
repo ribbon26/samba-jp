@@ -8,13 +8,54 @@
 	idmap backend は Winbindが SID/uid/gid のマッピングテーブルを
         格納するための様々なバックエンドを利用するためのプラグイン
         インターフェースを提供する。
-	このオプションは、より新しくて柔軟な
-	<smbconfoption name="idmap domains"/> パラメーターと同時に
-	利用することはできない。
-	&quot;idmap backend&quot; と &quot;idmap domains&quot; の主な違いは
-	前者が全てのドメインに対して単一のバックエンドのみ利用可能であるのに
-	対して、後者はドメインごとに個別にバックエンドを設定可能であると
-	いうことである。
+	</para>
+	
+	<para>
+	このオプションは、<smbconfoption name="idmap config"/>で何も指定
+	されていないときに、デフォルトで利用するバックエンドを指定する
+	ときに利用する。
+	</para>
+	
+	<para>
+	This default backend also specifies the place where winbind-generated
+	idmap entries will be stored. So it is highly recommended that you
+	specify a writable backend like <citerefentry>
+	<refentrytitle>idmap_tdb</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry> or <citerefentry>
+	<refentrytitle>idmap_ldap</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry> as the idmap backend. The <citerefentry>
+	<refentrytitle>idmap_rid</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry> and <citerefentry>
+	<refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry> backends are not writable and thus will generate
+	unexpected results if set as idmap backend.
+	</para>	
+	
+	<para>
+	このデフォルトのバックエンドは、winbindで生成されたidmapの格納場所
+	も指定する。そのため、書き込み可能な<citerefentry>
+	<refentrytitle>idmap_tdb</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry>や<citerefentry>
+	<refentrytitle>idmap_ldap</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry>がidmapの格納場所として推奨される。<citerefentry>
+	<refentrytitle>idmap_rid</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry>や<citerefentry>
+	<refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry>は書き込み可能でないため、これらをidmapのバックエンド
+	に指定すると予想できない結果となる。
+	</para>		
+	
+	<para>
+	To use the rid and ad backends, please specify them via the
+	<smbconfoption name="idmap config"/> parameter, possibly also for the
+	domain your machine is member of, specified by <smbconfoption
+	name="workgroup"/>.
+	</para>
+	
+	<para>
+	ridとadのバックエンドを利用する場合には<smbconfoption name="workgroup"/>で指定
+	されているドメイン名を<smbconfoption name="idmap config"/>の
+	パラメータで指定する。
 	</para>
 
 	<para> SID/uid/gid のバックエンドの実装として tdb (<citerefentry>
@@ -24,7 +65,8 @@
 	<refentrytitle>idmap_rid</refentrytitle><manvolnum>8</manvolnum></citerefentry>)、
 	ad (<citerefentry><refentrytitle>idmap_tdb</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>)が提供されている。
-	</para>
+	</para>	
+
 </description>
 
 <value type="default">tdb</value>
