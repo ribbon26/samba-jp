@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <refentry id="sharesec.1">
 
@@ -6,14 +6,14 @@
 	<refentrytitle>sharesec</refentrytitle>
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
-	<refmiscinfo class="manual">User Commands</refmiscinfo>
+	<refmiscinfo class="manual">ユーザコマンド</refmiscinfo>
 	<refmiscinfo class="version">3.3</refmiscinfo>
 </refmeta>
 
 
 <refnamediv>
 	<refname>sharesec</refname>
-	<refpurpose>Set or get share ACLs</refpurpose>
+	<refpurpose>共有のACLに対する設定と取得</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -38,63 +38,63 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<para>このツールは<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>The <command>sharesec</command> program manipulates share permissions
-	on SMB file shares.</para>
+	<para><command>sharesec</command>プログラムは、SMBファイル共有上の共有のパーミッションを
+	操作するプログラムである。</para>
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
-	<para>The following options are available to the <command>sharesec</command> program.
-	The format of ACLs is described in the section ACL FORMAT </para>
+	<para>以下のオプションは<command>sharesec</command>プログラムで有効である。ACLのフォーマットは、
+	ACL FORMATセクションで説明されている。</para>
 
 	<variablelist>
 		<varlistentry>
 		<term>-a|--add=ACL</term>
-		<listitem><para>Add the ACEs specified to the ACL list.
+		<listitem><para>指定されたACLリストにACEを追加する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-D|--delete</term>
-		<listitem><para>Delete the entire security descriptor.
+		<listitem><para>すべてのセキュリティディスクリプタを削除する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-F|--force</term>
-		<listitem><para>Force storing the ACL.
+		<listitem><para>強制的にACLを格納する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-m|--modify=ACL</term>
-		<listitem><para>Modify existing ACEs.
+		<listitem><para>存在するACEを変更する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-M|--machine-sid</term>
-		<listitem><para>Initialize the machine SID.
+		<listitem><para>マシンのSIDを初期化する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-r|--remove=ACL</term>
-		<listitem><para>Remove ACEs.
+		<listitem><para>ACEを削除する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-R|--replace=ACLS</term>
 		<listitem><para>
-		Overwrite an existing share permission ACL.
+		存在する共有パーミッションACLを上書きする。
 		</para></listitem>
 		</varlistentry>
 
@@ -108,8 +108,8 @@
 <refsect1>
 	<title>ACL FORMAT</title>
 
-	<para>The format of an ACL is one or more ACL entries separated by
-	either commas or newlines.  An ACL entry is one of the following: </para>
+	<para>ACLのフォーマットは、1つまたはそれ以上の、カンマ又は改行で分離された、ACL
+	エントリである。1つのACLエントリは以下のうちのどれかである:</para>
 
 	<para><programlisting>
 	REVISION:&lt;revision number&gt;
@@ -118,70 +118,81 @@
 	ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 	</programlisting></para>
 
-	<para>The revision of the ACL specifies the internal Windows
-	NT ACL revision for the security descriptor.
-	If not specified it defaults to 1. Using values other than 1 may
-	cause strange behaviour.</para>
+	<para>
+	ACLのリビジョンはセキュリティディスクリプタの　内部Windows NT ACL リビジョン
+	を指定する。もしも指定されなければ既定値として1が取られる。1以外の値を使うこと
+	は、奇妙な振る舞いを引き起こすかもしれない。</para>
 
-	<para>The owner and group specify the owner and group SIDs for the
+	<para>
+	owner と group は、オブジェクトのためのownerとgroup SIDを指定する。もしも
+	SIDがS-1-x-y-z形式で指定されれば、それが使われ、それ以外では、指定された名前が
+	ファイル又はディレクトリが存在するサーバを使って解決される。
+	The owner and group specify the owner and group SIDs for the
 	object. If a SID in the format S-1-x-y-z is specified this is used,
 	otherwise the name specified is resolved using the server on which
 	the file or directory resides.</para>
 
-	<para>ACLs specify permissions granted to the SID. This SID
+	<para>
+	ACLの指定したパーミッションは、SIDに対して許可される。このSIDはS-1-x-y-z
+	形式で指定されるか、ファイル又はディレクトリが存在するサー馬上で解決される
+	名前で指定される。type,flagsとmask値は、SIDに対して許可されるアクセスのタイ
+	プを決める。
+	ACLs specify permissions granted to the SID. This SID
 	can be specified in S-1-x-y-z format or as a name in which case
 	it is resolved against the server on which the file or directory
 	resides.  The type, flags and mask values determine the type of
 	access granted to the SID.</para>
 
-	<para>The type can be either ALLOWED or	DENIED to allow/deny access
-	to the SID. The flags values are generally zero for share ACLs.
+	<para>
+	typeはALLOWEDまたはDENIEDを、SIDに対するアクセスの許可/拒否として使う
+	ことができる。flagの値は共有のACLに対しては通常ゼロである。
 	</para>
 
-	<para>The mask is a value which expresses the access right
+	<para>
+	maskはSIDに対して許可されるアクセス権を表現する値である。これは、10進又は
+	16進の値として与えられるか、同じな前のNTファイルパーミッションにマップされる
+	以下のテキスト文字列のどれか1つである。
+	The mask is a value which expresses the access right
 	granted to the SID. It can be given as a decimal or hexadecimal value,
 	or by using one of the following text strings which map to the NT
 	file permissions of the same name.</para>
 
 	<itemizedlist>
-		<listitem><para><emphasis>R</emphasis> - Allow read access </para></listitem>
-		<listitem><para><emphasis>W</emphasis> - Allow write access</para></listitem>
-		<listitem><para><emphasis>X</emphasis> - Execute permission on the object</para></listitem>
-		<listitem><para><emphasis>D</emphasis> - Delete the object</para></listitem>
-		<listitem><para><emphasis>P</emphasis> - Change permissions</para></listitem>
-		<listitem><para><emphasis>O</emphasis> - Take ownership</para></listitem>
+		<listitem><para><emphasis>R</emphasis> - 読み取りを許可</para></listitem>
+		<listitem><para><emphasis>W</emphasis> - 書き込みを許可</para></listitem>
+		<listitem><para><emphasis>X</emphasis> - オブジェクトの実行を許可</para></listitem>
+		<listitem><para><emphasis>D</emphasis> - オブジェクトの削除</para></listitem>
+		<listitem><para><emphasis>P</emphasis> - パーミッションの変更</para></listitem>
+		<listitem><para><emphasis>O</emphasis> - 所有権の取得</para></listitem>
 	</itemizedlist>
 
-	<para>The following combined permissions can be specified:</para>
+	<para>以下の組み合わせパーミッションも指定することができる:</para>
 
 	<itemizedlist>
-		<listitem><para><emphasis>READ</emphasis> -  Equivalent to 'RX'
+		<listitem><para><emphasis>READ</emphasis> -  'RX' と同等
 		permissions</para></listitem>
-		<listitem><para><emphasis>CHANGE</emphasis> - Equivalent to 'RXWD' permissions
+		<listitem><para><emphasis>CHANGE</emphasis> - 'RXWD' パーミッションと同等
 		</para></listitem>
-		<listitem><para><emphasis>FULL</emphasis> - Equivalent to 'RWXDPO'
-		permissions</para></listitem>
+		<listitem><para><emphasis>FULL</emphasis> - 'RWXDPO' パーミッションと同等</para></listitem>
 	</itemizedlist>
 	</refsect1>
 
 <refsect1>
-	<title>EXIT STATUS</title>
+	<title>終了ステータス</title>
 
-	<para>The <command>sharesec</command> program sets the exit status
-	depending on the success or otherwise of the operations performed.
-	The exit status may be one of the following values. </para>
+	<para>The <command>sharesec</command>プログラムは、操作が実行された時の成功、またはそれ以外の状態に
+	応じて終了ステータスをセットする。終了ステータスは以下の値のうちのどれかである。</para>
 
-	<para>If the operation succeeded, sharesec returns and exit
-	status of 0.  If <command>sharesec</command> couldn't connect to the specified server,
-	or there was an error getting or setting the ACLs, an exit status
-	of 1 is returned.  If there was an error parsing any command line
-	arguments, an exit status of 2 is returned. </para>
+	<para>もしも操作が成功すれば、sharesecは終了ステータスを0にして戻る。もしも、
+	<command>sharesec</command>が指定されたサーバに接続できないか、ACLの設定
+	又は取得時にエラーが生じたならば、終了ステータスは1で戻る。もしもコマンド行
+	引数の解釈時にエラーがあれば終了ステータスは2で戻る。</para>
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>実行例</title>
 
-	<para>Add full access for SID
+	<para>SIDに対してフルアクセスを追加
 	<parameter>S-1-5-21-1866488690-1365729215-3963860297-17724</parameter> on
 	<parameter>share</parameter>:
 	</para>
@@ -190,7 +201,7 @@
 	host:~ # sharesec share -a S-1-5-21-1866488690-1365729215-3963860297-17724:ALLOWED/0/FULL
 	</programlisting>
 
-	<para>List all ACEs for <parameter>share</parameter>:
+	<para><parameter>share</parameter>に対するすべてのACEを表示:
 	</para>
 
 	<programlisting>
@@ -204,17 +215,28 @@
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3 of the Samba suite.</para>
+	<para>このマニュアルページは Samba バージョン 3用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<title>作者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team によって、Linux
+	カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
+	</para>
+	
 </refsect1>
 
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 3.3.2 対応のものである。</para>
+        <para>このドキュメントの Samba 3.3.2 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
 </refentry>
