@@ -28,23 +28,23 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>This module assists applications that want to read numbered
-	files in sequence with very strict latency requirements. One area
-	where this happens in video streaming applications that want to read
-	one file per frame.</para>
+	<para>このモジュールは、とても厳しいレイテンシ要求下で番号付け
+	  られた複数のファイルを読むアプリケーションを支援する。これが
+	  発生する1つの領域は、フレーム毎に1つのファイルを読むビデオ
+	  ストリーミングアプリケーションである。</para>
 
-	<para>When you use this module, a number of helper processes is
-	started that speculatively open files and read a number of bytes to
-	prime the file system cache, so that later on when the real
-	application's request comes along, no disk access is necessary.</para>
+	<para>このモジュールを使う場合、ファイルをオープンし、一定のバイト
+	  数のデータを読みシステムキャッシュに入れるヘルパプロセスが複数
+	  起動され、そのため、その後、実際のアプリケーションからの要求が
+	  来ても、ディスクアクセスが不要になる。</para>
 
-	<para>This module is stackable.</para>
+	<para>このモジュールはスタッカブルである。</para>
 
 </refsect1>
 
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
@@ -52,11 +52,12 @@
 		<term>preopen:names = /pattern/</term>
 		<listitem>
 		<para>
-		preopen:names specifies the file name pattern which should
-		trigger the preopen helpers to do their work. We assume that
-		the files are numbered incrementally. So if your file names
-		are numbered FRAME00000.frm FRAME00001.frm and so on you would
-		list them as <command>preopen:names=/FRAME*.frm/</command>
+		  preopen:names はプレオープンヘルパがその仕事を行うための
+		  トリガとなるファイル名パターンを指定する。ファイルは番号の
+		  昇順であることを仮定している。そのため、もしも、読みたい
+		  ファイルの名前が、FRAME00000.frm FRAME00001.frm と番号
+		  づけられているならば、これらをリストするために、
+		  <command>preopen:names=/FRAME*.frm/ と記述する。</command>
 		</para>
 		</listitem>
 		</varlistentry>
@@ -65,8 +66,7 @@
 		<term>preopen:num_bytes = BYTES</term>
 		<listitem>
 		<para>
-		Specifies the number of bytes the helpers should speculatively
-		read, defaults to 1.
+		  ヘルパが呼び出すバイトを指定する。既定値は1である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -75,7 +75,7 @@
 		<term>preopen:helpers = NUM-PROCS</term>
 		<listitem>
 		<para>
-		Number of forked helper processes, defaults to 1.
+		  フォークされるヘルパプロセス数を指定する。既定値は1である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -84,6 +84,8 @@
 		<term>preopen:queuelen = NUM-FILES</term>
 		<listitem>
 		<para>
+		  オープンされるファイル数を指定する。既定値は、連続した
+		  10個である。
 		Number of files that should be speculatively opened. Defaults
 		to the 10 subsequent files.
 		</para>
@@ -94,22 +96,31 @@
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
-	<para>This man page is correct for version 3.3 of the Samba suite.
+	<title>バージョン</title>
+	<para>このマニュアルページは Samba 3.3用である。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
 
-	<para>The PREOPEN VFS module was created with contributions from
-	Volker Lendecke and the developers at IBM.
-	</para>
+	<para>The PREOPEN VFSモジュールは、
+	Volker LendeckeとIBMの開発者にによって作成され、寄贈された。</para>
+</refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このドキュメントは、Samba 3.3.2対応のものである。</para>
+    <para>このドキュメントの翻訳は
+        <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.grjp)</para></listitem>
+        </itemizedlist>
+        によって行なわれた。</para>
 </refsect1>
 
 </refentry>
