@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 03/24/2009
+.\"      Date: 04/17/2009
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.3
 .\"
-.TH "SMB\.CONF" "5" "03/24/2009" "Samba 3\.3" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "04/17/2009" "Samba 3\.3" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -610,10 +610,10 @@ abort shutdown script (G)
 \fBSeRemoteShutdownPrivilege\fR
 権限を保持している場合、このコマンドはユーザ権限で呼び出される。
 .sp
-Default:
+既定値:
 \fI\fIabort shutdown script\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIabort shutdown script\fR\fR\fI = \fR\fI/sbin/shutdown \-c\fR\fI \fR
 .RE
 
@@ -626,7 +626,7 @@ acl check permissions (S)
 .sp
 このパラメータを「false」に設定した場合、Samba は「open for delete」リクエストの際にパーミッションの確認を行なわずにオープンを許可する。 ユーザにファイルを削除するアクセス許可がない場合は、クローズする時までわからない。 Windows 上のツールにとって、クローズ時点でこれが判明しても遅過ぎるため、ユーザにエラーメッセージが表示されるだろう。 また、削除したように見えたファイルが Windows 側のエクスプローラで再表示すると「魔法のように」復活するといった現象も発生するであろう。 これは非常に高度なプロトコルに関するパラメータであり、通常変更する必要はないはずである。 このパラメータは Samba 3\.0\.21 で現在の形となったが、現在とは若干挙動が異なる古い版は Samba 3\.0\.20 で導入された。古い版の挙動について、ここでは言及していない。
 .sp
-Default:
+既定値:
 \fI\fIacl check permissions\fR\fR\fI = \fR\fITrue\fR\fI \fR
 .RE
 
@@ -643,10 +643,10 @@ acl compatibility (G)
 \fIauto\fR
 に設定した場合、パラメータの値はクライアントのバージョンに合わせて変更される。 このパラメータを既定値から変更する必要はないだろう。
 .sp
-Default:
+既定値:
 \fI\fIacl compatibility\fR\fR\fI = \fR\fIAuto\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIacl compatibility\fR\fR\fI = \fR\fIwin2k\fR\fI \fR
 .RE
 
@@ -669,7 +669,7 @@ Windows サーバでは、グループがファイルやディレクトリの所
 このパラメータは、Samba 3\.0\.23 において、廃止予定の(deprecated)パラメータとなった。 しかし、Samba 3\.0\.31以降で復活し、ユーザが、所有するプライマリグループ中にいるとき、 パーミッションの変更を制御するのみになった。もはや
 \fIdos filemode\fRオプションとは異なる。
 .sp
-Default:
+既定値:
 \fI\fIacl group control\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -680,7 +680,7 @@ acl map full control (S)
 \fBsmbd\fR(8)
 が POSIX の ACE エントリでは最大のアクセス権を許可した状態である「rwx(read/write/execute)」を Windows 側の ACL の「フルコントロール」に対応づけるかどうかを制御する。 このパラメータを true に設定した場合、POSIX ACE で「rwx」のエントリに対して、Windows 側の ACL としては「フルコントロール」が返却される。 このパラメータが false に設定された場合、POSIX ACE で「rwx」のエントリに対して、 Windows 側の ACL としては read/write/execute を表すビットを設定したエントリが返却される。
 .sp
-Default:
+既定値:
 \fI\fIacl map full control\fR\fR\fI = \fR\fITrue\fR\fI \fR
 .RE
 
@@ -695,10 +695,10 @@ add group script (G)
 \fI%g\fR
 はグループ名に展開される。 スクリプトは Windows NT のドメイン管理ツールを使用して設定を行なう際にのみ有効である。 このスクリプトでは、UNIX側のグループ名の制約に捕らわれず、任意の名前のグループを作成することができる。 ただし、その場合スクリプトは標準出力に作成されたグループの gid の数値を表示する必要がある。
 .sp
-Default:
+既定値:
 \fI\fIadd group script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd group script\fR\fR\fI = \fR\fI/usr/sbin/groupadd %g\fR\fI \fR
 .RE
 
@@ -710,10 +710,10 @@ add machine script (G)
 .sp
 このオプションは、\fIadd user script\fRととてもよく 似ていて、さらに、アカウント名の置換として%uを使う。%mの置換を使ってはいけない。
 .sp
-Default:
+既定値:
 \fI\fIadd machine script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd machine script\fR\fR\fI = \fR\fI/usr/sbin/adduser \-n \-g machines \-c Machine \-d /var/lib/nobody \-s /bin/false %u\fR\fI \fR
 .RE
 
@@ -746,10 +746,10 @@ Samba 3\.0\.23 では、Windows の"Add Standard TCP/IP Port ウィザード"に
 .RE
 deviceURI は socket://<hostname>[:<portnumber>] もしくは lpd://<hostname>/<queuename> のように指定する。
 .sp
-Default:
+既定値:
 \fI\fIadd port command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd port command\fR\fR\fI = \fR\fI/etc/samba/scripts/addport\.sh\fR\fI \fR
 .RE
 
@@ -848,10 +848,10 @@ smbd
 .sp
 \fIaddprinter command\fRは Samba が新しいプリンタが接続するポートとして設定した 文字列からなる1行を返却する。 返却されない場合、Samba は印刷共有の再読み込みを行なわない。
 .sp
-Default:
+既定値:
 \fI\fIadd printer command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd printer command\fR\fR\fI = \fR\fI/usr/bin/addprinter\fR\fI \fR
 .RE
 
@@ -938,10 +938,10 @@ smbd
 \fIaddprinter command\fR
 を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIadd share command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd share command\fR\fR\fI = \fR\fI/usr/local/bin/addshare\fR\fI \fR
 .RE
 
@@ -997,10 +997,10 @@ smbd
 \fIdelete user script\fR
 も参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIadd user script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd user script\fR\fR\fI = \fR\fI/usr/local/samba/bin/add_user %u\fR\fI \fR
 .RE
 
@@ -1021,10 +1021,10 @@ add user to group script (G)
 adduser
 コマンドは、すべてのシステムにおいて、 以下の例で用いた構文をサポートしているわけではないことに注意。
 .sp
-Default:
+既定値:
 \fI\fIadd user to group script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadd user to group script\fR\fR\fI = \fR\fI/usr/sbin/adduser %u %g\fR\fI \fR
 .RE
 
@@ -1039,7 +1039,7 @@ administrative share (S)
 \fIsecurity\fR
 を参照してほしい。
 .sp
-Default:
+既定値:
 \fI\fIadministrative share\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1054,10 +1054,10 @@ admin users (S)
 \fIsecurity = share\fR
 環境では動作しない。 これは仕様である。
 .sp
-Default:
+既定値:
 \fI\fIadmin users\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIadmin users\fR\fR\fI = \fR\fIjason\fR\fI \fR
 .RE
 
@@ -1067,7 +1067,7 @@ afs share (S)
 このパラメータは、共有に対して AFS 特有の機能を有効にするかどうかを指定する。 もし有効な場合、\fIpath\fR
 パラメータでエクスポートされているディレクトリをローカルの AFS インポートとして扱う。 特殊な AFS の機能というのは、もし configure 時に \-\-with\-fake\-kaserver オプションを有効にした場合に、 AFS トークンを作成しようとする機能などが含まれる。
 .sp
-Default:
+既定値:
 \fI\fIafs share\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1080,10 +1080,10 @@ afs username map (G)
 .sp
 (訳注: AFSに関する知識不足のため、訳の正確性については担保できない)
 .sp
-Default:
+既定値:
 \fI\fIafs username map\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIafs username map\fR\fR\fI = \fR\fI%u@afs\.samba\.org\fR\fI \fR
 .RE
 
@@ -1100,10 +1100,10 @@ Related command:
 Related command:
 \fIaio write size\fR
 .sp
-Default:
+既定値:
 \fI\fIaio read size\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIaio read size\fR\fR\fI = \fR\fI16384 # リクエストサイズが 16KB を超えるリードについて非同期 I/O を使用する。 \fR\fI \fR
 .RE
 
@@ -1120,10 +1120,10 @@ Related command:
 Related command:
 \fIaio read size\fR
 .sp
-Default:
+既定値:
 \fI\fIaio write size\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIaio write size\fR\fR\fI = \fR\fI16384 # リクエストサイズが 16KB を超えるライトについて非同期 I/O を使用する。 \fR\fI \fR
 .RE
 
@@ -1136,10 +1136,10 @@ Windows NT/2000 から移行を行なうサイトでは、存在しているユ�
 .sp
 サーバ上の ACL が正しく機能する上では、すべての UID および GID が SID に変換できることが必須である。 このため、機械的な対応づけを無効にせずに、一定の範囲を対象領域から除外することが、 問題を避ける上で必要である。 RID の競合に対応したパスワード機構において、ユーザおよびグループには、 「小さな」 RID が割り当てられる。
 .sp
-Default:
+既定値:
 \fI\fIalgorithmic rid base\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIalgorithmic rid base\fR\fR\fI = \fR\fI100000\fR\fI \fR
 .RE
 
@@ -1150,10 +1150,10 @@ allocation roundup size (S)
 .sp
 このパラメータには、切り上げるサイズをバイト単位の整数値で指定する。
 .sp
-Default:
+既定値:
 \fI\fIallocation roundup size\fR\fR\fI = \fR\fI1048576\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIallocation roundup size\fR\fR\fI = \fR\fI0 # (to disable roundups)\fR\fI \fR
 .RE
 
@@ -1170,7 +1170,7 @@ allow trusted domains (G)
 .sp
 このオプションは、 Samba サーバが所属するドメインのユーザのみにリソースを提供させたい場合に便利である。 一例として DOMA と DOMB という 2 つのドメインがあって、 DOMA は Samba サーバを含み、DOMB を信頼している場合を想定する。 通常の条件では、DOMB中にアカウントを持つユーザは、 Samba サーバに同じ名前の UNIX アカウントがあれば、 DOMA にアカウントがなくてもリソースにアクセスできるため、 セキュリティ境界の区分けが困難である。
 .sp
-Default:
+既定値:
 \fI\fIallow trusted domains\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1181,10 +1181,10 @@ announce as (G)
 \fBnmbd\fR(8)
 が、 自身を「ネットワークコンピュータ」中のブラウズリストにアナウンスする際のサーバの種類を指定する。 デフォルトでは Windows NT に設定されている。有効な値は: 「NT Server」(これは「NT」と表記することもできる)、 「NT Workstation」、「Win95」、「WfW」であり、各々 Windows NT Server、 Windows NT Workstation、Windows 95、Windows for Workgroups を意味する。 変更を行なうと、Samba サーバがブラウザサーバ(訳注: ポテンシャルブラウザの意?)に正しく参加できなくなるかも知れないため、 Samba サーバを NT サーバとして表示させたくない特別な理由がない限り、 このパラメータを変更しないこと。
 .sp
-Default:
+既定値:
 \fI\fIannounce as\fR\fR\fI = \fR\fINT Server\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIannounce as\fR\fR\fI = \fR\fIWin95\fR\fI \fR
 .RE
 
@@ -1193,10 +1193,10 @@ announce version (G)
 .RS 4
 このパラメータは、 nmbd が自身をサーバとしてアナウンスする際に指定するメジャーおよびマイナーバージョン番号を指定する。 デフォルトは 4\.9 である。 Samba サーバをより下位のサーバとして設定する特別な必要性がない限り、このパラメータは変更しないこと。
 .sp
-Default:
+既定値:
 \fI\fIannounce version\fR\fR\fI = \fR\fI4\.9\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIannounce version\fR\fR\fI = \fR\fI2\.0\fR\fI \fR
 .RE
 
@@ -1221,10 +1221,10 @@ smbd
 \fBtrustdomain\fR
 (信頼できるユーザーの、smbd からリモート DC への直接アクセスによる認証。 現在は winbindd を使用する方が望ましいので使用すべきではない) がある。
 .sp
-Default:
+既定値:
 \fI\fIauth methods\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIauth methods\fR\fR\fI = \fR\fIguest sam winbind\fR\fI \fR
 .RE
 
@@ -1235,7 +1235,7 @@ available (S)
 \fIavailable = no\fR
 の場合、 サービスに対する接続は\fIすべて\fR失敗する。これらの失敗は記録される。
 .sp
-Default:
+既定値:
 \fI\fIavailable\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1328,7 +1328,7 @@ smbd
 nmbd
 の開始/停止/再起動を行なうこともできなくなる。
 .sp
-Default:
+既定値:
 \fI\fIbind interfaces only\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1345,7 +1345,7 @@ blocking locks (S)
 \fBno\fR
 の場合、 Samba は以前のバージョンの Samba (訳注: Samba 1\.9\.x 以前)と同様に振舞い、 ロック範囲が取得できない場合にただちにロック要求を失敗させる。
 .sp
-Default:
+既定値:
 \fI\fIblocking locks\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1360,18 +1360,17 @@ block size (S)
 .sp
 このオプションを変更しても、報告されるディスクの空き容量自体は変わらない。クライアントに報告されるディスクのブロックサイズが変更されるだけである。
 .sp
-Default:
+既定値:
 \fI\fIblock size\fR\fR\fI = \fR\fI1024\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIblock size\fR\fR\fI = \fR\fI4096\fR\fI \fR
 .RE
 
 browsable
 .PP
 .RS 4
-This parameter is a synonym for
-browseable\.
+このパラメータは右記のパラメータの別名である：browseable\.
 .RE
 
 browseable (S)
@@ -1379,7 +1378,7 @@ browseable (S)
 .RS 4
 このパラメータは、net view コマンドやブラウズリスト中に現れる利用可能な共有の一覧にこの共有を表示させるかどうかを制御する。
 .sp
-Default:
+既定値:
 \fI\fIbrowseable\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1394,15 +1393,14 @@ NetServerEnum
 \fBtrue\fR
 に設定されている。 これを変更する必要はまずないであろう。
 .sp
-Default:
+既定値:
 \fI\fIbrowse list\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 casesignames
 .PP
 .RS 4
-This parameter is a synonym for
-case sensitive\.
+このパラメータは右記のパラメータの別名である：case sensitive\.
 .RE
 
 case sensitive (S)
@@ -1411,7 +1409,7 @@ case sensitive (S)
 \fIname mangling\fR
 セクションでの説明を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIcase sensitive\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1422,7 +1420,7 @@ change notify (S)
 .sp
 このパラメータを変更する必要はないはずである
 .sp
-Default:
+既定値:
 \fI\fIchange notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1435,10 +1433,10 @@ change notify timeout (S)
 \fIchange notify timeout\fR
 で設定された秒毎に、要求された各ディレクトリの監視を行なう。 Samba 3\.0\.23 以降、このパラメータは共有単位のパラメータに変更され、 このパラメータを 0 に設定することで change notify 機能による共有内のディレクトリ走査を完全に抑止することが可能となった。 大量のディレクトリが存在するため、(大量のファイルを削除すると) 削除処理のたびに Windows クライアントが change notify によりディレクトリ全体の再走査を何度も繰り返すような共有において、このパラメータを 0 に設定することが可能となった。 この change notify 処理は、システムによっては非常に負荷のかかる処理となる。
 .sp
-Default:
+既定値:
 \fI\fIchange notify timeout\fR\fR\fI = \fR\fI60\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIchange notify timeout\fR\fR\fI = \fR\fI300 # スキャン間隔を 5 分毎にする。\fR\fI \fR
 .RE
 
@@ -1523,10 +1521,10 @@ smbd
 .RE
 このパラメータは、ファイル共有設定の変更にのみ使われる。印刷共有の設定を 変更にするには、共有されているホストのプリンタフォルダを使用する。
 .sp
-Default:
+既定値:
 \fI\fIchange share command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIchange share command\fR\fR\fI = \fR\fI/usr/local/bin/changeshare\fR\fI \fR
 .RE
 
@@ -1540,10 +1538,10 @@ check password script (G)
 example ディレクトリに、crackcheck
 という サンプルのプログラムがある。 これは cracklib を用いてパスワードのチェックを行なっている。
 .sp
-Default:
+既定値:
 \fI\fIcheck password script\fR\fR\fI = \fR\fIDisabled\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcheck password script\fR\fR\fI = \fR\fIcheck password script = /usr/local/sbin/crackcheck\fR\fI \fR
 .RE
 
@@ -1562,7 +1560,7 @@ LANMAN 暗号化レスポンスは簡単に解読することが可能である�
 client ntlmv2 auth
 パラメータを有効にした場合、NTLMv2 ログインのみが可能となる。
 .sp
-Default:
+既定値:
 \fI\fIclient lanman auth\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1588,7 +1586,7 @@ NTDS\eParameters\eLDAPServerIntegrity" によって制御する事が出来る�
 既定値は\fIplain\fRで、これは、KRB5のクロックスキュー エラーに対して過敏ではない。これは、\fIsign\fRか
 \fIseal\fRを使う場合においてはKDCとの時刻同期があること を暗黙的に示している。
 .sp
-Default:
+既定値:
 \fI\fIclient ldap sasl wrapping\fR\fR\fI = \fR\fIplain\fR\fI \fR
 .RE
 
@@ -1611,7 +1609,7 @@ client plaintext auth
 .sp
 サイトによっては (特に「ベストプラクティス」のセキュリティポリシーを適用しているサイト)、NTLMv2 のみを許可し、脆弱な LM および NTLM レスポンスは許可していない。
 .sp
-Default:
+既定値:
 \fI\fIclient ntlmv2 auth\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1620,7 +1618,7 @@ client plaintext auth (G)
 .RS 4
 このパラメータは、サーバが暗号化パスワードをサポートしていない場合にクライアントから平文パスワードを送出するかどうかを制御する。
 .sp
-Default:
+既定値:
 \fI\fIclient plaintext auth\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1635,10 +1633,10 @@ client schannel (G)
 \fIclient schannel = yes\fR
 はサーバが netlogon セキュアチャネルを理解できない場合、アクセスを許可しない。
 .sp
-Default:
+既定値:
 \fI\fIclient schannel\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIclient schannel\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1650,7 +1648,7 @@ client signing (G)
 .sp
 auto に設定した場合、SMB 署名が有効になるが、強制はしない。 mandatory に設定すると、SMB 署名が必須となる。disable に設定すると、SMB 署名は有効にならない。
 .sp
-Default:
+既定値:
 \fI\fIclient signing\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .RE
 
@@ -1659,7 +1657,7 @@ client use spnego (G)
 .RS 4
 この値により、Samba クライアントが認証の際に Simple and Protected NEGOciation (RFC2478 で規定) をサポートしたサーバ (Windows XP 、 Windows 2000 、Samba 3\.0 を含む) に対して SPNEGO の使用を試みるかどうかが制御される。 SPNEGO は Kerberos 認証の際に有効となる。
 .sp
-Default:
+既定値:
 \fI\fIclient use spnego\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1668,10 +1666,10 @@ cluster addresses (G)
 .RS 4
 このパラメータを使うと、nmbd が WINS サーバに登録する追加のアドレスを 付加することができる。これらのアドレス(群)は、すべてのノード上で 同時に存在しなければならないわけではないが、これらは WINS サーバに 登録されるため、クライアントはこれらのうちのどのノードにも接続できる。
 .sp
-Default:
+既定値:
 \fI\fIcluster addresses\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcluster addresses\fR\fR\fI = \fR\fI10\.0\.0\.1 10\.0\.0\.2 10\.0\.0\.3\fR\fI \fR
 .RE
 
@@ -1684,7 +1682,7 @@ ctdb が動作している状態でクラスタ構成を取る場合にのみ、
 yes
 にすること。
 .sp
-Default:
+既定値:
 \fI\fIclustering\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1698,10 +1696,10 @@ net view
 コンピュータ名の横に表示される文字列を設定したい場合は、\fIserver string\fR
 パラメータを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIcomment\fR\fR\fI = \fR\fI # コメント文字列なし\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcomment\fR\fR\fI = \fR\fIFred\'s Files\fR\fI \fR
 .RE
 
@@ -1721,10 +1719,10 @@ config backend (G)
 .sp
 注意：このオプションは、レジストリ設定自身の中でセットすることもできる。
 .sp
-Default:
+既定値:
 \fI\fIconfig backend\fR\fR\fI = \fR\fIfile\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIconfig backend\fR\fR\fI = \fR\fIregistry\fR\fI \fR
 .RE
 
@@ -1739,9 +1737,9 @@ config file (G)
 .sp
 指定された設定ファイルが存在しない場合は読み込まれない (これにより、特定クライアントに対して、 特別な設定ファイルを指定するということが可能となる)。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIconfig file\fR\fR\fI = \fR\fI/usr/local/samba/lib/smb\.conf\.%m\fR\fI \fR
 .RE
 
@@ -1752,18 +1750,17 @@ copy (S)
 .sp
 この機能を使うと、「ひな型(template)」となるサービスを作成した上で、 同様の設定のサービスを単純に作成するということが可能となる。 複製元のサービスは、 設定ファイル内で複製先のサービスより前に記述する必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIcopy\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcopy\fR\fR\fI = \fR\fIotherservice\fR\fI \fR
 .RE
 
 create mode
 .PP
 .RS 4
-This parameter is a synonym for
-create mask\.
+このパラメータは右記のパラメータの別名である：create mask\.
 .RE
 
 create mask (S)
@@ -1786,10 +1783,10 @@ create mask (S)
 \fIsecurity mask\fR
 の設定が必要である。
 .sp
-Default:
+既定値:
 \fI\fIcreate mask\fR\fR\fI = \fR\fI0744\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcreate mask\fR\fR\fI = \fR\fI0775\fR\fI \fR
 .RE
 
@@ -1804,10 +1801,10 @@ csc policy (S)
 \fIcsc policy = disable\fR
 とすることで、 オフラインキャッシュを無効にできる。
 .sp
-Default:
+既定値:
 \fI\fIcsc policy\fR\fR\fI = \fR\fImanual\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcsc policy\fR\fR\fI = \fR\fIprograms\fR\fI \fR
 .RE
 
@@ -1818,10 +1815,10 @@ ctdbd socket (G)
 clustering=yes
 の指定を行う場合は、 ctdbd がどの unix ドメインソケットを監視するのかを、Samba に対して 教えてやる必要がある。ctdb 1\.0 におけるデフォルトのパスは /tmp/ctdb\.socket であるが、これを smb\.conf で明示してやらなければならない。
 .sp
-Default:
+既定値:
 \fI\fIctdbd socket\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIctdbd socket\fR\fR\fI = \fR\fI/tmp/ctdb\.socket\fR\fI \fR
 .RE
 
@@ -1833,10 +1830,10 @@ cups connection timeout (G)
 .sp
 これが有効な場合、smbdがCUPSサーバに接続時にタイムアウトするまでの時間を 指定する。もし、指定時間以上の秒数が経過しても接続が確立しない場合には 接続エラーとなる。
 .sp
-Default:
+既定値:
 \fI\fIcups connection timeout\fR\fR\fI = \fR\fI30\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcups connection timeout\fR\fR\fI = \fR\fI60\fR\fI \fR
 .RE
 
@@ -1859,10 +1856,10 @@ Windows クライアントが Samba を経由して印刷を行なう際に CUPS
 \fI/etc/cups/mime\.{convs,types}\fR
 において、 システム全体で raw 印刷を有効にする必要はない。
 .sp
-Default:
+既定値:
 \fI\fIcups options\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcups options\fR\fR\fI = \fR\fI"raw,media=a4\fR\fI \fR
 .RE
 
@@ -1881,13 +1878,13 @@ cups server (G)
 .sp
 なお、サーバ名に引続きコロンの後ろにポート番号を記述することで、ポー ト番号を指定することも可能である。 ポートの指定が行なわれ名張った場合、IPP のデフォルトポート (631) が用いられる。
 .sp
-Default:
+既定値:
 \fI\fIcups server\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcups server\fR\fR\fI = \fR\fImycupsserver\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIcups server\fR\fR\fI = \fR\fImycupsserver:1631\fR\fI \fR
 .RE
 
@@ -1904,10 +1901,10 @@ deadtime (G)
 .sp
 deadtime が 0 の場合、タイムアウトによる自動的な切断は行なわれない。
 .sp
-Default:
+既定値:
 \fI\fIdeadtime\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdeadtime\fR\fR\fI = \fR\fI15\fR\fI \fR
 .RE
 
@@ -1919,7 +1916,7 @@ debug class (G)
 現在利用可能なデバッグクラスに関する詳細は、\fIlog level\fR
 の章を参照してほしい。
 .sp
-Default:
+既定値:
 \fI\fIdebug class\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1932,7 +1929,7 @@ debug hires timestamp (G)
 \fIdebug timestamp\fR
 が有効になっている必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIdebug hires timestamp\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1947,7 +1944,7 @@ fork されて生成された
 \fIdebug timestamp\fR
 が有効になっている必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIdebug pid\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -1962,15 +1959,14 @@ debug prefix timestamp (G)
 \fIdebug timestamp\fR
 を上書きする。
 .sp
-Default:
+既定値:
 \fI\fIdebug prefix timestamp\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 timestamp logs
 .PP
 .RS 4
-This parameter is a synonym for
-debug timestamp\.
+このパラメータは右記のパラメータの別名である：debug timestamp\.
 .RE
 
 debug timestamp (G)
@@ -1979,7 +1975,7 @@ debug timestamp (G)
 Samba のデバッグログのメッセージには、 デフォルトでタイムスタンプが付加されるが、 高い、\fIdebug level\fR
 を設定している場合、 このタイムスタンプが目障りに感じることもあるだろう。 この真偽値パラメータにより、タイムスタンプの付加を抑止することができる。
 .sp
-Default:
+既定値:
 \fI\fIdebug timestamp\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -1992,7 +1988,7 @@ Samba は root 権限で動作する時もあれば、 接続したユーザの�
 \fIdebug timestamp\fR
 が有効になっている必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIdebug uid\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2004,7 +2000,7 @@ default case (S)
 \fIshort preserve case\fR
 パラメータにも注意。
 .sp
-Default:
+既定値:
 \fI\fIdefault case\fR\fR\fI = \fR\fIlower\fR\fI \fR
 .RE
 
@@ -2024,15 +2020,14 @@ Windows NT/2000 の印刷システムやデバイスモードに関する詳細�
 MSDN documentation
 を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIdefault devmode\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 default
 .PP
 .RS 4
-This parameter is a synonym for
-default service\.
+このパラメータは右記のパラメータの別名である：default service\.
 .RE
 
 default service (G)
@@ -2053,10 +2048,10 @@ default service は
 .sp
 default service のサービス名に現れる「_」文字は、「/」にマッピングされる。 これにより、いろいろと面白いことができるだろう。
 .sp
-Default:
+既定値:
 \fI\fIdefault service\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdefault service\fR\fR\fI = \fR\fIpub\fR\fI \fR
 .RE
 
@@ -2069,7 +2064,7 @@ UNIX のデフォルトでは、こうした挙動は行なわれない。
 .sp
 このパラメータは Samba の挙動をより Windows に近づけるためのものであり、 無効にする必然性はないであろう。
 .sp
-Default:
+既定値:
 \fI\fIdefer sharing violations\fR\fR\fI = \fR\fITrue\fR\fI \fR
 .RE
 
@@ -2084,7 +2079,7 @@ delete group script (G)
 \fI%g\fR
 はグループ名に置換される。 スクリプトは Windows NT のドメイン管理ツールを使用して設定を行なう際にのみ有効である。
 .sp
-Default:
+既定値:
 \fI\fIdelete group script\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -2109,10 +2104,10 @@ smbd
 を読み直す。 共有名が依然として有効な場合、smbd
 はクライアントに ACCESS_DENIED エラーを返却する。
 .sp
-Default:
+既定値:
 \fI\fIdeleteprinter command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdeleteprinter command\fR\fR\fI = \fR\fI/usr/bin/removeprinter\fR\fI \fR
 .RE
 
@@ -2123,7 +2118,7 @@ delete readonly (S)
 .sp
 このオプションは、rcs のようなアプリケーションを動作させるのに有用で、 UNIX ファイルの所有者に関する仕様がファイルのパーミッション変更を妨げたり、 DOS の仕様が読み取り専用ファイルの削除を妨げたりする問題を回避する。
 .sp
-Default:
+既定値:
 \fI\fIdelete readonly\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2172,10 +2167,10 @@ smbd
 .RE
 このパラメータは、ファイル共有設定の削除にのみ使われる。印刷共有の設定を 削除するときは\fIdeleteprinter command\fRを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIdelete share command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdelete share command\fR\fR\fI = \fR\fI/usr/local/bin/delshare\fR\fI \fR
 .RE
 
@@ -2192,10 +2187,10 @@ delete user from group script (G)
 \fI%u\fR
 はユーザ名に置換される。
 .sp
-Default:
+既定値:
 \fI\fIdelete user from group script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdelete user from group script\fR\fR\fI = \fR\fI/usr/sbin/deluser %u %g\fR\fI \fR
 .RE
 
@@ -2212,10 +2207,10 @@ rpcclient
 .sp
 このスクリプトは指定されたユーザ名の UNIX ユーザを削除するものでなければならない。
 .sp
-Default:
+既定値:
 \fI\fIdelete user script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdelete user script\fR\fR\fI = \fR\fI/usr/local/samba/bin/del_user %u\fR\fI \fR
 .RE
 
@@ -2236,7 +2231,7 @@ delete veto files (S)
 \fIdelete veto files = yes\fR
 を指定することで、 これらのディレクトリは、親ディレクトリが削除された際に、自動的に削除される (ただし、ユーザはディレクトリを削除するパーミッションを持っている必要がある)。
 .sp
-Default:
+既定値:
 \fI\fIdelete veto files\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2252,9 +2247,9 @@ dfree cache time (S)
 .sp
 このパラメータのデフォルト値は 0 であり、キャッシュは行なわれない。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIdfree cache time\fR\fR\fI = \fR\fIdfree cache time = 60\fR\fI \fR
 .RE
 
@@ -2302,17 +2297,16 @@ df $1 | tail \-1 | awk \'{print $(NF\-4),$(NF\-2)}\'
 .sp
 デフォルトは内部ルーチンにより、ディスクの総容量と空き容量が計算される。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIdfree command\fR\fR\fI = \fR\fI/usr/local/samba/bin/dfree\fR\fI \fR
 .RE
 
 directory mode
 .PP
 .RS 4
-This parameter is a synonym for
-directory mask\.
+このパラメータは右記のパラメータの別名である：directory mask\.
 .RE
 
 directory mask (S)
@@ -2332,10 +2326,10 @@ directory mask (S)
 \fIdirectory security mask\fR
 パラメータを設定することが必要である。
 .sp
-Default:
+既定値:
 \fI\fIdirectory mask\fR\fR\fI = \fR\fI0755\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdirectory mask\fR\fR\fI = \fR\fI0775\fR\fI \fR
 .RE
 
@@ -2357,10 +2351,10 @@ directory security mask (S)
 \fB0777\fR
 のままにしておきたいと考えるだろう。
 .sp
-Default:
+既定値:
 \fI\fIdirectory security mask\fR\fR\fI = \fR\fI0777\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdirectory security mask\fR\fR\fI = \fR\fI0700\fR\fI \fR
 .RE
 
@@ -2376,7 +2370,7 @@ disable netbios (G)
 Note
 NetBIOS サポートを無効にすると、 NetBIOS のみをサポートするクライアントからは Samba サーバにアクセスできなくなることに注意。
 
-Default:
+既定値:
 \fI\fIdisable netbios\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2386,7 +2380,7 @@ disable spoolss (G)
 このパラメータを有効にすることで、 Samba の SPOOLSS MS\-RPC サポートを無効にし、Samba 2\.0\.x と同様の動作をさせることが可能となる。 Windows NT/2000 クライアントは、Lanman 形式の印刷コマンドを利用することも可能である。 Windows 9x/Me は、このパラメータに影響されない。 なお、このパラメータを有効にすると、NT のプリンタプロパティを利用した、 Windows NTのプリンタ追加ウィザードによる Sambaマシンへのプリンタドライバのアップロード機能が無効になる。 また、Windows NT/2000 クライアントが、必要に応じて Samba マシンからプリンタドライバをダウンロードする機能も同時に無効になる。
 \fIこのパラメータを有効にする際は、充分注意すること。\fR
 .sp
-Default:
+既定値:
 \fI\fIdisable spoolss\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2397,10 +2391,10 @@ Samba がメッセージを標準出力や標準エラー出力に出力する�
 \fIunix charset\fR
 と同じに 設定すべきである。
 .sp
-Default:
+既定値:
 \fI\fIdisplay charset\fR\fR\fI = \fR\fI"LOCALE" or "ASCII" (システムに依存)\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdisplay charset\fR\fR\fI = \fR\fIUTF8\fR\fI \fR
 .RE
 
@@ -2413,7 +2407,7 @@ Samba はファイルの状態を DMAPI アプリケーションが登録した�
 .sp
 このパラメータは、コンパイル時に DMAPI の実装サポートを確認できた場合にのみ有効となる。 また、実行時にシステムで DMAPI が使用可能であることが確認できた場合にのみ使用される。
 .sp
-Default:
+既定値:
 \fI\fIdmapi support\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2429,7 +2423,7 @@ NetBIOS 名の最大長は 15 文字であるため、 問い合わせる DNS �
 nmbd
 が DNS への名前解決を行う際には、問い合わせにより他の処理が停止させないために、自分自身を複製したプロセスを生成する。
 .sp
-Default:
+既定値:
 \fI\fIdns proxy\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2442,7 +2436,7 @@ domain logons (G)
 \fIworkgroup\fR
 に所属する Windows 95/98 に対するドメインログオン機能を提供するようになる。 さらに、Samba サーバは、 Windows NT 4\.0 形式のドメインコントローラとしても機能するようになる。 この機能の設定に関する詳細な記述は、 Samba\-PDC\-HOWTO の「Domain Control」章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIdomain logons\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2483,7 +2477,7 @@ Windows NT のプライマリドメインコントローラは、
 \fIdomain master = No\fR
 の場合、Samba は BDC として動作するようになる。通常、このパラメータを「No」に設定する必要があるのは、BDC として機能させる場合のみである。
 .sp
-Default:
+既定値:
 \fI\fIdomain master\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .RE
 
@@ -2499,10 +2493,10 @@ Samba が要求する「dont descend」の書式は一定ではない。 たと�
 \fI\./proc\fR
 でなければならないかもしれない。 実験してみるのが最良の方法である。 :\-)
 .sp
-Default:
+既定値:
 \fI\fIdont descend\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIdont descend\fR\fR\fI = \fR\fI/proc,/dev\fR\fI \fR
 .RE
 
@@ -2515,7 +2509,7 @@ DOS SMB クライアントは、サーバ側でも自身と同じ文字コード
 \fBtestparm\fR(1)
 コマンドを実行することで、システム上のデフォルト値を確認することが可能である。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 dos filemode (S)
@@ -2523,7 +2517,7 @@ dos filemode (S)
 .RS 4
 Samba のデフォルトの動作では、 ファイルやディレクトリの所有者のみがアクセス権を変更できるという、UNIX的な仕様になっている。 しかし、この仕様が DOS/Windows のユーザを混乱させてしまうことも多い。 このパラメータを有効にすることによって、 (何らかの手段によって)ファイルに書き込み権のあるユーザは、パーミッション(ACLを含む)の変更もできるようになる。 ファイルの所有グループに所属しているユーザは、 グループに対して読み込み権限しか与えられていない場合は パーミッションの変更を行なうことができないことに注意。 ファイルやディレクトリの所有者を変更することも可能である。
 .sp
-Default:
+既定値:
 \fI\fIdos filemode\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2536,7 +2530,7 @@ DOS や Windows の FAT ファイルシステム下では、 時刻の最小単�
 .sp
 このオプションはおもに、Samba の共有で Visual C++ を 使用するための互換性オプションとして利用する。 共有で oplock が有効であると、 Visual C++ はファイルが最後の読み込みから変更されていないかを検査するときに、 扱う日付の最小単位が異なる 2 つの時刻取得の呼び出し (call) を利用する。 そのうちのひとつの呼び出しは 1秒単位であり、もうひとつは 2 秒単位になっている。 2 秒単位で扱う呼び出しが奇数秒を切り捨てるため、 ファイルが奇数秒の日付であると 2 つの日付が一致せず、 Visual C++ はファイルが変更されたと報告し続けてしまう。 このオプションを\fByes\fRに設定することで 2 つの日付は一致し、Visual C++ も幸福になれる。
 .sp
-Default:
+既定値:
 \fI\fIdos filetime resolution\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2551,7 +2545,7 @@ smbd
 \fBsmbd\fR(8)
 は DOS の要求に従ってタイムスタンプを変更できるようになる。 Microsoft Office 2000 以降で行なわれた変更に対応するため、 Samba 3\.0\.14 以降ではデフォルト値が「no」から「yes」に変更された。 このパラメータが「yes」になっていない場合、ファイルが複数のユーザ間で共用されていると、 Microsoft Excel はファイルが他のユーザによって変更されたという警告のダイアログボックスを表示してしまう。
 .sp
-Default:
+既定値:
 \fI\fIdos filetimes\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2562,7 +2556,7 @@ ea support (S)
 \fBsmbd\fR(8)
 は、クライアントが共有内に OS/2 形式の拡張属性を格納することを可能とする。 このパラメータを有効にするためには、下位のファイルシステムが (Linux の場合 XFS や EXT3 に対するパッチとして提供されているような) 拡張属性をサポートしていることが必要である。 Linux の場合、拡張属性を有効にするには、カーネルが拡張属性を有効にしてコンパイルされていることに加え、 ファイルシステムのマウントオプションとして user_xattr を指定してマウントする必要がある。
 .sp
-Default:
+既定値:
 \fI\fIea support\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2571,7 +2565,7 @@ enable asu support (G)
 .RS 4
 「Advanced Server for Unix (ASU)」というプロダクトを実行しているホストでは、 IPC コネクションのみをサポートするビルトイン [ADMIN$] 共有が作成されるなど、 ASU 特有の動作が幾つか存在する。長年、これは smbd の既定値の動作でもあった。 ところが、Print Migrator tool というマイクロソフトのアプリケーションでは、 リモートのサーバで [ADMIN$] というファイル共有がサポートされている必要がある。 このパラメータを無効にすることで、smb\.conf に [ADMIN$] というファイル共有を作成することが可能になる。
 .sp
-Default:
+既定値:
 \fI\fIenable asu support\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2586,7 +2580,7 @@ net rpc rights
 .sp
 より詳細な説明については、Samba HOWTO 中の記載を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIenable privileges\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2611,7 +2605,7 @@ Microsoft 社の Windows 製品では、すでに平文パスワードのサポ�
 smbd
 が別のサーバで認証を行うようにする必要がある。
 .sp
-Default:
+既定値:
 \fI\fIencrypt passwords\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2626,7 +2620,7 @@ enhanced browsing (G)
 .sp
 通常は、サブネット越えのブラウザのアナウンスメントの信頼性向上のため、 このオプションは、有効のままにしておくべきである。
 .sp
-Default:
+既定値:
 \fI\fIenhanced browsing\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2638,10 +2632,10 @@ enumports command (G)
 というポートのみが定義されている。 Windows NT/2000においては、すべてのプリンタに適切なポート名がある。 デフォルトの\fB「Samba Printer Port」 \fR以外のポート名をポートの一覧に表示させたい場合 (smbdはポート名を全く使用していない)、 標準出力に対してポート名のリストを1行に一つずつ生成するようなプログラムを
 \fIenumports command\fRで定義することができる。 この一覧はレベル1および2のEnumPorts() RPCのレスポンス中で利用される。
 .sp
-Default:
+既定値:
 \fI\fIenumports command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIenumports command\fR\fR\fI = \fR\fI/usr/bin/listports\fR\fI \fR
 .RE
 
@@ -2656,10 +2650,10 @@ eventlog list (G)
 \fI/var/log/messages\fR
 のような一般の UNIX ログファイルを解析し、 イベントログの TDB ファイルにエントリを書き込む必要がある。 イベントログのエントリを書き込む方法については、eventlogadm(8) ユーティリティを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIeventlog list\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIeventlog list\fR\fR\fI = \fR\fISecurity Application Syslog Apache\fR\fI \fR
 .RE
 
@@ -2674,7 +2668,7 @@ NTFS や Windows VFAT ファイルシステムでは、 すべてのファイル
 .sp
 しかし、UNIX の時刻の扱いに関する仕様のため、 Samba が報告するディレクトリの作成時間はディレクトリにファイルが作成または削除されたときにも更新されてしまう。 その結果 NMAKE は、オブジェクトディレクトリで最後にビルドされたファイルを除く すべてのオブジェクトファイルがオブジェクトディレクトリより古いと判断し、それらを再構築してしまう。 このオプションを有効にすることで、 常にディレクトリは含まれるファイルよりも前の日付になり、 NMAKE によるビルドが意図したように行なわれることが保証される。
 .sp
-Default:
+既定値:
 \fI\fIfake directory create times\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2694,7 +2688,7 @@ fake oplocks = yes
 .sp
 CDROM 等の物理的に読みとり専用のメディアの場合など、 読みとり専用か、同時に 1 台のクライアントからだけしか アクセスされないとわかっている共有でこのオプションを有効にすると、 多くの操作で大きな性能改善が見られるだろう。複数のクライアントから 同時にファイルの読み書きアクセスする可能性がある共有でこのオプションを有効にすると、 ファイルの内容が破壊される場合が起こりうる。 このオプションは慎重に使用して欲しい!
 .sp
-Default:
+既定値:
 \fI\fIfake oplocks\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2707,7 +2701,7 @@ fam change notify (G)
 \fIkernel change notify\fR
 パラメータが有効な場合、そちらが優先される。
 .sp
-Default:
+既定値:
 \fI\fIfam change notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2725,7 +2719,7 @@ follow symlinks (S)
 このオプションはデフォルトで有効になっている (つまり、smbd
 はシンボリックリンクを追跡する)。
 .sp
-Default:
+既定値:
 \fI\fIfollow symlinks\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -2739,10 +2733,10 @@ force create mode (S)
 .sp
 下記の例は、作成されるすべてのファイルに対し、 グループ(group)とその他のユーザ(others)の読み込みと実行ビットと、 所有者(user)の読み込み/書き込み/実行ビットが必ず付与されるようにする。
 .sp
-Default:
+既定値:
 \fI\fIforce create mode\fR\fR\fI = \fR\fI000\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce create mode\fR\fR\fI = \fR\fI0755\fR\fI \fR
 .RE
 
@@ -2756,10 +2750,10 @@ force directory mode (S)
 .sp
 下記の例は、作成されるすべてのディレクトリに対し、 グループ(group)とその他のユーザ(others)の読み込みと実行権ビットと、 所有者(user)の読み込み/書き込み/実行ビットが必ず付与されるようにする。
 .sp
-Default:
+既定値:
 \fI\fIforce directory mode\fR\fR\fI = \fR\fI000\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce directory mode\fR\fR\fI = \fR\fI0755\fR\fI \fR
 .RE
 
@@ -2779,18 +2773,17 @@ force directory security mode (S)
 \fI注意\fR
 : 他の方法を使って Samba サーバにアクセスすることが可能なユーザは、この制限を簡単に回避できてしまう。 そのため、このパラメータの主な用途はスタンドアロンで動作する「アプライアンス」システムになるだろう。 通常システムの管理者のほとんどは、このパラメータを 0000 のままにしておきたいと考えるだろう。
 .sp
-Default:
+既定値:
 \fI\fIforce directory security mode\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce directory security mode\fR\fR\fI = \fR\fI700\fR\fI \fR
 .RE
 
 group
 .PP
 .RS 4
-This parameter is a synonym for
-force group\.
+このパラメータは右記のパラメータの別名である：force group\.
 .RE
 
 force group (S)
@@ -2809,10 +2802,10 @@ Samba 2\.0\.5 以降では、このパラメータの機能が拡張されてい
 \fIforce user\fR
 で指定されたユーザのプライマリグループの方が優先される。
 .sp
-Default:
+既定値:
 \fI\fIforce group\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce group\fR\fR\fI = \fR\fIagroup\fR\fI \fR
 .RE
 
@@ -2832,7 +2825,7 @@ Windows では、プリンタ名と共有名を強制的に一致させること
 .sp
 プリンタがクライアントにより使用を開始された後にこのパラメータの値を変更することは、 ユーザが自身の「プリンタ」フォルダからプリンタを削除することができなくなるため、推奨しない。
 .sp
-Default:
+既定値:
 \fI\fIforce printername\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2852,10 +2845,10 @@ force security mode (S)
 \fI注意\fR
 : 他の方法を使って Samba サーバにアクセスすることが可能なユーザは、この制限を簡単に回避できてしまう。 そのため、このパラメータの主な用途はスタンドアロンで動作する「アプライアンス」システムになるだろう。 通常システムの管理者のほとんどは、 このパラメータを 0000 のままにしておきたいと考えるだろう。
 .sp
-Default:
+既定値:
 \fI\fIforce security mode\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce security mode\fR\fR\fI = \fR\fI700\fR\fI \fR
 .RE
 
@@ -2868,7 +2861,7 @@ force unknown acl user (S)
 .sp
 XCOPY /O が ACCESS_DENIED エラーを引きおこす際には、このパラメータを使って欲しい。
 .sp
-Default:
+既定値:
 \fI\fIforce unknown acl user\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -2881,10 +2874,10 @@ force user (S)
 .sp
 Samba 2\.0\.5 以降では、このパラメータによって 設定されたユーザのプライマリグループが、 すべてのファイル操作においてプライマリグループとして利用される。 Samba 2\.0\.5 以前では、プライマリグループは本来接続を行ったユーザのプライマリグループのまま変わらない(これはバグである)。
 .sp
-Default:
+既定値:
 \fI\fIforce user\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIforce user\fR\fR\fI = \fR\fIauser\fR\fI \fR
 .RE
 
@@ -2901,10 +2894,10 @@ fstype (S)
 \fB FAT \fR
 といった別の文字列に、変更することができる。
 .sp
-Default:
+既定値:
 \fI\fIfstype\fR\fR\fI = \fR\fINTFS\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIfstype\fR\fR\fI = \fR\fISamba\fR\fI \fR
 .RE
 
@@ -3093,10 +3086,10 @@ get quota command
 要素8(オプション) \- ブロックあたりのバイト数(デフォルト1024)
 .sp
 .RE
-Default:
+既定値:
 \fI\fIget quota command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIget quota command\fR\fR\fI = \fR\fI/usr/local/sbin/query_quota\fR\fI \fR
 .RE
 
@@ -3109,7 +3102,7 @@ getwd cache (G)
 \fBno\fR
 に設定された場合は、パフォーマンスに対して相当な効果がある。
 .sp
-Default:
+既定値:
 \fI\fIgetwd cache\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3128,18 +3121,17 @@ lp(1)
 .sp
 このパラメータは % マクロを受け付けない。 システムの大半の箇所では、正常動作する上でこの値が静的に設定されていることが必要とされるためである。
 .sp
-Default:
+既定値:
 \fI\fIguest account\fR\fR\fI = \fR\fInobody # default can be changed at compile\-time\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIguest account\fR\fR\fI = \fR\fIftp\fR\fI \fR
 .RE
 
 public
 .PP
 .RS 4
-This parameter is a synonym for
-guest ok\.
+このパラメータは右記のパラメータの別名である：guest ok\.
 .RE
 
 guest ok (S)
@@ -3158,15 +3150,14 @@ guest ok (S)
 \fIsecurity\fR
 セクションを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIguest ok\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 only guest
 .PP
 .RS 4
-This parameter is a synonym for
-guest only\.
+このパラメータは右記のパラメータの別名である：guest only\.
 .RE
 
 guest only (S)
@@ -3180,7 +3171,7 @@ guest only (S)
 このオプションに関する詳細については、\fIsecurity\fR
 セクションを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIguest only\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3189,7 +3180,7 @@ hide dot files (S)
 .RS 4
 この真偽値パラメータにより、 ドットで始まるファイル名のファイルを隠しファイルとして扱うかどうかが制御される。
 .sp
-Default:
+既定値:
 \fI\fIhide dot files\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3218,7 +3209,7 @@ hide files = /\.*/DesktopFolderDB/TrashFor%m/resource\.frk/
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIhide files\fR\fR\fI = \fR\fI # どのファイルも隠されない\fR\fI \fR
 .RE
 
@@ -3227,7 +3218,7 @@ hide special files (S)
 .RS 4
 このパラメータにより、クライアントからソケット、デバイス、FIFOなどのファイルがディレクトリ一覧で表示されることを抑止できる。
 .sp
-Default:
+既定値:
 \fI\fIhide special files\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3236,7 +3227,7 @@ hide unreadable (S)
 .RS 4
 このパラメータにより、読みとりができないファイルの存在をクライアントから隠蔽できる。 このパラメータのデフォルトは off になっている。
 .sp
-Default:
+既定値:
 \fI\fIhide unreadable\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3245,7 +3236,7 @@ hide unwriteable files (S)
 .RS 4
 このパラメータにより、書き込みができないファイルの存在をクライアントから隠蔽できる。 このパラメータのデフォルトは off になっている。 書き込みができないディレクトリについては通常通り表示されることに注意。
 .sp
-Default:
+既定値:
 \fI\fIhide unwriteable files\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3277,10 +3268,10 @@ username server:/some/file/system
 Note
 このオプションを利用する場合は、 システムがNISクライアントとして稼働している必要がある。
 
-Default:
+既定値:
 \fI\fIhomedir map\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIhomedir map\fR\fR\fI = \fR\fIamd\.homedir\fR\fI \fR
 .RE
 
@@ -3294,7 +3285,7 @@ host msdfs (G)
 \fImsdfs root\fR
 も参照のこと。 Samba で DFS ツリーを構成する場合の詳細な情報については、 Samba3\-HOWTO の MSDFS の章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIhost msdfs\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3307,18 +3298,17 @@ hosts deny
 hosts allow
 の確認箇所などが挙げられる。
 .sp
-Default:
+既定値:
 \fI\fIhostname lookups\fR\fR\fI = \fR\fIno\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIhostname lookups\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 allow hosts
 .PP
 .RS 4
-This parameter is a synonym for
-hosts allow\.
+このパラメータは右記のパラメータの別名である：hosts allow\.
 .RE
 
 hosts allow (S)
@@ -3373,18 +3363,17 @@ Note
 \fBtestparm\fR(1)
 を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIhosts allow\fR\fR\fI = \fR\fI # なし (全てのホストがアクセス許可される)\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIhosts allow\fR\fR\fI = \fR\fI150\.203\.5\. myhost\.mynet\.edu\.au\fR\fI \fR
 .RE
 
 deny hosts
 .PP
 .RS 4
-This parameter is a synonym for
-hosts deny\.
+このパラメータは右記のパラメータの別名である：hosts deny\.
 .RE
 
 hosts deny (S)
@@ -3399,26 +3388,27 @@ hosts deny (S)
 \fIhosts allow = hosts allow\fR
 パラメータにより、 アクセスを許可したいホストを明示的に指定すること。
 .sp
-Default:
+既定値:
 \fI\fIhosts deny\fR\fR\fI = \fR\fI # なし (アクセスを拒否されるホストはない)\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIhosts deny\fR\fR\fI = \fR\fI150\.203\.4\. badhost\.mynet\.edu\.au\fR\fI \fR
 .RE
 
 idmap alloc backend (G)
 .PP
 .RS 4
-idmap alloc backend は Winbindが WindowsのSIDに対してUnixのuid/gidを 割り当てるためのプラグインインターフェースを提供する。 このオプションは
-\fIidmap domains\fR
-パラメーターと ID割り当て機能を提供する idmap モジュールの名前を結びつけるために 利用される。 それぞれのidmapプラグインが実装しているID割り当て機能の特徴については それぞれのmanページを参照すること。最も共通のプラグインは、 tdb (\fBidmap_tdb\fR(8)) と ldap (\fBidmap_ldap\fR(8)) である。
+idmap alloc backend は Winbindが WindowsのSIDに対してUnixのuid/gidを 割り当てるためのプラグインインターフェースを提供する。 このオプションは ID割り当て機能を提供する idmap モジュールの名前を結びつけるために 利用される。 それぞれのidmapプラグインが実装しているID割り当て機能の特徴については それぞれのmanページを参照のこと。最も共通のプラグインは、 tdb (\fBidmap_tdb\fR(8)) と ldap (\fBidmap_ldap\fR(8)) である。
+.sp
+このパラメータの既定値は\fIidmap backend\fR
+である。そのため、Winbindは標準のバックエンドから取得したUnixのIDを 割り当てる。このパラメータは、会社でユーザ情報を集中管理している といった時に、UnixのID情報を外部から取得する必要がある場合にのみ設定 する。
 .sp
 \fIidmap alloc config\fR
-オプションも参照すること。
+オプションも参照のこと。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIidmap alloc backend\fR\fR\fI = \fR\fItdb\fR\fI \fR
 .RE
 
@@ -3429,19 +3419,28 @@ idmap alloc config のプレフィックスは、
 \fIidmap alloc backend\fR
 パラメーターで設定された バックエンドに対するパラメーターの設定方法を提供する。 それぞれの idmap プラグインに対する個別の設定方法の詳細については man ページを参照すること。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 idmap backend (G)
 .PP
 .RS 4
-idmap backend は Winbindが SID/uid/gid のマッピングテーブルを 格納するための様々なバックエンドを利用するためのプラグイン インターフェースを提供する。 このオプションは、より新しくて柔軟な
-\fIidmap domains\fR
-パラメーターと同時に 利用することはできない。 "idmap backend" と "idmap domains" の主な違いは 前者が全てのドメインに対して単一のバックエンドのみ利用可能であるのに 対して、後者はドメインごとに個別にバックエンドを設定可能であると いうことである。
+idmap backend は Winbindが SID/uid/gid のマッピングテーブルを 格納するための様々なバックエンドを利用するためのプラグイン インターフェースを提供する。
 .sp
-SID/uid/gid のバックエンドの実装として tdb (\fBidmap_tdb\fR(8))、 ldap (\fBidmap_ldap\fR(8))、 rid (\fBidmap_rid\fR(8))、 ad (\fBidmap_tdb\fR(8))が提供されている。
+このオプションは、\fIidmap config\fRで何も指定 されていないときに、既定値として利用するバックエンドを指定する ときに利用する。
 .sp
-Default:
+この既定値のバックエンドは、winbindで生成されたidmapの格納場所 も指定する。そのため、書き込み可能な\fBidmap_tdb\fR(8)や\fBidmap_ldap\fR(8)をidmapバックエンドとして強く推奨する。\fBidmap_rid\fR(8)や\fBidmap_ad\fR(8)は書き込み可能でないため、これらをidmapのバックエンド に指定すると予想できない結果となる。
+.sp
+To use the rid and ad backends, please specify them via the
+\fIidmap config\fR
+parameter, possibly also for the domain your machine is member of, specified by
+\fIworkgroup\fR\.
+.sp
+ridとadのバックエンドを利用する場合には\fIworkgroup\fRで指定 されているドメイン名を\fIidmap config\fRの パラメータで指定する。
+.sp
+SID/uid/gid のバックエンドの例として tdb (\fBidmap_tdb\fR(8))、 ldap (\fBidmap_ldap\fR(8))、 rid (\fBidmap_rid\fR(8))、 ad (\fBidmap_tdb\fR(8))が提供されている。
+.sp
+既定値:
 \fI\fIidmap backend\fR\fR\fI = \fR\fItdb\fR\fI \fR
 .RE
 
@@ -3450,50 +3449,44 @@ idmap cache time (G)
 .RS 4
 このパラメーターにはWinbindのidmapインターフェースが SID/uid/gidの問い合わせに成功した結果をキャッシュする秒数を設定する。
 .sp
-Default:
-\fI\fIidmap cache time\fR\fR\fI = \fR\fI900\fR\fI \fR
+既定値:
+\fI\fIidmap cache time\fR\fR\fI = \fR\fI604800（1週間）\fR\fI \fR
 .RE
 
 idmap config (G)
 .PP
 .RS 4
-idmap config のプレフィックスは、Sambaのパラメーターのオプション設定 機能を利用して、\fIidmap domains\fR
-オプションで定義されたそれぞれのドメインを管理する方法を提供する。 idmap config プレフィックスに続けて、ドメイン名、コロン、そして 選択したバックエンド用の設定を指定しなければならない。 全てのドメインで指定可能な3つのオプションがある。
+idmap config のプレフィックスは、それぞれの信頼されたドメインを 管理する方法を提供する。idmap config プレフィックスに続けて、 ドメイン名、コロン、そして選択したバックエンド用の設定を指定 しなければならない。全てのドメインで指定可能な3つのオプションがある。
 .PP
 backend = backend_name
 .RS 4
 このドメインでSID/uid/gidのバックエンドとして利用する idmapプラグインの名前を指定する。
 .RE
 .PP
-default = [yes|no]
+range = low \- high
 .RS 4
-ユーザー、グループの探索で、(アカウント SIDや、 ドメインSIDの比較で一致した)指定されたドメインに 該当者が存在しない場合のデフォルトの ドメイン/バックエンドとして利用される。
-.RE
-.PP
-readonly = [yes|no]
-.RS 4
-ドメイン内のあらゆるユーザーやグループに対して 試みられる(\fIidmap alloc backend\fR
-による)uidやgidの割り当てを試みない read onlyのドメインとして扱う。
+バックエンドの管轄下にある、利用可能なuidとgidの範囲を指定する。 一般的に、同じバックエンドにてSID/uid/gidを保存・取得する場合、 範囲は変わらない。
+.sp
+Winbindは、このパラメータを使って信頼できるバックエンドから unix IDとSIDのマッピング情報を検索する。そのため、各ドメイン ごとに設定される必要があり、\fIidmap uid\fR
+と\fIidmap gid\fRの設定範囲とは異なっている 必要がある。
 .RE
 .sp
 次の例はCORPドメインが\fBidmap_ad\fR(8)
 バックエンド で、他の全てのドメインが\fBidmap_tdb\fR(8)
-バックエンドとしてどのように 設定されるかを示している。 TRUSTEDDOMAINSの文字列は、"idmap config" の設定として 参照するための任意のキーであり、実際のドメイン名を表しているわけでは ない。この設定は、明示的に指定されていない他の全てのドメインを包括する ドメインを意味している。
+バックエンドとしてどのように 設定されるかを示している。 この設定では、CORPドメインの管理者がSFUを使って1000000以下をアサイン しており、winbindが次の1000000台を、自分の管轄下のドメインとローカル グループのためのマッピングに使う場合の例である。
 .sp
 .RS 4
 .nf
-	idmap domains = CORP TRUSTEDDOMAINS
+	idmap backend = tdb
+	idmap uid = 1000000\-1999999
+	idmap gid = 1000000\-1999999
 
-	idmap config CORP:backend  = ad
-	idmap config CORP:readonly = yes
-
-	idmap config TRUSTEDDOMAINS:backend = tdb
-	idmap config TRUSTEDDOMAINS:default = yes
-	idmap config TRUSTEDDOMAINS:range   = 1000 \- 9999
+	idmap config CORP : backend  = ad
+	idmap config CORP : range = 1000\-999999
 	
 .fi
 .RE
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 idmap domains (G)
@@ -3507,30 +3500,30 @@ idmap domains オプションは、WinbindのSID/uid/gidのテーブルを 管�
 .sp
 それぞれのドメインの SID/uid/gid バックエンドを管理するための 詳細については\fIidmap config\fRを参照のこと。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIidmap domains\fR\fR\fI = \fR\fIdefault AD CORP\fR\fI \fR
 .RE
 
 winbind gid
 .PP
 .RS 4
-This parameter is a synonym for
-idmap gid\.
+このパラメータは右記のパラメータの別名である：idmap gid\.
 .RE
 
 idmap gid (G)
 .PP
 .RS 4
-idmap gid パラメータは UNIX グループを NT グループの SID に マッピングする際に使用するグループ id の範囲を指定する。 予期しない競合が発生しないようにするため、この GID の範囲に ローカルな グループや NIS グループが存在しないようにすること
+idmap gid パラメータは UNIX グループを NT グループの SID に マッピングする際に使用するグループ id の範囲を指定する。 予期しない競合が発生しないようにするため、この GID の範囲に ローカルな グループや NIS グループが存在しないようにすること。
 .sp
-\fIidmap backend\fR、\fIidmap domains\fR、\fIidmap config\fRも参照のこと。
+\fIidmap backend\fR、
+\fIidmap config\fRも参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIidmap gid\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIidmap gid\fR\fR\fI = \fR\fI10000\-20000\fR\fI \fR
 .RE
 
@@ -3539,28 +3532,28 @@ idmap negative cache time (G)
 .RS 4
 このパラメーターは Winbindのidmapインターフェースが SID/uid/gidの問い合わせに失敗した結果をキャッシュしておく秒数を 指定する。
 .sp
-Default:
+既定値:
 \fI\fIidmap negative cache time\fR\fR\fI = \fR\fI120\fR\fI \fR
 .RE
 
 winbind uid
 .PP
 .RS 4
-This parameter is a synonym for
-idmap uid\.
+このパラメータは右記のパラメータの別名である：idmap uid\.
 .RE
 
 idmap uid (G)
 .PP
 .RS 4
-idmap uid パラメータは UNIX ユーザを NT ユーザの SID に マッピングする際に割り当てられるユーザ id の範囲を指定する。 予期しない競合が発生しないようにするため、この GID の範囲に ローカルな ユーザや NIS ユーザが存在しないようにすること
+idmap uid パラメータは UNIX ユーザを NT ユーザの SID に マッピングする際に割り当てられるユーザ id の範囲を指定する。 予期しない競合が発生しないようにするため、この GID の範囲に ローカルな ユーザや NIS ユーザが存在しないようにすること。
 .sp
-\fIidmap backend\fR、\fIidmap domains\fR、\fIidmap config\fRオプションも参照のこと。
+\fIidmap backend\fR、
+\fIidmap config\fRオプションも参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIidmap uid\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIidmap uid\fR\fR\fI = \fR\fI10000\-20000\fR\fI \fR
 .RE
 
@@ -3578,10 +3571,10 @@ include (G)
 \fIregistry\fR
 という 名前のファイルをインクルードする\fIのではなく\fR、 レジストリーからグローバル設定を読み込む。詳細はレジストリーベースの設定 に関する章を参照されたい。注意：このオプションはレジストリー共有を自動的に 有効にする。
 .sp
-Default:
+既定値:
 \fI\fIinclude\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIinclude\fR\fR\fI = \fR\fI/usr/local/samba/lib/admin_smb\.conf\fR\fI \fR
 .RE
 
@@ -3590,7 +3583,7 @@ inherit acls (S)
 .RS 4
 このパラメータは、 親ディレクトリにデフォルト ACL が設定されており、 サブディレクトリの作成時に、その ACL の設定を引き継がせたい場合に用いられる。 デフォルトでは ディレクトリ作成時に設定されるモードが用いられる。 このオプションを有効にすると、モードが 0777 となり、 ディレクトリのデフォルト ACL を確実に継承できるようになる。
 .sp
-Default:
+既定値:
 \fI\fIinherit acls\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3601,7 +3594,7 @@ inherit owner (S)
 .sp
 この動作が有用な状況としては、 ユーザがファイルの作成や修正はできるが、削除はできないようにした drop box や、 あるユーザの移動プロファイルのディレクトリ内に新規作成されたファイルの所有者が そのユーザとなるようにしたい場合などが挙げられる。
 .sp
-Default:
+既定値:
 \fI\fIinherit owner\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3630,7 +3623,7 @@ setuid ビットが引き継がれることは、\fI決して \fRない(コー�
 .sp
 このパラメータは、数千人レベルの多くのユーザが存在する大規模なシステムで、 単一の [homes] 共有を各ユーザが柔軟に利用できるようにさせる際に、 特に有用であろう。
 .sp
-Default:
+既定値:
 \fI\fIinherit permissions\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3639,21 +3632,21 @@ init logon delay (G)
 .RS 4
 このパラメータは\fIinit logon delayed hosts\fRで指定 したホストに対してinitial samlogonの応答を保留する長さをミリ秒で指定する。
 .sp
-Default:
+既定値:
 \fI\fIinit logon delay\fR\fR\fI = \fR\fI100\fR\fI \fR
 .RE
 
 init logon delayed hosts (G)
 .PP
 .RS 4
-このパラメータは、initial samlogonの応答を保留すべきホスト名や ネットワークを指定する。（これにより、XP Workstationは他のドメイン コントローラを参照できる）
+このパラメータには、最初に返される samlogon 応答を遅延させるべき ホスト名や IP アドレス、ネットワーク等のリストを指定する（本ホスト 以外にもドメインコントローラがある場合、この設定により、Windows XP 端末はそれらの DC を参照するようになる）。
 .sp
 応答を保留する長さは\fIinit logon delay\fRで指定する。
 .sp
-Default:
+既定値:
 \fI\fIinit logon delayed hosts\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIinit logon delayed hosts\fR\fR\fI = \fR\fI150\.203\.5\. myhost\.mynet\.de\fR\fI \fR
 .RE
 
@@ -3716,10 +3709,10 @@ IP/mask のペア。
 .sp
 以下の設定では、eth0 デバイスと 192\.168\.2\.10 および 192\.168\.3\.10 の IP アドレスに対応する 3 つのネットワークインタフェースが指定されている。 後者のインタフェース 2 つに対するネットマスクは 255\.255\.255\.0 に設定されている。
 .sp
-Default:
+既定値:
 \fI\fIinterfaces\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIinterfaces\fR\fR\fI = \fR\fIeth0 192\.168\.2\.10/24 192\.168\.3\.10/255\.255\.255\.0\fR\fI \fR
 .RE
 
@@ -3736,10 +3729,10 @@ invalid users (S)
 .sp
 \fI%S\fRは、 現在のサービス名に置換される。これは [homes] セクションで有効である。
 .sp
-Default:
+既定値:
 \fI\fIinvalid users\fR\fR\fI = \fR\fI # invalid users は空である\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIinvalid users\fR\fR\fI = \fR\fIroot fred admin @wheel\fR\fI \fR
 .RE
 
@@ -3755,10 +3748,10 @@ iprint server (G)
 \fIclient\.conf\fR
 で指定された ServerName オプションの値がこのパラメータによって上書きされる。 複数の仮想 Samba サーバが起動している環境で各々が異なる CUPS デーモンに接続している環境では、このパラメータが必要となる。
 .sp
-Default:
+既定値:
 \fI\fIiprint server\fR\fR\fI = \fR\fI""\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIiprint server\fR\fR\fI = \fR\fIMYCUPSSERVER\fR\fI \fR
 .RE
 
@@ -3773,10 +3766,10 @@ keepalive (G)
 \fIsocket options\fR
 を参照のこと)、通常 keepalive は不要である。基本的に、このオプションは問題が発生している場合にのみ使用すべきである。
 .sp
-Default:
+既定値:
 \fI\fIkeepalive\fR\fR\fI = \fR\fI300\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIkeepalive\fR\fR\fI = \fR\fI600\fR\fI \fR
 .RE
 
@@ -3787,7 +3780,7 @@ kernel change notify (S)
 .sp
 このパラメータは使用しているカーネルが inotify インターフェース を使用してユーザプログラムに対しての変更の通知をサポートしている 場合にのみ使用される。
 .sp
-Default:
+既定値:
 \fI\fIkernel change notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3808,7 +3801,7 @@ kernel oplocks (G)
 \fBon\fR
 であるが、 カーネルがこの機能をサポートしていないシステムでは、自動的に無効にされる。 このパラメータを変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fIkernel oplocks\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3829,7 +3822,7 @@ client lanman auth
 ntlm auth
 の両方を無効にした場合、 NTLMv2 によるログインのみが可能となる。 クライアントのすべてが NTLMv2 をサポートしているわけではなく、ほとんどのクライアントでは NTLMv2 を使用するために明示的な設定を行なう必要がある。
 .sp
-Default:
+既定値:
 \fI\fIlanman auth\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3840,7 +3833,7 @@ large readwrite (G)
 \fBsmbd\fR(8)
 がサポートするかどうかを制御する。 Windows 2000クライアントのリダイレクタにはバグがあるため、 このパラメータを利用するには、SambaがIRIX、Solaris、Linux 2\.4カーネルのような64ビットのOSで動作している必要がある。 Windows 2000クライアントにおいては、10% のパフォーマンス向上が見込まれる。 デフォルト値は on であるが、他の Samba コードほどにはテストが充分には行われていない。
 .sp
-Default:
+既定値:
 \fI\fIlarge readwrite\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -3865,7 +3858,7 @@ ldap admin dn (G)
 \fIldap admin dn\fR
 に付加されることはない。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 ldap connection timeout (G)
@@ -3876,7 +3869,7 @@ ldap connection timeout (G)
 このパラメータは、存在するコネクションを使ってのLDAPサーバ上の操作に影響する
 \fIldap timeout\fRとは異なり、最初の接続を確立しない。
 .sp
-Default:
+既定値:
 \fI\fIldap connection timeout\fR\fR\fI = \fR\fI2\fR\fI \fR
 .RE
 
@@ -3893,10 +3886,10 @@ LDAP ライブラリからのデバッグ出力は、Samba のログ出力の中
 \fIldap debug threshold\fR
 パラメータでコントロール できる。
 .sp
-Default:
+既定値:
 \fI\fIldap debug level\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap debug level\fR\fR\fI = \fR\fI1\fR\fI \fR
 .RE
 
@@ -3907,10 +3900,10 @@ ldap debug threshold (G)
 \fIldap debug level\fR
 を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIldap debug threshold\fR\fR\fI = \fR\fI10\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap debug threshold\fR\fR\fI = \fR\fI5\fR\fI \fR
 .RE
 
@@ -3919,7 +3912,7 @@ ldap delete dn (G)
 .RS 4
 このパラメータは ldapsam の削除の操作時に、エントリを完全に 削除するか、Samba でしか使用されない属性だけを消すかの制御を行なう。
 .sp
-Default:
+既定値:
 \fI\fIldap delete dn\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -3931,10 +3924,10 @@ ldap group suffix (G)
 の値が代わりに使用される。 サフィックスの文字列には、\fIldap suffix\fR
 の文字列が付加されるため、相対 DN で指定を行なうこと。
 .sp
-Default:
+既定値:
 \fI\fIldap group suffix\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap group suffix\fR\fR\fI = \fR\fIou=Groups\fR\fI \fR
 .RE
 
@@ -3946,10 +3939,10 @@ ldap idmap suffix (G)
 の値が代わりに使用される。 サフィックスの文字列には、\fIldap suffix\fR
 の文字列が付加されるため、相対 DN で指定を行なうこと。
 .sp
-Default:
+既定値:
 \fI\fIldap idmap suffix\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap idmap suffix\fR\fR\fI = \fR\fIou=Idmap\fR\fI \fR
 .RE
 
@@ -3961,10 +3954,10 @@ ldap machine suffix (G)
 の値が代わりに使用される。 サフィックスの文字列には、\fIldap suffix\fR
 の文字列が付加されるため、相対 DN で指定を行なうこと。
 .sp
-Default:
+既定値:
 \fI\fIldap machine suffix\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap machine suffix\fR\fR\fI = \fR\fIou=Computers\fR\fI \fR
 .RE
 
@@ -4012,7 +4005,7 @@ ldap passwd sync (G)
 = LDAP パスワードのみを変更し、あとの処理は LDAP サーバに 委任する。
 .sp
 .RE
-Default:
+既定値:
 \fI\fIldap passwd sync\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -4025,7 +4018,7 @@ Samba が読みとり専用の LDAP レプリカに対して、書き込みの�
 .sp
 この値はミリ秒単位で指定する。最大値は 5000 (5秒)である。
 .sp
-Default:
+既定値:
 \fI\fIldap replication sleep\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .RE
 
@@ -4110,7 +4103,7 @@ net sam provision
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIldapsam:editposix\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -4124,7 +4117,7 @@ o Samba を大規模環境に適用させるため、\fIldapsam:trusted = yes\fR
 \fIldapsam:trusted = yes\fR
 を設定することが可能となる。 この場合、Samba はユーザ情報の NSS に対する問い合わせを完全にバイパスする。 最適化された LDAP クエリにより、ログオンや管理作業が劇的に高速化される。 LDAP データベースのサイズにもよるが、共通的なクエリについては、100 倍以上の高速化が容易に達成される。
 .sp
-Default:
+既定値:
 \fI\fIldapsam:trusted\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -4170,7 +4163,7 @@ LDAPサーバとの接続は可能な限り暗号化すべきである。これ�
 \fIldap ssl ads\fRの詳細については
 smb\.conf(5)を参照。
 .sp
-Default:
+既定値:
 \fI\fIldap ssl\fR\fR\fI = \fR\fIstart tls\fR\fI \fR
 .RE
 
@@ -4183,7 +4176,7 @@ ldap ssl ads (G)
 詳細についてはsmb\.conf(5)
 の\fIldap ssl\fRを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIldap ssl ads\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -4199,10 +4192,10 @@ ldap suffix は、\fIldap user suffix\fR、
 \fIldap suffix\fR
 からの相対 DN で指定が行なわれる。
 .sp
-Default:
+既定値:
 \fI\fIldap suffix\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap suffix\fR\fR\fI = \fR\fIdc=samba,dc=org\fR\fI \fR
 .RE
 
@@ -4211,7 +4204,7 @@ ldap timeout (G)
 .RS 4
 このパラメータでは、SambaがLDAP接続においてタイムアウトさせるまでの秒数を指定する。
 .sp
-Default:
+既定値:
 \fI\fIldap timeout\fR\fR\fI = \fR\fI15\fR\fI \fR
 .RE
 
@@ -4223,10 +4216,10 @@ ldap user suffix (G)
 の値が代わりに使用される。 サフィックスの文字列には、\fIldap suffix\fR
 の文字列が付加されるため、相対 DN で指定を行なうこと。
 .sp
-Default:
+既定値:
 \fI\fIldap user suffix\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIldap user suffix\fR\fR\fI = \fR\fIou=people\fR\fI \fR
 .RE
 
@@ -4250,7 +4243,7 @@ level2 oplock に関する詳細な議論については、CIFS の仕様を参�
 \fByes\fR
 である必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIlevel2 oplocks\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -4274,10 +4267,10 @@ lm announce (G)
 \fIlm interval\fR
 によって設定された間隔で定期的なブロードキャストの送出を開始する。
 .sp
-Default:
+既定値:
 \fI\fIlm announce\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlm announce\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -4289,10 +4282,10 @@ Samba が OS/2 クライアントが必要とする lanman announce のブロー
 \fIlm announce\fR
 パラメータの設定に関わらず、 lanman announce は送出されない。
 .sp
-Default:
+既定値:
 \fI\fIlm interval\fR\fR\fI = \fR\fI60\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlm interval\fR\fR\fI = \fR\fI120\fR\fI \fR
 .RE
 
@@ -4303,7 +4296,7 @@ load printers (G)
 \fIprinters\fR
 セクションを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIload printers\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -4332,15 +4325,14 @@ nmbd
 \fI決して\fR
 ローカルマスタブラウザにならなくなる。
 .sp
-Default:
+既定値:
 \fI\fIlocal master\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 lock dir
 .PP
 .RS 4
-This parameter is a synonym for
-lock directory\.
+このパラメータは右記のパラメータの別名である：lock directory\.
 .RE
 
 lock directory (G)
@@ -4352,10 +4344,10 @@ lock directory (G)
 .sp
 注意：レジストリ設定の中では、このオプションは指定できない。
 .sp
-Default:
+既定値:
 \fI\fIlock directory\fR\fR\fI = \fR\fI${prefix}/var/locks\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlock directory\fR\fR\fI = \fR\fI/var/run/samba/locks\fR\fI \fR
 .RE
 
@@ -4374,7 +4366,7 @@ read only のファイルシステム(例えばCDROMドライブ)では、有用
 .sp
 ロックが機能しない場合、 データが破壊される可能性もあるため、全体に対しても、 個々の共有に対しても、ロックを無効にする際には注意すること。このパラメータの設定は通常必要ない。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 lock spin count (G)
@@ -4384,7 +4376,7 @@ Samba 3\.0\.24 において、このパラメータは無効となった。 こ�
 \fIlock spin time\fR
 パラメータで制御されている。
 .sp
-Default:
+既定値:
 \fI\fIlock spin count\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
@@ -4395,7 +4387,7 @@ smbd が一度失敗したロックを再度獲得しようとする際の待ち
 \fIlock spin count\fR
 パラメータは Samba 3\.0\.24 以降では使用されない。 このパラメータの値を変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fIlock spin time\fR\fR\fI = \fR\fI200\fR\fI \fR
 .RE
 
@@ -4406,17 +4398,16 @@ log file (G)
 .sp
 このオプションには、標準の変数置換が適用されるため、 個々のユーザやマシン毎にログを分割することが可能である。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIlog file\fR\fR\fI = \fR\fI/usr/local/samba/var/log\.%m\fR\fI \fR
 .RE
 
 debuglevel
 .PP
 .RS 4
-This parameter is a synonym for
-log level\.
+このパラメータは右記のパラメータの別名である：log level\.
 .RE
 
 log level (G)
@@ -4646,10 +4637,10 @@ log level (G)
 \fIregistry\fR
 .sp
 .RE
-Default:
+既定値:
 \fI\fIlog level\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlog level\fR\fR\fI = \fR\fI3 passdb:5 auth:10 winbind:2\fR\fI \fR
 .RE
 
@@ -4663,10 +4654,10 @@ logon drive (G)
 .sp
 訳注: Samba 3\.0 系列で LDAP や TDB を認証データベースとして用いている場合、これらの値はユーザ毎に保持され、本パラメータは指定がなかった際のデフォルト値を設定するものとなる。
 .sp
-Default:
+既定値:
 \fI\fIlogon drive\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlogon drive\fR\fR\fI = \fR\fIh:\fR\fI \fR
 .RE
 
@@ -4701,10 +4692,10 @@ Sambaの以前のバージョンでは、
 .sp
 訳注: Samba 3\.0 系列で LDAP や TDB を認証データベースとして用いている場合、これらの値はユーザ毎に保持され、本パラメータは指定がなかった際のデフォルト値を設定するものとなる。
 .sp
-Default:
+既定値:
 \fI\fIlogon home\fR\fR\fI = \fR\fI\e\e%N\e%U\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlogon home\fR\fR\fI = \fR\fI\e\eremote_smb_server\e%U\fR\fI \fR
 .RE
 
@@ -4750,7 +4741,7 @@ logon path = \e\ePROFILESERVER\ePROFILE\e%U
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIlogon path\fR\fR\fI = \fR\fI\e\e%N\e%U\eprofile\fR\fI \fR
 .RE
 
@@ -4795,10 +4786,10 @@ NET USE U: \e\eSERVER\eUTILS
 .sp
 このパラメータは、Sambaがログオンサーバとして構成された場合のみ、 意味をもつ。
 .sp
-Default:
+既定値:
 \fI\fIlogon script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlogon script\fR\fR\fI = \fR\fIscripts\e%U\.bat\fR\fI \fR
 .RE
 
@@ -4818,10 +4809,10 @@ lppause command (S)
 .sp
 サーバの PATH 環境変数が利用できないかもしれないことを考慮して、 lppause command を絶対パスで記述する癖をつけておくと良い。
 .sp
-Default:
+既定値:
 \fI\fIlppause command\fR\fR\fI = \fR\fI # 現在のところデフォルト値は設定されていない。 ただし、\fIprinting\fR パラメータの値が ただし、\fIprinting\fR パラメータの値が \fBSYSV\fR の場合は lp \-i %p\-%j \-H hold、 \fBSOFTQ\fR の場合は qstat \-s \-j%j \-h がデフォルト値となる。\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlppause command\fR\fR\fI = \fR\fI/usr/bin/lpalt %p\-%j \-p0\fR\fI \fR
 .RE
 
@@ -4848,10 +4839,10 @@ lpq
 .sp
 値を 0 にした場合、キャッシュは完全に無効となる。
 .sp
-Default:
+既定値:
 \fI\fIlpq cache time\fR\fR\fI = \fR\fI30\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlpq cache time\fR\fR\fI = \fR\fI10\fR\fI \fR
 .RE
 
@@ -4880,10 +4871,10 @@ lpq形式のプリンタ状態情報を得るため、 サーバ上で実行す�
 \fIlpq command\fR
 は必要ない。
 .sp
-Default:
+既定値:
 \fI\fIlpq command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIlpq command\fR\fR\fI = \fR\fI/usr/bin/lpq \-P%p\fR\fI \fR
 .RE
 
@@ -4922,7 +4913,7 @@ lp \-i %p\-%j \-H resume
 .sp
 qstat \-s \-j%j \-r
 .sp
-Default:
+既定値:
 \fI\fIlpresume command\fR\fR\fI = \fR\fIlpresume command = /usr/bin/lpalt %p\-%j \-p2\fR\fI \fR
 .RE
 
@@ -4955,7 +4946,7 @@ lprm command = /usr/bin/cancel %p\-%j
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIlprm command\fR\fR\fI = \fR\fI printing パラメータの設定に依存する \fR\fI \fR
 .RE
 
@@ -4971,7 +4962,7 @@ Sambaサーバが NT ドメインのメンバである場合 (\fIsecurity = doma
 \fIsecurity = domain\fR
 パラメータも参照のこと。
 .sp
-Default:
+既定値:
 \fI\fImachine password timeout\fR\fR\fI = \fR\fI604800\fR\fI \fR
 .RE
 
@@ -4991,10 +4982,10 @@ Warning
 \fIMagic スクリプト\fR
 を同じディレクトリで利用する場合、 出力ファイルの内容は不定になる。
 
-Default:
+既定値:
 \fI\fImagic output\fR\fR\fI = \fR\fI<magic script name>\.out\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImagic output\fR\fR\fI = \fR\fImyfile\.txt\fR\fI \fR
 .RE
 
@@ -5016,10 +5007,10 @@ Magic スクリプトは
 のパラメータであり、このパラメータを安全だと考えるべきでは
 \fIない\fR。
 .sp
-Default:
+既定値:
 \fI\fImagic script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImagic script\fR\fR\fI = \fR\fIuser\.csh\fR\fI \fR
 .RE
 
@@ -5043,10 +5034,10 @@ mangled map (S)
 とても便利な利用方法の一つに、CDROMによってファイル名の末尾に付加されている
 \fI;1\fR(幾つかのUNIX上でのみ表示される) の削除が挙げられる。これを行なうためには、 (*;1 *;) のように指定すればよい。
 .sp
-Default:
+既定値:
 \fI\fImangled map\fR\fR\fI = \fR\fI # mangled map なし\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImangled map\fR\fR\fI = \fR\fI(*;1 *;)\fR\fI \fR
 .RE
 
@@ -5104,7 +5095,7 @@ UNIX 上のファイル名がドットから始まる場合、 そのファイ�
 .sp
 名前の短縮処理により、(この処理が有効な限り) Windows や DOS から、UNIX 側の長いファイル名を保持したまま UNIX ディレクトリ間のファイルのコピーができる。 Windows や DOS 側から UNIX 側のファイル名の拡張子を変更しても、ベース名は保持される。 なお、セッションが異なっても短縮名は変化しない。
 .sp
-Default:
+既定値:
 \fI\fImangled names\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5115,10 +5106,10 @@ mangle prefix (G)
 .sp
 mangle prefix は mangling method が hash2 の時のみ有効である。
 .sp
-Default:
+既定値:
 \fI\fImangle prefix\fR\fR\fI = \fR\fI1\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImangle prefix\fR\fR\fI = \fR\fI4\fR\fI \fR
 .RE
 
@@ -5131,10 +5122,10 @@ mangling char (S)
 \fImagic\fR
 キャラクタとして利用される文字を指定する。デフォルトは「~」であるが、 ソフトウェアによっては問題が発生してしまうかも知れない。 このオプションにより、任意の文字を指定することが可能になる。 このパラメータは mangling method が hash の時のみ有効である。
 .sp
-Default:
+既定値:
 \fI\fImangling char\fR\fR\fI = \fR\fI~\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImangling char\fR\fR\fI = \fR\fI^\fR\fI \fR
 .RE
 
@@ -5143,10 +5134,10 @@ mangling method (G)
 .RS 4
 短縮名を生成する際に利用するアルゴリズムを指定する。 「hash」と「hash2」という2つの値を指定することが可能である。 「hash」は Samba 2\.2\.x でのデフォルト値であり、長年 Samba で利用されてきた方式である。 「hash2」は新しい方式であり、現在のデフォルト値である。これは、 (名前の重複の発生が低減される点で)より優れたアルゴリズムといえる。 Win32 アプリケーションの多くが短縮名を記憶しているため、 新しいアルゴリズムへの変更は、 こうしたアプリケーションの再インストールが必要になる可能性があるという点で、安易に行なうべきではない。
 .sp
-Default:
+既定値:
 \fI\fImangling method\fR\fR\fI = \fR\fIhash2\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImangling method\fR\fR\fI = \fR\fIhash\fR\fI \fR
 .RE
 
@@ -5157,7 +5148,7 @@ map acl inherit (S)
 \fBsmbd\fR(8)
 は Windows の ACL に格納される「inherit」および「protected」の ACE フラグを user\.SAMBA_PAI (訳注: Samba_Posix_Acl_Inheritance) と呼ばれる拡張属性にマッピングすることが可能となる。 このパラメータは Samba が拡張属性をサポートしているプラットフォーム(Linux および IRIX など)で実行されており、Windows 2000 の ACL エディタから Samba 側の POSIX ACL とのマッピングを実現するコードで継承を適切に設定できる場合のみ、有効となる。
 .sp
-Default:
+既定値:
 \fI\fImap acl inherit\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -5171,7 +5162,7 @@ map archive (S)
 パラメータを設定することが必要となることに注意。 詳細は、\fIcreate mask\fR
 パラメータを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fImap archive\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5185,7 +5176,7 @@ map hidden (S)
 パラメータを設定することが必要となることに注意。 詳細は、\fIcreate mask\fR
 パラメータを参照のこと。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 map read only (S)
@@ -5248,7 +5239,7 @@ map read only (S)
 パラメータによってのみ付与される。 これは、マウント中の CD を共有する場合にも便利かも知れない。
 .sp
 .RE
-Default:
+既定値:
 \fI\fImap read only\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5262,7 +5253,7 @@ map system (S)
 パラメータを設定することが必要となることに注意。 詳細は、\fIcreate mask\fR
 パラメータを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fImap system\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -5347,10 +5338,10 @@ map to guest (G)
 \fBGUEST_SESSSETUP \fR
 というコンパイル設定に対応づけられている。
 .sp
-Default:
+既定値:
 \fI\fImap to guest\fR\fR\fI = \fR\fINever\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImap to guest\fR\fR\fI = \fR\fIBad User\fR\fI \fR
 .RE
 
@@ -5365,10 +5356,10 @@ max connections (S)
 \fIlock directory\fR
 オプションで指定されたディレクトリに保存される。
 .sp
-Default:
+既定値:
 \fI\fImax connections\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax connections\fR\fR\fI = \fR\fI10\fR\fI \fR
 .RE
 
@@ -5386,10 +5377,10 @@ max disk size (G)
 \fImax disk size\fR
 パラメータが 0 の場合は、無制限を意味する。
 .sp
-Default:
+既定値:
 \fI\fImax disk size\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax disk size\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .RE
 
@@ -5402,10 +5393,10 @@ max log size (G)
 .sp
 サイズ 0 は無制限を意味する。
 .sp
-Default:
+既定値:
 \fI\fImax log size\fR\fR\fI = \fR\fI5000\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax log size\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .RE
 
@@ -5414,7 +5405,7 @@ max mux (G)
 .RS 4
 このオプションは、 Samba がクライアントに通知する同時に実行可能な SMB オペレーションの最大数を制御する。 このパラメータを設定する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fImax mux\fR\fR\fI = \fR\fI50\fR\fI \fR
 .RE
 
@@ -5427,7 +5418,7 @@ max open files (G)
 .sp
 オープンするファイルの数の制限は、通常このパラメータではなく UNIX におけるプロセス毎のファイルディスクリプタの上限値によって制限される。そのため、この値を変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fImax open files\fR\fR\fI = \fR\fI10000\fR\fI \fR
 .RE
 
@@ -5438,18 +5429,17 @@ max print jobs (S)
 \fBsmbd\fR(8)
 は、 クライアントに「空き領域がない」というエラーを返却する。
 .sp
-Default:
+既定値:
 \fI\fImax print jobs\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax print jobs\fR\fR\fI = \fR\fI5000\fR\fI \fR
 .RE
 
 protocol
 .PP
 .RS 4
-This parameter is a synonym for
-max protocol\.
+このパラメータは右記のパラメータの別名である：max protocol\.
 .RE
 
 max protocol (G)
@@ -5518,10 +5508,10 @@ max protocol (G)
 .RE
 通常、SMB プロトコルによりネゴシエーションを経て適切なプロトコルが選択されるため、 このオプションを設定すべきではない。
 .sp
-Default:
+既定値:
 \fI\fImax protocol\fR\fR\fI = \fR\fINT1\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax protocol\fR\fR\fI = \fR\fILANMAN1\fR\fI \fR
 .RE
 
@@ -5530,10 +5520,10 @@ max reported print jobs (S)
 .RS 4
 このパラメータにより、ある時点で Samba の印刷キューのポートモニタが表示する印刷ジョブの最大数が設定される。 この数値を超過した場合、超過したジョブは表示されない。 0 が設定された場合は、表示される印刷ジョブの制限はなくなる。
 .sp
-Default:
+既定値:
 \fI\fImax reported print jobs\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax reported print jobs\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .RE
 
@@ -5546,10 +5536,10 @@ max smbd processes (G)
 \fBsmbd\fR(8)
 が割り当てられ、そのホストからの共有に対するコネクションのすべてを扱うことに注意。
 .sp
-Default:
+既定値:
 \fI\fImax smbd processes\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax smbd processes\fR\fR\fI = \fR\fI1000\fR\fI \fR
 .RE
 
@@ -5560,10 +5550,10 @@ max stat cache size (G)
 \fIstat cache\fR
 に用いられるメモリの上限値が指定される。 このパラメータには、使用する stat cache のサイズをキロバイト (1024) 単位で指定する。 値 0 は無制限を意味する。このパラメータを変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fImax stat cache size\fR\fR\fI = \fR\fI256\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax stat cache size\fR\fR\fI = \fR\fI100\fR\fI \fR
 .RE
 
@@ -5574,7 +5564,7 @@ max ttl (G)
 \fBnmbd\fR(8)
 がブロードキャストを利用したりWINSサーバを利用したりして NetBIOS 名を要求する際の NetBIOS 名のデフォルトのTTL(time to live)を(秒単位で)設定する。 このパラメータを変更する必要はないであろう。 デフォルトは3日である。
 .sp
-Default:
+既定値:
 \fI\fImax ttl\fR\fR\fI = \fR\fI259200\fR\fI \fR
 .RE
 
@@ -5586,7 +5576,7 @@ max wins ttl (G)
 が WINS サーバとして動作している (\fIwins support = yes\fR)
 nmbdに登録される NetBIOS 名の最大のTTL(time to live)を秒単位で指定する。 このパラメータを変更する必要はないであろう。 デフォルトは6日(518400秒)である。
 .sp
-Default:
+既定値:
 \fI\fImax wins ttl\fR\fR\fI = \fR\fI518400\fR\fI \fR
 .RE
 
@@ -5595,10 +5585,10 @@ max xmit (G)
 .RS 4
 このオプションにより、 Samba がネゴシエーション時に用いるパケットサイズの最大値が設定される。 デフォルトは 16644 であり、これは Windows 2000 の挙動に合わせた値である。 2048 以下ではおそらく問題が出るだろう。 このパラメータの値をデフォルトから変更する必要はないだろう。
 .sp
-Default:
+既定値:
 \fI\fImax xmit\fR\fR\fI = \fR\fI16644\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImax xmit\fR\fR\fI = \fR\fI8192\fR\fI \fR
 .RE
 
@@ -5686,10 +5676,10 @@ message command = rm %s
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fImessage command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImessage command\fR\fR\fI = \fR\fIcsh \-c \'xedit %s; rm %s\' &\fR\fI \fR
 .RE
 
@@ -5698,10 +5688,10 @@ min print space (S)
 .RS 4
 ユーザの印刷ジョブをスプールする際に利用可能でなければならない空きディスクスペースの最小容量を設定する。この値はキロバイト単位で指定する。デフォルトは 0 で、この場合、ユーザは常に印刷ジョブをスプールできる。
 .sp
-Default:
+既定値:
 \fI\fImin print space\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImin print space\fR\fR\fI = \fR\fI2000\fR\fI \fR
 .RE
 
@@ -5718,10 +5708,10 @@ min protocol (G)
 \fIlanman auth\fR
 パラメータも参照のこと。 それ以外の観点からこのパラメータを変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fImin protocol\fR\fR\fI = \fR\fICORE\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fImin protocol\fR\fR\fI = \fR\fINT1\fR\fI \fR
 .RE
 
@@ -5735,7 +5725,7 @@ min receivefile size (G)
 .sp
 デフォルトは 0 に設定され、このオプションは無効となっている
 .sp
-Default:
+既定値:
 \fI\fImin receivefile size\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
@@ -5748,7 +5738,7 @@ min wins ttl (G)
 nmbd
 に登録された NetBIOS 名の最小の TTL (time to live)を秒単位で指定する。 このパラメータを変更する必要はないであろう。 デフォルトは6時間(21600秒)である。
 .sp
-Default:
+既定値:
 \fI\fImin wins ttl\fR\fR\fI = \fR\fI21600\fR\fI \fR
 .RE
 
@@ -5763,9 +5753,9 @@ DFS ルートのみがプロキシする共有として機能できる。 DFS �
 \fIhost msdfs\fR
 オプションを参照のこと。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fImsdfs proxy\fR\fR\fI = \fR\fI\eotherserver\esomeshare\fR\fI \fR
 .RE
 
@@ -5776,7 +5766,7 @@ msdfs root (S)
 \fImsdfs:serverA\e\eshareA,serverB\e\eshareB\fR
 のような形式でシンボリックリンクを作成することにより行なわれる。 DFS ツリーを Samba で構成する際の詳細情報については、 Samba3\-HOWTO の MSDFS の章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fImsdfs root\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -5785,10 +5775,10 @@ name cache timeout (G)
 .RS 4
 Samba のホスト名キャッシュ内のエントリがタイムアウトするまで時間を秒単位で指定する。タイムアウトが 0 に設定された場合、キャッシュは無効になる。
 .sp
-Default:
+既定値:
 \fI\fIname cache timeout\fR\fR\fI = \fR\fI660\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIname cache timeout\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
@@ -5863,10 +5853,10 @@ name resolve order = wins bcast
 .sp
 この 場合でも、DC は DNS への問い合わせを行なう。 失敗した場合に NetBIOS 名の問い合わせを行なうが、その際無意味な DNS への「DOMAIN<0x1c>」の問い合わせが抑止される。
 .sp
-Default:
+既定値:
 \fI\fIname resolve order\fR\fR\fI = \fR\fIlmhosts host wins bcast\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIname resolve order\fR\fR\fI = \fR\fIlmhosts bcast host\fR\fI \fR
 .RE
 
@@ -5875,10 +5865,10 @@ netbios aliases (G)
 .RS 4
 これは、nmbdが Samba サーバの別名としてアナウンスする NetBIOS 名のリストである。これにより、ブラウズリスト中で単一のマシンを複数の名前で表示させることが可能になる。 マシンがブラウズサーバやログオンサーバとして動作している場合、別名はブラウズサーバやログオンサーバとしてはアナウンスされない。マシン本来の名前だけがそれらの機能をもつ名前としてアナウンスされる。
 .sp
-Default:
+既定値:
 \fI\fInetbios aliases\fR\fR\fI = \fR\fI # 空文字列 (別名なし)\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fInetbios aliases\fR\fR\fI = \fR\fITEST TEST1 TEST2\fR\fI \fR
 .RE
 
@@ -5893,10 +5883,10 @@ PIPE
 PIPE
 にしないこと。
 .sp
-Default:
+既定値:
 \fI\fInetbios name\fR\fR\fI = \fR\fI # マシンの DNS 名\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fInetbios name\fR\fR\fI = \fR\fIMYNAME\fR\fI \fR
 .RE
 
@@ -5905,7 +5895,7 @@ netbios scope (G)
 .RS 4
 このパラメータにより、 Samba が使用する NetBIOS スコープを設定される。LAN上のすべてのマシンに同じ値を設定しない限り、このパラメータを設定すべきではない。
 .sp
-Default:
+既定値:
 \fI\fInetbios scope\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -5922,7 +5912,7 @@ Samba のログオンサーバが実際のホームディレクトリを提供�
 .sp
 このオプションが機能するためには、NIS システムが動いていなければならず、 このオプションを指定した Samba サーバは、 ログオンサーバでなければならないことに注意すること。
 .sp
-Default:
+既定値:
 \fI\fInis homedir\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -5933,7 +5923,7 @@ nt acl support (S)
 \fBsmbd\fR(8)
 が UNIX のパーミッションを Windows NT のアクセスコントロールリストにマップするかどうかが決定される。 対象となる UNIX のパーミッションは、 ファイルやディレクトリに設定された伝統的な UNIX の所有者とグループのパーミッションと POSIX ACL である。 このパラメータは、Samba 2\.2\.2 より前のリリースでは、グローバルパラメータであった。
 .sp
-Default:
+既定値:
 \fI\fInt acl support\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5947,7 +5937,7 @@ ntlm auth (G)
 lanman auth
 の両方を無効にした場合、NTLMv2 ログインのみが可能となる。すべての クライアントが NTLMv2 をサポートしているわけではなく、ほとんどの場合、NTLMv2 を 使用するためには、明示的に設定を行なうことが必要である。
 .sp
-Default:
+既定値:
 \fI\fIntlm auth\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5960,7 +5950,7 @@ nt pipe support (G)
 \fBIPC$\fR
 パイプへの接続を許可するかどうかが制御される。 これは開発者のデバッグオプションであり、意識する必要はない。
 .sp
-Default:
+既定値:
 \fI\fInt pipe support\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5975,7 +5965,7 @@ nt status support (G)
 .sp
 このオプションを無効にしてはならない。
 .sp
-Default:
+既定値:
 \fI\fInt status support\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -5987,7 +5977,7 @@ null passwords (G)
 \fBsmbpasswd\fR(5)
 も参照のこと。
 .sp
-Default:
+既定値:
 \fI\fInull passwords\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -5998,7 +5988,7 @@ PAMサポートを有効にして(\-\-with\-pam) configure された Samba 3\.0 
 \fIencrypt passwords = yes\fR
 の場合、Sambaは常に PAM による認証を無視することに気を付けること。 これは、PAMモジュールが、 SMBのパスワード暗号化に必要なチャレンジアンドレスポンス認証機構をサポートしていないためである。
 .sp
-Default:
+既定値:
 \fI\fIobey pam restrictions\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6024,7 +6014,7 @@ user = %S
 \fIuser\fR
 リストにサービス名が設定され、 ホームディレクトリをユーザの名前にすることができる。
 .sp
-Default:
+既定値:
 \fI\fIonly user\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6040,7 +6030,7 @@ oplock break wait time (G)
 Warning
 Samba の oplock コードを読んで理解していない限り、このパラメータを変更してはいけない。
 
-Default:
+既定値:
 \fI\fIoplock break wait time\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
@@ -6065,7 +6055,7 @@ smbdは Windows NT と同様の動作を行うようになる。
 Warning
 Samba の oplock コードを読んで理解していない限り、このパラメータを変更してはいけない。
 
-Default:
+既定値:
 \fI\fIoplock contention limit\fR\fR\fI = \fR\fI2\fR\fI \fR
 .RE
 
@@ -6085,7 +6075,7 @@ oplock は共有内のファイル単位で無効にすることも可能であ�
 パラメータを参照のこと。 システムによっては、oplock が OS 自身によって認識される。 この場合、Samba、NFS、ローカルなUNIXのいずれを経由してアクセスが行なわれた場合でも、 oplock が行なわれたファイルとのデータの同期が実現する。 詳細は、\fIkernel oplocks\fR
 パラメータを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIoplocks\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -6100,7 +6090,7 @@ HP LaserJet 5 のプリンタドライバを例にとった場合、 正しい�
 .sp
 このファイルは、 Samba3\-HOWTO 本の Classical Printing 章で記述されているプリンタドライバの名前空間の問題に対応するために用いられる。 OS/2 クライアントに関する詳細については、Samba3\-HOWTO 本の other clients 章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIos2 driver map\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -6117,10 +6107,10 @@ os level (G)
 ローカルマスタブラウザの選定に際して、既定値では、 Samba が Windows NT 4\.0/2000 のドメインコントローラ以外のすべての Microsoft 社のOSに優先する。 このため、Samba ホストの設定が不正の場合、 ブラウジング的にそのサブネットが孤立してしまう可能性がある。 Samba 3\.0 系列では、このパラメータは通常自動設定されるため、デフォルト値を手動で設定する必要は通常発生しない。(訳注: 実際には自動設定は行なわれない。この説明は誤りだと思われる) このパラメータに関する詳細は、Samba\-3 HOWTO ドキュメントの「Network Browsing」を参照のこと。
 \fI注意:\fRこのパラメータの最大値は255である。 それより大きな値を使った場合、もしも、カウントは0から始まる!
 .sp
-Default:
+既定値:
 \fI\fIos level\fR\fR\fI = \fR\fI20\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIos level\fR\fR\fI = \fR\fI65\fR\fI \fR
 .RE
 
@@ -6132,7 +6122,7 @@ Samba 2\.2 における PAM サポート機能の追加にともない、 この
 \fIpasswd chat\fR
 パラメータの変更なしにこのパラメータを有効にすることが可能である。
 .sp
-Default:
+既定値:
 \fI\fIpam password change\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6145,10 +6135,10 @@ panic action (G)
 \fBsmbd\fR(8)
 がクラッシュした際に呼び出されるシステム上のコマンドを指定する。 これは通常問題が発生した事実を警告するのに使われる。
 .sp
-Default:
+既定値:
 \fI\fIpanic action\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpanic action\fR\fR\fI = \fR\fI"/bin/sleep 90000"\fR\fI \fR
 .RE
 
@@ -6159,7 +6149,7 @@ Windows NT 4\.x のバージョンによっては、問題のあるパスワー�
 .sp
 このオプションを無効にすることで、 Samba がこのチェックを行なわなくなるため、リモートサーバに対する問題のあるログオンの試行が明示的に許可される。
 .sp
-Default:
+既定値:
 \fI\fIparanoid server security\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -6236,7 +6226,7 @@ passdb backend = ldapsam:"ldap://ldap\-1\.example\.com ldap\-2\.example\.com"
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIpassdb backend\fR\fR\fI = \fR\fIsmbpasswd\fR\fI \fR
 .RE
 
@@ -6245,7 +6235,7 @@ passdb expand explicit (G)
 .RS 4
 このパラメータは、passdb の指定に % マクロが明示的に指定された際に、 それを展開するかどうかを制御する。 ここではマクロを用いることが可能となっているが、 Windows クライアントがユーザのプライマリグループに置換されるべき %G が含まれている %G_osver% といった変数を展開してしまうというバグを引き起こしてしまうことがある。
 .sp
-Default:
+既定値:
 \fI\fIpassdb expand explicit\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6286,10 +6276,10 @@ passwd chat (G)
 \fByes\fR
 の場合、やりとりの手順は、任意の順番でマッチし、 成功したか否かは出力結果ではなく PAM の戻り値で判断される。 PAM の場合、\en マクロは無視される。
 .sp
-Default:
+既定値:
 \fI\fIpasswd chat\fR\fR\fI = \fR\fI*new*password* %n\en*new*password* %n\en *changed*\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpasswd chat\fR\fR\fI = \fR\fI"*Enter OLD password*" %o\en "*Enter NEW password*" %n\en "*Reenter NEW password*" %n\en "*Password changed*"\fR\fI \fR
 .RE
 
@@ -6312,7 +6302,7 @@ smbd
 \fIpam password change\fR
 パラメータが有効になっている場合、このオプションは無効になる。 このパラメータはデフォルトで無効になっている。
 .sp
-Default:
+既定値:
 \fI\fIpasswd chat debug\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6321,7 +6311,7 @@ passwd chat timeout (G)
 .RS 4
 この整数値により、smbd が passwd chat script の実行を待機する時間を秒単位で指定する。 最初の応答が受信されて以降のやりとりは、 この値の 1/10 の時間で応答される必要がある。 デフォルトは 2 秒である。
 .sp
-Default:
+既定値:
 \fI\fIpasswd chat timeout\fR\fR\fI = \fR\fI2\fR\fI \fR
 .RE
 
@@ -6357,10 +6347,10 @@ smbd
 \fBno\fR
 になっているので注意。
 .sp
-Default:
+既定値:
 \fI\fIpasswd program\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpasswd program\fR\fR\fI = \fR\fI/bin/passwd %u\fR\fI \fR
 .RE
 
@@ -6392,10 +6382,10 @@ password level (G)
 \fIencrypt passwords = No\fR
 という設定の場合にのみ使用するということである。
 .sp
-Default:
+既定値:
 \fI\fIpassword level\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpassword level\fR\fR\fI = \fR\fI4\fR\fI \fR
 .RE
 
@@ -6485,21 +6475,20 @@ Windows NT サーバをパスワードサーバとして使っている場合、
 モードの場合、 ネットワーク経由のログオンは、ユーザのワークステーションからではなく、 Samba サーバから行われたものとして扱われるためである。
 .sp
 .RE
-Default:
+既定値:
 \fI\fIpassword server\fR\fR\fI = \fR\fI*\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpassword server\fR\fR\fI = \fR\fINT\-PDC, NT\-BDC1, NT\-BDC2, *\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpassword server\fR\fR\fI = \fR\fIwindc\.mydomain\.com:389 192\.168\.1\.101 *\fR\fI \fR
 .RE
 
 directory
 .PP
 .RS 4
-This parameter is a synonym for
-path\.
+このパラメータは右記のパラメータの別名である：path\.
 .RE
 
 path (S)
@@ -6516,10 +6505,10 @@ path (S)
 \fIroot dir\fR
 が指定されていた場合、このパラメータもその影響を受けることに注意。
 .sp
-Default:
+既定値:
 \fI\fIpath\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpath\fR\fR\fI = \fR\fI/home/fred\fR\fI \fR
 .RE
 
@@ -6528,10 +6517,10 @@ pid directory (G)
 .RS 4
 このオプションにより、 pid ファイルがおかれるディレクトリが指定される。
 .sp
-Default:
+既定値:
 \fI\fIpid directory\fR\fR\fI = \fR\fI${prefix}/var/locks\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpid directory\fR\fR\fI = \fR\fIpid directory = /var/run/\fR\fI \fR
 .RE
 
@@ -6541,7 +6530,7 @@ posix locking (S)
 \fBsmbd\fR(8)
 デーモンでは、 SMB クライアントによって行なわれたファイルロックの情報を記録するデータベースを管理している。 デフォルトでは、データベースの内部処理として POSIX ロックへの置換えが行なわれている。 これにより、SMB クライアントによって行なわれたファイルロックは、 POSIX 互換のアプリケーションが SMB 以外の方式(NFS やローカルなファイルアクセス) を用いて、ファイルにアクセスする際にも認識されることになる。 このパラメータを無効にする必要はまずないであろう。
 .sp
-Default:
+既定値:
 \fI\fIposix locking\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -6554,18 +6543,17 @@ postexec (S)
 .sp
 postexec = /etc/umount /cdrom
 .sp
-Default:
+既定値:
 \fI\fIpostexec\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpostexec\fR\fR\fI = \fR\fIecho \e"%u disconnected from %S from %m (%I)\e" >> /tmp/log\fR\fI \fR
 .RE
 
 exec
 .PP
 .RS 4
-This parameter is a synonym for
-preexec\.
+このパラメータは右記のパラメータの別名である：preexec\.
 .RE
 
 preexec (S)
@@ -6586,10 +6574,10 @@ preexec = csh \-c \'echo \e"Welcome to %S!\e" | /usr/local/samba/bin/smbclient \
 \fIpostexec\fR
 も参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIpreexec\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpreexec\fR\fR\fI = \fR\fIecho \e"%u connected to %S from %m (%I)\e" >> /tmp/log\fR\fI \fR
 .RE
 
@@ -6599,15 +6587,14 @@ preexec close (S)
 この真偽値オプションは、\fIpreexec\fR
 で指定したコマンドから 0 以外の戻り値が返却された際に、 サービスへの接続をクローズするかどうかを制御する。
 .sp
-Default:
+既定値:
 \fI\fIpreexec close\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 prefered master
 .PP
 .RS 4
-This parameter is a synonym for
-preferred master\.
+このパラメータは右記のパラメータの別名である：preferred master\.
 .RE
 
 preferred master (G)
@@ -6632,15 +6619,14 @@ nmbd
 .sp
 同じサブネット上に優先マスタブラウザに指定されたホスト(Samba サーバ、Windows 95/NT のいずれの場合も)が複数台存在すると、 それらのホストは定期的にローカルマスタブラウザになろうとする 試みを永続的に繰り返すことになる。 これは不要なブロードキャストトラフィックを発生させるだけでなく、 ブラウジング機能自体にも支障を発生させてしまうため、このオプションは注意して扱うこと。
 .sp
-Default:
+既定値:
 \fI\fIpreferred master\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .RE
 
 auto services
 .PP
 .RS 4
-This parameter is a synonym for
-preload\.
+このパラメータは右記のパラメータの別名である：preload\.
 .RE
 
 preload (G)
@@ -6652,10 +6638,10 @@ printcap ファイルにあるすべてのプリンタを指定したい場合�
 \fIload printers\fR
 オプションを利用する方が簡単である。
 .sp
-Default:
+既定値:
 \fI\fIpreload\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpreload\fR\fR\fI = \fR\fIfred lp colorlp\fR\fI \fR
 .RE
 
@@ -6664,10 +6650,10 @@ preload modules (G)
 .RS 4
 このパラメータには、クライアントの接続前に smbd にロードされるモジュールのパスのリストを指定する。 これにより smbd が新しい接続を開始する際の時間が短縮される。
 .sp
-Default:
+既定値:
 \fI\fIpreload modules\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIpreload modules\fR\fR\fI = \fR\fI/usr/lib/samba/passdb/mysql\.so\fR\fI \fR
 .RE
 
@@ -6682,15 +6668,14 @@ preserve case (S)
 名前の短縮
 セクションを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIpreserve case\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 print ok
 .PP
 .RS 4
-This parameter is a synonym for
-printable\.
+このパラメータは右記のパラメータの別名である：printable\.
 .RE
 
 printable (S)
@@ -6704,7 +6689,7 @@ printable (S)
 \fIread only\fR
 パラメータは、 リソースに対する印刷以外のアクセスにのみ影響する。
 .sp
-Default:
+既定値:
 \fI\fIprintable\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -6715,18 +6700,17 @@ printcap cache time (G)
 .sp
 このパラメータを 0 にすると、 起動後に新しいプリンタや削除されたプリンタを再確認する機能が無効化される。
 .sp
-Default:
+既定値:
 \fI\fIprintcap cache time\fR\fR\fI = \fR\fI750\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIprintcap cache time\fR\fR\fI = \fR\fI600\fR\fI \fR
 .RE
 
 printcap
 .PP
 .RS 4
-This parameter is a synonym for
-printcap name\.
+このパラメータは右記のパラメータの別名である：printcap name\.
 .RE
 
 printcap name (S)
@@ -6781,10 +6765,10 @@ AIXにおけるデフォルトの printcap ファイルの名前は、
 の場合、Samba はファイルが AIXの
 \fIqconfig\fR形式であると仮定する。
 
-Default:
+既定値:
 \fI\fIprintcap name\fR\fR\fI = \fR\fI/etc/printcap\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIprintcap name\fR\fR\fI = \fR\fI/etc/myprintcap\fR\fI \fR
 .RE
 
@@ -6854,9 +6838,9 @@ printing = CUPS の場合: Samba が libcups を利用してコンパイルさ�
 printing = cups
 の設定が行なわれた場合、 手動で設定された print コマンドは無視される。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIprint command\fR\fR\fI = \fR\fI/usr/local/samba/bin/myprintscript %p %s\fR\fI \fR
 .RE
 
@@ -6867,18 +6851,17 @@ printer admin (S)
 .sp
 このパラメータは SePrintOperatorPrivilege ユーザ権利とプリンタのア クセス許可により、廃止予定のパラメータとなっている。 将来のリリースでは廃止されるだろう。
 .sp
-Default:
+既定値:
 \fI\fIprinter admin\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIprinter admin\fR\fR\fI = \fR\fIadmin, @staff\fR\fI \fR
 .RE
 
 printer
 .PP
 .RS 4
-This parameter is a synonym for
-printer name\.
+このパラメータは右記のパラメータの別名である：printer name\.
 .RE
 
 printer name (S)
@@ -6894,10 +6877,10 @@ printer name (S)
 lp
 である。
 .sp
-Default:
+既定値:
 \fI\fIprinter name\fR\fR\fI = \fR\fIなし\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIprinter name\fR\fR\fI = \fR\fIlaserwriter\fR\fI \fR
 .RE
 
@@ -6944,7 +6927,7 @@ program\.
 [printers]
 セクションでの説明も参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIprinting\fR\fR\fI = \fR\fI OSによって異なるためtestparm \-vで確認する。 \fR\fI \fR
 .RE
 
@@ -6953,10 +6936,10 @@ printjob username (S)
 .RS 4
 このパラメータはプリンとシステムにどちらのユーザ情報が渡されるかを 指定する。通常、ユーザ名が送られる。しかし、いくつかの場合、たとえば、 ドメインプレフィックスも一緒にした方が便利な場合もある。
 .sp
-Default:
+既定値:
 \fI\fIprintjob username\fR\fR\fI = \fR\fI%U\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIprintjob username\fR\fR\fI = \fR\fI%D\e%U\fR\fI \fR
 .RE
 
@@ -6969,7 +6952,7 @@ private dir (G)
 \fIsecrets\.tdb\fR
 といったファイルを格納するために使用するディレクトリを指定する。
 .sp
-Default:
+既定値:
 \fI\fIprivate dir\fR\fR\fI = \fR\fI${prefix}/private\fR\fI \fR
 .RE
 
@@ -6982,7 +6965,7 @@ winbindd を用いたドメインモードで運用していない場合、ロ�
 .sp
 ワークステーションに複数のユーザがログオンする環境の場合、別ユーザのプロファイルへのアクセスを禁止するためには、「捜査チェックのバイパス」権利を削除する必要がある。 プロファイルディレクトリのトップ(ユーザ名を含む名称となっている)がワークステーション上で作成される際、所有するユーザ以外のアクセスを禁止するような ACL が設定されるため、この設定により、別のユーザのプロファイルディレクトリへのアクセスを禁止することができる。
 .sp
-Default:
+既定値:
 \fI\fIprofile acls\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7001,9 +6984,9 @@ Windows 95 や Windows NTでは、 「プリンタ」ウインドウからこの
 .sp
 サーバ上で PATH 環境変数が設定されていない場合を想定して、 コマンドをフルパスで記述することが推奨される。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .sp
-Example:
+例:
 \fI\fIqueuepause command\fR\fR\fI = \fR\fIdisable %p\fR\fI \fR
 .RE
 
@@ -7022,10 +7005,10 @@ Windows 95 や Windows NTでは、 「プリンタ」ウインドウからこの
 .sp
 サーバ上で PATH 環境変数が設定されていない場合を想定して、 コマンドをフルパスで記述することが推奨される。
 .sp
-Default:
+既定値:
 \fI\fIqueueresume command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIqueueresume command\fR\fR\fI = \fR\fIenable %p\fR\fI \fR
 .RE
 
@@ -7038,7 +7021,7 @@ read bmpx (G)
 \fBno\fR
 になっている。 このパラメータを設定する必要はまずないであろう。
 .sp
-Default:
+既定値:
 \fI\fIread bmpx\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7055,10 +7038,10 @@ Samba 3\.0 系列において、このパラメータは
 \fIsecurity = share\fR
 の環境で動作しない。これは仕様である。
 .sp
-Default:
+既定値:
 \fI\fIread list\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIread list\fR\fR\fI = \fR\fImary, @students\fR\fI \fR
 .RE
 
@@ -7074,7 +7057,7 @@ read only (S)
 .sp
 印刷サービス(printable = yes)の場合、 ユーザは\fI常に\fR(アクセス権を持っている) ディレクトリに対して書き込むことが可能であるが、書き込みはスプール操作経由に限られる。
 .sp
-Default:
+既定値:
 \fI\fIread only\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7089,7 +7072,7 @@ read raw (G)
 .sp
 このパラメータは、システムのチューニングパラメータであり、 通常は設定を変更すべきものではない。
 .sp
-Default:
+既定値:
 \fI\fIread raw\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7098,10 +7081,10 @@ realm (G)
 .RS 4
 このオプションは、使用する Kerberos レルムを指定する。 レルムは Windows NT 4\.0 におけるドメインに相当する Active Directory の概念である。 レルムには、通常 Kerberos サーバの DNS 名が設定される。
 .sp
-Default:
+既定値:
 \fI\fIrealm\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIrealm\fR\fR\fI = \fR\fImysambabox\.mycompany\.com\fR\fI \fR
 .RE
 
@@ -7121,10 +7104,10 @@ registry shares (G)
 にセットされている場合は\fIyes\fR
 となる。
 .sp
-Default:
+既定値:
 \fI\fIregistry shares\fR\fR\fI = \fR\fIno\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIregistry shares\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7154,7 +7137,7 @@ remote announce = 192\.168\.2\.255/SERVERS 192\.168\.4\.255/STAFF
 .sp
 Samba HOWTO の Network Browsing 章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIremote announce\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -7183,7 +7166,7 @@ remote browse sync (G)
 \fIremote browse sync\fR
 は、 WINS サーバが存在しない場合も、 ネットワーク毎に異なる WINS サーバを指定している場合にも用いることができる。
 .sp
-Default:
+既定値:
 \fI\fIremote browse sync\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -7209,7 +7192,7 @@ rename user script (G)
 Note
 このスクリプトは POSIX 機構でアクセスが行なわれるすべての情報について名前を変更する必要があるが、パスワード機構により必要とされる変更箇所が異なる。 tdbsam と smbpasswd の場合、各ファイル中の情報についての変更は自動的に行なわれるため、スクリプト側では POSIX のユーザ名とホームディレクトリなどの環境依存で必要とされるデータの変更だけを行なえば良い。 ホームディレクトリの名前自体を変更する必要があるかも検討すべきだろう。 ldapsam の場合、LDAP のネーミング属性（LDAP naming attribute）を変更することには潜在的な問題があるため、LDAP 中の情報については全く変更が行なわれない。 この場合、スクリプト側で責任を持って Samba がユーザの識別に用いる属性（UID）および同じディレクトリを利用する他のアプリケーションが参照する情報の変更を行なう必要がある。
 
-Default:
+既定値:
 \fI\fIrename user script\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7218,7 +7201,7 @@ reset on zero vc (G)
 .RS 4
 この真偽値オプションは、到着したセッションセットアップが、 同一の IP アドレスからの別のセッションを切断するかを制御する。 これは Windows Server 2003 のデフォルトの挙動である。 ネットワークが不安定で、 Windows が、古い接続がファイルを共有モードでオープンしているにも関わらず、再接続を試行してしまうような環境では、このパラメータを yes にする必要があるだろう。 これらのファイルは、新しい接続経由ではアクセスできなくなるが、 クライアントが新しい接続中で 0 VC を送信すると、Windows Server 2003 は同一の IP が送信元のすべての他の接続を切断する。 これにより、ロックされたファイルが再度アクセスできるようになる。 このオプションを有効にすると、ルータで同一 IP アドレスに隠蔽されている接続も切断されてしまうことに注意。
 .sp
-Default:
+既定値:
 \fI\fIreset on zero vc\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7246,22 +7229,20 @@ restrict anonymous = 2 を用いることによるセキュリティ上の利点
 \fIguest ok = yes\fR
 の設定を行なうことで損なわれてしまうことに注意。
 
-Default:
+既定値:
 \fI\fIrestrict anonymous\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
 root
 .PP
 .RS 4
-This parameter is a synonym for
-root directory\.
+このパラメータは右記のパラメータの別名である：root directory\.
 .RE
 
 root dir
 .PP
 .RS 4
-This parameter is a synonym for
-root directory\.
+このパラメータは右記のパラメータの別名である：root directory\.
 .RE
 
 root directory (G)
@@ -7281,10 +7262,10 @@ chroot()
 \fI/etc/passwd\fR
 (またはその一部)や、 印刷に必要となる設定ファイルやバイナリなどを（場合によっては）コピーする必要がある。 コピーしなければならないファイルは、オペレーティングシステムに依存する。
 .sp
-Default:
+既定値:
 \fI\fIroot directory\fR\fR\fI = \fR\fI/\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIroot directory\fR\fR\fI = \fR\fI/homes/smb\fR\fI \fR
 .RE
 
@@ -7295,7 +7276,7 @@ root postexec (S)
 \fIpostexec\fR
 パラメータと同一である。 このコマンドは、コネクションの切断後に(CD\-ROMなどの)ファイルシステムをアンマウントするのに便利である。
 .sp
-Default:
+既定値:
 \fI\fIroot postexec\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -7306,7 +7287,7 @@ root preexec (S)
 \fIpreexec \fR
 パラメータと同一である。 このコマンドは、コネクションの開始時に(CD\-ROMなどの)ファイルシステムをマウントするのに便利である。
 .sp
-Default:
+既定値:
 \fI\fIroot preexec\fR\fR\fI = \fR\fI\fR\fI \fR
 .RE
 
@@ -7317,7 +7298,7 @@ root preexec close (S)
 \fIpreexec close \fR
 パラメータと同一である。
 .sp
-Default:
+既定値:
 \fI\fIroot preexec close\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7579,10 +7560,10 @@ security=user
 .sp
 詳細については、HOWTO の Domain Membership の章を熟読のこと。
 .sp
-Default:
+既定値:
 \fI\fIsecurity\fR\fR\fI = \fR\fIUSER\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIsecurity\fR\fR\fI = \fR\fIDOMAIN\fR\fI \fR
 .RE
 
@@ -7603,10 +7584,10 @@ Samba を経由せずサーバにアクセスできるユーザは、 簡単に�
 \fB0777\fR
 に設定することであろう。
 .sp
-Default:
+既定値:
 \fI\fIsecurity mask\fR\fR\fI = \fR\fI0777\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIsecurity mask\fR\fR\fI = \fR\fI0770\fR\fI \fR
 .RE
 
@@ -7627,10 +7608,10 @@ no
 \fIWinXP_SignOrSeal\.reg\fR
 ファイルを適用してレジストリを修正する必要があることに注意。
 .sp
-Default:
+既定値:
 \fI\fIserver schannel\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIserver schannel\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7642,7 +7623,7 @@ server signing (G)
 .sp
 auto に設定した場合、SMB 署名が有効になるが、強制はしない。 mandatory に設定すると、SMB 署名が必須となる。disable に設定すると、SMB 署名は有効にならない。
 .sp
-Default:
+既定値:
 \fI\fIserver signing\fR\fR\fI = \fR\fIDisabled\fR\fI \fR
 .RE
 
@@ -7661,10 +7642,10 @@ net view
 \fI%h\fR
 は、ホスト名に置換される。
 .sp
-Default:
+既定値:
 \fI\fIserver string\fR\fR\fI = \fR\fISamba %v\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIserver string\fR\fR\fI = \fR\fIUniversity of GNUs Samba Server\fR\fI \fR
 .RE
 
@@ -7678,7 +7659,7 @@ set directory = no
 setdir
 コマンドは Digital Pathworks クライアントにおいてのみ実装されている。 詳細については、Pathworks の説明書を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIset directory\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -7693,10 +7674,10 @@ net rpc vampire
 \fI%g\fR
 は設定されるグループ名に置き換えられる。
 .sp
-Default:
+既定値:
 \fI\fIset primary group script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIset primary group script\fR\fR\fI = \fR\fI/usr/sbin/usermod \-g \'%g\' \'%u\'\fR\fI \fR
 .RE
 
@@ -7851,10 +7832,10 @@ set quota command
 .RE
 このスクリプトは少なくとも1行のデータ行を出力する必要がある。ただし処理が成功しなかった場合は何も出力されない。
 .sp
-Default:
+既定値:
 \fI\fIset quota command\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIset quota command\fR\fR\fI = \fR\fI/usr/local/sbin/set_quota\fR\fI \fR
 .RE
 
@@ -7877,7 +7858,7 @@ share modes (S)
 \fI絶対に\fR
 off にしてはならない。 off にした場合、多くの Windows アプリケーションが誤動作するであろう。
 .sp
-Default:
+既定値:
 \fI\fIshare modes\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7892,7 +7873,7 @@ short preserve case (S)
 .sp
 名前の短縮セクションも参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIshort preserve case\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7914,7 +7895,7 @@ Samba 2\.2 での Windows NT/2000 クライアントに対する MS\-RPC ベー�
 Note
 このパラメータは、ユーザが個々のプリンタの管理権限を持つことを制限するものではない。
 
-Default:
+既定値:
 \fI\fIshow add printer wizard\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -7999,10 +7980,10 @@ let "time++"
 .sp
 シャットダウン処理から復帰することはないので、この処理はバックグラウンドで実行する必要がある。
 .sp
-Default:
+既定値:
 \fI\fIshutdown script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIshutdown script\fR\fR\fI = \fR\fI/usr/local/samba/sbin/shutdown %m %t %r %f\fR\fI \fR
 .RE
 
@@ -8021,7 +8002,7 @@ SMB暗号化が用いられると、Windows形式のSMB署名(\fIserver signing\
 .sp
 パラメータの値をautoに設定すると、SMB暗号化が提供されるが、強制はされない。 mandatoryに設定すると、SMB暗号化が要求される。disableに設定すると、 SMB暗号化は利用できない。
 .sp
-Default:
+既定値:
 \fI\fIsmb encrypt\fR\fR\fI = \fR\fIauto\fR\fI \fR
 .RE
 
@@ -8039,7 +8020,7 @@ smb passwd file = /etc/samba/smbpasswd
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIsmb passwd file\fR\fR\fI = \fR\fI${prefix}/private/smbpasswd\fR\fI \fR
 .RE
 
@@ -8048,7 +8029,7 @@ smb ports (G)
 .RS 4
 サーバが SMB トラヒックを町受けるポートを設定する。
 .sp
-Default:
+既定値:
 \fI\fIsmb ports\fR\fR\fI = \fR\fI445 139\fR\fI \fR
 .RE
 
@@ -8061,10 +8042,10 @@ socket address (G)
 .sp
 既定値では、Sambaは全てのアドレスへの接続を受け付ける。
 .sp
-Default:
+既定値:
 \fI\fIsocket address\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIsocket address\fR\fR\fI = \fR\fI192\.168\.2\.20\fR\fI \fR
 .RE
 
@@ -8216,10 +8197,10 @@ WAN の場合は、 IPTOS_THROUGHPUT を設定してみるとよいかも知れ�
 .sp
 これらのオプションの中には、 Samba サーバを完全に停止させるものもあるかもしれない。オプションを設定する際には気をつけること。
 .sp
-Default:
+既定値:
 \fI\fIsocket options\fR\fR\fI = \fR\fITCP_NODELAY\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIsocket options\fR\fR\fI = \fR\fIIPTOS_LOWDELAY\fR\fI \fR
 .RE
 
@@ -8230,7 +8211,7 @@ stat cache (G)
 \fBsmbd\fR(8)
 が、 大文字小文字を区別しない名前のマップ操作を高速化するためにキャッシュを利用するかどうかが設定される。 このパラメータを変更する必要はないであろう。
 .sp
-Default:
+既定値:
 \fI\fIstat cache\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -8245,7 +8226,7 @@ store dos attributes (S)
 \fImap system\fR、\fImap archive\fR、\fImap readonly\fR
 といったパラメータは無効にする必要がある。 このパラメータは DOS のファイル属性を「user\.DOSATTRIB」という名前の拡張属性に、文字列として書き込む。 この拡張属性は、クライアントの拡張属性に関するリクエストからは明示的に隠蔽されている。 Linux において拡張属性を有効にするには、 Linux カーネルで拡張属性がコンパイルされており、 ファイルシステムが user_xattr オプションをつけてマウントされている必要がある。
 .sp
-Default:
+既定値:
 \fI\fIstore dos attributes\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8264,7 +8245,7 @@ strict allocate が
 \fByes\fR
 にすると、 ディスククオータによるディスク領域の制限を行なっているシステムで、 クォータ超過メッセージを出力する際には便利である。
 .sp
-Default:
+既定値:
 \fI\fIstrict allocate\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8285,7 +8266,7 @@ strict locking = Auto
 strict locking = no
 がよい。
 .sp
-Default:
+既定値:
 \fI\fIstrict locking\fR\fR\fI = \fR\fIAuto\fR\fI \fR
 .RE
 
@@ -8297,7 +8278,7 @@ strict sync (S)
 \fBsmbd\fR(8)
 は Windows アプリケーションからの同期処理要求を無視する。 この場合でも、データが失われる可能性があるのは、 Samba が動作しているオペレーティングシステム自身がクラッシュしたときだけであるので、この設定による危険度は少ない。 また、 Windows 98 の Explorer を使ったファイルコピーのパフォーマンス問題が報告されているが、こちらも改善される。
 .sp
-Default:
+既定値:
 \fI\fIstrict sync\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8314,10 +8295,10 @@ svcctl list (G)
 \fIsvcctl list\fR
 パラメータに記載した名称と同一にしておくこと。
 .sp
-Default:
+既定値:
 \fI\fIsvcctl list\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIsvcctl list\fR\fR\fI = \fR\fIcups postfix portmap httpd\fR\fI \fR
 .RE
 
@@ -8333,7 +8314,7 @@ fsync()
 が呼び出される。 このパラメータが機能するには、
 \fIstrict sync\fRパラメータが\fB yes\fRに設定されている必要がある。
 .sp
-Default:
+既定値:
 \fI\fIsync always\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8350,7 +8331,7 @@ syslog (G)
 .sp
 このパラメータは どのデバッグレベルまでのメッセージを syslog に送るかのしきい値を設定する。 この値未満の Samba のデバッグメッセージのみが syslog に送られる。
 .sp
-Default:
+既定値:
 \fI\fIsyslog\fR\fR\fI = \fR\fI1\fR\fI \fR
 .RE
 
@@ -8359,7 +8340,7 @@ syslog only (G)
 .RS 4
 このパラメータが設定されると、 Samba のデバッグメッセージが システムの syslog にのみ記録されるようになり、 デバッグログファイルに出力されなくなる。 もしも、\fIsyslog only\fRが有効になっていたとしても、 log\.[sn]mbdへのロギングは引き続き行われる。
 .sp
-Default:
+既定値:
 \fI\fIsyslog only\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8374,7 +8355,7 @@ NT ドメインのユーザに対応するユーザ情報を作成する際、
 \fI%U\fR
 があれば、 ユーザの NT ドメインにおけるユーザ名に置き換えられる。
 .sp
-Default:
+既定値:
 \fI\fItemplate homedir\fR\fR\fI = \fR\fI/home/%D/%U\fR\fI \fR
 .RE
 
@@ -8384,7 +8365,7 @@ template shell (G)
 NT ドメインのユーザに対応するユーザ情報を作成する際、
 \fBwinbindd\fR(8)デーモンは、 このパラメータによってユーザのログインシェルを設定する。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 time offset (G)
@@ -8392,10 +8373,10 @@ time offset (G)
 .RS 4
 このパラメータは、GMT からローカル時間への変換時に追加する時間(分単位)を設定する。 夏時間処理に問題があるPCを多数管理している際に有効である。
 .sp
-Default:
+既定値:
 \fI\fItime offset\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fItime offset\fR\fR\fI = \fR\fI60\fR\fI \fR
 .RE
 
@@ -8406,7 +8387,7 @@ time server (G)
 \fBnmbd\fR(8)
 が、 Windows クライアントに対して、自身をタイムサーバとしてアナウンスするかどうかが制御される。
 .sp
-Default:
+既定値:
 \fI\fItime server\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8417,10 +8398,10 @@ Samba が動作する UNIX マシンで使われている文字コードを指�
 .sp
 ここで設定した文字コードは、Samba から実行するスクリプトの引数にも用いられる。
 .sp
-Default:
+既定値:
 \fI\fIunix charset\fR\fR\fI = \fR\fIUTF8\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIunix charset\fR\fR\fI = \fR\fIASCII\fR\fI \fR
 .RE
 
@@ -8429,7 +8410,7 @@ unix extensions (G)
 .RS 4
 この真偽値パラメータは、Samba が HP 社によって定義された CIFS の UNIX拡張を利用するかどうかを制御する。 これらの拡張は、UNIX クライアントから UNIX サーバに対して接続する際に有用な CIFS を有効にし、 シンボリックリンクやハードリンクなどを利用可能にする。 これらの拡張により、Samba は UNIX の CIFS クライアントに対して、 シンボリックリンクやハードリンクといった機能を提供することが可能となる。
 .sp
-Default:
+既定値:
 \fI\fIunix extensions\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -8443,7 +8424,7 @@ unix password sync (G)
 パラメータで指定されたコマンドが
 \fIROOT権限で\fR呼び出される。
 .sp
-Default:
+既定値:
 \fI\fIunix password sync\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8467,7 +8448,7 @@ update encrypted ()
 smbd
 に接続するユーザは正しいパスワードを入力して、 (smbpasswdファイル中の)暗号化されたパスワードを更新する必要がある。
 .sp
-Default:
+既定値:
 \fI\fIupdate encrypted\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8481,7 +8462,7 @@ use client driver (S)
 このパラメータが有効になっているプリンタに対しては、 PRINTER_ACCESS_ADMINISTER 権限によるプリンタのオープンの試みはすべて、 PRINTER_ACCESS_USE の権限で行なわれ、 これにより、OpenPrinterEx() が成功することになる。
 \fI適切なプリンタドライバがインストールされている Samba サーバ上のプリンタ共有に対して、このパラメータを有効にしてはならない。\fR
 .sp
-Default:
+既定値:
 \fI\fIuse client driver\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8506,7 +8487,7 @@ default_keytab_name = FILE:/etc/krb5\.keytab
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIuse kerberos keytab\fR\fR\fI = \fR\fIFalse\fR\fI \fR
 .RE
 
@@ -8516,22 +8497,20 @@ use mmap (G)
 このグローバルパラメータは、 Samba が内部的に利用する tdb の動作を、システムの mmap が正しく動作するかどうかに依存させるかどうかを制御する。 Samba は一貫性の保たれた mmap (read\-write system memory cache) を必要とする。 現在、HPUX については、こうした一貫性のあるキャッシュが実装されていないため、 HPUX におけるこのパラメータのデフォルトは、\fBno\fR
 になっている。 それ以外のシステムにおいては、このパラメータの値を変更すべきではない。 このパラメータは、Samba 開発者の tdb の内部コードの問題解析を支援するために提供されている。
 .sp
-Default:
+既定値:
 \fI\fIuse mmap\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 user
 .PP
 .RS 4
-This parameter is a synonym for
-username\.
+このパラメータは右記のパラメータの別名である：username\.
 .RE
 
 users
 .PP
 .RS 4
-This parameter is a synonym for
-username\.
+このパラメータは右記のパラメータの別名である：username\.
 .RE
 
 username (S)
@@ -8566,10 +8545,10 @@ Samba は、プラットフォームである UNIX のセキュリティ機構�
 NOTE ABOUT ユーザ名とパスワード認証についての注意
 のセクションを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIusername\fR\fR\fI = \fR\fI # ゲストサービスの時は、 guest account で設定されたアカウント、それ以外の時は <空文字列>\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusername\fR\fR\fI = \fR\fIfred, mary, jack, jane, @users, @pcgroup\fR\fI \fR
 .RE
 
@@ -8583,10 +8562,10 @@ username level (G)
 .sp
 このパラメータは、ユーザ名の大文字、小文字が区別される UNIX システムでのみ必要である。
 .sp
-Default:
+既定値:
 \fI\fIusername level\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusername level\fR\fR\fI = \fR\fI5\fR\fI \fR
 .RE
 
@@ -8687,7 +8666,7 @@ username map = /usr/local/samba/lib/users\.map
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIusername map\fR\fR\fI = \fR\fI # no username map\fR\fI \fR
 .RE
 
@@ -8698,10 +8677,10 @@ username map script (G)
 \fIusername map\fR
 パラメータと排他的な関係にある。 このパラメータは、（認証要求で渡されたユーザ名を示す）コマンドライン引数を1つだけとり、 標準出力に（マッピングされたアカウント名を示す）文字列を1行返却する 外部プログラム、もしくはスクリプトを指定する。 これにより、ユーザ名のマッピング表を LDAP や NIS などのディレクトリサービス上に格納することが可能となる。
 .sp
-Default:
+既定値:
 \fI\fIusername map script\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusername map script\fR\fR\fI = \fR\fI/etc/samba/scripts/mapusers\.sh\fR\fI \fR
 .RE
 
@@ -8712,7 +8691,7 @@ usershare allow guests (G)
 \fIguest ok = yes\fR
 オプションを付与した共有を作成することの許可と同義である。 セキュリティ上注意を要するため、既定値は無効となっている。
 .sp
-Default:
+既定値:
 \fI\fIusershare allow guests\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8721,7 +8700,7 @@ usershare max shares (G)
 .RS 4
 このパラメータは(訳注: usershare path パラメータで定義された) ユーザ定義共有ディレクトリの所有グループに所属するユーザによって作成可能なユーザ定義共有の最大数を設定する。 0 (デフォルト) の場合、ユーザ定義共有は作成できない。
 .sp
-Default:
+既定値:
 \fI\fIusershare max shares\fR\fR\fI = \fR\fI0\fR\fI \fR
 .RE
 
@@ -8730,7 +8709,7 @@ usershare owner only (G)
 .RS 4
 このパラメータは、ユーザ定義共有として公開されるパスが、 ユーザ定義共有を作成しようとしているユーザの所有であることを必須とするかどうかを制御する。 必須とした場合 (デフォルト値) 、smbd は公開しようとしているディレクトリが、ユーザ定義共有の設定ファイルの所有者と同一であることを確認し、もし異なっていた倍は作成を拒否する。 必須としなかった場合、こうした確認は行なわれず、誰が所有しているかに関わらず、ディレクトリの公開が可能となる。
 .sp
-Default:
+既定値:
 \fI\fIusershare owner only\fR\fR\fI = \fR\fITrue\fR\fI \fR
 .RE
 
@@ -8752,7 +8731,7 @@ usershare path (G)
 .sp
 この場合、「power_users」グループのメンバのみがユーザ定義共有を作成できる。
 .sp
-Default:
+既定値:
 \fI\fIusershare path\fR\fR\fI = \fR\fINULL\fR\fI \fR
 .RE
 
@@ -8763,10 +8742,10 @@ usershare prefix allow list (G)
 .sp
 「usershare prefix deny list」と「usershare prefix allow list」の両方が定義されている場合は、 拒否リスト側が先に処理され、後から許可リストが処理される。 これにより、拒否リストによる制限を優先している。
 .sp
-Default:
+既定値:
 \fI\fIusershare prefix allow list\fR\fR\fI = \fR\fINULL\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusershare prefix allow list\fR\fR\fI = \fR\fI/home /data /space\fR\fI \fR
 .RE
 
@@ -8777,10 +8756,10 @@ usershare prefix deny list (G)
 .sp
 「usershare prefix deny list」と「usershare prefix allow list」の両方が定義されている場合は、 拒否リスト側が先に処理され、後から許可リストが処理される。 これにより、拒否リストによる制限を優先している。
 .sp
-Default:
+既定値:
 \fI\fIusershare prefix deny list\fR\fR\fI = \fR\fINULL\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusershare prefix deny list\fR\fR\fI = \fR\fI/etc /dev /private\fR\fI \fR
 .RE
 
@@ -8791,10 +8770,10 @@ usershare template share (G)
 .sp
 対象となる共有には、「\-valid = False」の設定をテンプレートの設定として行なっておくことで、実際のファイル共有として機能しないようにしておくことができる。 これにより、ユーザ定義共有のテンプレートとして用いつつ、その共有が実際に公開されないようにできる。
 .sp
-Default:
+既定値:
 \fI\fIusershare template share\fR\fR\fI = \fR\fINULL\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIusershare template share\fR\fR\fI = \fR\fItemplate_share\fR\fI \fR
 .RE
 
@@ -8807,7 +8786,7 @@ use sendfile (S)
 \fBsendfile() \fR
 システムコールがサポートされている場合、いくつかの SMB read コール (主に ReadAndX と ReadRaw) において排他的 oplock が行なわれているファイルに対して効率的な sendfile システムコールが使用される。これにより、システムの CPU の効率的な使用が行なわれ、 Samba の動作も高速化するだろう。 Samba は NT LM 0\.12 未満のプロトコルを用いるクライアントや Windows 9x ( Linux から sendfile を用いると、これらのクライアントの処理が失敗する) に対しては、自動的にこのオプションを無効にする。
 .sp
-Default:
+既定値:
 \fI\fIuse sendfile\fR\fR\fI = \fR\fIfalse\fR\fI \fR
 .RE
 
@@ -8818,7 +8797,7 @@ use spnego (G)
 .sp
 SPNEGO の実装に問題点が発見されない限り、 これを無効にする必要性はない。
 .sp
-Default:
+既定値:
 \fI\fIuse spnego\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -8833,7 +8812,7 @@ utmp (G)
 .sp
 utmp レコードの仕様のため、接続する個々のユーザ毎に一意な識別子が生成されている必要がある。 この、オプションを有効にすることで、 n^2 アルゴリズムを使ってその番号を検索する処理が発生する。 大規模システムの場合、この処理がパフォーマンスに影響を与える場合も考えられる。
 .sp
-Default:
+既定値:
 \fI\fIutmp\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -8846,10 +8825,10 @@ utmp directory (G)
 \fI/var/run/utmp\fR
 にある)。
 .sp
-Default:
+既定値:
 \fI\fIutmp directory\fR\fR\fI = \fR\fI # Determined automatically\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIutmp directory\fR\fR\fI = \fR\fI/var/run/utmp\fR\fI \fR
 .RE
 
@@ -8860,7 +8839,7 @@ Example:
 .sp
 このオプションは一般ユーザが利用すべきものではなく、開発者の利便性のために設けられている。 Samba はこのオプションを内部的に用いて、共有が削除されたことを記録している。
 .sp
-Default:
+既定値:
 \fI\fI\-valid\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -8878,10 +8857,10 @@ valid users (S)
 \fI%S\fR
 は、現在のサービス名に置き換えられる。 これは [homes] セクションで用いると便利である。
 .sp
-Default:
+既定値:
 \fI\fIvalid users\fR\fR\fI = \fR\fI # No valid users list (anyone can login) \fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIvalid users\fR\fR\fI = \fR\fIgreg, @pcusers\fR\fI \fR
 .RE
 
@@ -8920,7 +8899,7 @@ veto files = /\.AppleDouble/\.bin/\.AppleDesktop/Network Trash Folder/
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIveto files\fR\fR\fI = \fR\fIアクセスできないファイルやディレクトリはない\fR\fI \fR
 .RE
 
@@ -8946,15 +8925,14 @@ veto oplock files = /\.*SEM/
 .RE
 .sp
 .sp
-Default:
+既定値:
 \fI\fIveto oplock files\fR\fR\fI = \fR\fI # oplock 取得を禁止されるファイルやディレクトリはない\fR\fI \fR
 .RE
 
 vfs object
 .PP
 .RS 4
-This parameter is a synonym for
-vfs objects\.
+このパラメータは右記のパラメータの別名である：vfs objects\.
 .RE
 
 vfs objects (S)
@@ -8962,10 +8940,10 @@ vfs objects (S)
 .RS 4
 このパラメータは、 Samba の VFS I/O 操作において用いられるバックエンド名を指定する。デフォルトでは通常のディスク I/O 操作が行なわれるが、 VFS オブジェクトによりこの操作を変更することが可能である。
 .sp
-Default:
+既定値:
 \fI\fIvfs objects\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIvfs objects\fR\fR\fI = \fR\fIextd_audit recycle\fR\fI \fR
 .RE
 
@@ -8974,7 +8952,7 @@ volume (S)
 .RS 4
 このパラメータにより、共有のボリュームラベルの設定が可能になる。 これは、特定のボリューム名が必要なインストールプログラムを格納した CD\-ROM を共有する際に便利である。
 .sp
-Default:
+既定値:
 \fI\fIvolume\fR\fR\fI = \fR\fI # the name of the share\fR\fI \fR
 .RE
 
@@ -8985,7 +8963,7 @@ wide links (S)
 .sp
 このパラメータを no に設定すると、 リンク先のチェックを行なうための余分なシステムコールを実行する必要があるため、 サーバのパフォーマンスに悪影響を及ぼすことに注意。
 .sp
-Default:
+既定値:
 \fI\fIwide links\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -8999,7 +8977,7 @@ winbind cache time (G)
 この設定は認証要求には適用されない。認証要求は
 \fIwinbind offline logon\fRオプションが有効に されない限り、常にその度ごとに処理される。
 .sp
-Default:
+既定値:
 \fI\fIwinbind cache time\fR\fR\fI = \fR\fI300\fR\fI \fR
 .RE
 
@@ -9027,7 +9005,7 @@ getgrent()
 Warning
 グループ一覧(enumeration)を無効にするとプログラムによっては異常動作を引き起こす恐れがある。
 
-Default:
+既定値:
 \fI\fIwinbind enum groups\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9054,7 +9032,7 @@ getpwent
 Warning
 ユーザ一覧(enumeration)を無効にするとプログラムによっては 異常動作を引き起こす恐れがある。 例えば、finger プログラムは、全てのユーザの一覧にアクセスできる前提で、 ユーザ名のマッチングを行なっている。
 
-Default:
+既定値:
 \fI\fIwinbind enum users\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9067,7 +9045,7 @@ winbind expand groups (G)
 .sp
 このパラメーターに高い値を設定することは、最上位の winbindd デーモンがグループの展開を処理しなければならず、その間、 NSSや認証要求に対する応答が不可能となるために、システムの 性能低下をもたらすことに注意しなさい。
 .sp
-Default:
+既定値:
 \fI\fIwinbind expand groups\fR\fR\fI = \fR\fI1\fR\fI \fR
 .RE
 
@@ -9076,19 +9054,21 @@ winbind nested groups (G)
 .RS 4
 このパラメータを yes にすると、グループの入れ子が可能になる。 入れ子になるグループは、ローカルグループやエイリアスと呼ばれる。 これは、Windows のローカルグループに対応するものである。 入れ子になるグループは、各マシンローカルで定義され (ただしドメインコントローラ間では SAM を共有するため共有され)、 信頼される任意の SAM で定義されたユーザやグローバルグループを 含めることができる。 入れ子になるグループを用いるには、nss_winbind を有効にしておく 必要がある。
 .sp
-Default:
+既定値:
 \fI\fIwinbind nested groups\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 winbind normalize names (G)
 .PP
 .RS 4
-このパラメーターは、winbindd がユーザー名やグループ名に含まれる 空白をアンダースコア「_」に置き換えるかどうかを制御する。 例えば、"Space Kadet" という名前が、"space_kadet" という文字列に置き換えられるべきかどうかということを意味する。 シェルのデフォルトのフィールドセパレーターが空白であるため、 Unixのシェルスクリプトは空白を含むユーザー名を扱うことが難しい。 もしあなたのドメインでアカウント名にアンダースコアを含む場合には このオプションを有効にしてはならない。
+このパラメーターは、winbindd がユーザー名やグループ名に含まれる 空白をアンダースコア「_」に置き換えるかどうかを制御する。 例えば、"Space Kadet" という名前が、"space_kadet" という文字列に置き換えられるべきかどうかということを意味する。 シェルの既定値のフィールドセパレーターが空白であるため、 Unixのシェルスクリプトは空白を含むユーザー名を扱うことが難しい。 もしあなたのドメインでアカウント名にアンダースコアを含む場合、 このオプションを有効にしてはならない(nss_infoプラグインで名前の エイリアス機能がサポートされている場合を除く)。
 .sp
-Default:
+この機能は、認証されていないドメインユーザとグループの名前の エイリアスを作成するAPIも提供する。特定の設定に関するidmapやnss プラグインの仕様についてはマニュアルページを参照のこと。エイリアス の設定は、前述の「空白文字の制御」と排他的な関係である。
+.sp
+既定値:
 \fI\fIwinbind normalize names\fR\fR\fI = \fR\fIno\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind normalize names\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -9128,10 +9108,10 @@ winbind nss info (G)
 .sp
 .RE
 .sp
-Default:
+既定値:
 \fI\fIwinbind nss info\fR\fR\fI = \fR\fItemplate\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind nss info\fR\fR\fI = \fR\fItemplate sfu\fR\fI \fR
 .RE
 
@@ -9142,21 +9122,19 @@ winbind offline logon (G)
 \fIpam_winbind\fR
 モジュールにキャッシュされた資格情報を用いたログインを可能に するかどうかを指定する。 有効にした場合、winbindd は、ログインに 成功したユーザの資格情報を、暗号化してローカルのキャッシュに 格納する。
 .sp
-Default:
+既定値:
 \fI\fIwinbind offline logon\fR\fR\fI = \fR\fIfalse\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind offline logon\fR\fR\fI = \fR\fItrue\fR\fI \fR
 .RE
 
 winbind reconnect delay (G)
 .PP
 .RS 4
-This parameter specifies the number of seconds the
-\fBwinbindd\fR(8)
-daemon will wait between attempts to contact a Domain controller for a domain that is determined to be down or not contactable\.
+このパラメータは\fBwinbindd\fR(8)デーモンがドメインコントローラ に接続できない場合に再接続要求を行う間隔を秒単位で指定する。
 .sp
-Default:
+既定値:
 \fI\fIwinbind reconnect delay\fR\fR\fI = \fR\fI30\fR\fI \fR
 .RE
 
@@ -9167,10 +9145,10 @@ winbind refresh tickets (G)
 \fIpam_winbind\fR
 モジュールから取得した Kerberos チケットをリフレッシュするかどうかを制御する。
 .sp
-Default:
+既定値:
 \fI\fIwinbind refresh tickets\fR\fR\fI = \fR\fIfalse\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind refresh tickets\fR\fR\fI = \fR\fItrue\fR\fI \fR
 .RE
 
@@ -9179,7 +9157,7 @@ winbind rpc only (G)
 .RS 4
 このパラメーターをyesに 設定すると、winbindd がドメインコントローラーから情報を取得する際に、 LDAPの代わりにRPCを利用する。
 .sp
-Default:
+既定値:
 \fI\fIwinbind rpc only\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9195,10 +9173,10 @@ winbind separator (G)
 .sp
 + 文字は NIS において /etc/group 中で特別な意味を持っているため、このパラメータを + に設定した場合、少なくとも glibc システムにおいては問題が発生する。
 .sp
-Default:
+既定値:
 \fI\fIwinbind separator\fR\fR\fI = \fR\fI\'\e\'\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind separator\fR\fR\fI = \fR\fI+\fR\fI \fR
 .RE
 
@@ -9208,12 +9186,10 @@ winbind trusted domains only (G)
 このパラメータは、Samba が管理するドメインの、他の Samba メンバーサーバに対して、NIS、rsync や LDAP で配布されている UNIX アカウントの uid を、プライマリドメインの winbindd ユーザの uid として使用するのを目的として設計された。 これにより、DOMAIN\euser1
 というユーザは、 新しい uid が割り当てられる代わりに /etc/passwd の user1 というアカウントに割り当てられる。
 .sp
-このパラメーターは現在では idmap_nss バックエンドによって不要となっている。 詳細は、smb\.conf の
-\fIidmap domains\fR
-オプションと\fBidmap_nss\fR(8)
-のmanページを参照のこと。
+このパラメーターは現在では idmap_nss バックエンドによって不要となっている。 詳細は、\fBidmap_nss\fR(8)
+のマニュアルページを参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIwinbind trusted domains only\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9224,10 +9200,10 @@ winbind use default domain (G)
 \fBwinbindd\fR(8)
 デーモンが、ドメイン名が 付加されていないユーザ名を扱う方式が指定される。 ドメイン名が付加されていないユーザは、winbindd サーバのドメイン のものとして扱われる。 Windows ユーザにとっては、どちらでもよい話であるが、 SSH, FTP や e\-mail を利用する際に、 UNIX システム本来のやり方に近い方法で 指定することが可能となる。
 .sp
-Default:
+既定値:
 \fI\fIwinbind use default domain\fR\fR\fI = \fR\fIno\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwinbind use default domain\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -9288,7 +9264,7 @@ BIND の動的なDNS更新プログラムである
 nsupdate
 を呼び出すスクリプトのサンプルが、 Samba ソースコードの examples ディレクトリに格納されている。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 wins proxy (G)
@@ -9300,7 +9276,7 @@ wins proxy (G)
 \fByes\fR
 にする必要があるかも知れない。
 .sp
-Default:
+既定値:
 \fI\fIwins proxy\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9324,13 +9300,13 @@ Note
 
 Samba3\-HOWTO の Network Browsing 章を参照のこと。
 .sp
-Default:
+既定値:
 \fI\fIwins server\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwins server\fR\fR\fI = \fR\fImary:192\.9\.200\.1 fred:192\.168\.3\.199 mary:192\.168\.2\.61 # この例では、名前の問い合わせを行なう際に、 192\.9\.200\.1 に最初に問い合わせが行なわれる。応答がなかった場合は、 192\.168\.2\.61 に問い合わせが行なわれる。いずれのサーバからにも名前が存在しなかった場合、 192\.168\.3\.199 に対して問い合わせが行なわれる。\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwins server\fR\fR\fI = \fR\fI192\.9\.200\.1 192\.168\.2\.61\fR\fI \fR
 .RE
 
@@ -9349,7 +9325,7 @@ nmbd
 \fByes\fR
 に設定することが\fI絶対に\fRないように注意すること。
 .sp
-Default:
+既定値:
 \fI\fIwins support\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
@@ -9360,18 +9336,17 @@ workgroup ()
 \fIsecurity = domain\fR
 の設定におけるドメイン名も設定されることに注意。
 .sp
-Default:
+既定値:
 \fI\fIworkgroup\fR\fR\fI = \fR\fIWORKGROUP\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIworkgroup\fR\fR\fI = \fR\fIMYGROUP\fR\fI \fR
 .RE
 
 writable
 .PP
 .RS 4
-This parameter is a synonym for
-writeable\.
+このパラメータは右記のパラメータの別名である：writeable\.
 .RE
 
 writeable (S)
@@ -9380,7 +9355,7 @@ writeable (S)
 \fIread only\fR
 の反意語である。
 .sp
-\fINo default\fR
+\fI既定値なし\fR
 .RE
 
 write cache size (S)
@@ -9393,10 +9368,10 @@ Sambaは、このキャッシュにより、 RAID ディスクに対して適切
 .sp
 この数値パラメータにより、(oplock を行なったファイル単位での) キャッシュサイズがバイト単位で指定される。
 .sp
-Default:
+既定値:
 \fI\fIwrite cache size\fR\fR\fI = \fR\fI0\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwrite cache size\fR\fR\fI = \fR\fI262144 # 1 ファイルあたり 256k のキャッシュサイズ\fR\fI \fR
 .RE
 
@@ -9411,10 +9386,10 @@ Samba 3\.0 において、このパラメータは
 \fIsecurity = share\fR
 では動作しない。これは仕様である。
 .sp
-Default:
+既定値:
 \fI\fIwrite list\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwrite list\fR\fR\fI = \fR\fIadmin, root, @staff\fR\fI \fR
 .RE
 
@@ -9423,7 +9398,7 @@ write raw (G)
 .RS 4
 このパラメータは、クライアントからのデータ転送時に、 サーバ側で raw write SMB のサポートを行なうかどうかを制御する。 このパラメータを変更する必要はないだろう。
 .sp
-Default:
+既定値:
 \fI\fIwrite raw\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
@@ -9438,10 +9413,10 @@ wtmp directory (G)
 \fI/var/run/wtmp\fR
 にある)。
 .sp
-Default:
+既定値:
 \fI\fIwtmp directory\fR\fR\fI = \fR\fI\fR\fI \fR
 .sp
-Example:
+例:
 \fI\fIwtmp directory\fR\fR\fI = \fR\fI/var/log/wtmp\fR\fI \fR
 .RE
 .SH "注意"
@@ -9480,11 +9455,11 @@ Example:
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.1対応のものである。
+このマニュアルページは Samba 3\.3\.2対応のものである。
 .PP
 Samba 3\.0\.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.3\.1 対応の翻訳は、
+Samba 3\.2\.4\-3\.3\.2 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP
