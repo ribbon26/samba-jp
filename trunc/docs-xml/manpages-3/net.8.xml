@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.2</refmiscinfo>
+	<refmiscinfo class="version">3.3</refmiscinfo>
 </refmeta>
 
 
@@ -95,7 +95,7 @@
 		<term>-p port</term>
 		<listitem><para>
 		操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。
-		デフォルトではまず 445 を試行し、ついで 139 を試行する。
+		既定値ではまず 445 を試行し、ついで 139 を試行する。
 		</para></listitem>
 		</varlistentry>
 
@@ -495,7 +495,7 @@ OS/2 サーバに対してのみ機能する。
 
 <para>
 指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。
-タイプのデフォルトは 0x20 (workstation (訳注: server の誤り)) である。
+タイプの既定値は 0x20 (workstation (訳注: server の誤り)) である。
 </para>
 
 </refsect3>
@@ -503,7 +503,7 @@ OS/2 サーバに対してのみ機能する。
 <refsect3>
 <title>LOOKUP LDAP [<replaceable>DOMAIN</replaceable></title>
 
-<para>指定した <replaceable>DOMAIN</replaceable> の LDAP サーバの IP アドレスを検索する。デフォルトはローカルドメインが対象となる。</para>
+<para>指定した <replaceable>DOMAIN</replaceable> の LDAP サーバの IP アドレスを検索する。既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -511,7 +511,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP KDC [<replaceable>REALM</replaceable>]</title>
 
 <para>指定した <replaceable>REALM</replaceable> の KDC の IP アドレスを検索する。
-デフォルトはローカルなレルム(realm)が対象となる。</para>
+既定値はローカルなレルム(realm)が対象となる。</para>
 
 </refsect3>
 
@@ -519,7 +519,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP DC [<replaceable>DOMAIN</replaceable>]</title>
 
 <para>指定した <replaceable>DOMAIN</replaceable> のドメインコントローラの IP アドレスを検索する。
-デフォルトはローカルドメインが対象となる。</para>
+既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -527,7 +527,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP MASTER <replaceable>DOMAIN</replaceable></title>
 
 <para>指定した <replaceable>DOMAIN</replaceable> もしくはワークグループのマスタブラウザの IP アドレスを検索する。
-デフォルトはローカルドメインが対象となる。</para>
+既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -632,7 +632,7 @@ OS/2 サーバに対してのみ機能する。
 <listitem><para>ntgroup - Windows NT のグループ名 (SID が解決可能である必要がある。)</para></listitem>
 <listitem><para>rid - 符号なし 32 ビット整数</para></listitem>
 <listitem><para>sid - 「S-1-...」形式の完全な SID</para></listitem>
-<listitem><para>type - グループのタイプ。「domain」、「local」もしくは「builtin のいずれか。
+<listitem><para>type - グループのタイプ。「domain」、「local」もしくは「builtin」のいずれか。
 </para></listitem>
 <listitem><para>comment - 任意の文字列によるグループの説明</para></listitem>
 </itemizedlist>
@@ -767,8 +767,8 @@ net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
 <title>RPC RIGHTS</title>
 
 <para>
-このサブコマンドは、 Samba のユーザー権利の割当の表示、管理に用いられる。
-現在のところ、以下の 3 つのオプションが利用できる: 
+このサブコマンドは(権限として参照もされる)、 Samba のユーザー権利の割当の
+表示、管理に用いられる。現在のところ、以下の 3 つのオプションが利用できる: 
 <parameter>list</parameter>、 <parameter>grant</parameter>、
 <parameter>revoke</parameter>。
 Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba-HOWTO-Collection を参照のこと。</para>
@@ -833,6 +833,20 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 <para>リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 ドメインに参加したBDC 上で、PDCに対してのみ実行することが可能である。
 </para>
 
+<refsect2>
+<title>RPC VAMPIRE KEYTAB</title>
+
+<para>リモートのSAMデータベースをローカルのKerberos keytabファイルにダンプする。
+</para>
+</refsect2>
+
+<refsect2>
+<title>RPC VAMPIRE LDIF</title>
+
+<para>リモートのSAMデータベースをローカルのLDIFファイルか標準出力にダンプする。
+</para>
+</refsect2>
+
 </refsect2>
 
 <refsect2>
@@ -866,7 +880,7 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 
 <para>
 <replaceable>SERVER</replaceable> 上にある <replaceable>PRINTER</replaceable> を検索する。
-プリンタ名のデフォルトは「*」であり、サーバ名のデフォルトはローカルホスト名である。</para>
+プリンタ名の既定値は「*」であり、サーバ名の既定値はローカルホスト名である。</para>
 
 </refsect3>
 
@@ -890,7 +904,7 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 <title>ADS SEARCH <replaceable>EXPRESSION</replaceable> <replaceable>ATTRIBUTES...</replaceable></title>
 
 <para>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
-EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP フィールドの一覧である。</para>
+EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。</para>
 
 <para>設定例: <userinput>net ads search '(objectCategory=group)' sAMAccountName</userinput>
 </para>
@@ -901,7 +915,7 @@ EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中
 <title>ADS DN <replaceable>DN</replaceable> <replaceable>(attributes)</replaceable></title>
 
 <para>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
-DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP フィールドの一覧である。</para>
+DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。</para>
 
 <para>設定例: <userinput>net ads dn 'CN=administrator,CN=Users,DC=my,DC=domain' SAMAccountName</userinput></para>
 
@@ -919,7 +933,7 @@ DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP
 
 <para>
 BUILTINグループを(再)作成する。
-このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在迫っていされるグループ名である: Administrators,
+このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators,
 Users, Guests, Power Users, Account Operators, Server Operators, Print
 Operators, Backup Operators, Replicator, RAS Servers, Pre-Windows 2000
 compatible Access.
@@ -973,6 +987,15 @@ compatible Access.
 
 <para>
 ローカルグループへメンバを追加する。グループは名前でのみ指定でき、メンバは名前かSIDで指定出来る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM DELMEM  &lt;GROUP&gt; &lt;MEMBER&gt;</title>
+
+<para>
+ローカルグループからメンバを削除する。グループとメンバは名前でのみ指定できる。
 </para>
 
 </refsect2>
@@ -1164,7 +1187,7 @@ idmap_tdbバックエンドによって生成されたマップのダンプに�
 <title>IDMAP RESTORE [input file]</title>
 
 <para>
-指定したファイルか標準入りょcuからマッピングをリストアする。
+指定したファイルか標準入力からマッピングをリストアする。
 </para>
 
 </refsect2>
@@ -1308,12 +1331,12 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
 <refsect2>
 <title>CONF</title>
 
-<para>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出きるようになった。この設定データは新しい"net conf"コマンドで編集できる。
+<para>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
 </para>
 
 <para>
 この設定データの配布は
-The deployment of this configuration data can be activated in two levels from the<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
+<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
 レジストリからの共有定義は[global]セクション中で<parameter>registry shares</parameter>を<quote>yes</quote>にすることで有効にでき、
 グローバルオプションは、複合設定の場合、[global]セクション中で<smbconfoption name="include">registry</smbconfoption>を設定することで、
 レジストリのみの設定の場合は、[global]セクション中で、<smbconfoption name="config backend">registry</smbconfoption>を設定することで有効になる。
@@ -1441,7 +1464,7 @@ smb.conf風の形式でレジストリ中にある設定データを標準出力
 また、テキストファイル中の指定したような順番は認められない。すべての真の
 パラメータに対して、これは完全に問題がないが、includeディレクティブは
 smb.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ
-との間での場所の指定はとても重要である。これは単純なsmbconfデータもデルによって
+との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって
 は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての
 共有パラメータの後に評価される。
 </para>
@@ -1487,7 +1510,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </refsect1>
 
 <refsect1>
-	<title>作者</title>
+	<title>著者</title>
 	
 	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
@@ -1498,7 +1521,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</para>
+	<para>このマニュアルページは Samba 3.3.2 対応のものである。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -1508,7 +1531,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4-3.2.8 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4-3.3.2 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
