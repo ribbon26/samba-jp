@@ -1,0 +1,34 @@
+<samba:parameter name="idmap backend"
+                 context="G"
+		 type="string"
+                 advanced="1" developer="1" hide="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>
+	idmap backend パラメータの目的は、ローカルの idmap TDB ファイルから、まだ対応づけされていない SID について SID と UID や GID の対応づけを行なうのではなく、
+	共用の LDAP 機構から取得するようにすることである。
+	これにより、すべてのドメインメンバおよびドメインコントローラは、同一の UID や GID と SID との対応づけを保持することとなる。
+	これにより、UNIX や Linux システム間で UID や GID の一貫性が保持されないことにより、
+	SMB/CIFS 以外のプロトコル (NFS など) を用いて情報の共有を行なう際に発生するリスクを押えることができる。
+	</para>
+
+	<para>
+	SID と UID や GID とを対応づけるもう一つの方法は RID プラグインである。
+	このプラグインは、アカウントの RID に指定された基本値を加算することで UID や GID を生成する。
+	このプラグインを用いる際は、
+	<quote>allow trusted domains = No</quote> パラメータの指定が必須であり、
+	複数ドメイン環境では使用できない。
+	idmap uid および idmap gid パラメータの設定も必要である。
+	</para>
+
+	<para>
+	この他 ad モジュールを用いることで、RFC 2307 互換の LDAP スキーマを有する
+	Active Directory の LDAP サーバから UID や GID の情報を直接取得することが可能である。
+	ad モジュールは「Services for Unix(SFU)」の 2.X および 3.0 もサポートする。
+	</para>
+</description>
+<value type="default"></value>
+<value type="example">ldap:ldap://ldapslave.example.com</value>
+<value type="example">rid:"BUILTIN=1000-1999,DOMNAME=2000-100000000"</value>
+<value type="example">ad</value>
+</samba:parameter>
