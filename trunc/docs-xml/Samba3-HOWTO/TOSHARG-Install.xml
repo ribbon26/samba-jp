@@ -100,21 +100,24 @@
 
 	<para>
 	<indexterm><primary>節</primary></indexterm>
-	Each section of the &smb.conf; file that specifies a share, or a meta-service, is called a stanza.
-	The <literal>global</literal> stanza specifies settings that affect all the other stanzas in the
-	&smb.conf; file. Configuration parameters are documented in the &smb.conf; man page. Some parameters
-	can be used only in the <literal>global</literal> stanza, some only in share or meta-service stanzas,
-	and some can be used globally or just within a share or meta-service stanza.
+        共有またはメタサービスを指定する&smb.conf;ファイル中のおのおののセクション
+        は節(stanza)と呼ばれる(訳注:日本ではセクションという呼び名が通用している
+        ため、以下はすべてセクションとする)。<literal>global</literal>セクション
+        は&smb.conf;ファイル中のすべての他のセクションに影響する設定を指定する。
+        設定パラメータは&smb.conf;マニュアルページに説明がある。いくつかのパラメータ
+        は<literal>global</literal>セクションのみで使われ、その他いくつかは通常の
+        共有またはメタサービスセクションでのみ使われ、いくつかは、グローバルまたは
+        共有、メタサービスセクションで使える。
 	</para>
 
 	<para>
-	<indexterm><primary>minimal</primary><secondary>configuration</secondary></indexterm>
-	<link linkend="smbconfminimal">A minimal smb.conf</link> contains a very minimal &smb.conf;.
-	<indexterm><primary>minimal configuration</primary></indexterm>
+	<indexterm><primary>最小の</primary><secondary>設定</secondary></indexterm>
+	<link linkend="smbconfminimal">最小のsmb.conf</link> はとても小さい&smb.conf;を含む。
+	<indexterm><primary>最小の設定</primary></indexterm>
 	</para>
 
 	<example id="smbconfminimal">
-		<title>A minimal smb.conf</title>
+		<title>最小のsmb.conf</title>
 		<smbconfblock>
 
 		<smbconfsection name="[global]"/>
@@ -132,34 +135,35 @@
 </sect2>
 
 <sect2 id="tdbdocs">
-	<title>TDB Database File Information</title>
+	<title>TDBデータベースファイルの情報</title>
 
 	<para>
-	This section contains brief descriptions of the databases that are used by Samba-3.
+        このセクションインはSamba-3で使われるデータベースの簡単な説明を含む。
 	</para>
 
 	<para>
-<indexterm><primary>tdb file locations</primary></indexterm>
-	The directory in which Samba stores the tdb files is determined by compile-time directives. Samba-3 stores
-	tdb files in two locations. The best way to determine these locations is to execute the following
-	command:
+<indexterm><primary>tdbファイルの位置</primary></indexterm>
+        Sambaが格納するtdbファイルのディレクトリの位置は、コンパイル時オプ
+        ションによって変わる。Samba-3は2つの場所にtdbファイルを格納する。
+        その位置を決める最も良い方法は、以下のコマンドを実行する:
 <screen>
 &rootprompt; smbd -b | grep PRIVATE_DIR
    PRIVATE_DIR: /etc/samba/private
 </screen>
-	This means that the confidential tdb files are stored in the <filename>/etc/samba/private</filename>
-	directory. Samba-3 also uses a number of tdb files that contain more mundane data. The location of
-	these files can be found by executing:
+        これは、秘密のtdbファイルが<filename>/etc/samba/private</filename>
+        ディレクトリに格納されることを意味している。Samba-3はまた、より
+        ありふれたデータを含むいくつかのtdbファイルを使う。それらのファイルの
+        位置は以下を実行することで見つけられる:
 <screen>
 &rootprompt; smbd -b | grep LOCKDIR
    LOCKDIR: /var/lib/samba
 </screen>
-	Therefore the remaining control files will, in the example shown, be stored in the
-	<filename>/var/lib/samba</filename> directory.
+        それゆえ、令の中で表示されている残りの制御ファイルは
+	<filename>/var/lib/samba</filename> ディレクトリに格納される。
 	</para>
 
 	<para>
-<indexterm><primary>tdb file descriptions</primary></indexterm>
+<indexterm><primary>tdbファイルの説明</primary></indexterm>
 	The persistent tdb files are described in <link linkend="tdbpermfiledesc">the Persistent TDB File
 	Descriptions table</link>. All persistent tdb files should be regularly backed up. Use the
 	<command>tdbbackup</command> utility to backup the tdb files. All persistent tdb files must be
