@@ -453,66 +453,74 @@
 	<indexterm><primary>account</primary></indexterm>
 	<indexterm><primary>login name</primary></indexterm>
 	<indexterm><primary>service name</primary></indexterm>
-	This will allow connections by anyone with an account on the server, using either
-	their login name or <smbconfsection name="homes"/> as the service name.
-	(Note: The workgroup that Samba should appear in must also be set. The default
-	workgroup name is WORKGROUP.)
+        これは、サーバ上にアカウントを持つ誰でも、ログイン名かサービス名
+        として、<smbconfsection name="homes"/>への接続を許す。
+        (注意:Sambaが使うワークグループ名も設定する必要がある。既定値の
+        ワークグループ名はWORKGROUPである。)
 	</para>
 	
 	<para>
 	<indexterm><primary>smbd</primary></indexterm>
-	Make sure you put the &smb.conf; file in the correct place. Note, the correct location of this file
-	depends on how the binary files were built. You can discover the correct location by executing from
-	the directory that contains the <command>smbd</command> command file:
+        正しい場所に&smb.conf;ファイルをきちんと置くこと。正しい場所は、
+        バイナリファイルの構築方法に依存することに注意。正しい場所を知る
+        ためには、以下の<command>smbd</command>コマンド行を実行することで
+        わかる:
 <screen>
 &rootprompt; smbd -b | grep smb.conf
 </screen>
 	</para>
 
 	<para>
-	<indexterm><primary>security</primary><secondary>settings</secondary></indexterm>
-	For more information about security settings for the <smbconfsection name="[homes]"/> share, please refer to 
-	<link linkend="securing-samba">Securing Samba</link>.
+	<indexterm><primary>security</primary><secondary>設定</secondary></indexterm>
+	<smbconfsection name="[homes]"/>共有に対するセキュリティ設定の詳しい情報は 
+	<link linkend="securing-samba">Sambaのセキュア化</link>を参照してほしい。
 	</para>
 
 <sect3>
-	<title>Test Your Config File with <command>testparm</command></title>
+	<title><command>testparm</command>による設定ファイルの検査</title>
 
 	<para>
 	<indexterm><primary>validate</primary></indexterm>
 	<indexterm><primary>testparm</primary></indexterm>
 	<indexterm><primary>misconfigurations</primary></indexterm>
-	It's important to validate the contents of the &smb.conf; file using the &testparm; program.
-	If testparm runs correctly, it will list the loaded services. If not, it will give an error message.
-	Make sure it runs correctly and that the services look reasonable before proceeding. Enter the command: 
+        &testparm;プログラムを使って&smb.conf;ファイルの内容を検査することは
+        重要である。もしもtestparmが正しく動けば、設定されたサービスの一覧を
+        表示する。もしもそうでなければ、エラーメッセージを表示する。それが
+        正しく動くようにして、動かす前にサービスが合理的であるようにすること。
+        以下のコマンドを入力する:
 	<screen>
 	&rootprompt; testparm /etc/samba/smb.conf
 	</screen>
-	Testparm will parse your configuration file and report any unknown parameters or incorrect syntax.
-	It also performs a check for common misconfigurations and will issue a warning if one is found.
+        Testparmは設定ファイルを解析し、不正な文法や不明なパラメータを報告する。
+        また、共通の設定ミスをチェックし、それが見つかれば警告を発する。
 	</para>
 
 	<para>
-	Always run testparm again whenever the &smb.conf; file is changed!
+        &smb.conf;ファイルを変更した後には必ずtestparmを実行すること!
 	</para>
 
 	<para>
 	<indexterm><primary>smbd</primary></indexterm>
 	<indexterm><primary>nmbd</primary></indexterm>
 	<indexterm><primary>winbindd</primary></indexterm>
-	<indexterm><primary>configuration</primary><secondary>documentation</secondary></indexterm>
-	The &smb.conf; file is constantly checked by the Samba daemons <command>smbd</command> and every instance of
-	itself that it spawns, <command>nmbd</command> and <command>winbindd</command>. It is good practice to
-	keep this file as small as possible. Many administrators prefer to document Samba configuration settings
-	and thus the need to keep this file small goes against good documentation wisdom. One solution that may
-	be adopted is to do all documentation and configuration in a file that has another name, such as
-	<filename>smb.conf.master</filename>. The <command>testparm</command> utility can be used to generate a
-	fully optimized &smb.conf; file from this master configuration and documtenation file as shown here:
+	<indexterm><primary>設定の</primary><secondary>文書</secondary></indexterm>
+        &smb.conf;ファイルは<command>smbd</command>daemonによって定期的にチェッ
+        クされ、
+        <command>nmbd</command>と<command>winbindd</command>によりそれがspawnさ
+        れる毎インスタンスごとにチェックされる。可能な限りこのファイルを小さく
+        しておくことはよいことである。多くの管理者はSamba設定を文書化すること
+        を好み、そのため、このファイルを小さくしておくことは、賢明な文書化手法
+        である。これを適用する1つの解決方法は、
+        <filename>smb.conf.master</filename>というような名前で別のファイルに、
+        すべての文書と設定を1つにまとめておくことである。
+        <command>testparm</command>ユーティリティは、以下のように、マスタの
+        設定および文書ファイルから完全に最適化された&smb.conf;ファイルを作成
+        するのに使える:
 <screen>
 &rootprompt; testparm -s smb.conf.master > smb.conf
 </screen>
-	This administrative method makes it possible to maintain detailed configuration change records while at
-	the same time keeping the working &smb.conf; file size to the minimum necessary.
+        この管理手法は最小限の必要性のために&smb.conf;ファイルサイズを同じ時に
+        保つ間詳細な設定変更レコードをメンテナンスすることを可能にする。
 	</para>
 
 </sect3>
@@ -523,26 +531,30 @@
 
 	<para>
 	<indexterm><primary>swat</primary></indexterm>
-	SWAT is a Web-based interface that can be used to facilitate the configuration of Samba.  SWAT might not
-	be available in the Samba package that shipped with your platform, but in a separate package. If it is
-	necesaary to built SWAT please read the SWAT man page regarding compilation, installation, and
-	configuration of SWAT from the source code.
+        SWATはWebベースの、Sambaの設定を行うために使うことが出来るインタフェー
+        スである。SWATはあなたのプラットフォームでSambaパッケージで有効になって
+        いないかもしれないが、分離したパッケージになっているかもしれない。もし
+        もSWATを構築することが必要ならば、編集に注意してSWATのマニュアルページ
+        を読んでソースコードからSWATを構成してインストールしてほしい。
 	</para>
 
 	<para>
-	To launch SWAT, just run your favorite Web browser and point it to
-	<ulink url="http://localhost:901/" noescape="1">http://localhost:901/</ulink>.
-	Replace <replaceable>localhost</replaceable> with the name of the computer on which
-	Samba is running if that is a different computer than your browser.
+        SWATを起動するために、好みのブラウザを起動し、
+	<ulink url="http://localhost:901/" noescape="1">http://localhost:901/</ulink>
+        を指定する。
+        Sambaを動かしているコンピュータがブラウザが動いているコンピュータと異な
+        るならば、<replaceable>localhost</replaceable>の部分を置き換えること。
 	</para>
 
 	<para>
-	SWAT can be used from a browser on any IP-connected machine, but be aware that connecting from a remote
-	machine leaves your connection open to password sniffing because passwords will be sent over the wire in the clear. 
+        SWATは任意のIP接続されたマシンからブラウザ経由で使えるが、平文でパスワー
+        ドがネットワーク上を流れ、盗聴の危険性があることに注意してほしい。
 	</para>
 
 	<para>
-	More information about SWAT can be found in <link linkend="SWAT">The Samba Web Administration Tool</link>.
+        SWATについての詳細な情報は、
+        <link linkend="SWAT">The Samba Web Administration Tool</link>
+        にある。
 	</para>
 
 </sect2>
@@ -550,11 +562,11 @@
 </sect1>
 
 <sect1>
-	<title>List Shares Available on the Server</title>
+	<title>サーバ上で有効な共有の一覧表示</title>
 
 	<para>
-	To list shares that are available from the configured Samba server, execute the
-	following command:
+        設定済みのSambaサーバから有効な共有の一覧を表示するには、以下の
+        コマンドを実行する:
 	</para>
 
 <para><screen>
@@ -562,34 +574,37 @@
 </screen></para>
 
 	<para>
-	You should see a list of shares available on your server. If you do not, then
-	something is incorrectly configured. This method can also be used to see what shares 
-	are available on other SMB servers, such as Windows 2000.
+        サーバ上で有効の共有の一覧が表示される。もしもそうでなければ、設定が
+        どこか間違っている。この方法はたとえばWindows 2000のような、他のSMB
+        サーバの共有が有効かと言うことにも使える。
 	</para>
 
 	<para>
-	If you choose user-level security, you may find that Samba requests a password
-	before it will list the shares. See the <command>smbclient</command> man page for details.
-	You can force it to list the shares without a password by adding the option
-	<option>-N</option> to the command line. 
+        もしも、ユーザレベルのセキュリティを選択しているならば、共有の一覧を表
+        示する前にパスワードを要求してくる。詳細は<command>smbclient</command>
+        のマニュアルページを参照のこと。コマンドラインに<option>-N</option>
+        オプションを追加することで、パスワード要求なしに共有の一覧を表示出来る。
 	</para>
 </sect1>
 
 <sect1>
-	<title>Connect with a UNIX Client</title>
+	<title>UNIXクライアントによる接続</title>
 	
 	<para>
-	Enter the following command:
+        以下のコマンドを入力する:
 <screen>
 &prompt;<userinput>smbclient <replaceable> //yourhostname/aservice</replaceable></userinput>
 </screen></para>
 	
-	<para>Typically <replaceable>yourhostname</replaceable> is the name of the host on which &smbd;
-	has been installed. The <replaceable>aservice</replaceable> is any service that has been defined in the &smb.conf;
-	file. Try your username if you just have a <smbconfsection name="[homes]"/> section in the &smb.conf; file.</para>
+	<para>通常<replaceable>yourhostname</replaceable>は&smbd;が
+        インストールされたホストの名前である。
+        <replaceable>aservice</replaceable>は&smb.conf;ファイル中にある任意の
+        サービスである。&smb.conf;ファイル中の
+        <smbconfsection name="[homes]"/>セクションがあるならばusernameを試みる
+        こと。</para>
 
-	<para>Example: If the UNIX host is called <replaceable>bambi</replaceable> and a valid login name
-	is <replaceable>fred</replaceable>, you would type:</para>
+	<para>例:もしもUNIXホストが<replaceable>bambi</replaceable>で有効な
+        ログイン名が<replaceable>fred</replaceable>ならば、以下のように入力:</para>
 
 <para><screen>
 &prompt;<userinput>smbclient //<replaceable>bambi</replaceable>/<replaceable>fred</replaceable></userinput>
@@ -597,16 +612,19 @@
 </sect1>
 
 <sect1>
-	<title>Connect from a Remote SMB Client</title>
+	<title>リモートのSMBクライアントからの接続</title>
 
 	<para>
-	Now that Samba is working correctly locally, you can try to access it from other clients. Within a few
-	minutes, the Samba host should be listed in the Network Neighborhood on all Windows clients of its subnet.
-	Try browsing the server from another client or "mounting" it.
+        Sambaがローカルで正しく動いている時には、他のクライアントからアクセスを
+        試みることが出来る。数分以内に、Sambaホストは同一のサブネット上のすべて
+        のWindowsクライアント上のマイネットワーク上(Network Neighborhood)に表示
+        される。他のクライアントからサーバをブラウズするかそれをマウントするこ
+        とを試みる。
 	</para>
 
 	<para>
-	Mounting disks from a DOS, Windows, or OS/2 client can be done by running a command such as:
+        DOS、Windows、あるいはOS/2クライアントからのマウントは以下のコマンドを
+        動かすことで行える:
 <screen>
 &dosprompt;<userinput>net use m: \\servername\service</userinput>
 </screen>
@@ -619,9 +637,10 @@
 <screen>
 &dosprompt;<userinput>net use lpt1:	\\servername\spoolservice</userinput>
 </screen>
-	The <literal>spoolservice</literal> is the name of the printer (actually the print queue) on the target
-	server. This will permit all print jobs that are captured by the lpt1: port on the Windows client to
-	be sent to the printer that owns the spoolservice that has been specified.
+	<literal>spoolservice</literal>は対象のサーバ上のプリンタの名前(実際
+        にはプリントキュー)である。これは、指定されたspoolserviceが所有する
+        プリンタに送られるWinbowsクライアント上のlpt1:ポートでキャプチャされ
+        たすべてのプリントジョブを許可する。
 	</para>
 
 <para>
@@ -629,14 +648,16 @@
 </screen></para>
 
 	<sect2>
-	<title>What If Things Don't Work?</title>
+	<title>うまく動かない時には</title>
 	
 	<para>
-	You might want to read <link linkend="diagnosis">The Samba Checklist</link>.  If you are still
-	stuck, refer to <link linkend="problems">Analyzing and Solving Samba Problems</link>.  Samba has
-	been successfully installed at thousands of sites worldwide.  It is unlikely that your particular problem is
-	unique, so it might be productive to perform an Internet search to see if someone else has encountered your
-	problem and has found a way to overcome it.
+	<link linkend="diagnosis">Sambaチェックリスト</link>を読んでみてもよい。
+        もしもまだ行き詰まっているならば、
+        <link linkend="problems">Sambaの問題の解析と解決</link>を参照しよう。
+        Sambaは世界中でとてもたくさん正常にインストールされている。あなたの
+        特定の問題が固有であれば、あなたの問題に誰かが遭遇し、それを克服する
+        方法を見つけていることを発見するために、インターネット上での検索を実
+        行することは生産的かもしれない。
 	</para>
 
 	<para>
