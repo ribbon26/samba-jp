@@ -273,29 +273,29 @@ Press enter to see a dump of your service definitions
 		<title>匿名の読み書き可能な文書サーバ</title>
 
 		<para>
-		<indexterm><primary>anonymous</primary><secondary>read-write server</secondary></indexterm>
-		We should view this configuration as a progression from the previous example.
-		The difference is that shared access is now forced to the user identity of jackb
-		and to the primary group jackb belongs to. One other refinement we can make is to
-		add the user <emphasis>jackb</emphasis> to the <filename>smbpasswd</filename> file.
-		To do this, execute:
+		<indexterm><primary>匿名</primary><secondary>読み書きサーバ</secondary></indexterm>
+                以前の例からこの設定を発展系と見なすべきである。違いは、共有アクセスが
+		jackbというユーザIDに、プライマリグループがjackbに強制的に設定されると
+		いうことである。その他1つの改善点は、ユーザjackbを
+		<filename>smbpasswd</filename>に追加することが出来るということである。
+		これを行うのには以下を実行する:
 <screen>
 &rootprompt;<userinput>smbpasswd -a jackb</userinput>
 New SMB password: <userinput>m0r3pa1n</userinput>
 Retype new SMB password: <userinput>m0r3pa1n</userinput>
 Added user jackb.
 </screen>
-		Addition of this user to the <filename>smbpasswd</filename> file allows all files
-		to be displayed in the Explorer Properties boxes as belonging to <emphasis>jackb</emphasis>
-		instead of to <emphasis>User Unknown</emphasis>.
+		<filename>smbpasswd</filename>ファイルへのこのユーザの追加は、エクス
+		プローラのプロパティにおいて所有者が<emphasis>User Unknown</emphasis>
+		の代わりに<emphasis>jackb</emphasis>が表示されると言うことである。
 		</para>
 
 		<para>
-		The complete, modified &smb.conf; file is as shown in <link linkend="anon-rw"/>.
+		完全な変更後の&smb.conf;ファイルは<link linkend="anon-rw"/>である。
 		</para>
 
 <example id="anon-rw">
-<title>Modified Anonymous Read-Write smb.conf</title>
+<title>変更後の匿名の読み書き可能な設定の smb.conf</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -316,40 +316,42 @@ Added user jackb.
 		</sect3>
 
 		<sect3>
-		<title>Anonymous Print Server</title>
+		<title>匿名プリントサーバ</title>
 
 		<para>
-		<indexterm><primary>anonymous</primary><secondary>print server</secondary></indexterm>
-		An anonymous print server serves two purposes:
+		<indexterm><primary>匿名</primary><secondary>プリントサーバ</secondary></indexterm>
+		匿名プリントサーバは2つの目的で提供される:
 		</para>
 
 		<itemizedlist>
 			<listitem><para>
-			It allows printing to all printers from a single location.
+			1つの所から、すべてのプリンタに印刷を許可する。
 			</para></listitem>
 
 			<listitem><para>
-			It reduces network traffic congestion due to many users trying
-			to access a limited number of printers.
+			制限された数のプリンタに対するアクセスのため、たくさんの
+			ユーザのためにネットワークのトラフィック輻輳を減らす。
 			</para></listitem>
 		</itemizedlist>
 
 		<para>
-		In the simplest of anonymous print servers, it is common to require the installation
-		of the correct printer drivers on the Windows workstation. In this case the print
-		server will be designed to just pass print jobs through to the spooler, and the spooler
-		should be configured to do raw pass-through to the printer. In other words, the print
-		spooler should not filter or process the data stream being passed to the printer.
+		最も単純な匿名印刷サーバ中で、Windowsワークステーション上での正しい
+		プリンタドライバのインストール要求は共通である。この場合、プリント
+		サーバはスプーラに対して印刷ジョブを単に渡すだけに設定され、
+		スプーラはプリンタに対して素通しになるように設定される。別の言い方
+		をすると、プリントスプーラはプリンタに対して渡されたデータストリーム
+		をフィルタリングもなんらかの処理もしない。
 		</para>
 
 		<para>
-		In this configuration, it is undesirable to present the Add Printer Wizard, and we do
-		not want to have automatic driver download, so we disable it in the following
-		configuration. <link linkend="anon-print"></link> is the resulting &smb.conf; file.
+		この設定中で、プリンタの追加ウィザードを使うのは好ましくなく、
+		また、自動ドライバダウンロードを行うのも望まない。そのため、
+		以下の設定でそれを無効にする。
+		<link linkend="anon-print"></link>は結果の &smb.conf;ファイルである。
 		</para>
 
 <example id="anon-print">
-<title>Anonymous Print Server smb.conf</title>
+<title>匿名プリントサーバのsmb.conf</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -372,28 +374,31 @@ Added user jackb.
 </example>
 
 		<para>
-		The above configuration is not ideal. It uses no smart features, and it deliberately
-		presents a less than elegant solution. But it is basic, and it does print. Samba makes
-		use of the direct printing application program interface that is provided by CUPS.
-		When Samba has been compiled and linked with the CUPS libraries, the default printing
-		system will be CUPS. By specifying that the printcap name is CUPS, Samba will use
-		the CUPS library API to communicate directly with CUPS for all printer functions.
-		It is possible to force the use of external printing commands by setting the value
-		of the <parameter>printing</parameter> to either SYSV or BSD, and thus the value of
-		the parameter <parameter>printcap name</parameter> must be set to something other than
-		CUPS. In such case, it could be set to the name of any file that contains a list
-		of printers that should be made available to Windows clients.
+		上記の設定は理想的なものではない。よりよい機能を使っておらず、
+		故意にエレガントではない解決方法を提示している。しかし、これは
+		基本であり、これで印刷は出来る。SambaはCUPSによって提供される
+		直接印刷APIを使える。CUPSライブラリを、Sambaコンパイル時に指定
+		してリンクした場合、既定値の印刷システムはCUPSになる。princap name
+		がCUPSを指定した場合、Sambaはすべての印刷機能のためにCUPSに直接
+		通信を行うため、CUPSライブラリAPIを使う。
+		<parameter>printing</parameter>の値をSYSVかBSDに設定して外部印刷
+		コマンドを強制的に使うことが可能で、パラメータ
+		<parameter>printcap name</parameter>の値はCUPS以外の何かに設定
+		しなければならない。この場合、Windowsクライアントに対して有効に
+		させるためのプリンタの一覧が含まれている任意のファイルの名前を設定
+		する。
 		</para>
 
 		<note><para>
-		Windows users will need to install a local printer and then change the print
-		to device after installation of the drivers. The print to device can then be set to
-		the network printer on this machine.
+		Windowsユーザはローカルプリンタのインストールが必要で、ドライバの
+		インストール後に通常使うプリンタを切り替える。通常使うプリンタは
+		そのマシン上のネットワークプリンタに設定できる。
 		</para></note>
 
 		<para>
-		Make sure that the directory <filename>/var/spool/samba</filename> is capable of being used
-		as intended. The following steps must be taken to achieve this:
+		ディレクトリ<filename>/var/spool/samba</filename>が使えるように
+		なっていることを確かめておくこと。以下の手順はこれを達成するため
+		に行わなければならない:
 		</para>
 
 		<itemizedlist>
