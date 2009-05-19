@@ -105,67 +105,70 @@ linkend="StandAloneServer"></link>、<link linkend="RefDocServer"></link>
 <title>動く例</title>
 
 <para>
-The configuration examples are designed to cover everything necessary to get Samba 
-running. They do not cover basic operating system platform configuration, which is
-clearly beyond the scope of this text.
+設定の例はSambaが動くために必要なすべてをカバーするためにデザインされている。
+それはこのテキストの範囲を明らかに超えている、基本的なOSプラットフォームの
+設定をカバーしていない。
 </para>
 
 <para>
-It is also assumed that Samba has been correctly installed, either by way of installation
-of the packages that are provided by the operating system vendor or through other means.
+また、OSベンダによって提供されているパッケージにか、他の手段で
+Sambaが正しくインストールされていることも仮定している。
 </para>
 
 	<sect2>
-	<title>Standalone Server</title>
+	<title>スタンドアロンサーバ</title>
 
 	<para>
-	<indexterm><primary>Server Type</primary><secondary>Stand-alone</secondary></indexterm>
-	A standalone server implies no more than the fact that it is not a domain controller
-	and it does not participate in domain control. It can be a simple, workgroup-like
-	server, or it can be a complex server that is a member of a domain security context.
+	<indexterm><primary>サーバタイプ</primary><secondary>スタンドアロン</secondary></indexterm>
+	スタンドアロンサーバであるということは、それがドメインコントローラでないこと、
+	ドメイン制御下に参加していないと言う事実以上のことを何も暗示しない。これは
+	単純で、ワークグループ風のサーバであるか、ドメインセキュリティ管理下のメンバ
+	であることができる。
 	</para>
 
 	<para>
-	As the examples are developed, every attempt is made to progress the system toward greater capability, just as
-	one might expect would happen in a real business office as that office grows in size and its needs change.
+	  例題が作成されている間、真のビジネスオフィスが、そのオフィスの大きさが
+	  増えたり必要に応じて変わるようなことが起こると思うかもしれないのと同じ
+          ように、システムガソのすばらしい能力に向かって進歩するすべての試みが行
+	  われた。
 	</para>
 
 		<sect3 id="anon-ro">
-		<title>Anonymous Read-Only Document Server</title>
+		<title>匿名リードオンリ文書サーバ</title>
 
 		<para>
-		<indexterm><primary>read only</primary><secondary>server</secondary></indexterm>
-		The purpose of this type of server is to make available to any user
-		any documents or files that are placed on the shared resource. The
-		shared resource could be a CD-ROM drive, a CD-ROM image, or a file
-		storage area.
+		<indexterm><primary>リードオンリ</primary><secondary>サーバ</secondary></indexterm>
+		このタイプのサーバの目的は、共有リソース上にある任意の文書やファイルを
+		任意のユーザに有効にさせることである。共有リソースはCD-ROMでもファイル
+		領域でも可能である。
 		</para>
 
 		<itemizedlist>
 			<listitem><para>
-			The file system share point will be <filename>/export</filename>.
+			ファイルシステムの共有位置は<filename>/export</filename>である。
 			</para></listitem>
 
 			<listitem><para>
-			All files will be owned by a user called Jack Baumbach.
-			Jack's login name will be <emphasis>jackb</emphasis>. His password will be
-			<emphasis>m0r3pa1n</emphasis> &smbmdash; of course, that's just the example we are
-			using; do not use this in a production environment because
-			all readers of this document will know it.
+			すべてのファイルはJack Baumbachと呼ばれるユーザが所有している。
+			Jackのログイン名は<emphasis>jackb</emphasis>である。そのパス
+			ワードは<emphasis>m0r3pa1n</emphasis>である。 &smbmdash;
+			もちろんこれは例として使っているものである。すべての、この
+			文書の読者がこのことを知っているため、実環境でこれを使っては
+			いけない。
 			</para></listitem>
 		</itemizedlist>
 
 		<procedure>
-		<title>Installation Procedure: Read-Only Server</title>
+		<title>インストール手順: リードオンリサーバ</title>
 			<step><para>
-			Add user to system (with creation of the user's home directory):
+			ユーザをシステムに登録する(ユーザのホームディレクトリも作る):
 <screen>
 &rootprompt;<userinput>useradd -c "Jack Baumbach" -m -g users -p m0r3pa1n jackb</userinput>
 </screen>
 			</para></step>
 
 			<step><para>
-			Create directory, and set permissions and ownership:
+			ディレクトリを作りパーミッションと所有者を設定する:
 <screen>
 &rootprompt;<userinput>mkdir /export</userinput>
 &rootprompt;<userinput>chmod u+rwx,g+rx,o+rx /export</userinput>
@@ -174,19 +177,20 @@ of the packages that are provided by the operating system vendor or through othe
 			</para></step>
 
 			<step><para>
-			Copy the files that should be shared to the <filename>/export</filename>
-			directory.
+			<filename>/export</filename>ディレクトリに共有したいファイルをコピーする。
 			</para></step>
 
 			<step><para>
-			Install the Samba configuration file (<filename>/etc/samba/smb.conf</filename>)
-			as shown in <link linkend="anon-example">Anonymous Read-Only Server Configuration</link>.
+			
+			<link linkend="anon-example">匿名リードオンリサーバ設定</link>で
+			表示されているSamba設定ファイル(<filename>/etc/samba/smb.conf</filename>)を
+			インストールする。
 			</para></step>
 
 <example id="anon-example">
-<title>Anonymous Read-Only Server Configuration</title>
+<title>匿名リードオンリサーバ設定</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MIDEARTH</smbconfoption>
 <smbconfoption name="netbios name">HOBBIT</smbconfoption>
@@ -201,7 +205,7 @@ of the packages that are provided by the operating system vendor or through othe
 </example>
 
 			<step><para>
-			Test the configuration file by executing the following command:
+			以下のコマンドを実行して設定ファイルをテストする:
 <screen>
 &rootprompt;<userinput>testparm</userinput>
 </screen>
