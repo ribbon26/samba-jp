@@ -663,54 +663,56 @@ smb: \> <userinput>q</userinput>
 	</para>
 
 	<para>
-	We use the users from the last example. The accounting department
-	has a general printer that all departmental users may use. There is also a check printer
-	that may be used only by the person who has authority to print checks. The chief financial
-	officer (CFO) wants that printer to be completely restricted and for it to be located in the
-	private storage area in her office. It therefore must be a network printer.
+        ここでは最後の例からのユーザを使うことにする。経理部門にはその部門のユーザが使える
+	汎用プリンタがある。また、小切手を印刷するための権限を持つ人のそばにその人だけが
+	使える小切手印刷プリンタもある。最高会計責任者(CFO)はオフィス内の個人用収納場所
+	中に配置して完全にそのプリンタの使用を制限したいと望んでいる。そのため、それは
+	ネットワークプリンタである必要がある。
 	</para>
 
 	<para>
-	The accounting department uses an accounting application called <emphasis>SpytFull</emphasis>
-	that must be run from a central application server. The software is licensed to run only off
-	one server, there are no workstation components, and it is run off a mapped share. The data
-	store is in a UNIX-based SQL backend. The UNIX gurus look after that, so this is not our
-	problem.
+	経理部門は中央のアプリケーションサーバから動かさなければならない
+	<emphasis>SpytFull</emphasis>という会計アプリケーションを使っている。ソフトウェア
+	は1台のサーバだけで動かすようにライセンスされていて、底にはワークステーション
+	コンポーネントがなく、マップされた共有で動く。データはUNIXベースのSQLバックエンド
+	にある。UNIXの専門家はそれをみて、それはUNIX屋の問題ではないと言う。
 	</para>
 
 	<para>
-	The accounting department manager (maryo) wants a general filing system as well as a separate
-	file storage area for form letters (nastygrams). The form letter area should be read-only to
-	all accounting staff except the manager. The general filing system has to have a structured
-	layout with a general area for all staff to store general documents as well as a separate
-	file area for each member of her team that is private to that person, but she wants full
-	access to all areas. Users must have a private home share for personal work-related files
-	and for materials not related to departmental operations.
+	経理部門のマネージャ(maryo)はフォームレター(いやなメール)のために分離したファイル
+	格納領域と同じような汎用ファイリングシステムを希望している。フォームレター領域は
+	マネージャを除いてすべての経理スタッフにはリードオンリにすべきである。汎用ファイ
+	リングシステムは、経理のチームのメンバの、その人固有の階層構造ファイル領域を持つ
+	必要があるが、マネージャにはすべての領域にアクセスできることを希望している。各
+	ユーザは、個人に関連したファイルのための固有のホーム領域を持つが、それは部門の
+	作業に関連しない。
 	</para>
 	
 		<sect3>
-		<title>Example Configuration</title>
+		<title>設定例</title>
 		
 		<para>
-		The server <emphasis>valinor</emphasis> will be a member server of the company domain.
-		Accounting will have only a local server. User accounts will be on the domain controllers,
-		as will desktop profiles and all network policy files.
+		サーバ<emphasis>valinor</emphasis>は会社のドメインのメンバサーバである。
+		経理部門はローカルサーバのみを持つ。ユーザのアカウントはドメインコント
+		ローラ上にあり、そこにはデスクトッププロファイルとすべてのネットワーク
+		ポリシファイルがある。
 		</para>
 
 		<procedure>
 			<step><para>
-			Do not add users to the UNIX/Linux server; all of this will run off the
-			central domain.
+			UNIX/Linuxサーバにユーザを追加してはならない。すべては中央の
+			ドメインで行う。
 			</para></step>
 
 			<step><para>
-			Configure &smb.conf; according to <link linkend="fast-member-server">Member server smb.conf
-			(globals)</link> and <link linkend="fast-memberserver-shares">Member server smb.conf (shares
-			and services)</link>.
+			<link linkend="fast-member-server">メンバサーバのsmb.conf
+			(globals)</link>と
+			<link linkend="fast-memberserver-shares">メンバサーバのsmb.conf (shares
+			and services)</link>と一致するように&smb.conf;を設定する。
 			</para></step>
 
 <example id="fast-member-server">
-<title>Member Server smb.conf (Globals)</title>
+<title>メンバサーバのsmb.conf (Globals)</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -728,7 +730,7 @@ smb: \> <userinput>q</userinput>
 </example>
 
 <example id="fast-memberserver-shares">
-<title>Member Server smb.conf (Shares and Services)</title>
+<title>メンバサーバのsmb.conf (Shares and Services)</title>
 <smbconfblock>
 <smbconfsection name="[homes]"/>
 <smbconfoption name="comment">Home Directories</smbconfoption>
@@ -762,7 +764,7 @@ smb: \> <userinput>q</userinput>
 
 			<step><para>
 			<indexterm><primary>net</primary><secondary>rpc</secondary></indexterm>
-			Join the domain. Note: Do not start Samba until this step has been completed!
+			ドメインに参加する。注意:このステップが終わるまでSambaを起動してはいけない!
 <screen>
 &rootprompt;<userinput>net rpc join -Uroot%'bigsecret'</userinput>
 Joined domain MIDEARTH.
