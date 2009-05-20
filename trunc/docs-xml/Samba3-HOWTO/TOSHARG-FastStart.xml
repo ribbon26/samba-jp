@@ -425,58 +425,59 @@ Added user jackb.
 		<note><para>
 		<indexterm><primary>MIME</primary><secondary>raw</secondary></indexterm>
 		<indexterm><primary>素通し印刷</primary></indexterm>
-		On CUPS-enabled systems there is a facility to pass raw data directly to the printer without
-		intermediate processing via CUPS print filters. Where use of this mode of operation is desired,
-		it is necessary to configure a raw printing device. It is also necessary to enable the raw mime
-		handler in the <filename>/etc/mime.conv</filename> and <filename>/etc/mime.types</filename>
-		files. Refer to <link linkend="cups-raw"></link>.
+		CUPSが有効になっているシステムで、中間のCUPSプリントフィルタ処理なしで、
+		直接プリンタに生データを渡す機能がある。このモードの操作を使うことが
+		要求される場合、生データを印刷するデバイスを設定することが必要である。
+		また、<filename>/etc/mime.conv</filename>と
+		<filename>/etc/mime.types</filename>ファイル中のraw mime ハンドラを
+		有効にする必要もある。<link linkend="cups-raw"></link>を参照のこと。
 		</para></note>
 
 		</sect3>
 
 		<sect3>
 
-		<title>Secure Read-Write File and Print Server</title>
+		<title>セキュアな読み書き可能ファイルと印刷サーバ</title>
 
 		<para>
-		We progress now from simple systems to a server that is slightly more complex.
+		続いて、簡単なシステムからやや複雑なサーバの例に説明を進めよう。
 		</para>
 
 		<para>
-		Our new server will require a public data storage area in which only authenticated
-		users (i.e., those with a local account) can store files, as well as a home directory.
-		There will be one printer that should be available for everyone to use.
+		新しいサーバは認証されたユーザのみ(すなわち、ローカルアカウントを持つ)が、
+		ホームディレクトリと同様にファイルを保存できる共用データ領域を必要とする。
+		また、誰でも使える1つのプリンタも提供する。
 		</para>
 
 		<para>
-		In this hypothetical environment (no espionage was conducted to obtain this data),
-		the site is demanding a simple environment that is <emphasis>secure enough</emphasis>
-		but not too difficult to use. 
+		この仮想の環境(このデータを入手するための盗聴は無いものとする)中で、
+		使うのに難しくない、<emphasis>十分な安全性</emphasis>を持つ簡単な環境に
+		サイトは依存する。
 		</para>
 
 		<para>
-		Site users will be Jack Baumbach, Mary Orville, and Amed Sehkah. Each will have
-		a password (not shown in further examples). Mary will be the printer administrator and will
-		own all files in the public share.
+		サイトユーザは Jack Baumbach, Mary Orvilleと Amed Sehkahである。おのおのは
+		パスワード(これ以降の例では表示しない)を持つ。Maryはプリンタ管理者で、
+		共通の共有中のファイルの所有者である。
 		</para>
 
 		<para>
-		This configuration will be based on <emphasis>user-level security</emphasis> that
-		is the default, and for which the default is to store Microsoft Windows-compatible
-		encrypted passwords in a file called <filename>/etc/samba/smbpasswd</filename>.
-		The default &smb.conf; entry that makes this happen is
-		<smbconfoption name="passdb backend">smbpasswd, guest</smbconfoption>. Since this is the default,
-		it is not necessary to enter it into the configuration file. Note that the guest backend is
-		added to the list of active passdb backends no matter whether it specified directly in Samba configuration
-		file or not.
+		この設定は既定値である<emphasis>ユーザレベルのセキュリティ</emphasis>を
+		ベースとしていて、<filename>/etc/samba/smbpasswd</filename>中に
+		Windows互換の暗号化パスワードを格納している。この設定にするための既定値
+		の&smb.conf;エントリは
+		<smbconfoption name="passdb backend">smbpasswd, guest</smbconfoption>である。
+		これが既定値になっているので、設定ファイルにこれを記述する必要はない。
+		guest バックエンドはSamba設定ファイル中で指定されるか否かに関わらす、
+		有効なpassdb backendに追加されることに注意。
 		</para>
 
 
 		<procedure>
-		<title>Installing the Secure Office Server</title>
+		<title>セキュアなオフィスサーバのインストール</title>
 			<step><para>
-		<indexterm><primary>office server</primary></indexterm>
-			Add all users to the operating system:
+		<indexterm><primary>オフィスサーバ</primary></indexterm>
+			すべてのユーザをOSに追加する:
 <screen>
 &rootprompt;<userinput>useradd -c "Jack Baumbach" -m -g users -p m0r3pa1n jackb</userinput>
 &rootprompt;<userinput>useradd -c "Mary Orville" -m -g users -p secret maryo</userinput>
@@ -485,11 +486,11 @@ Added user jackb.
 			</para></step>
 
 			<step><para>
-			Configure the Samba &smb.conf; file as shown in <link linkend="OfficeServer"/>.
+			<link linkend="OfficeServer"/>中で示されているようにSambaの &smb.conf;を設定する。
 			</para></step>
 
 <example id="OfficeServer">
-<title>Secure Office Server smb.conf</title>
+<title>セキュアなオフィスサーバのsmb.conf</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -526,7 +527,7 @@ Added user jackb.
 </example>
 
 			<step><para>
-			Initialize the Microsoft Windows password database with the new users:
+			Microsoft Windowsパスワードデータベースに新規ユーザを追加する:
 <screen>
 &rootprompt;<userinput>smbpasswd -a root</userinput>
 New SMB password: <userinput>bigsecret</userinput>
