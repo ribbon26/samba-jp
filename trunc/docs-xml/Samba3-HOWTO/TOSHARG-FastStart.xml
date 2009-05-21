@@ -772,13 +772,13 @@ Joined domain MIDEARTH.
 			</para></step>
 
 			<step><para>
-			Make absolutely certain that you disable (shut down) the <command>nscd</command>
-			daemon on any system on which <command>winbind</command> is configured to run.
+			<command>winbind</command>が設定されて動いている任意のシステム上で
+			<command>nscd</command> daemonを停止する(シャットダウンする)ことを必ず行うこと。
 			</para></step>
 
 			<step><para>
-			Start Samba following the normal method for your operating system platform.
-			If you wish to do this manually, execute as root:
+			OSプラットフォームの通常の方法で、Sambaを起動する。
+			手動で動かしたい場合は、rootになって以下の手順で起動する:
 			<indexterm><primary>smbd</primary></indexterm>
 			<indexterm><primary>nmbd</primary></indexterm>
 			<indexterm><primary>winbindd</primary></indexterm>
@@ -791,8 +791,9 @@ Joined domain MIDEARTH.
 			</para></step>
 
 			<step><para>
-			Configure the name service switch (NSS) control file on your system to resolve user and group names
-			via winbind. Edit the following lines in <filename>/etc/nsswitch.conf</filename>:
+			winbind経由でユーザとグループ名を解決するために、システム上にあるネーム
+			サービススイッチ(NSS)制御ファイルを設定する。
+			<filename>/etc/nsswitch.conf</filename>中の以下の行を編集する。
 <programlisting>
 passwd: files winbind
 group:  files winbind
@@ -801,14 +802,15 @@ hosts:  files dns winbind
 			</para></step>
 
 			<step><para>
-			Set the password for <command>wbinfo</command> to use:
+			<command>wbinfo</command>に対するパスワードを以下の方法で設定する:
 <screen>
 &rootprompt;<userinput>wbinfo --set-auth-user=root%'bigsecret'</userinput>
 </screen>
 			</para></step>
 
 			<step><para>
-			Validate that domain user and group credentials can be correctly resolved by executing:
+		        ドメインユーザとグループの認証が以下を実行することで正しく解決されるかを
+			検証すること:
 <screen>
 &rootprompt;<userinput>wbinfo -u</userinput>
 MIDEARTH\maryo
@@ -827,8 +829,9 @@ MIDEARTH\Accounts
 			</para></step>
 
 			<step><para>
-			Check that <command>winbind</command> is working. The following demonstrates correct
-			username resolution via the <command>getent</command> system utility:
+			<command>winbind</command>が動作しているかをチェックすること。以下は、
+			<command>getent</command>システムユーティリティ経由で正しいユーザ名の
+			解決を行っている例である:
 <screen>
 &rootprompt;<userinput>getent passwd maryo</userinput>
 maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
@@ -850,8 +853,8 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 			</para></step>
 
 			<step><para>
-			Configuration is now mostly complete, so this is an opportune time
-			to configure the directory structure for this site:
+			ここまでで設定はほぼ終わり、この後、このサイト用にディレクトリ
+			構造を設定する:
 <screen>
 &rootprompt;<userinput>mkdir -p /export/{spytfull,public}</userinput>
 &rootprompt;<userinput>chmod ug=rwxS,o=x /export/{spytfull,public}</userinput>
@@ -865,15 +868,15 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 	</sect2>
 
 	<sect2>
-	<title>Domain Controller</title>
+	<title>ドメインコントローラ</title>
 
 
 	<para>
-	<indexterm><primary>Server Type</primary><secondary>Domain Controller</secondary></indexterm>
-	For the remainder of this chapter the focus is on the configuration of domain control.
-	The examples that follow are for two implementation strategies. Remember, our objective is
-	to create a simple but working solution. The remainder of this book should help to highlight
-	opportunity for greater functionality and the complexity that goes with it.
+	<indexterm><primary>サーバタイプ</primary><secondary>ドメインコントローラ</secondary></indexterm>
+	この節の残りの部分は、ドメイン制御の設定に焦点を当てる。以下は2つの実装方法の例である。
+	ここでの例は、簡単に作れるが、ちゃんと動くものを提示するのが目的であることを思い出して
+	ほしい。この本の残りではより大きな機能性とそれに付随する複雑性に注目する機会を手助け
+	するべきである。
 	</para>
 
 	<para>
