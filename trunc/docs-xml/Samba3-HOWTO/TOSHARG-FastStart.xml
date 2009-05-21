@@ -880,71 +880,74 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 	</para>
 
 	<para>
-	A domain controller configuration can be achieved with a simple configuration using the new
-	tdbsam password backend. This type of configuration is good for small
-	offices, but has limited scalability (cannot be replicated), and performance can be expected
-	to fall as the size and complexity of the domain increases.
+	ドメインコントローラの設定は新しいtdbsamパスワードバックエンドを使う簡単な設定
+	で達成できる。このタイプの設定は小さなオフィスに適しているが、拡張性が制限され
+	ていて(複製が出来ない)、ドメインの大きさと複雑さが増大するとパフォーマンスが
+	下がることが予想される。
 	</para>
 
 	<para>
-	The use of tdbsam is best limited to sites that do not need
-	more than a Primary Domain Controller (PDC). As the size of a domain grows the need
-	for additional domain controllers becomes apparent. Do not attempt to under-resource
-	a Microsoft Windows network environment; domain controllers provide essential
-	authentication services. The following are symptoms of an under-resourced domain control
-	environment:
+	tdbsamの使用は、PDC以外の必要性がないサイトにのみ最適である。ドメインが大きく
+	なると、追加のドメインコントローラが必要となるのは必定である。Microsoftネット
+	ワーク環境に過小なリソースを提供しようと試みてはいけない;ドメインコントローラは
+	基本的な認証サービスを提供する。以下は過小なリソースでのドメインコントロール
+	環境の症状である:
 	</para>
 
 	<itemizedlist>	
 		<listitem><para>
-		 Domain logons intermittently fail.
+		 ドメインログオンが断続的に失敗する。
 		</para></listitem>
 
 		<listitem><para>
-		File access on a domain member server intermittently fails, giving a permission denied
-		error message.
+		ドメインメンバサーバ上のファイルアクセスが断続的に失敗し、
+		パーミッション拒否エラーメッセージが出る。
 		</para></listitem>
 	</itemizedlist>
 
 	<para>
-	A more scalable domain control authentication backend option might use
-	Microsoft Active Directory or an LDAP-based backend. Samba-3 provides
-	for both options as a domain member server. As a PDC, Samba-3 is not able to provide
-	an exact alternative to the functionality that is available with Active Directory.
-	Samba-3 can provide a scalable LDAP-based PDC/BDC solution.
+	より拡張性のあるドメインコントロール認証バックエンドオプションは、
+	Microsoft Active DirectoryかLDAPベースのバックエンドを使うことである。
+	Samba-3はドメインメンバサーバとして両方のオプションを提供する。PDC
+	として、Samba-3はActive Directoryで有効な機能の完全な代替を提供でき
+	ない。Samba-3は拡張性のあるLDAPベースの PDC/BDCソリューションを提供
+	できる。
 	</para>
 
 	<para>
-	The tdbsam authentication backend provides no facility to replicate
-	the contents of the database, except by external means (i.e., there is no self-contained protocol
-	in Samba-3 for Security Account Manager database [SAM] replication).
+	tdbsam認証バックエンドは、外部手段を除いて、データベースの内容を複製
+	する機能は提供していない(すなわち、独立したSamba-3のためのSAM複製
+	手順はない)。
 	</para>
 
 	<note><para>
-	If you need more than one domain controller, do not use a tdbsam authentication backend.
+	もしも1つ以上のドメインコントローラが必要ならば、tdbsam認証バックエンドは
+	使えない。
 	</para></note>
 
 		<sect3>
-		<title>Example: Engineering Office</title>
+		<title>例: エンジニアリングオフィス</title>
 
 		<para>
-		The engineering office network server we present here is designed to demonstrate use
-		of the new tdbsam password backend. The tdbsam
-		facility is new to Samba-3. It is designed to provide many user and machine account controls
-		that are possible with Microsoft Windows NT4. It is safe to use this in smaller networks.
+		ここで提供するエンジニアリングオフィスのネットワークサーバは、新しい
+		tdbsamパスワードバックエンドの使い方をデモするように設計されている。
+		tdbsam機能はSamba-3で取り入れられた。Microsoft Windows NT4で可能な
+		たくさんのユーザとマシンアカウント制御を提供するように設計された。
+		小さなネットワーク中で使うのには、これは安全である。
 		</para>
 
 		<procedure>
 			<step><para>
-			A working PDC configuration using the tdbsam
-			password backend can be found in <link linkend="fast-engoffice-global">Engineering Office smb.conf
-			(globals)</link> together with <link linkend="fast-engoffice-shares">Engineering Office smb.conf
-			(shares and services)</link>:
+			tdbsamパスワードバックエンドを使う動作するPDCの設定は、
+			<link linkend="fast-engoffice-global">エンジニアリングオフィスのsmb.conf
+			(globals)</link>と
+			<link linkend="fast-engoffice-shares">エンジニアリングオフィスのsmb.conf
+			(shares and services)</link>にある:
 			<indexterm><primary>pdbedit</primary></indexterm>
 			</para></step>
 
 <example id="fast-engoffice-global">
-<title>Engineering Office smb.conf (globals)</title>
+<title>エンジニアリングオフィスのsmb.conf (globals)</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MIDEARTH</smbconfoption>
@@ -958,7 +961,7 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 <smbconfoption name="add user to group script">/usr/sbin/groupmod -A %u %g</smbconfoption>
 <smbconfoption name="delete user from group script">/usr/sbin/groupmod -R %u %g</smbconfoption>
 <smbconfoption name="add machine script">/usr/sbin/useradd -s /bin/false -d /var/lib/nobody %u</smbconfoption>
-<smbconfcomment>Note: The following specifies the default logon script.</smbconfcomment>
+<smbconfcomment>注意: 以下は既定値のログオンスクリプトを指定する。</smbconfcomment>
 <smbconfcomment>Per user logon scripts can be specified in the user account using pdbedit </smbconfcomment>
 <smbconfoption name="logon script">scripts\logon.bat</smbconfoption>
 <smbconfcomment>This sets the default profile path. Set per user paths with pdbedit</smbconfcomment>
