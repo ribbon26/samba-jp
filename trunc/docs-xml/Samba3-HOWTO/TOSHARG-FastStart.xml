@@ -1084,39 +1084,42 @@ net groupmap add ntgroup="QA Team"   unixgroup=qateam    type=d
 		<title>大きな組織の場合</title>
 
 		<para>
-		In this section we finally get to review in brief a Samba-3 configuration that
-		uses a Lightweight Directory Access (LDAP)-based authentication backend. The
-		main reasons for this choice are to provide the ability to host primary
-		and Backup Domain Control (BDC), as well as to enable a higher degree of
-		scalability to meet the needs of a very distributed environment.
+		この節では、LDAPベースの認証バックエンドを使うSamba-3の設定の簡単な
+		紹介を行う。このことを行う主旨は、より高次のレベルのスケーラビリティ
+		に適合するのを可能にするための、とても分散した環境と同じように、
+		PDC/BDCホストを可能にすることを提供することである。
 		</para>
 
 			<sect4>
-			<title>The Primary Domain Controller</title>
+			<title>プライマリドメインコントローラ</title>
 
 			<para>
-			This is an example of a minimal configuration to run a Samba-3 PDC
-			using an LDAP authentication backend. It is assumed that the operating system
-			has been correctly configured.
+			これは、LDAP認証バックエンドを使うSamba-3 PDCを動かすための
+			最小限の設定例である。OSが正しく設定されていることを仮定して
+			いる。
 			</para>
 
 			<para>
-			The Idealx scripts (or equivalent) are needed to manage LDAP-based POSIX and/or
-			SambaSamAccounts. The Idealx scripts may be downloaded from the <ulink url="http://www.idealx.org">
-			Idealx</ulink> Web site. They may also be obtained from the Samba tarball. Linux
-			distributions tend to install the Idealx scripts in the 
-			<filename>/usr/share/doc/packages/sambaXXXXXX/examples/LDAP/smbldap-tools</filename> directory.
-			Idealx scripts version <constant>smbldap-tools-0.9.1</constant> are known to work well.
+			Idealx スクリプト(か同等のもの)が、LDAPベースのPOSIXとSambaSamAccount
+			を管理するのに必要である。Idealxスクリプトはサイト
+			<ulink url="http://www.idealx.org">Idealx</ulink>からダウンロードする
+			ことが出来る。また、Sambaのリリースtarファイルから得ることも出来る。
+			Linuxディストリビューションは、Idealxスクリプトを
+			<filename>/usr/share/doc/packages/sambaXXXXXX/examples/LDAP/smbldap-tools</filename>
+			ディレクトリにインストールする傾向がある。
+			Idealxスクリプトバージョン<constant>smbldap-tools-0.9.1</constant>は
+			よく動作することが知られている。
 			</para>
 
 			<procedure>
 				<step><para>
-				Obtain from the Samba sources <filename>~/examples/LDAP/samba.schema</filename>
-				and copy it to the <filename>/etc/openldap/schema/</filename> directory.
+				Sambaのソース<filename>~/examples/LDAP/samba.schema</filename>
+				から入手し、<filename>/etc/openldap/schema/</filename>
+				ディレクトリにそれをコピーする。
 				</para></step>
 
 				<step><para>
-				Set up the LDAP server. This example is suitable for OpenLDAP 2.1.x.
+				LDAPサーバを設定する。この例はOpenLDAP 2.1.xに対応している。
 				The <filename>/etc/openldap/slapd.conf</filename> file.
 				<indexterm><primary>/etc/openldap/slapd.conf</primary></indexterm>
 <title>Example slapd.conf File</title>
@@ -1155,7 +1158,7 @@ index   default               sub
 				</para></step>
 
 				<step><para>
-				Create the following file <filename>initdb.ldif</filename>:
+				<filename>initdb.ldif</filename>ファイルを作成する:
 				<indexterm><primary>initdb.ldif</primary></indexterm>
 <programlisting>
 # Organization for SambaXP Demo
@@ -1190,30 +1193,31 @@ userPassword: {SSHA}0jBHgQ1vp4EDX2rEMMfIudvRMJoGwjVb
 				</para></step>
 
 				<step><para>
-				Load the initial data above into the LDAP database:
+				LDAPデータベース中に初期データを投入する:
 <screen>
 &rootprompt;<userinput>slapadd -v -l initdb.ldif</userinput>
 </screen>
 				</para></step>
 
 				<step><para>
-				Start the LDAP server using the appropriate tool or method for
-				the operating system platform on which it is installed.
+				OSにインストールされている方法か適当なツールを使ってLDAP
+				サーバを起動する。
 				</para></step>
 
 				<step><para>
-				Install the Idealx script files in the <filename>/usr/local/sbin</filename> directory,
-				then configure the smbldap_conf.pm file to match your system configuration.
+				<filename>/usr/local/sbin</filename>ディレクトリ中にIdealx
+				スクリプトファイルをインストールし、システム設定に合わせて、
+				smbldap_conf.pmを設定する。
 				</para></step>
 
 				<step><para>
-				The &smb.conf; file that drives this backend can be found in example <link
-				linkend="fast-ldap">LDAP backend smb.conf for PDC</link>. Add additional stanzas
-				as required.
+				このバックエンドを制御する&smb.conf;ファイルの例は
+				<link linkend="fast-ldap">PDC用のLDAPバックエンドを使うsmb.conf</link>
+				にある。必要に応じて追加する。
 				</para></step>
 
 <example id="fast-ldap">
-<title>LDAP backend smb.conf for PDC</title>
+<title>PDC用のLDAPバックエンドを使うsmb.conf</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -1253,17 +1257,17 @@ userPassword: {SSHA}0jBHgQ1vp4EDX2rEMMfIudvRMJoGwjVb
 </example>
 
 				<step><para>
-				Add the LDAP password to the <filename>secrets.tdb</filename> file so Samba can update
-				the LDAP database:
+				<filename>secrets.tdb</filename>ファイルにLDAPパスワードを
+				追加すると、SambaはLDAPデータベースを更新できるようになる:
 <screen>
 &rootprompt;<userinput>smbpasswd -w mordonL8</userinput>
 </screen>
 				</para></step>
 
 				<step><para>
-				Add users and groups as required. Users and groups added using Samba tools
-				will automatically be added to both the LDAP backend and the operating
-				system as required.
+				必要に応じてユーザとグループを追加する。Sambaツールを使った
+				ユーザとグループの追加は必要に応じて、自動的にLDAPバックエ
+				ンドとOSに追加される。
 				</para></step>
 
 			</procedure>
@@ -1271,24 +1275,26 @@ userPassword: {SSHA}0jBHgQ1vp4EDX2rEMMfIudvRMJoGwjVb
 			</sect4>
 
 			<sect4>
-			<title>Backup Domain Controller</title>
+			<title>バックアップドメインコントローラ</title>
 
 			<para>
-			<link linkend="fast-bdc"/> shows the example configuration for the BDC. Note that
-			the &smb.conf; file does not specify the smbldap-tools scripts &smbmdash; they are
-			not needed on a BDC. Add additional stanzas for shares and printers as required.
+			<link linkend="fast-bdc"/> ではBDCの設定例を示している。&smb.conf;
+			ファイルがBDC上で必要でないsmbldap-toolsスクリプトを&smbmdash;
+			指定していないことに注意。必要に応じて追加の共有とプリンタを
+			追加する。
 			</para>
 
 			<procedure>
 				<step><para>
-				Decide if the BDC should have its own LDAP server or not. If the BDC is to be
-				the LDAP server, change the following &smb.conf; as indicated. The default
-				configuration in <link linkend="fast-bdc">Remote LDAP BDC smb.conf</link>
-				uses a central LDAP server.
+				BDCが固有のLDAPサーバを持つかどうかを決める。もしもBDCが
+				LDAPサーバであるならば、以下の&smb.conf;を示されたように
+				変更する。既定値の
+				<link linkend="fast-bdc">リモートのLDAPを使うBDCのsmb.conf</link>
+				中の設定は、中央のLDAPサーバを使う。
 				</para></step>
 
 <example id="fast-bdc">
-<title>Remote LDAP BDC smb.conf</title>
+<title>リモートのLDAPを使うBDCのsmb.conf</title>
 <smbconfblock>
 <smbconfcomment>Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
@@ -1320,7 +1326,8 @@ userPassword: {SSHA}0jBHgQ1vp4EDX2rEMMfIudvRMJoGwjVb
 </example>
 
 				<step><para>
-				Configure the NETLOGON and PROFILES directory as for the PDC in <link linkend="fast-bdc"/>.
+				<link linkend="fast-bdc"/>中にあるようにNETLOGONとPROFILES
+				ディレクトリを設定する。
 				</para></step>
 			</procedure>
 
