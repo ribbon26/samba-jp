@@ -962,7 +962,7 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 <smbconfoption name="delete user from group script">/usr/sbin/groupmod -R %u %g</smbconfoption>
 <smbconfoption name="add machine script">/usr/sbin/useradd -s /bin/false -d /var/lib/nobody %u</smbconfoption>
 <smbconfcomment>注意: 以下は既定値のログオンスクリプトを指定する。</smbconfcomment>
-<smbconfcomment>Per user logon scripts can be specified in the user account using pdbedit </smbconfcomment>
+<smbconfcomment>ユーザ単位のログオンスクリプトは、pdbeditを使って、ユーザアカウント中で指定できる。</smbconfcomment>
 <smbconfoption name="logon script">scripts\logon.bat</smbconfoption>
 <smbconfcomment>This sets the default profile path. Set per user paths with pdbedit</smbconfcomment>
 <smbconfoption name="logon path">\\%L\Profiles\%U</smbconfoption>
@@ -979,7 +979,7 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 </example>
 
 <example id="fast-engoffice-shares">
-<title>Engineering Office smb.conf (shares and services)</title>
+<title>エンジニアリングオフィスのOffice smb.conf (shares and services)</title>
 <smbconfblock>
 <smbconfsection name="[homes]"/>
 <smbconfoption name="comment">Home Directories</smbconfoption>
@@ -1024,7 +1024,7 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 </example>
 
 			<step><para>
-			Create UNIX group accounts as needed using a suitable operating system tool:
+			OSで提供されているツールを使って、必要に応じUNIXグループを作成する:
 <screen>
 &rootprompt;<userinput>groupadd ntadmins</userinput>
 &rootprompt;<userinput>groupadd designers</userinput>
@@ -1034,19 +1034,18 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 			</para></step>
 
 			<step><para>
-			Create user accounts on the system using the appropriate tool
-			provided with the operating system. Make sure all user home directories
-			are created also. Add users to groups as required for access control
-			on files, directories, printers, and as required for use in the Samba
-			environment.
+			OSで提供されている適当なツールを使ってシステム上にユーザアカウントを
+			作成する。同時にユーザ毎のホームディレクトリを作っておくこと。Samba
+			環境で使うときに要求されるグループのファイル、ディレクトリ、プリンタ
+			のアクセス制御に対し、ユーザを追加する。
 			</para></step>
 
 
 			<step><para>
 			<indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
 			<indexterm><primary>initGroups.sh</primary></indexterm>
-			Assign each of the UNIX groups to NT groups by executing this shell script
-			(You could name the script <filename>initGroups.sh</filename>):
+			このシェルスクリプトを動かしてNTグループにおのおののUNIXグループを割り当
+			てる(スクリプトの名前は<filename>initGroups.sh</filename>とする)。
 <screen>
 #!/bin/bash
 #### Keep this as a shell script for future re-use
@@ -1064,25 +1063,25 @@ net groupmap add ntgroup="QA Team"   unixgroup=qateam    type=d
 			</para></step>
 
 			<step><para>
-			Create the <filename>scripts</filename> directory for use in the 
-			<smbconfsection name="[NETLOGON]"/> share:
+			<smbconfsection name="[NETLOGON]"/> 共有中で使うための
+			<filename>scripts</filename>ディレクトリを作成する:
 <screen>
 &rootprompt;<userinput>mkdir -p /var/lib/samba/netlogon/scripts</userinput>
 </screen>
-			Place the logon scripts that will be used (batch or cmd scripts)
-			in this directory.
+                        使用するログオンスクリプト(バッチまたはcmdスクリプト)をこの
+                        ディレクトリに配置する。
 			</para></step>
 		</procedure>
 
 		<para>
-		The above configuration provides a functional PDC
-		system to which must be added file shares and printers as required.
+		上記の設定で、ファイル共有とプリンタ共有を必要に応じて追加しなければ
+		ならない、基本的なPDCシステムが提供される。
 		</para>
 
 		</sect3>
 
 		<sect3>
-		<title>A Big Organization</title>
+		<title>大きな組織の場合</title>
 
 		<para>
 		In this section we finally get to review in brief a Samba-3 configuration that
