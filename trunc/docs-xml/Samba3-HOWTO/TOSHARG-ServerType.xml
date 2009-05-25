@@ -140,77 +140,82 @@ Microsoftネットワークの管理者はしばしば3つの異なったタイ�
 ドメイン制御を扱っている節(<link linkend="samba-pdc">ドメイン制御</link>), 
 バックアップのドメイン制御(<link linkend="samba-bdc">バックアップドメイン制御</link>),と 
 ドメインメンバシップ(<link linkend="domain-member">ドメインメンバシップ</link>)は
-3つのサーバの役割のためのSambaの設定に言及する適切な情報を提供する。
- provide
-pertinent information regarding Samba configuration for each of these server roles.
-You are strongly encouraged to become intimately familiar with these chapters because
-they lay the foundation for deployment of Samba domain security.
+3つのサーバの役割のためのSambaの設定に言及する適切な情報を提供する。Sambaドメイン
+セキュリティの実装のための基礎を作るために、それらの章のそれぞれについて、精通
+しておくことを強く推奨する。
 </para>
 
 <para>
-<indexterm><primary>standalone</primary></indexterm>
-A Standalone server is autonomous in respect of the source of its account backend.
-Refer to <link linkend="StandAloneServer">Standalone Servers</link> to gain a wider appreciation
-of what is meant by a server being configured as a <emphasis>standalone</emphasis> server.
+<indexterm><primary>スタンドアロン</primary></indexterm>
+スタンドアロンサーバはアカウント管理が独立している。<emphasis>スタンドアロン</emphasis>
+サーバとして設定することがサーバにとって何を意味するかについてのより広い評価を
+得るために、<link linkend="StandAloneServer">スタンドアロンサーバ</link>を参照のこと。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Samba Security Modes</title>
+<title>Sambaセキュリティモード</title>
 
 
 <para>
-<indexterm><primary>Security Mode</primary></indexterm>
-<indexterm><primary>security</primary></indexterm>
-In this section, the function and purpose of Samba's security modes are described. An accurate understanding of
-how Samba implements each security mode as well as how to configure MS Windows clients for each mode will
-significantly reduce user complaints and administrator heartache.
+<indexterm><primary>セキュリティモード</primary></indexterm>
+<indexterm><primary>セキュリティ</primary></indexterm>
+この節では、Sambaのセキュリティモードの機能と目的について説明する。おのおののモードの
+ためにMicrosoft Windows クライアントを設定する方法と同様におのおののセキュリティモード
+についてどのようにSambaが実装しているかを正確に理解することは、ユーザの不満と管理者の
+心労をとても減らすだろう。
 </para>
 
 <para>
 <indexterm><primary>Server Message Block</primary><see>SMB</see></indexterm>
 <indexterm><primary>Common Internet Filesystem</primary><see>CIFS</see></indexterm>
-Microsoft Windows networking uses a protocol that was originally called the Server Message Block (SMB)
-protocol. Since some time around 1996 the protocol has been better known as the Common Internet Filesystem
-(CIFS) protocol.
+Microsoft Windows ネットワークはもともとServer Message Block(SMB)プロトコルと
+呼ばれていたプロトコルを使っている。1996年あたりから、プロトコルは
+Common Internet Filesystem(CIFS)プロトコルとしてより知られるようになった。
 </para>
 
 <para>
-<indexterm><primary>security levels</primary></indexterm>
-<indexterm><primary>security modes</primary></indexterm>
-<indexterm><primary>user-level</primary></indexterm>
-<indexterm><primary>share-level</primary></indexterm>
-In the SMB/CIFS networking world, there are only two types of security: <emphasis>user-level</emphasis> and
-<emphasis>share level</emphasis>. We refer to these collectively as <emphasis>security levels</emphasis>.  In
-implementing these two security levels, Samba provides flexibilities that are not available with MS Windows
-NT4/200x servers. In fact, Samba implements <emphasis>share-level</emphasis> security only one way, but has
-four ways of implementing <emphasis>user-level</emphasis> security. Collectively, we call the Samba
-implementations of the security levels <emphasis>security modes</emphasis>. They are known as
-<emphasis>share</emphasis>, <emphasis>user</emphasis>, <emphasis>domain</emphasis>, <emphasis>ADS</emphasis>,
-and <emphasis>server</emphasis> modes.  They are documented in this chapter.
+<indexterm><primary>セキュリティレベル</primary></indexterm>
+<indexterm><primary>セキュリティモード</primary></indexterm>
+<indexterm><primary>ユーザレベル</primary></indexterm>
+<indexterm><primary>共有レベル</primary></indexterm>
+SMB/CIFSネットワークにおいては、<emphasis>ユーザレベル</emphasis>と
+<emphasis>共有レベル</emphasis>という2つのセキュリティのみがある。それらをまとめて
+<emphasis>セキュリティレベル</emphasis>として参照する。それら2つのセキュリティレベル
+の実装において、SambaはMicrosoft Windows NT4/200xサーバでは出来ない柔軟性を提供する。
+実際、Sambaは<emphasis>共有レベル</emphasis>のセキュリティを1つの方法で実装しているが、
+<emphasis>ユーザレベル</emphasis>のセキュリティについては4つの方法で実装している。
+それらをまとめて、Sambaでのセキュリティレベルの実装を
+<emphasis>セキュリティモード</emphasis>と呼ぶ。それらは、
+<emphasis>share</emphasis>, <emphasis>user</emphasis>, <emphasis>domain</emphasis>,
+<emphasis>ADS</emphasis>と<emphasis>server</emphasis>モードとして知られている。
+それらはこの章で解説されている。
 </para>
 
 <para>
-An SMB server informs the client, at the time of a session setup, the security level the server is running.
-There are two options: share-level and user-level. Which of these two the client receives affects the way the
-client then tries to authenticate itself. It does not directly affect (to any great extent) the way the Samba
-server does security. This may sound strange, but it fits in with the client/server approach of SMB.  In SMB
-everything is initiated and controlled by the client, and the server can only tell the client what is
-available and whether an action is allowed.
+セッションのセットアップ時にクライアントに対してSMBサーバは動作しているサーバの
+セキュリティレベルを伝える。それはシェアレベルとユーザレベルという2つのオプション
+である。2つのうちのどちらかをクライアントが受け取り、それは、クライアントがそれ
+自身を認証するときに試みる方法に影響する。それはSambaサーバをセキュリティ化する
+方法には直接(たいして)影響しない。これは奇妙に聞こえるが、それはSMBのクライアント/
+サーバアプローチに適合する。SMB中では、すべてはクライアントによって開始され、
+制御され、サーバはクライアントに対して、何が有効で、どのような動作が許可されるか
+のみを通知できる。
 </para>
 
 <para>
-The term <literal>client</literal> refers to all agents whether it is a Windows workstation, a Windows server,
-another Samba server, or any vanilla SMB or CIFS client application (e.g., <command>smbclient</command>) that
-make use of services provided by an SMB/CIFS server.
+<literal>client</literal>という語は、たとえばWindowsワークステーション、Windows
+サーバ、あるいはその他の平凡なSMBまたはCIFSクライアントアプリケーション(たとえば
+<command>smbclient</command>)のような、SMB/CIFSサーバによって提供されるサービスを
+使うものすべてのエージェントを参照する。
 </para>
 
 <sect2>
-<title>User Level Security</title>
+<title>ユーザレベルのセキュリティ</title>
 
 <para>
-<indexterm><primary>user-level</primary></indexterm>
+<indexterm><primary>ユーザレベル</primary></indexterm>
 We describe user-level security first because its simpler.  In user-level security, the client sends a session
 setup request directly following protocol negotiation.  This request provides a username and password. The
 server can either accept or reject that username/password combination. At this stage the server has no idea
