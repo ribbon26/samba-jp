@@ -288,39 +288,45 @@ Windowsネットワークユーザアカウント名は大文字小文字に依�
 <indexterm><primary>共有レベル</primary></indexterm>
 <indexterm><primary>mount</primary></indexterm>
 共有レベルのセキュリティ中では、クライアント自身の認証はおのおのの共有毎に
-分離している。
-In share-level security, the client authenticates itself separately for each share. It sends a password along
-with each tree connection request (share mount), but it does not explicitly send a username with this
-operation. The client expects a password to be associated with each share, independent of the user. This means
-that Samba has to work out what username the client probably wants to use,
-because the username is not explicitly sent to the SMB server. Some commercial SMB servers such as NT actually associate passwords directly with shares
-in share-level security, but Samba always uses the UNIX authentication scheme where it is a username/password
-pair that is authenticated, not a share/password pair.
+分離している。クライアントはおのおのの tree connection要求(共有マウント)
+と共にパスワードを送るが、この操作で明示的にユーザ名を送らない。クライアント
+は、おのおのの共有にパスワードが関連づけられ、ユーザから独立していることを
+期待する。これは、Sambaは、ユーザ名がSMBサーバに明示的に送られないために、
+クライアントが使いたいとしているユーザ名をSambaが考えなければならないこと
+を意味する。たとえばNTのような、いくつかの商用SMBサーバは共有レベルの
+セキュリティ中に直接共有とパスワードを関連づけるが、Sambaはいつでも、
+共有/パスワードペアではなく、認証に使ったユーザ名/パスワードペアを使う
+UNIX認証スキームを使う。
 </para>
 
 <para>
-To understand the MS Windows networking parallels, think in terms of MS Windows 9x/Me where you can create a
-shared folder that provides read-only or full access, with or without a password.
+Microsoftネットワーキングとの類似点を理解するために、パスワードあり/なし
+でリードオンリまたはフルアクセスできる共有フォルダを作成できる、Microsoft 
+Windows 9x/Meについて考えてみる。
 </para>
 
 <para>
-Many clients send a session setup request even if the server is in share-level security. They normally send a valid
-username but no password. Samba records this username in a list of possible usernames. When the client then
-issues a tree connection request, it also adds to this list the name of the share they try to connect to (useful for
-home directories) and any users listed in the <smbconfoption name="user"/> parameter in the &smb.conf; file.
-The password is then checked in turn against these possible usernames. If a match is found, then the client is
-authenticated as that user.
+多くのクライアントは、サーバが共有レベルのセキュリティであったとしても、
+session setup要求を送る。それらは通常有効なユーザ名を送るがパスワードは
+送らない。Sambaは有効なユーザ名リスト中にこのユーザ名を記憶する。クライアント
+がtree connection要求を次に発行するとき、接続しようとする共有名の名前
+(ホームディレクトリに有用)をこのリストに追加もし、&smb.conf;ファイル中の
+<smbconfoption name="user"/>パラメータ中にリストされているユーザもである。
+次にパスワードが、それらの可能なユーザ名に対して順番にチェックされる。
+もしも一致したものが見つかれば、クライアントはそのユーザとして認証される。
 </para>
 
 <para>
-<indexterm><primary>name service switch</primary><see>NSS</see></indexterm>
+<indexterm><primary>ネームサービススイッチ</primary><see>NSS</see></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>nsswitch.conf</primary></indexterm>
-Where the list of possible user names is not provided, Samba makes a UNIX system call to find the user
-account that has a password that matches the one provided from the standard account database. On a system that
-has no name service switch (NSS) facility, such lookups will be from the <filename>/etc/passwd</filename>
-database. On NSS enabled systems, the lookup will go to the libraries that have been specified in the
-<filename>nsswitch.conf</filename> file. The entries in that file in which the libraries are specified are:
+使用可能なユーザ名のリストが提供されていない場合、Sambaは、標準のアカウント
+データベースから、そのユーザに対して提供されるパスワードとユーザアカウントを
+UNIXのシステムコールを使って探し出すことを行う。システムがネームサービススイッチ
+(NSS)機能を持っていない場合、そのような検索は<filename>/etc/passwd</filename>
+データベースを対象として行う。NSSが有効なシステムの場合、検索は、
+<filename>nsswitch.conf</filename>ファイル中で指定されたライブラリを通じて
+行う。ライブラリを指定するそのファイル中のエントリは以下の通り:
 <screen>
 passwd: files nis ldap
 shadow: files nis ldap
@@ -329,16 +335,16 @@ group: files nis ldap
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
 <indexterm><primary>NIS</primary></indexterm>
-In the example shown here (not likely to be used in practice) the lookup will check
-<filename>/etc/passwd</filename> and <filename>/etc/group</filename>, if not found it will check NIS, then
-LDAP.
+以下の例(実際に使われるようなものではないが)では、検索は、
+<filename>/etc/passwd</filename>と <filename>/etc/group</filename>に対して
+行われ、見つからなければ NISでチェックし、次にLDAPでチェックする。
 </para>
 
 <sect3>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
-The &smb.conf; parameter that sets share-level security is:
+共有レベルのセキュリティを設定する&smb.conf; パラメータは以下の通り:
 </para>
 
 <para><smbconfblock>
@@ -349,15 +355,15 @@ The &smb.conf; parameter that sets share-level security is:
 </sect2>
 
 <sect2>
-<title>Domain Security Mode (User-Level Security)</title>
+<title>ドメインセキュリティモード(ユーザレベルのセキュリティ)</title>
 
 <para>
-<indexterm><primary>domain</primary><secondary>controllers</secondary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary></indexterm>
 <indexterm><primary>security</primary><secondary>controllers</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-<indexterm><primary>logon</primary></indexterm>
-<indexterm><primary>authentication</primary></indexterm>
+<indexterm><primary>ログオン</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
 Domain security provides a mechanism for storing all user and group accounts in a central, shared, account
 repository. The centralized account repository is shared between domain (security) controllers. Servers that
 act as domain controllers provide authentication and validation services to all machines that participate in
