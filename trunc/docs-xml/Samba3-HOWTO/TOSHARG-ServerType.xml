@@ -241,10 +241,11 @@ SMB/CIFSネットワークにおいては、<emphasis>ユーザレベル</emphas
 
 <para>
 <indexterm><primary>session setup</primary></indexterm>
-It is also possible for a client to send multiple <emphasis>session setup</emphasis>
-requests. When the server responds, it gives the client a <emphasis>uid</emphasis> to use
-as an authentication tag for that username/password. The client can maintain multiple
-authentication contexts in this way (WinDD is an example of an application that does this).
+複数の<emphasis>session setup</emphasis>要求をクライアントが送信することも
+可能である。サーバが返信するとき、そのユーザ名/パスワードペアのための、
+認証タグとして使うために、<emphasis>uid</emphasis>を送る。クライアントは
+この方法で複数の認証コンテキストを操作することが可能である(このことを行う
+アプリケーションの例としてはWinDDがある)。
 </para>
 
 <para>
@@ -253,18 +254,20 @@ authentication contexts in this way (WinDD is an example of an application that 
 <indexterm><primary>case-insensitive</primary></indexterm>
 <indexterm><primary>upper-case</primary></indexterm>
 <indexterm><primary>lower-case</primary></indexterm>
-Windows networking user account names are case-insensitive, meaning that upper-case and lower-case characters
-in the account name are considered equivalent. They are said to be case-preserving, but not case significant.
-Windows and LanManager systems previous to Windows NT version 3.10 have case-insensitive passwords that were
-not necessarily case-preserving. All Windows NT family systems treat passwords as case-preserving and
-case-sensitive.
+Windowsネットワークユーザアカウント名は大文字小文字に依存しない。すなわち、
+アカウント名中の大文字小文字はすべて同一視されると言うことである。また、
+大文字小文字の状態は保存されるが、大文字小文字の状態は関係ないということ
+である。Windows NT 3.10より前のWindowsとLanManagerシステムは、大文字小文字
+の状態を保存する必要がない、大文字小文字を無視するパスワードを使っていた。
+すべてのWindows NT ファミリシステムはパスワードについて、大文字小文字を保
+存し、それを意識するように取り扱う。
 </para>
 
 <sect3>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
-The &smb.conf; parameter that sets user-level security is:
+ユーザレベルのセキュリティを実現する &smb.conf; の例は以下の通り:
 </para>
 
 <para><smbconfblock>
@@ -272,18 +275,20 @@ The &smb.conf; parameter that sets user-level security is:
 </smbconfblock></para>
 
 <para>
-This is the default setting since Samba-2.2.x.
+これはSamba-2.2.xの既定値である。
 </para>
 
 </sect3>
 
 </sect2>
 <sect2>
-<title>Share-Level Security</title>
+<title>共有レベルのセキュリティ</title>
 
 <para>
-<indexterm><primary>share-level</primary></indexterm>
+<indexterm><primary>共有レベル</primary></indexterm>
 <indexterm><primary>mount</primary></indexterm>
+共有レベルのセキュリティ中では、クライアント自身の認証はおのおのの共有毎に
+分離している。
 In share-level security, the client authenticates itself separately for each share. It sends a password along
 with each tree connection request (share mount), but it does not explicitly send a username with this
 operation. The client expects a password to be associated with each share, independent of the user. This means
