@@ -364,66 +364,69 @@ group: files nis ldap
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>ログオン</primary></indexterm>
 <indexterm><primary>認証</primary></indexterm>
-Domain security provides a mechanism for storing all user and group accounts in a central, shared, account
-repository. The centralized account repository is shared between domain (security) controllers. Servers that
-act as domain controllers provide authentication and validation services to all machines that participate in
-the security context for the domain. A primary domain controller (PDC) is a server that is responsible for
-maintaining the integrity of the security account database. Backup domain controllers (BDCs) provide only domain
-logon and authentication services. Usually, BDCs will answer network logon requests more responsively than
-will a PDC.
+ドメインセキュリティは、すべてのユーザとグループアカウントを、中央の共有されている
+アカウントリポジトリに保存するメカニズムを提供する。中央のアカウントリポジトリは
+ドメイン(セキュリティ)コントローラ間で共有される。ドメインコントローラとして振る舞う
+サーバはドメインに対するセキュリティコンテキストに参加するすべてのマシンに、認証と
+確認サービスを提供する。プライマリドメインコントローラ(PDC)はセキュリティアカウント
+データベースの完全性を管理するための責任を負うサーバである。バックアップドメイン
+コントローラ(BDC)はドメインログオンと認証サービスのみを提供する。通常、BDCはPDCが
+行うよりもより反応性がよいネットワークログオン要求を提供する。
 </para>
 
 <para>
-<indexterm><primary>domain member</primary></indexterm>
-<indexterm><primary>trust account</primary></indexterm>
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>信頼されたアカウント</primary></indexterm>
 <indexterm><primary>trust</primary><secondary>account</secondary></indexterm>
-<indexterm><primary>domain</primary><secondary>security</secondary></indexterm>
-<indexterm><primary>domain</primary><secondary>controller</secondary></indexterm>
-When Samba is operating in <smbconfoption name="security">domain</smbconfoption> mode, the Samba server has a
-domain security trust account (a machine account) and causes all authentication requests to be passed through
-to the domain controllers.  In other words, this configuration makes the Samba server a domain member server,
-even when it is in fact acting as a domain controller. All machines that participate in domain security must
-have a machine account in the security database.
+<indexterm><primary>ドメイン</primary><secondary>セキュリティ</secondary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary></indexterm>
+Sambaが<smbconfoption name="security">domain</smbconfoption>モードで動作中の時、
+Sambaサーバはドメインセキュリティ信頼アカウント(マシンアカウント)を持ち、ドメイン
+コントローラに対してすべての認証要求をパススルーする。別の言い方をすると、この設定は、
+実際、それがドメインコントローラとして振る舞う場合にも、Sambaサーバをドメインメンバ
+サーバにする。ドメインセキュリティに参加するすべてのマシンはセキュリティデータベース
+中にマシンアカウントを持たなければならない。
 </para>
 
 <para>
-<indexterm><primary>account</primary><secondary>database</secondary></indexterm>
-<indexterm><primary>machine</primary><secondary>account</secondary></indexterm>
-<indexterm><primary>NetBIOS</primary><secondary>name</secondary></indexterm>
+<indexterm><primary>アカウント</primary><secondary>データベース</secondary></indexterm>
+<indexterm><primary>マシン</primary><secondary>アカウント</secondary></indexterm>
+<indexterm><primary>NetBIOS</primary><secondary>名</secondary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-Within the domain security environment, the underlying security architecture uses user-level security. Even
-machines that are domain members must authenticate on startup. The machine account consists of an account
-entry in the accounts database, the name of which is the NetBIOS name of the machine and of which the password
-is randomly generated and known to both the domain controllers and the member machine. If the machine account
-cannot be validated during startup, users will not be able to log on to the domain using this machine because
-it cannot be trusted. The machine account is referred to as a machine trust account.
+ドメインセキュリティ環境ないで、セキュリティアーキテクチャの基盤は、ユーザレベルの
+セキュリティを使う。ドメインメンバであるマシンは開始時に認証を行わなければならない。
+アカウントデータベース内にあるアカウントエントリの一部であるマシンアカウントは、
+その名前がマシンのNetBIOS名であり、パスワードはランダムに生成され、ドメインコントローラ
+と他のマシンの両方に知られている。もしもマシンアカウントがセットアップ中に認証
+されなければ、ユーザは、それが認証できないため、そのマシンを使ってドメインにログオン
+できない。マシンアカウントはマシン信頼アカウントとして参照される。
 </para>
 
 <para>
-There are three possible domain member configurations:
+ドメインメンバの設定には以下の3つのパターンがある:
 </para>
 
 <orderedlist>
-	<listitem><para>Primary domain controller (PDC) - of which there is one per domain.</para></listitem>
-	<listitem><para>Backup domain controller (BDC) - of which there can be any number per domain.</para></listitem>
-	<listitem><para>Domain member server (DMS) - of which there can be any number per domain.</para></listitem>
+	<listitem><para>プライマリドメインコントローラ(PDC) - ドメインに1つのみ。</para></listitem>
+	<listitem><para>バックアップドメインコントローラ(BDC) - ドメインに複数配置可能。</para></listitem>
+	<listitem><para>ドメインメンバサーバ(DMS) - ドメインに複数配置可能。</para></listitem>
 </orderedlist>
 
 <para>
 <indexterm><primary>DMS</primary></indexterm>
-We will discuss each of these in separate chapters. For now, we are most interested in basic DMS
-configuration.
+それぞれについて別の節で解説する。まずはじめに、もっとも関心のある基本的なDMSの設定について
+説明する。
 </para>
 
 <sect3>
-<title>Example Configuration</title>
+<title>設定例</title>
 <para><emphasis>
-Samba as a Domain Member Server
+Sambaをドメインメンバサーバとする
 </emphasis></para>
 
 
 <para>
-<indexterm><primary>server type</primary><secondary>domain member</secondary></indexterm>
+<indexterm><primary>サーバタイプ</primary><secondary>ドメインメンバ</secondary></indexterm>
 This method involves addition of the following parameters in the &smb.conf; file:
 <smbconfblock>
 <smbconfoption name="security">domain</smbconfoption>
