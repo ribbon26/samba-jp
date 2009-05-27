@@ -427,7 +427,7 @@ Sambaをドメインメンバサーバとする
 
 <para>
 <indexterm><primary>サーバタイプ</primary><secondary>ドメインメンバ</secondary></indexterm>
-This method involves addition of the following parameters in the &smb.conf; file:
+この方法は&smb.conf;ファイル中に以下のパラメータを必要とする:
 <smbconfblock>
 <smbconfoption name="security">domain</smbconfoption>
 <smbconfoption name="workgroup">&example.workgroup;</smbconfoption>
@@ -435,19 +435,19 @@ This method involves addition of the following parameters in the &smb.conf; file
 </para>
 
 <para>
-In order for this method to work, the Samba server needs to join the MS Windows NT
-security domain. This is done as follows:
+この方法を動作させるために、SambaサーバはMicrosoft Windows NTセキュリティドメイン
+にジョインする必要がある。これは以下の方法で行う:
 <indexterm><primary>net</primary><secondary>rpc</secondary></indexterm>
-<indexterm><primary>Domain Member</primary><secondary>joining</secondary></indexterm>
+<indexterm><primary>ドメインメンバの</primary><secondary>ジョイン</secondary></indexterm>
 </para>
 
 
 <procedure>
-        <step><para>On the MS Windows NT domain controller, using
-        the Server Manager, add a machine account for the Samba server.
+        <step><para>Microsoft Windows NT ドメインコントローラ上で、サーバマネージャを
+	つかい、Sambaサーバのマシンアカウントを追加する。
         </para></step>
 
-        <step><para>On the UNIX/Linux system execute:</para>
+        <step><para>UNIX/Linuxシステム上で以下を実行する:</para>
 	
 			<para><screen>&rootprompt;<userinput>net rpc join -U administrator%password</userinput></screen></para>
 		</step>
@@ -455,42 +455,46 @@ security domain. This is done as follows:
 
 <note><para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-Samba-2.2.4 and later Samba 2.2.x series releases can autojoin a Windows NT4-style domain just by executing:
+Samba-2.2.4とそれ以降の Samba 2.2.x 系列では、以下を実行することで、Windows NT4スタイル
+ドメインへの自動ジョインが可能である:
 <screen>
 &rootprompt;<userinput>smbpasswd -j <replaceable>DOMAIN_NAME</replaceable> -r <replaceable>PDC_NAME</replaceable> \
 	 -U Administrator%<replaceable>password</replaceable></userinput>
 </screen>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>join</tertiary></indexterm>
-Samba-3 can do the same by executing:
+Samba-3では同じことを以下の方法で行う:
 <screen>
 &rootprompt;<userinput>net rpc join -U Administrator%<replaceable>password</replaceable></userinput>
 </screen>
-It is not necessary with Samba-3 to specify the <replaceable>DOMAIN_NAME</replaceable> or the
-<replaceable>PDC_NAME</replaceable>, as it figures this out from the &smb.conf; file settings.
+Samba-3では<replaceable>DOMAIN_NAME</replaceable>か<replaceable>PDC_NAME</replaceable>
+を指定する必要はないので、&smb.conf;ファイルの設定からこれをわかるようにする(訳注:訳があやしい)。
 </para></note>
 
 <para>
 <indexterm><primary>invalid shell</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>/bin/false</primary></indexterm>
-Use of this mode of authentication requires there to be a standard UNIX account for each user in order to
-assign a UID once the account has been authenticated by the Windows domain controller. This account can be
-blocked to prevent logons by clients other than MS Windows through means such as setting an invalid shell in
-the <filename>/etc/passwd</filename> entry. The best way to allocate an invalid shell to a user account is to
-set the shell to the file <filename>/bin/false</filename>.
+Windowsドメインコントローラによってアカウントが認証される時に、UIDを割り当てるため、
+このモードを使う認証は、おのおののユーザに対する標準UNIXアカウントがあることを要求
+する。このアカウントは、<filename>/etc/passwd</filename>エントリ中で不正なシェルと
+して設定するような方法で、Microsoft Windows以外のクライアントによってログオンする
+ことをブロックすることができる。ユーザアカウントに対して不正なシェルを割り当てる
+最も良い方法は、シェルに<filename>/bin/false</filename>を割り当てることである。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Domain controllers can be located anywhere that is convenient. The best advice is to have a BDC on every
-physical network segment, and if the PDC is on a remote network segment the use of WINS (see <link
-linkend="NetworkBrowsing">Network Browsing</link> for more information) is almost essential.
+ドメインコントローラは、利便性のために任意の場所に配置できる。BDCを配置する推奨は、
+物理ネットワーク毎に配置し、もしもPDCがリモートネットワークセグメントにあるならば、
+WINS(詳細は<link linkend="NetworkBrowsing">ネットワークのブラウジング</link>を参照)を
+使うのが基本である。
 </para>
 
 <para>
-An alternative to assigning UIDs to Windows users on a Samba member server is presented in <link
-linkend="winbind">Winbind</link>, <link linkend="winbind">Winbind: Use of Domain Accounts</link>.
+Sambaサーバ上でWindowsユーザにUIDを割り当てる別の方法は、
+<link linkend="winbind">Winbind</link>と
+<link linkend="winbind">Winbind: Use of Domain Accounts</link>にある。
 </para>
 
 <para>
