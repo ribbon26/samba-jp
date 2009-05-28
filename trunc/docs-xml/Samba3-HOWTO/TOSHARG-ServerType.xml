@@ -652,16 +652,17 @@ Microsoft Windows NTを認証サーバとして使う
 <para>
 <indexterm><primary>bogus</primary></indexterm>
 <indexterm><primary>lockout</primary></indexterm>
-The downside of this mode of configuration is that for security reasons Samba
-will send the password server a bogus username and a bogus password, and if the remote
-server fails to reject the bogus username and password pair, then an alternative mode of
-identification or validation is used. Where a site uses password lockout, after a
-certain number of failed authentication attempts, this will result in user lockouts.
+このモードの設定の悪い点は、セキュリティの観点でSambaが偽のユーザ名と偽の
+パスワードをパスワードサーバに送る可能性があることと、もしもリモートの
+サーバが偽のユーザ名と偽のパスワードの認証拒否に失敗すると代替の認証か
+承認作業が使われてしまうと言うことである。数回の認証の繰り返し後にサイト
+がパスワードロックを使う場合、これはユーザをロックアウトしてしまう。
 </para>
 
 <para>
-Use of this mode of authentication requires a standard UNIX account for the user.
-This account can be blocked to prevent logons by non-SMB/CIFS clients.
+認証要求でのこのモードの使用はユーザが標準UNIXアカウントがあることを必要と
+する。このアカウントは非SMB/CIFSクライアントからのログオンを防止するために
+ブロックすることが出来る。
 </para>
 
 </sect3>
@@ -670,49 +671,50 @@ This account can be blocked to prevent logons by non-SMB/CIFS clients.
 </sect1>
 
 <sect1>
-<title>Password Checking</title>
+<title>パスワードの検査</title>
 
 <para>
-MS Windows clients may use encrypted passwords as part of a challenge/response
-authentication model (a.k.a. NTLMv1 and NTLMv2) or alone, or clear-text strings for simple
-password-based authentication. It should be realized that with the SMB protocol,
-the password is passed over the network either in plaintext or encrypted, but
-not both in the same authentication request.
+Microsoft Windows クライアントはチャレンジ/レスポンス認証モデル(NTLMv1と
+NTLMv2として知られる)の一部としての暗号化パスワードか、単独か、あるいは
+単純なパスワードベースの認証のための平文パスワードを使うことが出来る
+(訳注:aloneがよく分からない)。これはSMBプロトコルで実現され、パスワード
+は平文または暗号化されてネットワーク経由で渡されるが、同じ認証要求では
+両方は使われない。
 </para>
 
 <para>
-<indexterm><primary>encrypted passwords</primary></indexterm>
-<indexterm><primary>encrypted</primary></indexterm>
-When encrypted passwords are used, a password that has been entered by the user
-is encrypted in two ways:
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+<indexterm><primary>暗号化</primary></indexterm>
+暗号化パスワードが使われるとき、以下の2つの方法でユーザが入力した
+パスワードは暗号化される:
 </para>
 
 <itemizedlist>
-        <listitem><para>An MD4 hash of the unicode of the password
-        string. This is known as the NT hash.
+        <listitem><para>unicodeのパスワード文字列をMD4でハッシュ。
+	これはNTハッシュとして知られているものである。
         </para></listitem>
 
-        <listitem><para>The password is converted to uppercase,
-        and then padded or truncated to 14 bytes. This string is
-        then appended with 5 bytes of NULL characters and split to
-        form two 56-bit DES keys to encrypt a "magic" 8-byte value.
-        The resulting 16 bytes form the LanMan hash.
+        <listitem><para>パスワードは大文字化され、14バイトに短縮
+	される。この文字列に5バイトのNULL文字が追加され、"magic"
+	な8バイト値に暗号化するために、2つの56ビットDESキー形式
+	に分割される。結果はLanManハッシュという16ビットの値である。
         </para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>plain-text</primary><secondary>passwords</secondary></indexterm>
-MS Windows 95 pre-service pack 1 and MS Windows NT versions 3.x and version 4.0 pre-service pack 3 will use
-either mode of password authentication. All versions of MS Windows that follow these versions no longer
-support plain-text passwords by default.
+<indexterm><primary>平文</primary><secondary>パスワード</secondary></indexterm>
+Microsoft Windows 95 サービスパック1より前とWindows NT バージョン3.xとバージョン
+4.0のサービスパック3より前では、パスワード認証のどちらかのモードを使う。すべての
+それより後のMicrosoft Windowsバージョンはもはや既定値で平文パスワードをサポート
+しない。
 </para>
 
 <para>
-<indexterm><primary>cached</primary><secondary>password</secondary></indexterm>
-MS Windows clients have a habit of dropping network mappings that have been idle
-for 10 minutes or longer. When the user attempts to use the mapped drive
-connection that has been dropped, the client re-establishes the connection using
-a cached copy of the password.
+<indexterm><primary>キャッシュされた</primary><secondary>パスワード</secondary></indexterm>
+Microsoft Windows クライアントは10分またはそれより長くアイドルな時にネットワーク
+マッピングを切断するという習性がある。切断した、マップされたドライブ接続を
+使うためにユーザが試みるとき、クライアントはキャッシュされたパスワードの
+コピーを使って再接続する。
 </para>
 
 <para>
