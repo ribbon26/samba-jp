@@ -718,18 +718,18 @@ Microsoft Windows クライアントは10分またはそれより長くアイド
 </para>
 
 <para>
-When Microsoft changed the default password mode, support was dropped for caching
-of the plaintext password. This means that when the registry parameter is changed
-to re-enable use of plaintext passwords, it appears to work, but when a dropped
-service connection mapping attempts to revalidate, this will fail if the remote
-authentication server does not support encrypted passwords. It is definitely not
-a good idea to re-enable plaintext password support in such clients.
+Microsoftが既定値のパスワードモードを変更したとき、平文パスワードのキャッシュ
+サポートをやめた。これは、平文パスワードを使うためにレジストリパラメータを修正
+したときに、それは動くようになるが、もしもリモートの認証サーバが暗号化パスワード
+をサポートしないときに、切断されたサービスのマッピングを試みるときに失敗する
+ことを意味する。そのようなクライアントで平文パスワードを再度有効にすることは
+良い考えではないと確かに言える。
 </para>
 
 <para>
-The following parameters can be used to work around the issue of Windows 9x/Me clients
-uppercasing usernames and passwords before transmitting them to the SMB server
-when using clear-text authentication:
+以下のパラメータは、平文テキストでの認証を使うときに、Windows 9x/Meクライアントが
+大文字化したユーザ名とパスワードをSMBサーバに送る前に問題になる時に使うことが
+できるものである:
 </para>
 
 
@@ -740,21 +740,23 @@ when using clear-text authentication:
 </smbconfblock>
 
 <para>
-By default Samba will convert to lowercase the username before attempting to lookup the user
-in the database of local system accounts. Because UNIX usernames conventionally
-only contain lowercase characters, the <smbconfoption name="username-level"/> parameter
-is rarely needed.
+既定値では、Sambaはローカルのシステムアカウントデータベース中でユーザ名を検索する前に
+ユーザ名を小文字に変更する。これは、UNIXユーザ名が慣習的に小文字のみで構成されている
+ことによるためであり、<smbconfoption name="username-level"/>パラメータは滅多に必要と
+さない。
 </para>
 
 <para>
-<indexterm><primary>clear-text</primary></indexterm>
-However, passwords on UNIX systems often make use of mixed-case characters.  This means that in order for a
-user on a Windows 9x/Me client to connect to a Samba server using clear-text authentication, the
-<smbconfoption name="password level"/> must be set to the maximum number of uppercase letters that
-<emphasis>could</emphasis> appear in a password. Note that if the Server OS uses the traditional DES version
-of crypt(), a <smbconfoption name="password level"/> of 8 will result in case-insensitive passwords as seen
-from Windows users. This will also result in longer login times because Samba has to compute the permutations
-of the password string and try them one by one until a match is located (or all combinations fail).
+<indexterm><primary>平文</primary></indexterm>
+しかしながら、UNIXシステム上のパスワードはしばしば大文字小文字を混ぜた文字で構成され
+ている。これは、平文認証を使ってSambaサーバに接続しようとするWindows 9x/Meクライアント
+上でのユーザのために、<smbconfoption name="password level"/>が、パスワードに現れること
+が<emphasis>出来る</emphasis>大文字の最大数を設定しなければならないことを意味する。
+もしもサーバのOSが伝統的なDESバージョンを使うcrypt()を使うならば、
+<smbconfoption name="password level"/>を8に設定することは、結果としてWindowsユーザ
+にとって、大文字小文字を無視したパスワードとして見える。これはまた、一致するまで
+(あるいはすべての組み合わせが失敗するまで)1つ1つ、Sambaがパスワード文字列の組み合わせ
+を試みるために、より長いログイン時間がかかるという結果となる。
 </para>
 
 <para>
