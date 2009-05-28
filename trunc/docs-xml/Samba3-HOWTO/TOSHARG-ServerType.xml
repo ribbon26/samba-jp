@@ -575,58 +575,65 @@ Microsoft WindowsのActive Directoryサービス(ADS)を使うサイトは、以
 <itemizedlist>
 	<listitem><para>Microsoft Windows NT4/200xパスワードサーバ上でアカウントロックアウトの可能性。</para></listitem>
 	<listitem><para>Lack of assurance that the password server is the one specified.</para></listitem>
-	<listitem><para>Does not work with Winbind, which is particularly needed when storing profiles remotely.</para></listitem>
-	<listitem><para>This mode may open connections to the password server and keep them open for extended periods.</para></listitem>
-	<listitem><para>Security on the Samba server breaks badly when the remote password server suddenly shuts down.</para></listitem>
-	<listitem><para>With this mode there is NO security account in the domain that the password server belongs to for the Samba server.</para></listitem>
+	<listitem><para>リモートでプロファイルを格納するときに特に必要な、Winbindと一緒に動かない。</para></listitem>
+	<listitem><para>このモードはパスワードサーバに対して接続をオープンにでき、また長期間それとオープンしたままにできる</para></listitem>
+	<listitem><para>突然リモートのパスワードサーバが停止したときに、不正にSambaサーバのセキュリティを壊す。</para></listitem>
+	<listitem><para>このモードでは、Sambaサーバのために属するドメイン中のパスワードサーバにセキュリティアカウントがない(訳注:訳が微妙)。</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>session setup</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
-In server security mode the Samba server reports to the client that it is in user-level security. The client
-then does a session setup as described earlier.  The Samba server takes the username/password that the client
-sends and attempts to log into the <smbconfoption name="password server"/> by sending exactly the same
-username/password that it got from the client. If that server is in user-level security and accepts the
-password, then Samba accepts the client's connection. This parameter allows the Samba server to use another
-SMB server as the <smbconfoption name="password server"/>.
+サーバセキュリティモード中で、Sambaサーバはクライアントに、ユーザレベルセキュリティ
+であることを報告する。クライアントは次に以前に説明したようにsession setupを行う。
+Sambaサーバはユーザ名/パスワードペアをクライアントから得、クライアントから得た
+ユーザ名/パスワードペアと正確に同じものを送って
+<smbconfoption name="password server"/>にログインしようとする。もしもサーバが
+ユーザレベルのセキュリティで動作していて、パスワードを受け入れるならば、Samba
+はクライアントからの接続を許可する。このパラメータは
+<smbconfoption name="password server"/>としてSambaサーバを、別のSMBサーバを使う
+ことができるようになる。
 </para>
 
 <para>
-<indexterm><primary>security level</primary></indexterm>
-<indexterm><primary>encryption</primary></indexterm>
-You should also note that at the start of all this, when the server tells the client
-what security level it is in, it also tells the client if it supports encryption. If it
-does, it supplies the client with a random cryptkey. The client will then send all
-passwords in encrypted form. Samba supports this type of encryption by default.
+<indexterm><primary>セキュリティレベル</primary></indexterm>
+<indexterm><primary>暗号化</primary></indexterm>
+どのセキュリティレベルであるかとクライアントに告げるとき、これらすべての開始時に
+もしも暗号化をサポートしているのであrばそのこともクライアントに告げる。もしも
+そうであれば、クライアントに対して乱数を使った暗号化キーを送信する。クライアント
+は暗号化形式ですべてのパスワードを送る。Sambaは既定値でこのタイプの暗号化を
+サポートする。
 </para>
 
 <para>
-The parameter <smbconfoption name="security">server</smbconfoption> means that Samba reports to clients that
-it is running in <emphasis>user mode</emphasis> but actually passes off all authentication requests to another
-user mode server. This requires an additional parameter <smbconfoption name="password server"/> that points to
-the real authentication server.  The real authentication server can be another Samba server, or it can be a
-Windows NT server, the latter being natively capable of encrypted password support.
+パラメータ<smbconfoption name="security">server</smbconfoption>は
+<emphasis>user mode</emphasis>で動いていることをSambaがクライアントに報告する
+ことを意味するが、実際には別のユーザモードサーバに対してすべての認証要求を渡す。
+これは、真の認証サーバを差す追加の<smbconfoption name="password server"/>
+パラメータを必要とする。真の認証サーバは別のSambaサーバでも、Windows NT
+サーバでもよく、後者は標準で暗号化パスワードをサポートしている。
 </para>
 
 <note><para>
-<indexterm><primary>password server</primary></indexterm>
-<indexterm><primary>workgroup</primary></indexterm>
-When Samba is running in <emphasis>server security mode</emphasis>, it is essential that the parameter
-<emphasis>password server</emphasis> is set to the precise NetBIOS machine name of the target authentication
-server. Samba cannot determine this from NetBIOS name lookups because the choice of the target authentication
-server is arbitrary and cannot be determined from a domain name. In essence, a Samba server that is in
-<emphasis>server security mode</emphasis> is operating in what used to be known as workgroup mode.
+<indexterm><primary>パスワードサーバ</primary></indexterm>
+<indexterm><primary>ワークグループ</primary></indexterm>
+<emphasis>server security mode</emphasis>でSambaサーバが動作しているとき、
+パラメータ<emphasis>password server</emphasis>をターゲットの認証サーバの
+正確なNetBIOSマシン名に設定することは必要である。Sambaは、ターゲットの認証
+サーバの選択は任意であり、ドメイン名から決定できないという理由で、NetBIOS
+名前検索からこれを決定できない。本質的に、
+<emphasis>サーバセキュリティモード</emphasis>のSambaサーバはワークグループ
+モードとして知られているものとして動作している。
 </para></note>
 
 <sect3>
-<title>Example Configuration</title>
+<title>設定例</title>
 <para><emphasis>
-Using MS Windows NT as an Authentication Server
+Microsoft Windows NTを認証サーバとして使う
 </emphasis></para>
 
 <para>
-This method involves the additions of the following parameters in the &smb.conf; file:
+この方法は&smb.conf;ファイル中に以下のパラメータを追記することになる:
 </para>
 
 <para><smbconfblock>
@@ -637,9 +644,9 @@ This method involves the additions of the following parameters in the &smb.conf;
 
 
 <para>
-There are two ways of identifying whether or not a username and password pair is valid.
-One uses the reply information provided as part of the authentication messaging
-process, the other uses just an error code.
+ユーザ名/パスワードペアが正しいかどうかを確認する2つの方法がある。
+1つは提供された認証メッセージングプロセスの一部としてリプライ情報を使う
+ことであり、もう1つはエラーコードを使うことである。
 </para>
 
 <para>
