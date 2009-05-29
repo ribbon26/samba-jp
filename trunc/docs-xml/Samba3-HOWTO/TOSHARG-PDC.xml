@@ -132,38 +132,43 @@ SIDはセキュリティコンテキストを表す。例をあげると、お�
 <screen>
 S-1-5-21-726309263-4128913605-1168186429
 </screen>
-Every account (user, group, machine, trust, etc.) is assigned a RID. This is done automatically as an account
-is created. Samba produces the RID algorithmically. The UNIX operating system uses a separate name space for
-user and group identifiers (the UID and GID) but Windows allocates the RID from a single name space. A Windows
-user and a Windows group can not have the same RID. Just as the UNIX user <literal>root</literal> has the
-UID=0, the Windows Administrator has the well-known RID=500. The RID is catenated to the Windows domain SID,
-so Administrator account for a domain that has the above SID will have the user SID
+すべてのアカウント(ユーザ、グループ、マシン、信頼関係など)はRIDが割り当てられる。
+これは、アカウントが作成された時に自動的に行われる。UNIX OSはユーザとグループ
+識別子に別々の名前空間を使う(UIDとGID)が、Windowsは同じ名前空間からRIDを
+割り当てる。WindowsユーザとWindowsグループは同じRIDを持てない。ちょうどUNIX
+ユーザ<literal>root</literal>がUID=0であるように、Windows Administrator
+は、よく知られたRID=500を持つ。RIDはWindowsドメインRIDに連結され、そのため、
+上記のSIDを持つドメインのAdministratorアカウントは下記のユーザSIDを持つ。
 <screen>
 S-1-5-21-726309263-4128913605-1168186429-500
 </screen>
-The result is that every account in the Windows networking world has a globally unique security identifier.
+Windowsネットワーク領域中での残りのすべてのアカウントは全体で一意なセキュリティ
+識別子を持つ。
 </para>
 
 <note><para>
-<indexterm><primary>domain</primary><secondary>member</secondary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>メンバ</secondary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>domain</primary><secondary>trust account</secondary></indexterm>
-Network clients of an MS Windows domain security environment must be domain members to be able to gain access
-to the advanced features provided. Domain membership involves more than just setting the workgroup name to the
-domain name. It requires the creation of a domain trust account for the workstation (called a machine
-account). Refer to <link linkend="domain-member">Domain Membership</link> for more information.
+Microsoft Windows ドメインセキュリティ環境でのネットワーククライアントは提供される
+高度な機能にアクセスすることを得ることが出来るためにドメインメンバでなければならな
+い。ドメインメンバシップはワークグループ名をドメイン名に設定することを含む。それ
+は、ワークステーションに対する(マシンアカウントと呼ばれる)ドメイン信頼アカウント
+の作成を要求する。より詳細については
+<link linkend="domain-member">ドメインメンバシップ</link>を参照のこと。
 </para></note>
 
 <para>
-The following functionalities are new to the Samba-3 release:
+以下の機能はSamba-3リリースで新規に追加された:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	<indexterm><primary>account</primary><secondary>backend</secondary></indexterm>
-	Samba-3 supports the use of a choice of backends that may be used in which user, group and machine
-	accounts may be stored. Multiple passwd backends can be used in combination, either as additive backend
-	data sets, or as fail-over data sets.
+	<indexterm><primary>アカウント</primary><secondary>バックエンド</secondary></indexterm>
+	Samba-3はユーザ、グループとマシンアカウントが格納される時に使われる
+	バックエンドの選択を行う事をサポートしている。複数のパスワードバックエンド
+	を、付加的なデータセット、あるいはフェールオーバデータセットのどちらでも、
+	組み合わせて使うことが出来る(訳注:今は使えない)。
 	</para>
 
 	<para>
@@ -172,38 +177,42 @@ The following functionalities are new to the Samba-3 release:
 	<indexterm><primary>distributed</primary></indexterm>
 	<indexterm><primary>scalability</primary></indexterm>
 	<indexterm><primary>reliability</primary></indexterm>
-	An LDAP passdb backend confers the benefit that the account backend can be distributed and replicated,
-	which is of great value because it confers scalability and provides a high degree of reliability. 
+	LDAP passdbバックエンドは、スケーラビリティと高いレベルでの信頼性を
+	提供するという理由で、とても価値のある、アカウントバックエンドが
+	分散かつ複製が出来るメリットを享受できる。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>interdomain</primary><secondary>trust</secondary><tertiary>account</tertiary></indexterm>
-	<indexterm><primary>trust account</primary><secondary>interdomain</secondary></indexterm>
-	<indexterm><primary>interoperability</primary></indexterm>
-	Windows NT4 domain trusts. Samba-3 supports workstation and server (machine) trust accounts. It also
-	supports Windows NT4 style interdomain trust accounts, which further assists in network scalability
-	and interoperability.
+	<indexterm><primary>ドメイン間</primary><secondary>信頼</secondary><tertiary>アカウント</tertiary></indexterm>
+	<indexterm><primary>信頼アカウント</primary><secondary>ドメイン間</secondary></indexterm>
+	<indexterm><primary>相互運用性</primary></indexterm>
+	Windows NT4のドメイン信頼関係である。Samba-3haワークステーションと
+	サーバ(マシン)信頼アカウントをサポートする。これは、ネットワークの
+	スケーラビリティと相互運用性をさらに支援する、NT4スタイルのドメイン
+	間信頼アカウントをサポートする。
 	</para></listitem>
 	
 	<listitem><para>
 	<indexterm><primary>NetBIOS</primary></indexterm>
 	<indexterm><primary>raw SMB</primary></indexterm>
 	<indexterm><primary>active directory</primary></indexterm>
-	<indexterm><primary>domain</primary><secondary>member server</secondary></indexterm>
-	<indexterm><primary>domain</primary><secondary>controller</secondary></indexterm>
-	<indexterm><primary>network</primary><secondary>browsing</secondary></indexterm>
-	Operation without NetBIOS over TCP/IP, rather using the raw SMB over TCP/IP. Note, this is feasible
-	only when operating as a Microsoft active directory domain member server. When acting as a Samba domain
-	controller the use of NetBIOS is necessary to provide network browsing support.
+	<indexterm><primary>ドメイン</primary><secondary>メンバサーバ</secondary></indexterm>
+	<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary></indexterm>
+	<indexterm><primary>ネットワーク</primary><secondary>ブラウジング</secondary></indexterm>
+	
+	NetBIOS over TCP/IPなしの操作は、むしろraw SMB over TCP/IPを使うことである。注意:
+	これはMicrosoft active directoryドメインメンバサーバとして操作する時にのみ
+	実行可能である。Sambaドメインコントローラとして動作する時、NetBIOSの使用は、
+	ネットワークブラウジングのサポートを提供するために必要である。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>WINS</primary></indexterm>
-	<indexterm><primary>TCP port</primary></indexterm>
-	<indexterm><primary>session services</primary></indexterm>
-	Samba-3 provides NetBIOS name services (WINS), NetBIOS over TCP/IP (TCP port 139) session services, SMB over
-	TCP/IP (TCP port 445) session services, and Microsoft compatible ONC DCE RPC services (TCP port 135)
-	services.
+	<indexterm><primary>TCPポート</primary></indexterm>
+	<indexterm><primary>セッションサービス</primary></indexterm>
+	Samba-3はNetBIOSネームサービス(WINS)、NetBIOS ever TCP/IP(TCPポート139)、
+	SMB over TCP(TCP port 445)セッションサービスとMicrosoft互換のONC DCE 
+	RPCサービス(TCPポート135)を提供する。
 	</para></listitem>
 
 	<listitem><para>
