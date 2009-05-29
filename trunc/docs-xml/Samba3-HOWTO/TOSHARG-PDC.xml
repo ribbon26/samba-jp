@@ -87,40 +87,48 @@ Windows ネットワークをセットアップするのは良い方法とは言
 <indexterm><primary>trust</primary></indexterm>
 <indexterm><primary>account</primary></indexterm>
 <indexterm><primary>ドメイン</primary><secondary>セキュリティ</secondary><tertiary>プロトコル</tertiary></indexterm>
-In a word, <emphasis>single sign-on</emphasis>, or SSO for short. To many, this is the Holy Grail of MS
-Windows NT and beyond networking. SSO allows users in a well-designed network to log onto any workstation that
-is a member of the domain that contains their user account (or in a domain that has an appropriate trust
-relationship with the domain they are visiting) and they will be able to log onto the network and access
-resources (shares, files, and printers) as if they are sitting at their home (personal) workstation. This is a
-feature of the domain security protocols.
+要するに、<emphasis>シングルサインオン</emphasis>、あるいは短く言えばSSO
+である。たくさんの人のために、これはMicrosoft Windows NTとその先のネット
+ワークの聖杯である。SSOは、彼らの作業用(個人用)ワークステーションの所に
+座っているかのように、ネットワークにログオンしてリソース(共有、ファイル
+とプリンタ)にアクセスでき、彼らのユーザアカウント(か今入っているドメインと
+信頼関係を結んだドメイン中の)を含むドメインのメンバの任意のワークステーション
+に、よく設計されたネットワーク中にログオンできることをユーザに許可する。
+これは、ドメインセキュリティプロトコルの機能である。
 </para>
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>relative identifier</primary><see>RID</see></indexterm>
-<indexterm><primary>security identifier</primary><see>SID</see></indexterm>
-<indexterm><primary>access control</primary></indexterm>
-The benefits of domain security are available to those sites that deploy a Samba PDC.  A domain provides a
-unique network security identifier (SID). Domain user and group security identifiers are comprised of the
-network SID plus a relative identifier (RID) that is unique to the account. User and group SIDs (the network
-SID plus the RID) can be used to create access control lists (ACLs) attached to network resources to provide
-organizational access control. UNIX systems recognize only local security identifiers.
+<indexterm><primary>セキュリティ識別子</primary><see>SID</see></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
+ドメインセキュリティの利便性は、Samba PDCを実装するサイトで有効となる。
+ドメインは一意のネットワーク識別子(SID)を提供する。ドメインユーザと
+グループセキュリティ識別子はアカウント毎に一意の相対識別子(RID)を
+ネットワークSIDに追加したもので構成される。ユーザとグループSID(
+ネットワークSID+RID)は組織のアクセス制御を提供するためのネットワーク
+リソースを付加するアクセスコントロールリスト(ACL)を作成するために
+使うことが出来る。UNIXシステムはローカルセキュリティ識別子のみを
+認識する。
 </para>
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
-A SID represents a security context. For example, every Windows machine has local accounts within the security
-context of the local machine which has a unique SID. Every domain (NT4, ADS, Samba) contains accounts that
-exist within the domain security context which is defined by the domain SID.
+SIDはセキュリティコンテキストを表す。例をあげると、おのおののWindows
+マシンは固有のSIDを持つローカルマシンのセキュリティコンテキストでの
+ローカルアカウントを持つ。すべてのドメイン(NT4、ADS、Samba)は
+ドメインSIDによって定義されるセキュリティドメインセキュリティコン
+テキストで存在するアカウントを含む。
 </para>
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
-A domain member server will have a SID that differs from the domain SID.  The domain member server can be
-configured to regard all domain users as local users. It can also be configured to recognize domain users and
-groups as non-local. SIDs are persistent. A typical domain of user SID looks like this:
+ドメインメンバサーバはドメインSIDとは異なるSIDを持つ。ドメインメンバ
+サーバはすべてのドメインユーザをローカルユーザとして見なすように
+設定できる。SIDは持続的である。標準的なドメインのユーザSIDは以下の
+ようなものである:
 <screen>
 S-1-5-21-726309263-4128913605-1168186429
 </screen>
