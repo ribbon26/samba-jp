@@ -12,78 +12,81 @@
 <title>ドメイン制御</title>
 
 <para>
-There are many who approach MS Windows networking with incredible misconceptions.
-That's okay, because it gives the rest of us plenty of opportunity to be of assistance.
-Those who really want help are well advised to become familiar with information
-that is already available.
+信じがたい誤解を伴った、Microsoft Windows ネットワークに対する
+アプローチがある。それは問題ない。なぜならば、それは支援のための
+機会を我々にたくさん与えるからである。本当に手助けが必要な人は、
+すでに有効になっている情報に対してなじむ方が賢明である。
 </para>
 
 <para>
-<indexterm><primary>domain</primary><secondary>controller</secondary></indexterm>
-You are advised not to tackle this section without having first understood
-and mastered some basics. MS Windows networking is not particularly forgiving of
-misconfiguration. Users of MS Windows networking are likely to complain 
-of persistent niggles that may be caused by a broken network configuration.
-To a great many people, however, MS Windows networking starts with a domain controller
-that in some magical way is expected to solve all network operational ills.
+<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary></indexterm>
+最初に若干の基本を理解かつマスタしないでこの節に取り組まないことを推奨する。
+Microsoft Windows ネットワークは特に誤設定に寛容ではない。Microsoft Windows
+ネットワークの利用者は壊れたネットワーク設定によって引き起こされるしつこい
+心配事について不平を言うことがありそうなことである。しかしながら、とても多く
+の人々にとって、いくつかの不思議な方法でドメインコントローラを伴うMicrosoft 
+Windows ネットワークを、始めることは、、すべてのネットワークの問題を解決する
+ことを期待される。
 </para>
 
 <para>
-<link linkend="domain-example">The Example Domain Illustration</link> shows a typical MS Windows domain security
-network environment. Workstations A, B, and C are representative of many physical MS Windows
-network clients.
+<link linkend="domain-example">ドメインの例の図解</link>は典型的な、Microsoft 
+Windows ネットワーク ドメインセキュリティネットワーク環境を図示している。
+ワークステーションA、BとCは多くの物理的なMicrosoft Windowsネットワーククライアント
+の代表である。
 </para>
 
 <figure id="domain-example">
-	<title>An Example Domain.</title>
+	<title>ドメインの例</title>
 	<imagefile scale="40">domain</imagefile>
 </figure>
 
 <para>
-From the Samba mailing list we can readily identify many common networking issues.
-If you are not clear on the following subjects, then it will do much good to read the 
-sections of this HOWTO that deal with it. These are the most common causes of MS Windows
-networking problems:
+Sambaメーリングリストから、たくさんの共通したネットワークの問題を容易に認識できる。
+もしも以下の題名についてよく分からないのであれば、それについて取り扱っている、
+このHOWTOの節を読むことを強く勧める。以下は、最も共通的なMicrosoft Windows
+ネットワークの問題である:
 </para>
 
 <itemizedlist>
-	<listitem><para>Basic TCP/IP configuration.</para></listitem>
-	<listitem><para>NetBIOS name resolution.</para></listitem>
-	<listitem><para>Authentication configuration.</para></listitem>
-	<listitem><para>User and group configuration.</para></listitem>
-	<listitem><para>Basic file and directory permission control in UNIX/Linux.</para></listitem>
-	<listitem><para>Understanding how MS Windows clients interoperate in a network environment.</para></listitem>
+	<listitem><para>基本的なTCP/IPの設定</para></listitem>
+	<listitem><para>NetBIOS名の解決方法</para></listitem>
+	<listitem><para>認証の設定</para></listitem>
+	<listitem><para>ユーザとグループの設定</para></listitem>
+	<listitem><para>UNIX/Linux上での基本的なファイルとディレクトリのアクセス制御</para></listitem>
+	<listitem><para>ネットワーク環境中でのMicrosoft Windowsクライアントの相互運用性の理解</para></listitem>
 </itemizedlist>
 
 <para>
-Do not be put off; on the surface of it MS Windows networking seems so simple that anyone 
-can do it. In fact, it is not a good idea to set up an MS Windows network with
-inadequate training and preparation. But let's get our first indelible principle out of the
-way: <emphasis>It is perfectly okay to make mistakes!</emphasis> In the right place and at
-the right time, mistakes are the essence of learning. It is very much not okay to make
-mistakes that cause loss of productivity and impose an avoidable financial burden on an
-organization.
+それから逃げてはいけない。表面上、Microsoft Windows ネットワークは
+誰でもが動かせるように簡単に見える。実際、不十分な練習と準備でMicrosoft 
+Windows ネットワークをセットアップするのは良い方法とは言えない。しかし、
+我々の最初の、忘れられない、方法を外れた原理を得よう(訳注:あやしい)。
+<emphasis>間違いをしても全く問題ない!</emphasis> 正しい場所と正しい時間
+での間違いは、学習のエッセンスである。が、組織にたいして回避可能な、
+財政的負担と生産性を落とすことを引き起こすミスをするのはとても好ましく
+ない。
 </para>
 
 <para>
-Where is the right place to make mistakes? Only out of harms way. If you are going to
-make mistakes, then please do it on a test network, away from users, and in such a way as
-to not inflict pain on others. Do your learning on a test network.
+間違いをしても良い正しい場所はどこか?Only out of harms way。もしも、
+間違いをしてしまいそうならば、ユーザとは離れた、他の人に影響がない、
+テストネットワークでやってほしい。
 </para>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-<indexterm><primary>domain security</primary></indexterm>
-<emphasis>What is the key benefit of Microsoft Domain Security?</emphasis>
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<emphasis>Microsoftドメインセキュリティの最も重要な利便性は何か?</emphasis>
 </para>
 
 <para>
-<indexterm>single sign-on<primary></primary><see>SSO</see></indexterm>
+<indexterm>シングルサインオン<primary></primary><see>SSO</see></indexterm>
 <indexterm><primary>trust</primary></indexterm>
 <indexterm><primary>account</primary></indexterm>
-<indexterm><primary>domain</primary><secondary>security</secondary><tertiary>protocols</tertiary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>セキュリティ</secondary><tertiary>プロトコル</tertiary></indexterm>
 In a word, <emphasis>single sign-on</emphasis>, or SSO for short. To many, this is the Holy Grail of MS
 Windows NT and beyond networking. SSO allows users in a well-designed network to log onto any workstation that
 is a member of the domain that contains their user account (or in a domain that has an appropriate trust
