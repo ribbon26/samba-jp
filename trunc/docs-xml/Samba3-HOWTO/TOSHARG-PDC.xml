@@ -270,122 +270,142 @@ Microsoft Windows ドメインセキュリティ環境でのネットワーク�
 <para>
 <indexterm><primary>Windows XP Home エディション</primary></indexterm>
 <indexterm><primary>LanMan</primary></indexterm>
-Windows 9x/Me/XP Home clients are not true members of a domain for reasons outlined in this chapter. The
-protocol for support of Windows 9x/Me-style network (domain) logons is completely different from NT4/Windows
-200x-type domain logons and has been officially supported for some time. These clients use the old LanMan
-network logon facilities that are supported in Samba since approximately the Samba-1.9.15 series.
+この章中で概要が説明されている理由により、ドメインの真のメンバに、
+Windows 9x/Me/XP Homeクライアントはなれない。Windows9x/Meスタイルの
+ネットワーク(ドメイン)ログオンプロトコルはNT4/Windows 200xスタイルの
+ドメインログオンとは完全に異なり、それはいつか公式にサポートされる。
+これらのクライアントはおおよそSamba-1.9.15シリーズからサポート
+された古いLanManネットワークログイン機能を使う。
 </para>
 
 <para>
-<indexterm><primary>group</primary><secondary>mapping</secondary></indexterm>
-Samba-3 implements group mapping between Windows NT groups and UNIX groups (this is really quite complicated
-to explain in a short space). This is discussed more fully in <link linkend="groupmapping">Group Mapping: MS
-Windows and UNIX</link>.
+<indexterm><primary>グループ</primary><secondary>マッピング</secondary></indexterm>
+Samba-3ではWindows NT グループとUNIXグループ間でのグループマッピングを実装
+している(これは、小さなスペースでは説明できないくらい非常に複雑で
+ある)。これについての詳細については
+<link linkend="groupmapping">グループマッピング:Microsoft WindowsとUNIX</link>
+を参照のこと。
 </para>
 
 <para>
-<indexterm><primary>machine trust account</primary></indexterm>
-<indexterm><primary>trust account</primary><secondary>machine</secondary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
-Samba-3, like an MS Windows NT4 PDC or a Windows 200x Active Directory, needs to store user and Machine Trust
-Account information in a suitable backend data-store.  Refer to <link linkend="machine-trust-accounts">MS
-Windows Workstation/Server Machine Trust Accounts</link>. With Samba-3 there can be multiple backends for
-this. A complete discussion of account database backends can be found in <link linkend="passdb">Account
-Information Databases</link>.
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>信頼アカウント</primary><secondary>マシン</secondary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
+Samba-3はMicrosoft Windows NT4 PDCまたはWindows200x Active Directory
+と同様に、それにふさわしいバックエンドデータベースにユーザとマシン
+信頼アカウント情報を格納することを必要とする。これについては、
+<link linkend="machine-trust-accounts">Microsoft Windows Workstation/Server マシン信頼アカウント</link>
+を参照のこと。Samba-3では複数のバックエンドが用意されている。
+完全なアカウントデータベースバックエンドについての解説は
+<link linkend="passdb">アカウント情報データベース</link>にある。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Single Sign-On and Domain Security</title>
+<title>シングルサインオンとドメインセキュリティ</title>
 
 <para>
-<indexterm><primary>single sign-on</primary><see>SSO</see></indexterm>
+<indexterm><primary>シングルサインオン</primary><see>SSO</see></indexterm>
 <indexterm><primary>SSO</primary></indexterm>
 <indexterm><primary>active directory</primary></indexterm>
-<indexterm><primary>authentication</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
 <indexterm><primary>validation</primary></indexterm>
-<indexterm><primary>password uniqueness</primary></indexterm>
-<indexterm><primary>password history</primary></indexterm>
-When network administrators  are asked to describe the benefits of Windows NT4 and active directory networking
-the most often mentioned feature is that of single sign-on (SSO). Many companies have implemented SSO
-solutions. The mode of implementation of a single sign-on solution is an important factor in the practice of
-networking in general, and is critical in respect of Windows networking. A company may have a wide variety of
-information systems, each of which requires a form of user authentication and validation, thus it is not
-uncommon that users may need to remember more than ten login IDs and passwords. This problem is compounded
-when the password for each system must be changed at regular intervals, and particularly so where password
-uniqueness and history limits are applied.
+<indexterm><primary>パスワードの一意性</primary></indexterm>
+<indexterm><primary>パスワード履歴</primary></indexterm>
+ネットワーク管理者が、Windows NT4とactive directoryネットワークの利点に
+ついて説明を求められるとき、しばしば言及するのが、シングルサインオン
+(SSO)を実装しているということである。多くの会社がSSOを実装している。
+シングルサインオンソリューション実装のモードは、一般的に、ネットワーク
+業務における重要な要因であり、Windowsネットワークに関してとても重要で
+ある。会社には多くの種類の情報システムがあり、それぞれはユーザ認証と承認
+(訳注:authentication and validation)を要求し、そのため、一般的
+ではないが、ユーザは10以上のログインIDとパスワードを記憶する必要が
+あるかもしれない。この問題は、おのおののシステムのパスワードが
+一定期間で更新が必定で、パスワードの複雑さとパスワード履歴が
+適用されるときには特に顕著となる。
 </para>
 
 <para>
-<indexterm><primary>management overheads</primary></indexterm>
-There is a broadly held perception that SSO is the answer to the problem of users having to deal with too many
-information system access credentials (username/password pairs). Many elaborate schemes have been devised to
-make it possible to deliver a user-friendly SSO solution. The trouble is that if this implementation is not
-done correctly, the site may end up paying dearly by way of complexity and management overheads. Simply put,
-many SSO solutions are an administrative nightmare.
+<indexterm><primary>管理のオーバヘッド</primary></indexterm>
+非常にたくさんの情報システムに対するアクセス権限(ユーザ名/パスワードペア)
+を扱うユーザの問題に対する回答がSSOであるという認識を包括的に
+持っている。多くの巧妙な案が、ユーザフレンドリーなSSOのソリューション
+を提供可能にするために考案された。問題は、この導入がうまく終わって
+いない場合、サイトは複雑さによるたくさんの費用と管理上のオーバヘッド
+が起きるかもしれないということである。簡単言って、多くのSSOソリュー
+ションは管理上の悪夢である。
 </para>
 
 <para>
 <indexterm><primary>identity management</primary></indexterm>
-<indexterm><primary>authentication system</primary></indexterm>
+<indexterm><primary>認証システム</primary></indexterm>
 <indexterm><primary>SSO</primary></indexterm>
-SSO implementations utilize centralization of all user account information. Depending on environmental
-complexity and the age of the systems over which a SSO solution is implemented, it may not be possible to
-change the solution architecture so as to accomodate a new identity management and user authentication system.
-Many SSO solutions involving legacy systems consist of a new super-structure that handles authentication on
-behalf of the user. The software that gets layered over the old system may simply implement a proxy
-authentication system. This means that the addition of SSO increases over-all information systems complexity.
-Ideally, the implementation of SSO should reduce complexity and reduce administative overheads.
+SSOを使うことですべてのユーザアカウント情報を集中管理できる。
+環境の複雑さと、SSOを導入したシステムの稼働期間に依存して、
+新しいアイデンティティ管理とユーザ認証システムを受け入れること
+は可能ではないかもしれない。多くのSSOソリューションは、
+ユーザのための認証を処理する新しい上位の構造から成り立つ
+レガシーシステムを改良する。これは、SSOの追加は全体的な情報
+システムの複雑さを増大することを意味する。理想的には、SSOの
+導入は複雑さの低減と管理オーバヘッドの削減をすべきである。
 </para>
 
 <para>
-<indexterm><primary>centralized identity management</primary></indexterm>
-<indexterm><primary>identity management</primary><secondary>centralized</secondary></indexterm>
-<indexterm><primary>centralized</primary><secondary>authentication</secondary></indexterm>
-<indexterm><primary>legacy systems</primary></indexterm>
-<indexterm><primary>access control</primary></indexterm>
-The initial goal of many network administrators is often to create and use a centralized identity management
-system. It is often assumed that such a centralized system will use a single authentication infrastructure
-that can be used by all information systems. The Microsoft Windows NT4 security domain architecture and the
-Micrsoft active directory service are often put forward as the ideal foundation for such a system. It is
-conceptually simple to install an external authentication agent on each of the disparate infromation systems
-that can then use the Microsoft (NT4 domain or ads service) for user authentication and access control. The
-wonderful dream of a single centralized authentication service is commonly broken when realities are realized.
-The problem with legacy systems is often the inability to externalize the authentication and access control
-system it uses because its implementation will be excessively invasive from a re-engineering perspective, or
-because application software has built-in dependencies on particular elements of the way user authentication
-and access control were designed and built.
+<indexterm><primary>集中化したアイデンティティ管理</primary></indexterm>
+<indexterm><primary>アイデンティティ管理</primary><secondary>集中化</secondary></indexterm>
+<indexterm><primary>集中化</primary><secondary>認証</secondary></indexterm>
+<indexterm><primary>レガシーシステム</primary></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
+たくさんのネットワーク管理の最初のゴールは、しばしば集中管理した
+アイデンティティ管理システムを作り、使うことである。これは、
+そのような集中化したシステムは、すべての情報システムによって
+使うことが出来る単一の認証基盤を使うことをしばしば仮定している。
+Microsoft Windows NT4セキュリティドメインアーキテクチャとMicrosoft
+Active Directoryサービスは、そのようなシステムに対しての理想的な
+基盤としてしばしば提供される。ユーザの認証とアクセス制御のために
+Microsoft(NT4ドメインかadsサービス)を使うことが出来る単一の
+認証基盤を使う、そのような集中化したシステムがしばしば仮定される。
+単一の集中化した認証サービスのすばらしい幻想は一般的に、現実を
+理解するときに一般的に壊れている。レガシーシステムを使うときの問題
+は、その導入がリエンジニアリングの観点から、過度に侵略的になるか、
+アプリケーションソフトが、設計されて実装されたユーザ認証の特定の
+要素に依存して組み込まれているという理由により、認証とアクセス制御
+を具体化する能力がしばしばないということである。
 </para>
 
 <para>
-<indexterm><primary>meta-directory</primary></indexterm>
+<indexterm><primary>メタディレクトリ</primary></indexterm>
 <indexterm><primary>credentials</primary></indexterm>
 <indexterm><primary>disparate information systems</primary></indexterm>
-<indexterm><primary>management procedures</primary></indexterm>
-<indexterm><primary>work-flow protocol</primary></indexterm>
+<indexterm><primary>管理手続き</primary></indexterm>
+<indexterm><primary>ワークフロープロトコル</primary></indexterm>
 <indexterm><primary>rights</primary></indexterm>
 <indexterm><primary>privileges</primary></indexterm>
 <indexterm><primary>provisioned</primary></indexterm>
-Over the past decade an industry has been developed around the various methods that have been built to get
-around the key limitations of legacy information technology systems. One approach that is often used involves
-the use of a meta-directory. The meta-directory stores user credentials for all disparate information systems
-in the format that is particular to each system. An elaborate set of management procedures is coupled with a
-rigidly enforced work-flow protocol for managing user rights and privileges within the maze of systems that
-are provisioned by the new infrastructure makes possible user access to all systems using a single set of user
-credentials.
+これまでの10年間、産業が、レガシー名情報テクノロジーシステムの
+制限の鍵となる点を回避するために作られた、いろいろな方法が開発
+されてきた。しばしば使われるその1つの方法はメタディレクトリを
+使うことである。メタディレクトリには、それぞれのシステムに固有な
+形式で、すべての異なる情報システムのためにユーザ認証情報を保存
+する。単一のユーザ認証情報を使うすべてのシステムのために、新しい
+基盤がユーザアクセスを可能にさせることが提供されるシステムの
+迷宮の中で、ユーザ権限と権利(rights and privileges)を管理する
+ための厳格に実施されるワークフロープロトコルに、管理手続き
+の巧妙なセットが結合される。
 </para>
 
 <para>
 <indexterm><primary>Organization for the Advancement of Structured Information Standards</primary><see>OASIS</see></indexterm>
 <indexterm><primary>Security Assertion Markup Language</primary><see>SAML</see></indexterm>
 <indexterm><primary>Federated Identity Management</primary><see>FIM</see></indexterm>
-<indexterm><primary>secure access</primary></indexterm>
-The Organization for the Advancement of Structured Information Standards (OASIS) has developed the Security
-Assertion Markup Language (SAML), a structured method for communication of authentication information. The
-over-all umbrella name for the technologies and methods that deploy SAML is called Federated Identity
-Management (FIM). FIM depends on each system in the complex maze of disparate information systems to
-authenticate their respective users and vouch for secure access to the services each provides.
+<indexterm><primary>安全なアクセス</primary></indexterm>
+Organization for the Advancement of Structured Information Standards (OASIS)
+は、認証情報の通信のための構造化情報であるSecurity Assertion Markup Language (SAML)
+を開発している。SAMLを配置するための全体的な技術と手法の統合名(umbrella name)は
+Federated Identity Management (FIM)と呼ばれる。FIMはそれぞれのユーザを認証
+するための異なった情報システムの複雑な迷宮中で、かつおのおのが提供するサービス
+の安全なアクセスを請け負うために、おのおののシステムに依存する。
 </para>
 
 <para>
