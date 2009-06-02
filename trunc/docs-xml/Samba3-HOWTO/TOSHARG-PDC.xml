@@ -566,7 +566,7 @@ Microsoft Windows 200xサーバベースのActive Directoryドメインで、一
 Samba-3では新規にNT4スタイルのSAMデータベース(レジストリファイルの1つ)で
 同じタイプのデータを保持するバックエンドデータベースを使う能力を持つ。
 <footnote><para><link linkend="passdb">アカウント情報データベース</link>
-を参照のこと。/para></footnote>
+を参照のこと。</para></footnote>
 New to Samba-3 is the ability to use a backend database that holds the same type of data as the NT4-style SAM
 database (one of the registry files)<footnote><para>See also <link linkend="passdb">Account Information
 Databases</link>.</para>.</footnote>(ここピリオドダブり)
@@ -593,49 +593,40 @@ WINSサーバがない場合、ワークステーションはUDPブロードキ�
 Windowsクライアントが使うことが出来るネットログオンサーバがたくさんの
 変数によって影響され、それゆえ、PDCまたはBDCが特定のログオン認証要求
 を処理する単純な決定要素はない。
-
-The <emphasis>Backup Domain Controller</emphasis> or BDC plays a key role in servicing network authentication
-requests. The BDC is biased to answer logon requests in preference to the PDC.  On a network segment that has
-a BDC and a PDC, the BDC will most likely service network logon requests. The PDC will answer network logon
-requests when the BDC is too busy (high load). When a user logs onto(ここTYPO) a Windows domain member client the
-workstation will query the network to locate the nearest network logon server. Where a WINS server is used,
-this is done via a query to the WINS server. If a netlogon server can not be found from the WINS query, or in
-the absence of a WINS server, the workstation will perform a NetBIOS name lookup via a mailslot broadcast over
-the UDP broadcast protocol. This means that the netlogon server that the windows client will use is influenced
-by a number of variables, thus there is no simple determinant of whether a PDC or a BDC will serve a
-particular logon authentication request.
 </para>
 
 <para>
 <indexterm><primary>promote</primary></indexterm>
 <indexterm><primary>demote</primary></indexterm>
-A Windows NT4 BDC can be promoted to a PDC. If the PDC is online at the time that a BDC is promoted to PDC,
-the previous PDC is automatically demoted to a BDC. With Samba-3, this is not an automatic operation; the PDC
-and BDC must be manually configured, and other appropriate changes also need to be made.
+Windows NT4 BDCはPDCに昇格することが出来る。BDCがPDCに昇格する時にPDC
+がオンラインならば、以前のPDCは自動的にBDCに降格する。Samba-3では
+これは自動的な操作ではない。PDCとBDCは手動で設定し、その他の適切な
+変更も行う必要がある。
 </para>
 
 <para>
-<indexterm><primary>domain</primary><secondary>controller</secondary><tertiary>convert</tertiary></indexterm>
-With MS Windows NT4, a decision is made at installation to determine what type of machine the server will be.
-It is possible to promote a BDC to a PDC, and vice versa. The only method Microsoft provide to convert a
-Windows NT4 domain controller to a domain member server or a standalone server is to reinstall it. The install
-time choices offered are:
+<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary><tertiary>変換</tertiary></indexterm>
+Microsoft Windows NTPでは、サーバのマシンタイプが何になるかを決める
+ためにインストール時に決定が行われる。BDCからPDCへの昇格やその他も
+可能である。Windows NTPドメインコントローラからドメインメンバサーバ
+かスタンドアロンサーバへの変換のためにMicrosoftが提供している唯一の
+手法は、再インストールである。インストール時に提供されている選択肢
+は以下の通り:
 </para>
 
 <itemizedlist>
-	<listitem><para><emphasis>Primary Domain Controller</emphasis> &smbmdash; the one that seeds the domain SAM.</para></listitem>
-	<listitem><para><emphasis>Backup Domain Controller</emphasis> &smbmdash; one that obtains a copy of the domain SAM.</para></listitem>
-	<listitem><para><emphasis>Domain Member Server</emphasis> &smbmdash; one that has no copy of the domain SAM; rather
-		it obtains authentication from a domain controller for all access controls.</para></listitem>
-	<listitem><para><emphasis>Standalone Server</emphasis> &smbmdash; one that plays no part in SAM synchronization,
-		has its own authentication database, and plays no role in domain security.</para></listitem>
+	<listitem><para><emphasis>プライマリドメインコントローラ</emphasis> &smbmdash; ドメインSAMの頒布元。</para></listitem>
+	<listitem><para><emphasis>バックアップドメインコントローラ</emphasis> &smbmdash; ドメインSAMのコピーを受け取る。</para></listitem>
+	<listitem><para><emphasis>ドメインメンバサーバ</emphasis> &smbmdash; ドメインSAMのコピーを持たない。すべてのアクセス制御のためにドメインコントローラから認証を受け取る。</para></listitem>
+	<listitem><para><emphasis>スタンドアロンサーバ</emphasis> &smbmdash; SAM同期を行わないサーバで、固有の認証データベースを持ち、ドメインセキュリティでは何の役割も担わない。</para></listitem>
 </itemizedlist>
 
 <note><para>
 <indexterm><primary>promote</primary></indexterm>
-Algin Technology LLC provide a commercial tool that makes it possible to promote a Windows NT4 standalone
-server to a PDC or a BDC, and also permits this process to be reversed. Refer to the <ulink
-url="http://utools.com/UPromote.asp">Algin</ulink> web site for further information.
+Algin Technology LLC はWindows NT4スタンドアロンサーバをPDCまたはBDCに昇格
+することとその逆ができるが可能な商用ツールを提供している。さらなる情報は
+<ulink url="http://utools.com/UPromote.asp">Algin</ulink>のWebサイトを参照
+のこと。
 </para></note>
 
 <para>
