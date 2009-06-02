@@ -514,54 +514,62 @@ IBM、CA、Novell(e-Directory)とその他で知られている。
 <title>ドメインコントローラの種類</title>
 
 <itemizedlist>
-	<listitem><para>NT4 style Primary Domain Controller</para></listitem>
-	<listitem><para>NT4 style Backup Domain Controller</para></listitem>
-	<listitem><para>ADS Domain Controller</para></listitem>
+	<listitem><para>NT4スタイルプライマリドメインコントローラ</para></listitem>
+	<listitem><para>NT4スタイルバックアップドメインコントローラ</para></listitem>
+	<listitem><para>ADSドメインコントローラ</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>powerful</primary></indexterm>
-<indexterm><primary>network</primary><secondary>performance</secondary></indexterm>
-<indexterm><primary>domain</primary><secondary>member</secondary><secondary>server</secondary></indexterm>
-The <emphasis>Primary Domain Controller</emphasis> or PDC plays an important role in MS Windows NT4. In
-Windows 200x domain control architecture, this role is held by domain controllers.  Folklore dictates that
-because of its role in the MS Windows network, the domain controller should be the most powerful and most
-capable machine in the network.  As strange as it may seem to say this here, good overall network performance
-dictates that the entire infrastructure needs to be balanced. It is advisable to invest more in standalone
-(domain member) servers than in the domain controllers.
+<indexterm><primary>ネットワーク</primary><secondary>パフォーマンス</secondary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>メンバ</secondary><secondary>サーバ</secondary></indexterm>
+<emphasis>プライマリドメインコントローラ</emphasis>あるいはPDCはMicrosoft
+Windows NTで重要な役割を演じる。Windows 200xドメインアーキテクチャ中では
+この役割はドメインコントローラによって保持されている。Microsoft Windows
+ネットワーク中の役割の理由から、フォークロアはそれを指示し(訳注:意味取れない)、
+ドメインコントローラはネットワーク中で最も性能が高く、最も能力があるマシン
+であるべきである。ここで言うのもとても奇妙に見えるが、ネットワーク全体での
+よいパフォーマンスは、すべてのインフラストラクチャーがバランスされている
+ことを必要とすることを指示する。ドメインコントローラ中よりもスタンドアロン
+(ドメインメンバ)中でより投資することは賢明である。
 </para>
 
 <para>
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-<indexterm><primary>authenticatior</primary></indexterm>
-<indexterm><primary>synchronization</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
+<indexterm><primary>同期</primary></indexterm>
 <indexterm><primary>Security Account Manager</primary><see>SAM</see></indexterm>
-In the case of MS Windows NT4-style domains, it is the PDC that initiates a new domain control database.
-This forms a part of the Windows registry called the Security Account Manager (SAM). It plays a key
-part in NT4-type domain user authentication and in synchronization of the domain authentication
-database with BDCs. 
+Microsoft Windows NT4スタイルドメインの場合、新しいドメイン制御データベースを
+初期化するのはPDCである。この形式は、Security Account Manager (SAM)と呼ばれる
+Windowsレジストリの一部である。これは、NT4スタイルのドメインユーザの認証と
+BDCのドメイン認証データベースとの同期で最も中心的な部分を行う。
 </para>
 
 <para>
-<indexterm><primary>domain</primary><secondary>controller</secondary><tertiary>hierarchy</tertiary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary><tertiary>階層</tertiary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-<indexterm>account<primary></primary><secondary>backend</secondary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
-With MS Windows 200x Server-based Active Directory domains, one domain controller initiates a potential
-hierarchy of domain controllers, each with its own area of delegated control. The master domain
-controller has the ability to override any downstream controller, but a downline controller has
-control only over its downline. With Samba-3, this functionality can be implemented using an
-LDAP-based user and machine account backend.
+<indexterm>アカウント<primary></primary><secondary>バックエンド</secondary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
+Microsoft Windows 200xサーバベースのActive Directoryドメインで、一つのドメイン
+コントローラが、そのおのおのが委託された制御の固有領域であるドメインコント
+ローラの潜在的な階層を初期化する。マスタドメインコントローラは任意の下位
+コントローラを上書きする能力を持っているが、下位のコントローラはその下位の
+コントローラのみ制御する。Samba-3では、この機能はLDAPベースのユーザとマシン
+アカウントバックエンドを使うことで実現できる。
 </para>
 
 <para>
-<indexterm><primary>backend database</primary></indexterm>
-<indexterm><primary>registry</primary></indexterm>
+<indexterm><primary>バックエンドデータベース</primary></indexterm>
+<indexterm><primary>レジストリ</primary></indexterm>
+Samba-3では新規にNT4スタイルのSAMデータベース(レジストリファイルの1つ)で
+同じタイプのデータを保持するバックエンドデータベースを使う能力を持つ。
+<footnote><para><link linkend="passdb">アカウント情報データベース</link>
+を参照のこと。/para></footnote>
 New to Samba-3 is the ability to use a backend database that holds the same type of data as the NT4-style SAM
 database (one of the registry files)<footnote><para>See also <link linkend="passdb">Account Information
-Databases</link>.</para>.</footnote>
+Databases</link>.</para>.</footnote>(ここピリオドダブり)
 </para>
 
 <para>
@@ -571,10 +579,25 @@ Databases</link>.</para>.</footnote>
 <indexterm><primary>authentication</primary></indexterm>
 <indexterm><primary>netlogon</primary></indexterm>
 <indexterm><primary>name lookup</primary></indexterm>
+<emphasis>バックアップドメインコントローラ</emphasis>またはBDCはネットワーク
+認証サービス中で重要な役割を演じる。BDCはPDCに優先してログオン要求に答える
+ために、バイアスをかけられる。BDCとPDCがあるネットワークセグメント上で、
+BDCはネットワークログオン要求を最もサービスする。PDCはBDCがとても忙しい
+(ロードアベレージが大きい)ときにログオン要求に応える。ユーザがWindows
+ドメインメンバクライアントにログオンした時、ワークステーションは最も近い
+ネットワークログオンサーバに位置づけるために、ネットワークに問い合わせを
+行う。WINSサーバが使われている時、これは問い合わせを経由してWINSサーバ
+で行われる。もしもネットログオンサーバがWINS問い合わせから見つからないか、
+WINSサーバがない場合、ワークステーションはUDPブロードキャストプロトコル
+上でmailslotブロードキャスト経由でNetBIOS名前検索を実行する。これは、
+Windowsクライアントが使うことが出来るネットログオンサーバがたくさんの
+変数によって影響され、それゆえ、PDCまたはBDCが特定のログオン認証要求
+を処理する単純な決定要素はない。
+
 The <emphasis>Backup Domain Controller</emphasis> or BDC plays a key role in servicing network authentication
 requests. The BDC is biased to answer logon requests in preference to the PDC.  On a network segment that has
 a BDC and a PDC, the BDC will most likely service network logon requests. The PDC will answer network logon
-requests when the BDC is too busy (high load). When a user logs onto a Windows domain member client the
+requests when the BDC is too busy (high load). When a user logs onto(ここTYPO) a Windows domain member client the
 workstation will query the network to locate the nearest network logon server. Where a WINS server is used,
 this is done via a query to the WINS server. If a netlogon server can not be found from the WINS query, or in
 the absence of a WINS server, the workstation will perform a NetBIOS name lookup via a mailslot broadcast over
