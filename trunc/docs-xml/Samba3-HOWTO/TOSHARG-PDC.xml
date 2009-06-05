@@ -872,15 +872,16 @@ PDC用のsmb.confの例</link>にある。
 <variablelist>
 	<varlistentry><term>passdb backend </term>
 		<listitem><para>
-		<indexterm><primary>group</primary><secondary>account</secondary></indexterm>
+		<indexterm><primary>グループ</primary><secondary>アカウント</secondary></indexterm>
 		<indexterm><primary>smbpasswd</primary></indexterm>
 		<indexterm><primary>tdbsam</primary></indexterm>
 		<indexterm><primary>ldapsam</primary></indexterm>
 		<indexterm><primary>guest</primary></indexterm>
 		<indexterm><primary>default accounts</primary></indexterm>
-		This contains all the user and group account information. Acceptable values for a PDC
-		are: <emphasis>smbpasswd, tdbsam, and ldapsam</emphasis>. The <quote>guest</quote> entry provides
-		default accounts and is included by default; there is no need to add it explicitly.
+		ここにすべてのユーザとグループアカウント情報が含まれている。PDCで使える値は:
+		<emphasis>smbpasswd, tdbsam, and ldapsam</emphasis>である。<quote>guest</quote>
+		エントリは既定値のアカウントを提供し、それは既定値で含まれている;明示的に
+		追加する必要はない。
 		</para>
 
 		<para>
@@ -888,13 +889,13 @@ PDC用のsmb.confの例</link>にある。
 		<indexterm><primary>distributed</primary></indexterm>
 		<indexterm><primary>smbpasswd</primary></indexterm>
 		<indexterm><primary>tdbsam</primary></indexterm>
-		Where use of BDCs is intended, the only logical choice is
-		to use LDAP so the passdb backend can be distributed. The tdbsam and smbpasswd files
-		cannot effectively be distributed and therefore should not be used.
+		BDCを使う場合、passdb backendを配信できるため、LDAPの使用が論理的な唯一の
+		選択肢である。tdbsamとsmbpasswdファイルは効果的に配信できないため、それを
+		使うべきではない。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>Domain Control Parameters </term>
+	<varlistentry><term>ドメイン制御パラメータ</term>
 		<listitem><para>
 		<indexterm><primary>os level</primary></indexterm>
 		<indexterm><primary>preferred master</primary></indexterm>
@@ -922,40 +923,43 @@ PDC用のsmb.confの例</link>にある。
 		<indexterm><primary>logon home</primary></indexterm>
 		<indexterm><primary>logon drive</primary></indexterm>
 		<indexterm><primary>logon script</primary></indexterm>
-		The parameters <emphasis>logon path, logon home, logon drive</emphasis>, and <emphasis>logon script</emphasis> are
-		environment support settings that help to facilitate client logon operations and that help
-		to provide automated control facilities to ease network management overheads. Please refer
-		to the man page information for these parameters.
+		パラメータ<emphasis>logon path, logon home, logon drive</emphasis>と<emphasis>logon script</emphasis>
+		環境は、はクライアントログオン操作機能を手助けすることと、ネットワーク管理のオーバヘッドを
+		簡単にするための自動コントロール機能の提供を手助けするための設定をサポートする。
+		それらのパラメータのマニュアルページの情報を参照してほしい。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>NETLOGON Share </term>
+	<varlistentry><term>NETLOGON共有</term>
 		<listitem><para>
 		<indexterm><primary>NETLOGON</primary></indexterm>
-		<indexterm><primary>logon processing</primary></indexterm>
-		<indexterm><primary>domain logon</primary></indexterm>
-		<indexterm><primary>domain membership</primary></indexterm>
-		<indexterm><primary>group policy</primary></indexterm>
+		<indexterm><primary>logon処理</primary></indexterm>
+		<indexterm><primary>ドメインログオン</primary></indexterm>
+		<indexterm><primary>ドメインメンバシップ</primary></indexterm>
+		<indexterm><primary>グループポリシー</primary></indexterm>
 		<indexterm><primary>NTConfig.POL</primary></indexterm>
-		The NETLOGON share plays a central role in domain logon and domain membership support.
-		This share is provided on all Microsoft domain controllers. It is used to provide logon
-		scripts, to store group policy files (NTConfig.POL), as well as to locate other common
-		tools that may be needed for logon processing. This is an essential share on a domain controller.
+		NETLOGON共有はドメインログオンとドメインメンバシップサポートで中心的な役割を演じる。
+		この共有はMicrosoftドメインコントローラ上で提供される。これは、ログオン処理のために
+		必要となるかもしれない他の共通ツールに位置づけるのと同じように、ログオンスクリプト
+		の提供と、グループポリシーファイル(NTConfig.POL)の格納のために使われる。これは、
+		ドメインコントローラ上で不可欠な共有である。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>PROFILE Share </term>
+	<varlistentry><term>PROFILE共有</term>
 		<listitem><para>
-		<indexterm><primary>desktop profile</primary></indexterm>
+		<indexterm><primary>デスクトッププロファイル</primary></indexterm>
 		<indexterm><primary>VFS</primary></indexterm>
 		<indexterm><primary>fake_permissions</primary></indexterm>
-		<indexterm><primary>profile</primary></indexterm>
+		<indexterm><primary>プロファイル</primary></indexterm>
 		<indexterm><primary></primary></indexterm>
-		This share is used to store user desktop profiles. Each user must have a directory at the root
-		of this share. This directory must be write-enabled for the user and must be globally read-enabled.
-		Samba-3 has a VFS module called <quote>fake_permissions</quote> that may be installed on this share. This will
-		allow a Samba administrator to make the directory read-only to everyone. Of course this is useful
-		only after the profile has been properly created.
+		この共有はユーザのデスクトッププロファイルを格納するために使われる。おのおののユーザ
+		はこの共有をrootとするディレクトリを持たねばならない。このディレクトリはユーザが
+		書き込み可能で、その他が読み込み可能でなければならない。Samba-3は
+		<quote>fake_permissions</quote>と呼ばれる、この共有上にインストールしてもよい
+		VFSモジュールを用意している。これはSambaの管理者が、全員に対してこのディレクトリを
+		読み込みのみにすることを許可する。もちろん、これはプロファイルが適した形で作成された
+		後にのみ便利である。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
