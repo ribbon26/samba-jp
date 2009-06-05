@@ -784,55 +784,58 @@ SMB/CIFSサーバでのドメインコントローラは下記の通り:
 	<indexterm><primary>UDP</primary></indexterm>
 	<indexterm><primary>DNS</primary></indexterm>
 	<indexterm><primary>active directory</primary></indexterm>
-	Registers and advertises itself as a domain controller (through NetBIOS broadcasts
-	as well as by way of name registrations either by Mailslot Broadcasts over UDP broadcast,
-	to a WINS server over UDP unicast, or via DNS and Active Directory).
+	それ自身の登録と広告をドメインコントローラとする(UDPブロードキャスト上でのMailslot
+	ブロードキャストによって、UDPユニキャスト上でWINSサーバにか、DNSとActive Directory
+	経由での名前登録の方法によるのと同じようなNetBIOSブロードキャストを通して)。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>NETLOGON</primary></indexterm>
-	<indexterm><primary>LanMan logon service</primary></indexterm>
-	Provides the NETLOGON service. (This is actually a collection of services that runs over
-	multiple protocols. These include the LanMan logon service, the Netlogon service,
-	the Local Security Account service, and variations of them.)
+	<indexterm><primary>LanMan logon サービス</primary></indexterm>
+	NETLOGON サービスの提供(これは実際、複数のプロトコル上で動くサービスの集合体である。
+	それらにはLanManログオンサービス、Netlogonサービス、ローカルセキュリティアカウント
+	サービスとそれらのバリエーションを含む。)。
 	</para></listitem>
 
 	<listitem><para>
-	Provides a share called NETLOGON.
+	NETLOGONという共有が提供される。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>domain</primary><secondary>master</secondary><tertiary>browser</tertiary></indexterm>
-<indexterm><primary>local</primary><secondary>master</secondary><tertiary>browser</tertiary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>マスタ</secondary><tertiary>ブラウザ</tertiary></indexterm>
+<indexterm><primary>ローカル</primary><secondary>マスタ</secondary><tertiary>ブラウザ</tertiary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>browse list</primary></indexterm>
-It is rather easy to configure Samba to provide these. Each Samba domain controller must provide the NETLOGON
-service that Samba calls the <smbconfoption name="domain logons"/> functionality (after the name of the
-parameter in the &smb.conf; file). Additionally, one server in a Samba-3 domain must advertise itself as the
-domain master browser.<footnote><para>See <link linkend="NetworkBrowsing">Network
-Browsing</link>.</para></footnote> This causes the PDC to claim a domain-specific NetBIOS name that identifies
-it as a DMB for its given domain or workgroup. Local master browsers (LMBs) in the same domain or workgroup on
-broadcast-isolated subnets then ask for a complete copy of the browse list for the whole wide-area network.
-Browser clients then contact their LMB, and will receive the domain-wide browse list instead of just the list
-for their broadcast-isolated subnet.
+<indexterm><primary>ブラウズリスト</primary></indexterm>
+それらを提供するためにSambaを設定することはむしろ容易である。おのおののSamba
+ドメインコントローラは <smbconfoption name="domain logons"/>機能(&smb.conf;
+ファイル中のパラメータの後)とSambaが呼ぶNETLOGONサービスを提供しなければな
+らない。さらに、Samba-3ドメイン中の1つのサーバはドメインマスタブラウザとして
+それ自身を公告しなければならない。<footnote><para><link linkend="NetworkBrowsing">
+ネットワークのブラウジング</link>を参照。</para></footnote>これは、与えられた
+ドメインまたはワークグループのためのDMBとして識別されるドメイン固有のNetBIOS名
+をPDCが主張するようにさせる。ブロードキャストで分離されたサブネットの、同じドメイン
+またはワークグループ上の複数のローカルマスタブラウザ(LMB)は完全な広範囲な領域の
+ネットワークのためのブラウズリストの完全なコピーのために問い合わせを行う。
+ブラウザクライアントは次にそれらのLMBに接続し、それらのブロードキャストで分離
+されたサブネットのためのリストの代わりにドメイン全体のブラウズリストを受け取る。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Domain Control: Example Configuration</title>
+<title>ドメイン制御: 設定例</title>
 
 <para>
-The first step in creating a working Samba PDC is to understand the parameters necessary
-in &smb.conf;. An example &smb.conf; for acting as a PDC can be found in <link linkend="pdc-example">the
-smb.conf file for an example PDC</link>. 
+Samba PDCを作成するための作業の最初のステップは&smb.conf;中で必要なパラメータの
+理解である。PDCとして振る舞うための&smb.conf;の例は<link linkend="pdc-example">
+PDC用のsmb.confの例</link>にある。
 </para>
 
 <example id="pdc-example">
-<title>smb.conf for being a PDC</title>
+<title>PDC用のsmb.confの例</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="netbios name"><replaceable>BELERIAND</replaceable></smbconfoption>
@@ -863,7 +866,7 @@ smb.conf file for an example PDC</link>.
 </example>
 
 <para>
-The basic options shown in <link linkend="pdc-example">this example</link> are explained as follows:
+<link linkend="pdc-example">this example</link>中で示される基本的なオプションの説明は以下の通り:
 </para>
 
 <variablelist>
