@@ -996,56 +996,56 @@ Samba-3はActive Directoryサーバではなく、そのように振る舞えな
 PDCとして本当に機能しない。Active Directoryドメインコントローラのいくつかの機能の
 プロトコルは実験的のみのものとして部分的に実装されている。Samba-3がそれらのプロ
 トコルをサポートするとは思わないでほしい。現在または将来にわたって、そのような
-任意の機能に依存しない。これは、
-Samba-3 is not, and cannot act as, an Active Directory server. It cannot truly function as an Active Directory
-PDC. The protocols for some of the functionality of Active Directory domain controllers has been partially
-implemented on an experimental only basis. Please do not expect Samba-3 to support these protocols. Do not
-depend on any such functionality either now or in the future. The Samba Team may remove these experimental
-features or may change their behavior. This is mentioned for the benefit of those who have discovered secret
-capabilities in Samba-3 and who have asked when this functionality will be completed. The answer is maybe
-someday or maybe never!
+任意の機能に依存しない。Sambaチームはこれらの機能を取り除くかもしれないか、あるいは
+それらの機能を変更するかもしれない。これはSamba-3の秘密の機能と、それらの機能
+の完成を質問する人のために説明される。答えは、「出来るかもしれないし出来ないかも
+しれない!」
 </para>
 
 <para>
-<indexterm><primary>domain controllers</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>active directory</primary></indexterm>
-To be sure, Samba-3 is designed to provide most of the functionality that Microsoft Windows NT4-style
-domain controllers have. Samba-3 does not have all the capabilities of Windows NT4, but it does have
-a number of features that Windows NT4 domain controllers do not have. In short, Samba-3 is not NT4 and it
-is not Windows Server 200x: it is not an Active Directory server. We hope this is plain and simple
-enough for all to understand.
+たしかに、Samba-3はMicrosoft Windows NT4スタイルのドメインコントローラが持つ
+大部分の機能を提供するように設計されている。Samba-3にはWindows NT4の全ての
+機能があるわけではないが、一方Windows NT4 ドメインコントローラにはない
+たくさんの特徴を持つ。要するに、Samba-3はNT4でもWindows Server 200xでもない。
+もちろんActive Directoryサーバでもない。このことがすべての人に理解してもらう
+ために、十分に単純で明白であることを望んでいる。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Domain and Network Logon Configuration</title>
+<title>ドメインとネットワークログインの設定</title>
 
 <para>
-<indexterm><primary>domain logon</primary></indexterm>
-The subject of network or domain logons is discussed here because it forms
-an integral part of the essential functionality that is provided by a domain controller.
+<indexterm><primary>ドメインログオン</primary></indexterm>
+ドメインコントローラによって提供される重要な機能の絶対必要な部分なので、
+ネットワークまたはドメインログオンについてはここで説明する。
 </para>
 
 <sect2>
-<title>Domain Network Logon Service</title>
+<title>ドメインネットワークログオンサービス</title>
 
 <para>
-<indexterm><primary>domain logon</primary></indexterm>
-All domain controllers must run the netlogon service (<emphasis>domain logons</emphasis>
-in Samba). One domain controller must be configured with <smbconfoption name="domain master">Yes</smbconfoption>
-(the PDC); on all BDCs set the parameter <smbconfoption name="domain master">No</smbconfoption>.
+<indexterm><primary>ドメインログオン</primary></indexterm>
+すべてのドメインコントローラはネットログオンサービスを動かさなければ
+ならない(Samba中での<emphasis>ドメインログオン</emphasis>)。
+1つのドメインコントローラは
+<smbconfoption name="domain master">Yes</smbconfoption>(PDC)と設定
+しなければならない;すべてのBDCではパラメータを
+<smbconfoption name="domain master">No</smbconfoption>と設定する。
 </para>
 
 <sect3>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <example id="PDC-config">
-<title>smb.conf for being a PDC</title>
+<title>PDCにするためのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain logons">Yes</smbconfoption>
-<smbconfoption name="domain master">(Yes on PDC, No on BDCs)</smbconfoption>
+<smbconfoption name="domain master">(PDCならYes, BDCならNo)</smbconfoption>
 
 <smbconfsection name="[netlogon]"/>
 <smbconfoption name="comment">Network Logon Service</smbconfoption>
@@ -1057,7 +1057,7 @@ in Samba). One domain controller must be configured with <smbconfoption name="do
 
 </sect3>
 <sect3>
-<title>The Special Case of MS Windows XP Home Edition</title>
+<title>Windows XP Home Editionにおける特別な例</title>
 
 <para>
 <indexterm><primary>Windows XP Home edition</primary></indexterm>
