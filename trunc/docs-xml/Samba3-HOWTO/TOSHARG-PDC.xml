@@ -1264,10 +1264,12 @@ Windows 9x/Meが見つけることを期待するネットワークログオン�
 <indexterm><primary>security mode</primary></indexterm>
 <indexterm><primary>user-mode security</primary></indexterm>
 <indexterm><primary>share-mode security</primary></indexterm>
-There are a few comments to make in order to tie up some loose ends. There has been much debate over the issue
-of whether it is okay to configure Samba as a domain controller that operates with security mode other than
-user-mode. The only security mode that will not work due to technical reasons is share-mode security. Domain
-and server mode security are really just a variation on SMB user-level security.
+若干の未解決の問題と結びつけるためのいくつかのコメントがある。
+ユーザモード以外でのセキュリティモードで、Sambaをドメインコントローラ
+として操作するような設定を認めるかについての問題についてたくさんの議論
+があった。技術的な理由で動作しない唯一のセキュリティモードは共有モード
+である。ドメインとサーバモードセキュリティはSMBユーザレベルセキュリティ
+の単なるバリエーションである。
 </para>
 
 <para>
@@ -1275,27 +1277,32 @@ and server mode security are really just a variation on SMB user-level security.
 <indexterm><primary>DOMAIN&lt;1B&gt;</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>NetBIOS name</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>NetBIOS名</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>election</primary></indexterm>
-Actually, this issue is also closely tied to the debate on whether Samba must be the DMB for its workgroup
-when operating as a domain controller.  In a pure Microsoft Windows NT domain, the PDC wins the election to be
-the DMB, and then registers the DOMAIN&lt;1B&gt; NetBIOS name. This is not the name used by Windows clients
-to locate the domain controller, all domain controllers register the DOMAIN&lt;1C&gt; name and Windows clients
-locate a network logon server by seraching for the DOMAIN&lt;1C&gt; name.  A DMB is a Domain Master Browser
-&smbmdash; see <link linkend="NetworkBrowsing">The Network Browsing Chapter</link>, <link
-linkend="DMB">Configuring WORKGROUP Browsing</link>; Microsoft PDCs expect to win the election to become the
-DMB, if it loses that election it will report a continuous and rapid sequence of warning messages to its
-Windows event logger complaining that it has lost the election to become a DMB.  For this reason, in networks
-where a Samba server is the PDC it is wise to configure the Samba domain controller as the DMB.
+実際、この問題は、ドメインコントローラとして動作しているとき、その
+ワークグループのためのDMBがSambaであることに違いないことについて、
+この問題も議論に密接に結びついている。純粋なMicrosoft Windows NT
+ドメイン中では、PDCはDMBになるために選択に勝ち、次に、DOMAIN&lt;1B&gt;
+というNetBIOS名を登録する。これはWindowsクライアントがDOMAIN&lt;1C&gt;
+名を探すためにネットワークログオンサーバを位置づけるのには使われない
+名前である。DMBはドメインマスタブラウザである。&smbmdash;
+<link linkend="NetworkBrowsing">ネットワークブラウジングの章</link>、
+<link linkend="DMB">WORKGROUPブラウジングの設定</link>を参照のこと。
+Microsoft PDC はDMBになるためにelectionに勝つことを期待するが、もしも
+勝てない場合、electionはDMBになるためのelectionに負けたという内容を
+Windowsイベントロガー(訳注:イベントビューワ?)に、警告メッセージを
+短い間隔で連続して出力する。この理由のため、SambaサーバがPDCである
+ネットワーク中では、SambaドメインコントローラをDMBとして設定するのが
+賢いやり方である。
 </para>
 
 <note><para>
 <indexterm><primary>DOMAIN&lt;1D&gt;</primary></indexterm>
-<indexterm><primary>synchronization</primary></indexterm>
-<indexterm><primary>domain control</primary></indexterm>
-<indexterm><primary>browse list management</primary></indexterm>
-<indexterm><primary>network</primary><secondary>logon</secondary><tertiary>service</tertiary></indexterm>
+<indexterm><primary>動機</primary></indexterm>
+<indexterm><primary>ドメイン制御</primary></indexterm>
+<indexterm><primary>ブラウズリスト管理</primary></indexterm>
+<indexterm><primary>ネットワーク</primary><secondary>ログオン</secondary><tertiary></tertiary></indexterm>
 SMB/CIFS servers that register the DOMAIN&lt;1C&gt; name do so because they provide the network logon
 service. Server that register the DOMAIN&lt;1B&gt; name are DMBs &smbmdash; meaning that they are responsible
 for browse list synchronization across all machines that have registered the DOMAIN&lt;1D&gt; name. The later
