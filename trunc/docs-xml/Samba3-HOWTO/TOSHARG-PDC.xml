@@ -1203,60 +1203,62 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 <listitem>
 	<para>
 	<indexterm><primary>profiles</primary></indexterm>
-	The client connects to the user's home share and searches for the 
-	user's profile. As it turns out, you can specify the user's home share as
-	a share name and path. For example, <filename>\\server\fred\.winprofile</filename>.
-	If the profiles are found, they are implemented.
+	クライアントはユーザのプロファイル検索のためにユーザのホーム共有に
+	接続する。明確ではあるが、共有名とパスでユーザのホーム共有を指定する
+	こともできる。例をあげると、<filename>\\server\fred\.winprofile</filename>
+	である。もしもプロファイルが見つかれば、それを適用する。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
 	<indexterm><primary>CONFIG.POL</primary></indexterm>
-	The client then disconnects from the user's home share and reconnects to
-	the NetLogon share and looks for <filename>CONFIG.POL</filename>, the policies file. If this is
-	found, it is read and implemented.
+	クライアントは次にユーザのホーム共有を切断し、NetLogon共有に再接続し、
+	ポリシーファイル<filename>CONFIG.POL</filename>を探す。もしも見つかれば、
+	それを読み、適用する。
 	</para>
 </listitem>
 </orderedlist>
 
 <para>
-The main difference between a PDC and a Windows 9x/Me logon server configuration is:
+PDCとWindows 9x/Me ログオンサーバ設定の主要な違いは以下の通り:
 </para>
 
 <itemizedlist>
 <listitem><para>
-	<indexterm><primary>password</primary><secondary>plaintext</secondary></indexterm>
-	<indexterm><primary>plaintext password</primary></indexterm>
-	Password encryption is not required for a Windows 9x/Me logon server. But note
-	that beginning with MS Windows 98 the default setting is that plaintext
-	password support is disabled. It can be re-enabled with the registry
-	changes that are documented in <link linkend="PolicyMgmt">System and Account Policies</link>.
+	<indexterm><primary>パスワード</primary><secondary>平文</secondary></indexterm>
+	<indexterm><primary>平文パスワード</primary></indexterm>
+	パスワード暗号化はWindows 9x/Me ログオンサーバのためには不要である。しかし、
+	Microsoft Windows 98 の最初では、既定値が、平文パスワードサポートが無効化され
+	ていることに注意。<link linkend="PolicyMgmt">システムとアカウントポリシー</link>
+	で記述されているレジストリの変更で再度有効に出来る。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>machine trust account</primary></indexterm>
-	Windows 9x/Me clients do not require and do not use Machine Trust Accounts.
+	Windows 9x/Me クライアントはマシン信頼アカウントを必要とせず、かつ使わない。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>network logon services</primary></indexterm>
-A Samba PDC will act as a Windows 9x/Me logon server; after all, it does provide the
-network logon services that MS Windows 9x/Me expect to find.
+<indexterm><primary>ネットワークログオンサービス</primary></indexterm>
+Samba PDCは Windows 9x/Meログオンサーバとして振る舞う。その後、
+Windows 9x/Meが見つけることを期待するネットワークログオンサービスを提供
+する。
 </para>
 
 <note><para>
 <indexterm><primary>sniffer</primary></indexterm>
-Use of plaintext passwords is strongly discouraged. Where used they are easily detected
-using a sniffer tool to examine network traffic.
+平文パスワードの使用は思いとどまることを強く推奨する。それを使うと、
+ネットワークトラフィックを解析するネットワークも似たツールを使うことで、
+容易に検出できる。
 </para></note>
 
 </sect3>
 </sect2>
 
 <sect2>
-<title>Security Mode and Master Browsers</title>
+<title>セキュリティモードとマスタブラウザ</title>
 
 <para>
 <indexterm><primary>security mode</primary></indexterm>
