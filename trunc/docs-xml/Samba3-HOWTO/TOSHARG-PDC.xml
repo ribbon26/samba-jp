@@ -1315,21 +1315,25 @@ DOMAIN&lt;1C&gt;名を登録するSMB/CIFSサーバは、ネットワークロ�
 </para></note>
 
 <para>
-Now back to the issue of configuring a Samba domain controller to use a mode other than <smbconfoption
-name="security">user</smbconfoption>. If a Samba host is configured to use another SMB server or domain
-controller in order to validate user connection requests, it is a fact that some other machine on the network
-(the <smbconfoption name="password server"/>) knows more about the user than the Samba host. About 99 percent
-of the time, this other host is a domain controller. Now to operate in domain mode security, the
-<smbconfoption name="workgroup"/> parameter must be set to the name of the Windows NT domain (which already
-has a domain controller).  If the domain does not already have a domain controller, you do not yet have a
-domain.
+<smbconfoption name="security">user</smbconfoption>以外のモードを
+Sambaドメインコントローラで使うための設定の問題に戻ろう。もしも、
+Sambaホストがユーザ接続要求を検証するために他のSMBサーバかドメイン
+コントローラを使うように設定した場合、ネットワーク上の他のマシン
+(<smbconfoption name="password server"/>)は、Sambaホストよりもより
+詳しくユーザについて知っているということになる。時間のおおよそ99％は
+この他のホストはドメインコントローラである。ドメインモードセキュリティ
+で動作しているとした場合、<smbconfoption name="workgroup"/>パラメータ
+はWindows NTドメインの名前にセットされなければならない(それはすでに
+ドメインコントローラが持っている)。もしもドメインがドメインコントローラ
+をまだ持っていない場合、まだドメインを持っていないことになる。
 </para>
 
 <para>
-Configuring a Samba box as a domain controller for a domain that already by definition has a
-PDC is asking for trouble. Therefore, you should always configure the Samba domain controller
-to be the DMB for its domain and set <smbconfoption name="security">user</smbconfoption>.
-This is the only officially supported mode of operation.
+すでに定義上PDCを持つドメイン用にSambaサーバをドメインコントローラとして
+設定することは災難を招く。それゆえ、そのドメインに対してDMBになるようにと
+<smbconfoption name="security">user</smbconfoption>を設定するようにSamba
+ドメインコントローラをいつでも設定すべきである。これのみが公式にサポート
+される操作モードである。
 </para>
 
 </sect2>
@@ -1337,28 +1341,31 @@ This is the only officially supported mode of operation.
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>共通のエラー</title>
 
 <sect2>
-<title><quote>$</quote> Cannot Be Included in Machine Name</title>
+<title><quote>$</quote>マシン名中に$を含められない</title>
 
 <para>
 <indexterm><primary>BSD</primary></indexterm>
 <indexterm><primary>FreeBSD</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
-A machine account, typically stored in <filename>/etc/passwd</filename>, takes the form of the machine
-name with a <quote>$</quote> appended. Some BSD systems will not create a user with a <quote>$</quote> in the name.
-Recent versions of FreeBSD have removed this limitation, but older releases are still in common use.
+通常<filename>/etc/passwd</filename>に格納されるマシンアカウントは、マシン名に
+<quote>$</quote>を追加した形で通常格納される。いくつかのBSDシステムはユーザ名
+に<quote>$</quote>を使うものが作成できない。最近のFreeBSDのバージョンはこの
+制限が取り払われたが、それより古いものはまだ使われている。
 </para>
 
 <para>
 <indexterm><primary>vipw</primary></indexterm>
-The problem is only in the program used to make the entry. Once made, it works perfectly.  Create a user
-without the <quote>$</quote>. Then use <command>vipw</command> to edit the entry, adding the <quote>$</quote>.
-Or create the whole entry with vipw if you like; make sure you use a unique user login ID.
+問題はエントリを作る時に使われるプログラム中のみである。一度作成されると
+問題なく動作する。まず<quote>$</quote>なしでユーザ名を作る。次に、エントリを
+編集するために <command>vipw</command>を使い<quote>$</quote>を追加する。
+あるいは、全部のエントリをvipwで作っても良い。固有のユーザログインIDを使うように
+すること。
 </para>
 
-<note><para>The machine account must have the exact name that the workstation has.</para></note>
+<note><para>マシンアカウントはワークステーションが持つ名前と同じ名前でなければならない。</para></note>
 
 <note><para>
 The UNIX tool <command>vipw</command> is a common tool for directly editing the <filename>/etc/passwd</filename> file.
