@@ -1368,30 +1368,32 @@ Sambaホストがユーザ接続要求を検証するために他のSMBサーバ
 <note><para>マシンアカウントはワークステーションが持つ名前と同じ名前でなければならない。</para></note>
 
 <note><para>
-The UNIX tool <command>vipw</command> is a common tool for directly editing the <filename>/etc/passwd</filename> file.
-The use of vipw will ensure that shadow files (where used) will remain current with the passwd file. This is
-important for security reasons.
+UNIXのツール<command>vipw</command>は直接<filename>/etc/passwd</filename>を修正
+する共通的なツールである。vipwの使用は(もしも使われるならば)shadowファイルが
+パスワードファイルと同じになることを保証する。これはセキュリティの観点から重要
+である。
 </para></note>
 
 </sect2>
 
 <sect2>
-<title>Joining Domain Fails Because of Existing Machine Account</title>
+<title>存在するマシンアカウントがあるためにドメイン参加に失敗する</title>
 		
 <para>
-<indexterm><primary>join domain</primary></indexterm>
-<quote>I get told, `You already have a connection to the Domain....' or `Cannot join domain, the
-credentials supplied conflict with an existing set...' when creating a Machine Trust Account.</quote>
+<indexterm><primary>ドメインへの参加</primary></indexterm>
+<quote>I get told,マシン信頼アカウント作成時に `You already have a connection to the Domain....'
+か `Cannot join domain, the credentials supplied conflict with an existing set...'が出る
+ことについては以前に話した。</quote>
 </para>
 
 <para>
-This happens if you try to create a Machine Trust Account from the machine itself and already have a
-connection (e.g., mapped drive) to a share (or IPC$) on the Samba PDC. The following command will remove all
-network drive connections:
+これは、もしもそのマシン自身でマシン信頼アカウントの作成を試みるとき、
+Samba PDC上の共有(かIPC$)に接続している(たとえばマップされたドライブ)
+時に起きる。以下のコマンドはすべてのネットワークドライブ接続を切断する:
 <screen>
 &dosprompt;<userinput>net use * /d</userinput>
 </screen>
-This will break all network connections.
+これはすべてのネットワーク接続を切る。
 </para>
 
 <para>
