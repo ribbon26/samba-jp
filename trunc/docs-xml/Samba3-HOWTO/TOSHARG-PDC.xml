@@ -1397,32 +1397,36 @@ Samba PDC上の共有(かIPC$)に接続している(たとえばマップされ�
 </para>
 
 <para>
-Further, if the machine is already a <quote>member of a workgroup</quote> that is the same name as the domain
-you are joining (bad idea), you will get this message. Change the workgroup name to something else &smbmdash;
-it does not matter what &smbmdash; reboot, and try again.
+さらに、もしもマシンがすでに(悪いアイデアだが)参加済みのドメインと同じ名前の
+<quote>workgroupのメンバ</quote>ならば、このメッセージを受け取るだろう。
+ワークグループを何か重要でない別の名前に変えて&smbmdash;再起動し、&smbmdash;
+もう一度やってみる。
 </para>
 
 </sect2>
 
 <sect2>
-<title>The System Cannot Log You On (C000019B)</title>
+<title>システムにログオンできない(C000019B)</title>
 
 <para><quote>
-I joined the domain successfully but after upgrading to a newer version of the Samba code I get the message,
+ドメイン参加に成功したが、Sambaのバージョンを新しくした後、ログオン時に
 <errorname>`The system cannot log you on (C000019B). Please try again or consult your system
-administrator</errorname> when attempting to logon.'</quote>
+administrator</errorname>というメッセージが出た。'</quote>
 </para>
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
-This occurs when the domain SID stored in the secrets.tdb database is changed. The most common cause of a
-change in domain SID is when the domain name and/or the server name (NetBIOS name) is changed.  The only way
-to correct the problem is to restore the original domain SID or remove the domain client from the domain and
-rejoin. The domain SID may be reset using either the net or rpcclient utilities.
+これはsecrets.tdbに格納されているドメインSIDが変わったことによって引き
+起こされるものである。最も一般的なドメインSIDの変更理由は、ドメイン名
+かサーバ名(NetBIOS名)が変わったことである。問題を解決する唯一の方法は
+オリジナルのドメインSIDをリストアするか、ドメインと領域からドメイン
+クライアントを削除することである。ドメインSIDは、netまたはrpcclient
+ユーティリティによってリセットしても良い。
 </para>
 
 <para>
-To reset or change the domain SID you can use the net command as follows:
+ドメインSIDをリセットしたり、変更するには、以下のようにnetコマンドを
+使用する:
 
 <screen>
 &rootprompt;<userinput>net getlocalsid 'OLDNAME'</userinput>
@@ -1431,26 +1435,30 @@ To reset or change the domain SID you can use the net command as follows:
 </para>
 
 <para>
-Workstation Machine Trust Accounts work only with the domain (or network) SID. If this SID changes,
-domain members (workstations) will not be able to log onto the domain. The original domain SID
-can be recovered from the secrets.tdb file. The alternative is to visit each workstation to rejoin
-it to the domain.
+ワークステーションのマシン信頼アカウントはドメイン(またはネットワーク)
+SIDとともにのみ動作する。もしもこのSIDが変更されたならば、ドメイン
+メンバ(ワークステーション)はドメインにログオンできない。オリジナルの
+ドメインSIDはsecrets.tdbファイルから復元できる。別の解は、おのおのの
+ワークステーションが再度ドメインに参加することである。
 </para>
 
 </sect2>
 
 <sect2>
-<title>The Machine Trust Account Is Not Accessible</title>
+<title>マシン信頼アカウントがアクセスできない</title>
 
 <para>
-<quote>When I try to join the domain I get the message, <errorname>"The machine account 
-for this computer either does not exist or is not accessible</errorname>." What's wrong?</quote>
+<quote>ドメインに参加しようとした時 <errorname>"The machine account 
+for this computer either does not exist or is not accessible</errorname>."
+というメッセージが出た。何が悪い?</quote>
 </para>
 
 <para>
-This problem is caused by the PDC not having a suitable Machine Trust Account.  If you are using the
-<smbconfoption name="add machine script"/> method to create accounts, then this would indicate that it has not
-worked. Ensure the domain admin user system is working.
+この問題は、PDCが適したマシン信頼アカウントを持っていないことによって
+引き起こされる。もしもアカウント作成時に
+<smbconfoption name="add machine script"/>という方法を使ったならば、
+これは、それが動作していないことを示している。ドメイン管理ユーザが
+動作しているかを確認して正常動作するようにすること。
 </para>
 
 <para>
