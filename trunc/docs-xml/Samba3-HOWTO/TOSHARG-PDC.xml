@@ -1462,75 +1462,85 @@ for this computer either does not exist or is not accessible</errorname>."
 </para>
 
 <para>
-Alternately, if you are creating account entries manually, then they have not been created correctly. Make
-sure that you have the entry correct for the Machine Trust Account in <filename>smbpasswd</filename> file on
-the Samba PDC.  If you added the account using an editor rather than using the smbpasswd utility, make sure
-that the account name is the machine NetBIOS name with a <quote>$</quote> appended to it (i.e.,
-computer_name$). There must be an entry in both the POSIX UNIX system account backend as well as in the
-SambaSAMAccount backend. The default backend for Samba-3 (i.e., the parameter <parameter>passdb
-backend</parameter> is not specified in the &smb.conf; file, or if specified is set to
-<literal>smbpasswd</literal>, are respectively the <filename>/etc/passwd</filename> and
-<filename>/etc/samba/smbpasswd</filename> (or <filename>/usr/local/samba/lib/private/smbpasswd</filename> if
-compiled using Samba Team default settings). The use of the <filename>/etc/passwd</filename> can be overridden
-by alternative settings in the NSS <filename>/etc/nsswitch.conf</filename> file.
+かわりに、もしもアカウントエントリを手動で作成していた場合、それらは
+正しく作られていない。Samba PDC上で<filename>smbpasswd</filename>ファイル
+中のマシン信頼アカウントのエントリを正しくしなければならない。もしも、
+smbpasswd ユーティリティを使わないでアカウントをエディタで追加した場合、
+アカウント名をマシンのNetBIOS名に<quote>$</quote>を追加して(すなわち、
+computer_name$)おくこと。これはSambaSAMAccountバックエンドと同じように
+POSIX UNIXシステムアカウントバックエンドの両方の中に存在する必要がある。
+Samba-3の既定値のバックエンド(すなわち、パラメータ
+<parameter>passdb backend</parameter>)は&smb.conf;ファイル中で指定されて
+おらず、また、もしも指定されているものが<literal>smbpasswd</literal>
+だった場合、それらはそれぞれ<filename>/etc/passwd</filename>と
+<filename>/etc/samba/smbpasswd</filename>(あるいはもしもSambaチームの
+既定値の設定を使ってコンパイルした場合は
+<filename>/usr/local/samba/lib/private/smbpasswd</filename>)である。
+<filename>/etc/passwd</filename>の使用はNSS <filename>/etc/nsswitch.conf</filename>
+ファイル中の別の設定で上書きすることが出来る。
 </para>
 
 <para>
-Some people have also reported that inconsistent subnet masks between the Samba server and the NT 
-client can cause this problem.  Make sure that these are consistent for both client and server.
+ある人はSambaサーバとNTクライアントの間でのつじつまの合わないサブネットマスク
+は、この問題を引き起こすことを報告している。両方のクライアントとサーバで整合性
+を取るようにすること。
 </para>
 </sect2>
 
 <sect2>
-<title>Account Disabled</title>
+<title>アカウントが無効</title>
 
-<para><quote>When I attempt to log in to a Samba domain from a NT4/W200x workstation,
-I get a message about my account being disabled.</quote></para>
+<para><quote>NT4/W200xワークステーションからSambaドメインにログオンしようとした
+とき、アカウントが無効になっているメッセージが出た。</quote></para>
 
 <para>
-Enable the user accounts with <userinput>smbpasswd -e <replaceable>username</replaceable>
-</userinput>. This is normally done as an account is created.
+<userinput>smbpasswd -e <replaceable>username</replaceable>でユーザアカウントを有効化する
+</userinput>。これは通常アカウント作成時に行われる。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Domain Controller Unavailable</title>
+<title>ドメインコントローラが無効</title>
 		
-<para><quote>Until a few minutes after Samba has started, clients get the error `Domain Controller Unavailable'</quote></para>
+<para><quote>Sambaが開始してから数分間、クライアントがエラー`Domain Controller Unavailable'を受け取る。</quote></para>
 
 <para>
-A domain controller has to announce its role on the network. This usually takes a while. Be patient for up to 15 minutes,
-then try again.
+ドメインコントローラはネットワーク上にその役割をアナウンスする。これは通常しばらくかかる。最低15分は待ち、
+再度試してみること。
 </para>
 </sect2>
 
 <sect2>
-<title>Cannot Log onto Domain Member Workstation After Joining Domain</title>
+<title>ドメイン参加後ドメインメンバワークステーションにログオンできない</title>
 
 <para>
 <indexterm><primary>schannel</primary></indexterm>
 <indexterm><primary>signing</primary></indexterm>
-After successfully joining the domain, user logons fail with one of two messages: one to the
-effect that the domain controller cannot be found; the other claims that the account does not
-exist in the domain or that the password is incorrect. This may be due to incompatible
-settings between the Windows client and the Samba-3 server for <emphasis>schannel</emphasis>
-(secure channel) settings or <emphasis>smb signing</emphasis> settings. Check your Samba
-settings for <emphasis>client schannel</emphasis>, <emphasis>server schannel</emphasis>,
-<emphasis>client signing</emphasis>, <emphasis>server signing</emphasis> by executing:
+ドメイン参加成功後、2つのメッセージのうちの1つが出てユーザログオンに失敗する:
+1つはドメインコントローラが見つからないというもので、もう1つはアカウントが
+ドメインにないか、パスワードが違うというものである。これは、<emphasis>schannel</emphasis>
+(セキュアchannel)の設定か、<emphasis>smb 署名</emphasis>の設定について、
+WindowsクライアントとSamba-3サーバの違いによる互換性のない設定によるものである。
+以下を実行して、Sambaの
+<emphasis>client schannel</emphasis>、<emphasis>server schannel</emphasis>、
+<emphasis>client signing</emphasis>、<emphasis>server signing</emphasis>の設定と
+それらの値について確認すること:
 <screen>
-<command>testparm -v | grep channel</command> and looking for the value of these parameters.
+<command>testparm -v | grep channel</command>
 </screen>
 </para>
 
 <para>
-Also use the MMC &smbmdash; Local Security Settings. This tool is available from the
-Control Panel. The Policy settings are found in the Local Policies/Security Options area and are prefixed by
-<emphasis>Secure Channel:..., and Digitally sign...</emphasis>.
+また、MMC &smbmdash; ローカルセキュリティの設定を使うこと。このツールはコントロール
+パネルにある。ポリシーの設定は、ローカルポリシー/セキュリティオプション領域にあり、
+<emphasis>Secure Channel:..., and Digitally sign...</emphasis>というプレフィックスが
+ついている(訳注:XPでは、管理ツール->ローカル セキュリティ ポリシーで、
+ローカルポリシー/セキュリティオプションにあるはず....。)
 </para>
 
 <para>
-It is important that these be set consistently with the Samba-3 server settings.
+これらを首尾一貫してSamba-3サーバに設定をするのは重要である。
 </para>
 
 </sect2>
