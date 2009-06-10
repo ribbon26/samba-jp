@@ -11,20 +11,21 @@
 <title>バックアップドメインコントローラ</title>
 
 <para>
-Before you continue reading this section, please make sure that you are comfortable
-with configuring a Samba domain controller as described in <link linkend="samba-pdc">Domain Control</link>.
+このセクションを読み始める前に、<link linkend="samba-pdc">ドメイン制御</link>
+中で説明されているSambaドメインコントローラの設定に自身があるようにして
+おくこと。
 </para>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-This is one of the most difficult chapters to summarize. It does not matter what we say here, for someone will
-still draw conclusions and/or approach the Samba Team with expectations that are either not yet capable of
-being delivered or that can be achieved far more effectively using a totally different approach. In the event
-that you should have a persistent concern that is not addressed in this book, please email <ulink
-url="mailto:jht@samba.org">John H. Terpstra</ulink> clearly setting out your requirements and/or question, and
-we will do our best to provide a solution.
+これは、要約するのが最も難しい章である。ここで何かを言うかが重要ではなく、
+まだ提供できていない、あるいは全く違ったアプローチを使うことでより効果的に
+達成できるかに、誰かが引き続き結論を描くか、期待を込めてSambaチームに
+アプローチする。この本に取り上げられていない持続的な関心事を持っている場合、
+要求または質問を明確にして<ulink url="mailto:jht@samba.org">John H. Terpstra</ulink>
+まで電子メールを送ってほしい。
 </para>
 
 <para>
@@ -32,20 +33,24 @@ we will do our best to provide a solution.
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>LDAP</primary><secondary>slave</secondary></indexterm>
-<indexterm><primary>scalability</primary></indexterm>
-Samba-3 can act as a Backup Domain Controller (BDC) to another Samba Primary Domain Controller (PDC). A
-Samba-3 PDC can operate with an LDAP account backend. The LDAP backend can be either a common master LDAP
-server or a slave server. The use of a slave LDAP server has the benefit that when the master is down, clients
-may still be able to log onto the network.  This effectively gives Samba a high degree of scalability and is
-an effective solution for large organizations. If you use an LDAP slave server for a PDC, you will need to
-ensure the master's continued availability &smbmdash; if the slave finds its master down at the wrong time,
-you will have stability and operational problems.
+<indexterm><primary>スケーラビリティ</primary></indexterm>
+Samba-3は他のSambaプライマリドメインコントローラ(PDC)へのバックアップドメイン
+コントローラ(BDC)として振る舞うことが出来る。Samba-3 PDCはLDAPアカウント
+バックエンドと共に動作できる。LDAPバックエンドは共通のマスタLDAPサーバか
+スレーブサーバのどちらでも使える。スレーブLDAPサーバの利用は、マスタサーバ
+がダウンしたときに、クライアントが引き続きネットワークにログオンできるようになる
+という利点がある。これは効果的にSambaに対して高度な拡張性を与え、大規模な
+組織のための効果的なソリューションとなる。もしも、PDCにスレーブLDAPサーバを
+使うのであれば、マスタサーバの可用性を確保しておく必要がある。&smbmdash;
+もしも、スレーブが悪い時間にマスタのダウンを検出したならば、安定性と操作上の
+問題が生じるであろう(訳注:最近のOpenLDAPだと、マスタ/スレーブという用語は
+使っていない)。
 </para>
 
 <para>
 <indexterm><primary>two-way</primary><secondary>propagation</secondary></indexterm>
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
-<indexterm><primary>non-LDAP</primary><secondary>backend</secondary></indexterm>
+<indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
 <indexterm><primary>propagate</primary></indexterm>
 While it is possible to run a Samba-3 BDC with a non-LDAP backend, that backend must allow some form of
 "two-way" propagation of changes from the BDC to the master.  At this time only LDAP delivers the capability
