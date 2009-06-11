@@ -52,28 +52,32 @@ Samba-3は他のSambaプライマリドメインコントローラ(PDC)へのバ
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
 <indexterm><primary>propagate</primary></indexterm>
-While it is possible to run a Samba-3 BDC with a non-LDAP backend, that backend must allow some form of
-"two-way" propagation of changes from the BDC to the master.  At this time only LDAP delivers the capability
-to propagate identity database changes from the BDC to the PDC. The BDC can use a slave LDAP server, while it
-is preferable for the PDC to use as its primary an LDAP master server.
+非LDAPバックエンドでSamba-3 BDCを動かすことが可能ではあるが、そのバックエンドは
+なんらかの、BDCからマスタへの"2-way"の更新の伝搬を許可しなければならない。この
+点で、LDAPのみが、BDCからPDCへのイデンティティデータベースの変更を伝搬する能力
+を提供する。PDCに対してそのプライマリとしてLDAPマスタサーバを使うことが望ましい
+間、BDCはスレーブLDAPサーバを使える(訳注:whileをどう訳すか...
+The BDC can use a slave LDAP server, while it
+is preferable for the PDC to use as its primary an LDAP master server.)。
 </para>
 
 <para>
-<indexterm><primary>non-LDAP</primary><secondary>backend</secondary></indexterm>
-<indexterm><primary>SAM backend</primary><secondary>non-LDAP</secondary></indexterm>
-<indexterm><primary>domain</primary><secondary>member</secondary><tertiary>server</tertiary></indexterm>
+<indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
+<indexterm><primary>SAMバックエンド</primary><secondary>非LDAP</secondary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>メンバ</secondary><tertiary>サーバ</tertiary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>trust account password</primary></indexterm>
 <indexterm><primary>domain trust</primary></indexterm>
-The use of a non-LDAP backend SAM database is particularly problematic because domain member
-servers and workstations periodically change the Machine Trust Account password. The new
-password is then stored only locally. This means that in the absence of a centrally stored
-accounts database (such as that provided with an LDAP-based solution) if Samba-3 is running
-as a BDC, the BDC instance of the domain member trust account password will not reach the
-PDC (master) copy of the SAM. If the PDC SAM is then replicated to BDCs, this results in 
-overwriting the SAM that contains the updated (changed) trust account password with resulting
-breakage of the domain trust.
+非LDAPバックエンドSAMデータベースの使用は、ドメインメンバサーバとワーク
+ステーションが定期的にマシン信頼アカウントのパスワードを変更するため、
+特に問題である。新しいパスワードはローカルにのみ格納される。これは、
+もしも、Samba-3がBDCで動いている場合、集中して管理するアカウントデータ
+ベース(LDAPベースのソリューションで提供されるようなもの)の欠如を意味し、
+ドメインメンバ信頼アカウントパスワードのインスタンスは、PDC(マスタ)のSAMの
+コピーに届かない。もしもPDCのSAMがBDCに複製されるならば、更新された
+(変更された)信頼アカウントパスワードを含むSAMを上書きし、ドメインの信頼
+関係を壊す結果となる。
 </para>
 
 <para>
@@ -81,61 +85,60 @@ breakage of the domain trust.
 <indexterm><primary>SAM backend</primary><secondary>ldapsam</secondary></indexterm>
 <indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
-Considering the number of comments and questions raised concerning how to configure a BDC,
-let's consider each possible option and look at the pros and cons for each possible solution.
-<link linkend="pdc-bdc-table">The Domain Backend Account Distribution Options table below</link> lists 
-possible design configurations for a PDC/BDC infrastructure.
+どのようにBDCを設定するかの、数多いコメントと議論によって発生した質問
+を考慮し、おのおの可能なオプションを考慮し、おのおのの解について利点
+欠点を見てみよう。
+<link linkend="pdc-bdc-table">以下のドメインバックエンドアカウント分散オプション一覧</link>
+は、PDC/BDC公正のための可能な設定例の一覧である。
 </para>
 
-<table frame="all" id="pdc-bdc-table"><title>Domain Backend Account Distribution Options</title>
+<table frame="all" id="pdc-bdc-table"><title>ドメインバックエンドアカウント分散オプション</title>
 <tgroup cols="3">
         <colspec align="center" colwidth="1*"/>
         <colspec align="center" colwidth="1*"/>
         <colspec align="left" colwidth="3*"/>
 
         <thead>
-        <row><entry>PDC Backend</entry><entry>BDC Backend</entry><entry>Notes/Discussion</entry></row>
+        <row><entry>PDCバックエンド</entry><entry>BDCバックエンド</entry><entry>補足事項</entry></row>
         </thead>
         <tbody>
         <row>
-        <entry><para>Master LDAP Server</para></entry>
-        <entry><para>Slave LDAP Server</para></entry>
-        <entry><para>The optimal solution that provides high integrity. The SAM will be
-		replicated to a common master LDAP server.</para></entry>
+        <entry><para>マスタLDAPサーバ</para></entry>
+        <entry><para>スレーブLDAPサーバ</para></entry>
+        <entry><para>高い完全性を提供する完全なソリューション。SAMは共通マスタLDAPサーバで
+	    複製される。</para></entry>
         </row>
         <row>
-        <entry><para>Single Central LDAP Server</para></entry>
-        <entry><para>Single Central LDAP Server</para></entry>
+        <entry><para>単一の集中LDAPサーバ</para></entry>
+        <entry><para>単一の集中LDAPサーバ</para></entry>
 	<entry><para>
-	A workable solution without failover ability. This is a usable solution, but not optimal. 
+	フェイルオーバ機能がない実用可能なソリューション。これは実用的なソリューションで
+	あるが、完全ではない。
 	</para></entry>
         </row>
         <row>
         <entry><para>tdbsam</para></entry>
         <entry><para>tdbsam + <command>net rpc vampire</command></para></entry>
         <entry><para>
-	Does not work with Samba-3.0; Samba does not implement the
-        server-side protocols required.
+	Samba-3.0では動かない。Sambaはサーバサイドプロトコル要求を実装していない。
 	</para></entry>
         </row>
         <row>
         <entry><para>tdbsam</para></entry>
         <entry><para>tdbsam + <command>rsync</command></para></entry>
         <entry><para>
-	Do not use this configuration.
-	Does not work because the TDB files are live and data may not
-        have been flushed to disk.  Furthermore, this will cause
-        domain trust breakdown.
+	この設定を使ってはいけない。データがディスクに完全に書き戻されていない
+	かもしれないので、TDBファイルは使用中状態であるため動作しない。
+	さらに、ドメインの信頼関係を壊すだろう。
 	</para></entry>
         </row>
         <row>
         <entry><para>smbpasswd file</para></entry>
         <entry><para>smbpasswd file</para></entry>
         <entry><para>
-	Do not use this configuration.
-	Not an elegant solution due to the delays in synchronization
-        and also suffers
-        from the issue of domain trust breakdown.
+	この設定を使ってはいけない。
+	同期が遅延するためにエレガントな解ではなく、ドメイン信頼関係
+	の問題で悩むだろう。
 	</para></entry>
         </row>
         </tbody>
@@ -145,11 +148,11 @@ possible design configurations for a PDC/BDC infrastructure.
 </sect1>
 
 <sect1>
-<title>Essential Background Information</title>
+<title>本質的な背景について</title>
 
 <para>
-<indexterm><primary>domain controller</primary></indexterm>
-<indexterm><primary>logon requests</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<indexterm><primary>ログオン要求</primary></indexterm>
 <indexterm><primary>LanMan</primary></indexterm>
 <indexterm><primary>Netlogon</primary></indexterm>
 A domain controller is a machine that is able to answer logon requests from network
