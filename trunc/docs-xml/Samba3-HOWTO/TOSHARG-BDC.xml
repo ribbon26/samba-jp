@@ -269,46 +269,51 @@ SAMのマスタコピーを持っている。PDCが持っているローカル�
 <indexterm><primary>SAM</primary><secondary>差分ファイル</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba-3 cannot participate in true SAM replication and is therefore not able to
-employ precisely the same protocols used by MS Windows NT4. A Samba-3 BDC will
-not create SAM update delta files. It will not interoperate with a PDC (NT4 or Samba)
-to synchronize the SAM from delta files that are held by BDCs.
+Samba-3は真のSAM複製に参加できず、それゆえ、Microsoft Windows NT4で
+試用されている同じプロトコルを正確に使用することが出来ない。1つの
+Samba-3 BDCはSAM更新差分ファイルを作成できない。BDCが持っている差分
+ファイルからSAMの同期をPDC(NT4またはSamba)間で行う操作はできない。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba-3 cannot function as a BDC to an MS Windows NT4 PDC, and Samba-3 cannot
-function correctly as a PDC to an MS Windows NT4 BDC. Both Samba-3 and MS Windows
-NT4 can function as a BDC to its own type of PDC.
+Samba-3 はMicrosoft Windows NT4 BDCとしては動作できず、Samba-3は
+Microsoft Windows NT4 BDCに対するPDCとして正しく動作できない。
+Samba-3とMicrosoft Windows NT4はそれぞれのタイプのPDCへのBDCとして
+機能することは出来る。
 </para>
 
 <para>
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-<indexterm><primary>domain security</primary></indexterm>
-The BDC is said to hold a <emphasis>read-only</emphasis> of the SAM from which
-it is able to process network logon requests and authenticate users. The BDC can
-continue to provide this service, particularly while, for example, the wide-area
-network link to the PDC is down. A BDC plays a very important role in both the
-maintenance of domain security as well as in network integrity.
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+BDCはネットワークログオン要求とユーザ認証が出来るところから、
+<emphasis>読み出し専用</emphasis>のSAMを保持していると言える。
+BDCは、たとえば、PDCへの広域ネットワークがダウンするような場合
+特に、このサービスを提供し続けることができる。BDCはネットワーク
+の完全性と同様のドメインセキュリティの保守の両方でとても重要な
+役割を演じる。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>promoted</primary></indexterm>
-<indexterm><primary>demoted</primary></indexterm>
-<indexterm><primary>reconfiguration</primary></indexterm>
-In the event that the NT4 PDC should need to be taken out of service, or if it dies, one of the NT4 BDCs can
-be promoted to a PDC. If this happens while the original NT4 PDC is online, it is automatically demoted to an
-NT4 BDC. This is an important aspect of domain controller management. The tool that is used to effect a
-promotion or a demotion is the Server Manager for Domains. It should be noted that Samba-3 BDCs cannot be
-promoted in this manner because reconfiguration of Samba requires changes to the &smb.conf; file. It is easy
-enough to manuall change the &smb.conf; file and then restart relevant Samba network services.
+<indexterm><primary>昇格</primary></indexterm>
+<indexterm><primary>降格</primary></indexterm>
+<indexterm><primary>再設定</primary></indexterm>
+NT4 PDCが稼働停止の必要がある状態か、停止している時、NT4 BDC
+の1つはPDCに昇格することが出来る。もしもNT4 PDCが動作中にこの
+ことが発生すると、それは自動的にNT4 BDCに降格する。これは、
+ドメインコントローラの管理において重要な観点である。降格および
+昇格を行う時に使うツールはドメインサーバマネージャである。Samba-3 
+BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とするという
+理由で、この方式で昇格することは出来ないことに注意。&smb.conf;
+ファイルを手動での変更とSambaネットワークサービスに関連したもの
+の再起動で十分である。
 </para>
 
 <sect3>
-<title>Example PDC Configuration</title>
+<title>PDC設定例</title>
 
 <para>
 <indexterm><primary>domain logon</primary></indexterm>
