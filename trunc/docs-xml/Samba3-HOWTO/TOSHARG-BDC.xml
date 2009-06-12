@@ -240,35 +240,33 @@ BDCをインストールすることが好ましい2つの状況がある:
 
 	<listitem><para>
 	<indexterm><primary>network</primary><secondary>wide-area</secondary></indexterm>
-	At each remote site, to reduce wide-area network traffic and to add stability to
-	remote network operations. The design of the network, and the strategic placement of
-	BDCs, together with an implementation that localizes as much of network to client
-	interchange as possible, will help to minimize wide-area network bandwidth needs
-	(and thus costs).
+	おのおののリモートサイトで、広域ネットワークの転送量を減らすためとリモート
+	ネットワーク操作の安定性を追加するため。ネットワークのデザインと、戦略的な
+	BDCの配置はともに、可能な限りクライアントへのデータ交換をする、たくさんの
+	ネットワークの局所化を実装するとともに、必要とする広域ネットワークのバンド
+	幅(とコストも)を最小化するのを支援する。
 	</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-<indexterm><primary>user account database</primary></indexterm>
+<indexterm><primary>ユーザアカウントデータベース</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>trigger</primary></indexterm>
-The interoperation of a PDC and its BDCs in a true Windows NT4 environment is worth
-mentioning here. The PDC contains the master copy of the SAM. In the event that an
-administrator makes a change to the user account database while physically present
-on the local network that has the PDC, the change will likely be made directly to
-the PDC instance of the master copy of the SAM. In the event that this update may
-be performed in a branch office, the change will likely be stored in a delta file
-on the local BDC. The BDC will then send a trigger to the PDC to commence the process
-of SAM synchronization. The PDC will then request the delta from the BDC and apply
-it to the master SAM. The PDC will then contact all the BDCs in the domain and
-trigger them to obtain the update and then apply that to their own copy of the SAM.
+真のWindows NT4環境中でのPDCとBDCの相互運用は、ここで言及する価値がある。PDCは
+SAMのマスタコピーを持っている。PDCが持っているローカルネットワーク上に物理的に
+ある間にユーザアカウントデータベースへの変更が管理者によって行われるという
+イベント中で、変更はSAMのマスタコピーのPDCインスタンスで直接行われるだろう。
+別のオフィスでこの更新が行われるというイベントの場合は、変更はローカルBDC
+上の差分ファイルに格納されるだろう。BDCはSAM同期を開始するために、PDCに対して
+トリガを送る。PDCはドメイン中のすべてのBDCに接続し、差分を入手し、それをそれら
+固有のSAMのコピーに適用する。
 </para>
 
 <para>
-<indexterm><primary>SAM</primary><secondary>replication</secondary></indexterm>
-<indexterm><primary>SAM</primary><secondary>delta file</secondary></indexterm>
+<indexterm><primary>SAM</primary><secondary>複製</secondary></indexterm>
+<indexterm><primary>SAM</primary><secondary>差分ファイル</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 Samba-3 cannot participate in true SAM replication and is therefore not able to
