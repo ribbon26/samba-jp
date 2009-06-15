@@ -380,68 +380,74 @@ BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とする�
 <indexterm><primary>CN</primary></indexterm>
 <indexterm><primary>DN</primary></indexterm>
 <indexterm><primary>RFC2830</primary></indexterm>
-When configuring a master LDAP server that will have slave LDAP servers, do not forget to configure this in
-the <filename>/etc/openldap/slapd.conf</filename> file. It must be noted that the DN of a server certificate
-must use the CN attribute to name the server, and the CN must carry the servers' fully qualified domain name.
-Additional alias names and wildcards may be present in the subjectAltName certificate extension. More details
-on server certificate names are in RFC2830.
+スレーブLDAPサーバサーバを持つマスタLDAPサーバ設定時、このことを
+<filename>/etc/openldap/slapd.conf</filename>ファイル中に設定する
+ことを忘れないように。サーバ証明書のDNはサーバの名前のためのCN属性を
+使わなければならず、CNはサーバの完全なドメイン名を伝搬しなければならない
+ことに注意。追加の別名とワイルドカードは、subjectAltName認証拡張(訳注:
+certificate extension)中に存在しても良い。サーバ証明書についてのより詳細
+な情報はRFC2830にある。
 </para>
 
 <para>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
-<indexterm><primary>transport layer security</primary><see>TLS</see></indexterm>
+<indexterm><primary>トランスポートレイヤのセキュリティ</primary><see>TLS</see></indexterm>
 <indexterm><primary>/etc/ssl/certs/slapd.pem</primary></indexterm>
 <indexterm><primary>slapd.pem</primary></indexterm>
 <indexterm><primary>Red Hat Linux</primary></indexterm>
-It does not really fit within the scope of this document, but a working LDAP installation is basic to
-LDAP-enabled Samba operation. When using an OpenLDAP server with Transport Layer Security (TLS), the machine
-name in <filename>/etc/ssl/certs/slapd.pem</filename> must be the same as in
-<filename>/etc/openldap/sldap.conf</filename>. The Red Hat Linux startup script creates the
-<filename>slapd.pem</filename> file with hostname <quote>localhost.localdomain.</quote> It is impossible to
-access this LDAP server from a slave LDAP server (i.e., a Samba BDC) unless the certificate is re-created with
-a correct hostname.
+この文書の範囲内にはうまく適合しないが、LDAPのインストール作業はLDAPが
+有効になっているSamba操作の基本である。トランスポートレイヤのセキュリティ
+(TLS)とともにOpenLDAPを使うとき、<filename>/etc/ssl/certs/slapd.pem</filename>
+中のマシン名は<filename>/etc/openldap/sldap.conf</filename>と同じものである
+必要がある。Red Hat Linuxスタートアップスクリプトはホスト名として、
+<quote>localhost.localdomain</quote>とした<filename>slapd.pem</filename>
+ファイルを生成する。これだと、正しいホスト名で証明書が再作成されない限り、
+スレーブLDAPサーバ(すなわちSamba BDC)からLDAPサーバにアクセスできない。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>credentials</primary></indexterm>
-<indexterm><primary>replication</primary></indexterm>
+<indexterm><primary>複製</primary></indexterm>
 <indexterm><primary>duplicate</primary></indexterm>
-Do not install a Samba PDC so that is uses an LDAP slave server. Joining client machines to the domain
-will fail in this configuration because the change to the machine account in the LDAP tree must take place on
-the master LDAP server. This is not replicated rapidly enough to the slave server that the PDC queries. It
-therefore gives an error message on the client machine about not being able to set up account credentials. The
-machine account is created on the LDAP server, but the password fields will be empty.  Unfortunately, some
-sites are unable to avoid such configurations, and these sites should review the <smbconfoption name="ldap
-replication sleep"/> parameter, intended to slow down Samba sufficiently for the replication to catch up.
-This is a kludge, and one that the administrator must manually duplicate in any scripts (such as the
-<smbconfoption name="add machine script"/>) that they use.
+LDAPスレーブサーバを使う形でSamba PDCをインストールしてはいけない。ドメインへの
+クライアントマシンの参加は、LDAPデータベース中へのマシンアカウントの変更がマスタ
+LDAPサーバ上で行わなければならないという理由で、この設定では失敗する。これは
+PDCが問い合わせるスレーブサーバに十分急速に複製されない。そのため、クライアント
+マシン上に、アカウントの証明書がセットアップできないというエラーメッセージが出る。
+LDAPサーバ上でマシンアカウントが作成されるが、パスワードファイルは空である。
+残念なことに、いくつかのサイトはこのような設定を防げず、それらのサイトは、
+レプリケーションに追いつくために、Sambaの処理を十分に遅くするように意図するための、
+<smbconfoption name="ldap replication sleep"/>パラメータを検討すべきである。
+これは、その場しのぎの解決方法であり、管理者が何らかのスクリプト(たとえば、
+<smbconfoption name="add machine script"/>のようなもの)を使って手動で複製
+しなければならない。
 </para>
 
 <para>
-Possible PDC/BDC plus LDAP configurations include:
+PDC/BDCとLDAPを使う、設定可能なパターンは以下の通り:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	PDC+BDC -> One Central LDAP Server.
+	PDC+BDC -> 1つの集中LDAPサーバ。
 	</para></listitem>
 	<listitem><para>
-	PDC -> LDAP master server, BDC -> LDAP slave server.
+	PDC -> LDAP マスタサーバ、 BDC -> LDAPスレーブサーバ。
 	</para></listitem>
 	<listitem><para>
-	PDC -> LDAP master, with secondary slave LDAP server.
+	PDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
 	</para><para>
-	BDC -> LDAP master, with secondary slave LDAP server.
+	BDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
 	</para></listitem>
 	<listitem><para>
-	PDC -> LDAP master, with secondary slave LDAP server.
+	PDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
 	</para><para>
-	BDC -> LDAP slave server, with secondary master LDAP server.
+	BDC -> 第二のマスタLDAPサーバを使うLDAPスレーブサーバ。
 	</para></listitem>
 </itemizedlist>
 
