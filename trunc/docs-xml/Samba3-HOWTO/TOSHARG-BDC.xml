@@ -452,13 +452,13 @@ PDC/BDCとLDAPを使う、設定可能なパターンは以下の通り:
 </itemizedlist>
 
 <para>
-In order to have a fallback configuration (secondary) LDAP server, you would specify
-the secondary LDAP server in the &smb.conf; file as shown in <link linkend="mulitldapcfg">the Multiple LDAP
-Servers in &smb.conf; example</link>.
+(セカンダリ)LDAPサーバサーバの次候補の設定を行うために、
+<link linkend="mulitldapcfg">&smb.conf;に記述する複数LDAPサーバの例</link>
+を指定する。
 </para>
 
 <example id="mulitldapcfg">
-<title>Multiple LDAP Servers in &smb.conf;</title>
+<title>&smb.conf;に記述する複数LDAPサーバ</title>
 <smbconfblock>
 <smbconfoption name="passdb backend">ldapsam:"ldap://master.quenya.org ldap://slave.quenya.org"</smbconfoption>
 </smbconfblock>
@@ -467,56 +467,60 @@ Servers in &smb.conf; example</link>.
 </sect2>
 
 <sect2>
-<title>Active Directory Domain Control</title>
+<title>Active Directoryドメイン制御</title>
 
 <para>
-<indexterm><primary>MS Windows 2000</primary></indexterm>
+<indexterm><primary>Microsoft Windows 2000</primary></indexterm>
 <indexterm><primary>Active Directory</primary></indexterm>
-<indexterm><primary>directory</primary></indexterm>
+<indexterm><primary>ディレクトリ</primary></indexterm>
 <indexterm><primary>replicated</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
-As of the release of MS Windows 2000 and Active Directory, this information is now stored
-in a directory that can be replicated and for which partial or full administrative control
-can be delegated. Samba-3 is not able to be a domain controller within an Active Directory
-tree, and it cannot be an Active Directory server. This means that Samba-3 also cannot
-act as a BDC to an Active Directory domain controller.
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+Microsoft Windows 2000とActive Directoryのリリース時点で、この情報は
+複製が出来、部分的あるいは全体の管理者による管理が伝搬できるディレクトリ
+中に格納される。Samba-3はActive Directory内でドメインコントローラ
+にはなれず、また、Active Directoryサーバにもなれない。これは、Samba-3
+はActive DirectoryドメインコントローラのBDCとして振る舞えないことも
+意味する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>What Qualifies a Domain Controller on the Network?</title>
+<title>何がネットワーク上でドメインコントローラを制限するか?</title>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-Every machine that is a domain controller for the domain MIDEARTH has to register the NetBIOS
-group name MIDEARTH&lt;1C&gt; with the WINS server and/or by broadcast on the local network.
-The PDC also registers the unique NetBIOS name MIDEARTH&lt;1B&gt; with the WINS server.
-The name type &lt;1B&gt; name is normally reserved for the Domain Master Browser (DMB), a role
-that has nothing to do with anything related to authentication, but the Microsoft domain
-implementation requires the DMB to be on the same machine as the PDC.
+ドメインMIDEARTH用のドメインコントローラであるおのおののマシンは、
+WINSサーバかローカルネットワークに対するブロードキャストを使って
+NetBIOSグループ名MIDEARTH&lt;1C&gt;を登録しなければならない。
+PDCもWINSサーバを使って一意のNetBIOS名MIDEARTH&lt;1B&gt;を登録する。
+名前タイプ&lt;1B&gt;名は通常認証に関連する何らの作業もしない、
+ドメインマスタブラウザ(DMB)のために通常予約されるが、Microsoft
+ドメインの実装はDMBに対してPDCと同じマシンであることを要求する。
 </para>
 
 <para>
-<indexterm><primary>broadcast</primary></indexterm>
-<indexterm><primary>name registration</primary></indexterm>
+<indexterm><primary>ブロードキャスト</primary></indexterm>
+<indexterm><primary>名前登録</primary></indexterm>
 <indexterm><primary>SMB/CIFS</primary></indexterm>
-Where a WINS server is not used, broadcast name registrations alone must suffice. Refer to
-<link linkend="NetworkBrowsing">Network Browsing</link>,<link linkend="netdiscuss">Discussion</link>
-for more information regarding TCP/IP network protocols and how SMB/CIFS names are handled.
+WINSサーバを使っていないとき、ブロードキャスト名前登録はそれだけで
+十分になっていなければならない。<link linkend="NetworkBrowsing">ネットワークブラウジング</link>
+と<link linkend="netdiscuss">Discussion</link>に、TCP/IPネットワーク
+プロトコル関連と、どのようにSMB/CIFS名前が扱うかについてのより詳細な
+情報があるので参照すること。
 </para>
 
 </sect2>
 
 <sect2>
-<title>How Does a Workstation find its Domain Controller?</title>
+<title>どのようにワークステーションがそのドメインコントローラを探すか?</title>
 
 <para>
-<indexterm><primary>locate domain controller</primary></indexterm>
+<indexterm><primary>ドメインコントローラへの位置づけ</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
 There are two different mechanisms to locate a domain controller: one method is used when
 NetBIOS over TCP/IP is enabled and the other when it has been disabled in the TCP/IP
