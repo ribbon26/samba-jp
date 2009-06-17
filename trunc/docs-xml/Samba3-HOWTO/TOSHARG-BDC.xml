@@ -661,26 +661,25 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>rsync</primary></indexterm>
 	<indexterm><primary>ssh</primary></indexterm>
 	<indexterm><primary>LDAP</primary></indexterm>
-	The Samba password database must be replicated from the PDC to the BDC.
-	Although it is possible to synchronize the <filename>smbpasswd</filename>
-	file with <command>rsync</command> and <command>ssh</command>, this method
-	is broken and flawed, and is therefore not recommended. A better solution
-	is to set up slave LDAP servers for each BDC and a master LDAP server for the PDC.
-	The use of rsync is inherently flawed by the fact that the data will be replicated
-	at timed intervals. There is no guarantee that the BDC will be operating at all
-	times with correct and current machine and user account information. This means that
-	this method runs the risk of users being inconvenienced by discontinuity of access
-	to network services due to inconsistent security data. It must be born in mind that
-	Windows workstations update (change) the machine trust account password at regular
-	intervals &smbmdash; administrators are not normally aware that this is happening
-	or when it takes place.
+	SambaパスワードデータベースはPDCからBDCに向けて複製されねばならない。
+	<command>rsync</command>と<command>ssh</command>で<filename>smbpasswd</filename>
+	ファイルの同期を取るのが可能であるにもかかわらず、この方法は破綻していて
+	欠陥があり、それゆえ推奨できない。よりよい解決方法は、おのおののBDC
+	に対してスレーブLDAPサーバを、PDCにマスタLDAPサーバを構築することである。
+	rsyncの使用は、一定間隔毎にデータが複製されるということにより、本質的に
+	欠陥がある。すべての瞬間に、正しい現在のマシンとユーザアカウント情報で
+	BDCが操作できるという保証がない。これは、この方法が、首尾一貫しない
+	セキュリティデータのために不連続なネットワークサービスへのアクセスによって
+	ユーザに不都合が生じる危険性がある。Windows ワークステーションが通常の
+	間隔でマシン信頼アカウントパスワードを更新(変更)することを心にとめて
+	おかねばならず、&smbmdash;管理者は通常それが起きていることを知らない。
 	</para>
 
 	<para>
 	<indexterm><primary>POSIX</primary></indexterm>
 	<indexterm><primary>LDAP</primary></indexterm>
 	<indexterm><primary>SambaSAMAccount</primary></indexterm>
-	<indexterm><primary>synchronize</primary></indexterm>
+	<indexterm><primary>同期</primary></indexterm>
 	The use of LDAP for both the POSIX (UNIX user and group) accounts and for the
 	SambaSAMAccount data automatically ensures that all account change information
 	will be written to the shared directory. This eliminates the need for any special
