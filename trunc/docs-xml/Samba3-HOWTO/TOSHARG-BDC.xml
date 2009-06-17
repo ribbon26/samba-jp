@@ -560,17 +560,19 @@ MIDEARTH&lt;1C&gt;に対するNetBIOS名前解決を行うことによって行�
 </sect3>
 
 <sect3>
-<title>NetBIOS Over TCP/IP Disabled</title>
+<title>NetBIOS Over TCP/IPが無効</title>
 
 <para>
 <indexterm><primary>realm</primary></indexterm>
-<indexterm><primary>logon authentication</primary></indexterm>
+<indexterm><primary>ログオン認証</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>_ldap._tcp.pdc._msdcs.quenya.org</primary></indexterm>
-An MS Windows NT4/200x/XP Professional workstation in the realm <constant>quenya.org</constant>
-that has a need to affect user logon authentication will locate the domain controller by 
-re-querying DNS servers for the <constant>_ldap._tcp.pdc._msdcs.quenya.org</constant> record.
-More information regarding this subject may be found in <link linkend="adsdnstech">DNS and Active Directory</link>.
+ユーザログオン認証に影響を与えることを必要とする realm <constant>quenya.org</constant>
+中のMicrosoft Windows NT4/200x/XP Professional workstationは
+<constant>_ldap._tcp.pdc._msdcs.quenya.org</constant>レコードをDNS
+サーバに対して再度問い合わせすることでドメインコントローラの位置を
+見つける。この項目に対する関連したより詳細な情報は、
+<link linkend="adsdnstech">DNSとActive Directory</link>にある。
 </para>
 
 </sect3>
@@ -578,12 +580,12 @@ More information regarding this subject may be found in <link linkend="adsdnstec
 </sect1>
 
 <sect1>
-<title>Backup Domain Controller Configuration</title>
+<title>バックアップドメインコントローラの設定</title>
 
 <para>
 <indexterm><primary>BDC</primary></indexterm>
-The creation of a BDC requires some steps to prepare the Samba server before
-&smbd; is executed for the first time. These steps are as follows:
+BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備するため
+のいくつかのステップが要求される。
 </para>
 
 <itemizedlist>
@@ -593,23 +595,25 @@ The creation of a BDC requires some steps to prepare the Samba server before
 	<indexterm><primary>BDC</primary></indexterm>
 	<indexterm><primary>private/secrets.tdb</primary></indexterm>
 	<indexterm><primary>private/MACHINE.SID</primary></indexterm>
-	<indexterm><primary>domain SID</primary></indexterm>
-	The domain SID has to be the same on the PDC and the BDC. In Samba versions pre-2.2.5, the domain SID was
-	stored in the file <filename>private/MACHINE.SID</filename>.  For all versions of Samba released since 2.2.5
-	the domain SID is stored in the file <filename>private/secrets.tdb</filename>. This file is unique to each
-	server and cannot be copied from a PDC to a BDC; the BDC will generate a new SID at startup. It will overwrite
-	the PDC domain SID with the newly created BDC SID.  There is a procedure that will allow the BDC to aquire the
-	domain SID. This is described here.
+	<indexterm><primary>ドメインSID</primary></indexterm>
+	ドメインSIDはPDCとBDCで同じにしなければならない。バージョン2.2.5
+	以前のSambaでは、ドメインSIDは<filename>private/MACHINE.SID</filename>
+	ファイルに格納されていた。バージョン2.2.5以降すべてのバージョンの
+	Sambaでは、ドメインSIDは<filename>private/secrets.tdb</filename>ファイルに
+	格納されている。このファイルはおのおののサーバで固有であり、PDCからBDCに
+	コピーできない。BDCは新しいSIDを起動時に生成する。新しく生成したBDCのSID
+	でPDCのドメインSIDを上書きする。これは、BDCにドメインSIDを入手することを
+	認める手続きである。これについては以下で説明する。
 	</para>
 
 	<para>
-	<indexterm><primary>domain SID</primary></indexterm>
+	<indexterm><primary>ドメインSID</primary></indexterm>
 	<indexterm><primary>PDC</primary></indexterm>
 	<indexterm><primary>BDC</primary></indexterm>
 	<indexterm><primary>secrets.tdb</primary></indexterm>
 	<indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>getsid</tertiary></indexterm>
-	To retrieve the domain SID from the PDC or an existing BDC and store it in the
-	<filename>secrets.tdb</filename>, execute:
+	PDCまたは存在するBDCからドメインSIDを検索するためと、それを
+	<filename>secrets.tdb</filename>に格納するためには、以下を実行する:
 	</para>
 <screen>
 &rootprompt;<userinput>net rpc getsid</userinput>
