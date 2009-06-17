@@ -10,7 +10,7 @@
 	シャットダウン処理を実行するスクリプトのフルパス名である。</para>
 
 	<para>サーバに接続しているユーザが <constant>SeRemoteShutdownPrivilege</constant> 権利を有している場合、
-	このコマンドはそのユーザの権限で実行される。</para>
+	このコマンドはroot権限で実行される。</para>
 
 	<para>%m %t %r %f パラメータは以下のように展開される:</para>
 	
@@ -36,11 +36,12 @@
 <programlisting format="linespecific">
 #!/bin/bash
 		
-$time=0
-let &quot;time/60&quot;
-let &quot;time++&quot;
+$time=2
+let time=&quot;${time} / 60&quot;
+let time=&quot;${time} + 1&quot;
 
 /sbin/shutdown $3 $4 +$time $1 &amp;
+
 </programlisting>
 シャットダウン処理から復帰することはないので、この処理はバックグラウンドで実行する必要がある。
 </para>
