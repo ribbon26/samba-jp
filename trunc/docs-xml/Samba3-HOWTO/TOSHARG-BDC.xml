@@ -623,37 +623,38 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<listitem><para>
 	<indexterm><primary>secrets.tdb</primary></indexterm>
 	<indexterm><primary>smbpasswd</primary></indexterm>
-	<indexterm><primary>LDAP administration password</primary></indexterm>
-	Specification of the <smbconfoption name="ldap admin dn"/> is obligatory.
-	This also requires the LDAP administration password to be set in the <filename>secrets.tdb</filename>
-	using the <command>smbpasswd -w <replaceable>mysecret</replaceable></command>.
+	<indexterm><primary>LDAP管理用パスワード</primary></indexterm>
+	<smbconfoption name="ldap admin dn"/>の指定は必須である。
+	これは、<command>smbpasswd -w <replaceable>mysecret</replaceable></command>
+	を使って、<filename>secrets.tdb</filename>中にLDAP管理用パスワードを
+	設定することも要求する。
 	</para></listitem>
 
 	<listitem><para>
-	The <smbconfoption name="ldap suffix"/> parameter and the <smbconfoption name="ldap idmap suffix"/>
-	parameter must be specified in the &smb.conf; file.
+	The <smbconfoption name="ldap suffix"/>パラメータと<smbconfoption name="ldap idmap suffix"/>
+	パラメータは&smb.conf;ファイル中で指定しなければならない。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
-	<indexterm><primary>user database</primary></indexterm>
-	<indexterm><primary>synchronized</primary></indexterm>
+	<indexterm><primary>レプリケーション</primary><secondary>SAM</secondary></indexterm>
+	<indexterm><primary>ユーザデータベース</primary></indexterm>
+	<indexterm><primary>同期</primary></indexterm>
 	<indexterm><primary>NIS</primary></indexterm>
-	The UNIX user database has to be synchronized from the PDC to the
-	BDC. This means that both the <filename>/etc/passwd</filename> and
-	<filename>/etc/group</filename> have to be replicated from the PDC
-	to the BDC. This can be done manually whenever changes are made. 
-	Alternately, the PDC is set up as an NIS master server and the BDC as an NIS slave
-	server. To set up the BDC as a mere NIS client would not be enough,
-	as the BDC would not be able to access its user database in case of
-	a PDC failure. NIS is by no means the only method to synchronize
-	passwords. An LDAP solution would also work.
+	UNIXユーティリティ差データベースはPDCからBDCにむけて同期しなければ
+	ならない。これは、<filename>/etc/passwd</filename>と
+	<filename>/etc/group</filename>の両方がPDCからBDCに複製されなければ
+	ならないことを意味している。これは変更が行われたたびごとに手動で
+	行うことが出来る。別のやり方として、PDCをNISマスタサーバとして設定し、
+	BDCをNISスレーブサーバとして設定するBDCをNISクライアントとして設定
+	するのでは、PDCが止まっているときにそのユーザデータベースにアクセス
+	出来ないので不十分である。NISはパスワード同期の唯一の手法というわけ
+	ではない。LDAPを使う解も同様に動作する。
 	</para>
 	</listitem>
 
 	<listitem><para>
-	<indexterm><primary>password database</primary></indexterm>
-	<indexterm><primary>replicated</primary></indexterm>
+	<indexterm><primary>パスワードデータベース</primary></indexterm>
+	<indexterm><primary>複製</primary></indexterm>
 	<indexterm><primary>PDC</primary></indexterm>
 	<indexterm><primary>BDC</primary></indexterm>
 	<indexterm><primary>smbpasswd</primary></indexterm>
