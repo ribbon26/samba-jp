@@ -680,10 +680,10 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>LDAP</primary></indexterm>
 	<indexterm><primary>SambaSAMAccount</primary></indexterm>
 	<indexterm><primary>同期</primary></indexterm>
-	The use of LDAP for both the POSIX (UNIX user and group) accounts and for the
-	SambaSAMAccount data automatically ensures that all account change information
-	will be written to the shared directory. This eliminates the need for any special
-	action to synchronize account information because LDAP will meet that requirement.
+	POSIX(UNIXユーザとグループ)アカウント用とSambaSAMAccountデータ用の両方に
+	LDAPを使うことは、すべてのアカウント変更情報が共有ディレクトリに書かれること
+	を自動的に保証する。これは、LDAPがその要求に適合するために、アカウント情報の
+	同期のための任意の特別な動作の必要性をこのことは排除する。
 	</para></listitem>
 
 	<listitem><para>
@@ -693,27 +693,29 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>BDC</primary></indexterm>
 	<indexterm><primary>cron</primary></indexterm>
 	<indexterm><primary>rsync</primary></indexterm>
-	The netlogon share has to be replicated from the PDC to the BDC. This can be done manually whenever login
-	scripts are changed, or it can be done automatically using a <command>cron</command> job that will replicate
-	the directory structure in this share using a tool like <command>rsync</command>. The use of
-	<command>rsync</command> for replication of the netlogon data is not critical to network security and is one
-	that can be manually managed given that the administrator will make all changes to the netlogon share as part
-	of a conscious move.
+	netlogon共有はPDCからBDCに向けて複製されねばならない。これは、ログインスクリプト
+	が変更されるたびごとに手動で行うことが出来るか、<command>rsync</command>のような
+	ツールを使うことでこの共有中のディレクトリ構造を複製する、<command>cron</command>
+	ジョブを使うことで自動的に行える。netlogonデータの複製のために、
+	<command>rsync</command>を使うことは、ネットワークセキュリティに対して特段重要
+	というわけではなく、意識的な移動の一部としてnetlogon共有へのすべての変更を行う
+	管理者によって与えられたものについて手動で管理できる(訳注:意味取りにくい)。
 	</para></listitem>
 
 </itemizedlist>
 
 <sect2>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
-Finally, the BDC has to be capable of being found by the workstations. This can be done by configuring the
-Samba &smb.conf; file <smbconfsection name="[global]"/> section as shown in <link linkend="minim-bdc">Minimal
-Setup for Being a BDC</link>.
+最後に、BDCはワークステーションによって見つけられるようになっていなければならない。
+これは、<link linkend="minim-bdc">BDCであるための最低限の設定</link>中にある
+Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクションで設定
+されることで行える。
 </para>
 
 <example id="minim-bdc">
-<title>Minimal Setup for Being a BDC</title>
+<title>BDCであるための最低限の設定</title>
 <smbconfblock>
 <smbconfoption name="workgroup">&example.workgroup;</smbconfoption>
 <smbconfoption name="passdb backend">ldapsam:ldap://slave-ldap.quenya.org</smbconfoption>
@@ -732,9 +734,10 @@ Setup for Being a BDC</link>.
 </example>
 
 <para>
-Fully documented working example network configurations using OpenLDAP and Samba
-as available in the <ulink url="http://www.samba.org/samba/docs/Samba3-ByExample">book</ulink> <quote>Samba-3
-by Example</quote> that may be obtained from local and on-line book stores.
+完全な、OpenLDAPとSambaを使うネットワーク設定の例の説明は、ローカルとオンライン
+書店で見つけられる、<quote>Samba-3 by Example</quote>という
+<ulink url="http://www.samba.org/samba/docs/Samba3-ByExample">本</ulink>
+にある。
 </para>
 
 <para>
