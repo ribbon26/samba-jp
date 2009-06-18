@@ -775,49 +775,53 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 <indexterm><primary>ID マッピング</primary></indexterm>
 <indexterm><primary>ドメインメンバサーバ</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
-Samba-3 has introduced a new ID mapping facility. One of the features of this facility is that it
-allows greater flexibility in how user and group IDs are handled in respect to NT domain user and group
-SIDs. One of the new facilities provides for explicitly ensuring that UNIX/Linux UID and GID values
-will be consistent on the PDC, all BDCs, and all domain member servers. The parameter that controls this
-is called <parameter>idmap backend</parameter>. Please refer to the man page for &smb.conf; for more information
-regarding its behavior.
+Samba-3は新しいIDマッピング機能を導入した。その機能の特徴の1つは、
+NTドメインのユーザとグループSIDに関してユーザとグループIDが扱われる
+より柔軟さを提供することである。新しい機能の1つは、UNIX/Linuxの
+UIDとGIDの値が、PDC、すべてのBDCとすべてのドメインメンバサーバ上で
+一貫していることを明確に保証することを提供することである。これを制御
+するパラメータは、<parameter>idmap backend</parameter>である。その動作
+に関連する詳細な情報は、&smb.conf;マニュアルページを参照してほしい。
 </para></note>
 
 <para>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>domain member servers</primary></indexterm>
-The use of the <smbconfoption name="idmap backend">ldap:ldap://master.quenya.org</smbconfoption>
-option on a BDC only makes sense where ldapsam is used on a PDC. The purpose of an LDAP-based idmap backend is
-also to allow a domain member (without its own passdb backend) to use winbindd to resolve Windows network users
-and groups to common UID/GIDs. In other words, this option is generally intended for use on BDCs and on domain
-member servers.
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+BDC上での<smbconfoption name="idmap backend">ldap:ldap://master.quenya.org</smbconfoption>
+オプションの使用は、PDC上でldapsamが使われている時にのみ意味をなす。
+LDAPベースのバックエンドの目的は、ドメインメンバ(固有のpassdbバックエンドがない)
+にWindowsネットワークユーザとグループを共通のUID/GIDに解決するためのwinbind
+を使うことも許可する。別の言い方をすると、このオプションは一般的に、
+BDCとドメインメンバサーバ上で使うために意図されている。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>共通のエラー</title>
 
 <para>
-<indexterm><primary>domain control</primary></indexterm>
-Domain control was a new area for Samba, but there are now many examples that we may refer to.
-Updated information will be published as they become available and may be found in later Samba releases or
-from the Samba Web <ulink url="http://samba.org">site</ulink>; refer in particular to the
-<filename>WHATSNEW.txt</filename> in the Samba release tarball. The book, <quote>Samba-3 by Example</quote>
-documents well tested and proven configuration examples. You can obtain a copy of this
-<ulink url="http://www.samba.org/samba/docs/Samba3-ByExample.pdf">book</ulink> for the Samba web site.
+<indexterm><primary>ドメイン制御</primary></indexterm>
+ドメイン制御はSambaの新しい領域であるが、参照できるたくさんの例がある。
+更新された情報は、それが有効になったときで、新しいSambaのリリースがあった
+時か、Samba Web<ulink url="http://samba.org">site</ulink>で公開される。
+Sambaリリースパッケージの<filename>WHATSNEW.txt</filename>を特に参照すること。
+<quote>Samba-3 by Example</quote>という本には、よくテストされ、検証された
+例が記述されている。これをSamba Webサイト上の
+<ulink url="http://www.samba.org/samba/docs/Samba3-ByExample.pdf">本</ulink>
+からコピーを入手することもできる。
 </para>
 
 <sect2>
-<title>Machine Accounts Keep Expiring</title>
+<title>マシンアカウントが満了し続ける</title>
 
 <para>
-<indexterm><primary>Machine Trust Accounts</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>passdb</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-<indexterm><primary>Local Machine Trust Account</primary></indexterm>
+<indexterm><primary>ローカルマシン信頼アカウント</primary></indexterm>
 This problem will occur when the passdb (SAM) files are copied  from a central
 server but the local BDC is acting as a PDC. This results in the application of
 Local Machine Trust Account password updates to the local SAM. Such updates 
