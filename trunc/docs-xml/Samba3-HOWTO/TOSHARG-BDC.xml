@@ -745,10 +745,12 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 <indexterm><primary>NetBIOS</primary></indexterm>
 <indexterm><primary>group</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-This configuration causes the BDC to register only the name MIDEARTH&lt;1C&gt; with the WINS server. This is
-not a problem, as the name MIDEARTH&lt;1C&gt; is a NetBIOS group name that is meant to be registered by more
-than one machine. The parameter <smbconfoption name="domain master">no</smbconfoption> forces the BDC not to
-register MIDEARTH&lt;1B&gt;, which is a unique NetBIOS name that is reserved for the PDC.
+この設定はWINSサーバを使ってMIDEARTH&lt;1C&gt;という名前のみをBDCに
+登録させる。これは、MIDEARTH&lt;1C&gt;というNetBIOSグループ名が、1つ
+以上のマシンから登録されるという意味において、問題ではない。パラメータ
+<smbconfoption name="domain master">no</smbconfoption>は、PDCのために
+予約されている固有のNetBIOS名であるMIDEARTH&lt;1B&gt;をBDCが登録させ
+ないようにする。
 </para>
 
 <para>
@@ -761,16 +763,17 @@ register MIDEARTH&lt;1B&gt;, which is a unique NetBIOS name that is reserved for
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>nss_ldap</primary></indexterm>
-The <parameter>idmap backend</parameter> will redirect the <command>winbindd</command> utility to use the LDAP
-database to store all mappings for Windows SIDs to  UIDs and GIDs for UNIX accounts in a repository that is
-shared. The BDC will however depend on local resolution of UIDs and GIDs via NSS and the
-<command>nss_ldap</command> utility.
+<parameter>idmap backend</parameter>パラメータは、共有されるリポジトリ
+中のUNIXアカウントのためのWindows SIDからUIDとGIDへのすべてのマッピング
+を格納するためのLDAPサーバデータベースを使うための<command>winbindd</command>
+ユーティリティにリダイレクトする。BDCは<command>nss_ldap</command>ユーティリティ
+とNSS経由の、ローカルでのUIDとGIDの解決にも依存する。
 </para>
 
 <note><para>
-<indexterm><primary>Server Type</primary><secondary>Domain Member</secondary></indexterm>
-<indexterm><primary>ID mapping</primary></indexterm>
-<indexterm><primary>domain member server</primary></indexterm>
+<indexterm><primary>サーバタイプ</primary><secondary>ドメインメンバ</secondary></indexterm>
+<indexterm><primary>ID マッピング</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
 Samba-3 has introduced a new ID mapping facility. One of the features of this facility is that it
 allows greater flexibility in how user and group IDs are handled in respect to NT domain user and group
