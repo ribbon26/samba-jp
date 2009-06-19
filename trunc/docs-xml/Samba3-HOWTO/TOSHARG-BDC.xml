@@ -822,49 +822,50 @@ Sambaリリースパッケージの<filename>WHATSNEW.txt</filename>を特に参
 <indexterm><primary>passdb</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>ローカルマシン信頼アカウント</primary></indexterm>
-This problem will occur when the passdb (SAM) files are copied  from a central
-server but the local BDC is acting as a PDC. This results in the application of
-Local Machine Trust Account password updates to the local SAM. Such updates 
-are not copied back to the central server. The newer machine account password is then
-overwritten when the SAM is recopied from the PDC. The result is that the domain member machine
-on startup will find that its passwords do not match the one now in the database, and
-since the startup security check will now fail, this machine will not allow logon attempts
-to proceed and the account expiry error will be reported.
+この問題は、passdb(SAM)ファイルが中央のサーバからコピーされたがローカルのBDC
+がPDCとして振る舞う時に起こる。これはローカルマシン信頼アカウントパスワードを
+ローカルSAMに更新することを適用することで解決する。そのような更新は中央の
+サーバにコピーは戻されない新しいマシンアカウントパスワードは次に、PDCから
+SAMが再度コピーされたときに上書きされる。結果は起動時のドメインメンバマシン
+が、データベース中でそのパスワードがそれと一致しないことを見つけ、開始時の
+セキュリティチェックが失敗し、このマシンはログオン要求を出すことが出来ず、
+アカウント満了エラーが出る(訳注:この辺不安)。
 </para>
 
 <para>
-The solution is to use a more robust passdb backend, such as the ldapsam backend, setting up
-a slave LDAP server for each BDC and a master LDAP server for the PDC.
+解決策は、ldapsamバックエンドのようなより堅牢なpassdbバックエンドを使うことで、
+すなわち、おのおののBDCにスレーブLDAPサーバを立て、PDCにマスタLDAPサーバを
+立てることである。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Can Samba Be a Backup Domain Controller to an NT4 PDC?</title>
+<title>NT4 PDCのバックアップドメインコントローラにSambaはなれるか?</title>
 
 <para>
-<indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
+<indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-No. The native NT4 SAM replication protocols have not yet been fully implemented.
+できない。オリジナルのNT4 SAM複製プロトコルはまだ完全に実装されていない。
 </para>
 
 <para>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>logon requests</primary></indexterm>
-Can I get the benefits of a BDC with Samba?  Yes, but only to a Samba PDC.The
-main reason for implementing a BDC is availability. If the PDC is a Samba
-machine, a second Samba machine can be set up to service logon requests whenever
-the PDC is down.
+<indexterm><primary>ログオン要求</primary></indexterm>
+SambaでBDCを使う利点はあるか?もちろん。しかし、それはSamba PDCに対して
+のみである。BDCの実装は可用性の点のみである。もしもPDCがSambaだった
+場合、2番目のSambaマシンはPDCがダウンしているときはいつでもログオン要求
+をサービスするように設定できる。
 </para>
 
 </sect2>
 
 <sect2>
-<title>How Do I Replicate the smbpasswd File?</title>
+<title>smbpasswdファイルの複製をどのようにやったらよいか?</title>
 
 <para>
-<indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
+<indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
 Replication of the smbpasswd file is sensitive. It has to be done whenever changes
