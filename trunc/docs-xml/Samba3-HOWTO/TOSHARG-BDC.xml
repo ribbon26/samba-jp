@@ -868,42 +868,43 @@ SambaでBDCを使う利点はあるか?もちろん。しかし、それはSamba
 <indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-Replication of the smbpasswd file is sensitive. It has to be done whenever changes
-to the SAM are made. Every user's password change is done in the smbpasswd file and
-has to be replicated to the BDC. So replicating the smbpasswd file very often is necessary.
+smbpasswdファイルの複製はデリケートである。SAMが変更されたときはいつでも
+行わなければならない。おのおののユーザのパスワードの変更はsmbpasswd
+ファイル中で行われてBDCに複製されねばならない。そのため、smbpasswdファイル
+の複製は非常にしばしば必要となる。
 </para>
 
 <para>
-<indexterm><primary>plaintext password</primary></indexterm>
+<indexterm><primary>平文のパスワード</primary></indexterm>
 <indexterm><primary>ssh</primary></indexterm>
 <indexterm><primary>rsync</primary></indexterm>
-As the smbpasswd file contains plaintext password equivalents, it must not be
-sent unencrypted over the wire. The best way to set up smbpasswd replication from
-the PDC to the BDC is to use the utility rsync. rsync can use ssh as a transport.
-<command>ssh</command> itself can be set up to accept <emphasis>only</emphasis>
-<command>rsync</command> transfer without requiring the user to type a password.
+smbpasswdファイルには平文パスワード相当のものが含まれているので、ネットワーク
+上で暗号化しないで送ってはならない。PDCからBDCへのsmbpasswd複製方法の最も良い
+設定は、rsyncを使うことである。rsyncは伝送路としてsshを使える。
+<command>ssh</command>それ自身は、パスワードの入力をユーザに
+<emphasis>要求しない</emphasis><command>rsync</command>転送を設定できる。
 </para>
 
 <para>
-<indexterm><primary>machine trust accounts</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-As said a few times before, use of this method is broken and flawed. Machine trust 
-accounts will go out of sync, resulting in a broken domain. This method is
-<emphasis>not</emphasis> recommended. Try using LDAP instead.
+少し前に説明したが、この方法を使うことは欠陥があるため危険である。マシン信頼
+アカウントは同期から外れ、結果としてドメインが破壊される。この方法は
+<emphasis>推奨されない</emphasis>。その代わりにLDAPを使うこと。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Can I Do This All with LDAP?</title>
+<title>これをすべてのLDAPに使えるか?</title>
 
 <para>
 <indexterm><primary>pdb_ldap</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-The simple answer is yes. Samba's pdb_ldap code supports binding to a replica
-LDAP server and will also follow referrals and rebind to the master if it ever
-needs to make a modification to the database. (Normally BDCs are read-only, so
-this will not occur often).
+簡単な答えはyesである。Sambaのpdb_ldapコードはレプリカLDAPサーバに対する
+バインドサポートと、データベースに対する変更が必要ならば、referralの
+追跡と再バインドを行う(通常BDCはリードオンリで、そのためこれは滅多に
+起こらない)。
 </para>
 
 </sect2>
