@@ -131,45 +131,51 @@ Samba-3 はNT4形式のMicrosoft Windowsドメインにネイティブなメン�
 <indexterm><primary>認証</primary></indexterm>
 <indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>rogue user</primary></indexterm>
-A Machine Trust Account is an account that is used to authenticate a client machine (rather than a user) to
-the domain controller server. In Windows terminology, this is known as a <quote>computer account.</quote> The
-purpose of the machine trust account is to prevent a rogue user and domain controller from colluding to gain
-access to a domain member workstation.
+マシン信頼アカウントは(ユーザというよりはむしろ)クライアントマシンを
+ドメインコントローラサーバに対して認証するために使われる。Windows技術
+中で、これは<quote>コンピュータアカウント</quote>として知られている。
+マシン信頼アカウントの目的は、凶暴な(rogue)ユーザとドメインコントローラ
+が、共謀してドメインメンバのワークステーションにアクセスすることを
+防ぐことである。
 </para>
 
 <para>
-<indexterm><primary>machine trust account</primary><secondary>password</secondary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary><secondary>パスワード</secondary></indexterm>
 <indexterm><primary>shared secret</primary></indexterm>
 <indexterm><primary>unauthorized</primary></indexterm>
 <indexterm><primary>Windows NT/200x/XP Professional</primary></indexterm>
 <indexterm><primary>Windows 9x/Me/XP Home</primary></indexterm>
-The password of a Machine Trust Account acts as the shared secret for secure communication with the domain
-controller. This is a security feature to prevent an unauthorized machine with the same NetBIOS name from
-joining the domain, participating in domain security operations, and gaining access to domain user/group
-accounts. Windows NT/200x/XP Professional clients use machine trust accounts, but Windows 9x/Me/XP Home
-clients do not. Hence, a Windows 9x/Me/XP Home client is never a true member of a domain because it does not
-possess a Machine Trust Account, and, thus, has no shared secret with the domain controller.
+マシン信頼アカウントのパスワードは、ドメインコントローラとの間で暗号化
+通信を行うために共通の秘密鍵(訳注:shared secret:共通鍵?)としてふるまう。
+これは、同じNetBIOS名を持つ認証されていないマシンがドメインに参加する
+こと、ドメインセキュリティ操作に参加し、ドメインユーザ/グループ
+アカウントへアクセスすることを得ることを防ぐ。Windows NT/200x/XP Professional
+クライアントはマシン信頼アカウントを使うが、Windows 9x/Me/XP Home
+は使わない。そのため、Windows 9x/Me/XP Homeクライアントは、マシン信頼
+アカウントの処理が出来ず、そのため、ドメインコントローラとの間で、
+共通の秘密鍵を持たないので、決してドメインの真のメンバにはなれない。
 </para>
 
 <para>
-<indexterm><primary>Windows Registry</primary></indexterm>
+<indexterm><primary>Windowsレジストリ</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>Machine Trust Account</primary></indexterm>
-A Windows NT4 PDC stores each Machine Trust Account in the Windows Registry.
-The introduction of MS Windows 2000 saw the introduction of Active Directory,
-the new repository for Machine Trust Accounts. A Samba PDC, however, stores
-each Machine Trust Account in two parts,
-as follows:
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+Windows NT4 PDCはおのおののマシン信頼アカウントをWindowsレジストリ中に
+格納する。Microsoft Windows 2000の導入は、Active Directoryという、
+マシン信頼アカウントのための新しいリポジトリを導入した。Samba PDCは
+しかしながら、おのおののマシン信頼アカウントを以下のように2つの部分に
+分けて格納する:
 
 <itemizedlist>
 	<listitem><para>
-	<indexterm><primary>domain security account</primary></indexterm>
-	<indexterm><primary>account information</primary></indexterm>
-	<indexterm><primary>backend database</primary></indexterm>
-	A domain security account (stored in the <smbconfoption name="passdb backend"/>) that has been configured in
-	the &smb.conf; file. The precise nature of the account information that is stored depends on the type of
-	backend database that has been chosen.
+	<indexterm><primary>ドメインセキュリティアカウント</primary></indexterm>
+	<indexterm><primary>アカウント情報</primary></indexterm>
+	<indexterm><primary>バックエンドデータベース</primary></indexterm>
+	&smb.conf;ファイル中で設定される、ドメインセキュリティアカウント
+	(<smbconfoption name="passdb backend"/>	に格納される)。格納される
+	アカウント情報の正確な性質は、選択されたバックエンドデータベースの
+	タイプに依存する。
 	</para>
 
 	<para>
