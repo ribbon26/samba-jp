@@ -27,103 +27,109 @@ Microsoftドメインセキュリティコンテキスト中においてメン�
 <para>
 <indexterm><primary>ドメインメンバシップ</primary></indexterm>
 <indexterm><primary>misinformation</primary></indexterm>
-This chapter covers background information pertaining to domain membership,
-the Samba configuration for it, and MS Windows client procedures for joining a
-domain. Why is this necessary? Because both are areas in which there exists
-within the current MS Windows networking world, and particularly in the
-UNIX/Linux networking and administration world, a considerable level of
-misinformation, incorrect understanding, and lack of knowledge. Hopefully
-this chapter will fill the voids.
+この章は、ドメインメンバシップに関する背景情報と、それに対するSambaの設定と、
+Microsoft Windows クライアントがドメインに参加するための手続きについて
+を説明する。なぜそれが必要か?なぜならば、両者とも現在のMicrosoft Windows
+ネットワーキングの世界と、UNIX/Linuxネットワーキング中と管理領域に関する
+ことと、考慮すべき間違った情報、誤解と知識の欠如に属することだからである。
+望むらくは、この章はその欠如を埋めるであろう。
 </para>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-<indexterm><primary>domain security</primary></indexterm>
-<indexterm><primary>single sign-on</primary></indexterm>
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<indexterm><primary>シングルサインオン</primary></indexterm>
 <indexterm><primary>SSO</primary></indexterm>
-MS Windows workstations and servers that want to participate in domain security need to
-be made domain members. Participating in domain security is often called 
-<emphasis>single sign-on</emphasis>, or <acronym>SSO</acronym> for short. This
-chapter describes the process that must be followed to make a workstation
-(or another server &smbmdash; be it an <application>MS Windows NT4/200x</application>
-server) or a Samba server a member of an MS Windows domain security context.
+ドメインセキュリティに参加を望むMicrosoft Windows ワークステーションと
+サーバはドメインメンバにならなければならない。Participating in domain security
+ドメインセキュリティに関することはしばしば<emphasis>シングルサインオン</emphasis>
+か短く<acronym>SSO</acronym>と呼ばれる。この章では、ワークステーション
+(かあるいはもう一つの、<application>Microsoft Windows NT4/200x</application>サーバ&smbmdash;)
+か、SambaサーバをMicrosoft Windowsドメインセキュリティコンテキストの
+メンバにするために取らなければならない手続きについて説明する。
 </para>
 
 <para>
 <indexterm><primary>native member</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>domain control</primary></indexterm>
-<indexterm><primary>Server Type</primary><secondary>Domain Member</secondary></indexterm>
-Samba-3 can join an MS Windows NT4-style domain as a native member server, an 
-MS Windows Active Directory domain as a native member server, or a Samba domain
-control network. Domain membership has many advantages:
+<indexterm><primary>ドメイン制御</primary></indexterm>
+<indexterm><primary>サーバタイプ</primary><secondary>ドメインメンバ</secondary></indexterm>
+Samba-3 はNT4形式のMicrosoft Windowsドメインにネイティブなメンバサーバ
+として、Microsoft Windows Active Directoryドメインにネイティブな
+メンバサーバとして、あるいは、Sambaドメイン制御ネットワークに参加
+できる。ドメインメンバシップはたくさんの利点を持つ:
 </para>
 
 <itemizedlist>
 	<listitem><para>
 	<indexterm><primary>SAM</primary></indexterm>
-	MS Windows workstation users get the benefit of SSO.
+	Microsoft WindowsワークステーションユーザはSSOの利点を使える。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>access rights</primary></indexterm>
-	<indexterm><primary>file ownership</primary></indexterm>
-	<indexterm><primary>access controls</primary></indexterm>
+	<indexterm><primary>アクセス権</primary></indexterm>
+	<indexterm><primary>ファイルの所有者</primary></indexterm>
+	<indexterm><primary>アクセス制御</primary></indexterm>
 	<indexterm><primary>SAM</primary></indexterm>
-	Domain user access rights and file ownership/access controls can be set
-	from the single Domain Security Account Manager (SAM) database 
-	(works with domain member servers as well as with MS Windows workstations
-	that are domain members).
+	ドメインユーザアカウントの権限とファイルの所有者/アクセス制御は
+	単一のドメインセキュリティアカウントマネージャ(SAM)データベース
+	から設定できる(ドメインメンバであるMicrosoft Windowsワークステーション
+	と同様にドメインメンバサーバで動作する)。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>domain members</primary></indexterm>
-	<indexterm><primary>network logon</primary></indexterm>
-	Only <application>MS Windows NT4/200x/XP Professional</application>
-	workstations that are domain members can use network logon facilities.
+	<indexterm><primary>ドメインメンバ</primary></indexterm>
+	<indexterm><primary>ネットワークログオン</primary></indexterm>
+	ドメインメンバの<application>Microsoft Windows NT4/200x/XP Professional</application>
+	ワークステーションのみがネットワークログオン機能を使える。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>domain member</primary></indexterm>
-	<indexterm><primary>policy files</primary></indexterm>
+	<indexterm><primary>ドメインメンバ</primary></indexterm>
+	<indexterm><primary>ポリシーファイル</primary></indexterm>
 	<indexterm><primary>NTConfig.POL</primary></indexterm>
-	<indexterm><primary>desktop profiles</primary></indexterm>
-	Domain member workstations can be better controlled through the use of
-	policy files (<filename>NTConfig.POL</filename>) and desktop profiles.
+	<indexterm><primary>デスクトッププロファイル</primary></indexterm>
+	ドメインメンバのワークステーションはポリシーファイル
+	(<filename>NTConfig.POL</filename>)とデスクトッププロファイルの使用を
+	通してよりよく制御できる。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>logon script</primary></indexterm>
+	<indexterm><primary>ログオンスクリプト</primary></indexterm>
 	<indexterm><primary>transparent access</primary></indexterm>
-	<indexterm><primary>application servers</primary></indexterm>
+	<indexterm><primary>アプリケーションサーバ</primary></indexterm>
+	ログオンスクリプトの使用を通して、ユーザはアプリケーションサーバ
+	から追い出されたネットワークアプリケーションへの透過的なアクセスが
+	得られる(訳注:意味が?)。
 	Through the use of logon scripts, users can be given transparent access to network
 	applications that run off application servers.
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>user access management</primary></indexterm>
+	<indexterm><primary>ユーザアクセス管理</primary></indexterm>
 	<indexterm><primary>SAM</primary></indexterm>
 	<indexterm><primary>LDAP</primary></indexterm>
 	<indexterm><primary>ADS</primary></indexterm>
-	Network administrators gain better application and user access management
-	abilities because there is no need to maintain user accounts on any network
-	client or server other than the central domain database 
-	(either NT4/Samba SAM-style domain, NT4 domain that is backend-ed with an
-	LDAP directory, or via an Active Directory infrastructure).
+	ネットワーク管理者は、中央にあるドメインデータベース(NT4/Samba
+	でのSAM形式ドメインか、LDAPによるディレクトリがバックエンドになった
+	NT4ドメインか、Active Directoryインフラストラクチャ経由で)以外の
+	任意のネットワーククライアントかサーバ上のユーザアカウントを保守
+	する必要がないという理由で、選りすぐれたユーザアクセス管理能力と
+	アプリケーション(訳注:単にアプリケーションでいい?)を得られる。
 	</para></listitem>
 </itemizedlist>
 
 </sect1>
 
 <sect1 id="machine-trust-accounts">
-<title>MS Windows Workstation/Server Machine Trust Accounts</title>
+<title>MicrosoftWindowsワークステーション/サーバのマシン信頼アカウント</title>
 
 <para>
-<indexterm><primary>Machine Trust Accounts</primary></indexterm>
-<indexterm><primary>authenticate</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>rogue user</primary></indexterm>
 A Machine Trust Account is an account that is used to authenticate a client machine (rather than a user) to
 the domain controller server. In Windows terminology, this is known as a <quote>computer account.</quote> The
