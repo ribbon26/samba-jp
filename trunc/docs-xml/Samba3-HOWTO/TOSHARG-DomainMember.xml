@@ -183,86 +183,88 @@ Windows NT4 PDCはおのおののマシン信頼アカウントをWindowsレジ�
 	<indexterm><primary>UNIX login ID</primary></indexterm>
 	<indexterm><primary>UID</primary></indexterm>
 	<indexterm><primary>LanMan</primary></indexterm>
-	<indexterm><primary>NT-encrypted password</primary></indexterm>
-	<indexterm><primary>UNIX user identifier</primary><see>UID</see></indexterm>
-	The older format of this data is the <filename>smbpasswd</filename> database
-	that contains the UNIX login ID, the UNIX user identifier (UID), and the
-	LanMan and NT-encrypted passwords. There is also some other information in
-	this file that we do not need to concern ourselves with here.
+	<indexterm><primary>NT形式で暗号化されたパスワード</primary></indexterm>
+	<indexterm><primary>UNIXユーザ識別子</primary><see>UID</see></indexterm>
+	このデータの古い形式は、UNIXのログインID、UNIXのユーザ識別子(UID)とLanMan
+	とNT形式で暗号化されたパスワードを含む<filename>smbpasswd</filename>
+	データベースである。また、ここで心配する必要のない、いくつかのその他の
+	情報も入っている。
 	</para>
 
 	<para>
 	<indexterm><primary>database</primary></indexterm>
 	<indexterm><primary>ldapsam</primary></indexterm>
 	<indexterm><primary>smbpasswd</primary></indexterm>
-	<indexterm><primary>account controls</primary></indexterm>
-	The two newer database types are called ldapsam and tdbsam. Both store considerably more data than the older
-	<filename>smbpasswd</filename> file did. The extra information enables new user account controls to be
-	implemented.
+	<indexterm><primary>アカウント制御</primary></indexterm>
+	2つの新しいデータベースタイプは、ldapsamとtdbsamと呼ばれる。両者とも、古い
+	<filename>smbpasswd</filename>ファイルが出来るよりもかなりより多くのデータを
+	格納する。拡張された情報は、実装された新しいユーザアカウント制御を可能にする。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>UNIX account</primary></indexterm>
+	<indexterm><primary>UNIXアカウント</primary></indexterm>
 	<indexterm><primary>/etc/passwd</primary></indexterm>
-	A corresponding UNIX account, typically stored in <filename>/etc/passwd</filename>. Work is in progress to
-	allow a simplified mode of operation that does not require UNIX user accounts, but this has not been a feature
-	of the early releases of Samba-3, and is not currently planned for release either.
+	通常<filename>/etc/passwd</filename>に格納されるUNIXアカウントに対応する。
+	処理は、UNIXユーザアカウントを必要としない単純な操作モードを認めることを
+	進行中(訳注:work on progressにもっといい訳はないか)が、Samba-3よりも前の
+	リリースでは機能せず、現在の所、リリース計画はない。
 	</para></listitem>
 </itemizedlist>
 </para>
 
 <?latex \newpage ?>
 <para>
-<indexterm><primary>Machine Trust Accounts</primary><secondary>creating</secondary></indexterm>
-There are three ways to create Machine Trust Accounts:
+<indexterm><primary>マシン信頼アカウント</primary><secondary>作成</secondary></indexterm>
+マシン信頼アカウントの作成には3つの方法がある:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	<indexterm><primary>manual UNIX account creation</primary></indexterm>
-	Manual creation from the UNIX/Linux command line. Here, both the Samba and
-	corresponding UNIX account are created by hand.
+	<indexterm><primary>手動でのUNIXアカウント作成</primary></indexterm>
+	手動でUNIX/Linuxコマンド行から作成する。ここで、Sambaと対応するUNIX
+	アカウントが手動で作成される。
 	</para></listitem>
 
 	<listitem><para>
-	<indexterm><primary>Server Manager</primary></indexterm>
-	<indexterm><primary>Nexus toolkit</primary></indexterm>
-	Using the MS Windows NT4 Server Manager, either from an NT4 domain member
-	server or using the Nexus toolkit available from the Microsoft Web site.
-	This tool can be run from any MS Windows machine as long as the user is
-	logged on as the administrator account.
+	<indexterm><primary>サーバマネージャ</primary></indexterm>
+	<indexterm><primary>Nexusツールキット</primary></indexterm>
+	Microsoft Windows NT4サーバマネージャを使い、NT4ドメインコントローラか
+	MicrosoftのWebサイトにあるNexusツールキットを使う。このツールはユーザが
+	任意のMicrosoft Windows マシンに管理者アカウントでログオンしている間、
+	実行することが出来る。
 	</para></listitem>
 	
 	<listitem><para>
-	<indexterm><primary>Machine Trust Account</primary></indexterm>
-	<indexterm><primary>joined client</primary></indexterm>
-	<quote>On-the-fly</quote> creation. The Samba Machine Trust Account is automatically
-	created by Samba at the time the client is joined to the domain.
-	(For security, this is the recommended method.) The corresponding UNIX
-	account may be created automatically or manually. 
+	<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+	<indexterm><primary>参加済みのクライアント</primary></indexterm>
+	
+	<quote>その場での</quote>作成。Sambaマシン信頼アカウントは、Samba
+	によって、クライアントがドメインに参加したときに自動的に作成される
+	(セキュリティのため、これは推奨される手法である)。対応するUNIX
+	アカウントは自動でも、手動ででも作成できる。
 	</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>enforcing</primary></indexterm>
-<indexterm><primary>machine trust account</primary><secondary>creation</secondary></indexterm>
-Neither MS Windows NT4/200x/XP Professional, nor Samba, provide any method for enforcing the method of machine
-trust account creation. This is a matter of the administrator's choice.
+<indexterm><primary>マシン信頼アカウント</primary><secondary>作成</secondary></indexterm>
+Microsoft Windows NT4/200x/XP ProfessionalもSambaもマシン信頼アカウントを
+強制する方法を提供しない。これは管理者の選択問題である。
 </para>
 
 <sect2>
-<title>Manual Creation of Machine Trust Accounts</title>
+<title>マシン信頼アカウントの手動作成</title>
 
 <para>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary></primary></indexterm>
 <indexterm><primary>useradd</primary></indexterm>
 <indexterm><primary>vipw</primary></indexterm>
-The first step in manually creating a Machine Trust Account is to manually
-create the corresponding UNIX account in <filename>/etc/passwd</filename>. 
-This can be done using <command>vipw</command> or another <quote>adduser</quote> command
-that is normally used to create new UNIX accounts. The following is an example for
-a Linux-based Samba server:
+マシン信頼アカウントの手動作成の最初の手順は、<filename>/etc/passwd</filename>
+中に対応するUNIXアカウントを手動で作成することである。
+これは、<command>vipw</command>か、その他の新しいUNIXアカウント作成のために
+通常使われる<quote>adduser</quote>コマンドを使うことで行える。以下は、Linux
+ベースのSambaサーバにおける例である:
 <screen>
 &rootprompt;<userinput>/usr/sbin/useradd -g machines -d /var/lib/nobody \
    -c <replaceable>"machine nickname"</replaceable> \
@@ -273,18 +275,19 @@ a Linux-based Samba server:
 </para>
 
 <para>
-<indexterm><primary>primary group</primary></indexterm>
+<indexterm><primary>プライマリグループ</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
-<indexterm><primary>machine accounts</primary></indexterm>
-In the example above there is an existing system group <quote>machines</quote> which is used
-as the primary group for all machine accounts. In the following examples the <quote>machines</quote> group
-numeric GID is 100.
+<indexterm><primary>マシンアカウント</primary></indexterm>
+上記の例の中では、すべてのマシンアカウントのためにプライマリグループとして使われる
+存在するシステムグループ<quote>machines</quote>がある。以下の例中では、
+<quote>machines</quote>グループのGIDは100である。
 </para>
 
 <para>
 <indexterm><primary>chpass</primary></indexterm>
 <indexterm><primary>BSD</primary></indexterm>
-On *BSD systems, this can be done using the <command>chpass</command> utility:
+*BSDシステム上では、これは<command>chpass</command>ユーティリティを使うことで
+行える:
 <screen>
 &rootprompt;<userinput>chpass -a \
 '<replaceable>machine_name</replaceable>$:*:101:100::0:0:Windows <replaceable>machine_name</replaceable>:/dev/null:/sbin/nologin'</userinput>
