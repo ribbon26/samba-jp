@@ -227,9 +227,9 @@ Samba PDCはマシン信頼アカウントを以下のように2つの部分に�
 	<indexterm><primary>サーバマネージャ</primary></indexterm>
 	<indexterm><primary>Nexusツールキット</primary></indexterm>
 	NT4ドメインコントローラからMicrosoft Windows NT4サーバマネージャを使うか、
-	MicrosoftのWebサイトから入手可能なNexusツールキットを使う(訳注:Nexusツール
-	キットの所在が分からない)。このツールはユーザが管理者アカウントでログオン
-	している限り、任意のMicrosoft Windowsマシンから実行することが出来る。
+	MicrosoftのWebサイトから入手可能なNexusツールキットを使う。このツールは
+	ユーザが管理者アカウントでログオンしている限り、任意のMicrosoft Windows
+	マシンから実行することが出来る。
 	</para></listitem>
 	
 	<listitem><para>
@@ -344,127 +344,125 @@ Sambaはこれがマシン信頼アカウントと認識できない。
 <title>クライアントをドメインに即座に参加させる</title>
 
 <para>
-<indexterm><primary>Machine Trust Account</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>Server Manager</primary></indexterm>
-<indexterm><primary>changes password</primary></indexterm>
-<indexterm><primary>NetBIOS name</primary></indexterm>
-Manually creating a Machine Trust Account using this method is the 
-equivalent of creating a Machine Trust Account on a Windows NT PDC using 
-<indexterm><primary>Server Manager</primary></indexterm>
-the <application>Server Manager</application>. From the time at which the 
-account is created to the time the client joins the domain and 
-changes the password, your domain is vulnerable to an intruder joining 
-your domain using a machine with the same NetBIOS name. A PDC inherently 
-trusts members of the domain and will serve out a large degree of user 
-information to such clients. You have been warned!
+<indexterm><primary>サーバマネージャ</primary></indexterm>
+<indexterm><primary>パスワードの変更</primary></indexterm>
+<indexterm><primary>NetBIOS名</primary></indexterm>
+この方法でマシン信頼アカウントを手動作成することは、 Windows NT PDC で
+<indexterm><primary>サーバマネージャ</primary></indexterm>
+<application>サーバマネージャ</application>によりマシン信頼アカウントを
+作成するのと同等である。アカウントが作成されてからクライアントがドメイン
+に参加してパスワードを変更するまでの間、同じ NetBIOS 名を持つマシンで
+ドメインに参加しようとする侵入者の被害を受ける可能性がある。 PDC は、
+ドメインのメンバを信頼するようにできており、多くのユーザー情報をこのような
+クライアントに渡してしまう。注意すること!
 </para>
 </warning>
 </sect2>
 
 <sect2>
-<title>Managing Domain Machine Accounts using NT4 Server Manager</title>
+<title>NT4サーバマネージャによるドメインマシンアカウントの管理</title>
 
 <para>
-<indexterm><primary>machine trust accounts</primary></indexterm>
-<indexterm><primary>automatic account creation</primary></indexterm>
-<indexterm><primary>Server Manager</primary></indexterm>
-A working <smbconfoption name="add machine script"/> is essential
-for machine trust accounts to be automatically created. This applies no matter whether
-you use automatic account creation or the NT4 Domain Server Manager.
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>自動的なアカウントの生成</primary></indexterm>
+<indexterm><primary>サーバマネージャ</primary></indexterm>
+有効な<smbconfoption name="add machine script"/>はマシン信頼アカウントの
+自動作成に必須である。これは自動アカウント作成機能を使用する場合でも、
+NT4 ドメインサーバマネージャを使用する場合でも必要である。
 </para>
 
 <para>
 <indexterm><primary>SRVTOOLS.EXE</primary></indexterm>
 <indexterm><primary>SrvMgr.exe</primary></indexterm>
 <indexterm><primary>UsrMgr.exe</primary></indexterm>
-<indexterm><primary>domain management tools</primary></indexterm>
-If the machine from which you are trying to manage the domain is an 
-<application>MS Windows NT4 workstation or MS Windows 200x/XP Professional</application>,
-the tool of choice is the package called <command>SRVTOOLS.EXE</command>. 
-When executed in the target directory it will unpack <command>SrvMgr.exe</command>
-and <command>UsrMgr.exe</command> (both are domain management tools for MS Windows NT4 workstation).
+<indexterm><primary>ドメイン管理ツール</primary></indexterm>
+ドメインを管理しようとしているマシンが
+<application>Microsoft Windows NT4 ワークステーション又はMicrosoft Windows 200x/XP Professional</application>
+の場合、使用するツールは<command>SRVTOOLS.EXE</command>という
+パッケージである。これをターゲットディレクトリで実行すると、<command>SrvMgr.exe</command>
+及び<command>UsrMgr.exe</command>(どちらもMicrosoft Windows NT4 ワークステーション
+のドメイン管理ツール)が解凍される。
 </para>
 
 <para>
 <indexterm><primary>Nexus.exe</primary></indexterm>
 <indexterm><primary>Microsoft Windows 9x/Me</primary></indexterm>
-If your workstation is a <application>Microsoft Windows 9x/Me</application> family product,
- you should download the <command>Nexus.exe</command> package from the Microsoft Web site.
-When executed from the target directory, it will unpack the same tools but for use on 
-this platform.
+ワークステーションが<application>Microsoft Windows 9x/Me</application>
+ファミリー製品であれば、 Microsoft のWebサイトから<command>Nexus.exe</command>
+パッケージをダウンロードする。それをターゲットディレクトリから実行すると、
+上記と同じツールで、9x/Meプラットフォーム用のものが解凍される。
 </para>
 
 <para>
-Further information about these tools may be obtained from Knowledge Base articles
-<ulink url="http://support.microsoft.com/default.aspx?scid=kb;en-us;173673">173673</ulink>, and
+これらのツールに関する詳細情報は次のKnowledge Baseの記事で得ることができる: 
+<ulink url="http://support.microsoft.com/default.aspx?scid=kb;en-us;173673">173673</ulink>と
 <ulink url="http://support.microsoft.com/default.aspx?scid=kb;en-us;172540">172540</ulink>
 </para>
 
 <para>
 <indexterm><primary>srvmgr.exe</primary></indexterm>
-<indexterm><primary>Server Manager for Domains</primary></indexterm>
-Launch the <command>srvmgr.exe</command> (Server Manager for Domains) and follow these steps:
+<indexterm><primary>ドメインのサーバマネージャ</primary></indexterm>
+<command>srvmgr.exe</command>(ドメイン用のサーバマネージャ)を起動し、以下の手順を実行する:
 </para>
 
 <procedure>
-<title>Server Manager Account Machine Account Management</title>
+<title>サーバマネージャによるドメインマシンアカウント管理</title>
 	<step><para>
-	From the menu select <guimenu>Computer</guimenu>.
+	メニューから<guimenu>コンピュータ</guimenu>を選択する。
 	</para></step>
 
 	<step><para>
-	Click <guimenuitem>Select Domain</guimenuitem>.
+	<guimenuitem>Select Domain</guimenuitem>をクリックする。
 	</para></step>
 
 	<step><para>
-	Click the name of the domain you wish to administer in the
-	<guilabel>Select Domain</guilabel> panel and then click 
-	<guibutton>OK</guibutton>.
+	<guilabel>Select Domain</guilabel>パネルで管理対象の
+	ドメイン名をクリックし、 <guibutton>OK</guibutton>をクリックする。
 	</para></step>
 
 	<step><para>
-	Again from the menu select <guimenu>Computer</guimenu>.
+	再度メニュー画面から<guimenu>コンピュータ</guimenu>を選択する。
 	</para></step>
 
 	<step><para>
-	Select <guimenuitem>Add to Domain</guimenuitem>.
+	<guimenuitem>Add to Domain</guimenuitem>を選択する。
 	</para></step>
 
 	<step><para>
-	In the dialog box, click the radio button to 
-	<guilabel>Add NT Workstation of Server</guilabel>, then
-	enter the machine name in the field provided, and click the 
-	<guibutton>Add</guibutton> button.
+	ダイアログボックス中で、<guilabel>Add NT Workstation of Server</guilabel>
+	ラジオボタンをクリックし、フィールドにマシン名を入力し、
+	<guibutton>Add</guibutton>ボタンをクリックする。
 	</para></step>
 </procedure>
 
 </sect2>
 
 <sect2>
-<title>On-the-Fly Creation of Machine Trust Accounts</title>
+<title>マシン信頼アカウントの即時作成</title>
 
 <para>
-<indexterm><primary>Machine Trust Account</primary><secondary>creation</secondary></indexterm>
-The third (and recommended) way of creating Machine Trust Accounts is simply to allow the Samba server to
-create them as needed when the client is joined to the domain.
+<indexterm><primary>マシン信頼アカウント</primary><secondary>作成</secondary></indexterm>
+マシン信頼アカウント作成の第3の(そして推奨する)方法は、クライアントが
+ドメインに参加する時、必要に応じて Samba サーバーアカウントを作成する方法である。
 </para>
 
 <para>
-<indexterm><primary>Machine Trust Account</primary><secondary>UNIX account</secondary></indexterm>
-<indexterm><primary>UNIX account</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary><secondary>UNIXアカウント</secondary></indexterm>
+<indexterm><primary>UNIXアカウント</primary></indexterm>
 <indexterm><primary>add machine script</primary></indexterm>
-Since each Samba Machine Trust Account requires a corresponding UNIX account, a method
-for automatically creating the UNIX account is usually supplied; this requires configuration of the
-add machine script option in &smb.conf;. This method is not required; however, corresponding UNIX
-accounts may also be created manually.
+Samba の各マシン信頼アカウントは対応するUNIXアカウントを必要とするので、
+通常、 UNIXアカウントを自動作成する機能が提供されている。これには &smb.conf;
+ファイル内に add machine script オプションを設定する必要がある。
+しかし、この方法は必須ではなく、対応するUNIXアカウントを手動で作成しても構わない。
 </para>
 
 
 <para>
 <indexterm><primary>useradd</primary></indexterm>
 <indexterm><primary>Red Hat Linux</primary></indexterm>
-Here is an example for a Red Hat Linux system:
+以下は、Red Hat linux での例である:
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="add machine script">/usr/sbin/useradd -d /var/lib/nobody -g 100 -s /bin/false -M %u</smbconfoption>
@@ -473,19 +471,19 @@ Here is an example for a Red Hat Linux system:
 
 </sect2>
 
-<sect2><title>Making an MS Windows Workstation or Server a Domain Member</title>
+<sect2><title>Microsoft Windows ワークステーション又はサーバをドメインメンバにする</title>
 
 <para>
-The procedure for making an MS Windows workstation or server a member of the domain varies
-with the version of Windows.
+Microsoft Windows ワークステーションやサーバをドメインのメンバ
+にする手順は Windowsのバージョンによって異なる。
 </para>
 
 <sect3>
-	<title>Windows 200x/XP Professional Client</title>
+	<title>Windows 200x/XP Professionalクライアント</title>
 
 	<para>
-<indexterm><primary>domain member</primary></indexterm>
-<indexterm><primary>machine trust account</primary><secondary>create privilege</secondary></indexterm>
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary><secondary>create privilege</secondary></indexterm>
 <indexterm><primary>privileges</primary></indexterm>
 <indexterm><primary>root</primary></indexterm>
 	When the user elects to make the client a domain member, Windows 200x prompts for
