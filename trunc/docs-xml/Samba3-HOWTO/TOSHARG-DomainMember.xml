@@ -483,50 +483,53 @@ Microsoft Windows ワークステーションやサーバをドメインのメ�
 
 	<para>
 <indexterm><primary>ドメインメンバ</primary></indexterm>
-<indexterm><primary>マシン信頼アカウント</primary><secondary>create privilege</secondary></indexterm>
-<indexterm><primary>privileges</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary><secondary>作成権限</secondary></indexterm>
+<indexterm><primary>権限</primary></indexterm>
 <indexterm><primary>root</primary></indexterm>
-	When the user elects to make the client a domain member, Windows 200x prompts for
-	an account and password that has privileges to create  machine accounts in the domain.
-	A Samba administrator account (i.e., a Samba account that has <constant>root</constant> privileges on the
-	Samba server) must be entered here; the operation will fail if an ordinary user
-	account is given. 
+        ユーザーがクライアントをドメインメンバにする時、 Windows 200x は、ドメイン内で
+        マシンアカウントを作成する権限を持つアカウント及びパスワードの入力を要求する。
+        Samba管理者アカウント(すなわち、Sambaサーバ上で<constant>root</constant>権限を
+        持つSambaアカウント)をここで入力せねばならない。通常のユーザアカウントが入力さ
+        れると、この作業は失敗する(訳注:net rpc rightsでSeMachineAccountPrivilege権限を
+        持ったユーザも出来るのでは?)
 	</para>
 
 	<para>
-<indexterm><primary>administrator account</primary></indexterm>
+<indexterm><primary>管理者アカウント</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
-	For security reasons, the password for this administrator account should be set
-	to a password that is other than that used for the root user in <filename>/etc/passwd</filename>.
+        セキュリティのため、この管理者アカウントのパスワードは<filename>/etc/passwd</filename>
+        でルートユーザ用に使用されているパスワード以外のものを設定するべきである。
 	</para>
 
 	<para>
-<indexterm><primary>account</primary></indexterm>
-<indexterm><primary>create domain member</primary></indexterm>
+<indexterm><primary>アカウント</primary></indexterm>
+<indexterm><primary>ドメインメンバの作成</primary></indexterm>
 <indexterm><primary>root</primary></indexterm>
 <indexterm><primary>map</primary></indexterm>
-	The name of the account that is used to create domain member machine trust accounts can be
-	anything the network administrator may choose. If it is other than <constant>root</constant>,
-	then this is easily mapped to <constant>root</constant> in the file named in the &smb.conf; parameter
-	<smbconfoption name="username map">/etc/samba/smbusers</smbconfoption>.
+        ドメインメンバのマシンアカウントを作成するために使用するアカウント名は
+        ネットワーク管理者が任意に選択する。もしそれが<constant>root</constant>以外なら
+        &smb.conf;中のパラメータ
+        <smbconfoption name="username map">/etc/samba/smbusers</smbconfoption>
+        で指定するファイル名中で容易にマッピングできる。
 	</para>
 
 	<para>
-<indexterm><primary>administrator account</primary></indexterm>
-<indexterm><primary>encryption key</primary></indexterm>
-<indexterm><primary>machine trust account</primary></indexterm>
-	The session key of the Samba administrator account acts as an encryption key for setting the password of the machine trust
-	account. The Machine Trust Account will be created on-the-fly, or updated if it already exists.
+<indexterm><primary>管理者アカウント</primary></indexterm>
+<indexterm><primary>暗号化キー</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+        Samba管理者アカウントのセッションキーは、マシン信頼アカウントのパスワード
+        設定の際、暗号化キーの機能を果たす。マシン信頼アカウントはその場でで作成
+        されるか、または、既に存在していれば更新される。
 	</para>
 </sect3>
 
 <sect3>
-	<title>Windows NT4 Client</title>
+	<title>Windows NT4 クライアント</title>
 
 	<para>
-<indexterm><primary>Machine Trust Account</primary></indexterm>
-<indexterm><primary>Create a Computer Account</primary></indexterm>
-<indexterm><primary>join the machine</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>コンピュータアカウントの作成</primary></indexterm>
+<indexterm><primary>マシンの参加</primary></indexterm>
 	If the Machine Trust Account was created manually, on the
 	Identification Changes menu enter the domain name, but do not
 	check the box <guilabel>Create a Computer Account in the Domain</guilabel>.
