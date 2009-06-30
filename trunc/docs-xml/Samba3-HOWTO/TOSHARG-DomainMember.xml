@@ -643,35 +643,37 @@ Sambaドメインメンバマシンがドメインに参加し完全に信頼さ
 
 <para>
 <indexterm><primary></primary></indexterm>
-First, you must edit your &smb.conf; file to tell Samba it should now use domain security.
+まず&smb.conf;ファイルを編集し、Sambaが以降ドメインセキュリティを
+使用するように設定しなければならない。
 </para>
 
 <para>
 <indexterm><primary>security = user</primary></indexterm>
 <indexterm><primary>standalone server</primary></indexterm>
-<indexterm><primary>domain member server</primary></indexterm>
-<indexterm><primary>domain security</primary></indexterm>
-Change (or add) your <smbconfoption name="security"/> line in the [global] section 
-of your &smb.conf; to read:
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+&smb.conf;中の[global]セクション中に<smbconfoption name="security"/>
+行を、下記のように変更(又は追加)する:
 <smbconfblock>
 <smbconfoption name="security">domain</smbconfoption>
 </smbconfblock>
-Note that if the parameter <parameter>security = user</parameter> is used, this machine would function as a
-standalone server and not as a domain member server. Domain security mode causes Samba to work within the
-domain security context.
+もしも、パラメータ<parameter>security = user</parameter>が使われている
+ならば、このマシンはスタンドアロンサーバで動作するのでドメインメンバ
+サーバではないことに注意。ドメインセキュリティモードはSambaにドメイン
+セキュリティコンテキスト内で動作するようにさせる。
 </para>
 
 <para>
-Next change the <smbconfoption name="workgroup"/> line in the <smbconfsection name="[global]"/>
-section to read: 
+次に、<smbconfsection name="[global]"/>セクション中の
+<smbconfoption name="workgroup"/>行を下記のように修正する:
 <smbconfblock>
 <smbconfoption name="workgroup">&example.workgroup;</smbconfoption>
 </smbconfblock>
-This is the name of the domain we are joining.
+これが参加するドメイン名である。
 </para>
 
 <para>
-<indexterm><primary>authenticate</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 You must also have the parameter <smbconfoption name="encrypt passwords"/>
 set to <constant>yes</constant> in order for your users to authenticate to the NT PDC.
