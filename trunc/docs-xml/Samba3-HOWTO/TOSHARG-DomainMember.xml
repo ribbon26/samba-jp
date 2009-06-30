@@ -530,31 +530,34 @@ Microsoft Windows ワークステーションやサーバをドメインのメ�
 <indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>コンピュータアカウントの作成</primary></indexterm>
 <indexterm><primary>マシンの参加</primary></indexterm>
-	If the Machine Trust Account was created manually, on the
-	Identification Changes menu enter the domain name, but do not
-	check the box <guilabel>Create a Computer Account in the Domain</guilabel>.
-	In this case, the existing Machine Trust Account is used to join the machine 
-	to the domain.
+        マシン信頼アカウントが手動作成された場合、Identification Changes
+        メニュー画面でドメイン名を入力するが、
+        <guilabel>Create a Computer Account in the Domain</guilabel>
+	チェックボックスにはチェックを入れない。こうすることでマシン
+	がドメインに参加する際に既存のマシン信頼アカウントが使用される。
 	</para>
 
 	<para>
-<indexterm><primary>Machine Trust Account</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>on the fly</primary></indexterm>
-<indexterm><primary>Computer Account</primary></indexterm>
-<indexterm><primary>administrator account</primary></indexterm>
-	If the Machine Trust Account is to be created on the fly, on the Identification Changes menu enter the domain
-	name and check the box <guilabel>Create a Computer Account in the Domain</guilabel>. In this case, joining
-	the domain proceeds as above for Windows 2000 (i.e., you must supply a Samba administrator account when
-	prompted).
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
+<indexterm><primary>管理者アカウント</primary></indexterm>
+	もしマシン信頼アカウントがその場で作成される場合は、Identification Changes
+	メニュー画面でドメイン名を入力し、
+	<guilabel>Create a Computer Account in the Domain</guilabel>
+	チェックボックスにチェックを入れる。この場合、上記 Windows2000用
+	の手順に従いドメインに参加する(プロンプトに対してSamba管理者
+	アカウント名を入力する)。
 	</para>
 </sect3>
 
 <sect3>
-	<title>Samba Client</title>
+	<title>Sambaクライアント</title>
 
 	<para>
 <indexterm><primary></primary></indexterm>
-	Joining a Samba client to a domain is documented in <link linkend="domain-member-server">the next section</link>.
+	Joining a Sambaクライアントをドメインに参加させる方法は
+	<link linkend="domain-member-server">次の章</link>に記述されている。
 	</para>
 </sect3>
 
@@ -562,79 +565,77 @@ Microsoft Windows ワークステーションやサーバをドメインのメ�
 </sect1>
 
 <sect1 id="domain-member-server">
-<title>Domain Member Server</title>
+<title>ドメインメンバサーバ</title>
 
 <para>
-<indexterm><primary>domain security</primary></indexterm>
-<indexterm><primary>security context</primary></indexterm>
-<indexterm><primary>authentication regime</primary></indexterm>
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<indexterm><primary>セキュリティコンテキスト</primary></indexterm>
+<indexterm><primary>認証機構</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-This mode of server operation involves the Samba machine being made a member
-of a domain security context. This means by definition that all user
-authentication will be done from a centrally defined authentication regime. 
-The authentication regime may come from an NT3/4-style (old domain technology)
-server, or it may be provided from an Active Directory server (ADS) running on
-MS Windows 2000 or later.
+このモードのサーバ操作は、Sambaマシンをドメインセキュリティコンテキスト
+のメンバーにすることを含む。またこれは定義上、全てのユーザ認証は中央で
+定義された認証機構(訳注:authentication regime)で行われることを意味する。
+この認証機構は NT3/4形式(旧式のドメインテクノロジー)サーバ又は
+Microsoft Windows 2000以降で実装されているActive Directory server(ADS)
+が提供する。
 </para>
 
 <para>
 <emphasis>
-<indexterm><primary>authentication</primary><secondary>backend</secondary></indexterm>
-<indexterm><primary>distributed directory</primary></indexterm>
+<indexterm><primary>認証</primary><secondary>バックエンド</secondary></indexterm>
+<indexterm><primary>分散ディレクトリ</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
 <indexterm><primary>iPlanet</primary></indexterm>
 <indexterm><primary>Sun</primary></indexterm>
 <indexterm><primary>Novell</primary></indexterm>
 <indexterm><primary>e-Directory</primary></indexterm>
-Of course it should be clear that the authentication backend itself could be
-from any distributed directory architecture server that is supported by Samba.
-This can be LDAP (from OpenLDAP), or Sun's iPlanet, or Novell e-Directory
-Server, and so on.
+もちろん、認証バックエンド自体はSambaがサポートしている分散ディレクトリ
+構造のサーバなら、いずれでも構いません。LDAP(OpenLDAPベース) 、Sunの
+iPlanet、Novellの e-Directoryなどが使用可能である。
 </emphasis>
 </para>
 
 <note><para>
 <indexterm><primary>LDAP</primary></indexterm>
-<indexterm><primary>identity management</primary></indexterm>
-<indexterm><primary>machine authentication</primary></indexterm>
-When Samba is configured to use an LDAP or other identity management and/or
-directory service, it is Samba that continues to perform user and machine
-authentication. It should be noted that the LDAP server does not perform
-authentication handling in place of what Samba is designed to do.
+<indexterm><primary>アイデンティティ管理</primary></indexterm>
+<indexterm><primary>マシン認証</primary></indexterm>
+SambaがLDAPやその他のアイデンティティ管理、あるいは、ディレクトリ
+サービスを使用するように設定される場合、ユーザ及びマシン認証を継続して
+実行するのはSambaである。Sambaが行う認証をLDAPサーバが代替するわけでは
+ないことに注意。
 </para></note>
 
 <para>
-<indexterm><primary>create a domain machine account</primary></indexterm>
-<indexterm><primary>domain member server</primary></indexterm>
-<indexterm><primary>join the domain</primary></indexterm>
-Please refer to <link linkend="samba-pdc">Domain Control</link>, for more information regarding
-how to create a domain machine account for a domain member server as well as for
-information on how to enable the Samba domain member machine to join the domain
-and be fully trusted by it.
+<indexterm><primary>ドメインマシンアカウントの作成</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+<indexterm><primary>ドメインに参加</primary></indexterm>
+ドメインメンバサーバーのドメインマシンアカウント作成に関する詳細情報や
+Sambaドメインメンバマシンがドメインに参加し完全に信頼されるようにする
+方法に関しては、<link linkend="samba-pdc">ドメイン管理</link>の章を参照のこと。
 </para>
 
 <sect2>
-<title>Joining an NT4-type Domain with Samba-3</title>
+<title>Samba-3でNT4形式でのドメインに参加する</title>
 
-<para><link linkend="assumptions">Assumptions</link> lists names that are used in the remainder of this chapter.</para>
+<para><link linkend="assumptions">下記の表</link>に、この後この章で使用される名前を示す。</para>
 
-<table frame="all" id="assumptions"><title>Assumptions</title>
+<table frame="all" id="assumptions"><title>前提</title>
 	<tgroup cols="2">
 		<colspec align="right"/>
 		<colspec align="left"/>
 	<tbody>
 			<row>
-				<entry>Samba DMS NetBIOS name:</entry><entry>SERV1</entry>
+				<entry>Samba DMSのNetBIOS名:</entry><entry>SERV1</entry>
 			</row>
 			<row>
-				<entry>Windows 200x/NT domain name:</entry><entry>&example.workgroup;</entry>
+				<entry>Windows 200x/NTドメイン名:</entry><entry>&example.workgroup;</entry>
 			</row>
 			<row>
-				<entry>Domain's PDC NetBIOS name:</entry><entry>DOMPDC</entry>
+				<entry>ドメインのPDCのNetBIOS名:</entry><entry>DOMPDC</entry>
 			</row>
 			<row>
-				<entry>Domain's BDC NetBIOS names:</entry><entry>DOMBDC1 and DOMBDC2</entry>
+				<entry>ドメインのBDCのNetBIOS名:</entry><entry>DOMBDC1とDOMBDC2</entry>
 			</row>
 	</tbody>
 	</tgroup>
