@@ -816,64 +816,64 @@ DMSによって必要とされる信頼アカウント情報は
 <title>これがなぜ<parameter>security = server</parameter>よりもすぐれているのか?</title>
 
 <para>
-<indexterm><primary>domain security</primary></indexterm>
-<indexterm><primary>UNIX users</primary></indexterm>
-<indexterm><primary>authentication</primary></indexterm>
-Currently, domain security in Samba does not free you from having to create local UNIX users to represent the
-users attaching to your server. This means that if domain user <constant>DOM\fred</constant> attaches to your
-domain security Samba server, there needs to be a local UNIX user fred to represent that user in the UNIX file
-system. This is similar to the older Samba security mode <smbconfoption
-name="security">server</smbconfoption>, where Samba would pass through the authentication request to a Windows
-NT server in the same way as a Windows 95 or Windows 98 server would.
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<indexterm><primary>UNIXユーザ</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
+現在、Samba のドメインセキュリティでは、サーバに紐づくユーザに対応するローカルUNIXユーザを
+作成しなければならない。このことは、もしも、ドメインユーザ<constant>DOM\fred</constant>
+がドメインセキュリティのSambaサーバーに紐づく場合、UNIXファイルシステム上にそれに対応する
+fred というローカル UNIXユーザーがいなければならないことを意味する。これは以前のSambaの
+セキュリティモードである<smbconfoption name="security">server</smbconfoption>と似ているが、
+このモードでは、Windows 95又はWindows 98サーバと同じように、 Sambaが認証リクエストを
+Windows NT サーバーに回送していた。
 </para>
 
 <para>
 <indexterm><primary>winbind</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
-Please refer to <link linkend="winbind">Winbind: Use of Domain Accounts</link>, for information on a system
-to automatically assign UNIX UIDs and GIDs to Windows NT domain users and groups.
+UNIX の UID 及び GID を自動的に Windows NT ドメインユーザ及びグループへ割り当てる
+システムについての情報は<link linkend="winbind">Winbind: ドメインアカウントの使用</link>
+を参照のこと。
 </para>
 
 <para>
-<indexterm><primary>domain-level</primary></indexterm>
-<indexterm><primary>authentication</primary></indexterm>
+<indexterm><primary>ドメインレベル</primary></indexterm>
+<indexterm><primary>認証</primary></indexterm>
 <indexterm><primary>RPC</primary></indexterm>
-The advantage of domain-level security is that the authentication in domain-level security is passed down the
-authenticated RPC channel in exactly the same way that an NT server would do it. This means Samba servers now
-participate in domain trust relationships in exactly the same way NT servers do (i.e., you can add Samba
-servers into a resource domain and have the authentication passed on from a resource domain PDC to an account
-domain PDC).
+ドメインレベルのセキュリティの利点は、NT サーバと全く同じように、ドメインレベルセキュリティ
+における認証が、認証されたRPC チャンネルを通ることである。これは、Sambaサーバが NT サーバと
+全く同じやり方でドメインの信頼関係に参加できることを意味する(すなわち、Sambaサーバをリソース
+ドメインに追加し、リソースドメインPDC からアカウントドメイン PDC に認証を渡してもらうことができる)。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>connection resources</primary></indexterm>
-In addition, with <smbconfoption name="security">server</smbconfoption>, every Samba daemon on a server has to
-keep a connection open to the authenticating server for as long as that daemon lasts. This can drain the
-connection resources on a Microsoft NT server and cause it to run out of available connections. With
-<smbconfoption name="security">domain</smbconfoption>, however, the Samba daemons connect to the PDC or BDC
-only for as long as is necessary to authenticate the user and then drop the connection, thus conserving PDC
-connection resources.
+さらに、<smbconfoption name="security">server</smbconfoption>(訳注:サーバーレベルのセキュリティ)
+を使う場合、サーバ上のすべてのSambaデーモンは、起動している限り認証サーバーと接続し続けなければ
+ならない。これはMicrosoft NTサーバの接続リソースを使い果たし、利用可能な接続がなくなることに
+なりかねない。それに対し<smbconfoption name="security">domain</smbconfoption>
+(訳注:ドメインレベルのセキュリティ)の場合は、Sambaデーモンはユーザー認証に必要な時のみPDC/BDCに
+接続し、その後接続を切断する。これにより PDC の接続リソースを節約することができる。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>authentication reply</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-<indexterm><primary>NT groups</primary></indexterm>
-Finally, acting in the same manner as an NT server authenticating to a PDC means that as part of the
-authentication reply, the Samba server gets the user identification information such as the user SID, the list
-of NT groups the user belongs to, and so on.
+<indexterm><primary>NTグループ</primary></indexterm>
+最後に、NT サーバと同じように PDC 認証を行うということは、認証の返答の一部として、ユーザ SIDや
+ユーザが属する NTグループなどのユーザ識別情報を、Samba サーバーが受け取ることを意味する。
 </para>
 
 <note>
 <para>
-Much of the text of this document was first published in the Web magazine 
-<ulink url="http://www.linuxworld.com"><emphasis>LinuxWorld</emphasis></ulink> as the article <ulink
-url="http://www.linuxworld.com/linuxworld/lw-1998-10/lw-10-samba.html"/>
-<emphasis>Doing the NIS/NT Samba</emphasis>.
+この文書の内容の大半は、ウェブマガジン
+<ulink url="http://www.linuxworld.com"><emphasis>LinuxWorld</emphasis></ulink>の記事
+<ulink url="http://www.linuxworld.com/linuxworld/lw-1998-10/lw-10-samba.html"/>
+<emphasis>Doing the NIS/NT Samba</emphasis>として最初に発表された。
 </para>
 </note>
 
@@ -881,7 +881,7 @@ url="http://www.linuxworld.com/linuxworld/lw-1998-10/lw-10-samba.html"/>
 </sect1>
 
 <sect1 id="ads-member">
-<title>Samba ADS Domain Membership</title>
+<title>Samba ADS ドメインメンバシップ</title>
 
 <para>
 <indexterm significance="preferred"><primary>Active Directory</primary></indexterm>
