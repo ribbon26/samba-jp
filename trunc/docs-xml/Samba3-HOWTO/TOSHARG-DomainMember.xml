@@ -1031,9 +1031,9 @@ Heimdal のバージョン 0.6 以前を使用する場合は次のように設�
 <para>
 <indexterm><primary>KDC</primary></indexterm>
 <indexterm><primary>kinit</primary></indexterm>
-Test your config by doing a <userinput>kinit
-<replaceable>USERNAME</replaceable>@<replaceable>REALM</replaceable></userinput> and
-making sure that your password is accepted by the Win2000 KDC.
+<userinput>kinit<replaceable>USERNAME</replaceable>@<replaceable>REALM</replaceable></userinput>
+を実行して設定をテストし、パスワードが Windows 2000 KDC に認証されることを確認
+する。
 </para>
 
 <para>
@@ -1041,36 +1041,40 @@ making sure that your password is accepted by the Win2000 KDC.
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>KDC</primary></indexterm>
 <indexterm><primary>Windows 2003</primary></indexterm>
-With Heimdal versions earlier than 0.6.x you can use only newly created accounts
-in ADS or accounts that have had the password changed once after migration, or
-in case of <constant>Administrator</constant> after installation. At the
-moment, a Windows 2003 KDC can only be used with Heimdal releases later than 0.6
-(and no default etypes in krb5.conf). Unfortunately, this whole area is still
-in a state of flux.
+Heimdal 0.6.x 以前のバージョンでは、ADSで新規に作成されたアカウントであるか、
+移行後にパスワードが変更されたアカウントであるか、インストール後に
+<constant>Administrator</constant>であれば使用できる。現行、Windows 2003 KDCは
+Heimdal のバージョン 0.6 以降のリリース(かつkrb5.conf内にetypesの既定値の設定が
+ないもの)とのみ使用できる。残念ながらこの領域はいまだに流動的な状態である。
 </para>
 
 <note><para>
 <indexterm><primary>realm</primary></indexterm>
-<indexterm><primary>uppercase</primary></indexterm>
+<indexterm><primary>大文字</primary></indexterm>
 <indexterm><primary>KDC</primary></indexterm>
-The realm must be in uppercase or you will get a <quote><errorname>Cannot find KDC for
-requested realm while getting initial credentials</errorname></quote> error (Kerberos
-is case-sensitive!).
+レルムは大文字でなければ、
+<quote><errorname>Cannot find KDC for requested realm while getting initial credentials</errorname>
+(最初の認証情報取得時にリクエストされたレルムの KDC を見つけられない)</quote>
+というエラーが表示される(Kerberos は大文字・小文字を区別する)。
 </para></note>
 
 <note><para>
-<indexterm><primary>synchronize</primary></indexterm>
+<indexterm><primary>同期</primary></indexterm>
 <indexterm><primary>credentials</primary></indexterm>
-<indexterm><primary>time difference</primary></indexterm>
-<indexterm><primary>clock skew</primary></indexterm>
-Time between the two servers must be synchronized. You will get a <quote><errorname>kinit(v5): Clock skew too
-great while getting initial credentials</errorname></quote> if the time difference (clock skew) is more than five minutes.
+<indexterm><primary>時間差</primary></indexterm>
+<indexterm><primary>クロックスキュー</primary></indexterm>
+2つのサーバは時間の同期を取らなければならない。もし時間差が5分以上になると
+メッセージ
+<quote><errorname>kinit(v5): Clock skew too
+great while getting initial credentials</errorname>
+(kinit(v5): 最初の認証情報取得時にクロックスキューが過大)</quote>
+が表示される。
 </para></note>
 
 <para>
-<indexterm><primary>clock skew</primary></indexterm>
+<indexterm><primary>クロックスキュー</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
-Clock skew limits are configurable in the Kerberos protocols. The default setting is five minutes.
+Kerberos プロトコルではクロックスキューの限界値を設定できる。既定値は5分である。
 </para>
 
 <para>
