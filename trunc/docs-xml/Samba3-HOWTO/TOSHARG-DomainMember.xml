@@ -888,22 +888,22 @@ UNIX の UID 及び GID を自動的に Windows NT ドメインユーザ及び�
 <indexterm significance="preferred"><primary>ADS</primary><see>Active Directory</see></indexterm>
 <indexterm><primary>KDC</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
-This is a rough guide to setting up Samba-3 with Kerberos authentication against a
-Windows 200x KDC. A familiarity with Kerberos is assumed.
+これは、Windows 200x KDC に対し Kerberos認証を行うSamba-3の設定方法の概略である。
+Kerberosの知識を有することを前提としている。
 </para> 
 
 <sect2>
-<title>Configure &smb.conf;</title>
+<title>&smb.conf;の設定</title>
 
 <para>
-You must use at least the following three options in &smb.conf;:
+最低以下の3つのオプションを&smb.conf;で使用しなければならない:
 </para>
 
 <smbconfblock>
 <smbconfoption name="realm">your.kerberos.REALM</smbconfoption>
 <smbconfoption name="security">ADS</smbconfoption>
-<smbconfcomment>The following parameter need only be specified if present.</smbconfcomment>
-<smbconfcomment>The default setting if not present is Yes.</smbconfcomment>
+<smbconfcomment>もしも存在するときのみ、以下のパラメータを指定する必要がある。</smbconfcomment>
+<smbconfcomment>もしも存在しないときの既定値はYesである。</smbconfcomment>
 <smbconfoption name="encrypt passwords">yes</smbconfoption>
 </smbconfblock>
 
@@ -912,38 +912,39 @@ You must use at least the following three options in &smb.conf;:
 <indexterm><primary>realm</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>ADS DC</primary></indexterm>
-<indexterm><primary>password server</primary></indexterm>
-In case samba cannot correctly identify the appropriate ADS server using the realm name, use the 
-<smbconfoption name="password server"/> option in &smb.conf;:
+<indexterm><primary>パスワードサーバ</primary></indexterm>
+Samba がレルム名を使用して適切な ADS サーバーを正確に識別できない場合、
+&smb.conf;中の<smbconfoption name="password server"/>オプションを使用する:
 <smbconfblock>
 <smbconfoption name="password server">your.kerberos.server</smbconfoption>
 </smbconfblock>
-The most common reason for which Samba may not be able to locate the ADS domain controller is a consequence of
-sites maintaining some DNS servers on UNIX systems without regard for the DNS requirements of the ADS
-infrastructure. There is no harm in specifying a preferred ADS domain controller using the <parameter>password
-server</parameter>.
+ADSドメインコントローラを識別できない最も共通的な理由は、ADS基盤のDNS要求条件
+に関係なくUNIXシステム上でいくつかのDNSサーバを保守しているサイトの問題である。
+<parameter>password server</parameter>を使って、優先するADSドメインコントローラ
+を指定することは問題ない。
 </para>
 
 <note><para>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>authenticated</primary></indexterm>
-You do <emphasis>not</emphasis> need an smbpasswd file, and older clients will be authenticated as 
-if <smbconfoption name="security">domain</smbconfoption>, although it will not do any harm and 
-allows you to have local users not in the domain.
+smbpasswdファイルは<emphasis>必要でなく</emphasis>、古いクライアントは
+あたかも<smbconfoption name="security">domain</smbconfoption>のように
+認証され、何の害もなく、ドメインに入らないローカルユーザーを持つことが
+できる。
 </para></note>
 
 </sect2>
   
 <sect2>
-<title>Configure <filename>/etc/krb5.conf</filename></title>
+<title><filename>/etc/krb5.conf</filename>の設定</title>
 
 <para>
 <indexterm><primary>/etc/krb5.conf</primary></indexterm>
 <indexterm><primary>Kerberos</primary><secondary>/etc/krb5.conf</secondary></indexterm>
 <indexterm><primary>MIT</primary></indexterm>
 <indexterm><primary>Heimdal</primary></indexterm>
-With both MIT and Heimdal Kerberos, it is unnecessary to configure the <filename>/etc/krb5.conf</filename>,
-and it may be detrimental.
+MIT 及び Heimdal Kerberosでは、<filename>/etc/krb5.conf</filename>の
+設定は必要なく、時に害となることがある。
 </para>
 
 <para>
@@ -952,45 +953,48 @@ and it may be detrimental.
 <indexterm><primary>DNS zon</primary></indexterm>
 <indexterm><primary>KDC</primary></indexterm>
 <indexterm><primary>_kerberos.REALM.NAME</primary></indexterm>
-Microsoft ADS automatically create SRV records in the DNS zone 
-<parameter>_kerberos._tcp.REALM.NAME</parameter> for each KDC in the realm. This is part
-of the installation and configuration process used to create an Active Directory domain.
-A KDC is a Kerberos Key Distribution Center and forms an integral part of the Microsoft
-active directory infrastructure.
+Microsoft ADSは、DNSの<parameter>_kerberos._tcp.REALM.NAME</parameter>に、
+レルム内の各KDCのSRVレコードを、自動的に作成する。 これは、Active Directory
+ドメインを作成するために使われるインストールと設定プロセスの一部である。
+KDCはKerberosのキー配信センタであり、Microsoft Active Directory基盤の
+不可欠な部分として構成されている。
 </para>
 
 <para>
 <indexterm><primary>kinit</primary></indexterm>
 <indexterm><primary>DES-CBC-MD5</primary></indexterm>
 <indexterm><primary>DES-CBC-CRC</primary></indexterm>
-<indexterm><primary>encryption types</primary></indexterm>
+<indexterm><primary>暗号化タイプ</primary></indexterm>
 <indexterm><primary>kerberos</primary></indexterm>
 <indexterm><primary>Windows 2000</primary></indexterm>
-UNIX systems can use kinit and the DES-CBC-MD5 or DES-CBC-CRC encryption types to authenticate to the Windows
-2000 KDC. For further information regarding Windows 2000 ADS kerberos interoperability please refer to the
-Microsoft Windows 2000 Kerberos <ulink
+UNIXシステムは、Windows2000 KDCに対して認証するために、kinitとDES-CBC-MD5
+又はDES-CBC-CRCという種類の暗号手法を使える。Windows 2000 ADSのkerberos
+相互運用性に関連する詳細情報は、
+<ulink
 url="http://www.microsoft.com/windows2000/techinfo/planning/security/kerbsteps.asp">Interoperability</ulink>
-guide. Another very useful document that may be referred to for general information regarding Kerberos
-interoperability is <ulink url="http://www.ietf.org/rfc/rfc1510.txt?number=1510">RFC1510</ulink>. This RFC
-explains much of the magic behind the operation of Kerberos.
+というガイドを参照のこと。もう1つのとても有用な、Kerberosの相互運用性に関する
+一般的な情報として参照できる文書は、
+<ulink url="http://www.ietf.org/rfc/rfc1510.txt?number=1510">RFC1510</ulink>
+である。このRFCはKerberosの操作についてのたくさんの不可思議な背景について説明している。
 </para>
 
 <para>
 <indexterm><primary>MIT</primary></indexterm>
 <indexterm><primary>KRB5</primary></indexterm>
-<indexterm><primary>SRV records</primary></indexterm>
+<indexterm><primary>SRVレコード</primary></indexterm>
 <indexterm><primary>krb5.conf</primary></indexterm>
-<indexterm><primary>DNS lookup</primary></indexterm>
-<indexterm><primary>libraries</primary></indexterm>
-MIT's, as well as Heimdal's, recent KRB5 libraries default to checking for SRV records, so they will 
-automatically find the KDCs. In addition, <filename>krb5.conf</filename> only allows specifying 
-a single KDC, even there if there may be more than one. Using the DNS lookup allows the KRB5 
-libraries to use whichever KDCs are available.
+<indexterm><primary>DNS検索</primary></indexterm>
+<indexterm><primary>ライブラリ</primary></indexterm>
+MITとHeimdalでは、最新のKRB5ライブラリがSRVレコードをチェックするように
+既定値で設定されていて、従って、自動的にKDCを見つける。さらに、
+<filename>krb5.conf</filename>は、たとえ2つ以上あったとしても単一のKDCの
+指定のみ許可する。DNSルックアップを使用することによりKRB5ライブラリは使用
+可能な任意のKDCを使用できる。
 </para>
 
 <para>
 <indexterm><primary>krb5.conf</primary></indexterm>
-When manually configuring <filename>krb5.conf</filename>, the minimal configuration is:
+手動で<filename>krb5.conf</filename>を設定する場合の最小限の設定は次のとおり:
 <screen>
 [libdefaults]
 	default_realm = YOUR.KERBEROS.REALM
@@ -1007,7 +1011,7 @@ When manually configuring <filename>krb5.conf</filename>, the minimal configurat
 
 <para>
 <indexterm><primary>Heimdal</primary></indexterm>
-When using Heimdal versions before 0.6, use the following configuration settings:
+Heimdal のバージョン 0.6 以前を使用する場合は次のように設定する:
 <screen>
 [libdefaults]
 	default_realm      = YOUR.KERBEROS.REALM
