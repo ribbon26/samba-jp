@@ -1156,43 +1156,45 @@ ADS管理者は"organizational_unit"パラメータに指定すべきものを�
 <screen>
 &rootprompt; <userinput>net ads join "Computers/BusinessUnit/Department/Servers"</userinput>
 </screen>
-This command will place the Samba server machine trust account in the container
-<literal>Computers/BusinessUnit/Department/Servers</literal>. The container should exist in the ADS directory
-before executing this command.  Please note that forward slashes must be used, because backslashes are both
-valid characters in an OU name and used as escapes for other characters.  If you need a backslash in an OU 
-name, it may need to be quadrupled to pass through the shell escape and ldap escape.
+このコマンドは、コンテナ<literal>Computers/BusinessUnit/Department/Servers</literal>
+中に、Sambaサーバのマシン信頼アカウントを置く。コンテナはこのコマンドを実行する前に
+ADS ディレクトリ中に存在しなければならない。バックスラッシュはOU名とその他の文字に
+対するエスケープ文字の両方として有効な文字のため、普通のスラッシュを使わなければ
+ならないことに注意。もしもOU名にバックスラッシュを使う必要があるならば、シェルによる
+解釈と、LDAPによる解釈を考慮して4重にする必要がある。
 </para>
 
 <sect3>
-<title>Possible Errors</title>
+<title>起こりうるエラー</title>
 
 <para>
 <variablelist>
-	<varlistentry><term><errorname>ADS support not compiled in</errorname></term>
+	<varlistentry><term><errorname>ADS サポートがコンパイルされていない</errorname></term>
 	<listitem><para>
 	<indexterm><primary>config.cache</primary></indexterm>
 	<indexterm><primary>Kerberos</primary></indexterm>
 	<indexterm><primary>headers files</primary></indexterm>
-	Samba must be reconfigured (remove config.cache) and recompiled (make clean all install) after the
-	Kerberos libraries and headers files are installed.
+	Kerberosライブラリとヘッダファイルのインストール後に、Samba を再設定(config.cache を削除)
+	して、リコンパイルする(全てのクリーンインストール)。
 	</para></listitem></varlistentry>
 
-	<varlistentry><term><errorname>net ads join prompts for user name</errorname></term>
+	<varlistentry><term><errorname>net ads joinがユーザー名の入力を要求する</errorname></term>
 	<listitem><para>
 	<indexterm><primary>kinit</primary></indexterm>
 	<indexterm><primary>rights</primary></indexterm>
-	You need to log in to the domain using <userinput>kinit
-	<replaceable>USERNAME</replaceable>@<replaceable>REALM</replaceable></userinput>.
-	<replaceable>USERNAME</replaceable> must be a user who has rights to add a machine to the domain.
+	<userinput>kinit
+	<replaceable>USERNAME</replaceable>@<replaceable>REALM</replaceable></userinput>
+	を使ってドメインにログインする必要がある。
+	<replaceable>USERNAME</replaceable>はマシンをドメインへ追加する権限を持つユーザーでなければならない。
 	</para></listitem></varlistentry>
 
-	<varlistentry><term>Unsupported encryption/or checksum types</term>
+	<varlistentry><term>サポートされない暗号/もしくはチェックサムタイプ</term>
 	<listitem><para>
 	<indexterm><primary>/etc/krb5.conf</primary></indexterm>
 	<indexterm><primary>unsupported encryption</primary></indexterm>
 	<indexterm><primary>Kerberos</primary></indexterm>
-	Make sure that the <filename>/etc/krb5.conf</filename> is correctly configured
-	for the type and version of Kerberos installed on the system.
+	<filename>/etc/krb5.conf</filename>システムにインストールされているKerberosの
+	タイプとバージョンに対して適切に設定されているか確認する。
 	</para></listitem></varlistentry>
 </variablelist>
 </para>
@@ -1202,43 +1204,43 @@ name, it may need to be quadrupled to pass through the shell escape and ldap esc
 </sect2>
 
 <sect2 id="ads-test-server">
-<title>Testing Server Setup</title>
+<title>サーバ設定のテスト</title>
 
 <para>
-<indexterm><primary>successful join</primary></indexterm>
-<indexterm><primary>computer account</primary></indexterm>
+<indexterm><primary>参加成功</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-If the join was successful, you will see a new computer account with the
-NetBIOS name of your Samba server in Active Directory (in the <quote>Computers</quote>
-folder under Users and Computers.
+参加に成功したら、Active DirectoryにSambaサーバのNetBIOS名の付いた
+新規のコンピュータアカウントが表示される(ユーザとコンピュータ配下の
+<quote>コンピュータ</quote>フォルダ中)。
 </para>
 
 <para>
 <indexterm><primary>Windows 2000</primary></indexterm>
 <indexterm><primary>net</primary><secondary>use</secondary></indexterm>
 <indexterm><primary>DES-CBC-MD5</primary></indexterm>
-On a Windows 2000 client, try <userinput>net use * \\server\share</userinput>. You should
-be logged in with Kerberos without needing to know a password. If this fails, then run
-<userinput>klist tickets</userinput>. Did you get a ticket for the server? Does it have
-an encryption type of DES-CBC-MD5? 
+Windows 2000 クライアントでは、<userinput>net use * \\server\share</userinput>
+を試してみること。パスワードを知らないでもKerberos にログインできるはずである。
+もしも失敗したら、<userinput>klist tickets</userinput>を実行すること。
+サーバー用のチケットを取得できたか?それには暗号タイプ DES-CBC-MD5 があるか?
 </para>
 
 <note><para>
 <indexterm><primary>DES-CBC-MD5</primary></indexterm>
 <indexterm><primary>ARCFOUR-HMAC-MD5</primary></indexterm>
-<indexterm><primary>encoding</primary></indexterm>
-Samba can use both DES-CBC-MD5 encryption as well as ARCFOUR-HMAC-MD5 encoding.
+<indexterm><primary>エンコード</primary></indexterm>
+SambaはDES-CBC-MD5暗号及びARCFOUR-HMAC-MD5符号を使用できる。
 </para></note>
 
 </sect2>
 
 <sect2 id="ads-test-smbclient">
-<title>Testing with &smbclient;</title>
+<title>&smbclient;によるテスト</title>
 
 <para>
 <indexterm><primary>smbclient</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
-<indexterm><primary>Kerberos authentication</primary></indexterm>
+<indexterm><primary>Kerberos認証</primary></indexterm>
 On your Samba server try to log in to a Windows 2000 server or your Samba
 server using &smbclient; and Kerberos. Use &smbclient; as usual, but
 specify the <option>-k</option> option to choose Kerberos authentication.
