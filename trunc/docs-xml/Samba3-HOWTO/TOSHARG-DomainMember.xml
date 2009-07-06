@@ -1396,59 +1396,60 @@ Windows200xもしくはXP ProfessionalマシンをSamba PDCドメインに追加
 <itemizedlist>
 	<listitem><para>
 <indexterm><primary>script</primary></indexterm>
-<indexterm><primary>path specified</primary></indexterm>
-	The script does not actually exist, or could not be located in the path specified.
+<indexterm><primary>パスの指定</primary></indexterm>
+	スクリプトが実際には存在していないか、指定したパスにない。
 	</para>
 
 	<para>
-<indexterm><primary>UNIX system account</primary></indexterm>
-<indexterm><primary>Samba SAM account</primary></indexterm>
-	<emphasis>Corrective action:</emphasis> Fix it. Make sure when run manually
-	that the script will add both the UNIX system account and the Samba SAM account.
+<indexterm><primary>UNIXシステムアカウント</primary></indexterm>
+<indexterm><primary>Samba SAM アカウント</primary></indexterm>
+	<emphasis>是正処置:</emphasis>修正する。スクリプトを手動で実行すると、UNIX システム
+	アカウントとSamba SAM アカウントの両方が追加されることを確認する。
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>UNIX system account</primary></indexterm>
+<indexterm><primary>UNIX システムアカウント</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
-	The machine could not be added to the UNIX system accounts file <filename>/etc/passwd</filename>.
+	マシンをUNIXシステムアカウントファイル<filename>/etc/passwd</filename>に追加できない。
 	</para>
 
 	<para>
-<indexterm><primary>legal UNIX system account name</primary></indexterm>
-<indexterm><primary>uppercase</primary></indexterm>
-	<emphasis>Corrective action:</emphasis> Check that the machine name is a legal UNIX
-	system account name. If the UNIX utility <command>useradd</command> is called,
-	then make sure that the machine name you are trying to add can be added using this
-	tool. <command>Useradd</command> on some systems will not allow any uppercase characters
-	nor will it allow spaces in the name.
+<indexterm><primary>正しいUNIXシステムアカウント名</primary></indexterm>
+<indexterm><primary>大文字</primary></indexterm>
+	<emphasis>是正処置:</emphasis>マシン名が有効なUNIXシステムアカウント名であるか確認する。
+	もしもUNIXユーティリティ<command>useradd</command>が呼び出されるならば、このツールを
+	使用して追加したいマシン名を追加できることを確認する。一部のシステム上の
+	<command>Useradd</command>は大文字やスペースを名前に使用することを許可しない。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>backend database</primary></indexterm>
-<indexterm><primary>UNIX system account</primary></indexterm>
-<indexterm><primary>Samba backend database</primary></indexterm>
-The <smbconfoption name="add machine script"/> does not create the
-machine account in the Samba backend database; it is there only to create a UNIX system
-account to which the Samba backend database account can be mapped.
+<indexterm><primary>バックエンドデータベース</primary></indexterm>
+<indexterm><primary>UNIXシステムアカウント</primary></indexterm>
+<indexterm><primary>Sambaバックエンドデータベース</primary></indexterm>
+<smbconfoption name="add machine script"/>はSamba バックエンドデータベースでは、
+マシンアカウントを作成しない。Sambaバックエンドデータベースアカウントがマッピング
+される先のUNIXシステムアカウントを作成するためにのみあるものである。
 </para>
 
 </sect2>
 
 <sect2>
-	<title>I Can't Join a Windows 2003 PDC</title>
+	<title>Windows 2003 PDC に参加できない</title>
 
 	<para>
-<indexterm><primary>SMB signing</primary></indexterm>
+<indexterm><primary>SMB署名</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
 <indexterm><primary>Windows 2003</primary></indexterm>
 <indexterm><primary>SMB/CIFS</primary></indexterm>
-	Windows 2003 requires SMB signing. Client-side SMB signing has been implemented in Samba-3.0.
-	Set <smbconfoption name="client use spnego">yes</smbconfoption> when communicating 
-	with a Windows 2003 server. This will not interfere with other Windows clients that do not
-	support the more advanced security features of Windows 2003 because the client will simply
-	negotiate a protocol that both it and the server suppport. This is a well-known fall-back facility
-	that is built into the SMB/CIFS protocols.
+	Windows 2003はSMB署名を必要とする。クライアント側のSMB署名はSamba-3.0で
+	実現されている。Windows 2003サーバと通信する際には
+	<smbconfoption name="client use spnego">yes</smbconfoption>に設定する。
+	この機能は、クライアントは単純にそれ自身とサーバと両方がサポートする
+	プロトコルをネゴシエートするので、Windows 2003が持つより高度なセキュリティ
+	機能をサポートしない他のWindowsクライアントとインタフェースを取れない。
+	これは、SMB/CIFSプロトコル中で構築されているよく知られたフォールバック
+	機能である。
 	</para>
 
 </sect2>
