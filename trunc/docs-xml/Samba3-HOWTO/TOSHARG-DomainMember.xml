@@ -1342,21 +1342,24 @@ Microsoft Windowsのネットワーク機能を理解していれば容易に解
 <title>マシンをドメインに追加し直すことができない</title>
 
 <para>
-<indexterm><primary>machine trust account</primary></indexterm>
-<indexterm><primary>already exists</primary></indexterm>
-<quote>A Windows workstation was reinstalled. The original domain machine trust
-account was deleted and added immediately. The workstation will not join the domain if I use 
-the same machine name. Attempts to add the machine fail with a message that the machine already
-exists on the network &smbmdash; I know it does not. Why is this failing?</quote>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>すでに存在する(already exists)</primary></indexterm>
+<quote>
+Windowsワークステーションを再インストールした。元々のドメインマシンアカウントが削除され
+その直後に再度追加された。同じマシン名を使用するとワークステーションはドメインに参加
+できない。マシンの追加に失敗する際に、マシンはネットワーク上に存在していないにもかか
+わらず、マシンが既に存在するというメッセージが表示される。&smbmdash;なぜこのように失敗するのか?
+</quote>
 </para>
 
 <para>
-<indexterm><primary>NetBIOS name cache</primary></indexterm>
+<indexterm><primary>NetBIOS名前キャッシュ</primary></indexterm>
 <indexterm><primary>nbtstat</primary></indexterm>
-The original name is still in the NetBIOS name cache and must expire after machine account
-deletion before adding that same name as a domain member again. The best advice is to delete
-the old account and then add the machine with a new name. Alternately, the name cache can be flushed and
-reloaded with current data using the <command>nbtstat</command> command on the Windows client:
+前の名前がまだNetBIOS 名キャッシュに残っているためである。マシンアカウントが削除されると、
+同じ名前のマシンをドメインメンバとして再度追加できるようになるには、まず、その名前が
+期限切れにならなければならない。最もよい方法は、古いアカウントを削除し、新しい名前で
+マシンを追加することである。そのほかに、Windows上のクライアントから以下の<command>nbtstat</command>
+コマンドを使って、名前キャッシュにある現在のデータをフラッシュし、再ロードする。
 <screen>
 &dosprompt; nbtstat -R
 </screen>
@@ -1365,27 +1368,29 @@ reloaded with current data using the <command>nbtstat</command> command on the W
 </sect2>
 
 <sect2>
-<title>Adding Machine to Domain Fails</title>
+<title>マシンのドメインへの追加に失敗する</title>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>fails</primary></indexterm>
-<quote>Adding a Windows 200x or XP Professional machine to the Samba PDC Domain fails with a
-message that says, <errorname>"The machine could not be added at this time, there is a network problem.
-Please try again later."</errorname> Why?</quote>
+<indexterm><primary>失敗</primary></indexterm>
+<quote>
+Windows200xもしくはXP ProfessionalマシンをSamba PDCドメインに追加しようとすると失敗する。
+エラーメッセージは
+<errorname>今回はネットワークの問題によりマシンを追加できませんでした。後ほどやり直して下さい。</errorname>
+である(訳注:実際に表示されるメッセージとは違います)。なぜか?</quote>
 </para>
 
 <para>
-<indexterm><primary>check logs</primary></indexterm>
-You should check that there is an <smbconfoption name="add machine script"/> in your &smb.conf;
-file. If there is not, please add one that is appropriate for your OS platform. If a script
-has been defined, you will need to debug its operation. Increase the <smbconfoption name="log level"></smbconfoption>
-in the &smb.conf; file to level 10, then try to rejoin the domain. Check the logs to see which
-operation is failing.
+<indexterm><primary>ログのチェック</primary></indexterm>
+&smb.conf;ファイル中に<smbconfoption name="add machine script"/>があることを確認する。
+もしも存在していないならば、OSプラットフォームに適したスクリプトを追加する。もしも、
+スクリプトがすでに定義されているならば、その動作をデバッグする必要がある。
+&smb.conf;ファイル中の<smbconfoption name="log level"></smbconfoption>の値を10まで増やし、
+ドメインへの参加を試行してみる。そのログをチェックし、どの動作が失敗しているか突き止める。
 </para>
 
 <para>
-Possible causes include:
+可能性のある原因:
 </para>
 
 <itemizedlist>
