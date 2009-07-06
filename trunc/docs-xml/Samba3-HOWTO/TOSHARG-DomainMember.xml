@@ -1241,60 +1241,62 @@ SambaはDES-CBC-MD5暗号及びARCFOUR-HMAC-MD5符号を使用できる。
 <indexterm><primary>smbclient</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
 <indexterm><primary>Kerberos認証</primary></indexterm>
-On your Samba server try to log in to a Windows 2000 server or your Samba
-server using &smbclient; and Kerberos. Use &smbclient; as usual, but
-specify the <option>-k</option> option to choose Kerberos authentication.
+Sambaサーバ上で&smbclient;とKerberosを使用してWindows2000サーバ又はSambaサーバ
+にログインすることを試みる。&smbclient;は通常通り使用するが、Kerberos認証を選択
+するように、<option>-k</option>オプションを指定する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Notes</title>
+<title>注意</title>
 
 <para>
-<indexterm><primary>administrator password</primary></indexterm>
-<indexterm><primary>change password</primary></indexterm>
-<indexterm><primary>encryption types</primary></indexterm>
-You must change the administrator password at least once after installing a domain controller, 
-to create the right encryption types.
+<indexterm><primary>管理者パスワード</primary></indexterm>
+<indexterm><primary>パスワードの変更</primary></indexterm>
+<indexterm><primary>暗号化タイプ</primary></indexterm>
+ドメインコントローラインストール後は、正しい暗号化タイプを作成するために、少なくとも
+一度は管理者パスワードを変更しなれけばならない。
 </para>
 
 <para>
 <indexterm><primary>_kerberos._udp</primary></indexterm>
 <indexterm><primary>_ldap._tcp</primary></indexterm>
-<indexterm><primary>default DNS setup</primary></indexterm>
-Windows 200x does not seem to create the <parameter>_kerberos._udp</parameter> and
-<parameter>_ldap._tcp</parameter> in the default DNS setup. Perhaps this will be fixed later in service packs.
+<indexterm><primary>既定値のDNS設定</primary></indexterm>
+Windows200xは既定値のDNS設定では<parameter>_kerberos._udp</parameter>や
+<parameter>_ldap._tcp</parameter>を作成しないようである。おそらく今後
+サービスパックで修正されるだろう。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Sharing User ID Mappings between Samba Domain Members</title>
+<title>Sambaドメインメンバ間でのユーザIDマッピング共有</title>
 
 <para>
-<indexterm><primary>maps UNIX users and groups</primary></indexterm>
+<indexterm><primary>UNIXユーザとグループのマップ</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-Samba maps UNIX users and groups (identified by UIDs and GIDs) to Windows users and groups (identified by SIDs).
-These mappings are done by the <parameter>idmap</parameter> subsystem of Samba.
+SambaはUNIXユーザ及びグループ(それぞれUIDとGIDで識別される)をWindowsユーザ及び
+グループ(SIDで識別される)にマッピングする。これらのマッピングは Sambaの
+<parameter>idmap</parameter>サブシステムが行う。
 </para>
 
 <para>
-<indexterm><primary>mappings</primary></indexterm>
+<indexterm><primary>マッピング</primary></indexterm>
 <indexterm><primary>CIFS</primary></indexterm>
 <indexterm><primary>NFS</primary></indexterm>
-In some cases it is useful to share these mappings between Samba domain members,
-so <emphasis>name->id</emphasis> mapping is identical on all machines.
-This may be needed in particular when sharing files over both CIFS and NFS.
+これらのマッピングをSambaドメインメンバー間で共有することは、
+<emphasis>名前からIDへの</emphasis>マッピングが全マシンで同一になるので便利である。
+特に、CIFSとNFSの両方でファイルを共有する場合に有用である。
 </para>
 
 <para>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>ldap idmap suffix</primary></indexterm>
-To use the <emphasis>LDAP</emphasis> <parameter>ldap idmap suffix</parameter>, set:
+<emphasis>LDAP</emphasis> <parameter>ldap idmap suffix</parameter>を使う場合、以下のように設定する:
 </para>
 
 <smbconfblock>
@@ -1302,42 +1304,42 @@ To use the <emphasis>LDAP</emphasis> <parameter>ldap idmap suffix</parameter>, s
 </smbconfblock>
 
 <para>
-See the &smb.conf; man page entry for the <smbconfoption name="ldap idmap suffix"></smbconfoption>
-parameter for further information.
+詳細情報については &smb.conf; マニュアルページの<smbconfoption name="ldap idmap suffix"></smbconfoption>
+パラメータのエントリを参照のこと。
 </para>
 
 <para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-<indexterm><primary>LDAP administrative password</primary></indexterm>
+<indexterm><primary>LDAP管理用パスワード</primary></indexterm>
 <indexterm><primary>secrets.tdb</primary></indexterm>
-Do not forget to specify also the <smbconfoption name="ldap admin dn"/>
-and to make certain to set the LDAP administrative password into the <filename>secrets.tdb</filename> using:
+<smbconfoption name="ldap admin dn"/>も設定することと、<filename>secrets.tdb</filename>
+中にLDAP管理用パスワードを設定するのを忘れないこと。これには下記を使用する:
 <screen>
 &rootprompt; smbpasswd -w ldap-admin-password
 </screen>
-In place of <literal>ldap-admin-password</literal>, substitute the LDAP administration password for your
-system.
+<literal>ldap-admin-password</literal>の部分は、システムで使うLDAPサーバ管理用パスワードで
+置き換えること。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
-<indexterm><primary>domain member</primary></indexterm>
-<indexterm><primary>machine trust accounts</primary></indexterm>
-In the process of adding/deleting/re-adding domain member machine trust accounts, there are
-many traps for the unwary player and many <quote>little</quote> things that can go wrong.
-It is particularly interesting how often subscribers on the Samba mailing list have concluded
-after repeated failed attempts to add a machine account that it is necessary to <quote>reinstall</quote>
-MS Windows on the machine. In truth, it is seldom necessary to reinstall because of this type
-of problem. The real solution is often quite simple, and with an understanding of how MS Windows
-networking functions, it is easy to overcome.
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+ドメインメンバのマシンアカウントの追加/削除/再追加の手順の中には、不注意により
+陥りやすい多くの落とし穴や間違いを招きかねない多くの<quote>事細かな</quote>こと
+がある。興味深いことにSambaメーリングリストの購読者の中には、マシンアカウントの
+追加を繰り返し失敗し、最終的にMicrosoft Windows をマシンに<quote>再インストール<quote>
+しなければならないという結論を出す人がよくいる。しかし、実際はこのような種類の問題で
+再インストールが必要になることはめったにない。正しい解決法は単純である場合が多く、
+Microsoft Windowsのネットワーク機能を理解していれば容易に解決できる。
 </para>
 
 <sect2>
-<title>Cannot Add Machine Back to Domain</title>
+<title>マシンをドメインに追加し直すことができない</title>
 
 <para>
 <indexterm><primary>machine trust account</primary></indexterm>
