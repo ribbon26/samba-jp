@@ -71,46 +71,47 @@ emphasis>share</emphasis>モードか<emphasis>user</emphasis>モードのいず
 <indexterm><primary>ユーザアカウントの作成</primary></indexterm>
 <indexterm><primary>ネットワークログオンサービスがない</primary></indexterm>
 <indexterm><primary>独立</primary></indexterm>
-No special action is needed other than to create user accounts. Standalone
-servers do not provide network logon services. This means that machines that
-use this server do not perform a domain logon to it. Whatever logon facility
-the workstations are subject to is independent of this machine. It is, however,
-necessary to accommodate any network user so the logon name he or she uses will
-be translated (mapped) locally on the standalone server to a locally known
-user name. There are several ways this can be done.
+ユーザアカウントを作成するため以外に特別な操作は必要ない。スタンドアロンサーバ
+はネットワークログオンサービスを提供しない。これは、このサーバを使うマシンは
+これに対するドメインログオンを実行しないことを意味する。ワークステーションが
+使うどんなログオン機能も、このマシンからは独立している。しかし、使用する
+ログオン名がローカルで持っているユーザ名をスタンドアロンサーバ上でローカルに
+変換(マップ)するために、任意のネットワークユーザを一致させることは必要である。
+このことを実行するためにはいくつかの方法がある。
 </para>
 
 <para>
-<indexterm><primary>local authentication database</primary></indexterm>
+<indexterm><primary>ローカル認証データベース</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
-<indexterm><primary>not domain member</primary></indexterm>
-Samba tends to blur the distinction a little in defining
-a standalone server. This is because the authentication database may be
-local or on a remote server, even if from the SMB protocol perspective
-the Samba server is not a member of a domain security context.
+<indexterm><primary>非ドメインメンバ</primary></indexterm>
+Sambaはスタンドアロンサーバの定義中で少しだけ区別を曖昧にするのに
+役立つ。これは、SMBプロトコルの視点から、Sambaサーバがドメイン
+セキュリティコンテキストのメンバでないとしても、認証データベース
+がローカルかリモートサーバ上にあるという理由である。
 </para>
 
 <para>
 <indexterm><primary>PAM</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
-<indexterm><primary>UNIX-user database</primary></indexterm>
+<indexterm><primary>UNIXユーザデータベース</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>/etc/shadow</primary></indexterm>
-<indexterm><primary>local smbpasswd file</primary></indexterm>
-<indexterm><primary>LDAP backend</primary></indexterm>
+<indexterm><primary>ローカルのsmbpasswdファイル</primary></indexterm>
+<indexterm><primary>LDAPバックエンド</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
-Through the use of Pluggable Authentication Modules (PAM) (see <link linkend="pam">the chapter on PAM</link>)
-and the name service switcher (NSS), which maintains the UNIX-user database, the source of authentication may
-reside on another server. We would be inclined to call this the authentication server.  This means that the
-Samba server may use the local UNIX/Linux system password database (<filename>/etc/passwd</filename> or
-<filename>/etc/shadow</filename>), may use a local smbpasswd file, or may use an LDAP backend, or even via PAM
-and Winbind another CIFS/SMB server for authentication.
+UNIXユーザデータベースを操作するPAMとネームサービススイッチ(NSS)を使って
+(<link linkend="pam">PAMに付いての節</link>を参照)、認証のソースは
+別のサーバ上にあってもよい。これを認証サーバと呼ぶ傾向がある。これは、
+SambaサーバはローカルのUNIX/Linuxシステムパスワードデータベース
+(<filename>/etc/passwd</filename>か<filename>/etc/shadow</filename>)か、
+ローカルのsmbpasswdファイルか、LDAPバックエンドか、認証のために、
+PAMとWinbind経由で他のCIFS/SMBサーバを使っても良いことを意味する。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
 <indexterm><primary>inspire simplicity</primary></indexterm>
