@@ -171,56 +171,58 @@ PAMとWinbind経由で他のCIFS/SMBサーバを使っても良いことを意�
 <indexterm><primary>guest</primary></indexterm>
 <indexterm><primary>unprivileged account names</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-In <link linkend="simplynice">this example</link>, the machine name is set to &example.server.samba;, and the
-workgroup is set to the name of the local workgroup (&example.workgroup;) so the machine will appear together
-with systems with which users are familiar. The only password backend required is the <quote>guest</quote>
-backend to allow default unprivileged account names to be used. As there is a WINS server on this network, we
-of course make use of it.
+<link linkend="simplynice">この例</link>中で、マシン名は&example.server.samba;に設定
+され、ワークグループはローカルワークグループ(&example.workgroup;)の名前に設定され、
+ユーザがなじみのあるシステムと一緒に表示される。必要とされる唯一のパスワードバックエンド
+は、既定値の非制限アカウント名として使われることを許可する<quote>guest</quote>
+バックエンドである。このネットワーク上でWINSサーバがあるならば、もちろんそれを使う。
 </para>
 
 <para>
-A US Air Force Colonel was renowned for saying: <quote>Better is the enemy of good enough!</quote> There are often
-sound reasons for avoiding complexity as well as for avoiding a technically perfect solution. Unfortunately,
-many network administrators still need to learn the art of doing just enough to keep out of trouble.
+米国空軍連隊長が言った有名なことは:
+A US Air Force Colonel was renowned for saying: <quote>最善は善の的(Better is the enemy of good enough!)</quote>。
+専門的に完全な解決を避けることと同様、複雑さを避けることに対して、しばしば健全な理由が
+存在する。不幸にも、トラブルがないことを保持するのにちょうど十分な術を、多くの
+ネットワーク管理者は引き続き覚える必要がある。
 </para>
 
 </sect2>
 
 <sect2 id="SimplePrintServer">
-<title>Central Print Serving</title>
+<title>集中印刷サーバ</title>
 
 <para>
-<indexterm><primary>simple print server</primary></indexterm>
-<indexterm><primary>tools</primary></indexterm>
-Configuration of a simple print server is easy if you have all the right tools on your system.
+<indexterm><primary>単純印刷サーバ</primary></indexterm>
+<indexterm><primary>ツール</primary></indexterm>
+単純な印刷サーバの設定は、システム上のすべての正しいツールがあるならば簡単である。
 </para>
 
 <orderedlist>
-<title> Assumptions</title>
+<title>前提条件</title>
 	<listitem><para>
-	The print server must require no administration.
+	印刷サーバは管理不要でなければならない。
 	</para></listitem>
 
 	<listitem><para>
-	The print spooling and processing system on our print server will be CUPS.
-	(Please refer to <link linkend="CUPS-printing">CUPS Printing Support</link>, for more information).
+	印刷サーバ印刷の、スプールと処理をするシステムはCUPSである。
+	(詳細情報は<link linkend="CUPS-printing">CUPS印刷システム</link>を参照のこと)。
 	</para></listitem>
 
 	<listitem><para>
-	The print server will service only network printers. The network administrator
-	will correctly configure the CUPS environment to support the printers.
+	印刷サーバはネットワークプリンタのみ処理を行う。ネットワーク管理者は
+	プリンタをサポートするためにCUPS環境を正しく設定している。
 	</para></listitem>
 
 	<listitem><para>
-	All workstations will use only PostScript drivers. The printer driver
-	of choice is the one shipped with the Windows OS for the Apple Color LaserWriter.
+	すべてのワークステーションはPostScriptドライバを使う。選択したプリンタ
+	ドライバはApple Color LaserWriterのためのWindows OS用のものを選択する。
 	</para></listitem>
 </orderedlist>
 
 <para>
-<indexterm><primary>print server</primary></indexterm>
+<indexterm><primary>印刷サーバ</primary></indexterm>
 <indexterm><primary>/var/spool/samba</primary></indexterm>
-<indexterm><primary>anonymous</primary></indexterm>
+<indexterm><primary>匿名</primary></indexterm>
 In this example our print server will spool all incoming print jobs to
 <filename>/var/spool/samba</filename> until the job is ready to be submitted by
 Samba to the CUPS print processor. Since all incoming connections will be as
