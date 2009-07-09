@@ -223,53 +223,52 @@ A US Air Force Colonel was renowned for saying: <quote>最善は善の的(Better
 <indexterm><primary>印刷サーバ</primary></indexterm>
 <indexterm><primary>/var/spool/samba</primary></indexterm>
 <indexterm><primary>匿名</primary></indexterm>
-In this example our print server will spool all incoming print jobs to
-<filename>/var/spool/samba</filename> until the job is ready to be submitted by
-Samba to the CUPS print processor. Since all incoming connections will be as
-the anonymous (guest) user, two things will be required to enable anonymous printing.
+この例では、印刷サーバは入力したすべての印刷ジョブを、Sambaによって、CUPS
+印刷プロセッサに向けて送られたジョブが実行可能になるまで
+<filename>/var/spool/samba</filename>にスプールする。すべての入力された
+接続は匿名(guest)ユーザなので、匿名印刷を有効にするために、2つ設定が必要である。
 </para>
 
 <itemizedlist>
-<title>Enabling Anonymous Printing</title>
+<title>匿名印刷を有効にする</title>
 	<listitem><para>
-<indexterm><primary>guest account</primary></indexterm>
+<indexterm><primary>ゲストアカウント</primary></indexterm>
 <indexterm><primary>nobody</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
-	The UNIX/Linux system must have a <command>guest</command> account.
-	The default for this is usually the account <command>nobody</command>.
-	To find the correct name to use for your version of Samba, do the 
-	following:
+	UNIX/Linuxシステムは<command>guest</command>アカウントを持たねば
+	ならない。この既定値は、通常<command>nobody</command>である。
+	使用するバージョンで使っている正しい名前を探すためには、以下を実行する:
 <screen>
 &prompt;<userinput>testparm -s -v | grep "guest account"</userinput>
 </screen>
 <indexterm><primary>/etc/passwd</primary></indexterm>
-	Make sure that this account exists in your system password
-	database (<filename>/etc/passwd</filename>).
+	このアカウントはシステムのパスワードデータベース
+	(<filename>/etc/passwd</filename>)に存在するようにしておかねばならない。
 	</para>
 
 	<para>
-<indexterm><primary>set a password</primary></indexterm>
-<indexterm><primary>lock password</primary></indexterm>
+<indexterm><primary>パスワードの設定</primary></indexterm>
+<indexterm><primary>パスワードのロック</primary></indexterm>
 <indexterm><primary>passwd</primary></indexterm>
-	It is a good idea either to set a password on this account, or else to lock it
-	from UNIX use. Assuming that the guest account is called <literal>pcguest</literal>,
-	it can be locked by executing:
+	このアカウントに対してパスワードを設定するか、UNIXでの使用からロックすることは
+	良い考えである。ゲストアカウントが<literal>pcguest</literal>であると仮定した時、
+	以下を実行することでロックが出来る:
 <screen>
 &rootprompt; passwd -l pcguest
 </screen>
-	The exact command may vary depending on your UNIX/Linux distribution.
+	正確なコマンドは使用するUNIX/Linuxディストリビューションによって異なる。
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>directory</primary></indexterm>
-<indexterm><primary>guest account</primary></indexterm>
-<indexterm><primary>available</primary></indexterm>
+<indexterm><primary>ディレクトリ</primary></indexterm>
+<indexterm><primary>ゲストアカウント</primary></indexterm>
+<indexterm><primary>有効</primary></indexterm>
 <indexterm><primary>mkdir</primary></indexterm>
 <indexterm><primary>chown</primary></indexterm>
 <indexterm><primary>chmod</primary></indexterm>
-	The directory into which Samba will spool the file must have write
-	access for the guest account. The following commands will ensure that
-	this directory is available for use:
+	Sambaがファイルをスプールするディレクトリはゲストアカウントに対して
+	書き込み許可を持たねばならない。以下のコマンド操作で、このディレクトリ
+	が使えるようにする:
 <screen>
 &rootprompt;<userinput>mkdir /var/spool/samba</userinput>
 &rootprompt;<userinput>chown nobody.nobody /var/spool/samba</userinput>
@@ -279,11 +278,11 @@ the anonymous (guest) user, two things will be required to enable anonymous prin
 </itemizedlist>
 
 <para>
-The contents of the &smb.conf; file is shown in <link linkend="AnonPtrSvr">the Anonymous Printing example</link>.
+&smb.conf;ファイルの内容は<link linkend="AnonPtrSvr">匿名印刷の例</link>にある。
 </para>
 
 <example id="AnonPtrSvr">
-<title>&smb.conf; for Anonymous Printing</title>
+<title>匿名印刷のための&smb.conf;</title>
 <smbconfblock>
 <smbconfcomment> Global parameters</smbconfcomment>
 <smbconfsection name="[global]"/>
