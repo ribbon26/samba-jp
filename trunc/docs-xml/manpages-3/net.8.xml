@@ -343,7 +343,7 @@ OLDJOIN オプションを使用すること。
 
 <para>
 <replaceable>user</replaceable>で指定した、オープンしているファイルを表示する。
-<command>net rap file user</command>はSambaサーバに対して動作しない事に手注意。
+<command>net rap file user</command>はSambaサーバに対して動作しない事に注意。
 </para>
 
 </refsect3>
@@ -371,7 +371,7 @@ SMB/CIFS セッションの一覧を表示する。</para>
 <refsect3>
 <title>RAP SESSION INFO <replaceable>CLIENT_NAME</replaceable></title>
 
-<para>は指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</para>
+<para>指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</para>
 
 </refsect3>
 
@@ -624,9 +624,14 @@ OS/2 サーバに対してのみ機能する。
 
 <para>現在のローカルサーバのSIDと現在のドメインのSIDを表示する。</para>
 
+</refsect2>
+
+<refsect2>
 <title>SETDOMAINSID</title>
 
 <para>現在のドメインのSIDを設定する。</para>
+
+</refsect2>
 
 <refsect2>
 <title>GROUPMAP</title>
@@ -1497,6 +1502,91 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 <para>
 (globalか共有の)提供されたセクションからincludeリストを削除する。
 </para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>DOM</title>
+
+<para>バージョン 3.2.0 から、Samba ではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させる API がサポートされた。WindowsOS では、リモートでマシンをメンバに参加させる機能は Windows2000 からサポートされていた。
+</para>
+<para>Samba でリモートでマシンをドメインに追加するには、操作するアカウントが「ドメイン管理グループのメンバ」「ローカルの管理者グループ」もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+</para>
+
+<para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+<simplelist>
+<member>net dom join - リモートでマシンをドメインに参加させる</member>
+<member>net dom unjoin -リモートでマシンをドメインから削除する</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>DOM JOIN	<replaceable>domain=DOMAIN</replaceable> <replaceable>ou=OU</replaceable> <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>DOMAIN</replaceable>には、NetBIOS 名（ショートドメイン名とも言う）もしくは ActiveDirectory の DNS ドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\」で区切ってドメインコントローラの名前を指定する（例：MYDOM\MYDC）。<replaceable>DOMAIN</replaceable> に空白は指定できない。
+</para></listitem>
+
+<listitem><para><replaceable>OU</replaceable>には、デフォルトでないLDAPコンテナーにマシンアカウントを作成する場合、RFC 1779のLDAP DN（例：<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis>）で指定する。このパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</para></listitem>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
+</para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定されたドメインアカウントのパスワードを指定する。</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンが正しくドメインに参加できたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインに参加させたいマシンに接続して認証を行う場合、-S（コンピュータ）や-U（ユーザ）のように net で標準的に使用されるパラメータを別途指定する必要がある。
+</para>
+<para>
+	例：
+	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>DOM UNJOIN <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+ドメインからマシンを削除する。このコマンドでは次のパラメータを指定する。
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
+ </para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定したドメインアカウントのパスワードを指定する。
+</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンがドメインから削除されたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインから削除したいマシンに接続して認証を行う場合、-S（コンピュータ）や-U（ユーザ）のように net で標準的に使用されるパラメータを別途指定する必要がある。
+</para>
+<para>
+	例：
+	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
+</para>
+
 </refsect3>
 
 </refsect2>
