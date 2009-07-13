@@ -1509,9 +1509,9 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 <refsect2>
 <title>DOM</title>
 
-<para>バージョン 3.2.0 から、Samba ではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させる API がサポートされた。WindowsOS では、リモートでマシンをメンバに参加させる機能は Windows2000 からサポートされていた。
+<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
 </para>
-<para>Samba でリモートでマシンをドメインに追加するには、操作するアカウントが「ドメイン管理グループのメンバ」「ローカルの管理者グループ」もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+<para>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
 </para>
 
 <para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
@@ -1530,10 +1530,10 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 
 <itemizedlist>
 
-<listitem><para><replaceable>DOMAIN</replaceable>には、NetBIOS 名（ショートドメイン名とも言う）もしくは ActiveDirectory の DNS ドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\」で区切ってドメインコントローラの名前を指定する（例：MYDOM\MYDC）。<replaceable>DOMAIN</replaceable> に空白は指定できない。
+<listitem><para><replaceable>DOMAIN</replaceable>には、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\」で区切ってドメインコントローラの名前を指定する（例：MYDOM\MYDC）。<replaceable>DOMAIN</replaceable>に空白は指定できない。
 </para></listitem>
 
-<listitem><para><replaceable>OU</replaceable>には、デフォルトでないLDAPコンテナーにマシンアカウントを作成する場合、RFC 1779のLDAP DN（例：<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis>）で指定する。このパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</para></listitem>
+<listitem><para><replaceable>OU</replaceable>には、既定値ではないLDAPコンテナにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis>)で指定する。この、任意のパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</para></listitem>
 
 <listitem><para><replaceable>ACCOUNT</replaceable>には、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
 </para></listitem>
@@ -1545,10 +1545,10 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </itemizedlist>
 
 <para>
-ドメインに参加させたいマシンに接続して認証を行う場合、-S（コンピュータ）や-U（ユーザ）のように net で標準的に使用されるパラメータを別途指定する必要がある。
+ドメインに参加させたいマシンに接続して認証を行う場合、-S コンピュータ や-U ユーザ のように net で標準的に使用されるパラメータを別途指定する必要があることに注意。
 </para>
 <para>
-	例：
+	例:
 	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
@@ -1577,10 +1577,10 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </itemizedlist>
 
 <para>
-ドメインから削除したいマシンに接続して認証を行う場合、-S（コンピュータ）や-U（ユーザ）のように net で標準的に使用されるパラメータを別途指定する必要がある。
+ドメインから削除したいマシンに接続して認証を行う場合、-S コンピュータ や-U ユーザ のようにnetで標準的に使用されるパラメータを別途指定する必要があることに注意。
 </para>
 <para>
-	例：
+	例:
 	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
