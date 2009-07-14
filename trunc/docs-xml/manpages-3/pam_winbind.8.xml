@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="pam_winbind.7">
+<refentry id="pam_winbind.8">
 
 <refmeta>
 	<refentrytitle>pam_winbind</refentrytitle>
-	<manvolnum>7</manvolnum>
+	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
-	<refmiscinfo class="manual">7</refmiscinfo>
 	<refmiscinfo class="version">3.3</refmiscinfo>
+	<refmiscinfo class="manual">8</refmiscinfo>
 </refmeta>
 
 
@@ -27,6 +27,31 @@
 	ローカルドメインによるユーザ認証を実現する PAM モジュールである。
 	</para>
 
+</refsect1>
+
+<refsect1>
+        <title>概要</title>
+
+        <para>
+	        PAMシステム設定ファイル/etc/pam.d/serviceを以下の例のように編集する:
+                <programlisting>
+                            ...
+                            auth      required        pam_env.so
+                            auth      sufficient      pam_unix2.so
+                        +++ auth      required        pam_winbind.so  use_first_pass
+                            account   requisite       pam_unix2.so
+                        +++ account   required        pam_winbind.so  use_first_pass
+                        +++ password  sufficient      pam_winbind.so
+                            password  requisite       pam_pwcheck.so  cracklib
+                            password  required        pam_unix2.so    use_authtok
+                            session   required        pam_unix2.so
+                        +++ session   required        pam_winbind.so
+                            ...
+                </programlisting>
+
+		pam_winbind はセッション部分の最初のモジュールであるようにする。その他のモジュール
+		で必要とされるkerberosチケットを検索しても良い。
+        </para>
 </refsect1>
 
 <refsect1>
@@ -67,16 +92,20 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term>try_first_pass</term>
-		<listitem><para></para></listitem>
-		</varlistentry>
-
-		<varlistentry>
 		<term>use_first_pass</term>
 		<listitem><para>
 		pam_winbind のデフォルト設定では、前のモジュールから引き渡される認証トークンを使用する。
-		トークンが使用できない場合、ユーザに対してパスワードを問い合わせるが、このオプションを使用することで、pam_winbind は前のモジュールから認証トークンが引き渡されなかった場合に、エラー終了するようになる。
+		トークンが使用できない場合、ユーザに対してパスワードを問い合わせるが、このオプションを
+		使用することで、pam_winbind は前のモジュールから認証トークンが引き渡されなかった場合に、
+		エラー終了するようになる。
 		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>try_first_pass</term>
+		<listitem><para>
+		(前述の)use_first_passと、最初のパスワードが有効でなかった場合、PAMがパスワード要求の
+		プロンプトを出すことを除いて同じ。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
@@ -119,7 +148,8 @@
 		<varlistentry>
 		<term>cached_login</term>
 		<listitem><para>
-		<parameter>winbind offline logon</parameter> が有効な場合、Winbind 機構によるキャッシュされた資格情報を用いたログオンが可能となる。
+		<parameter>winbind offline logon</parameter> が有効な場合、Winbind 機構によるキャッシュされた
+		資格情報を用いたログオンが可能となる。
 		PAM モジュールからこの機能を用いたい場合は、このオプションを設定すること。
 		</para></listitem>
 		</varlistentry>
