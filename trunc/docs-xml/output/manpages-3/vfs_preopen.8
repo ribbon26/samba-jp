@@ -1,0 +1,75 @@
+.\"     Title: vfs_preopen
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 07/15/2009
+.\"    Manual: システム管理ツール
+.\"    Source: Samba 3.3
+.\"
+.TH "VFS_PREOPEN" "8" "07/15/2009" "Samba 3\.3" "システム管理ツール"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+vfs_preopen - 番号付けられたファイルを読むアプリケーションのために読み込みレイテンシを隠す
+.SH "SYNOPSIS"
+.HP 1
+vfs objects = preopen
+.SH "説明"
+.PP
+このVFSモジュールは、
+\fBsamba\fR(7)システムの一部である。
+.PP
+このモジュールは、とても厳しいレイテンシ要求下で番号付け られた複数のファイルを読むアプリケーションを支援する。これが 発生する1つの領域は、フレーム毎に1つのファイルを読むビデオ ストリーミングアプリケーションである。
+.PP
+このモジュールを使う場合、ファイルをオープンし、一定のバイト 数のデータを読みシステムキャッシュに入れるヘルパプロセスが複数 起動され、そのため、その後、実際のアプリケーションからの要求が 来ても、ディスクアクセスが不要になる。
+.PP
+このモジュールはスタッカブルである。
+.SH "オプション"
+.PP
+preopen:names = /pattern/
+.RS 4
+preopen:names はプレオープンヘルパがその仕事を行うための トリガとなるファイル名パターンを指定する。ファイルは番号の 昇順であることを仮定している。そのため、もしも、読みたい ファイルの名前が、FRAME00000\.frm FRAME00001\.frm と番号 づけられているならば、これらをリストするために、
+preopen:names=/FRAME*\.frm/ と記述する。
+.RE
+.PP
+preopen:num_bytes = BYTES
+.RS 4
+ヘルパが呼び出すバイトを指定する。既定値は1である。
+.RE
+.PP
+preopen:helpers = NUM\-PROCS
+.RS 4
+フォークされるヘルパプロセス数を指定する。既定値は1である。
+.RE
+.PP
+preopen:queuelen = NUM\-FILES
+.RS 4
+事前にオープンしておくファイル数を指定する。既定値は、次の ファイルから連続して10ファイルである。
+.RE
+.SH "バージョン"
+.PP
+このマニュアルページは Samba 3\.3用である。
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.PP
+The PREOPEN VFSモジュールは、 Volker LendeckeとIBMの開発者にによって作成され、寄贈された。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\.3\.6対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+太田俊哉 (ribbon@samba\.grjp)
+.sp
+.RE
+によって行なわれた。

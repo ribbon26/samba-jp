@@ -1,11 +1,11 @@
 .\"     Title: net
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 05/06/2009
+.\"      Date: 07/15/2009
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.3
 .\"
-.TH "NET" "8" "05/06/2009" "Samba 3\.3" "システム管理ツール"
+.TH "NET" "8" "07/15/2009" "Samba 3\.3" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -193,7 +193,7 @@ NET TIME
 .PP
 
 \fIuser\fRで指定した、オープンしているファイルを表示する。
-net rap file userはSambaサーバに対して動作しない事に手注意。
+net rap file userはSambaサーバに対して動作しない事に注意。
 .SS "SESSION"
 .SS "RAP SESSION"
 .PP
@@ -203,7 +203,7 @@ net rap file userはSambaサーバに対して動作しない事に手注意。
 指定したセッションをクローズする。
 .SS "RAP SESSION INFO CLIENT_NAME"
 .PP
-は指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。
+指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。
 .SS "RAP SERVER \fIDOMAIN\fR"
 .PP
 ドメインもしくはワークグループ内のサーバの一覧を出力する。 デフォルトの対象はローカルドメインである。
@@ -353,6 +353,7 @@ key をキャッシュから削除する。
 .SS "GETDOMAINSID"
 .PP
 現在のローカルサーバのSIDと現在のドメインのSIDを表示する。
+.SS "SETDOMAINSID"
 .PP
 現在のドメインのSIDを設定する。
 .SS "GROUPMAP"
@@ -623,6 +624,7 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 .SS "SAM SET COMMENT <NAME> <COMMENT>"
 .PP
 ユーザまたはグループアカウントに対するコメントを設定する。
+.SS "SAM SET FULLNAME <NAME> <FULL NAME>"
 .PP
 ユーザアカウントに対するフルネームを設定する。
 .SS "SAM SET LOGONSCRIPT <NAME> <SCRIPT>"
@@ -797,6 +799,126 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 .SS "CONF DELINCLUDES section"
 .PP
 (globalか共有の)提供されたセクションからincludeリストを削除する。
+.SS "DOM"
+.PP
+バージョン 3\.2\.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
+.PP
+Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+.PP
+クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+.IP "" 4
+net dom join \- リモートでマシンをドメインに参加させる
+.IP "" 4
+net dom unjoin \-リモートでマシンをドメインから削除する
+
+.SS "DOM JOIN	domain=DOMAIN ou=OU account=ACCOUNT password=PASSWORD reboot"
+.PP
+リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIDOMAIN\fRには、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\e」で区切ってドメインコントローラの名前を指定する（例：MYDOM\eMYDC）。\fIDOMAIN\fRに空白は指定できない。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIOU\fRには、既定値ではないLDAPコンテナにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:\fIou=mymachines,cn=Users,dc=example,dc=com\fR)で指定する。この、任意のパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIACCOUNT\fRには、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIPASSWORD\fRには、\fIACCOUNT\fRで指定されたドメインアカウントのパスワードを指定する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIREBOOT\fRは任意のオプションで、マシンが正しくドメインに参加できたときに再起動させたいときに指定する。
+.sp
+.RE
+.PP
+ドメインに参加させたいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のように net で標準的に使用されるパラメータを別途指定する必要があることに注意。
+.PP
+例: net dom join \-S xp \-U XP\e\eadministrator%secret domain=MYDOM account=MYDOM\e\eadministrator password=topsecret reboot\.
+.PP
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+.SS "DOM UNJOIN account=ACCOUNT password=PASSWORD reboot"
+.PP
+ドメインからマシンを削除する。このコマンドでは次のパラメータを指定する。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIACCOUNT\fRには、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIPASSWORD\fRには、\fIACCOUNT\fRで指定したドメインアカウントのパスワードを指定する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIREBOOT\fRは任意のオプションで、マシンがドメインから削除されたときに再起動させたいときに指定する。
+.sp
+.RE
+.PP
+ドメインから削除したいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のようにnetで標準的に使用されるパラメータを別途指定する必要があることに注意。
+.PP
+例: net dom unjoin \-S xp \-U XP\e\eadministrator%secret account=MYDOM\e\eadministrator password=topsecret reboot\.
+.PP
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
 .SS "HELP [COMMAND]"
 .PP
 指定されたコマンドの使用方法の情報を提供する。
@@ -810,7 +932,7 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 net マニュアルページは Jelmer Vernoij によって執筆された。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.4 対応のものである。
+このマニュアルページは Samba 3\.3\.6 対応のものである。
 .PP
 このドキュメントの Samba 3\.0\.0 対応の翻訳は
 .sp
@@ -840,4 +962,4 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.3\.4 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\.2\.4\-3\.3\.6 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
