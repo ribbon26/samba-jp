@@ -34,6 +34,7 @@
 		<arg choice="opt">-P</arg>
 		<arg choice="opt">-d debuglevel</arg>
 		<arg choice="opt">-V</arg>
+		<arg choice="opt">--request-timeout seconds</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -95,7 +96,7 @@
 		<term>-p port</term>
 		<listitem><para>
 		操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。
-		デフォルトではまず 445 を試行し、ついで 139 を試行する。
+		既定値ではまず 445 を試行し、ついで 139 を試行する。
 		</para></listitem>
 		</varlistentry>
 
@@ -124,6 +125,12 @@
 		</para></listitem>
 		</varlistentry>
 
+		<varlistentry>
+                <term>--request-timeout 30</term>
+                <listitem><para>
+		クライアントの要求を30秒後にタイムアウトさせる。既定値は10秒。
+                </para></listitem>
+                </varlistentry>
 		&stdarg.server.debug;
 	</variablelist>
 </refsect1>
@@ -336,7 +343,7 @@ OLDJOIN オプションを使用すること。
 
 <para>
 <replaceable>user</replaceable>で指定した、オープンしているファイルを表示する。
-<command>net rap file user</command>はSambaサーバに対して動作しない事に手注意。
+<command>net rap file user</command>はSambaサーバに対して動作しない事に注意。
 </para>
 
 </refsect3>
@@ -364,7 +371,7 @@ SMB/CIFS セッションの一覧を表示する。</para>
 <refsect3>
 <title>RAP SESSION INFO <replaceable>CLIENT_NAME</replaceable></title>
 
-<para>は指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</para>
+<para>指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</para>
 
 </refsect3>
 
@@ -495,7 +502,7 @@ OS/2 サーバに対してのみ機能する。
 
 <para>
 指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。
-タイプのデフォルトは 0x20 (workstation (訳注: server の誤り)) である。
+タイプの既定値は 0x20 (workstation (訳注: server の誤り)) である。
 </para>
 
 </refsect3>
@@ -503,7 +510,7 @@ OS/2 サーバに対してのみ機能する。
 <refsect3>
 <title>LOOKUP LDAP [<replaceable>DOMAIN</replaceable></title>
 
-<para>指定した <replaceable>DOMAIN</replaceable> の LDAP サーバの IP アドレスを検索する。デフォルトはローカルドメインが対象となる。</para>
+<para>指定した <replaceable>DOMAIN</replaceable> の LDAP サーバの IP アドレスを検索する。既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -511,7 +518,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP KDC [<replaceable>REALM</replaceable>]</title>
 
 <para>指定した <replaceable>REALM</replaceable> の KDC の IP アドレスを検索する。
-デフォルトはローカルなレルム(realm)が対象となる。</para>
+既定値はローカルなレルム(realm)が対象となる。</para>
 
 </refsect3>
 
@@ -519,7 +526,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP DC [<replaceable>DOMAIN</replaceable>]</title>
 
 <para>指定した <replaceable>DOMAIN</replaceable> のドメインコントローラの IP アドレスを検索する。
-デフォルトはローカルドメインが対象となる。</para>
+既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -527,7 +534,7 @@ OS/2 サーバに対してのみ機能する。
 <title>LOOKUP MASTER <replaceable>DOMAIN</replaceable></title>
 
 <para>指定した <replaceable>DOMAIN</replaceable> もしくはワークグループのマスタブラウザの IP アドレスを検索する。
-デフォルトはローカルドメインが対象となる。</para>
+既定値はローカルドメインが対象となる。</para>
 
 </refsect3>
 
@@ -617,9 +624,14 @@ OS/2 サーバに対してのみ機能する。
 
 <para>現在のローカルサーバのSIDと現在のドメインのSIDを表示する。</para>
 
+</refsect2>
+
+<refsect2>
 <title>SETDOMAINSID</title>
 
 <para>現在のドメインのSIDを設定する。</para>
+
+</refsect2>
 
 <refsect2>
 <title>GROUPMAP</title>
@@ -632,7 +644,7 @@ OS/2 サーバに対してのみ機能する。
 <listitem><para>ntgroup - Windows NT のグループ名 (SID が解決可能である必要がある。)</para></listitem>
 <listitem><para>rid - 符号なし 32 ビット整数</para></listitem>
 <listitem><para>sid - 「S-1-...」形式の完全な SID</para></listitem>
-<listitem><para>type - グループのタイプ。「domain」、「local」もしくは「builtin のいずれか。
+<listitem><para>type - グループのタイプ。「domain」、「local」もしくは「builtin」のいずれか。
 </para></listitem>
 <listitem><para>comment - 任意の文字列によるグループの説明</para></listitem>
 </itemizedlist>
@@ -767,8 +779,8 @@ net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
 <title>RPC RIGHTS</title>
 
 <para>
-このサブコマンドは、 Samba のユーザー権利の割当の表示、管理に用いられる。
-現在のところ、以下の 3 つのオプションが利用できる: 
+このサブコマンドは(権限として参照もされる)、 Samba のユーザー権利の割当の
+表示、管理に用いられる。現在のところ、以下の 3 つのオプションが利用できる: 
 <parameter>list</parameter>、 <parameter>grant</parameter>、
 <parameter>revoke</parameter>。
 Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba-HOWTO-Collection を参照のこと。</para>
@@ -866,7 +878,7 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 
 <para>
 <replaceable>SERVER</replaceable> 上にある <replaceable>PRINTER</replaceable> を検索する。
-プリンタ名のデフォルトは「*」であり、サーバ名のデフォルトはローカルホスト名である。</para>
+プリンタ名の既定値は「*」であり、サーバ名の既定値はローカルホスト名である。</para>
 
 </refsect3>
 
@@ -890,7 +902,7 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 <title>ADS SEARCH <replaceable>EXPRESSION</replaceable> <replaceable>ATTRIBUTES...</replaceable></title>
 
 <para>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
-EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP フィールドの一覧である。</para>
+EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。</para>
 
 <para>設定例: <userinput>net ads search '(objectCategory=group)' sAMAccountName</userinput>
 </para>
@@ -901,7 +913,7 @@ EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中
 <title>ADS DN <replaceable>DN</replaceable> <replaceable>(attributes)</replaceable></title>
 
 <para>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
-DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP フィールドの一覧である。</para>
+DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。</para>
 
 <para>設定例: <userinput>net ads dn 'CN=administrator,CN=Users,DC=my,DC=domain' SAMAccountName</userinput></para>
 
@@ -919,7 +931,7 @@ DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP
 
 <para>
 BUILTINグループを(再)作成する。
-このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在迫っていされるグループ名である: Administrators,
+このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators,
 Users, Guests, Power Users, Account Operators, Server Operators, Print
 Operators, Backup Operators, Replicator, RAS Servers, Pre-Windows 2000
 compatible Access.
@@ -978,6 +990,15 @@ compatible Access.
 </refsect2>
 
 <refsect2>
+<title>SAM DELMEM  &lt;GROUP&gt; &lt;MEMBER&gt;</title>
+
+<para>
+ローカルグループからメンバを削除する。グループとメンバは名前でのみ指定できる。
+</para>
+
+</refsect2>
+
+<refsect2>
 <title>SAM LISTMEM &lt;GROUP&gt;</title>
 
 <para>
@@ -1031,7 +1052,6 @@ ridとdescriptionも各々のアカウントに対して提供される。
 </para>
 
 </refsect2>
-
 <refsect2>
 <title>SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;</title>
 
@@ -1165,7 +1185,7 @@ idmap_tdbバックエンドによって生成されたマップのダンプに�
 <title>IDMAP RESTORE [input file]</title>
 
 <para>
-指定したファイルか標準入りょcuからマッピングをリストアする。
+指定したファイルか標準入力からマッピングをリストアする。
 </para>
 
 </refsect2>
@@ -1309,12 +1329,12 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
 <refsect2>
 <title>CONF</title>
 
-<para>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出きるようになった。この設定データは新しい"net conf"コマンドで編集できる。
+<para>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
 </para>
 
 <para>
 この設定データの配布は
-The deployment of this configuration data can be activated in two levels from the<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
+<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
 レジストリからの共有定義は[global]セクション中で<parameter>registry shares</parameter>を<quote>yes</quote>にすることで有効にでき、
 グローバルオプションは、複合設定の場合、[global]セクション中で<smbconfoption name="include">registry</smbconfoption>を設定することで、
 レジストリのみの設定の場合は、[global]セクション中で、<smbconfoption name="config backend">registry</smbconfoption>を設定することで有効になる。
@@ -1442,7 +1462,7 @@ smb.conf風の形式でレジストリ中にある設定データを標準出力
 また、テキストファイル中の指定したような順番は認められない。すべての真の
 パラメータに対して、これは完全に問題がないが、includeディレクティブは
 smb.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ
-との間での場所の指定はとても重要である。これは単純なsmbconfデータもデルによって
+との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって
 は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての
 共有パラメータの後に評価される。
 </para>
@@ -1468,6 +1488,91 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 <para>
 (globalか共有の)提供されたセクションからincludeリストを削除する。
 </para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>DOM</title>
+
+<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
+</para>
+<para>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+</para>
+
+<para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+<simplelist>
+<member>net dom join - リモートでマシンをドメインに参加させる</member>
+<member>net dom unjoin -リモートでマシンをドメインから削除する</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>DOM JOIN	<replaceable>domain=DOMAIN</replaceable> <replaceable>ou=OU</replaceable> <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>DOMAIN</replaceable>には、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\」で区切ってドメインコントローラの名前を指定する（例：MYDOM\MYDC）。<replaceable>DOMAIN</replaceable>に空白は指定できない。
+</para></listitem>
+
+<listitem><para><replaceable>OU</replaceable>には、既定値ではないLDAPコンテナにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis>)で指定する。この、任意のパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</para></listitem>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
+</para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定されたドメインアカウントのパスワードを指定する。</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンが正しくドメインに参加できたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインに参加させたいマシンに接続して認証を行う場合、-S コンピュータ や-U ユーザ のように net で標準的に使用されるパラメータを別途指定する必要があることに注意。
+</para>
+<para>
+	例:
+	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>DOM UNJOIN <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+ドメインからマシンを削除する。このコマンドでは次のパラメータを指定する。
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
+ </para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定したドメインアカウントのパスワードを指定する。
+</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンがドメインから削除されたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインから削除したいマシンに接続して認証を行う場合、-S コンピュータ や-U ユーザ のようにnetで標準的に使用されるパラメータを別途指定する必要があることに注意。
+</para>
+<para>
+	例:
+	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
+</para>
+
 </refsect3>
 
 </refsect2>
@@ -1499,7 +1604,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</para>
+	<para>このマニュアルページは Samba 3.2.13 対応のものである。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -1509,7 +1614,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4-3.2.11 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4-3.2.13 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
