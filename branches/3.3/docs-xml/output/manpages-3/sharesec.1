@@ -1,0 +1,289 @@
+.\"     Title: sharesec
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 07/15/2009
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.3
+.\"
+.TH "SHARESEC" "1" "07/15/2009" "Samba 3\.3" "ユーザコマンド"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+sharesec - 共有のACLに対する設定と取得
+.SH "SYNOPSIS"
+.HP 1
+sharesec {sharename} [\-r,\ \-\-remove=ACL] [\-m,\ \-\-modify=ACL] [\-a,\ \-\-add=ACL] [\-R,\ \-\-replace=ACLs] [\-D,\ \-\-delete] [\-v,\ \-\-view] [\-M,\ \-\-machine\-sid] [\-F,\ \-\-force] [\-d,\ \-\-debuglevel=DEBUGLEVEL] [\-s,\ \-\-configfile=CONFIGFILE] [\-l,\ \-\-log\-basename=LOGFILEBASE] [\-V,\ \-\-version] [\-?,\ \-\-help] [\-\-usage]
+.SH "説明"
+.PP
+このツールは\fBsamba\fR(7)システムの一部である。
+.PP
+sharesecプログラムは、SMBファイル共有上の共有のパーミッションを 操作するプログラムである。
+.SH "オプション"
+.PP
+以下のオプションはsharesecプログラムで有効である。ACLのフォーマットは、 ACL FORMATセクションで説明されている。
+.PP
+\-a|\-\-add=ACL
+.RS 4
+指定されたACLリストにACEを追加する。
+.RE
+.PP
+\-D|\-\-delete
+.RS 4
+すべてのセキュリティディスクリプタを削除する。
+.RE
+.PP
+\-F|\-\-force
+.RS 4
+強制的にACLを格納する。
+.RE
+.PP
+\-m|\-\-modify=ACL
+.RS 4
+存在するACEを変更する。
+.RE
+.PP
+\-M|\-\-machine\-sid
+.RS 4
+マシンのSIDを初期化する。
+.RE
+.PP
+\-r|\-\-remove=ACL
+.RS 4
+ACEを削除する。
+.RE
+.PP
+\-R|\-\-replace=ACLS
+.RS 4
+存在する共有パーミッションACLを上書きする。
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+コマンドラインオプションの要約を表示する。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+は0から10までの整数値である。 既定値の値は、パラメータが設定されていなければ0である。
+.sp
+この値を大きくするほど、サーバの動作に関するより詳細な情報が ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告 のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況 に関する情報を生成する。
+.sp
+1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容 となっている
+.sp
+このパラメータの指定は、\fIsmb\.conf\fRファイル中の、
+\fI\%smb.conf.5.html#\fR
+パラメータの 指定よりも優先する。
+.RE
+.PP
+\-V
+.RS 4
+プログラムのバージョン番号を表示する。
+.RE
+.PP
+\-s <configuration file>
+.RS 4
+サーバーが必要とする詳細な設定を含む設定ファイルを 指定する。このファイルには、サーバーが提供するサービスに関する記述や、 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+\fIsmb\.conf\fR
+を参照のこと。設定ファイルの名前の既定値は、コンパイル時 に決定される。
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+ログ/デバッグファイルのファイル名。拡張子として
+\fB"\.progname"\fR
+が追加される(例えば log\.smbclient, log\.smbd,など)。ログファイルはクライアントによって削除されることはない。
+.RE
+.SH "ACL FORMAT"
+.PP
+ACLのフォーマットは、1つまたはそれ以上の、カンマ又は改行で分離された、ACL エントリである。1つのACLエントリは以下のうちのどれかである:
+.PP
+.RS 4
+.nf
+	REVISION:<revision number>
+	OWNER:<sid or name>
+	GROUP:<sid or name>
+	ACL:<sid or name>:<type>/<flags>/<mask>
+	
+.fi
+.RE
+.PP
+ACLのリビジョンはセキュリティディスクリプタの　内部Windows NT ACL リビジョン を指定する。もしも指定されなければ既定値として1が取られる。1以外の値を使うこと は、奇妙な振る舞いを引き起こすかもしれない。
+.PP
+owner と group は、それぞれオブジェクトのためのownerとgroup SIDを指定する。 もしもSIDがS\-1\-x\-y\-z形式で指定されれば、それが使われ、それ以外では、 名前で指定されたと見なされ、対象のファイル又はディレクトリが存在するサーバ 上でSIDに解決される。
+.PP
+ACLは、そのSIDに対するパーミッションを指定する。このSIDはS\-1\-x\-y\-z 形式で指定されるが、そのファイル又はディレクトリが存在するサーバ上で 名前解決が出来る場合には、名前で指定できる。type,flagsとmask値は、そのSIDに 対して許可されるアクセス権の種類を決める。
+.PP
+typeはALLOWEDまたはDENIEDを、SIDに対するアクセスの許可/拒否として使う ことができる。flagの値は共有のACLに対しては通常ゼロである。
+.PP
+maskはSIDに対して許可されるアクセス権を表現する値である。これは、10進又は 16進の値として与えられるか、同じ名前の、Windows NTにおけるアクセス許可の 指定時に使用される、以下のテキスト文字列のどれか1つを使うことも出来る。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIR\fR
+\- 読み取りを許可
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIW\fR
+\- 書き込みを許可
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIX\fR
+\- オブジェクトの実行を許可
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fID\fR
+\- オブジェクトの削除
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIP\fR
+\- パーミッションの変更
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIO\fR
+\- 所有権の取得
+.sp
+.RE
+.PP
+以下の組み合わせパーミッションも指定することができる:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIREAD\fR
+\- \'RX\' と同等 permissions
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fICHANGE\fR
+\- \'RXWD\' パーミッションと同等
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIFULL\fR
+\- \'RWXDPO\' パーミッションと同等
+.SH "終了ステータス"
+.PP
+The
+sharesecプログラムは、操作が実行された時の成功、またはそれ以外の状態に 応じて終了ステータスをセットする。終了ステータスは以下の値のうちのどれかである。
+.PP
+もしも操作が成功すれば、sharesecは終了ステータスを0にして戻る。もしも、
+sharesecが指定されたサーバに接続できないか、ACLの設定 又は取得時にエラーが生じたならば、終了ステータスは1で戻る。もしもコマンド行 引数の解釈時にエラーがあれば終了ステータスは2で戻る。
+.SH "実行例"
+.PP
+SIDに対してフルアクセスを追加
+\fIS\-1\-5\-21\-1866488690\-1365729215\-3963860297\-17724\fR
+on
+\fIshare\fR:
+.sp
+.RS 4
+.nf
+	host:~ # sharesec share \-a S\-1\-5\-21\-1866488690\-1365729215\-3963860297\-17724:ALLOWED/0/FULL
+	
+.fi
+.RE
+.PP
+\fIshare\fRに対するすべてのACEを表示:
+.sp
+.RS 4
+.nf
+	host:~ # sharesec share \-v
+	REVISION:1
+	OWNER:(NULL SID)
+	GROUP:(NULL SID)
+	ACL:S\-1\-1\-0:ALLOWED/0/0x101f01ff
+	ACL:S\-1\-5\-21\-1866488690\-1365729215\-3963860297\-17724:ALLOWED/0/FULL
+	
+.fi
+.RE
+.SH "バージョン"
+.PP
+このマニュアルページは Samba バージョン 3用である。
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.3\.6 対応のものである。
+.PP
+このドキュメントの Samba 3\.3\.6 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+太田俊哉 (ribbon@samba\.gr\.jp)
+.sp
+.RE
+によって行なわれた。
