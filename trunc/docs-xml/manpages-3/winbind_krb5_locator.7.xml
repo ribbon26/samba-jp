@@ -28,59 +28,50 @@
 
 	<para>
 		<command>winbind_krb5_locator</command>は
-		Sambaシステムが実装しているのと同じセマンティクスで、
-		Kerberosサーバ(KDCとkpasswdサービス用)を検出するための、
-		MITとHeimdalKerberosライブラリを可能にするプラグインである。
-		これはADのDNSサービスレコード検索と最も近いDCのキャッシュを含む。
-		このプラグインは、最も最近のKerberos実装によって提供される
-		パブリックローケータAPIを使う。
-		is a plugin that permits MIT and
-		Heimdal Kerberos libraries to detect Kerberos Servers (for the KDC and
-		kpasswd service) using the same semantics that other tools of the Samba
-		suite use. This include site-aware DNS service record lookups and caching
-		of closest dc.
-		The plugin uses the public locator API provided by most modern Kerberos
-		implementations.
+		MITとHeimdalKerberosライブラリにおいて、Sambaシステムの実装と
+		同じセマンティクスで、(KDCとkpasswdサービス用の)
+		Kerberosサーバを検出することを可能にするプラグインである。
+		この機能はサイト構成のDNSサービスレコードの探索と、最も
+		近いドメインコントローラー情報のキャッシュに対応している。
+		このプラグインは、最も最近のKerberosの実装によって
+		提供されているパブリックロケーターAPIを利用する。
 	</para>
 </refsect1>
 <refsect1>
 	<title>必須条件</title>
 	<para>
-		MIT Kerberos(少なくともバージョン1.5)かHeimdal Kerberos(少なくとも
-		バージョン)が必要である。
+		MIT Kerberos(バージョン1.5以降)か
+		Heimdal Kerberos(バージョン1.0以降)が必要である。
 	</para>
 
 	<para>
-		プラグインは、あらかじめ設定されていて、独立して動いている
+		このプラグインは、あらかじめ設定済みで、稼働中の
 		<citerefentry><refentrytitle>winbindd</refentrytitle>
-		<manvolnum>8</manvolnum></citerefentry>デーモンに問い合わせをする。
+		<manvolnum>8</manvolnum></citerefentry>デーモンに
+		問い合わせを行う。
 	</para>
 
 	<para>
 		<command>winbind_krb5_locator.so</command>ファイルはシステムの
-		Kerberosライブラリがあるプラグインディレクトリに手動でコピーする
-		必要がある。
+		Kerberosライブラリがあるプラグインディレクトリに手動で
+		コピーする必要がある。
 
-		MIT Kerberosの場合は以下の通り:
+		MIT Kerberosでは通常以下のディレクトリ:
 			<filename>/usr/lib/krb5/plugins/libkrb5/</filename>。
-		Heimdal Kerberosの場合は以下の通り:
+		Heimdal Kerberosでは通常以下のディレクトリ:
 			<filename>/usr/lib/plugin/krb5/</filename>。
 
-		ローカルの、正しいKerberosインストールパスを確認してほしい。
+		あなたが利用しているKerberosで正しいインストールパスを
+		確認すること。
 		このプラグインを使うために
-		<filename>/etc/krb5.conf</filename>の変更は不要である。
-
+		<filename>/etc/krb5.conf</filename>を変更する必要は無い。
 	</para>
 	<para>
-	        所定のプラグインディレクトリにローケータプラグインをコピー
-		しただけですぐにこの機能が有効になる。利用者は、kerberos化
-		されたWindows環境を変更なしに、サーバ上の
-		<filename>/etc/krb5.conf</filename>手動で変更しなくても、kinitできる。
-		After copying the locator plugin to the appropriate plugin
-		directory it should immediately be available for use.
-		Users should be able to kinit into their kerberized Windows
-		environment without any modification or servers
-		being put manually into <filename>/etc/krb5.conf</filename>.
+	        適切なプラグインディレクトリにロケータープラグインをコピー
+		した後に、即座にこの機能が有効になる。ユーザーは
+		<filename>/etc/krb5.conf</filename>を変更したり、サーバー情報を
+		追加したりすることなく、Kerberos対応のWindows環境に対する
+		kinitを行うことが可能となる。
 	</para>
 </refsect1>
 
