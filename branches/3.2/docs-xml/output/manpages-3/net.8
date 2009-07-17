@@ -1,11 +1,11 @@
 .\"     Title: net
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 04/20/2009
+.\"      Date: 07/17/2009
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
 .\"
-.TH "NET" "8" "04/20/2009" "Samba 3\.2" "システム管理ツール"
+.TH "NET" "8" "07/17/2009" "Samba 3\.2" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -14,7 +14,7 @@
 net - Samba およびリモート CIFS サーバの管理ツール
 .SH "SYNOPSIS"
 .HP 1
-net {<ads|rap|rpc>} [\-h] [\-w\ workgroup] [\-W\ myworkgroup] [\-U\ user] [\-I\ ip\-address] [\-p\ port] [\-n\ myname] [\-s\ conffile] [\-S\ server] [\-l] [\-P] [\-d\ debuglevel] [\-V]
+net {<ads|rap|rpc>} [\-h] [\-w\ workgroup] [\-W\ myworkgroup] [\-U\ user] [\-I\ ip\-address] [\-p\ port] [\-n\ myname] [\-s\ conffile] [\-S\ server] [\-l] [\-P] [\-d\ debuglevel] [\-V] [\-\-request\-timeout\ seconds]
 .SH "説明"
 .PP
 このツールは、\fBsamba\fR(7)システムの一部である。
@@ -49,7 +49,7 @@ Samba の net ユーティリティは Windows や DOS に存在する NET コ�
 .PP
 \-p port
 .RS 4
-操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。 デフォルトではまず 445 を試行し、ついで 139 を試行する。
+操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。 既定値ではまず 445 を試行し、ついで 139 を試行する。
 .RE
 .PP
 \-n <primary NetBIOS name>
@@ -81,6 +81,11 @@ Samba 自身の NetBIOS 名を指定する。このオプションは、
 \-P
 .RS 4
 ローカルサーバのコンピュータアカウントを用いて別のサーバに対する問い合わせを行なう。
+.RE
+.PP
+\-\-request\-timeout 30
+.RS 4
+クライアントの要求を30秒後にタイムアウトさせる。既定値は10秒。
 .RE
 .PP
 \-d|\-\-debuglevel=level
@@ -188,7 +193,7 @@ NET TIME
 .PP
 
 \fIuser\fRで指定した、オープンしているファイルを表示する。
-net rap file userはSambaサーバに対して動作しない事に手注意。
+net rap file userはSambaサーバに対して動作しない事に注意。
 .SS "SESSION"
 .SS "RAP SESSION"
 .PP
@@ -198,7 +203,7 @@ net rap file userはSambaサーバに対して動作しない事に手注意。
 指定したセッションをクローズする。
 .SS "RAP SESSION INFO CLIENT_NAME"
 .PP
-は指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。
+指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。
 .SS "RAP SERVER \fIDOMAIN\fR"
 .PP
 ドメインもしくはワークグループ内のサーバの一覧を出力する。 デフォルトの対象はローカルドメインである。
@@ -284,27 +289,27 @@ Note
 .SS "LOOKUP"
 .SS "LOOKUP HOST HOSTNAME [TYPE]"
 .PP
-指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。 タイプのデフォルトは 0x20 (workstation (訳注: server の誤り)) である。
+指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。 タイプの既定値は 0x20 (workstation (訳注: server の誤り)) である。
 .SS "LOOKUP LDAP [DOMAIN"
 .PP
 指定した
 \fIDOMAIN\fR
-の LDAP サーバの IP アドレスを検索する。デフォルトはローカルドメインが対象となる。
+の LDAP サーバの IP アドレスを検索する。既定値はローカルドメインが対象となる。
 .SS "LOOKUP KDC [REALM]"
 .PP
 指定した
 \fIREALM\fR
-の KDC の IP アドレスを検索する。 デフォルトはローカルなレルム(realm)が対象となる。
+の KDC の IP アドレスを検索する。 既定値はローカルなレルム(realm)が対象となる。
 .SS "LOOKUP DC [DOMAIN]"
 .PP
 指定した
 \fIDOMAIN\fR
-のドメインコントローラの IP アドレスを検索する。 デフォルトはローカルドメインが対象となる。
+のドメインコントローラの IP アドレスを検索する。 既定値はローカルドメインが対象となる。
 .SS "LOOKUP MASTER DOMAIN"
 .PP
 指定した
 \fIDOMAIN\fR
-もしくはワークグループのマスタブラウザの IP アドレスを検索する。 デフォルトはローカルドメインが対象となる。
+もしくはワークグループのマスタブラウザの IP アドレスを検索する。 既定値はローカルドメインが対象となる。
 .SS "CACHE"
 .PP
 Samba は「gencache」という汎用のキャッシュインタフェースを用いている。 これは \'NET CACHE\' コマンドにより制御可能である。
@@ -348,6 +353,7 @@ key をキャッシュから削除する。
 .SS "GETDOMAINSID"
 .PP
 現在のローカルサーバのSIDと現在のドメインのSIDを表示する。
+.SS "SETDOMAINSID"
 .PP
 現在のドメインのSIDを設定する。
 .SS "GROUPMAP"
@@ -406,7 +412,7 @@ sid \- 「S\-1\-\.\.\.」形式の完全な SID
 .sp -1
 .IP \(bu 2.3
 .\}
-type \- グループのタイプ。「domain」、「local」もしくは「builtin のいずれか。
+type \- グループのタイプ。「domain」、「local」もしくは「builtin」のいずれか。
 .RE
 .sp
 .RS 4
@@ -495,7 +501,7 @@ smbpasswd \-a \-i DOMAINと同じ影響を及ぼす。 両コマンドとも適�
 現在のドメイン間の信頼関係を一覧表示する。
 .SS "RPC RIGHTS"
 .PP
-このサブコマンドは、 Samba のユーザー権利の割当の表示、管理に用いられる。 現在のところ、以下の 3 つのオプションが利用できる:
+このサブコマンドは(権限として参照もされる)、 Samba のユーザー権利の割当の 表示、管理に用いられる。現在のところ、以下の 3 つのオプションが利用できる:
 \fIlist\fR、
 \fIgrant\fR、
 \fIrevoke\fR。 Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba\-HOWTO\-Collection を参照のこと。
@@ -551,7 +557,7 @@ NET ADS TESTJOIN
 \fISERVER\fR
 上にある
 \fIPRINTER\fR
-を検索する。 プリンタ名のデフォルトは「*」であり、サーバ名のデフォルトはローカルホスト名である。
+を検索する。 プリンタ名の既定値は「*」であり、サーバ名の既定値はローカルホスト名である。
 .SS "ADS PRINTER PUBLISH PRINTER"
 .PP
 指定したプリンタを Active Directory に対して公開する。
@@ -560,13 +566,13 @@ NET ADS TESTJOIN
 指定したプリンタを Active Directory のディレクトリから削除する。
 .SS "ADS SEARCH \fIEXPRESSION\fR \fIATTRIBUTES\.\.\.\fR"
 .PP
-Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP フィールドの一覧である。
+Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。
 .PP
 設定例:
 \fBnet ads search \'(objectCategory=group)\' sAMAccountName\fR
 .SS "ADS DN \fIDN\fR \fI(attributes)\fR"
 .PP
-Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP フィールドの一覧である。
+Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。
 .PP
 設定例:
 \fBnet ads dn \'CN=administrator,CN=Users,DC=my,DC=domain\' SAMAccountName\fR
@@ -575,7 +581,7 @@ Active Directory のサーバに対して低レベルな LDAP 検索を行ない
 指定された Kerberos レルムのワークグループ名を表示する。
 .SS "SAM CREATEBUILTINGROUP <NAME>"
 .PP
-BUILTINグループを(再)作成する。 このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在迫っていされるグループ名である: Administrators, Users, Guests, Power Users, Account Operators, Server Operators, Print Operators, Backup Operators, Replicator, RAS Servers, Pre\-Windows 2000 compatible Access\. このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+BUILTINグループを(再)作成する。 このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators, Users, Guests, Power Users, Account Operators, Server Operators, Print Operators, Backup Operators, Replicator, RAS Servers, Pre\-Windows 2000 compatible Access\. このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
 .SS "SAM CREATELOCALGROUP <NAME>"
 .PP
 ローカルグループを作成する(別名である)。 このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
@@ -591,6 +597,9 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 .SS "SAM ADDMEM <GROUP> <MEMBER>"
 .PP
 ローカルグループへメンバを追加する。グループは名前でのみ指定でき、メンバは名前かSIDで指定出来る。
+.SS "SAM DELMEM <GROUP> <MEMBER>"
+.PP
+ローカルグループからメンバを削除する。グループとメンバは名前でのみ指定できる。
 .SS "SAM LISTMEM <GROUP>"
 .PP
 ローカルグループメンバを表示する。グループは名前で指定しなければならない。
@@ -609,6 +618,7 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 .SS "SAM SET COMMENT <NAME> <COMMENT>"
 .PP
 ユーザまたはグループアカウントに対するコメントを設定する。
+.SS "SAM SET FULLNAME <NAME> <FULL NAME>"
 .PP
 ユーザアカウントに対するフルネームを設定する。
 .SS "SAM SET LOGONSCRIPT <NAME> <SCRIPT>"
@@ -652,7 +662,7 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 指定したローカルのtdbファイル中にあるマッピングをダンプする。このコマンドは、 idmap_tdbバックエンドによって生成されたマップのダンプにのみ有用である。
 .SS "IDMAP RESTORE [input file]"
 .PP
-指定したファイルか標準入りょcuからマッピングをリストアする。
+指定したファイルか標準入力からマッピングをリストアする。
 .SS "IDMAP SECRET <DOMAIN>|ALLOC <secret>"
 .PP
 指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバに対してバインドするユーザDNのパスワードとして使われる。
@@ -706,9 +716,10 @@ net usershare info は、実行したユーザが作成したユーザ定義共�
 net usershare list は、実行したユーザが作成したユーザ定義共有の一覧を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。 「\-l」もしくは「\-\-long」オプションが指定されていた場合、他のユーザが作成したユーザ定義共有の情報も表示する。
 .SS "CONF"
 .PP
-バージョン 3\.2\.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出きるようになった。この設定データは新しい"net conf"コマンドで編集できる。
+バージョン 3\.2\.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
 .PP
-この設定データの配布は The deployment of this configuration data can be activated in two levels from the\fIsmb\.conf\fRファイルから2つのレベルで有効にできる。 レジストリからの共有定義は[global]セクション中で\fIregistry shares\fRを\(lqyes\(rqにすることで有効にでき、 グローバルオプションは、複合設定の場合、[global]セクション中で\fIinclude = registry\fRを設定することで、 レジストリのみの設定の場合は、[global]セクション中で、\fIconfig backend = registry\fRを設定することで有効になる。 詳細は\fBsmb.conf\fR(5)マニュアルページを参照のこと。
+この設定データの配布は
+\fIsmb\.conf\fRファイルから2つのレベルで有効にできる。 レジストリからの共有定義は[global]セクション中で\fIregistry shares\fRを\(lqyes\(rqにすることで有効にでき、 グローバルオプションは、複合設定の場合、[global]セクション中で\fIinclude = registry\fRを設定することで、 レジストリのみの設定の場合は、[global]セクション中で、\fIconfig backend = registry\fRを設定することで有効になる。 詳細は\fBsmb.conf\fR(5)マニュアルページを参照のこと。
 .PP
 conf コマンドは以下のとおり:
 .IP "" 4
@@ -773,7 +784,7 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 .PP
 (globalまたは共有の)提供されたセクションの、includeのリストを得る。
 .PP
-データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、 共有ごとにパラメータのインスタンスは1つだけである。 また、テキストファイル中の指定したような順番は認められない。すべての真の パラメータに対して、これは完全に問題がないが、includeディレクティブは smb\.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ との間での場所の指定はとても重要である。これは単純なsmbconfデータもデルによって は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての 共有パラメータの後に評価される。
+データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、 共有ごとにパラメータのインスタンスは1つだけである。 また、テキストファイル中の指定したような順番は認められない。すべての真の パラメータに対して、これは完全に問題がないが、includeディレクティブは smb\.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての 共有パラメータの後に評価される。
 .PP
 さらに、現在、レジストリ構成からファイルのみインクルード出来る。将来は、 他のレジストリキーから設定データをインクルード出来る予定である。
 .SS "CONF SETINCLUDES section [filename]+"
@@ -782,6 +793,126 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 .SS "CONF DELINCLUDES section"
 .PP
 (globalか共有の)提供されたセクションからincludeリストを削除する。
+.SS "DOM"
+.PP
+バージョン 3\.2\.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
+.PP
+Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+.PP
+クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+.IP "" 4
+net dom join \- リモートでマシンをドメインに参加させる
+.IP "" 4
+net dom unjoin \-リモートでマシンをドメインから削除する
+
+.SS "DOM JOIN	domain=DOMAIN ou=OU account=ACCOUNT password=PASSWORD reboot"
+.PP
+リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIDOMAIN\fRには、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\e」で区切ってドメインコントローラの名前を指定する（例：MYDOM\eMYDC）。\fIDOMAIN\fRに空白は指定できない。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIOU\fRには、既定値ではないLDAPコンテナにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:\fIou=mymachines,cn=Users,dc=example,dc=com\fR)で指定する。この、任意のパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIACCOUNT\fRには、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIPASSWORD\fRには、\fIACCOUNT\fRで指定されたドメインアカウントのパスワードを指定する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIREBOOT\fRは任意のオプションで、マシンが正しくドメインに参加できたときに再起動させたいときに指定する。
+.sp
+.RE
+.PP
+ドメインに参加させたいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のように net で標準的に使用されるパラメータを別途指定する必要があることに注意。
+.PP
+例: net dom join \-S xp \-U XP\e\eadministrator%secret domain=MYDOM account=MYDOM\e\eadministrator password=topsecret reboot\.
+.PP
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+.SS "DOM UNJOIN account=ACCOUNT password=PASSWORD reboot"
+.PP
+ドメインからマシンを削除する。このコマンドでは次のパラメータを指定する。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIACCOUNT\fRには、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIPASSWORD\fRには、\fIACCOUNT\fRで指定したドメインアカウントのパスワードを指定する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIREBOOT\fRは任意のオプションで、マシンがドメインから削除されたときに再起動させたいときに指定する。
+.sp
+.RE
+.PP
+ドメインから削除したいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のようにnetで標準的に使用されるパラメータを別途指定する必要があることに注意。
+.PP
+例: net dom unjoin \-S xp \-U XP\e\eadministrator%secret account=MYDOM\e\eadministrator password=topsecret reboot\.
+.PP
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
 .SS "HELP [COMMAND]"
 .PP
 指定されたコマンドの使用方法の情報を提供する。
@@ -795,7 +926,7 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 net マニュアルページは Jelmer Vernoij によって執筆された。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.23 \- Samba 3\.0\.24 対応のものである。
+このマニュアルページは Samba 3\.2\.13 対応のものである。
 .PP
 このドキュメントの Samba 3\.0\.0 対応の翻訳は
 .sp
@@ -825,4 +956,4 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.2\.11 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\.2\.4\-3\.2\.13 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
