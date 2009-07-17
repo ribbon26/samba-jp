@@ -1,0 +1,155 @@
+.\"     Title: pam_winbind
+.\"    Author: 
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 07/17/2009
+.\"    Manual: 8
+.\"    Source: Samba 3.2
+.\"
+.TH "PAM_WINBIND" "8" "07/17/2009" "Samba 3\.2" "8"
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+pam_winbind - Winbind 機構の PAM モジュール
+.SH "説明"
+.PP
+このツールは、\fBsamba\fR(7)
+システムの一部である。
+.PP
+pam_winbind は Winbind デーモンと通信を行なうことで、 ローカルドメインによるユーザ認証を実現する PAM モジュールである。
+.SH "概要"
+.PP
+PAMシステム設定ファイル/etc/pam\.d/serviceを以下の例のように編集する:
+.sp
+.RS 4
+.nf
+                            \.\.\.
+                            auth      required        pam_env\.so
+                            auth      sufficient      pam_unix2\.so
+                        +++ auth      required        pam_winbind\.so  use_first_pass
+                            account   requisite       pam_unix2\.so
+                        +++ account   required        pam_winbind\.so  use_first_pass
+                        +++ password  sufficient      pam_winbind\.so
+                            password  requisite       pam_pwcheck\.so  cracklib
+                            password  required        pam_unix2\.so    use_authtok
+                            session   required        pam_unix2\.so
+                        +++ session   required        pam_winbind\.so
+                            \.\.\.
+                
+.fi
+.RE
+.sp
+pam_winbind はセッション部分の最初のモジュールであるようにする。その他のモジュール で必要とされるkerberosチケットを検索しても良い。
+.SH "オプション"
+.PP
+pam_winbind では PAM の設定ファイルや pam_winbind の設定ファイルである
+\fI/etc/security/pam_winbind\.conf\fR
+で設定可能な幾つかのオプションがサポートされている。 PAM 設定ファイルのオプションは、設定ファイル中のオプションに優先する。
+.PP
+debug
+.RS 4
+syslog にデバッグ出力を行なう。
+.RE
+.PP
+debug_state
+.RS 4
+syslogに詳細なPAMの状態のデバッグ情報を出力する。
+.RE
+.PP
+require_membership_of=[SID もしくは NAME]
+.RS 4
+このオプションが設定されると、 pam_winbind は、認証するユーザが指定された SID もしくは NAME に所属する時のみ認証を成功させる。 SID にはグループの SID か alias の SID 、もしくはユーザの SID を指定することも可能である。 SID の代わり名前で指定することも可能である。 この名前は、
+\fIMYDOMAIN\e\emygroup\fR
+形式か、
+\fIMYDOMAIN\e\emyuser\fR
+形式である必要がある。 名前で指定された場合、pam_winbind は内部的に SID を検索する。 名前には空白文字を含めることができないため、SID で指定することが推奨される。
+wbinfo \-\-user\-sids=SID
+により、あるユーザが所属するグループの SID 一覧を表示できる。
+.RE
+.PP
+use_first_pass
+.RS 4
+pam_winbind のデフォルト設定では、前のモジュールから引き渡される認証トークンを使用する。 トークンが使用できない場合、ユーザに対してパスワードを問い合わせるが、このオプションを 使用することで、pam_winbind は前のモジュールから認証トークンが引き渡されなかった場合に、 エラー終了するようになる。
+.RE
+.PP
+try_first_pass
+.RS 4
+(前述の)use_first_passと、最初のパスワードが有効でなかった場合、PAMがパスワード要求の プロンプトを出すことを除いて同じ。
+.RE
+.PP
+use_authtok
+.RS 4
+その前の、スタックされたpasswordモジュールによって、 提供された、新しいパスワードを設定する。このオプションが 設定されていない場合、pam_winbindは新しいパスワードを 問い合わせる。
+.RE
+.PP
+krb5_auth
+.RS 4
+Active Directory のドメインコントローラと通信可能な場合、 pam_winbind は Kerberos 認証を用いて認証することが可能である。 このパラメータを指定することで、Kerberos 認証が有効になる。 (時刻が同期されていない場合など) Kerberos 認証に失敗した場合、 winbindd は MSRPC を用いた samlogon 認証を試行する。 このパラメータと共に、
+\fIwinbind refresh tickets\fR
+が指定された場合、 Winbind 機構は、必要な時に TGT を更新することで、TGT を保持し続ける。
+.RE
+.PP
+krb5_ccache_type=[type]
+.RS 4
+
+\fIkrb5_auth\fR
+オプションにより、pam_winbind が Kerberos 認証を行なうように構成されていた場合、 Winbindd は TGT を資格情報キャッシュ中に保持する。 このオプションにより資格情報キャッシュの形式を指定することが可能である。 現在のところ、サポートされている唯一の値は
+\fIFILE\fR
+である。 この場合、資格情報キャッシュは /tmp/krb5cc_UID ファイル中に作成される。UID はユーザの UID の数値である。 このオプションを空に設定した場合は、ログオン成功後にチケットキャッシュを用いた Kerberos 認証が行なわれない。
+.RE
+.PP
+cached_login
+.RS 4
+
+\fIwinbind offline logon\fR
+が有効な場合、Winbind 機構によるキャッシュされた 資格情報を用いたログオンが可能となる。 PAM モジュールからこの機能を用いたい場合は、このオプションを設定すること。
+.RE
+.PP
+silent
+.RS 4
+出力をすべて抑止する。
+.RE
+.SH "PAM DATA EXPORTS"
+.PP
+この節では、他のPAMモジュールで使うことが出来るPAMスタック中での データエクスポートについて説明する。
+.PP
+PAM_WINBIND_HOMEDIR
+.RS 4
+これはActive Directoryサーバ上でのユーザ設定中の、 プロファイルタブ中で設定されたWindowsのホームディレクトリ である。これは、ドライブにマップされた共有上のディレクトリか、 ローカルパスである。
+.RE
+.PP
+PAM_WINBIND_LOGONSCRIPT
+.RS 4
+ユーザのログオン時に実行されるログオンスクリプトのパス。これは 通常サーバ上に格納されるスクリプトへの相対パスである。
+.RE
+.PP
+PAM_WINBIND_LOGONSERVER
+.RS 4
+これは認証に対して使うActive Directoryサーバをエクスポートする。 これは後で変数として使うことが出来る。
+.RE
+.PP
+PAM_WINBIND_PROFILEPATH
+.RS 4
+これはユーザ設定中のプロファイルタブ中のプロファイルパス設定である。 通常、共有上のこのディレクトリとホームディレクトリは同期している。
+.RE
+.SH "関連項目"
+.PP
+\fBwbinfo\fR(1),
+\fBwinbindd\fR(8),
+\fBsmb.conf\fR(5)
+.SH "バージョン"
+.PP
+このマニュアルページは、Samba バージョン 3用に記述されている。
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作られた。 Samba は現在、Linux カーネルが開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発されている。
+.PP
+このマニュアルページは Jelmer Vernooij と Guenther Deschner によって作られた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.2\.13 対応のものである。
+.PP
+Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+.PP
+Samba 3\.2\.4\-3\.2\.13 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
