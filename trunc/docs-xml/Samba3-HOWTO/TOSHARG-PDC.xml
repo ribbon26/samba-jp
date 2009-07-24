@@ -560,8 +560,8 @@ Microsoft Windows 200xサーバベースのActive Directoryドメインでは、
 <para>
 <indexterm><primary>バックエンドデータベース</primary></indexterm>
 <indexterm><primary>レジストリ</primary></indexterm>
-Samba-3では新規にNT4スタイルのSAMデータベース(レジストリファイルの1つ)で
-同じタイプのデータを保持するバックエンドデータベースを使う能力を持つ。
+Samba-3では、新たにNT4スタイルのSAMデータベース(レジストリファイルの1つ)と
+同じタイプのデータを保持するバックエンドデータベースを使う機能が入った。
 <footnote><para><link linkend="passdb">アカウント情報データベース</link>
 を参照のこと。</para></footnote>
 </para>
@@ -574,14 +574,14 @@ Samba-3では新規にNT4スタイルのSAMデータベース(レジストリフ
 <indexterm><primary>netlogon</primary></indexterm>
 <indexterm><primary>name lookup</primary></indexterm>
 <emphasis>バックアップドメインコントローラ</emphasis>またはBDCはネットワーク
-認証サービス中で重要な役割を演じる。BDCはPDCに優先してログオン要求に答える
-ために、バイアスをかけられる。BDCとPDCがあるネットワークセグメント上で、
-BDCはネットワークログオン要求を最もサービスする。PDCはBDCがとても忙しい
+認証リクエストの処理に重要な役割を演じる。BDCはPDCに優先してログオン要求に答える
+ようになっている。BDCとPDCの両方があるネットワークセグメント上では、
+ネットワークログオン要求はおおむねBDCが処理する。PDCはBDCが高負荷
 (ロードアベレージが大きい)ときにログオン要求に応える。ユーザがWindows
 ドメインメンバクライアントにログオンした時、ワークステーションは最も近い
-ネットワークログオンサーバに位置づけるために、ネットワークに問い合わせを
-行う。WINSサーバが使われている時、これは問い合わせを経由してWINSサーバ
-で行われる。もしもネットログオンサーバがWINS問い合わせから見つからないか、
+ネットワークログオンサーバを探すために、ネットワークに問い合わせを
+行う。WINSサーバが使われている時は、WINSサーバへの問い合わせ
+で行われる。もしもネットログオンサーバがWINS問い合わせでは見つからないか、
 WINSサーバがない場合、ワークステーションはUDPブロードキャストプロトコル
 上でmailslotブロードキャスト経由でNetBIOS名前検索を実行する。これは、
 Windowsクライアントが使うことが出来るネットログオンサーバがたくさんの
@@ -594,15 +594,15 @@ Windowsクライアントが使うことが出来るネットログオンサー�
 <indexterm><primary>demote</primary></indexterm>
 Windows NT4 BDCはPDCに昇格することが出来る。BDCがPDCに昇格する時にPDC
 がオンラインならば、以前のPDCは自動的にBDCに降格する。Samba-3では
-これは自動的な操作ではない。PDCとBDCは手動で設定し、その他の適切な
-変更も行う必要がある。
+これは自動的には行われない。PDCとBDCは手動で設定し、その他適切な
+変更を行う必要がある。
 </para>
 
 <para>
 <indexterm><primary>ドメイン</primary><secondary>コントローラ</secondary><tertiary>変換</tertiary></indexterm>
-Microsoft Windows NTPでは、サーバのマシンタイプが何になるかを決める
-ためにインストール時に決定が行われる。BDCからPDCへの昇格やその他も
-可能である。Windows NTPドメインコントローラからドメインメンバサーバ
+Microsoft Windows NT4では、インストール時に、サーバのマシンタイプが
+何になるかを決める。BDCからPDCへの昇格やその逆も
+可能である。Windows NT4ドメインコントローラからドメインメンバサーバ
 かスタンドアロンサーバへの変換のためにMicrosoftが提供している唯一の
 手法は、再インストールである。インストール時に提供されている選択肢
 は以下の通り:
