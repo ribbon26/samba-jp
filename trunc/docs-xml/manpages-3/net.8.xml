@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.3</refmiscinfo>
+	<refmiscinfo class="version">3.4</refmiscinfo>
 </refmeta>
 
 
@@ -1032,6 +1032,33 @@ ridとdescriptionも各々のアカウントに対して提供される。
 </refsect2>
 
 <refsect2>
+<title>SAM RIGHTS LIST</title>
+
+<para>
+すべての有効な権限を表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;</title>
+
+<para>
+ユーザに対し、1つまたはそれ以上の権限を許可する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;</title>
+
+<para>
+ユーザに対し、1つまたはそれ以上の権限を取り去る。
+</para>
+
+</refsect2>
+
+<refsect2>
 <title>SAM SHOW &lt;NAME&gt;</title>
 
 <para>
@@ -1507,6 +1534,70 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </refsect2>
 
 <refsect2>
+
+<refsect2>
+<title>EVENTLOG</title>
+
+<para>バージョン3.4.0から、netはネイティブなwin32イベントログファイル
+(通常 *.evt)を読み、ダンプ、インポート、エクスポート出来る。 evtファイル
+はネイティブなWindowsイベントビューワツールによって使われる。
+</para>
+
+<para>
+evtファイルのインポートとエクスポートは、<emphasis>smb.conf</emphasis>
+ファイル中で<parameter>eventlog list</parameter>が定義されている時のみ
+行える。詳細は <citerefentry><refentrytitle>smb.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> マニュアルページを参照のこと。
+</para>
+
+<para>eventlogコマンドは以下の通り:
+<simplelist>
+<member>net eventlog dump - 画面上にイベントログ *.evtファイルをダンプする。</member>
+<member>net eventlog import - *.evtイベントログファイルを、イベントログを保持するSamba内部のtdbファイルにインポートする。</member>
+<member>net eventlog export - Samba内部のtdb形式によるイベントログを*.evtイベントログファイルにエクスポートする。</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>EVENTLOG DUMP <replaceable>filename</replaceable></title>
+
+<para>
+標準出力に*.evtイベントログファイルを出力する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>EVENTLOG IMPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
+
+<para>
+<replaceable>filename</replaceable>によって定義された*.evtイベントログファイル
+を、<replaceable>eventlog</replaceable>で定義したSamba内部のtdb形式によるイベン
+トログファイルにインポートする。
+<replaceable>eventlog</replaceable>はsmb.conf中で定義されている
+<parameter>eventlog list</parameter>の一部を必要とする。詳細は、
+<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+マニュアルページを参照のこと。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>EVENTLOG EXPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
+
+<para>
+<replaceable>eventlog</replaceable>で定義されている、Samba内部のtdb形式によるイベントログを
+<replaceable>filename</replaceable>で定義されている*.evtイベントログファイルに
+エクスポートする。
+<replaceable>eventlog</replaceable>はsmb.conf中で定義されている
+<parameter>eventlog list</parameter>の一部を必要とする。詳細は、
+<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+マニュアルページを参照のこと。
+</para>
+
+</refsect3>
+
+</refsect2>
+
 <title>DOM</title>
 
 <para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
@@ -1518,6 +1609,7 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 <simplelist>
 <member>net dom join - リモートでマシンをドメインに参加させる</member>
 <member>net dom unjoin -リモートでマシンをドメインから削除する</member>
+<member>net dom renamecomputer - ドメインに参加しているリモートコンピュータの名前を変更する。</member>
 </simplelist>
 </para>
 
