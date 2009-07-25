@@ -1681,7 +1681,48 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 
 </refsect3>
 
+<refsect3>
+<title>DOM RENAMECOMPUTER <replaceable>newname=NEWNAME</replaceable> <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+ドメインに参加しているコンピュータの名前を変更する。このコマンドは以下のサブパ
+ラメータをサポートする:
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>NEWNAME</replaceable> ドメイン中の新しいマシンの名前を定義する。</para></listitem>
+
+<listitem><para><replaceable>ACCOUNT</replaceable> ドメイン中でマシンの名前を変
+更する時に使うドメインアカウントを定義する。このドメインアカウントはマシン名を
+変更するために必要な権限を持つ必要がある。</para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable> <replaceable>ACCOUNT</replaceable>で定義されるドメインアカウントのパスワードを定義する。</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable> はオプションのパラメータで、ドメイン中で名前の変更が成功した後にマシンをリブートするように設定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメイン中で名前を変更したいリモートマシンに、標準のnetパラメータを使って接続と
+認証を行う必要があることに注意。それらの追加のパラメータには -S コンピュータ名
+と-U ユーザ名を含む。
+</para>
+<para>
+	例:
+	net dom renamecomputer -S xp -U XP\\administrator%secret newname=XPNEW account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPという名前のコンピュータに、パスワードがsecretのローカルの
+Administratorとして接続し、ドメインに参加しているコンピュータの名前を、
+MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、
+XPNEWに変更している。変更が成功したら、コンピュータをリブートする。
+</para>
+
+</refsect3>
+
 </refsect2>
+
 
 <refsect2>
 <title>HELP [COMMAND]</title>
