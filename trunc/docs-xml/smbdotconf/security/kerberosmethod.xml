@@ -1,0 +1,43 @@
+<samba:parameter name="kerberos method" context="G" type="enum"
+		 advanced="1" developer="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>
+    ケルベロスのチケットをどのように検査するのかを制御する。
+	</para>
+
+	<para>有効なオプションは以下の通り：</para>
+	<itemizedlist>
+	  <listitem><para>secrets only - 
+      チケットの検査に secrets.tdb のみを使用する（デフォルト）
+	  </para></listitem>
+
+	  <listitem><para>system keytab - 
+      チケットの検査に system keytab のみを使用する
+	  </para></listitem>
+
+	  <listitem><para>dedicated keytab - 
+      チケットの検査に dedicated（専用） keytab を使用する
+	  </para></listitem>
+
+	  <listitem><para>secrets and keytab - 
+      まず secrets.tdb 、その後system keytab を使用する
+	  </para></listitem>
+	</itemizedlist>
+
+	<para>
+      "system keytab" と "dedicated keytab" の主な違いとしては、
+      正しい keytab のエントリを見つけるのに、前者が期待するプリンシパルに
+      基づくフィルタリングを行うのに対し、後者はケルベロスに依存する
+      ところである。
+	</para>
+
+	<para>
+      ケルベロスのメソッドが "dedicated keytab" モードの場合、
+	  <smbconfoption name="dedicated keytab file"/> 
+      は keytab ファイルの位置を指定していなければならない。
+	</para>
+</description>
+<related>dedicated keytab file</related>
+<value type="default">secrets only</value>
+</samba:parameter>
