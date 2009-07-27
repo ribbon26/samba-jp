@@ -12,7 +12,7 @@
 
 <para>
 このセクションを読み始める前に、<link linkend="samba-pdc">ドメイン制御</link>
-中で説明されているSambaドメインコントローラの設定に自身があるようにして
+中で説明されているSambaドメインコントローラの設定に問題がないようにして
 おくこと。
 </para>
 
@@ -20,45 +20,44 @@
 <title>機能と利便性</title>
 
 <para>
-これは、要約するのが最も難しい章である。ここで何かを言うかが重要ではなく、
-まだ提供できていない、あるいは全く違ったアプローチを使うことでより効果的に
-達成できるかに、誰かが引き続き結論を描くか、期待を込めてSambaチームに
-アプローチする。この本に取り上げられていない持続的な関心事を持っている場合、
-要求または質問を明確にして<ulink url="mailto:jht@samba.org">John H. Terpstra</ulink>
-まで電子メールを送ってほしい。
+この章は、説明するのが最も困難な章の一つである。何を書いても、誰かがまだ
+実現できていない項目、あるいはまったく異なるアプローチを使った方が遥かに
+効果的に実現できる項目について、実現されたはずだと期待してSambaチームに
+問い合わせてくることを防止することはできないと思われる。もしこの章で説明
+されているはずなのに、いくら読んでも言及されない事項というのがある場合は、
+要件あるいは質問内容を明確に書いて
+<ulink url="mailto:jht@samba.org">John H. Terpstra</ulink>
+まで電子メールで問い合わせてほしい。
 </para>
 
 <para>
-<indexterm><primary>SAM backend</primary><secondary>LDAP</secondary></indexterm>
+<indexterm><primary>SAM バックエンド</primary><secondary>LDAP</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>LDAP</primary><secondary>slave</secondary></indexterm>
 <indexterm><primary>スケーラビリティ</primary></indexterm>
-Samba-3は他のSambaプライマリドメインコントローラ(PDC)へのバックアップドメイン
-コントローラ(BDC)として振る舞うことが出来る。Samba-3 PDCはLDAPアカウント
-バックエンドと共に動作できる。LDAPバックエンドは共通のマスタLDAPサーバか
-スレーブサーバのどちらでも使える。スレーブLDAPサーバの利用は、マスタサーバ
-がダウンしたときに、クライアントが引き続きネットワークにログオンできるようになる
-という利点がある。これは効果的にSambaに対して高度な拡張性を与え、大規模な
-組織のための効果的なソリューションとなる。もしも、PDCにスレーブLDAPサーバを
-使うのであれば、マスタサーバの可用性を確保しておく必要がある。&smbmdash;
-もしも、スレーブが悪い時間にマスタのダウンを検出したならば、安定性と操作上の
-問題が生じるであろう(訳注:最近のOpenLDAPだと、マスタ/スレーブという用語は
-使っていない)。
+Samba-3 は別のSambaプライマリドメインコントローラ(PDC)に対するバックアップ
+ドメインコントローラ(BDC)として機能することができる。Samba-3 PDCは、LDAP
+アカウントバックエンドとともに運用することができる。LDAPバックエンドは、
+共用のマスタLDAPサーバかスレーブサーバのどちらでも使える。スレーブLDAPサーバ
+を使用する利点は、マスタがダウンしている時でもクライアントがネットワークに
+ログオンできるということである。これによりSambaが高いレベルの拡張性を持つ
+ことになり、大規模な組織のための効果的なソリューションとなり得る。PDCにLDAP
+スレーブサーバを使用する場合、マスタの継続的な可用性を確保する必要がある。&smbmdash;
+悪い時にスレーブ側から見てマスタがダウンしていると、安定性の問題や運用上の
+問題となる。
 </para>
 
 <para>
-<indexterm><primary>two-way</primary><secondary>propagation</secondary></indexterm>
+<indexterm><primary>双方向</primary><secondary>propagation</secondary></indexterm>
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
 <indexterm><primary>propagate</primary></indexterm>
-非LDAPバックエンドでSamba-3 BDCを動かすことが可能ではあるが、そのバックエンドは
-なんらかの、BDCからマスタへの"2-way"の更新の伝搬を許可しなければならない。この
-点で、LDAPのみが、BDCからPDCへのイデンティティデータベースの変更を伝搬する能力
-を提供する。PDCに対してそのプライマリとしてLDAPマスタサーバを使うことが望ましい
-間、BDCはスレーブLDAPサーバを使える(訳注:whileをどう訳すか...
-The BDC can use a slave LDAP server, while it
-is preferable for the PDC to use as its primary an LDAP master server.)。
+Samba-3 BDCをLDAPでないバックエンドとともに運用することも可能だが、
+バックエンドが何らかの形で「双方向の」伝達を許容し、BDC側からマスタ
+への変更が可能であるようにしなければならない。現段階でこれをできるのは
+LDAPのみである。PDCが、そのプライマリとしてLDAPマスタサーバを使うことが
+好ましい間、BDCはスレーブLDAPサーバを使うことが出来る。
 </para>
 
 <para>
@@ -69,15 +68,15 @@ is preferable for the PDC to use as its primary an LDAP master server.)。
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>trust account password</primary></indexterm>
 <indexterm><primary>domain trust</primary></indexterm>
-非LDAPバックエンドSAMデータベースの使用は、ドメインメンバサーバとワーク
-ステーションが定期的にマシン信頼アカウントのパスワードを変更するため、
-特に問題である。新しいパスワードはローカルにのみ格納される。これは、
-もしも、Samba-3がBDCで動いている場合、集中して管理するアカウントデータ
-ベース(LDAPベースのソリューションで提供されるようなもの)の欠如を意味し、
-ドメインメンバ信頼アカウントパスワードのインスタンスは、PDC(マスタ)のSAMの
-コピーに届かない。もしもPDCのSAMがBDCに複製されるならば、更新された
-(変更された)信頼アカウントパスワードを含むSAMを上書きし、ドメインの信頼
-関係を壊す結果となる。
+LDAPでないバックエンドSAMデータベースを使用するのは問題に陥りやすくなる。
+なぜなら、ドメインメンバサーバもワークステーションも、マシン信頼アカウントの
+パスワードを定期的に変更するからである。新しいバスワードはローカルでしか保存
+されない。このことは、(LDAPベースのソリューションにあるような)集中的に格納
+されたアカウントデータベースが無く、Samba-3 がBDCとして動作しているとき、
+BDC 側のドメインメンバ信頼アカウントのパスワードの記録が、PDC(マスタ)のSAM
+のコピーに届かないことを意味する。もし、PDCのSAMがBDC側に複製されると、
+最新の(変更後の)信頼アカウントのパスワードを含むSAMが上書きされることになり、
+ドメイン信頼が無効になってしまう。
 </para>
 
 <para>
@@ -85,14 +84,13 @@ is preferable for the PDC to use as its primary an LDAP master server.)。
 <indexterm><primary>SAM backend</primary><secondary>ldapsam</secondary></indexterm>
 <indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
-どのようにBDCを設定するかの、数多いコメントと議論によって発生した質問
-を考慮し、おのおの可能なオプションを考慮し、おのおのの解について利点
-欠点を見てみよう。
+BDCの設定方法に関して挙げられたコメントや質問の数が多いので、可能な選択肢の
+一つ一つについて、おのおのの解について利点欠点を見てみよう。
 <link linkend="pdc-bdc-table">以下のドメインバックエンドアカウント分散オプション一覧</link>
-は、PDC/BDC公正のための可能な設定例の一覧である。
+は、PDC/BDC構成で設定可能な設定例の一覧である。
 </para>
 
-<table frame="all" id="pdc-bdc-table"><title>ドメインバックエンドアカウント分散オプション</title>
+<table frame="all" id="pdc-bdc-table"><title>分散ドメインバックエンドアカウントの選択肢</title>
 <tgroup cols="3">
         <colspec align="center" colwidth="1*"/>
         <colspec align="center" colwidth="1*"/>
@@ -105,14 +103,14 @@ is preferable for the PDC to use as its primary an LDAP master server.)。
         <row>
         <entry><para>マスタLDAPサーバ</para></entry>
         <entry><para>スレーブLDAPサーバ</para></entry>
-        <entry><para>高い完全性を提供する完全なソリューション。SAMは共通マスタLDAPサーバで
+        <entry><para>高い整合性を提供する完全なソリューション。SAMは共通マスタLDAPサーバで
 	    複製される。</para></entry>
         </row>
         <row>
         <entry><para>単一の集中LDAPサーバ</para></entry>
         <entry><para>単一の集中LDAPサーバ</para></entry>
 	<entry><para>
-	フェイルオーバ機能がない実用可能なソリューション。これは実用的なソリューションで
+	フェイルオーバ機能がないが実用可能なソリューション。これは実用的なソリューションで
 	あるが、完全ではない。
 	</para></entry>
         </row>
@@ -127,8 +125,8 @@ is preferable for the PDC to use as its primary an LDAP master server.)。
         <entry><para>tdbsam</para></entry>
         <entry><para>tdbsam + <command>rsync</command></para></entry>
         <entry><para>
-	この設定を使ってはいけない。データがディスクに完全に書き戻されていない
-	かもしれないので、TDBファイルは使用中状態であるため動作しない。
+	この設定を使ってはいけない。TDBファイルが使用中の状態でデータがディスクに
+	完全に書き戻されていないかもしれないので、動作しない。
 	さらに、ドメインの信頼関係を壊すだろう。
 	</para></entry>
         </row>
@@ -148,7 +146,7 @@ is preferable for the PDC to use as its primary an LDAP master server.)。
 </sect1>
 
 <sect1>
-<title>本質的な背景について</title>
+<title>基本的な背景情報について</title>
 
 <para>
 <indexterm><primary>ドメインコントローラ</primary></indexterm>
