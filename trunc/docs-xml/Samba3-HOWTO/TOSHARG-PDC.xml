@@ -1260,12 +1260,12 @@ Windows 9x/Meが期待するネットワークログオンサービスを提供�
 <indexterm><primary>security mode</primary></indexterm>
 <indexterm><primary>user-mode security</primary></indexterm>
 <indexterm><primary>share-mode security</primary></indexterm>
-若干の未解決の問題と結びつけるためのいくつかのコメントがある。
-ユーザモード以外でのセキュリティモードで、Sambaをドメインコントローラ
-として操作するような設定を認めるかについての問題についてたくさんの議論
-があった。技術的な理由で動作しない唯一のセキュリティモードは共有モード
-である。ドメインとサーバモードセキュリティはSMBユーザレベルセキュリティ
-の単なるバリエーションである。
+わかりにくい点が残らないように、最後に幾つかコメントを記述する。
+userモード以外でのセキュリティモードの時に、Sambaをドメインコントローラと
+して設定してもよいかについては、さまざまな議論があった。技術的な理由で
+うまくいかないセキュリティモードは、share モードのセキュリティのみである。
+domainモードとserver モードのセキュリティは、実際にはSMBのuserレベルの
+セキュリティの変形のようなものである。
 </para>
 
 <para>
@@ -1276,15 +1276,16 @@ Windows 9x/Meが期待するネットワークログオンサービスを提供�
 <indexterm><primary>NetBIOS名</primary></indexterm>
 <indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>election</primary></indexterm>
-実際、この問題は、ドメインコントローラとして動作しているとき、その
-ワークグループのためのDMBがSambaであることに違いないことについて、
-この問題も議論に密接に結びついている。純粋なMicrosoft Windows NT
-ドメイン中では、PDCはDMBになるために選択に勝ち、次に、DOMAIN&lt;1B&gt;
-というNetBIOS名を登録する。これはWindowsクライアントがDOMAIN&lt;1C&gt;
-名を探すためにネットワークログオンサーバを位置づけるのには使われない
+この問題は、Samba がドメインコントローラとして機能しているときに、
+そのワークグループのドメインマスタブラウザでなければならないかという
+議論と密接に関連している。
+純粋なMicrosoft Windows NTドメイン中では、PDCはDMBになるために選択に勝ち、
+次に、DOMAIN&lt;1B&gt;というNetBIOS名を登録する。これはWindowsクライアントが
+DOMAIN&lt;1C&gt;名を探すためにネットワークログオンサーバ見つけるときに使う
 名前である。DMBはドメインマスタブラウザである。&smbmdash;
 <link linkend="NetworkBrowsing">ネットワークブラウジングの章</link>、
 <link linkend="DMB">WORKGROUPブラウジングの設定</link>を参照のこと。
+この問題も議論に密接に結びついている。
 Microsoft PDC はDMBになるためにelectionに勝つことを期待するが、もしも
 勝てない場合、electionはDMBになるためのelectionに負けたという内容を
 Windowsイベントロガー(訳注:イベントビューワ?)に、警告メッセージを
@@ -1311,24 +1312,24 @@ DOMAIN&lt;1C&gt;名を登録するSMB/CIFSサーバは、ネットワークロ�
 </para></note>
 
 <para>
-<smbconfoption name="security">user</smbconfoption>以外のモードを
-Sambaドメインコントローラで使うための設定の問題に戻ろう。もしも、
-Sambaホストがユーザ接続要求を検証するために他のSMBサーバかドメイン
+<smbconfoption name="security">user</smbconfoption>以外のモードで
+Sambaドメインコントローラを使うための設定の問題に戻ろう。
+ユーザからの接続要求を検証するためにSambaホストが他のSMBサーバかドメイン
 コントローラを使うように設定した場合、ネットワーク上の他のマシン
 (<smbconfoption name="password server"/>)は、Sambaホストよりもより
-詳しくユーザについて知っているということになる。時間のおおよそ99％は
-この他のホストはドメインコントローラである。ドメインモードセキュリティ
-で動作しているとした場合、<smbconfoption name="workgroup"/>パラメータ
-はWindows NTドメインの名前にセットされなければならない(それはすでに
-ドメインコントローラが持っている)。もしもドメインがドメインコントローラ
-をまだ持っていない場合、まだドメインを持っていないことになる。
+詳しくユーザについて知っているという状況になる。99％のケースで、
+この別のホストはドメインコントローラである。ドメインモードセキュリティ
+で動作している場合、<smbconfoption name="workgroup"/>パラメータ
+は(すでにドメインコントローラが持っている)Windows NTドメインの名前に
+設定しれなければならない。もしもそのドメインがドメインコントローラ
+をまだ持っていない場合、ドメイン自体がないのと同じである。
 </para>
 
 <para>
 すでに定義上PDCを持つドメイン用にSambaサーバをドメインコントローラとして
-設定することは災難を招く。それゆえ、そのドメインに対してDMBになるようにと
+設定することは問題を発生させる。それゆえ、そのドメインに対してDMBになるようにと
 <smbconfoption name="security">user</smbconfoption>を設定するようにSamba
-ドメインコントローラをいつでも設定すべきである。これのみが公式にサポート
+ドメインコントローラをいつでも設定すべきである。この方法のみが公式にサポート
 される操作モードである。
 </para>
 
@@ -1337,7 +1338,7 @@ Sambaホストがユーザ接続要求を検証するために他のSMBサーバ
 </sect1>
 
 <sect1>
-<title>共通のエラー</title>
+<title>よくあるエラー</title>
 
 <sect2>
 <title><quote>$</quote>マシン名中に$を含められない</title>
@@ -1347,7 +1348,7 @@ Sambaホストがユーザ接続要求を検証するために他のSMBサーバ
 <indexterm><primary>FreeBSD</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 通常<filename>/etc/passwd</filename>に格納されるマシンアカウントは、マシン名に
-<quote>$</quote>を追加した形で通常格納される。いくつかのBSDシステムはユーザ名
+<quote>$</quote>を追加した形である。いくつかのBSDシステムはユーザ名
 に<quote>$</quote>を使うものが作成できない。最近のFreeBSDのバージョンはこの
 制限が取り払われたが、それより古いものはまだ使われている。
 </para>
@@ -1357,7 +1358,7 @@ Sambaホストがユーザ接続要求を検証するために他のSMBサーバ
 問題はエントリを作る時に使われるプログラム中のみである。一度作成されると
 問題なく動作する。まず<quote>$</quote>なしでユーザ名を作る。次に、エントリを
 編集するために <command>vipw</command>を使い<quote>$</quote>を追加する。
-あるいは、全部のエントリをvipwで作っても良い。固有のユーザログインIDを使うように
+あるいは、最初からエントリをvipwで作っても良い。その際には固有のユーザログインIDを使うように
 すること。
 </para>
 
@@ -1365,7 +1366,7 @@ Sambaホストがユーザ接続要求を検証するために他のSMBサーバ
 
 <note><para>
 UNIXのツール<command>vipw</command>は直接<filename>/etc/passwd</filename>を修正
-する共通的なツールである。vipwの使用は(もしも使われるならば)shadowファイルが
+する共通的なツールである。vipwを使うと(もしも使われているならば)shadowファイルが
 パスワードファイルと同じになることを保証する。これはセキュリティの観点から重要
 である。
 </para></note>
@@ -1378,14 +1379,16 @@ UNIXのツール<command>vipw</command>は直接<filename>/etc/passwd</filename>
 <para>
 <indexterm><primary>ドメインへの参加</primary></indexterm>
 <quote>I get told,マシン信頼アカウント作成時に `You already have a connection to the Domain....'
-か `Cannot join domain, the credentials supplied conflict with an existing set...'が出る
-ことについては以前に話した。</quote>
+(既にドメインへの接続があります。) か
+`Cannot join domain, the credentials supplied conflict with an existing set...'
+(ドメインに参加できません。信用情報が既存のものと一致しません)
+が出ることについては以前に話した。</quote>
 </para>
 
 <para>
-これは、もしもそのマシン自身でマシン信頼アカウントの作成を試みるとき、
-Samba PDC上の共有(かIPC$)に接続している(たとえばマップされたドライブ)
-時に起きる。以下のコマンドはすべてのネットワークドライブ接続を切断する:
+これは、そのマシン自身からマシン信頼アカウントの作成を使用としたとき、
+Samba PDC上の共有(かIPC$)にすでに接続している(つまりマップされたドライブ)
+がある時に起きる。以下のコマンドはすべてのネットワークドライブ接続を切断する:
 <screen>
 &dosprompt;<userinput>net use * /d</userinput>
 </screen>
@@ -1393,9 +1396,9 @@ Samba PDC上の共有(かIPC$)に接続している(たとえばマップされ�
 </para>
 
 <para>
-さらに、もしもマシンがすでに(悪いアイデアだが)参加済みのドメインと同じ名前の
-<quote>workgroupのメンバ</quote>ならば、このメッセージを受け取るだろう。
-ワークグループを何か重要でない別の名前に変えて&smbmdash;再起動し、&smbmdash;
+さらに、もしもマシンがすでに参加済みのドメインと同じ名前の
+<quote>workgroupのメンバ</quote>ならば(これはやってはいけない)、このメッセージが出る。
+ワークグループを何か別の名前に変えて&smbmdash;再起動し、&smbmdash;
 もう一度やってみる。
 </para>
 
@@ -1407,17 +1410,19 @@ Samba PDC上の共有(かIPC$)に接続している(たとえばマップされ�
 <para><quote>
 ドメイン参加に成功したが、Sambaのバージョンを新しくした後、ログオン時に
 <errorname>`The system cannot log you on (C000019B). Please try again or consult your system
-administrator</errorname>というメッセージが出た。'</quote>
+administrator
+(システムはあなたのログオンを許可できません(C000019B)。後ほど再試行するか、システム管理者に相談してログオンしてください)
+</errorname>というメッセージが出た。'</quote>
 </para>
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
 これはsecrets.tdbに格納されているドメインSIDが変わったことによって引き
-起こされるものである。最も一般的なドメインSIDの変更理由は、ドメイン名
+起こされるものである。ドメインSIDが変わるよくある理由は、ドメイン名
 かサーバ名(NetBIOS名)が変わったことである。問題を解決する唯一の方法は
-オリジナルのドメインSIDをリストアするか、ドメインと領域からドメイン
-クライアントを削除することである。ドメインSIDは、netまたはrpcclient
-ユーティリティによってリセットしても良い。
+オリジナルのドメインSIDに戻すか、クライアントをいったんドメインから
+削除して再参加することである。ドメインSIDは、netまたはrpcclient
+ユーティリティによってリセットすることも出来る。
 </para>
 
 <para>
@@ -1432,7 +1437,7 @@ administrator</errorname>というメッセージが出た。'</quote>
 
 <para>
 ワークステーションのマシン信頼アカウントはドメイン(またはネットワーク)
-SIDとともにのみ動作する。もしもこのSIDが変更されたならば、ドメイン
+SIDでのみ動作する。このSIDが変更されると、ドメイン
 メンバ(ワークステーション)はドメインにログオンできない。オリジナルの
 ドメインSIDはsecrets.tdbファイルから復元できる。別の解は、おのおのの
 ワークステーションが再度ドメインに参加することである。
@@ -1445,22 +1450,25 @@ SIDとともにのみ動作する。もしもこのSIDが変更されたなら�
 
 <para>
 <quote>ドメインに参加しようとした時 <errorname>"The machine account 
-for this computer either does not exist or is not accessible</errorname>."
+for this computer either does not exist or is not accessible
+(このコンピューターのマシン・アカウントは存在しないか、アクセスできません) 
+</errorname>."
 というメッセージが出た。何が悪い?</quote>
 </para>
 
 <para>
-この問題は、PDCが適したマシン信頼アカウントを持っていないことによって
-引き起こされる。もしもアカウント作成時に
-<smbconfoption name="add machine script"/>という方法を使ったならば、
-これは、それが動作していないことを示している。ドメイン管理ユーザが
+この問題は、PDCが適切なマシン信頼アカウントを持っていないことに起因
+する。アカウント作成時に
+<smbconfoption name="add machine script"/>という方法を使った場合、
+このメッセージは、アカウント作成に失敗したことを示している。ドメイン管理ユーザ
+のシステムが
 動作しているかを確認して正常動作するようにすること。
 </para>
 
 <para>
-かわりに、もしもアカウントエントリを手動で作成していた場合、それらは
-正しく作られていない。Samba PDC上で<filename>smbpasswd</filename>ファイル
-中のマシン信頼アカウントのエントリを正しくしなければならない。もしも、
+かわりに、手動でアカウントエントリを作成していた場合、正しく作られていない
+ということである。Samba PDC上で<filename>smbpasswd</filename>ファイル
+中のマシン信頼アカウントのエントリが正しく出来たかどうかを確認する。もしも、
 smbpasswd ユーティリティを使わないでアカウントをエディタで追加した場合、
 アカウント名をマシンのNetBIOS名に<quote>$</quote>を追加して(すなわち、
 computer_name$)おくこと。これはSambaSAMAccountバックエンドと同じように
@@ -1477,8 +1485,8 @@ Samba-3の既定値のバックエンド(すなわち、パラメータ
 </para>
 
 <para>
-ある人はSambaサーバとNTクライアントの間でのつじつまの合わないサブネットマスク
-は、この問題を引き起こすことを報告している。両方のクライアントとサーバで整合性
+SambaサーバとNTクライアントの間のサブネットマスクの不一致により、この問題が起こると
+いう報告も一部から上がっている。クライアントとサーバ両方で整合性
 を取るようにすること。
 </para>
 </sect2>
@@ -1499,7 +1507,8 @@ Samba-3の既定値のバックエンド(すなわち、パラメータ
 <sect2>
 <title>ドメインコントローラが無効</title>
 		
-<para><quote>Sambaが開始してから数分間、クライアントがエラー`Domain Controller Unavailable'を受け取る。</quote></para>
+<para><quote>Sambaが開始してから数分間、クライアントがエラー`Domain Controller Unavailable'
+(ドメイン・コントローラーが使えません。)を表示する。</quote></para>
 
 <para>
 ドメインコントローラはネットワーク上にその役割をアナウンスする。これは通常しばらくかかる。最低15分は待ち、
@@ -1517,7 +1526,7 @@ Samba-3の既定値のバックエンド(すなわち、パラメータ
 1つはドメインコントローラが見つからないというもので、もう1つはアカウントが
 ドメインにないか、パスワードが違うというものである。これは、<emphasis>schannel</emphasis>
 (セキュアchannel)の設定か、<emphasis>smb 署名</emphasis>の設定について、
-WindowsクライアントとSamba-3サーバの違いによる互換性のない設定によるものである。
+WindowsクライアントとSamba-3サーバにおいて設定の不一致によるものと考えられる。
 以下を実行して、Sambaの
 <emphasis>client schannel</emphasis>、<emphasis>server schannel</emphasis>、
 <emphasis>client signing</emphasis>、<emphasis>server signing</emphasis>の設定と
@@ -1530,13 +1539,13 @@ WindowsクライアントとSamba-3サーバの違いによる互換性のない
 <para>
 また、MMC &smbmdash; ローカルセキュリティの設定を使うこと。このツールはコントロール
 パネルにある。ポリシーの設定は、ローカルポリシー/セキュリティオプション領域にあり、
-<emphasis>Secure Channel:..., and Digitally sign...</emphasis>というプレフィックスが
-ついている(訳注:XPでは、管理ツール->ローカル セキュリティ ポリシーで、
-ローカルポリシー/セキュリティオプションにあるはず....。)
+<emphasis>Secure Channel:..., and Digitally sign...(セキュリティチャネル、 デジタル的に署名)</emphasis>
+という言葉を含んだ項目で設定する。
+
 </para>
 
 <para>
-これらを首尾一貫してSamba-3サーバに設定をするのは重要である。
+これらが Samba-3 サーバー設定と一致した設定になっていることが大切である。
 </para>
 
 </sect2>
