@@ -863,7 +863,7 @@ PDC用のsmb.confの例</link>である。
 </example>
 
 <para>
-<link linkend="pdc-example">this example</link>中で示される基本的なオプションの説明は以下の通り:
+<link linkend="pdc-example">上記の例</link>中で示される基本的なオプションの説明は以下の通り:
 </para>
 
 <variablelist>
@@ -876,7 +876,7 @@ PDC用のsmb.confの例</link>である。
 		<indexterm><primary>guest</primary></indexterm>
 		<indexterm><primary>default accounts</primary></indexterm>
 		ここにすべてのユーザとグループアカウント情報が含まれている。PDCで使える値は:
-		<emphasis>smbpasswd, tdbsam, and ldapsam</emphasis>である。<quote>guest</quote>
+		<emphasis>smbpasswd, tdbsamとldapsam</emphasis>である。<quote>guest</quote>
 		エントリは既定値のアカウントを提供し、それは既定値で含まれている;明示的に
 		追加する必要はない。
 		</para>
@@ -886,13 +886,13 @@ PDC用のsmb.confの例</link>である。
 		<indexterm><primary>distributed</primary></indexterm>
 		<indexterm><primary>smbpasswd</primary></indexterm>
 		<indexterm><primary>tdbsam</primary></indexterm>
-		BDCを使う場合、passdb backendを配信できるため、LDAPの使用が論理的な唯一の
-		選択肢である。tdbsamとsmbpasswdファイルは効果的に配信できないため、それを
+		BDCを使う場合、passdb backendを配信するために論理的な唯一の選択肢は
+		LDAPを使うことである。tdbsamとsmbpasswdファイルは効果的に配信できないため、それを
 		使うべきではない。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>ドメイン制御パラメータ</term>
+	<varlistentry><term>ドメイン管理パラメータ</term>
 		<listitem><para>
 		<indexterm><primary>os level</primary></indexterm>
 		<indexterm><primary>preferred master</primary></indexterm>
@@ -900,31 +900,31 @@ PDC用のsmb.confの例</link>である。
 		<indexterm><primary>network</primary><secondary>logon</secondary></indexterm>
 		パラメータ<emphasis>os level, preferred master, domain master, security, 
 		encrypt passwords</emphasis>と<emphasis>domain logons</emphasis>はドメイン
-		制御とネットワークログオンのサポートで中心的な役割を演じる。
+		管理とネットワークログオンのサポートを確実にするために中心的な役割を演じる。
 		</para>
 
 		<para>
 		<indexterm><primary>DMB</primary></indexterm>
 		<indexterm><primary>encryped password</primary></indexterm>
-		<emphasis>os level</emphasis>は32以上に、<emphasis>user</emphasis>
-		モードセキュリティに、Microsoft互換の暗号化パスワードサポートに、
-		ネットワークログオンサービス(ドメインログオン)の提供にしなければ
-		ならない。暗号化パスワードは有効にしなければならない。どのように
-		これを行うかについての詳細は、
+		<emphasis>os level</emphasis>は32以上にし、<emphasis>user</emphasis>
+		モードセキュリティ、Microsoft互換の暗号化パスワードサポート、
+		ネットワークログオンサービス(ドメインログオン)を提供するように
+		設定しなければ	ならない。暗号化パスワードは有効にしなければならない。
+		この設定についての詳細は、
 		<link linkend="passdb">アカウント情報データベース</link>を参照のこと。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>Environment Parameters </term>
+	<varlistentry><term>環境パラメータ</term>
 		<listitem><para>
 		<indexterm><primary>logon path</primary></indexterm>
 		<indexterm><primary>logon home</primary></indexterm>
 		<indexterm><primary>logon drive</primary></indexterm>
 		<indexterm><primary>logon script</primary></indexterm>
 		パラメータ<emphasis>logon path, logon home, logon drive</emphasis>と<emphasis>logon script</emphasis>
-		環境は、はクライアントログオン操作機能を手助けすることと、ネットワーク管理のオーバヘッドを
-		簡単にするための自動コントロール機能の提供を手助けするための設定をサポートする。
-		それらのパラメータのマニュアルページの情報を参照してほしい。
+		は環境サポートの設定で、クライアントログオン操作機能を支援し、ネットワーク管理の
+		間接費用を軽減するための、自動コントロール機能の提供するものである。
+		それらのパラメータに関しては、マニュアルページの情報を参照してほしい。
 		</para></listitem>
 	</varlistentry>
 
@@ -937,8 +937,8 @@ PDC用のsmb.confの例</link>である。
 		<indexterm><primary>グループポリシー</primary></indexterm>
 		<indexterm><primary>NTConfig.POL</primary></indexterm>
 		NETLOGON共有はドメインログオンとドメインメンバシップサポートで中心的な役割を演じる。
-		この共有はMicrosoftドメインコントローラ上で提供される。これは、ログオン処理のために
-		必要となるかもしれない他の共通ツールに位置づけるのと同じように、ログオンスクリプト
+		この共有はすべてのMicrosoftドメインコントローラ上で提供される。これは、ログオン処理のために
+		必要となるかもしれない他の共通ツールを見つけるのと同じように、ログオンスクリプト
 		の提供と、グループポリシーファイル(NTConfig.POL)の格納のために使われる。これは、
 		ドメインコントローラ上で不可欠な共有である。
 		</para></listitem>
@@ -951,20 +951,20 @@ PDC用のsmb.confの例</link>である。
 		<indexterm><primary>fake_permissions</primary></indexterm>
 		<indexterm><primary>プロファイル</primary></indexterm>
 		<indexterm><primary></primary></indexterm>
-		この共有はユーザのデスクトッププロファイルを格納するために使われる。おのおののユーザ
-		はこの共有をrootとするディレクトリを持たねばならない。このディレクトリはユーザが
-		書き込み可能で、その他が読み込み可能でなければならない。Samba-3は
-		<quote>fake_permissions</quote>と呼ばれる、この共有上にインストールしてもよい
+		この共有はユーザのデスクトッププロファイルを格納するために使われる。各ユーザ
+		はディレクトリのrootにこの共有を持たねばならない。このディレクトリはユーザが
+		書き込み可能で、グローバルに読み込み可能でなければならない。Samba-3は
+		<quote>fake_permissions</quote>と呼ばれる、この共有上にインストール可能な
 		VFSモジュールを用意している。これはSambaの管理者が、全員に対してこのディレクトリを
 		読み込みのみにすることを許可する。もちろん、これはプロファイルが適した形で作成された
-		後にのみ便利である。
+		後に行ってこそ有用である。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
 
 <note><para>
-上記のパラメータは、サーバの動作モードを決めるフルセットの機能を作り上げる。
-以下の&smb.conf;パラメータは単独で重要である:
+上記のパラメータが、サーバの動作モードを決めるパラメータの一式であると思って良い。
+&smb.conf;パラメータのうち必須のものを以下に列挙する:
 </para>
 
 <para>
@@ -978,8 +978,8 @@ PDC用のsmb.confの例</link>である。
 </para>
 
 <para>
-この節中で長いリスト中で示されている追加のパラメータは、より完全な
-説明に役立つ。
+この節中にある、長いリスト中で示されている追加のパラメータは、より完全な
+説明のためのものである。
 </para></note>
 
 </sect1>
@@ -989,14 +989,14 @@ PDC用のsmb.confの例</link>である。
 
 <para>
 <indexterm><primary>active directory</primary></indexterm>
-Samba-3はActive Directoryサーバではなく、そのように振る舞えない。Active Directoryの
-PDCとして本当に機能しない。Active Directoryドメインコントローラのいくつかの機能の
-プロトコルは実験的のみのものとして部分的に実装されている。Samba-3がそれらのプロ
+Samba-3はActive Directoryサーバとしては機能しない。真のActive Directoryの
+PDCとして機能することもできない。いくつかのActive Directoryドメインコントローラの機能用の
+プロトコルが実験的なものとして部分的に実装されてはいる。しかし、Samba-3がそれらのプロ
 トコルをサポートするとは思わないでほしい。現在または将来にわたって、そのような
-任意の機能に依存しない。Sambaチームはこれらの機能を取り除くかもしれないか、あるいは
-それらの機能を変更するかもしれない。これはSamba-3の秘密の機能と、それらの機能
-の完成を質問する人のために説明される。答えは、「出来るかもしれないし出来ないかも
-しれない!」
+任意の機能に依存しないでほしい。Sambaチームは将来これらの機能を取り除いたり
+機能を変更するかもしれない。このことをここに言及するのは、これらの秘密の機能を
+すでに発見し、この機能が完成されるのはいつかという質問を寄せられた方々のためである。
+その答えは、「出来るかもしれないし出来ないかもしれない!」である。
 </para>
 
 <para>
@@ -1005,9 +1005,9 @@ PDCとして本当に機能しない。Active Directoryドメインコントロ�
 たしかに、Samba-3はMicrosoft Windows NT4スタイルのドメインコントローラが持つ
 大部分の機能を提供するように設計されている。Samba-3にはWindows NT4の全ての
 機能があるわけではないが、一方Windows NT4 ドメインコントローラにはない
-たくさんの特徴を持つ。要するに、Samba-3はNT4でもWindows Server 200xでもない。
-もちろんActive Directoryサーバでもない。このことがすべての人に理解してもらう
-ために、十分に単純で明白であることを望んでいる。
+多くのの特徴を持っている。要するに、Samba-3はNT4でもWindows Server 200xでもない。
+もちろんActive Directoryサーバでもない。この言い方で全ての人に簡単にシンプルに
+理解していただけると期待している。
 </para>
 
 </sect1>
@@ -1017,8 +1017,8 @@ PDCとして本当に機能しない。Active Directoryドメインコントロ�
 
 <para>
 <indexterm><primary>ドメインログオン</primary></indexterm>
-ドメインコントローラによって提供される重要な機能の絶対必要な部分なので、
-ネットワークまたはドメインログオンについてはここで説明する。
+ネットワークとドメインのログオンについて、ここで言及するのは、ドメインコントローラ
+が提供する本質的な機能の欠かせない部分だからである。
 </para>
 
 <sect2>
@@ -1028,10 +1028,10 @@ PDCとして本当に機能しない。Active Directoryドメインコントロ�
 <indexterm><primary>ドメインログオン</primary></indexterm>
 すべてのドメインコントローラはネットログオンサービスを動かさなければ
 ならない(Samba中での<emphasis>ドメインログオン</emphasis>)。
-1つのドメインコントローラは
+1つのドメインコントローラが
 <smbconfoption name="domain master">Yes</smbconfoption>(PDC)と設定
 しなければならない;すべてのBDCではパラメータを
-<smbconfoption name="domain master">No</smbconfoption>と設定する。
+<smbconfoption name="domain master">No</smbconfoption>と設定しなければならない。
 </para>
 
 <sect3>
