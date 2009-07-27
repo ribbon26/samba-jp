@@ -590,8 +590,8 @@ Windowsクライアントが使うことが出来るネットログオンサー�
 </para>
 
 <para>
-<indexterm><primary>promote</primary></indexterm>
-<indexterm><primary>demote</primary></indexterm>
+<indexterm><primary>昇格</primary></indexterm>
+<indexterm><primary>降格</primary></indexterm>
 Windows NT4 BDCはPDCに昇格することが出来る。BDCがPDCに昇格する時にPDC
 がオンラインならば、以前のPDCは自動的にBDCに降格する。Samba-3では
 これは自動的には行われない。PDCとBDCは手動で設定し、その他適切な
@@ -609,14 +609,14 @@ Microsoft Windows NT4では、インストール時に、サーバのマシン�
 </para>
 
 <itemizedlist>
-	<listitem><para><emphasis>プライマリドメインコントローラ</emphasis> &smbmdash; ドメインSAMの頒布元。</para></listitem>
-	<listitem><para><emphasis>バックアップドメインコントローラ</emphasis> &smbmdash; ドメインSAMのコピーを受け取る。</para></listitem>
-	<listitem><para><emphasis>ドメインメンバサーバ</emphasis> &smbmdash; ドメインSAMのコピーを持たない。すべてのアクセス制御のためにドメインコントローラから認証を受け取る。</para></listitem>
-	<listitem><para><emphasis>スタンドアロンサーバ</emphasis> &smbmdash; SAM同期を行わないサーバで、固有の認証データベースを持ち、ドメインセキュリティでは何の役割も担わない。</para></listitem>
+	<listitem><para><emphasis>プライマリドメインコントローラ</emphasis>&smbmdash; ドメインSAMを生成するサーバ。</para></listitem>
+	<listitem><para><emphasis>バックアップドメインコントローラ</emphasis>&smbmdash; ドメインSAMのコピーを受け取るサーバ。</para></listitem>
+	<listitem><para><emphasis>ドメインメンバサーバ</emphasis> &smbmdash; ドメインSAMのコピーを持たない。すべてのアクセス制御についてドメインコントローラから認証を受け取るサーバ。</para></listitem>
+	<listitem><para><emphasis>スタンドアロンサーバ</emphasis> &smbmdash;SAM同期を行わず、固有の認証データベースを持ち、ドメインセキュリティでは何の役割も担わないサーバ。</para></listitem>
 </itemizedlist>
 
 <note><para>
-<indexterm><primary>promote</primary></indexterm>
+<indexterm><primary>昇格</primary></indexterm>
 Algin Technology LLC はWindows NT4スタンドアロンサーバをPDCまたはBDCに昇格
 することとその逆ができるが可能な商用ツールを提供している。さらなる情報は
 <ulink url="http://utools.com/UPromote.asp">Algin</ulink>のWebサイトを参照
@@ -646,28 +646,28 @@ Samba-3はWindows200xサーバのActive Directoryドメインでのネイティ�
 <indexterm><primary>SAM</primary><secondary>複製</secondary></indexterm>
 Samba-3での新機能として、SAM複製コンポーネントを除く、Microsoft Windows
 NT4スタイルのドメインコントローラ機能の実装が上げられる。しかし、Samba-3
-はMicrosoft Windows 200xドメイン制御プロトコルのサポートを行うことに
+はMicrosoft Windows 200xドメイン制御プロトコルについてもサポートすることも
 注目してほしい。
 </para>
 
 <para>
 <indexterm><primary>ADS</primary></indexterm>
-現時点で、ネイティブADSモード中での<emphasis>ドメインコントローラ</emphasis>
-としてSamba-3は振る舞うことが出来る任意の外観(訳注:もっといい訳がありそう)は、本質的に制限されていて
-実験的である。この機能はSambaチームがそれに対する公式のサポートを提供する
-まで使うべきでない。その時点でドキュメントはすべての設定と管理要件を
-正当に反映するために改訂されるだろう。SambaはWindows 2000/XP環境中
+現時点で、Samba-3はネイティブADSモード中での<emphasis>ドメインコントローラ</emphasis>
+として機能することが出来るように見えるが、これは限定的で実験的なもの
+でしかない。この機能はSambaチームがそれに対する公式のサポートを提供する
+まで使うべきでない。その時期になれば、すべての設定上・管理上の要件を
+正当に反映するためにドキュメント類は改訂されるだろう。SambaはWindows 2000/XP環境中
 ではNT4スタイルのドメインコントローラとして振る舞うことが出来る。しかし、
-ある程度の妥協がある:
+以下のように一定の短所(訳注:未実装の機能)がある:
 </para>
 
 <itemizedlist>
 	<listitem><para>マシンポリシーファイルがない</para></listitem>
 	<listitem><para>グループポリシーオブジェクトがない。</para></listitem>
-	<listitem><para>同期して実行されるActive DirectoryNログオンスクリプトがない。</para></listitem>
+	<listitem><para>同期して実行されるActive Directoryログオンスクリプトがない。</para></listitem>
 	<listitem><para>ユーザとマシンを管理するためのActive directory管理ツールが使えない。</para></listitem>
-	<listitem><para>レジストリの変更がメインのレジストリを修正するため、Active Directoryを使うときには、結果として恒久的な変更をしない(訳注:tattooの訳が微妙)。</para></listitem>
-	<listitem><para>Active Directoryなしでユーザとグループを指定するための特定のアプリケーションをエクスポートする機能を実行できない。</para></listitem>
+	<listitem><para>レジストリの変更でメインのレジストリに恒久的な変更が残るが、Active Directoryを使うときには、結果が残らない。</para></listitem>
+	<listitem><para>Active Directoryなしでは、特定のアプリケーションを特定のユーザとグループにエクスポートできない。</para></listitem>
 </itemizedlist>
 
 </sect2>
@@ -680,25 +680,25 @@ NT4スタイルのドメインコントローラ機能の実装が上げられ�
 <indexterm><primary>ワークグループ</primary></indexterm>
 <indexterm><primary>メンバ</primary></indexterm>
 <indexterm><primary>セキュリティ</primary></indexterm>
-その他のシステムと、ドメインコントローラやお互いに相互作用を
-行う2つの方法がある:そのうちの1つはより一般的には、
+Microsoft Windows のマシンが、お互いに他のサーバやドメインコントローラ
+とやりとりするのには2つの方法がある:そのうちの1つは、一般的に
 <emphasis>ワークグループ</emphasis>メンバとして呼ばれている
 <emphasis>スタンドアロン</emphasis>システムであり、もう1つは、
-より一般的には<emphasis>ドメイン</emphasis>メンバと呼ばれている、
-セキュリティシステム中で完全な参与者である。
+一般的に<emphasis>ドメイン</emphasis>メンバと呼ばれている、
+セキュリティシステム中で全面的に参加するものである。
 </para>
 
 <para>
 <indexterm><primary>ワークグループ</primary></indexterm>
 <indexterm><primary>ワークグループ</primary><secondary>メンバシップ</secondary></indexterm>
 <indexterm><primary>マシン信頼アカウント</primary></indexterm>
-ワークグループメンバシップは、マシンが設定されている以外の特別な設定を必要としない
-ので、一般的にそのワークグループエントリに対して使われた名前を持つネットワーク設定
-を持つことに注意すべきである。これに対してWORKGROUPという名前を使うのは一般的では
-ない。このモードの設定では、マシン信頼アカウントも、ネットワークコンピュータ中に
-論理的に一緒にグループ化されて現れるすべてのマシンに、実際制限されるようなメンバ
-シップの任意のコンセプトもない。繰り返すが、明確にすると、
-<emphasis>ワークグループモードは、セキュリティマシンアカウントを必要としない</emphasis>。
+ワークグループのメンバであるために、特別な設定は必要ないということに注意してほ
+しい。ただ、ネットワーク設定に、ワークグループのエントリーについて共通に使う
+単一の名前を持つようにマシンを設定するだけである。この時WORKGROUPという名前を使
+うのが一般的である。この設定モードでは、マシン信頼アカウントはなく、メンバシッ
+プの概念は、すべてのマシンがネットワーク環境の中で、論理的に一緒のグループに
+まとめられているという以上のものではない。繰り返すが、明確言うと、
+<emphasis>ワークグループモードは、セキュリティの確保されたマシンアカウントを含まない</emphasis>。
 </para>
 
 <para>
@@ -706,18 +706,18 @@ NT4スタイルのドメインコントローラ機能の実装が上げられ�
 <indexterm><primary>マシン信頼アカウント</primary><secondary>パスワード</secondary></indexterm>
 <indexterm><primary>トリガ</primary></indexterm>
 ドメインメンバのマシンは、ドメインアカウントデータベース中にマシン信頼
-アカウントを持つ。ドメインメンバシップを作るためにおのおののマシン上で
+アカウントを持つ。ドメインメンバシップを有効にするには、おのおののマシン上で
 以下の特別な手続きが必要である。この手続きは、ローカルマシンのAdministrator
-アカウントによってのみ行うことが出来、ドメインマシンアカウント(もしも
-存在しなければ)を作成し、次にそのアカウントを初期化する。クライアントが
-最初にドメインにログオンするとき、マシンアカウントのパスワード変更処理は
-自動的に起動される。
+アカウントによってのみ行うことが出来、これにより、ドメインマシンアカウント(もしも
+存在しなければ)を作成し、そのアカウントを初期化する。クライアントが
+最初にドメインにログオンすると、それがマシンアカウントのパスワード変更処理
+のトリガとなり自動的に起動される。
 </para>
 
 <note><para>
 <indexterm><primary>ドメインメンバ</primary></indexterm>
 Sambaがドメインコントローラとして設定されるとき、セキュアなネットワーク操作は
-すべてのMicrosoft Windows NT4/200x/XP Professionalクライアントはドメインメンバ
+Microsoft Windows NT4/200x/XP Professionalクライアントがすべてドメインメンバ
 として設定されることを要求する。もしもマシンがドメインのメンバでなければ、
 それはワークグループ(スタンドアロン)マシンとして操作される。ドメインメンバシップ
 に関係する情報は <link linkend="domain-member">ドメインメンバシップ</link>
@@ -726,7 +726,7 @@ Sambaがドメインコントローラとして設定されるとき、セキュ
 
 <para>
 以下はMicrosoft Windows NT4/200x/XPクライアントのための、Microsoft Windows
-NT4スタイルとしてSamba-3を設定するために必要なことである:
+NT4スタイルとしてSamba-3を設定するために必要な手順である:
 </para>
 
 <itemizedlist>
