@@ -1058,24 +1058,24 @@ PDCとして機能することもできない。いくつかのActive Directory�
 
 <para>
 <indexterm><primary>Windows XP Home edition</primary></indexterm>
-完全に明確にしよう:もしも、Microsoft Windows XP Home Editionを Microsoft 
-Windows NT4またはActive Directoryドメインセキュリティに統合したいと思う
-ならば、それが出来ないことを理解しなさい。唯一のオプションは、Microsoft 
-Windows XP Home EditionからMicrosoft Windows XP Professional にお金を
-払ってアップグレードすることである。
+次のことを完全に理解してほしい:Microsoft Windows XP Home Editionを Microsoft 
+Windows NT4またはActive Directoryドメインセキュリティに統合したいと思っても
+それが出来ない。これを解決する唯一のオプションは、Microsoft 
+Windows XP Home EditionからMicrosoft Windows XP Professional への
+アップグレードを購入することである。
 </para>
 
 <note><para>
 Microsoft Windows XP Home Editionはどのようなタイプのドメインセキュリティ
 機能に参加する能力は持っていない。Microsoft Windows 9x/Meと異なり、
-Microsoft Windows XP Home Edition はネットワークにログオンする機能も
-完全に欠けている。
+Microsoft Windows XP Home Edition はネットワークにログオンする機能を
+完全に欠いている。
 </para></note>
 
 <para>
-このことは前にも言ったが、これを行う事について、Sambaチームの誰かに
-質問を問い合わせるか、メーリングリストに質問を投げないでほしい。それは
-出来ないからである。それが出来るとなると、Microsoftとの間のライセンス
+このことは前にも説明したが、この事について、Sambaチームの誰かに
+質問を問い合わせたり、メーリングリストに質問を投げないでほしい。なぜなら
+「出来ないから」である。それが出来るとなると、それはMicrosoftとの間のライセンス
 に違反することになるので、それをしないことを推奨する。
 </para>
 
@@ -1091,47 +1091,48 @@ Microsoft Windows XP Home Edition はネットワークにログオンする機�
 <indexterm><primary>ブラウジング</primary></indexterm>
 <indexterm><primary>rights</primary></indexterm>
 ドメインとワークグループはネットワークブラウジングという言葉において
-全く同等である。違いは、ネットワークに対する安全なログインのために、
-分散認証データベースがドメインに関連づけられることである。
-また、もしもドメインログオンサーバに対して認証が成功した場合に、
-ユーザに許可されるアクセス権限が異なる。Samba-3はこれをMicrosoft 
+全く同等である。2つの違いは、ネットワークへの安全なログインのための、
+分散認証データベースはドメインに関連づけられることである。
+また、ドメインログオンサーバに対して認証が成功したユーザに対して
+異なるアクセス権を付与できる。Samba-3はこの機能をMicrosoft 
 Windows NT/200xと同じ方法で行う。
 </para>
 
 <para>
 <indexterm><primary>ブラウジング</primary></indexterm>
-SMBクライアントのドメインへのログオンは、ドメイン内のすべての他のサーバが
-同じ認証情報を許可するべきであることを予想している。ドメインとワークグループ
-のネットワークブラウズ機能は同一であり、、この文書内の、ブラウジングの議論
-の中で説明される。ブラウジングはログインサポートとは直交する概念である。
+ドメインへのログオンするSMBクライアントは、ドメイン内のすべての他のサーバが
+同じ認証情報を受け取ることを期待している。ドメインとワークグループ
+のネットワークブラウズ機能は同一であり、この文書内の、ブラウジングに関する節
+の中で説明される。ブラウジングはログインサポートとは直交する(互いに他方への影響
+を考慮する必要のない)概念であることに留意してほしい。
 </para>
 
 <para>
 <indexterm><primary>シングルログオン</primary></indexterm>
 <indexterm><primary>ドメインログオン</primary></indexterm>
 <indexterm><primary>ネットワークログオン</primary></indexterm>
-シングルログオン(訳注:シングルサインオンか?)ネットワークモデルに関連する問題は
-この節で議論される。Sambaはドメインログオン、ネットワークログオンスクリプト、
-ユーザプロファイルを、この節で焦点を当てる、Microsoft Windows for Workgrops
+シングルログオン(訳注:シングルサインオンか?)ネットワークモデルに関連する課題は
+この節で扱う。Sambaはドメインログオン、ネットワークログオンスクリプト、
+ユーザプロファイルを、この節で扱う、Microsoft Windows for Workgrops
 とMicrosoft Windows 9x/Meクライアントに対してサポートする。
 </para>
 
 <para>
 <indexterm><primary>ブロードキャストリクエスト</primary></indexterm>
-ドメイン中のSMBクライアントがログオンしようとした時、ログオンサーバに向けと
+ドメイン中のSMBクライアントがログオンしようとした時、ログオンサーバを探す
 要求をブロードキャストする。最初にリプライするものが処理を行い、Samba
-管理者がインストールした何らかのメカニズムを使ってパスワードを検証する。
-サーバ間でユーザデータベースが共有されていないドメインを作成することも
-可能である(お勧めはしないが)。すなわち、それらはドメイン中に参加している
-としてそれら自身を公告している有効なワークグループサーバである。これは
-どのように認証がそれらと全く異なるか、しかし、ドメインと密接に関係して
-いるかということを示している。
+管理者がインストールした何らかの機構を使ってパスワードを認証する。
+サーバ間でユーザデータベースが共有されていないドメイン(つまり、サーバが、本質
+的にはワークグループサーバーでありながら、しかも自分はドメインに参加している
+と他に周知するようなドメイン)を作成することも可能である(お勧めはしないが)。
+これは認証機構がドメインとはかなり異なるものでありながら、ドメインと密接に関係して
+いるということを示している。
 </para>
 
 <para>
-これらの機能を使うことで、Sambaサーバ経由でクライアントのログオンの検証を
-させ、ネットワークにログオンし他時にバッチファイルをクライアントで実行させ、
-プレファレンスとデスクトップとスタートメニューをダウンロードする。
+これらの機能を使うことで、Sambaサーバ経由でクライアントのログオンの確認
+させることができる。すなわち、ネットワークにログオンした時にクライアント側でバッチファイルを実行させ、
+クライアントの個人設定、デスクトップおよびスタートメニューをダウンロードさせる。
 </para>
 
 <para><emphasis>
@@ -1141,7 +1142,7 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 
 <para>
 設定手続きの話に入る前に、Windows 9x/Meクライアントがログオンをどのように
-実行するかを見ておくことは価値がある:
+実行するかを見ておくことにしよう:
 </para>
 
 <orderedlist>
@@ -1151,9 +1152,9 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 	<indexterm><primary>ログオンサーバ</primary></indexterm>
 	クライアントは(それがいるサブネットのIPブロードキャストアドレスに
 	対して)NetLogon要求をブロードキャストする。これは、NetBIOSレイヤ
-	でNetBIOS名 DOMAIN&lt;1C&gt; を送る。クライアントは、
-	<filename>\\SERVER</filename>という形式で、ログオンサーバのNetBIOS
-	名を含む、最初に受け取ったものを選ぶ。<literal>1C</literal>という
+	でのNetBIOS名 DOMAIN&lt;1C&gt; に送られる。クライアントは、最初に受け取った回答を選ぶ。
+	その回答には<filename>\\SERVER</filename>という形式で、ログオンサーバのNetBIOS
+	名を含む。<literal>1C</literal>という
 	名前はドメインコントローラ(netlogonサービスを提供するSMB/CIFSサーバ)
 	によって登録された名前のタイプである。
 	</para>
@@ -1165,14 +1166,14 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 	<indexterm><primary>SMBsessetupX</primary></indexterm>
 	<indexterm><primary>SMBtconX</primary></indexterm>
 	クライアントがそのサーバに接続し、ログオンし(SMBsessetupXを実行)
-	すると次にIPC$共有に接続する(SMBtconXを使って)。
+	し、次にIPC$共有に接続する(SMBtconXを使って)。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
 	<indexterm><primary>NetWkstaUserLogon</primary></indexterm>
-	クライアントは、ユーザのログオンスクリプトの名前を検索する
+	クライアントは、ユーザのログオンスクリプト名を検索する
 	NetWkstaUserLogon要求を送る。
 	</para>
 </listitem>
@@ -1180,8 +1181,8 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 <listitem>
 	<para>
 	クライアントは次にNetLogon共有に接続し、そのスクリプトを検索する。
-	もしも見つかり、読み出し可能ならば、クライアントによって検索され、
-	実行される。その後、クライアントはNetLogon共有の接続を切る。
+	もしも見つかり、読み出しできるならば、クライアントはそれを取り出し
+	実行する。その後、クライアントはNetLogon共有の接続を切る。
 	</para>
 </listitem>
 
@@ -1189,10 +1190,9 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 	<para>
 	<indexterm><primary>NetUserGetInfo</primary></indexterm>
 	<indexterm><primary>profile</primary></indexterm>
-	クライアントは、プロファイル検索のために使うユーザのホーム
-	共有を検索するためにサーバにNetUserGetInfo要求を送る。
-	NetUserGetInfo要求のレスポンスはユーザのホーム共有以外の
-	ものが含まれていないので、Windows 9x用のプロファイルは
+	クライアントは、サーバにNetUserGetInfo要求を送り、プロファイル検索の
+	ために使うユーザのホーム共有を検索する。NetUserGetInfo要求の
+	応答はユーザのホーム共有以外のものは含まれていないので、Windows 9x用のプロファイルは
 	ユーザのホームディレクトリ内になければならない。
 	</para>
 </listitem>
@@ -1200,8 +1200,8 @@ Microsoft Windows XP Home edition はドメインに参加できず、ドメイ�
 <listitem>
 	<para>
 	<indexterm><primary>profiles</primary></indexterm>
-	クライアントはユーザのプロファイル検索のためにユーザのホーム共有に
-	接続する。明確ではあるが、共有名とパスでユーザのホーム共有を指定する
+	クライアントはユーザのプロファイルを検索するために
+	ホーム共有に接続する。その時、共有名とパスでユーザのホーム共有を指定する
 	こともできる。例をあげると、<filename>\\server\fred\.winprofile</filename>
 	である。もしもプロファイルが見つかれば、それを適用する。
 	</para>
@@ -1225,8 +1225,8 @@ PDCとWindows 9x/Me ログオンサーバ設定の主要な違いは以下の通
 <listitem><para>
 	<indexterm><primary>パスワード</primary><secondary>平文</secondary></indexterm>
 	<indexterm><primary>平文パスワード</primary></indexterm>
-	パスワード暗号化はWindows 9x/Me ログオンサーバのためには不要である。しかし、
-	Microsoft Windows 98 の最初では、既定値が、平文パスワードサポートが無効化され
+	Windows 9x/Me ログオンサーバでは、パスワード暗号化は不要である。しかし、
+	Microsoft Windows 98 以降、既定値では平文パスワードサポートが無効化され
 	ていることに注意。<link linkend="PolicyMgmt">システムとアカウントポリシー</link>
 	で記述されているレジストリの変更で再度有効に出来る。
 	</para></listitem>
@@ -1239,16 +1239,15 @@ PDCとWindows 9x/Me ログオンサーバ設定の主要な違いは以下の通
 
 <para>
 <indexterm><primary>ネットワークログオンサービス</primary></indexterm>
-Samba PDCは Windows 9x/Meログオンサーバとして振る舞う。その後、
-Windows 9x/Meが見つけることを期待するネットワークログオンサービスを提供
-する。
+Samba PDCは Windows 9x/Meログオンサーバとしてどうさする。すなわち、
+Windows 9x/Meが期待するネットワークログオンサービスを提供するということである。
 </para>
 
 <note><para>
 <indexterm><primary>sniffer</primary></indexterm>
-平文パスワードの使用は思いとどまることを強く推奨する。それを使うと、
-ネットワークトラフィックを解析するネットワークも似たツールを使うことで、
-容易に検出できる。
+平文パスワードの使用は避けることを強く推奨する。それを使うと、
+ネットワークトラフィックを解析するネットワークようなツールを使うことで、
+容易にパスワードを検出できてしまうからである。
 </para></note>
 
 </sect3>
