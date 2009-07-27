@@ -731,47 +731,47 @@ NT4スタイルとしてSamba-3を設定するために必要な手順である:
 
 <itemizedlist>
 	<listitem><para>基本的なTCP/IPとMicrosoft Windows ネットワークの設定。</para></listitem>
-	<listitem><para>サーバの役割の指定を修正(<smbconfoption name="security">user</smbconfoption>)。</para></listitem>
-	<listitem><para>矛盾のない名前解決の設定。<footnote><para><link linkend="NetworkBrowsing">ネットワークブラウジングNetwork Browsing</link>と 
+	<listitem><para>正しいサーバの役割の指定(<smbconfoption name="security">user</smbconfoption>)。</para></listitem>
+	<listitem><para>一貫性のある名前解決の設定。<footnote><para><link linkend="NetworkBrowsing">ネットワークブラウジングNetwork Browsing</link>と 
 		<link linkend="integrate-ms-networks">Microsoft Windows ネットワークとSambaの統合</link>を参照。</para></footnote></para></listitem>
 	<listitem><para>Windows NT4/200x/XP Professionalクライアントのためのドメインログオン。</para></listitem>
-	<listitem><para>移動プロファイルの設定か、明示的な、ローカルプロファイル強制使用の設定。</para></listitem>
+	<listitem><para>移動プロファイルの設定か、明示的にローカルプロファイルを強制使用する設定。</para></listitem>
 	<listitem><para>network/systemポリシーの設定。</para></listitem>
 	<listitem><para>ドメインユーザアカウントの追加と管理。</para></listitem>
 	<listitem><para>Microsoft Windows NT4/2000 ProfessionalとWindows XP Professionalクライアントマシンがドメインメンバになるような設定。</para></listitem>
 </itemizedlist>
 
 <para>
-以下の準備はMicrosoft 9x/Meクライアントに提供するために必要である:
+以下の準備はMicrosoft 9x/Meクライアントに機能を提供するために必要な手順である:
 </para>
 
 <itemizedlist>
 	<listitem><para>基本的なTCP/IPとMicrosoft Windowsネットワークの設定。</para></listitem>
-	<listitem><para>サーバの役割の指定を修正(<smbconfoption name="security">user</smbconfoption>)。</para></listitem>
+	<listitem><para>正しいサーバの役割の指定(<smbconfoption name="security">user</smbconfoption>)。</para></listitem>
 	<listitem><para>ネットワークログイン設定(Windows 9x/Me/XP Homeは技術的にドメインメンバに
-	なれないため、それらはドメインログオンにおけるセキュリティ面には真に関わらない)。</para></listitem>
+	なれないため、ドメインログオンにおけるセキュリティ面には実際には参加しない)。</para></listitem>
 	<listitem><para>移動プロファイルの設定</para></listitem>
-	<listitem><para>システムポリシーハンドリングの設定。</para></listitem>
+	<listitem><para>システムポリシーの取り扱いの設定。</para></listitem>
 	<listitem><para><quote>Microsoft Windowsネットワーク用のクライアント</quote>ネットワークドライバのインストール
 	とドメインにログオンするための設定。</para></listitem>
-	<listitem><para>Windows 9x/Meクライアントをユーザレベルのセキュリティに設定 &smbmdash; もしもすべての
-	クライアント共有アクセスがドメインユーザ/グループ識別子に従って制御されることを可能にすることが
-	求められるならば。</para></listitem>
+	<listitem><para>もしもすべてのクライアント共有アクセスがドメインユーザ/グループ識別子に従って制御され
+ることが望ましいならば、Windows 9x/Meクライアントをユーザレベルのセキュリティに設定 &smbmdash;。</para></listitem>
 	<listitem><para>ドメインユーザアカウントの追加と管理。</para></listitem>
 </itemizedlist>
 
 <note><para>
 <indexterm><primary>移動プロファイル</primary></indexterm>
 <indexterm><primary>アカウントポリシー</primary></indexterm>
-ローミングプロファイルとシステム/ネットワークプロファイルはこのドキュメントの
+移動プロファイルとシステム/ネットワークポリシーは、高度なネットワーク管理の話題で、
+このドキュメントの
 <link linkend="ProfileMgmt">デスクトッププロファイル管理</link>と
-<link linkend="PolicyMgmt">システムとアカウントポリシー</link>で触れられている
-高度なネットワーク管理項目である。しかしながら、それらはWindows NT ネットワーク
-のコンセプトに関連するほど、特にSamba PDCには必要ではない。
+<link linkend="PolicyMgmt">システムとアカウントポリシー</link>で触れられている。
+しかしながら、それらはWindows NT ネットワーク
+のコンセプトに関連するので、必ずしもSamba PDCに固有の説明ではない。
 </para></note>
 
 <para>
-SMB/CIFSサーバでのドメインコントローラは下記の通り:
+ドメインコントローラはSMB/CIFSサーバであって以下を行う:
 </para>
 
 <itemizedlist>
@@ -781,9 +781,9 @@ SMB/CIFSサーバでのドメインコントローラは下記の通り:
 	<indexterm><primary>UDP</primary></indexterm>
 	<indexterm><primary>DNS</primary></indexterm>
 	<indexterm><primary>active directory</primary></indexterm>
-	それ自身の登録と広告をドメインコントローラとする(UDPブロードキャスト上でのMailslot
-	ブロードキャストによって、UDPユニキャスト上でWINSサーバにか、DNSとActive Directory
-	経由での名前登録の方法によるのと同じようなNetBIOSブロードキャストを通して)。
+	自分自身をドメインコントローラとして登録し、公告する(NetBIOSブロードキャストに
+	加え、UDPブロードキャスト上でのMailslotブロードキャスト、WINSサーバへのUDPユニキャスト、
+	DNSとActive Directory経由での名前登録によって)。
 	</para></listitem>
 
 	<listitem><para>
@@ -806,17 +806,17 @@ SMB/CIFSサーバでのドメインコントローラは下記の通り:
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>ブラウズリスト</primary></indexterm>
 それらを提供するためにSambaを設定することはむしろ容易である。おのおののSamba
-ドメインコントローラは <smbconfoption name="domain logons"/>機能(&smb.conf;
-ファイル中のパラメータの後)とSambaが呼ぶNETLOGONサービスを提供しなければな
+ドメインコントローラは Sambaが<smbconfoption name="domain logons"/>機能(&smb.conf;
+ファイル中のパラメータから取って)と呼ぶNETLOGONサービスを提供しなければな
 らない。さらに、Samba-3ドメイン中の1つのサーバはドメインマスタブラウザとして
 それ自身を公告しなければならない。<footnote><para><link linkend="NetworkBrowsing">
-ネットワークのブラウジング</link>を参照。</para></footnote>これは、与えられた
-ドメインまたはワークグループのためのDMBとして識別されるドメイン固有のNetBIOS名
-をPDCが主張するようにさせる。ブロードキャストで分離されたサブネットの、同じドメイン
-またはワークグループ上の複数のローカルマスタブラウザ(LMB)は完全な広範囲な領域の
-ネットワークのためのブラウズリストの完全なコピーのために問い合わせを行う。
-ブラウザクライアントは次にそれらのLMBに接続し、それらのブロードキャストで分離
-されたサブネットのためのリストの代わりにドメイン全体のブラウズリストを受け取る。
+ネットワークのブラウジング</link>を参照。</para></footnote>これにより、与えられた
+ドメインまたはワークグループにDMB識別されるようなドメイン固有のNetBIOS名
+をPDCが取得することになる。ブロードキャストで分離されたサブネットの、同じドメイン
+またはワークグループ上の複数のローカルマスタブラウザ(LMB)は、WAN全体の
+ブラウズリストの完全なコピーのために問い合わせを行う。
+ブラウザクライアントは次にそれらのLMBに接続し、ブロードキャストで分離
+されたサブネットのためのリストだけではなく、ドメイン全体のブラウズリストを受け取る。
 </para>
 
 </sect2>
@@ -826,9 +826,9 @@ SMB/CIFSサーバでのドメインコントローラは下記の通り:
 <title>ドメイン制御: 設定例</title>
 
 <para>
-Samba PDCを作成するための作業の最初のステップは&smb.conf;中で必要なパラメータの
-理解である。PDCとして振る舞うための&smb.conf;の例は<link linkend="pdc-example">
-PDC用のsmb.confの例</link>にある。
+Samba PDCを作成するための作業の第一歩は&smb.conf;中で必要なパラメータの
+理解である。PDCとして機能するための&smb.conf;の例は以下の<link linkend="pdc-example">
+PDC用のsmb.confの例</link>である。
 </para>
 
 <example id="pdc-example">
