@@ -250,14 +250,14 @@ BDCをインストールすることが好ましい状況が2つある:
 <indexterm><primary>ユーザアカウントデータベース</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>trigger</primary></indexterm>
-真のWindows NT4環境中でのPDCとBDCの相互運用は、ここで言及する価値がある。PDCは
-SAMのマスタコピーを持っている。PDCが持っているローカルネットワーク上に物理的に
-ある間にユーザアカウントデータベースへの変更が管理者によって行われるという
-イベント中で、変更はSAMのマスタコピーのPDCインスタンスで直接行われるだろう。
-別のオフィスでこの更新が行われるというイベントの場合は、変更はローカルBDC
-上の差分ファイルに格納されるだろう。BDCはSAM同期を開始するために、PDCに対して
-トリガを送る。PDCはドメイン中のすべてのBDCに接続し、差分を入手し、それをそれら
-固有のSAMのコピーに適用する。
+真のWindows NT4環境中でのPDCとBDCのやりとりについてここで触れておく。PDCは
+SAMのマスタコピーを持っている。管理者がPDCの持つローカルネットワーク上に物理的に
+存在するユーザアカウントデータベースに変更を加えると、この変更内容は、SAMの
+マスタコピーのPDC上の記録に直接行われる。
+このような情報更新が別のオフィスで行われると、この変更内容はローカルBDC
+上の差分ファイルに格納される。BDCはその後SAM同期を行うプロセスを開始するために、
+PDCに対してトリガを送る。PDCは当該ドメインの全BDCに接続し、全BDCが更新情報を入手し、
+それぞれのSAMのコピーに最新の情報を反映させるようにトリガを出す。 
 </para>
 
 <para>
@@ -265,10 +265,10 @@ SAMのマスタコピーを持っている。PDCが持っているローカル�
 <indexterm><primary>SAM</primary><secondary>差分ファイル</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba-3は真のSAM複製に参加できず、それゆえ、Microsoft Windows NT4で
-試用されている同じプロトコルを正確に使用することが出来ない。1つの
+Samba-3は真のSAM複製に参加できないので、Microsoft Windows NT4で
+使われているのと同じプロトコルを使用することが出来ない。
 Samba-3 BDCはSAM更新差分ファイルを作成できない。BDCが持っている差分
-ファイルからSAMの同期をPDC(NT4またはSamba)間で行う操作はできない。
+ファイルからSAMの同期をとるために、PDC(NT4またはSamba)間とやりとりもしない。
 </para>
 
 <para>
@@ -284,12 +284,11 @@ Samba-3とMicrosoft Windows NT4はそれぞれのタイプのPDCへのBDCとし�
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>ドメインセキュリティ</primary></indexterm>
-BDCはネットワークログオン要求とユーザ認証が出来るところから、
+BDCはネットワークログオン要求とユーザ認証が出来るので、
 <emphasis>読み出し専用</emphasis>のSAMを保持していると言える。
-BDCは、たとえば、PDCへの広域ネットワークがダウンするような場合
-特に、このサービスを提供し続けることができる。BDCはネットワーク
-の完全性と同様のドメインセキュリティの保守の両方でとても重要な
-役割を演じる。
+BDCはこのサービスを提供し続けることができる。特に、PDCへのWANの
+リンクがダウンしている場合などに有効である。BDCは、ドメインの
+セキュリティとネットワークの整合性の維持に大変重要な役割を果たす。
 </para>
 
 <para>
@@ -297,19 +296,19 @@ BDCは、たとえば、PDCへの広域ネットワークがダウンするよ�
 <indexterm><primary>昇格</primary></indexterm>
 <indexterm><primary>降格</primary></indexterm>
 <indexterm><primary>再設定</primary></indexterm>
-NT4 PDCが稼働停止の必要がある状態か、停止している時、NT4 BDC
-の1つはPDCに昇格することが出来る。もしもNT4 PDCが動作中にこの
-ことが発生すると、それは自動的にNT4 BDCに降格する。これは、
-ドメインコントローラの管理において重要な観点である。降格および
-昇格を行う時に使うツールはドメインサーバマネージャである。Samba-3 
-BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とするという
-理由で、この方式で昇格することは出来ないことに注意。&smb.conf;
-ファイルを手動での変更とSambaネットワークサービスに関連したもの
-の再起動で十分である。
+NT4のPDCを稼働停止しなければならない場合や故障した場合、NT4 のBDCの
+一つをPDCに昇格することができる。このようなことを NT4 PDCがオンライン
+中に行うと、NT4 PDCは自動的に NT4 BDCに降格する。これはドメインコントローラ
+の管理の中で特に重要な一面である。昇格および降格を実行するのに使用される
+ツールはドメインサーバーマネジャーである。ここで注意しなければならない
+ことは、Samba-3 の BDCは同様の方法で格上げすることはできないということである。
+これは、そのような Samba の再設定を行うには&smb.conf;ファイルの変更が必要に
+なるからである。作業は、&smb.conf;ファイルの手動での変更と、Sambaネットワーク
+サービスに関連するものの再起動をおこなうだけでよい。
 </para>
 
 <sect3>
-<title>PDC設定例</title>
+<title>PDCの設定例</title>
 
 <para>
 <indexterm><primary>ドメインログオン</primary></indexterm>
@@ -343,12 +342,12 @@ BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とする�
 <indexterm><primary>profile path</primary></indexterm>
 <indexterm><primary>home drive</primary></indexterm>
 <smbconfsection name="[homes]"/>と<smbconfsection name="[netlogon]"/>
-共有のようないくつかのものもプロファイルパス、ユーザのホームドライブや
-その他を設定するために一緒に設定が必要である。これはこの章では
-触れられない。詳細な情報については、<link linkend="samba-pdc">ドメイン制御</link>
+共有などの項目や、プロファイルパス、ユーザのホームドライブや
+その他を設定するための設定も一緒に行う必要がある。それらはこの章では
+触れない。詳細な情報については、<link linkend="samba-pdc">ドメイン制御</link>
 を参照のこと。PDC設定のための特定の推奨パターンは
 <link linkend="samba-pdc">ドメイン制御の章</link>を参照のこと。また別に、
-ローカルとオンライン書店から入手できる<quote>Samba-3 by Example</quote>という
+地域の、あるいはオンライン書店から入手できる<quote>Samba-3 by Example</quote>という
 書籍(<ulink url="http://www.samba.org/samba/docs/Samba3-ByExample">book</ulink>)
 中にOpenLDAPとSambaのネットワーク動作設定例が完全に記述されている。
 </para>
@@ -363,11 +362,11 @@ BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とする�
 <indexterm><primary>LDAP</primary><secondary>マスタ</secondary></indexterm>
 <indexterm><primary>LDAP</primary><secondary>スレーブ</secondary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-マスタとスレーブLDAPサーバ設定時、マスタLDPサーバをPDCで、スレーブLDAPサーバ
-をBDCで使うことは推奨される。スレーブLDAPサーバを使うことは不可欠ではないが、
-サービスの冗長性を提供するために多くの管理者はそのことを望んでいる。もちろん、
-1つまたはそれ以上のBDCは任意のスレーブLDAPサーバを使うことが出来る。繰り返すと、
-ネットワーク全体用に1つのLDAPサーバを使うことは完全に可能である。
+マスタとスレーブLDAPサーバを設定する時、マスタLDPサーバをPDCに、スレーブLDAPサーバ
+をBDCで使うことが推奨される。スレーブLDAPサーバを使うことは不可欠ではないが、
+サービスの冗長性を提供するために多くの管理者はそのことを好んでいる。もちろん、
+1つ以上のBDCがどののスレーブLDAPサーバを使ってもかまわない。また、
+ネットワーク全体で1つのLDAPサーバを使うことも可能である。
 </para>
 
 <para>
@@ -376,13 +375,13 @@ BDCは、Sambaの再設定が&smb.conf;ファイルの変更を必要とする�
 <indexterm><primary>CN</primary></indexterm>
 <indexterm><primary>DN</primary></indexterm>
 <indexterm><primary>RFC2830</primary></indexterm>
-スレーブLDAPサーバサーバを持つマスタLDAPサーバ設定時、このことを
+スレーブLDAPサーバサーバを持つマスタLDAPサーバを設定する時、このことを
 <filename>/etc/openldap/slapd.conf</filename>ファイル中に設定する
-ことを忘れないように。サーバ証明書のDNはサーバの名前のためのCN属性を
-使わなければならず、CNはサーバの完全なドメイン名を伝搬しなければならない
-ことに注意。追加の別名とワイルドカードは、subjectAltName認証拡張(訳注:
-certificate extension)中に存在しても良い。サーバ証明書についてのより詳細
-な情報はRFC2830にある。
+ことを忘れないように。サーバ証明書のDNは、サーバの名づけるためにCN属性を
+使わなければならず、CNはサーバの完全に的確性のあるドメイン名を含んでいなければ
+ならないことに注意。証明書の subjectAltNameエクステンション中に追加の別名や
+ワイルドカードを持っていても構わない。サーバ証明書についてのより詳細
+な情報はRFC2830を参照のこと。
 </para>
 
 <para>
@@ -393,9 +392,9 @@ certificate extension)中に存在しても良い。サーバ証明書につい�
 <indexterm><primary>/etc/ssl/certs/slapd.pem</primary></indexterm>
 <indexterm><primary>slapd.pem</primary></indexterm>
 <indexterm><primary>Red Hat Linux</primary></indexterm>
-この文書の範囲内にはうまく適合しないが、LDAPのインストール作業はLDAPが
-有効になっているSamba操作の基本である。トランスポートレイヤのセキュリティ
-(TLS)とともにOpenLDAPを使うとき、<filename>/etc/ssl/certs/slapd.pem</filename>
+この文書の範囲内にはうまく一致しないが、LDAPをインストールすることは、LDAPを
+有効にしているSamba操作の基本である。トランスポートレイヤのセキュリティ
+(TLS)を有効にしてOpenLDAPを使う場合、<filename>/etc/ssl/certs/slapd.pem</filename>
 中のマシン名は<filename>/etc/openldap/sldap.conf</filename>と同じものである
 必要がある。Red Hat Linuxスタートアップスクリプトはホスト名として、
 <quote>localhost.localdomain</quote>とした<filename>slapd.pem</filename>
@@ -410,14 +409,14 @@ certificate extension)中に存在しても良い。サーバ証明書につい�
 <indexterm><primary>credentials</primary></indexterm>
 <indexterm><primary>複製</primary></indexterm>
 <indexterm><primary>duplicate</primary></indexterm>
-LDAPスレーブサーバを使う形でSamba PDCをインストールしてはいけない。ドメインへの
-クライアントマシンの参加は、LDAPデータベース中へのマシンアカウントの変更がマスタ
-LDAPサーバ上で行わなければならないという理由で、この設定では失敗する。これは
-PDCが問い合わせるスレーブサーバに十分急速に複製されない。そのため、クライアント
-マシン上に、アカウントの証明書がセットアップできないというエラーメッセージが出る。
-LDAPサーバ上でマシンアカウントが作成されるが、パスワードファイルは空である。
-残念なことに、いくつかのサイトはこのような設定を防げず、それらのサイトは、
-レプリケーションに追いつくために、Sambaの処理を十分に遅くするように意図するための、
+LDAPスレーブサーバを使うようにSamba PDCをインストールしてはいけない。ドメインへ
+クライアントマシンを参加する時、LDAPデータベース中へのマシンアカウントの変更がマスタ
+LDAPサーバ上で行わなければならないという理由で、この設定ではうまくいかない。
+PDCが出した問い合わせがスレーブサーバに複製されるまで時間がかかりすぎる。そのため、
+クライアントマシン上で、アカウントの証明書がセットアップできないというエラー
+メッセージが出る。LDAPサーバ上でマシンアカウントが作成されるが、パスワード欄は空となる。
+残念なことに、いくつかのサイトはこのような設定を防げず、そのため、それらのサイトでは、
+複製に追いつくために、Sambaの処理を十分に遅くするための、
 <smbconfoption name="ldap replication sleep"/>パラメータを検討すべきである。
 これは、その場しのぎの解決方法であり、管理者が何らかのスクリプト(たとえば、
 <smbconfoption name="add machine script"/>のようなもの)を使って手動で複製
@@ -436,21 +435,21 @@ PDC/BDCとLDAPを使う、設定可能なパターンは以下の通り:
 	PDC -> LDAP マスタサーバ、 BDC -> LDAPスレーブサーバ。
 	</para></listitem>
 	<listitem><para>
-	PDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
+	PDC -> LDAPマスタ、第二のスレーブLDAPサーバあり。
 	</para><para>
-	BDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
+	BDC -> LDAPマスタ、第二のスレーブLDAPサーバあり。
 	</para></listitem>
 	<listitem><para>
-	PDC -> 第二のスレーブLDAPサーバを使うLDAPマスタ。
+	PDC -> マスタ、第二のスレーブLDAPサーバあり。
 	</para><para>
-	BDC -> 第二のマスタLDAPサーバを使うLDAPスレーブサーバ。
+	BDC -> スレーブ、第二のスレーブサーバあり。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-(セカンダリ)LDAPサーバサーバの次候補の設定を行うために、
+(セカンダリ)LDAPサーバサーバを持つためには、
 <link linkend="mulitldapcfg">&smb.conf;に記述する複数LDAPサーバの例</link>
-を指定する。
+のように指定する。
 </para>
 
 <example id="mulitldapcfg">
