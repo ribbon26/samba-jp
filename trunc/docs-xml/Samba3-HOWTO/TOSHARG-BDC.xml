@@ -471,41 +471,40 @@ PDC/BDCとLDAPを使う、設定可能なパターンは以下の通り:
 <indexterm><primary>replicated</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>ドメインコントローラ</primary></indexterm>
-Microsoft Windows 2000とActive Directoryのリリース時点で、この情報は
-複製が出来、部分的あるいは全体の管理者による管理が伝搬できるディレクトリ
+Microsoft Windows 2000とActive Directoryのリリース以降、この情報は
+複製可能で、管理コントロールの部分的あるいは全体を複製できるディレクトリ
 中に格納される。Samba-3はActive Directory内でドメインコントローラ
-にはなれず、また、Active Directoryサーバにもなれない。これは、Samba-3
-はActive DirectoryドメインコントローラのBDCとして振る舞えないことも
-意味する。
+にはなれず、また、Active Directoryサーバにもなれない。このことは、Samba-3
+はActive DirectoryドメインコントローラのBDCとなりえないことを意味する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>何がネットワーク上でドメインコントローラを制限するか?</title>
+<title>ネットワーク上のドメインコントローラになれる要件</title>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-ドメインMIDEARTH用のドメインコントローラであるおのおののマシンは、
+ドメインMIDEARTH用のドメインコントローラであるすべてのマシンは、
 WINSサーバかローカルネットワークに対するブロードキャストを使って
 NetBIOSグループ名MIDEARTH&lt;1C&gt;を登録しなければならない。
-PDCもWINSサーバを使って一意のNetBIOS名MIDEARTH&lt;1B&gt;を登録する。
-名前タイプ&lt;1B&gt;名は通常認証に関連する何らの作業もしない、
-ドメインマスタブラウザ(DMB)のために通常予約されるが、Microsoft
-ドメインの実装はDMBに対してPDCと同じマシンであることを要求する。
+またPDCはWINSサーバで一意のNetBIOS名MIDEARTH&lt;1B&gt;を登録する。
+名前タイプ&lt;1B&gt;はドメインマスタブラウザ(DMB)のために通常予約ていて、
+認証には通常何ら関係ないが、Microsoft
+ドメインの導入時はDMBがPDCと同じマシンであることが用件となる。
 </para>
 
 <para>
 <indexterm><primary>ブロードキャスト</primary></indexterm>
 <indexterm><primary>名前登録</primary></indexterm>
 <indexterm><primary>SMB/CIFS</primary></indexterm>
-WINSサーバを使っていないとき、ブロードキャスト名前登録はそれだけで
-十分になっていなければならない。<link linkend="NetworkBrowsing">ネットワークブラウジング</link>
+WINSサーバを使っていないとき、名前登録はブロードキャストするだけで
+十分なはずである。<link linkend="NetworkBrowsing">ネットワークブラウジング</link>
 と<link linkend="netdiscuss">Discussion</link>に、TCP/IPネットワーク
-プロトコル関連と、どのようにSMB/CIFS名前が扱うかについてのより詳細な
+プロトコル関連と、どのようにSMB/CIFS名を取り扱うかについてのより詳細な
 情報があるので参照すること。
 </para>
 
@@ -517,9 +516,9 @@ WINSサーバを使っていないとき、ブロードキャスト名前登録�
 <para>
 <indexterm><primary>ドメインコントローラへの位置づけ</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-ドメインコントローラの位置を見つけるのには2つのメカニズムがある:1つは
+ドメインコントローラを見つけるメカニズムは2つある:1つは
 NetBIOS over TCP/IPが有効なときに使われ、もう1つはTCP/IPネットワーク設定
-で無効になっているときである。
+で無効になっているときに使われるものである。
 </para>
 
 <para>
@@ -527,9 +526,9 @@ NetBIOS over TCP/IPが有効なときに使われ、もう1つはTCP/IPネット
 <indexterm><primary>broadcast messaging</primary></indexterm>
 NetBIOS over TCP/IPが無効になっているとき、すべての名前解決は、
 Active Directory通信技術のような、DNS、UDP上のブロードキャストを使う。
-このタイプの環境では、すべてのマシンは適切なDNSエントリを必要とする。
+このタイプの環境では、すべてのマシンが適切なDNSエントリを持つことが必要である。
 より詳細な情報は<link linkend="adsdnstech">DNSとActive Directory</link>
-にある。
+を参照のこと。
 </para>
 
 <sect3>
@@ -540,11 +539,11 @@ Active Directory通信技術のような、DNS、UDP上のブロードキャス�
 <indexterm><primary>ログオン要求</primary></indexterm>
 <indexterm><primary>credentials validation</primary></indexterm>
 
-ローカルユーザを認証させたいドメインMIDEARTH内の
-Microsoft Windows NT4/200x/XP Professionalワークステーションは、
+ドメインMIDEARTH内のMicrosoft Windows NT4/200x/XP Professional
+ワークステーションがローカルユーザを認証させたい場合、
 MIDEARTHのドメインコントローラを見つける必要がある。これは、グループ名
 MIDEARTH&lt;1C&gt;に対するNetBIOS名前解決を行うことによって行われる。
-問い合わせから結果をもどす、おのおののマシンはドメインコントローラで
+ワークステーションは、問い合わせに返事を返すマシンの1つ1つがドメインコントローラで
 あり、ログイン要求に答えることが出来ることを仮定している。セキュリティ
 ホールを造らないために、ワークステーションと選択されたドメインコントローラ
 はおのおのを認証する。その後、ワークステーションはユーザの認証情報(
@@ -562,12 +561,13 @@ MIDEARTH&lt;1C&gt;に対するNetBIOS名前解決を行うことによって行�
 <indexterm><primary>ログオン認証</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>_ldap._tcp.pdc._msdcs.quenya.org</primary></indexterm>
-ユーザログオン認証に影響を与えることを必要とする realm <constant>quenya.org</constant>
-中のMicrosoft Windows NT4/200x/XP Professional workstationは
-<constant>_ldap._tcp.pdc._msdcs.quenya.org</constant>レコードをDNS
-サーバに対して再度問い合わせすることでドメインコントローラの位置を
-見つける。この項目に対する関連したより詳細な情報は、
-<link linkend="adsdnstech">DNSとActive Directory</link>にある。
+realm <constant>quenya.org</constant>中の
+Microsoft Windows NT4/200x/XP Professional workstationが
+ユーザログオン認証をしたい場合、DNSサーバに対して
+<constant>_ldap._tcp.pdc._msdcs.quenya.org</constant>レコードを
+再度問い合わせすることでドメインコントローラ見つける。
+この項目に対する関連したより詳細な情報は、
+<link linkend="adsdnstech">DNSとActive Directory</link>を参照のこと。
 </para>
 
 </sect3>
@@ -593,11 +593,11 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>ドメインSID</primary></indexterm>
 	ドメインSIDはPDCとBDCで同じにしなければならない。バージョン2.2.5
 	以前のSambaでは、ドメインSIDは<filename>private/MACHINE.SID</filename>
-	ファイルに格納されていた。バージョン2.2.5以降すべてのバージョンの
-	Sambaでは、ドメインSIDは<filename>private/secrets.tdb</filename>ファイルに
-	格納されている。このファイルはおのおののサーバで固有であり、PDCからBDCに
+	ファイルに格納されていた。Sambaバージョン2.2.5以降すべてのバージョンでは、
+	ドメインSIDは<filename>private/secrets.tdb</filename>ファイルに
+	格納されている。このファイルは各サーバで固有であり、PDCからBDCに
 	コピーできない。BDCは新しいSIDを起動時に生成する。新しく生成したBDCのSID
-	でPDCのドメインSIDを上書きする。これは、BDCにドメインSIDを入手することを
+	はPDCのドメインSIDを上書きする。これは、BDCにドメインSIDを入手することを
 	認める手続きである。これについては以下で説明する。
 	</para>
 
@@ -607,7 +607,7 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>BDC</primary></indexterm>
 	<indexterm><primary>secrets.tdb</primary></indexterm>
 	<indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>getsid</tertiary></indexterm>
-	PDCまたは存在するBDCからドメインSIDを検索するためと、それを
+	PDCまたは既存のBDCからドメインSIDを検索するためと、検索した値を
 	<filename>secrets.tdb</filename>に格納するためには、以下を実行する:
 	</para>
 <screen>
@@ -620,9 +620,9 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>smbpasswd</primary></indexterm>
 	<indexterm><primary>LDAP管理用パスワード</primary></indexterm>
 	<smbconfoption name="ldap admin dn"/>の指定は必須である。
-	これは、<command>smbpasswd -w <replaceable>mysecret</replaceable></command>
+	また、<command>smbpasswd -w <replaceable>mysecret</replaceable></command>
 	を使って、<filename>secrets.tdb</filename>中にLDAP管理用パスワードを
-	設定することも要求する。
+	設定しなければならない。
 	</para></listitem>
 
 	<listitem><para>
@@ -635,12 +635,12 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>ユーザデータベース</primary></indexterm>
 	<indexterm><primary>同期</primary></indexterm>
 	<indexterm><primary>NIS</primary></indexterm>
-	UNIXユーティリティ差データベースはPDCからBDCにむけて同期しなければ
-	ならない。これは、<filename>/etc/passwd</filename>と
+	UNIXユーザデータベースはPDCからBDCへ同期しなければならない。
+	これは、<filename>/etc/passwd</filename>と
 	<filename>/etc/group</filename>の両方がPDCからBDCに複製されなければ
-	ならないことを意味している。これは変更が行われたたびごとに手動で
+	ならないことを意味している。これは変更が発生した時点で、手動で
 	行うことが出来る。別のやり方として、PDCをNISマスタサーバとして設定し、
-	BDCをNISスレーブサーバとして設定するBDCをNISクライアントとして設定
+	BDCをNISスレーブサーバとして設定する。BDCをNISクライアントとして設定
 	するのでは、PDCが止まっているときにそのユーザデータベースにアクセス
 	出来ないので不十分である。NISはパスワード同期の唯一の手法というわけ
 	ではない。LDAPを使う解も同様に動作する。
@@ -658,12 +658,12 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>LDAP</primary></indexterm>
 	SambaパスワードデータベースはPDCからBDCに向けて複製されねばならない。
 	<command>rsync</command>と<command>ssh</command>で<filename>smbpasswd</filename>
-	ファイルの同期を取るのが可能であるにもかかわらず、この方法は破綻していて
-	欠陥があり、それゆえ推奨できない。よりよい解決方法は、おのおののBDC
-	に対してスレーブLDAPサーバを、PDCにマスタLDAPサーバを構築することである。
-	rsyncの使用は、一定間隔毎にデータが複製されるということにより、本質的に
-	欠陥がある。すべての瞬間に、正しい現在のマシンとユーザアカウント情報で
-	BDCが操作できるという保証がない。これは、この方法が、首尾一貫しない
+	ファイルの同期を取るのが可能であるが、この方法は破綻していて
+	欠陥があるので推奨できない。よりよい解決方法は、各BDCに対してスレーブ
+	LDAPサーバを、PDCにマスタLDAPサーバを設定することである。
+	rsyncを使う方法は、一定間隔毎にデータが複製されるという理由で、本質的に
+	欠陥がある。すべての瞬間に、現在のマシンとユーザアカウントの正しい情報で
+	BDCが操作できるという保証がない。このため、この方法では、首尾一貫しない
 	セキュリティデータのために不連続なネットワークサービスへのアクセスによって
 	ユーザに不都合が生じる危険性がある。Windows ワークステーションが通常の
 	間隔でマシン信頼アカウントパスワードを更新(変更)することを心にとめて
@@ -675,10 +675,10 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>LDAP</primary></indexterm>
 	<indexterm><primary>SambaSAMAccount</primary></indexterm>
 	<indexterm><primary>同期</primary></indexterm>
-	POSIX(UNIXユーザとグループ)アカウント用とSambaSAMAccountデータ用の両方に
-	LDAPを使うことは、すべてのアカウント変更情報が共有ディレクトリに書かれること
-	を自動的に保証する。これは、LDAPがその要求に適合するために、アカウント情報の
-	同期のための任意の特別な動作の必要性をこのことは排除する。
+	POSIX(UNIXユーザとグループ)アカウントとSambaSAMAccountデータ両方のために
+	LDAPを使うと、すべてのアカウント変更情報が共有ディレクトリに書かれること
+	を自動的に保証する。これは、LDAPがその要求に適合するため、アカウント情報の
+	同期のための、何らかの特別な動作が必要ないことを意味する。
 	</para></listitem>
 
 	<listitem><para>
@@ -689,8 +689,8 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	<indexterm><primary>cron</primary></indexterm>
 	<indexterm><primary>rsync</primary></indexterm>
 	netlogon共有はPDCからBDCに向けて複製されねばならない。これは、ログインスクリプト
-	が変更されるたびごとに手動で行うことが出来るか、<command>rsync</command>のような
-	ツールを使うことでこの共有中のディレクトリ構造を複製する、<command>cron</command>
+	が変更されるたびごとに手動で行うことができ、また、<command>rsync</command>のような
+	ツールを使うことで、この共有中のディレクトリ構造を複製する、<command>cron</command>
 	ジョブを使うことで自動的に行える。netlogonデータの複製のために、
 	<command>rsync</command>を使うことは、ネットワークセキュリティに対して特段重要
 	というわけではなく、意識的な移動の一部としてnetlogon共有へのすべての変更を行う
@@ -703,14 +703,14 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 <title>設定例</title>
 
 <para>
-最後に、BDCはワークステーションによって見つけられるようになっていなければならない。
-これは、<link linkend="minim-bdc">BDCであるための最低限の設定</link>中にある
-Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクションで設定
-されることで行える。
+最後に、ワークステーションがBDCを見つけなければならない。
+これは、Sambaを<link linkend="minim-bdc">BDCになるための最低限の設定</link>中にある
+Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクションのように設定
+することで行える。
 </para>
 
 <example id="minim-bdc">
-<title>BDCであるための最低限の設定</title>
+<title>BDCになるための最低限の設定</title>
 <smbconfblock>
 <smbconfoption name="workgroup">&example.workgroup;</smbconfoption>
 <smbconfoption name="passdb backend">ldapsam:ldap://slave-ldap.quenya.org</smbconfoption>
