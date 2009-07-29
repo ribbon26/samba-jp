@@ -691,10 +691,10 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバを準備す�
 	netlogon共有はPDCからBDCに向けて複製されねばならない。これは、ログインスクリプト
 	が変更されるたびごとに手動で行うことができ、また、<command>rsync</command>のような
 	ツールを使うことで、この共有中のディレクトリ構造を複製する、<command>cron</command>
-	ジョブを使うことで自動的に行える。netlogonデータの複製のために、
-	<command>rsync</command>を使うことは、ネットワークセキュリティに対して特段重要
-	というわけではなく、意識的な移動の一部としてnetlogon共有へのすべての変更を行う
-	管理者によって与えられたものについて手動で管理できる(訳注:意味取りにくい)。
+	ジョブを使うことで自動的に行える。netlogon共有内のファイルの複製に
+	<command>rsync</command>を使うことは、ネットワークセキュリティに対して特段
+	問題になることはない。管理者が netlogon 共有に対するすべての変更を明示的に
+	行ないたいと考えている場合は、手作業で管理するために用いることも可能である。
 	</para></listitem>
 
 </itemizedlist>
@@ -729,10 +729,10 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 </example>
 
 <para>
-完全な、OpenLDAPとSambaを使うネットワーク設定の例の説明は、ローカルとオンライン
-書店で見つけられる、<quote>Samba-3 by Example</quote>という
+完全な、OpenLDAPとSambaを使うネットワーク設定の例の説明は、近所又はオンライン
+書店で買える、<quote>Samba-3 by Example</quote>という
 <ulink url="http://www.samba.org/samba/docs/Samba3-ByExample">本</ulink>
-にある。
+を参照のこと。
 </para>
 
 <para>
@@ -740,12 +740,13 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 <indexterm><primary>NetBIOS</primary></indexterm>
 <indexterm><primary>group</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-この設定はWINSサーバを使ってMIDEARTH&lt;1C&gt;という名前のみをBDCに
-登録させる。これは、MIDEARTH&lt;1C&gt;というNetBIOSグループ名が、1つ
-以上のマシンから登録されるという意味において、問題ではない。パラメータ
+この設定はWINSサーバに、MIDEARTH&lt;1C&gt;という名前のみをBDCによって
+登録させる。これは、MIDEARTH&lt;1C&gt;というNetBIOSグループ名が、
+複数のマシンが登録に使用することを意図した NetBIOS グループ名であることを
+考えれば問題ではない。パラメータ
 <smbconfoption name="domain master">no</smbconfoption>は、PDCのために
-予約されている固有のNetBIOS名であるMIDEARTH&lt;1B&gt;をBDCが登録させ
-ないようにする。
+予約されている固有のNetBIOS名であるMIDEARTH&lt;1B&gt;をBDCが登録時に
+使用させないことを確保する。
 </para>
 
 <para>
@@ -753,16 +754,18 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>redirect</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>LDAP database</primary></indexterm>
+<indexterm><primary>LDAPデータベース</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>nss_ldap</primary></indexterm>
-<parameter>idmap backend</parameter>パラメータは、共有されるリポジトリ
-中のUNIXアカウントのためのWindows SIDからUIDとGIDへのすべてのマッピング
-を格納するためのLDAPサーバデータベースを使うための<command>winbindd</command>
-ユーティリティにリダイレクトする。BDCは<command>nss_ldap</command>ユーティリティ
-とNSS経由の、ローカルでのUIDとGIDの解決にも依存する。
+<parameter>idmap backend</parameter>パラメータが、
+<command>winbindd</command>ユーティリティをリダイレクトして、共有される
+リポジトリ内にある、
+UNIXアカウントに関するすべての、Windows SIDからUIDとGIDへの解決のために
+LDAPサーバデータベースを使用させる。
+BDCは<command>nss_ldap</command>ユーティリティとNSS経由の、ローカルでのUIDとGIDの
+解決にも依存する。
 </para>
 
 <note><para>
@@ -771,10 +774,10 @@ Samba &smb.conf;ファイルの<smbconfsection name="[global]"/>セクション�
 <indexterm><primary>ドメインメンバサーバ</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
 Samba-3は新しいIDマッピング機能を導入した。その機能の特徴の1つは、
-NTドメインのユーザとグループSIDに関してユーザとグループIDが扱われる
-より柔軟さを提供することである。新しい機能の1つは、UNIX/Linuxの
+NTドメインのユーザとグループSIDに関してユーザとグループIDを取り扱うやり方に、
+より高い柔軟性を備えているということである。新しい機能の1つは、UNIX/Linuxの
 UIDとGIDの値が、PDC、すべてのBDCとすべてのドメインメンバサーバ上で
-一貫していることを明確に保証することを提供することである。これを制御
+一貫していることを明確に確保する。これを制御
 するパラメータは、<parameter>idmap backend</parameter>である。その動作
 に関連する詳細な情報は、&smb.conf;マニュアルページを参照してほしい。
 </para></note>
@@ -783,25 +786,25 @@ UIDとGIDの値が、PDC、すべてのBDCとすべてのドメインメンバ�
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>ドメインメンバサーバ</primary></indexterm>
-BDC上での<smbconfoption name="idmap backend">ldap:ldap://master.quenya.org</smbconfoption>
-オプションの使用は、PDC上でldapsamが使われている時にのみ意味をなす。
-LDAPベースのバックエンドの目的は、ドメインメンバ(固有のpassdbバックエンドがない)
-にWindowsネットワークユーザとグループを共通のUID/GIDに解決するためのwinbind
-を使うことも許可する。別の言い方をすると、このオプションは一般的に、
-BDCとドメインメンバサーバ上で使うために意図されている。
+BDC上のみで<smbconfoption name="idmap backend">ldap:ldap://master.quenya.org</smbconfoption>
+オプションを使用することは、PDC上でldapsamが使われている時に意味をなす。
+LDAPベースのバックエンドのもう1つの目的は、(固有のpassdbバックエンドを持たない)ドメインメンバ
+がWindowsネットワークユーザとグループを共通のUID/GIDに割り当てるためにwinbindd
+を使えるようにすることである。別の言い方をすると、一般的にこのオプションは、
+BDCとドメインメンバサーバ上で使うことを意図している。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>共通のエラー</title>
+<title>よくあるエラー</title>
 
 <para>
 <indexterm><primary>ドメイン制御</primary></indexterm>
-ドメイン制御はSambaの新しい領域であるが、参照できるたくさんの例がある。
-更新された情報は、それが有効になったときで、新しいSambaのリリースがあった
-時か、Samba Web<ulink url="http://samba.org">site</ulink>で公開される。
+ドメイン制御はSambaの新しい領域であるが、現在では参照可能なたくさんの事例がある。
+更新情報は、それが有効になった時点で、Sambaの新規リリース情報か、
+Samba Web<ulink url="http://samba.org">site</ulink>で公開される。
 Sambaリリースパッケージの<filename>WHATSNEW.txt</filename>を特に参照すること。
 <quote>Samba-3 by Example</quote>という本には、よくテストされ、検証された
 例が記述されている。これをSamba Webサイト上の
