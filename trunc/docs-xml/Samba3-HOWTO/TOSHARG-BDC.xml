@@ -820,26 +820,26 @@ Sambaリリースパッケージの<filename>WHATSNEW.txt</filename>を特に参
 <indexterm><primary>passdb</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>ローカルマシン信頼アカウント</primary></indexterm>
-この問題は、passdb(SAM)ファイルが中央のサーバからコピーされたがローカルのBDC
-がPDCとして振る舞う時に起こる。これはローカルマシン信頼アカウントパスワードを
-ローカルSAMに更新することを適用することで解決する。そのような更新は中央の
-サーバにコピーは戻されない新しいマシンアカウントパスワードは次に、PDCから
-SAMが再度コピーされたときに上書きされる。結果は起動時のドメインメンバマシン
-が、データベース中でそのパスワードがそれと一致しないことを見つけ、開始時の
-セキュリティチェックが失敗し、このマシンはログオン要求を出すことが出来ず、
-アカウント満了エラーが出る(訳注:この辺不安)。
+この問題は、passdb(SAM)ファイルが中央のサーバからコピーしていて、しかもローカルのBDC
+がPDCとして動作する時に発生する。これはローカルマシン信頼アカウントのパスワードを
+ローカルSAMへ更新を実行することで解決する。そのような更新は中央の
+サーバにコピーは戻されない。新しいマシンアカウントのパスワードは、PDCからの
+SAMが再度コピーされたときに上書きされてしまう。その結果、起動時のドメインメンバ
+であるマシンの起動時に、そのパスワードがデータベース中と一致しないことになり、起動時の
+セキュリティチェックに失敗するため、このマシンはログオン要求が許可されず、
+アカウント満了エラーが出ることになる。
 </para>
 
 <para>
-解決策は、ldapsamバックエンドのようなより堅牢なpassdbバックエンドを使うことで、
-すなわち、おのおののBDCにスレーブLDAPサーバを立て、PDCにマスタLDAPサーバを
+解決策は、ldapsamバックエンドのようなより堅牢なpassdbバックエンドを使うことである。
+すなわち、各BDCにスレーブLDAPサーバを立て、PDCにマスタLDAPサーバを
 立てることである。
 </para>
 
 </sect2>
 
 <sect2>
-<title>NT4 PDCのバックアップドメインコントローラにSambaはなれるか?</title>
+<title>SambaはNT4 PDCのバックアップドメインコントローラになれるか?</title>
 
 <para>
 <indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
@@ -851,43 +851,43 @@ SAMが再度コピーされたときに上書きされる。結果は起動時�
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>ログオン要求</primary></indexterm>
-SambaでBDCを使う利点はあるか?もちろん。しかし、それはSamba PDCに対して
-のみである。BDCの実装は可用性の点のみである。もしもPDCがSambaだった
-場合、2番目のSambaマシンはPDCがダウンしているときはいつでもログオン要求
+SambaでBDCを使う利点はあるかと言われればもちろんある。しかし、それはSamba PDCに対して
+のみである。BDCを使う理由は可用性という点である。もしもPDCがSambaだった
+場合、2番目のSambaマシンは、PDCがダウンしている時にログオン要求
 をサービスするように設定できる。
 </para>
 
 </sect2>
 
 <sect2>
-<title>smbpasswdファイルの複製をどのようにやったらよいか?</title>
+<title>smbpasswdファイルの複製はどうやるか?</title>
 
 <para>
 <indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-smbpasswdファイルの複製はデリケートである。SAMが変更されたときはいつでも
-行わなければならない。おのおののユーザのパスワードの変更はsmbpasswd
-ファイル中で行われてBDCに複製されねばならない。そのため、smbpasswdファイル
-の複製は非常にしばしば必要となる。
+smbpasswdファイルの複製は注意が必要である。SAMが変更されたときは必ず
+行わなければならない。各ユーザのパスワードの変更はsmbpasswd
+ファイル中で行われるので、必ずBDCに複製されねばならない。そのため、smbpasswdファイル
+の複製は非常に頻繁に必要となる。
 </para>
 
 <para>
 <indexterm><primary>平文のパスワード</primary></indexterm>
 <indexterm><primary>ssh</primary></indexterm>
 <indexterm><primary>rsync</primary></indexterm>
-smbpasswdファイルには平文パスワード相当のものが含まれているので、ネットワーク
-上で暗号化しないで送ってはならない。PDCからBDCへのsmbpasswd複製方法の最も良い
-設定は、rsyncを使うことである。rsyncは伝送路としてsshを使える。
-<command>ssh</command>それ自身は、パスワードの入力をユーザに
-<emphasis>要求しない</emphasis><command>rsync</command>転送を設定できる。
+smbpasswdファイルには平文パスワードと同等のものが含まれているので、ネットワーク
+上で暗号化しないで送ってはならない。PDCからBDCへ、smbpasswdを複製する最もよい方法
+は、rsyncを使うことである。rsyncは伝送路としてsshを使える。
+<command>ssh</command>は、ユーザがパスワードを入力
+<emphasis>しなくても</emphasis><command>rsync</command>での転送ができるように設定できる。
 </para>
 
 <para>
 <indexterm><primary>マシン信頼アカウント</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
 少し前に説明したが、この方法を使うことは欠陥があるため危険である。マシン信頼
-アカウントは同期から外れ、結果としてドメインが破壊される。この方法は
+アカウントの同期が外れると、結果としてドメインが破壊される。この方法は
 <emphasis>推奨されない</emphasis>。その代わりにLDAPを使うこと。
 </para>
 
@@ -899,8 +899,8 @@ smbpasswdファイルには平文パスワード相当のものが含まれて�
 <para>
 <indexterm><primary>pdb_ldap</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-簡単な答えはyesである。Sambaのpdb_ldapコードはレプリカLDAPサーバに対する
-バインドサポートと、データベースに対する変更が必要ならば、referralの
+一言で言うと可能である。Sambaのpdb_ldapコードはレプリカLDAPサーバに対する
+バインドをサポートし、データベースに対する変更の必要時には、referralの
 追跡と再バインドを行う(通常BDCはリードオンリで、そのためこれは滅多に
 起こらない)。
 </para>
