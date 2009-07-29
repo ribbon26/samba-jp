@@ -236,7 +236,7 @@ Samba PDCはマシン信頼アカウントを以下のように2つの部分に�
 	<indexterm><primary>マシン信頼アカウント</primary></indexterm>
 	<indexterm><primary>参加済みのクライアント</primary></indexterm>
 	
-	<quote>その場での</quote>作成。Sambaマシン信頼アカウントは、
+	<quote>その場での(on the fly)</quote>作成。Sambaマシン信頼アカウントは、
 	クライアントがドメインに参加したときに、Sambaによって自動的に作成
 	される(セキュリティ上、この方法が推奨される)。対応するUNIX
 	アカウントは自動でも、手動ででも作成できる。
@@ -276,7 +276,7 @@ Microsoft Windows NT4/200x/XP ProfessionalもSambaもマシン信頼アカウン
 <indexterm><primary>プライマリグループ</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>マシンアカウント</primary></indexterm>
-上記の例の中では、全マシンアカウントのプライマリグループとして使われる
+上記の例では、全マシンアカウントのプライマリグループとして使われる
 <quote>machines</quote>という、既存のシステムグループがある。以下の例では、
 <quote>machines</quote>グループのGIDは100である。
 </para>
@@ -314,17 +314,18 @@ doppy$:x:505:100:<replaceable>machine_nickname</replaceable>:/dev/null:/bin/fals
 上記の例では、<replaceable>machine_nickname</replaceable>はクライアントに対する
 任意の名前を記述する(たとえばBasementComputer)。
 <replaceable>machine_name</replaceable>はドメインに参加するときの
-クライアントのNetBIOS名でなければならない。<quote>$</quote>は
-クライアントのNetBIOS名に必ず付加しなければならず、そうしないと、
-Sambaはこれがマシン信頼アカウントと認識できない。
+クライアントのNetBIOS名でなければならない。<quote>$</quote>を
+クライアントのNetBIOS名に必ず付加しなければならず、これがないと、
+Sambaはこれをマシン信頼アカウントと認識できない。
 </para>
 
 <para>
 <indexterm><primary>UNIXアカウント</primary></indexterm>
 <indexterm><primary>Sambaアカウント</primary></indexterm>
 <indexterm><primary>マシン信頼アカウント</primary><secondary>パスワード</secondary></indexterm>
-対応するUNIXアカウントが作成されたなら、次の手順はよく知られた初期マシン信頼
-アカウントパスワードを持つクライアント用のSambaアカウントを作成することである。
+対応するUNIXアカウントが作成されると、次の手順は初期マシン信頼
+アカウントの、よく知られたパスワードを持つクライアント用のSamba
+アカウントを作成することである。
 これは以下に示すような<command>smbpasswd</command>を使用する:
 <screen>
 &rootprompt;<userinput>smbpasswd -a -m <replaceable>machine_name</replaceable></userinput>
@@ -350,7 +351,7 @@ Sambaはこれがマシン信頼アカウントと認識できない。
 <indexterm><primary>パスワードの変更</primary></indexterm>
 <indexterm><primary>NetBIOS名</primary></indexterm>
 この方法でマシン信頼アカウントを手動作成することは、 Windows NT PDC で
-<indexterm><primary>サーバマネージャ</primary></indexterm>
+<indexterm><primary>サーバマネージャ</primary></indexterm>により
 <application>サーバマネージャ</application>によりマシン信頼アカウントを
 作成するのと同等である。アカウントが作成されてからクライアントがドメイン
 に参加してパスワードを変更するまでの間、同じ NetBIOS 名を持つマシンで
