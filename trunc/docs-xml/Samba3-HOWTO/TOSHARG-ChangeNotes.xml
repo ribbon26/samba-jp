@@ -203,56 +203,53 @@ POSIX(UNIX)グループがLDAP内に格納される場合、それぞれ
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SQL</primary></indexterm>
 <indexterm><primary>XML</primary></indexterm>
-<smbconfoption name="passdb backend"/>パラメータは
-
-The <smbconfoption name="passdb backend"/> parameter no long accepts multiple passdb backends in a
-chained configuration.  Also be aware that the SQL and XML based passdb modules have been
-removed in the Samba-3.0.23 release.  More information regarding external support for a SQL
-passdb module can be found on the  <ulink url="http://pdbsql.sourceforge.net/">pdbsql</ulink> web site.
+もはや<smbconfoption name="passdb backend"/>パラメータは、複数のpassdbバックエンドを
+連続して設定できない。SQLとXML passdbバックエンドもSamba-3.0.23のリリースから取り除
+かれた。外部のSQL passdb サポートについてのより詳細な情報は
+<ulink url="http://pdbsql.sourceforge.net/">pdbsql</ulink>ページを参照のこと。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Group Mapping Changes in Samba-3.0.23</title>
+<title>Samba-3.0.23でのグループマッピングの変更</title>
 
 <para>
-<indexterm><primary>default mapping</primary></indexterm>
+<indexterm><primary>既定値のマッピング</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
-<indexterm><primary>passdb backend</primary></indexterm>
-<indexterm><primary>group mappings</primary></indexterm>
+<indexterm><primary>passdb バックエンド</primary></indexterm>
+<indexterm><primary>グループマッピング</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>IDMAP</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>domain groups</primary></indexterm>
-The default mapping entries for groups such as <literal>Domain Admins</literal> are no longer
-created when using an <literal>smbpasswd</literal> file or a <literal>tdbsam</literal> passdb
-backend.  This means that it is necessary to explicitly execute the <command>net groupmap add</command>
-to create group mappings, rather than use the <command>net groupmap modify</command> method to create the
-Windows group SID to UNIX GID mappings.  This change has no effect on winbindd's IDMAP functionality
-for domain groups.
+<indexterm><primary>ドメイングループ</primary></indexterm>
+<literal>Domain Admins</literal>のようなグループのための既定値のマッピングエントリは
+もはや<literal>smbpasswd</literal>ファイルか<literal>tdbsam</literal> passdbバックエンド
+を使う時に作成されない。このことは、グループマッピングを作成するためには、明示的に
+<command>net groupmap add</command>コマンドを実行することが必要であると言うことであり、
+WindowsのグループSIDをUNIXのGIDへのマッピングを作成するために、
+<command>net groupmap modify</command>を使うということである。この変更は
+ドメイングループに対するwinbinddのIDMAP機能には何らの影響はない。
 </para>
 
 </sect2>
 
 <sect2>
-<title>LDAP Changes in Samba-3.0.23</title>
+<title>Samba-3.0.23におけるLDAPの変更</title>
 
 <para>
-<indexterm><primary>LDAP schema</primary></indexterm>
+<indexterm><primary>LDAPスキーマ</primary></indexterm>
 <indexterm><primary>sambaSID</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
 <indexterm><primary>slapindex</primary></indexterm>
 <indexterm><primary>slapd.conf</primary></indexterm>
-There has been a minor update the Samba LDAP schema file. A substring matching rule has been
-added to the <literal>sambaSID</literal> attribute definition.  For OpenLDAP servers, this
-will require the addition of <literal>index sambaSID sub</literal> to the
-<filename>slapd.conf</filename> configuration file.  It will be necessary to execute the
-<command>slapindex</command> command after making this change. There has been no change to the
-actual data storage schema.
+Samba LDAPスキーマファイルに少々の変更がある。<literal>sambaSID</literal>
+属性定義にサブストリングマッチルールが追加された。OpenLDAPでは、これは、
+<filename>slapd.conf</filename>設定ファイルに<literal>index sambaSID sub</literal>
+を追加することが必要となる。実際のデータの内容については変更はない。
 </para>
 
 </sect2>
