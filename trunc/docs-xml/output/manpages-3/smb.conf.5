@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/15/2009
+.\"      Date: 07/31/2009
 .\"    Manual: ファイルフォーマットと変換
-.\"    Source: Samba 3.3
+.\"    Source: Samba 3.4
 .\"
-.TH "SMB\.CONF" "5" "07/15/2009" "Samba 3\.3" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "07/31/2009" "Samba 3\.4" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -615,6 +615,17 @@ abort shutdown script (G)
 .sp
 例:
 \fI\fIabort shutdown script\fR\fR\fI = \fR\fI/sbin/shutdown \-c\fR\fI \fR
+.RE
+
+access based share enum (S)
+.PP
+.RS 4
+あるサービスに対してこのパラメータが
+\fByes\fR
+であれば、 そのサービスで提供される共有は、その共有を一覧表示する際 （たとえば net view \e\esambaserver）、その共有に対して読み込みもしくは 書き込み権のあるユーザにだけ見えるようになる。これはアクセスベースの 一覧表示と同等である。主な違いとしては、共有パーミッションだけが 評価されること、またその共有に含まれるファイルのセキュリティ識別子は、 一覧表示の際のアクセス権のチェックには使用されないことである。
+.sp
+既定値:
+\fI\fIaccess based share enum\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 acl check permissions (S)
@@ -1542,7 +1553,7 @@ example ディレクトリに、crackcheck
 \fI\fIcheck password script\fR\fR\fI = \fR\fIDisabled\fR\fI \fR
 .sp
 例:
-\fI\fIcheck password script\fR\fR\fI = \fR\fIcheck password script = /usr/local/sbin/crackcheck\fR\fI \fR
+\fI\fIcheck password script\fR\fR\fI = \fR\fI/usr/local/sbin/crackcheck\fR\fI \fR
 .RE
 
 client lanman auth (G)
@@ -1990,6 +2001,19 @@ Samba は root 権限で動作する時もあれば、 接続したユーザの�
 .sp
 既定値:
 \fI\fIdebug uid\fR\fR\fI = \fR\fIno\fR\fI \fR
+.RE
+
+dedicated keytab file (G)
+.PP
+.RS 4
+
+\fIkerberos method\fRが "dedicated keytab" に設定されている場合に、kerberos の keytab ファイルへのパスを指定する。
+.sp
+既定値:
+\fI\fIdedicated keytab file\fR\fR\fI = \fR\fI\fR\fI \fR
+.sp
+例:
+\fI\fIdedicated keytab file\fR\fR\fI = \fR\fI/usr/local/etc/krb5\.keytab\fR\fI \fR
 .RE
 
 default case (S)
@@ -3756,6 +3780,67 @@ keepalive (G)
 \fI\fIkeepalive\fR\fR\fI = \fR\fI600\fR\fI \fR
 .RE
 
+kerberos method (G)
+.PP
+.RS 4
+ケルベロスのチケットをどのように検査するのかを制御する。
+.sp
+有効なオプションは以下の通り：
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+secrets only \- チケットの検査に secrets\.tdb のみを使用する（デフォルト）
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+system keytab \- チケットの検査に system keytab のみを使用する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+dedicated keytab \- チケットの検査に dedicated（専用） keytab を使用する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+secrets and keytab \- まず secrets\.tdb 、その後system keytab を使用する
+.sp
+.RE
+"system keytab" と "dedicated keytab" の主な違いとしては、 正しい keytab のエントリを見つけるのに、前者が期待するプリンシパルに 基づくフィルタリングを行うのに対し、後者はケルベロスに依存する ところである。
+.sp
+ケルベロスのメソッドが "dedicated keytab" モードの場合、
+\fIdedicated keytab file\fR
+は keytab ファイルの位置を指定していなければならない。
+.sp
+既定値:
+\fI\fIkerberos method\fR\fR\fI = \fR\fIsecrets only\fR\fI \fR
+.RE
+
 kernel change notify (S)
 .PP
 .RS 4
@@ -5328,6 +5413,21 @@ map to guest (G)
 \fI\fImap to guest\fR\fR\fI = \fR\fIBad User\fR\fI \fR
 .RE
 
+map untrusted to domain (G)
+.PP
+.RS 4
+クライアントが smbd に接続する際に BOGUS\euser のような信頼されない ドメイン名を使っている場合、smbd は BOGUS ドメインをその SAM 名に 置き換えてからそのユーザを認証する。smbd がドメインメンバーサーバ もしくはスタンドアロンサーバとして動作している場合、この名前は WORKSTATION\euser となる。
+.sp
+バージョン 3\.4 以前の Samba では、smbd がドメインメンバーサーバとして 動作している場合、BOGUS ドメイン名はその smbd がメンバーとして所属 しているプライマリドメイン名に置き換えていた。このケースでは、認証処理は DOMAIN\euser の認証情報を使って DC に委譲される。
+.sp
+このパラメータが
+\fByes\fR
+にセットされている場合、 smbd は信頼されないドメイン名をプライマリドメインにマッピングするという 従来の動作を行う。smbd がドメインのメンバーサーバとして動作していない 場合は、このパラメータは意味を持たない。
+.sp
+既定値:
+\fI\fImap untrusted to domain\fR\fR\fI = \fR\fIno\fR\fI \fR
+.RE
+
 max connections (S)
 .PP
 .RS 4
@@ -6154,7 +6254,7 @@ passdb backend (G)
 .IP \(bu 2.3
 .\}
 smbpasswd
-\- 既定値の smbpasswd 機構である。オプションの引数として smbpasswd ファイルの位置を指定する。
+\- 古い平文のパスワード格納 機構である。これを使うとSambaのいくつかの機能が動かない。 オプションの引数として smbpasswd ファイルの位置を指定する。
 .RE
 .sp
 .RS 4
@@ -6210,7 +6310,7 @@ passdb backend = ldapsam:"ldap://ldap\-1\.example\.com ldap\-2\.example\.com"
 .sp
 .sp
 既定値:
-\fI\fIpassdb backend\fR\fR\fI = \fR\fIsmbpasswd\fR\fI \fR
+\fI\fIpassdb backend\fR\fR\fI = \fR\fItdbsam\fR\fI \fR
 .RE
 
 passdb expand explicit (G)
@@ -6493,6 +6593,14 @@ path (S)
 .sp
 例:
 \fI\fIpath\fR\fR\fI = \fR\fI/home/fred\fR\fI \fR
+.RE
+
+perfcount module (G)
+.PP
+.RS 4
+SMB の操作をモニタリングする際に使用する perfcount バックエンドを指定する。 perfcount モジュールはひとつだけ指定できる。そのモジュールは、smb\.h で定義されている smb_perfcount_handler 構造体にある API をすべて 実装していなければならない。
+.sp
+\fI既定値なし\fR
 .RE
 
 pid directory (G)
@@ -7953,9 +8061,9 @@ shutdown script (G)
 .nf
 #!/bin/bash
 		
-$time=2
-let time="${time} / 60"
-let time="${time} + 1"
+$time=0
+let "time/60"
+let "time++"
 
 /sbin/shutdown $3 $4 +$time $1 &
 
@@ -8448,31 +8556,6 @@ use client driver (S)
 .sp
 既定値:
 \fI\fIuse client driver\fR\fR\fI = \fR\fIno\fR\fI \fR
-.RE
-
-use kerberos keytab (G)
-.PP
-.RS 4
-このパラメータは、Samba がシステムの keytab ファイル中にある、
-\fBhost/FQDN\fR
-および
-\fBcifs/FQDN\fR
-サービスプリンシパルの維持を行なうかどうかを制御する。
-.sp
-heimdal Kerberos ライブラリを利用している場合、
-\fI/etc/krb5\.conf\fR
-に以下の記述も必要である:
-.sp
-.RS 4
-.nf
-[libdefaults]
-default_keytab_name = FILE:/etc/krb5\.keytab
-.fi
-.RE
-.sp
-.sp
-既定値:
-\fI\fIuse kerberos keytab\fR\fR\fI = \fR\fIFalse\fR\fI \fR
 .RE
 
 use mmap (G)
@@ -9439,11 +9522,11 @@ wtmp directory (G)
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.6対応のものである。
+このマニュアルページは Samba 3\.4\.0対応のものである。
 .PP
 Samba 3\.0\.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.3\.6 対応の翻訳は、
+Samba 3\.2\.4\-3\.4\.0 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP

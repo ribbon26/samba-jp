@@ -1,11 +1,11 @@
 .\"     Title: idmap_rid
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/15/2009
+.\"      Date: 07/31/2009
 .\"    Manual: システム管理ツール
-.\"    Source: Samba 3.3
+.\"    Source: Samba 3.4
 .\"
-.TH "IDMAP_RID" "8" "07/15/2009" "Samba 3\.3" "システム管理ツール"
+.TH "IDMAP_RID" "8" "07/31/2009" "Samba 3\.4" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -24,24 +24,48 @@ range = low \- high
 .PP
 base_rid = 数字
 .RS 4
-UID や GID から SID を生成したり、取得したSID から UID や GID を 求めたりするためのベースとなる整数を指定する。ユーザの RID は デフォルトでは 1000 (16進では512) から始まる。このため、base_rid の好ましい値は 1000 となる。これにより結果としての ID は ID = RID \- BASE_RID + LOW RANGE ID として算出できる。
+UID や GID から SID を生成したり、取得したSID から UID や GID を 求めたりするためのベースとなる整数を指定する。 これは、base ridよりも小さい、RIDベースのSIDがフィルタされることを 意味する。既定値は許されているRIDに制限されておらず、すなわち、 base_rid の値は0である。base_ridの好ましい値は 1000 とすることが でき、これによりユーザ RIDは1000から始まる(16進で512:訳注間違い?)。
 .RE
+.SH "マッピング形式"
+.PP
+RID用のUnix IDは以下の方法で計算される:
+.sp
+.RS 4
+.nf
+                        ID = RID \- BASE_RID + LOW_RANGE_ID\.
+                
+.fi
+.RE
+.PP
+それに対応して、与えられたUnix IDからRIDを計算する方法は下記の通り:
+.sp
+.RS 4
+.nf
+                        RID = ID + BASE_RID \- LOW_RANGE_ID\.
+                
+.fi
+.RE
+.sp
 .SH "使用例"
 .PP
-この例では idmap_rid で２つのドメインを設定している。
+この例では idmap_rid で２つのドメインを設定し、それは、 基本的なドメインと信頼するドメインであり、tdbへの既定値の idマッピングスキームを残してある。この例はまた、信頼する ドメインに対してのbase_ridパラメータの使用方法も説明している。
 .sp
 .RS 4
 .nf
 	[global]
-	    idmap domains = MAIN TRUSTED1
+	security = domain
+	workgroup = MAIN
 
-	    idmap config MAIN:backend      = rid
-	    idmap config MAIN:base_rid     = 0
-	    idmap config MAIN:range        = 10000 \- 49999
+        idmap backend = tdb
+        idmap uid = 1000000\-1999999
+        idmap gid = 1000000\-1999999
 
-	    idmap config TRUSTED1:backend  = rid
-	    idmap config TRUSTED1:base_rid = 1000
-	    idmap config TRUSTED1:range    = 50000 \- 99999
+        idmap config MAIN : backend     = rid
+        idmap config MAIN : range       = 10000 \- 49999
+
+        idmap config TRUSTED : backend  = rid
+        idmap config TRUSTED : range    = 50000 \- 99999
+        idmap config TRUSTED : base_rid = 1000
 	
 .fi
 .RE
@@ -50,9 +74,9 @@ UID や GID から SID を生成したり、取得したSID から UID や GID �
 オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、 Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と 同様の方法で、Samba Team によりオープンソースプロジェクトとして 開発されている。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.2\.4\-3\.3\.6 対応のものである。
+このマニュアルページは Samba 3\.4\.0 対応のものである。
 .PP
-このドキュメントの Samba 3\.2\.4\-3\.3\.6 対応の翻訳は
+このドキュメントの Samba 3\.4\.0 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -63,6 +87,17 @@ UID や GID から SID を生成したり、取得したSID から UID や GID �
 .IP \(bu 2.3
 .\}
 堀田 倫英(hotta@net\-newbie\.com)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+太田俊哉(ribbon@samba\.gr\.jp)
 .sp
 .RE
 によって行なわれた。

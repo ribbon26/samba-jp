@@ -1,11 +1,11 @@
 .\"     Title: wbinfo
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/15/2009
+.\"      Date: 07/31/2009
 .\"    Manual: ユーザコマンド
-.\"    Source: Samba 3.3
+.\"    Source: Samba 3.4
 .\"
-.TH "WBINFO" "1" "07/15/2009" "Samba 3\.3" "ユーザコマンド"
+.TH "WBINFO" "1" "07/31/2009" "Samba 3\.4" "ユーザコマンド"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -31,9 +31,9 @@ wbinfo
 デーモンが正しく設定され、動作していなければならない。
 .SH "オプション"
 .PP
-\-a|\-\-authenticate username%password
+\-a|\-\-authenticate \fIusername%password\fR
 .RS 4
-winbindd経由でユーザの認証を試みる。これは、認証の方法をチェックし、その結果をレポートする。
+\fBwinbindd\fR(8)経由でユーザの認証を試みる。これは、認証の方法をチェックし、その結果をレポートする。
 .sp
 .it 1 an-trap
 .nr an-no-space-flag 1
@@ -59,17 +59,17 @@ idmap範囲外の新しいUIDを得る。
 すべてのドメインを表示する(信頼されたものと自分自身)。
 .RE
 .PP
-\-\-domain name
+\-\-domain \fIname\fR
 .RS 4
-このパラメータで指定された操作が行われるドメインを 設定する。特殊なドメイン名である \'\.\' は、現在 Winbind が属する ドメインを表すために使用される。今のところ、\fB\-\-sequence \fR、\fB\-u\fR
+このパラメータで指定された操作が行われるドメインを 設定する。特殊なドメイン名である \'\.\' は、現在\fB winbindd\fR(8)が属する ドメインを表すために使用される。今のところ、\fB\-\-sequence \fR、\fB\-u\fR
 と
 \fB\-g\fR
 オプションのみがこのパラメータに対応している。
 .RE
 .PP
-\-D|\-\-domain\-info domain
+\-D|\-\-domain\-info \fIdomain\fR
 .RS 4
-ドメインに関してのほとんどの情報を表示する。
+指定したドメインに関してのほとんどの情報を表示する。
 .RE
 .PP
 \-g|\-\-domain\-groups
@@ -83,26 +83,28 @@ idmap範囲外の新しいUIDを得る。
 .PP
 \-\-get\-auth\-user
 .RS 4
-ドメインコントローラとのセッションセットアップで、 Winbind で使用されるユーザ名とパスワードを表示する。ユーザ名と パスワードは
+ドメインコントローラとのセッションセットアップで、
+\fBwinbindd\fR(8)
+で使用されるユーザ名とパスワードを表示する。ユーザ名と パスワードは
 \fB\-\-set\-auth\-user\fRオプションを使って設定できる。 root しか使用できない。
 .RE
 .PP
-\-\-getdcname domain
+\-\-getdcname \fIdomain\fR
 .RS 4
 指定したドメインのためのDC名を得る。
 .RE
 .PP
-\-G|\-\-gid\-to\-sid gid
+\-G|\-\-gid\-to\-sid \fIgid\fR
 .RS 4
 UNIX の group id を Windows NT の SID に変換しようとする。もし指定された gid が idmap gid で指定された 範囲に収まらない場合、この操作は失敗する。
 .RE
 .PP
-\-i|\-\-user\-info user
+\-i|\-\-user\-info \fIuser\fR
 .RS 4
 ユーザ情報を得る。
 .RE
 .PP
-\-I|\-\-WINS\-by\-ip ip
+\-I|\-\-WINS\-by\-ip \fIip\fR
 .RS 4
 \fI\-I\fR
 オプションは
@@ -111,7 +113,7 @@ UNIX の group id を Windows NT の SID に変換しようとする。もし指
 パラメータで指定された IP アドレスと対応する NetBIOS 名を問い合わせるため、node status request を送る。
 .RE
 .PP
-\-K|\-\-krb5auth username%password
+\-K|\-\-krb5auth \fIusername%password\fR
 .RS 4
 Kerberos経由でユーザの認証を試みる。
 .RE
@@ -122,7 +124,7 @@ Kerberos経由でユーザの認証を試みる。
 が名前解決の際に問い合わせを行う、Windows NT サーバが信頼している ドメインの一覧を提供する。このリストには、 サーバがプライマリドメインコントローラとなっている Windows NT ドメインは含まれない。
 .RE
 .PP
-\-n|\-\-name\-to\-sid name
+\-n|\-\-name\-to\-sid \fIname\fR
 .RS 4
 \fI\-n\fR
 オプションは
@@ -134,7 +136,7 @@ Kerberos経由でユーザの認証を試みる。
 パラメータで指定されたものとなる。
 .RE
 .PP
-\-N|\-\-WINS\-by\-name name
+\-N|\-\-WINS\-by\-name \fIname\fR
 .RS 4
 \fI\-N\fR
 オプションは
@@ -150,15 +152,16 @@ Kerberos経由でユーザの認証を試みる。
 .PP
 \-p|\-\-ping
 .RS 4
-Winbindd が動作中かどうか確認する。 \'成功\' か \'失敗\' かを表示する。
+\fBwinbindd\fR(8)
+が動作中かどうか確認する。\'成功\' か \'失敗\' かを表示する。
 .RE
 .PP
-\-r|\-\-user\-groups username
+\-r|\-\-user\-groups \fIusername\fR
 .RS 4
 ユーザが所属する UNIX の group ids 一覧を表示しようとする。 これはドメインコントローラに登録されているユーザにのみ動作する。
 .RE
 .PP
-\-s|\-\-sid\-to\-name sid
+\-s|\-\-sid\-to\-name \fIsid\fR
 .RS 4
 \fI\-s\fR
 を使用して SID から名前を解決 することができる。これは前述の
@@ -176,12 +179,13 @@ Winbindd が動作中かどうか確認する。 \'成功\' か \'失敗\' か�
 すべての既知のドメインのシーケンス番号を表示する。
 .RE
 .PP
-\-\-set\-auth\-user username%password
+\-\-set\-auth\-user \fIusername%password\fR
 .RS 4
-ドメインコントローラとのセッション確立時に使用される ユーザ名とパスワードを保存する。これは winbindd が Restrict Anonymous が有効となっている Windows 2000 ドメインで動作することを可能にする。 (Windows 2000 サーバ互換のパーミッションのみ)
+ドメインコントローラとのセッション確立時に使用される ユーザ名とパスワードを保存する。これは\fBwinbindd \fR(8)
+が Restrict Anonymous が有効となっている Windows 2000 ドメインで動作することを可能にする。 (Windows 2000 サーバ互換のパーミッションのみ)
 .RE
 .PP
-\-S|\-\-sid\-to\-uid sid
+\-S|\-\-sid\-to\-uid \fIsid\fR
 .RS 4
 SID を UNIX の user id に変換する。もし SID が
 \fBwinbindd\fR(8)
@@ -202,22 +206,22 @@ Samba サーバが動作中の Windows NT ドメインに参加時に、 ワー�
 で見えるユーザ以外にはユーザ ID を割り当てることはない。
 .RE
 .PP
-\-\-uid\-info UID
+\-\-uid\-info \fIuid\fR
 .RS 4
 ユーザID UIDとして接続されたユーザのためのユーザ情報を得る。
 .RE
 .PP
-\-\-user\-domgroups SID
+\-\-user\-domgroups \fIsid\fR
 .RS 4
 ユーザドメイングループを得る。
 .RE
 .PP
-\-\-user\-sids SID
+\-\-user\-sids \fIsid\fR
 .RS 4
 ユーザのユーザグループSIDを得る。
 .RE
 .PP
-\-U|\-\-uid\-to\-sid uid
+\-U|\-\-uid\-to\-sid \fIuid\fR
 .RS 4
 UNIX の user id を Windows NT の SID に変換する。 もし指定された uid が idmap uid の範囲に収まらない場合、この操作は 失敗する。
 .RE
@@ -227,7 +231,7 @@ UNIX の user id を Windows NT の SID に変換する。 もし指定された
 問い合わせの結果に追加の情報を表示する。
 .RE
 .PP
-\-Y|\-\-sid\-to\-gid sid
+\-Y|\-\-sid\-to\-gid \fIsid\fR
 .RS 4
 SID を UNIX の group id に変換する。もし SID が
 \fBwinbindd\fR(8)
@@ -288,8 +292,8 @@ winbindd
 Samba 2\.2 用の DocBook 形式への変換は Gerald Carter が行った。 Samba 3\.0 用の DocBook XML 4\.2 形式への変換は Alexander Bokovoy が行った。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.6 対応のものである。
+このマニュアルページは Samba 3\.3\.6\-3\.4\.0 対応のものである。
 .PP
 このドキュメントの Samba 3\.0\.0 対応の翻訳は 山田 史朗 (shiro@miraclelinux\.com) によって行なわれた。
 .PP
-このドキュメントの Samba 3\.2\.4\-3\.3\.6 対応の翻訳は 太田俊哉(ribbon@samba\.gr\.jp)によって行われた。
+このドキュメントの Samba 3\.2\.4\-3\.4\.0 対応の翻訳は 太田俊哉(ribbon@samba\.gr\.jp)によって行われた。

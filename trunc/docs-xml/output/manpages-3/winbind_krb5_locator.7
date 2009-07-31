@@ -1,11 +1,11 @@
 .\"     Title: winbind_krb5_locator
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/15/2009
+.\"      Date: 07/31/2009
 .\"    Manual: 7
 .\"    Source: Samba 3.3
 .\"
-.TH "WINBIND_KRB5_LOCATOR" "7" "07/15/2009" "Samba 3\.3" "7"
+.TH "WINBIND_KRB5_LOCATOR" "7" "07/31/2009" "Samba 3\.3" "7"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -18,23 +18,22 @@ winbind_krb5_locator - Windowsの方式で、MITとHeimdal KerberosのためのK
 \fBsamba\fR(7)システムの一部である。
 .PP
 
-winbind_krb5_locatorは Sambaシステムが実装しているのと同じセマンティクスで、 Kerberosサーバ(KDCとkpasswdサービス用)を検出するための、 MITとHeimdalKerberosライブラリを可能にするプラグインである。 これはADのDNSサービスレコード検索と最も近いDCのキャッシュを含む。 このプラグインは、最も最近のKerberos実装によって提供される パブリックローケータAPIを使う。 is a plugin that permits MIT and Heimdal Kerberos libraries to detect Kerberos Servers (for the KDC and kpasswd service) using the same semantics that other tools of the Samba suite use\. This include site\-aware DNS service record lookups and caching of closest dc\. The plugin uses the public locator API provided by most modern Kerberos implementations\.
+winbind_krb5_locatorは MITとHeimdalKerberosライブラリにおいて、Sambaシステムの実装と 同じセマンティクスで、(KDCとkpasswdサービス用の) Kerberosサーバを検出することを可能にするプラグインである。 この機能はサイト構成のDNSサービスレコードの探索と、最も 近いドメインコントローラー情報のキャッシュに対応している。 このプラグインは、最も最近のKerberosの実装によって 提供されているパブリックロケーターAPIを利用する。
 .SH "必須条件"
 .PP
-MIT Kerberos(少なくともバージョン1\.5)かHeimdal Kerberos(少なくとも バージョン)が必要である。
+MIT Kerberos(バージョン1\.5以降)か Heimdal Kerberos(バージョン1\.0以降)が必要である。
 .PP
-プラグインは、あらかじめ設定されていて、独立して動いている
-\fBwinbindd\fR(8)デーモンに問い合わせをする。
+このプラグインは、あらかじめ設定済みで、稼働中の
+\fBwinbindd\fR(8)デーモンに 問い合わせを行う。
 .PP
 
-winbind_krb5_locator\.soファイルはシステムの Kerberosライブラリがあるプラグインディレクトリに手動でコピーする 必要がある。 MIT Kerberosの場合は以下の通り:
-\fI/usr/lib/krb5/plugins/libkrb5/\fR。 Heimdal Kerberosの場合は以下の通り:
-\fI/usr/lib/plugin/krb5/\fR。 ローカルの、正しいKerberosインストールパスを確認してほしい。 このプラグインを使うために
-\fI/etc/krb5\.conf\fRの変更は不要である。
+winbind_krb5_locator\.soファイルはシステムの Kerberosライブラリがあるプラグインディレクトリに手動で コピーする必要がある。 MIT Kerberosでは通常以下のディレクトリ:
+\fI/usr/lib/krb5/plugins/libkrb5/\fR。 Heimdal Kerberosでは通常以下のディレクトリ:
+\fI/usr/lib/plugin/krb5/\fR。 あなたが利用しているKerberosで正しいインストールパスを 確認すること。 このプラグインを使うために
+\fI/etc/krb5\.conf\fRを変更する必要は無い。
 .PP
-所定のプラグインディレクトリにローケータプラグインをコピー しただけですぐにこの機能が有効になる。利用者は、kerberos化 されたWindows環境を変更なしに、サーバ上の
-\fI/etc/krb5\.conf\fR手動で変更しなくても、kinitできる。 After copying the locator plugin to the appropriate plugin directory it should immediately be available for use\. Users should be able to kinit into their kerberized Windows environment without any modification or servers being put manually into
-\fI/etc/krb5\.conf\fR\.
+適切なプラグインディレクトリにロケータープラグインをコピー した後に、即座にこの機能が有効になる。ユーザーは
+\fI/etc/krb5\.conf\fRを変更したり、サーバー情報を 追加したりすることなく、Kerberos対応のWindows環境に対する kinitを行うことが可能となる。
 .SH "バージョン"
 .PP
 このマニュアルページはSamba 3システム用である。
@@ -43,3 +42,15 @@ winbind_krb5_locator\.soファイルはシステムの Kerberosライブラリ�
 オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell によって作成された。現在 Samba は、Samba Team によって Linux カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
 .PP
 The winbind_krb5_locatorマニュアルページはGuenther Deschnerによって記述された。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\.3\.2\-3\.4\.0 対応のものである。
+.PP
+このドキュメントの Samba 3\.3\.2\-3\.4\.0 対応の翻訳は
+.PP
+太田俊哉 (ribbon@samba\.gr\.jp)
+.PP
+武田保真
+.sp
+.RE
+によって行なわれた。
