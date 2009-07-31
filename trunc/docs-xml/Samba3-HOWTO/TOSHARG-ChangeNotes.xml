@@ -42,39 +42,40 @@ Sambaをアップデートまたはアップグレードする前に、この章
 </para>
 
 <para>
-最近では、Sambaユーザのグループは
-
-In recent times a group of Samba users has joined the thrust to create a new <ulink
-url="http://wiki.samba.org/">Samba Wiki</ulink> that is slated to become the all-singing and all-dancing
-new face of Samba documentation. Hopefully, the Wiki will benefit from greater community input and
-thus may be kept more up to date. Until that golden dream materializes and matures it is necessary to
-continue to maintain the HOWTO. This chapter will document major departures from earlier behavior until
-such time as the body of this HOWTO is restructured or modified.
+近年では、Samba のユーザも <ulink url="http://wiki.samba.org/">Samba Wiki</ulink>
+構築の推進に加わった。新しく作成される Samba ドキュメントは、すべてここに集約
+される予定である。Wikiは規模の大きなコミュニティからの投稿に適していて、より
+いっそう最新情報を提供できることを期待している。そのすばらしい夢が実現して、
+十分な価値が出てくるまでは、このHOWTO文書を維持管理することは必要である。
+この章では、このHOWTO文書の主要部分が再構成されるか変更される時点までの間
+での主要な変更点を文書化する。
 </para>
 
 <para>
-This chapter is new to the release of the HOWTO for Samba 3.0.23. It includes much of the notes provided
-in the <filename>WHATSNEW.txt</filename> file that is included with the Samba source code release tarball.
+この章は、Samba 3.0.23リリースでHOTWOに加わった。ここにはSambaソースコードリリース
+一式中に含まれる<filename>WHATSNEW.txt</filename>ファイル中で提供されているたくさんの
+注意点を含んでいる。
 </para>
 
 <sect2>
-<title>User and Group Changes</title>
+<title>ユーザとグループの変更</title>
 
 <para>
-The change documented here affects unmapped user and group accounts only.
+マップされていないユーザとグループアカウントのみに影響する変更点はここで文書化されている。
 </para>
 
 <para>
-<indexterm><primary>user</primary></indexterm>
-<indexterm><primary>group</primary></indexterm>
-<indexterm><primary>Relative Identifiers</primary><see>RID</see></indexterm>
+<indexterm><primary>ユーザ</primary></indexterm>
+<indexterm><primary>グループ</primary></indexterm>
+<indexterm><primary>相対識別子</primary><see>RID</see></indexterm>
 <indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>vampire</tertiary></indexterm>
-The user and group internal management routines have been rewritten to prevent overlaps of
-assigned Relative Identifiers (RIDs).  In the past the has been a potential problem when
-either manually mapping Unix groups with the <command>net groupmap</command> command or
-when migrating a Windows domain to a Samba domain by executing:
-<command>net rpc vampire</command>.
+ユーザとグループに対する内部管理ルーチンは割り当てられた相対識別子(RID)
+の重複を防ぐために書き直された。過去では、<command>net groupmap</command>コマンド
+又は<command>net rpc vampire</command>コマンドで
+<command>net rpc vampire</command>
+を実行してWindowsドメインをSambaドメインにマイグレートすることによって、
+手動でUnixグループにマッピングするときに問題が発生する可能性があった。
 </para>
 
 <para>
@@ -82,33 +83,35 @@ when migrating a Windows domain to a Samba domain by executing:
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>net</primary><secondary>getlocalsid</secondary></indexterm>
-Unmapped users are now assigned a SID in the <literal>S-1-22-1</literal> domain and unmapped
-groups are assigned a SID in the <literal>S-1-22-2</literal> domain.  Previously they were
-assigned a RID within the SAM on the Samba server.  For a domain controller this would have been under the
-authority of the domain SID where as on a member server or standalone server, this would have
-been under the authority of the local SAM (see the man page for <command>net getlocalsid</command>).
+マップされていないユーザは、今回から<literal>S-1-22-1</literal>ドメイン中の
+SIDが割り当てられ、マップされていないグループは<literal>S-1-22-2</literal>ドメイン
+中のSIDを割り当てられる。以前はSambaサーバ上のSAM内のRIDを割り当てていた。
+ドメインコントローラにとって、これは、メンバサーバかスタンドアロンサーバ上のような
+ドメインSIDの権限の配下にあり、これはローカルSAM(<command>net getlocalsid</command>
+マニュアルページを参照)の権限下にあった。
 </para>
 
 <para>
-<indexterm><primary>unmapped users</primary></indexterm>
-<indexterm><primary>unmapped groups</primary></indexterm>
+<indexterm><primary>マップされていないユーザ</primary></indexterm>
+<indexterm><primary>マップされていないグループ</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>NTFS</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
-The result is that any unmapped users or groups on an upgraded Samba domain controller may
-be assigned a new SID.  Because the SID rather than a name is stored in Windows security
-descriptors, this can cause a user to no longer have access to a resource for example if a
-file was copied from a Samba file server to a local Windows client NTFS partition.  Any files
-stored on the Samba server itself will continue to be accessible because UNIX stores the UNIX
-GID and not the SID for authorization checks.
+結果は、アップグレードされたSambaドメインコントローラ上の、あるマップされていない
+ユーザ又はグループは新しいSIDを割り当てられることになる。Windowsセキュリティ
+記述子中に名前というかSIDが格納されるので、これは、そのユーザが
+たとえば、Sambaファイルサーバからローカルの
+WindowsクライアントNTFSパーティションにファイルがコピーされた場合、もはやリソースに
+アクセスできないという現象を引き起こす。Sambaサーバ上自身で格納された任意のファイル
+は、UNIXがUNIXのGIDを格納し、権限の検査にSIDを使わないために引き続きアクセスできる。
 </para>
 
 <para>
-An example helps to illustrate the change:
+変更を図示するのに例題が役立つ:
 </para>
 
 <para>
-<indexterm><primary>group mapping</primary></indexterm>
+<indexterm><primary>グループマッピング</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
