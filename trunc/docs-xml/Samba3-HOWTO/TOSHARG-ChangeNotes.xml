@@ -115,10 +115,12 @@ WindowsクライアントNTFSパーティションにファイルがコピーさ
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-Assume that a group named <emphasis>developers</emphasis> exists with a UNIX GID of 782. In this
-case this user does not exist in Samba's group mapping table. It would be perfectly normal for
-this group to be appear in an ACL editor.  Prior to Samba-3.0.23, the group SID might appear as
-<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>.
+<emphasis>developers</emphasis>という名前のグループがありそのUNIX GIDが782だと
+する。この場合、このユーザはSambaのグループマップテーブル中には存在しない。
+このグループがACLエディタ中に現れることは全く通常通りである。Samba-3.0.23より
+前では、グループSIDは
+<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>として
+表示される。
 </para>
 
 <para>
@@ -126,48 +128,51 @@ this group to be appear in an ACL editor.  Prior to Samba-3.0.23, the group SID 
 <indexterm><primary>NTFS</primary></indexterm>
 <indexterm><primary>access</primary></indexterm>
 <indexterm><primary>group permissions</primary></indexterm>
-With the release of Samba-3.0.23, the group SID would be reported as <literal>S-1-22-2-782</literal>.  Any
-security descriptors associated with files stored on a Windows NTFS disk partition will not allow access based
-on the group permissions if the user was not a member of the
-<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>  group.  Because this group SID is
-<literal>S-1-22-2-782</literal> and not reported in a user's token, Windows would fail the authorization check
-even though both SIDs in some respect refer to the same UNIX group.
+Samba-3.0.23のリリースから、グループSIDは<literal>S-1-22-2-782</literal>のよう
+に表示されるようになった。任意の、Windows NTFSパーティション上に格納されるファイルに付
+随するセキュリティ記述子は、ユーザが
+<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>グループ
+のメンバでない場合、グループパーミッションベースのアクセスを許可されない。
+このグループSIDがliteral>S-1-22-2-782</literal>で、ユーザトークン中に
+表示されないという理由で、たとえ両方のSIDが同じUNIXグループを参照する
+という観点においても、Windowsは認証に失敗する。
 </para>
 
 <para>
-<indexterm><primary>group mapping</primary></indexterm>
+<indexterm><primary>グループマッピング</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-The workaround for versions of Samba prior to 3.0.23, is to create a manual domain group mapping
-entry for the group <emphasis>developers</emphasis> to point at the
-<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal> SID. With the release of Samba-3.0.23 this
-workaround is no longer needed.
+Samba 3.0.23より前での回避方法は、グループ<emphasis>developers</emphasis>
+が<literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>という
+SIDを示すグループマップエントリを手動で作成することである。Samba-3.0.23
+のリリースから、この回避方法は不要になった。
 </para>
 </sect2>
 
 <sect2>
-<title>Essential Group Mappings</title>
+<title>グループマッピングの基本</title>
 <para>
-Samba 3.0.x series  releases before 3.0.23 automatically created group mappings for the essential Windows
-domain groups <literal>Domain Admins, Domain Users, Domain Guests</literal>. Commencing with Samba 3.0.23
-these mappings need to be created by the Samba administrator. Failure to do this may result in a failure to
-correctly authenticate and recoognize valid domain users. When this happens users will not be able to log onto
-the Windows client.
+Samba 3.0.xシリーズの3.0.23より前のリリースでは、
+<literal>Domain Admins, Domain Users, Domain Guests</literal>というWindows
+ドメイングループに対するグループマッピングは自動的に作成された。Samba-3.0.23
+から、これらのマッピングはSamba管理者によって作成されなければならないように
+なった。これが失敗すると、正しい認証と、有効なドメインユーザの認識に失敗する
+結果となる。これが起きた場合、ユーザはWindowsクライアントにログオンできなくなる。
 </para>
 
 <note><para>
-Group mappings are essentail only if the Samba servers is running as a PDC/BDC. Stand-alone servers do not
-require these group mappings.
+グループマッピングは、SambaサーバがPDC/BDCとして動作している時にのみ重要である。
+スタンドアロンサーバはグループマッピングを必要としない。
 </para></note>
 
 <para>
-The following mappings are required:
+以下のマッピングが必要である:
 </para>
 
 <table frame="all" id="TOSH-domgroups">
-	<title>Essential Domain Group Mappings</title>
+	<title>基本的なドメイングループのマッピング</title>
 	<tgroup align="center" cols="3">
 	<thead>
-		<row><entry>Domain Group</entry><entry>RID</entry><entry>Example UNIX Group</entry></row>
+		<row><entry>Domain Group</entry><entry>RID</entry><entry>UNIXグループ例</entry></row>
 	</thead>
 	<tbody>
 		<row><entry>Domain Admins</entry><entry>512</entry><entry>root</entry></row>
@@ -178,25 +183,28 @@ The following mappings are required:
 </table>
 
 <para>
-When the POSIX (UNIX) groups are stored in LDAP, it may be desirable to call these <literal>domadmins, domusers,
-domguests</literal> respectively.
+POSIX(UNIX)グループがLDAP内に格納される場合、それぞれ
+<literal>domadmins, domusers,domguests</literal>と指定すると
+便利である(訳注:やや意訳です)。
 </para>
 
 <para>
-For further information regarding group mappings see <link linkend="groupmapping">Group Mapping: MS Windows
-and UNIX</link>.
+グループマッピングに関するさらなる情報は
+<link linkend="groupmapping">グループマッピング: Microsoft Windows と UNIX</link>を参照のこと。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Passdb Changes</title>
+<title>Passdbの変更</title>
 
 <para>
-<indexterm><primary>backends</primary></indexterm>
+<indexterm><primary>バックエンド</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SQL</primary></indexterm>
 <indexterm><primary>XML</primary></indexterm>
+<smbconfoption name="passdb backend"/>パラメータは
+
 The <smbconfoption name="passdb backend"/> parameter no long accepts multiple passdb backends in a
 chained configuration.  Also be aware that the SQL and XML based passdb modules have been
 removed in the Samba-3.0.23 release.  More information regarding external support for a SQL
