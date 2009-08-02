@@ -95,67 +95,68 @@ hope it never returns.(訳注:訳せません....)
 <para>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>MS WINS</primary></indexterm>
-Samba provides the ability to implement a WINS (Windows Internetworking Name Server)
-and implements extensions to Microsoft's implementation of WINS. These extensions
-help Samba to effect stable WINS operations beyond the normal scope of MS WINS.
+SambaはWINS(Windows Internetworking Name Server)を実現することと、Microsoft
+のWINS拡張を実現する能力を提供する。これらの拡張は、通常の範囲のMicrosoft WINS
+を超えて安定したWINS動作を提供することを支援する。
 </para>
 
 <para>
 <indexterm><primary>NetBIOS over TCP/IP</primary></indexterm>
-<indexterm><primary>NetBIOS disabled</primary></indexterm>
+<indexterm><primary>NetBIOSが無効</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-WINS is exclusively a service that applies only to those systems
-that run NetBIOS over TCP/IP. MS Windows 200x/XP have the capacity to operate with
-support for NetBIOS disabled, in which case WINS is of no relevance. Samba supports this also.
+WINSはNetBIOS overTCP/IPが動作しているシステムにのみ適用される
+サービスである。Microsoft Windows 200x/XPはNetBIOSが無効でも
+動作することが出来る。そのような場合、WINSは無関係となる。Sambaは
+これもサポートする。
 </para>
 
 <para>
-<indexterm><primary>NetBIOS disabled</primary></indexterm>
+<indexterm><primary>NetBIOSが無効</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-For those networks on which NetBIOS has been disabled (i.e., WINS is not required),
-the use of DNS is necessary for hostname resolution.
+NetBIOSが無効になったこれらのネットワークでは(すなわち、WINSを必要としない)、
+ホスト名の解決のためにDNSを使うことが必要である。
 </para>
 
 </sect1>
 
 <sect1>
-<title>What Is Browsing?</title>
+<title>ブラウジングとは何か?</title>
 
 <para>
-<indexterm><primary>browsing</primary></indexterm>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
-<indexterm><primary>shares</primary></indexterm>
-<indexterm><primary>printers available</primary></indexterm>
-To most people, browsing means they can see the MS Windows and Samba servers
-in the Network Neighborhood, and when the computer icon for a particular server is
-clicked, it opens up and shows the shares and printers available on the target server.
+<indexterm><primary>ブラウジング</primary></indexterm>
+<indexterm><primary>マイネットワーク</primary></indexterm>
+<indexterm><primary>共有</primary></indexterm>
+<indexterm><primary>有効なプリンタ</primary></indexterm>
+一般的には、ブラウジングとは、Microsoft WindowsとSambaサーバがマイネットワーク中に
+見える事を意味し、特定のサーバのコンピュータアイコンをクリックすると、その
+サーバ上の共有と有効なプリンタを表示するウィンドウが開いて表示される。
 </para>
 
 <para>
-What seems so simple is in fact a complex interaction of different technologies.
-The technologies (or methods) employed in making all of this work include:
+とても単純に見えるが、これは実際には、異なった技術の複雑な相互作用によるもの
+である。これらのすべてを行うために使われる技術(か方式)は以下を含む:
 </para>
 
 <itemizedlist>
-	<listitem><para>MS Windows machines register their presence to the network.</para></listitem>
-	<listitem><para>Machines announce themselves to other machines on the network.</para></listitem>
-	<listitem><para>One or more machines on the network collate the local announcements.</para></listitem>
-	<listitem><para>The client machine finds the machine that has the collated list of machines.</para></listitem>
-	<listitem><para>The client machine is able to resolve the machine names to IP addresses.</para></listitem>
-	<listitem><para>The client machine is able to connect to a target machine.</para></listitem>
+	<listitem><para>ネットワークへのMicrosoft Windowsマシンの存在を登録。</para></listitem>
+	<listitem><para>ネットワーク上の他のマシンにそれ自身を通知。</para></listitem>
+	<listitem><para>ネットワーク上の複数の1つ以上のマシンはローカルアナウンスメントをまとめる。</para></listitem>
+	<listitem><para>クライアントマシンはマシンのリストをまとめたマシンを見つける。</para></listitem>
+	<listitem><para>クライアントマシンはマシン名をIPアドレスに変換する。</para></listitem>
+	<listitem><para>クライアントマシンはターゲットマシンに接続する。</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>browse list management</primary></indexterm>
-<indexterm><primary>name resolution</primary></indexterm>
+<indexterm><primary>ブラウズリストの管理</primary></indexterm>
+<indexterm><primary>名前解決</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
-The Samba application that controls browse list management and name resolution is
-called <filename>nmbd</filename>. The configuration parameters involved in nmbd's operation are:
+ブラウズリスト管理と名前解決を制御するSambaアプリは<filename>nmbd</filename>である。
+nmbdの動作に関連する設定パラメータは以下の通り:
 </para>
 
 <para>
-Browsing options:
+ブラウジング動作:
 </para>
 <itemizedlist>
 	<listitem><smbconfoption name="os level"/></listitem>
@@ -169,14 +170,14 @@ Browsing options:
 </itemizedlist>
 
 <para>
-Name Resolution Method:
+名前解決方法:
 </para>
 <itemizedlist>
 	<listitem><smbconfoption name="name resolve order"/>(*)</listitem>
 </itemizedlist>
 
 <para>
-WINS options:
+WINS動作:
 </para>
 <itemizedlist>
 	<listitem><smbconfoption name="dns proxy"/></listitem>
@@ -187,8 +188,8 @@ WINS options:
 </itemizedlist>
 
 <para>
-Those marked with an (*) are the only options that commonly may need to be modified. Even if none of these
-parameters is set, <filename>nmbd</filename> will still do its job.
+(*)というマークが付いたものは通常変更が必要なオプションである。これらのパラメータが
+設定されていなくても、<filename>nmbd</filename>は動作することが出来る。
 </para>
 
 <para>
@@ -196,26 +197,28 @@ parameters is set, <filename>nmbd</filename> will still do its job.
 <indexterm><primary>WINS Server</primary></indexterm>
 <indexterm><primary>WINS Support</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
-<indexterm><primary>mutually exclusive options</primary></indexterm>
-For Samba, the WINS Server and WINS Support are mutually exclusive options. When <command>nmbd</command> is
-started it will fail to execute if both options are set in the &smb.conf; file. The <command>nmbd</command>
-understands that when it spawns an instance of itself to run as a WINS server that it has to use its own WINS
-server also.
+<indexterm><primary>相互に排他なオプション</primary></indexterm>
+Sambaでは、wins server と wins support は相互に排他的なオプションである。
+<command>nmbd</command>が起動するとき、&smb.conf;ファイル中に両方の
+オプションが設定されていると、起動に失敗する。<command>nmbd</command>
+は、それ自身のWINSサーバを使わなければならないWINSサーバとして動作する
+ために、それ自身のインスタンスをフォークする。
 </para>
 
 </sect1>
 
 <sect1 id="netdiscuss">
-<title>Discussion</title>
+<title>議論</title>
 
 <para>
-<indexterm><primary>SMB-based messaging</primary></indexterm>
+<indexterm><primary>SMBベースのメッセージング</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
 <indexterm><primary>phasing out NetBIOS</primary></indexterm>
-All MS Windows networking uses SMB-based messaging.  SMB messaging may be implemented with or without NetBIOS.
-MS Windows 200x supports NetBIOS over TCP/IP for backwards compatibility. Microsoft appears intent on phasing
-out NetBIOS support.
+すべてのMicrosoft Windows ネットワークは SMBベースのメッセージングを使う。
+SMBメッセージングはNetBIOSがあってもなくてもよい。Microsoft Windows 200x
+は下位互換のために、NetBIOS over TCP/IPをサポートする。Microsoftは段階的に
+NetBIOSサポートを打ち切っているように見える。
 </para>
 
 <sect2>
@@ -223,55 +226,60 @@ out NetBIOS support.
 
 <para>
 <indexterm><primary>encapsulating</primary></indexterm>
-<indexterm><primary>broadcast</primary></indexterm>
-<indexterm><primary>unicast</primary></indexterm>
+<indexterm><primary>ブロードキャスト</primary></indexterm>
+<indexterm><primary>ユニキャスト</primary></indexterm>
 <indexterm><primary>UDP</primary></indexterm>
-Samba implements NetBIOS, as does MS Windows NT/200x/XP, by encapsulating it over TCP/IP.
-NetBIOS-based networking uses broadcast messaging to effect browse list management. When running NetBIOS over
-TCP/IP, this uses UDP-based messaging.  UDP messages can be broadcast or unicast.
+Sambaは、TCP/IP上でカプセル化することによって、Microsoft Windows NT/200x/XPが
+するようなNetBIOSを実装している。NetBIOSベースのネットワークはブラウズリストの
+管理を行うために、ブロードキャストメッセージングを使う。NetBIOS over TCP/IP
+が動いている時、これはUDPベースのメッセージングを使う。UDPメッセージは
+ブロードキャストかユニキャストのどちらも使える。
 </para>
 
 <para>
 <indexterm><primary>UDP</primary></indexterm>
-Normally, only unicast UDP messaging can be forwarded by routers. The <smbconfoption name="remote announce"/>
-parameter to smb.conf helps to project browse announcements to remote network segments via unicast UDP.
-Similarly, the <smbconfoption name="remote browse sync"/> parameter of &smb.conf; implements browse list
-collation using unicast UDP.
+通常、ユニキャストUDPメッセージングのみがルータによって転送される。
+smb.confの<smbconfoption name="remote announce"/>パラメータはユニキャストUDB
+を通じて、リモートネットワークセグメントにブラウズアナウンスメントを公開する
+ことを支援する。同様に、&smb.conf;の<smbconfoption name="remote browse sync"/>
+パラメータはユニキャストUDPを使ってブラウズリストの収集を実現する。
 </para>
 
 <para>
-The methods used by MS Windows to perform name lookup requests (name resolution) is determined by a
-configuration parameter called the NetBIOS node-type. There are four basic NetBIOS node types:
+名前検索要求(名前解決)を実行するためにMicrosoft Windowsによって使われる方法
+はNetBIOSノードタイプと呼ばれる設定パラメータによって決まる。基本的なNetBIOS
+ノードタイプは4つある:
 </para>
 
 <indexterm><primary>b-node</primary></indexterm>
 <indexterm><primary>p-node</primary></indexterm>
 <indexterm><primary>m-node</primary></indexterm>
 <indexterm><primary>h-node</primary></indexterm>
-<indexterm><primary>node-type</primary></indexterm>
+<indexterm><primary>ノードタイプ</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>broadcast</primary></indexterm>
-<indexterm><primary>unicast</primary></indexterm>
+<indexterm><primary>ブロードキャスト</primary></indexterm>
+<indexterm><primary>ユニキャスト</primary></indexterm>
 <itemizedlist>
-	<listitem><para><emphasis>b-node (type 0x01):</emphasis> The Windows client will use only
-	NetBIOS broadcast requests using UDP broadcast.</para></listitem>
-	<listitem><para><emphasis>p-node (type 0x02):</emphasis> The Windows client will use point-to-point
-	(NetBIOS unicast) requests using UDP unicast directed to a WINS server.</para></listitem>
-	<listitem><para><emphasis>m-node (type 0x04):</emphasis> The Windows client will first use
-	NetBIOS broadcast requests using UDP broadcast, then it will use (NetBIOS unicast)
-	requests using UDP unicast directed to a WINS server.</para></listitem>
-	<listitem><para><emphasis>h-node (type 0x08):</emphasis> The Windows client will use
-	(NetBIOS unicast) requests using UDP unicast directed to a WINS server, then it will use
-	NetBIOS broadcast requests using UDP broadcast.</para></listitem>
+	<listitem><para><emphasis>b-node (type 0x01):</emphasis>UDPブロードキャストを
+	    使ってNetBIOSブロードキャスト要求のみを使うWindowsクライアント。</para></listitem>
+	<listitem><para><emphasis>p-node (type 0x02):</emphasis>WINSサーバに直接UDP
+	    ユニキャストを行う、ポイントツーポイント(NetBIOSユニキャスト)要求を使う
+	    Windowsクライアント。</para></listitem>
+	<listitem><para><emphasis>m-node (type 0x04):</emphasis>、最初にUDPブロード
+	    キャストを使ってNetBIOSブロードキャストを行い、次に(NetBIOSユニキャストで)
+	    WINSサーバに直接UDPユニキャストを行うWindowsクライアント。</para></listitem>
+	<listitem><para><emphasis>h-node (type 0x08):</emphasis>UDPユニキャスト
+	    (NetBIOSユニキャスト)を使ってWINSサーバに直接要求し、次にUDPブロードキャストを
+	    使ってNetBIOSブロードキャスト要求をするWindowsクライアント。</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>h-node</primary></indexterm>
 <indexterm><primary>hybrid</primary></indexterm>
-<indexterm><primary>enables NetBIOS over TCP/IP</primary></indexterm>
+<indexterm><primary>NetBIOS over TCP/IPを有効</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>broadcast-based</primary></indexterm>
-<indexterm><primary>name resolution</primary></indexterm>
+<indexterm><primary>ブロードキャストベース</primary></indexterm>
+<indexterm><primary>名前解決</primary></indexterm>
 The default Windows network client (or server) network configuration enables NetBIOS over TCP/IP
 and b-node configuration. The use of WINS makes most sense with h-node (hybrid mode) operation so that
 in the event of a WINS breakdown or non-availability, the client can use broadcast-based name resolution.
