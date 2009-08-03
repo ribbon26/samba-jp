@@ -281,126 +281,137 @@ smb.confの<smbconfoption name="remote announce"/>パラメータはユニキャ
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>ブロードキャストベース</primary></indexterm>
 <indexterm><primary>名前解決</primary></indexterm>
-The default Windows network client (or server) network configuration enables NetBIOS over TCP/IP
-and b-node configuration. The use of WINS makes most sense with h-node (hybrid mode) operation so that
-in the event of a WINS breakdown or non-availability, the client can use broadcast-based name resolution.
+既定値のWindowsネットワーククライアント(あるいはサーバ)のネットワーク設定は、
+NetBIOS over TCP/IPを有効にしていて、b-ノードになっている。WINSを使うと、
+WINSが故障か有効になっていない場合、クライアントがブロードキャストベースの
+名前解決を使えるように、h-ノード(ハイブリッドノード)動作が意味をなすようになる。
 </para>
 
 <para>
-<indexterm><primary>LMB</primary><see>Local Master Browser</see></indexterm>
+<indexterm><primary>LMB</primary><see>ローカルマスタブラウザ</see></indexterm>
 <indexterm><primary>Local Master Browser</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>cross-segment browsing</primary></indexterm>
-<indexterm><primary>network segment</primary></indexterm>
-In those networks where Samba is the only SMB server technology, wherever possible <filename>nmbd</filename>
-should be configured on one machine as the WINS server. This makes it easy to manage the browsing environment.
-If each network segment is configured with its own Samba WINS server, then the only way to get cross-segment
-browsing to work is by using the <smbconfoption name="remote announce"/> and the <smbconfoption name="remote
-browse sync"/> parameters to your &smb.conf; file.
+<indexterm><primary>セグメント間のブラウジング</primary></indexterm>
+<indexterm><primary>ネットワークセグメント</primary></indexterm>
+SambaがSMBサーバ技術のみのネットワーク中では<filename>nmbd</filename>
+のうち少なくとも1台はWINSサーバとして設定する必要がある。これは、
+ブラウジング環境の管理を簡単にする。もしもおのおののネットワークセグメントが
+固有のSamba WINSサーバを設定している場合、セグメント間のブラウジングを動作させ
+る唯一の方法は<smbconfoption name="remote announce"/>と
+<smbconfoption name="remote browse sync"/>パラメータを&smb.conf;ファイルで
+使うことである。
+
+
+<para>
+<indexterm><primary>WINS</primary></indexterm>
+もしも全体の複数ネットワークで1つだけのWINSサーバを使う場合、
+<smbconfoption name="remote announce"/>と
+<smbconfoption name="remote browse sync"/>パラメータの使用は必須ではない。
+</para>
+
+<para>
+<indexterm><primary>複製</primary><secondary>WINS</secondary></indexterm>
+Samba-3では、WINS複製は作業中である。大量のコードがコミットされていたが、
+まだ改良が必要である。Samba-3.0.20のリリース時点ではまだサポートされた機能では
+ない。希望としては、Samba-3のどこかのリリース時点でサポートされた機能になること
+を予定している。開発者がこれを完了させようと思うほどの、十分な重要性がないとい
+う理由で、これは遅れている。
 </para>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-If only one WINS server is used for an entire multisegment network, then
-the use of the <smbconfoption name="remote announce"/> and the
-<smbconfoption name="remote browse sync"/> parameters should not be necessary.
-</para>
-
-<para>
-<indexterm><primary>replication</primary><secondary>WINS</secondary></indexterm>
-As of Samba-3, WINS replication is being worked on. The bulk of the code has been committed, but it still
-needs maturation. This is not a supported feature of the Samba-3.0.20 release. Hopefully, this will become a
-supported feature of one of the Samba-3 release series. The delay is caused by the fact that this feature has
-not been of sufficient significance to inspire someone to pay a developer to complete it.
-</para>
-
-<para>
-<indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>MS-WINS replication</primary></indexterm>
+<indexterm><primary>MS-WINS 複製</primary></indexterm>
 <indexterm><primary>redundancy</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
-<indexterm><primary>NetBIOSless SMB over TCP/IP</primary></indexterm>
+<indexterm><primary>NetBIOSなしの SMB over TCP/IP</primary></indexterm>
 <indexterm><primary>local names</primary></indexterm>
-<indexterm><primary>subnets</primary></indexterm>
-<indexterm><primary>multiple WINS servers</primary></indexterm>
-Right now Samba WINS does not support MS-WINS replication. This means that when setting up Samba as a WINS
-server, there must only be one <filename>nmbd</filename> configured as a WINS server on the network. Some
-sites have used multiple Samba WINS servers for redundancy (one server per subnet) and then used
-<smbconfoption name="remote browse sync"/> and <smbconfoption name="remote announce"/> to effect browse list
-collation across all segments. Note that this means clients will only resolve local names and must be
-configured to use DNS to resolve names on other subnets in order to resolve the IP addresses of the servers
-they can see on other subnets. This setup is not recommended but is mentioned as a practical consideration
-(i.e., an <quote>if all else fails</quote> scenario). NetBIOS over TCP/IP is an ugly and difficult to manage
-protocol. Its replacement, NetBIOSless SMB over TCP/IP is not without its own manageability concerns. NetBIOS
-based networking is a life of compromise and trade-offs. WINS stores information that cannot be stored in
-DNS; consequently, DNS is a poor substitute for WINS given that when NetBIOS over TCP/IP is used, Windows
-clients are designed to use WINS.
+<indexterm><primary>サブネット</primary></indexterm>
+<indexterm><primary>複数のWINSサーバ</primary></indexterm>
+現時点で、SambaのWINSはMS-WINS複製をサポートしていない。これは、SambaをWINSサー
+バとして設定しても、ネットワーク上で、1つだけ<filename>nmbd</filename>をWINSサーバとして
+設定する必要がある。あるサイトでは(サブネット単位に1つのサーバを)冗長性のために、
+複数のSamba WINSサーバを使っていて、セグメントをまたいですべてのセグメントの
+ブラウズリストを集めるために、<smbconfoption name="remote browse sync"/>と
+<smbconfoption name="remote announce"/>を使っている。
+この設定では、クライアントがローカル名の解決のみが出来るので、他のサブネット上
+を見ることができる、サーバのIPアドレスを解決するために他のサブネット上の名前を
+解決するためのDNSを使うように設定しなければならない。この設定は推奨されないが、
+実用的なやり方として(すなわち、<quote>もしも他の場合がすべて失敗の場合</quote>
+というシナリオ)、記述されている。NetBIOS over TCP/IPはとてもひどくて管理しにく
+いプロトコルである。この置き換えとして、NetBIOSless SMB over TCP/IP is not
+without its own manageability concerns.
+NetBIOSベースのネットワークは妥協とトレードオフの固まりである。WINSは
+DNSに格納出来ない情報を格納する。従って、DNSはNetBIOS over TCP/IPが
+使われている時にWINSから得られるものよりも貧弱な代わりにしかならない。
+WindowsクライアントはWINSを使うように設計されている。
 </para>
 
 <para>
-<indexterm><primary>broadcast messages</primary></indexterm>
+<indexterm><primary>ブロードキャストメッセージ</primary></indexterm>
 <indexterm><primary>repeated intervals</primary></indexterm>
 <indexterm><primary>across network segments</primary></indexterm>
-Lastly, take note that browse lists are a collection of unreliable broadcast
-messages that are repeated at intervals of not more than 15 minutes. This means
-that it will take time to establish a browse list, and it can take up to 45
-minutes to stabilize, particularly across network segments.
+最後に、ブラウズリストは15分間よりも短い間隔で繰り返される信頼性のない
+ブロードキャストメッセージの集合から校正されていることに注意。これは、
+ブラウズリストを作成するために時間がかかると言うことであり、特に、
+ネットワークセグメントをまたぐ場合は、安定するまでには45分かかる可能性が
+あるということである。
 </para>
 
 <para>
 <indexterm><primary>Windows 200x/XP</primary></indexterm>
-When an MS Windows 200x/XP system attempts to resolve a host name to an IP address, it follows a defined path:
+Microsoft Windows 200x/XPシステムでホスト名をIPアドレスに解決しようとする場合、
+以下の手順で行う:
 </para>
 
 <orderedlist>
 	<listitem><para>
-	Checks the <filename>hosts</filename> file. It is located in <filename>%SystemRoot%\System32\Drivers\etc</filename>.
+	<filename>hosts</filename>ファイルを調べる。これは<filename>%SystemRoot%\System32\Drivers\etc</filename>にある。
 	</para></listitem>
 
 	<listitem><para>
-	Does a DNS lookup.
+	DNS 検索を実行する。
 	</para></listitem>
 
 	<listitem><para>
-	Checks the NetBIOS name cache.
+	NetBIOSネームキャッシュを調べる。
 	</para></listitem>
 
 	<listitem><para>
-	Queries the WINS server.
+	WINSサーバに問い合わせる。
 	</para></listitem>
 
 	<listitem><para>
-	Does a broadcast name lookup over UDP.
+	UDPでブロードキャストの名前検索を行う。
 	</para></listitem>
 
 	<listitem><para>
-	Looks up entries in LMHOSTS, located in <filename>%SystemRoot%\System32\Drivers\etc</filename>.
+	<filename>%SystemRoot%\System32\Drivers\etc</filename>にあるLMHOSTSファイルのエントリを調べる。
 	</para></listitem>
 </orderedlist>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>NetBIOS over TCP/IP</primary></indexterm>
-<indexterm><primary>name lookups</primary></indexterm>
+<indexterm><primary>名前検索</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
-Given the nature of how the NetBIOS over TCP/IP protocol is implemented, only WINS is capable of resolving
-with any reliability name lookups for service-oriented names such as TEMPTATION&lt;1C&gt; &smbmdash; a NetBIOS
-name query that seeks to find network logon servers. DNS has no concept of service-oriented names such as
-this. In fact, the Microsoft ADS implementation specifically manages a whole range of extended
-service-oriented DNS entries. This type of facility is not implemented and is not supported for the NetBIOS
-over TCP/IP protocol namespace.
+どのようにNetBIOS over TCP/IPプロトコルが実装されているを考えた上で、WINSのみが、
+TEMPTATION&lt;1C&gt; &smbmdash;というネットワークログオンサーバを探すための
+NetBIOS名前問い合わせのようなサービス指向の名前の、信頼性のある名前検索を解決す
+る能力を持つ。実際、Microsoft ADSでの実装は特に拡張されたサービス指向のDNSエン
+トリ全体を管理するようになっている。このタイプの機能はNetBIOS over TCP/IPプロト
+コルの名前空間では実装も、サポートもされていない。
 </para>
 
 </sect2>
 
 <sect2>
-<title>TCP/IP without NetBIOS</title>
+<title>TCP/IPなしのNetBIOS</title>
 
 <para>
 <indexterm><primary>NetBIOS</primary></indexterm>
-<indexterm><primary>NetBIOS-less</primary></indexterm>
+<indexterm><primary>NetBIOSなし</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 All TCP/IP-enabled systems use various forms of hostname resolution. The primary
 methods for TCP/IP hostname resolution involve either a static file (<filename>/etc/hosts</filename>)
