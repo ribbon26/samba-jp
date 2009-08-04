@@ -667,54 +667,59 @@ noldor.quenya.org. 1200  IN      A       10.1.1.17
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>WINSサーバアドレス</primary></indexterm>
-MS Windows machines register their NetBIOS names (i.e., the machine name for each service type in operation)
-on startup.  The exact method by which this name registration takes place is determined by whether or not the
-MS Windows client/server has been given a WINS server address, whether or not LMHOSTS lookup is enabled,
-whether or not DNS for NetBIOS name resolution is enabled, and so on.
+Microsoft WindowsマシンはそのNetBIOS名を起動時に登録する(すなわち、動作に対する
+おのおののサービスタイプのためのマシン名)。この名前登録の正確な方法は、
+Microsoft Windowsクライアント/サーバにWINSサーバアドレスが与えられているか否か
+か、LMHOSTS検索が有効になっているか否か、NetBIOS名の名前解決にDNSを使うかどうか
+か否か、あるいはその他によって決まる。
 </para>
 
 <para>
-<indexterm><primary>WINS server</primary></indexterm>
-<indexterm><primary>name lookups</primary></indexterm>
+<indexterm><primary>WINSサーバ</primary></indexterm>
+<indexterm><primary>名前検索</primary></indexterm>
 <indexterm><primary>UDP</primary></indexterm>
-In the case where there is no WINS server, all name registrations as well as name lookups are done by UDP
-broadcast. This isolates name resolution to the local subnet, unless LMHOSTS is used to list all names and IP
-addresses. In such situations, Samba provides a means by which the Samba server name may be forcibly injected
-into the browse list of a remote MS Windows network (using the <smbconfoption name="remote announce"/>
-parameter).
+WINSサーバがない場合、名前検索と同様、すべての名前登録は、UDPブロードキャストに
+よって行われる。これは、すべての名前とIPアドレスの一覧を用意するLMHOST
+を使う以外、ローカルサブネット単位で分割した名前解決を行う。このような状態で、
+リモートのMicrosoft Windowsネットワークのブラウズリスト中にSambaサーバの名前を
+強制的に入れ込むことによる方法を提供する
+(<smbconfoption name="remote announce"/>を使って)。
 </para>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>UDP unicast</primary></indexterm>
-<indexterm><primary>name resolution across routed networks</primary></indexterm>
-Where a WINS server is used, the MS Windows client will use UDP unicast to register with the WINS server. Such
-packets can be routed, and thus WINS allows name resolution to function across routed networks.
+<indexterm><primary>UDPユニキャスト</primary></indexterm>
+<indexterm><primary>ルーティングされたネットワークを超えた名前解決</primary></indexterm>
+WINSサーバを使う場合、Microsoft Windows蔵案とはWINSサーバにUDPユニキャストで名
+前を登録する。このようなパケットはルーティング出来、WINSはルーティングされたネッ
+トワークを超えて名前解決が出来る。
 </para>
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>local master browser</primary><see>LMB</see></indexterm>
+<indexterm><primary>ローカルマスタブラウザ</primary><see>LMB</see></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>LMHOSTS</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
-<indexterm><primary>browse list</primary></indexterm>
+<indexterm><primary>ブラウズリスト</primary></indexterm>
 <indexterm><primary>election</primary></indexterm>
 <indexterm><primary>election criteria</primary></indexterm>
-During the startup process, an election takes place to create a local master browser (LMB) if one does not
-already exist. On each NetBIOS network one machine will be elected to function as the domain master browser
-(DMB). This domain browsing has nothing to do with MS security Domain Control.  Instead, the DMB serves the
-role of contacting each LMB (found by asking WINS or from LMHOSTS) and exchanging browse list contents. This
-way every master browser will eventually obtain a complete list of all machines that are on the network. Every
-11 to 15 minutes an election is held to determine which machine will be the master browser. By the nature of
-the election criteria used, the machine with the highest uptime, or the most senior protocol version or other
-criteria, will win the election as DMB.
+スタートアップ処理中、すでに存在していなければ、ローカルマスタブラウザ(LMB)の
+選定が起こる。おのおののNetBIOSネットワークで、ある1つのマシンがドメインマスタ
+ブラウザ(DMB)として機能するように選択される。このドメインブラウジングは、
+Microsoftセキュリティドメインコントロールとは何らの関係もない。その代わり、DMB
+は(WINSまたはLMHOSTを使って見つけた)おのおののLMBに接続する役割を行い、ブラウズ
+リストの内容を交換する。このようにして、すべてのマスタブラウザは、結果として、ネットワーク
+上にあるすべてのマシンの完全な一覧を得ることになる。毎11から15分ごとに、どのマ
+シンがマスタブラウザになるかという選択が行われる。使用される選択基準の性質によ
+り、最も大きなuptime、あるいは最も上位のプロトコルバージョン、あるいは、そのた
+の基準を持つものがDMBとして選択される。
 </para>
 
 <para>
-<indexterm><primary>WINS server</primary></indexterm>
+<indexterm><primary>WINSサーバ</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
-<indexterm><primary>NetBIOS name type</primary></indexterm>
+<indexterm><primary>NetBIOS名前タイプ</primary></indexterm>
 <indexterm><primary>n security context</primary></indexterm>
 <indexterm><primary>network segment</primary></indexterm>
 <indexterm><primary>authoritive</primary></indexterm>
