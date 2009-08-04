@@ -413,74 +413,78 @@ NetBIOS名前問い合わせのようなサービス指向の名前の、信頼�
 <indexterm><primary>NetBIOS</primary></indexterm>
 <indexterm><primary>NetBIOSなし</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
-All TCP/IP-enabled systems use various forms of hostname resolution. The primary
-methods for TCP/IP hostname resolution involve either a static file (<filename>/etc/hosts</filename>)
-or the Domain Name System (DNS). DNS is the technology that makes
-the Internet usable. DNS-based hostname resolution is supported by nearly all
-TCP/IP-enabled systems. Only a few embedded TCP/IP systems do not support DNS.
+すべてのTCP/IPが有効なシステムは、いろいろなホスト名解決方法を使う。TCP/IPの
+ホスト名解決で最初に使う方法は固定のファイル(<filename>/etc/hosts</filename>)
+かDNSである。DNSはインターネットを使えるようにする技術である。DNSベースのホスト
+名解決はほとんどすべてのTCP/IPが有効なシステムでサポートされている。ごくわずか
+の組み込みシステムのみがDNSのサポートをしていない。
 </para>
 
 <para>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>DDNS</primary></indexterm>
 <indexterm><primary>ipconfig</primary></indexterm>
-<indexterm><primary>Dynamic DNS</primary><see>DDNS</see></indexterm>
-Windows 200x/XP can register its hostname with a Dynamic DNS server (DDNS). It is possible to force register with a
-dynamic DNS server in Windows 200x/XP using <command>ipconfig /registerdns</command>.
+<indexterm><primary>ダイナミックDNS</primary><see>DDNS</see></indexterm>
+Windows 200x/XPはダイナミックDNSサーバ(DDNS)にそのホスト名を登録できる。
+Windows 200x/XP上で <command>ipconfig /registerdns</command>を使うことで、
+ダイナミックDNSサーバに強制的に登録できる。
 </para>
 
 <para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>severely impaired</primary></indexterm>
-With Active Directory, a correctly functioning DNS server is absolutely essential. In the absence of a working
-DNS server that has been correctly configured, MS Windows clients and servers will be unable to locate each
-other, so network services consequently will be severely impaired.
+Active Directoyでは、正確に動作しているDNSサーバが確実に必要である。正しく設定
+されていて動作しているDNSサーバがない場合、Microsoft Windows クライアントとサー
+バはお互いを認識できず、そのためネットワークサービスはひどく使い物にならないだ
+ろう。
 </para>
 
 <para>
 <indexterm><primary>raw SMB over TCP/IP</primary></indexterm>
 <indexterm><primary>No NetBIOS layer</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-<indexterm><primary>domain member server</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-Use of raw SMB over TCP/IP (No NetBIOS layer) can be done only with Active Directory domains. Samba is not an
-Active Directory domain controller: ergo, it is not possible to run Samba as a domain controller and at the same
-time <emphasis>not</emphasis> use NetBIOS. Where Samba is used as an Active Directory domain member server
-(DMS) it is possible to configure Samba to not use NetBIOS over TCP/IP. A Samba DMS can integrate fully into
-an Active Directory domain, however, if NetBIOS over TCP/IP is disabled, it is necessary to manually create
-appropriate DNS entries for the Samba DMS because they will not be automatically generated either by Samba, or
-by the ADS environment.
+raw SMB over TCP/IP(NetBIOSレイヤなし)の使用は、Active Directoryドメインのみで
+行える。SambaはActive Directory ドメインコントローラではない:故に、NetBIOSを
+<emphasis>使わないで</emphasis>同じ時にSambaをドメインコントローラとして動かす
+のは不可能である。SambaをActive Directoryのメンバサーバ(DMS)として動かしているとき、
+NetBIOS over TCP/IPを使わないでSambaを設定することは可能である。Samba DMSは
+Active Directoyドメインに完全に統合できるが、もしも、NetBIOS over TCP/IPが無効
+の場合、SambaまたはADS環境のどちらかで自動的に生成されないという理由で、Samba
+DMS用に適切なDNSエントリを手動で作成する必要がある。
 </para>
 
 </sect2>
 
 <sect2 id="adsdnstech">
-<title>DNS and Active Directory</title>
+<title>DNSとActive Directory</title>
 
 <para>
 <indexterm><primary>DNS</primary><secondary>Active Directory</secondary></indexterm>
 <indexterm><primary>DDNS</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>SRV records</primary></indexterm>
-<indexterm><primary>DNS</primary><secondary>SRV records</secondary></indexterm>
-Occasionally we hear from UNIX network administrators who want to use a UNIX-based DDNS server in place
-of the Microsoft DNS server. While this might be desirable to some, the MS Windows 200x DNS server is
-autoconfigured to work with Active Directory. It is possible to use BIND version 8 or 9, but it will almost
-certainly be necessary to create service records (SRV records) so MS Active Directory clients can resolve
-hostnames to locate essential network services.  The following are some of the default service records that
-Active Directory requires:
+<indexterm><primary>SRV レコード</primary></indexterm>
+<indexterm><primary>DNS</primary><secondary>SRV レコード</secondary></indexterm>
+時折、Microsoft DNSサーバの代わりにUNIXベースのDDNSサーバを使いたいというUNIXネッ
+トワーク管理者の要望を聞くことがある。これが誰かにとって都合がよい間、Microsoft
+Windows 200x DNSサーバはActive Directoryと共に動作するように自動的に設定される。
+BIND 8または9を使うのは可能だが、Microsoft Active Directoryクライアントが基本的
+なネットワークサービスを確実に使えるために、ホスト名を解決できるために、サービ
+スレコード(SRVレコード)を確実に作成することがほとんど必要となる。以下は、
+Active Directoryが要求する既定値のサービスレコードのいくつかである:
 </para>
 
 <para>
 <indexterm><primary>DDNS</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>BIND9</primary></indexterm>
-The use of DDNS is highly recommended with Active Directory, in which case the use of BIND9 is preferred for
-its ability to adequately support the SRV (service) records that are needed for Active Directory. Of course,
-when running ADS, it makes sense to use Microsoft's own DDNS server because of the natural affinity between ADS
-and MS DNS.
+Active Directoryで必要とされるSRV(サービス)レコードを十分にサポートする能力を
+BIND9を使うときに望まれるため、Active DirectoryでDDNSを使うことは強く推奨される。
+もちろん、ADSが動いているとき、ADSとMicrosoft DNSの間で自然な類似性があるという
+理由で、Microsoft固有のDDNSサーバを使うことは意味があることである。
 </para>
 
 <variablelist>
@@ -488,7 +492,7 @@ and MS DNS.
 	<term>_ldap._tcp.pdc._msdcs.<emphasis>Domain</emphasis></term>
 	<listitem>
 	<para>
-	This provides the address of the Windows NT PDC for the domain.
+	これは、ドメイン内のWindows NT PDCアドレスを提供する。
 	</para>
 	</listitem>
 </varlistentry>
@@ -496,7 +500,7 @@ and MS DNS.
 	<term>_ldap._tcp.pdc._msdcs.<emphasis>DomainTree</emphasis></term>
 	<listitem>
         <para>
-	Resolves the addresses of global catalog servers in the domain.
+	ドメイン内のグローバルカタログのアドレスを解決する。
         </para>
 	</listitem>
 </varlistentry>
@@ -504,7 +508,7 @@ and MS DNS.
         <term>_ldap._tcp.<emphasis>site</emphasis>.sites.writable._msdcs.<emphasis>Domain</emphasis></term>
 	<listitem>
         <para>
-	Provides list of domain controllers based on sites.
+	サイト上のドメインコントローラの一覧を提供する。
         </para>
 	</listitem>
 </varlistentry>
@@ -520,7 +524,7 @@ and MS DNS.
 	<term>_ldap._tcp.<emphasis>GUID</emphasis>.domains._msdcs.<emphasis>DomainTree</emphasis></term>
 	<listitem>
 	<para>
-	Entry used by MS Windows clients to locate machines using the global unique identifier.
+	グローバルな一意の識別子を使うマシンをクライアントが認識するためにMicrosoft Windowsによって使われるエントリ。
 	</para>
 	</listitem>
 </varlistentry>
@@ -528,21 +532,22 @@ and MS DNS.
 	<term>_ldap._tcp.<emphasis>Site</emphasis>.gc._msdcs.<emphasis>DomainTree</emphasis></term>
 	<listitem>
 	<para>
-	Used by Microsoft Windows clients to locate the site configuration-dependent global catalog server.
+	サイト設定に依存するグローバルカタログサーバをクライアントが認識するためにMicrosoft Windowsによって使われる。
 	</para>
 	</listitem>
 </varlistentry>
 </variablelist>
 
 	<para>
-	Specific entries used by Microsoft clients to locate essential services for an example domain
-	called <constant>quenya.org</constant> include:
+	サンプルのドメイン<constant>quenya.org</constant>のために基本的なサービスを
+	Microsoftクライアントが認識するために使われる特定のエントリは以下を含む:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		_kerberos._udp.quenya.org &smbmdash; Used to contact the KDC server via UDP.
-		This entry must list port 88 for each KDC.
+		_kerberos._udp.quenya.org &smbmdash; UDP経由でKDCサーバに接続す
+		るために使われる。のエントリはおのおののKDC向けにポート88にしな
+		ければならない。
 		</para></listitem>
 
 		<listitem><para>
