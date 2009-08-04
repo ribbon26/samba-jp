@@ -551,35 +551,36 @@ BIND9を使うときに望まれるため、Active DirectoryでDDNSを使うこ�
 		</para></listitem>
 
 		<listitem><para>
-		_kpasswd._udp.quenya.org &smbmdash; Used to locate the <constant>kpasswd</constant> server
-		when a user password change must be processed. This record must list port 464 on the
-		master KDC.
+		_kpasswd._udp.quenya.org &smbmdash;ユーザのパスワード変更処理を
+		行わなければならない時に<constant>kpasswd</constant>サーバを見つけるときに使う。
+		このレコードはマスタKDCのポート464でなければならない。
 		</para></listitem>
 
 		<listitem><para>
-		_kerberos._tcp.quenya.org &smbmdash; Used to locate the KDC server via TCP.
-		This entry must list port 88 for each KDC.
+		_kerberos._tcp.quenya.org &smbmdash; TCP経由でKDCサーバを見つけ
+		るときに使う。このエントリはおのおののKDCでポート88でなければならない。
 		</para></listitem>
 
 		<listitem><para>
-		_ldap._tcp.quenya.org &smbmdash; Used to locate the LDAP service on the PDC.
-		This record must list port 389 for the PDC.
+		_ldap._tcp.quenya.org &smbmdash; PDC上でLDAPサービスを見つける
+		のに使う。このレコードはPDCのためにポート389でなければならない。
 		</para></listitem>
 
 		<listitem><para>
-		_kpasswd._tcp.quenya.org &smbmdash; Used to locate the <constant>kpasswd</constant> server
-		to permit user password changes to be processed. This must list port 464.
+		_kpasswd._tcp.quenya.org &smbmdash; ユーザパスワード変更を行う
+		ことを許可するためにconstant>kpasswd</constant>を探すときに使う。これはポート
+		464でなければならない。
 		</para></listitem>
 
 		<listitem><para>
-		_gc._tcp.quenya.org &smbmdash; Used to locate the global catalog server  for the
-		top of the domain. This must list port 3268.
+		_gc._tcp.quenya.org &smbmdash; グローバル型ログサーバを探すとき
+		に使う。これはポート3268でなければならない。
 		</para></listitem>
 	</itemizedlist>
 
 	<para>
-	The following records are also used by the Windows domain member client to locate vital
-	services on the Windows ADS domain controllers.
+	以下のレコードも、Windows ADS ドメインコントローラ上の重要なサービスを
+	探すために、Windowsドメインクライアントによって使われる。
 	</para>
 
 	<itemizedlist>
@@ -621,7 +622,7 @@ BIND9を使うときに望まれるため、Active DirectoryでDDNSを使うこ�
 	</itemizedlist>
 
 	<para>
-	Presence of the correct DNS entries can be validated by executing:
+	正しいDNSエントリの存在は以下を実行することによって検証できる:
 <screen>
 &rootprompt; dig @frodo -t any _ldap._tcp.dc._msdcs.quenya.org
 
@@ -658,14 +659,14 @@ noldor.quenya.org. 1200  IN      A       10.1.1.17
 </sect1>
 
 <sect1>
-<title>How Browsing Functions</title>
+<title>どのようにブラウジングは機能するか</title>
 
 <para>
-<indexterm><primary>register NetBIOS names</primary></indexterm>
+<indexterm><primary>NetBIOS名の登録</primary></indexterm>
 <indexterm><primary>LMHOSTS</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>WINS server address</primary></indexterm>
+<indexterm><primary>WINSサーバアドレス</primary></indexterm>
 MS Windows machines register their NetBIOS names (i.e., the machine name for each service type in operation)
 on startup.  The exact method by which this name registration takes place is determined by whether or not the
 MS Windows client/server has been given a WINS server address, whether or not LMHOSTS lookup is enabled,
