@@ -831,15 +831,17 @@ DMBはそれがいるサブネット上でのLMBであるべきである。こ�
 <indexterm><primary>サブネット</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>rebooted</primary></indexterm>
-Next, you should ensure that each of the subnets contains a machine that can act as an LMB for the workgroup.
-Any MS Windows NT/200x/XP machine should be able to do this, as will Windows 9x/Me machines (although these
-tend to get rebooted more often, so it is not such a good idea to use them). To make a Samba server an LMB,
-set the following options in the <smbconfsection name="[global]"/> section of the &smb.conf; file as shown in
-<link linkend="lmbexample">Local master browser smb.conf</link>
+次に、ワークグループに対するLMBとして振る舞うことが出来るマシンを、おのおののサ
+ブネットごとに存在するようにする。任意のWindows NT/200x/XPマシンはこれが出来、
+Windows 9x/Meマシン(しばしばリブートの必要があるため、この目的に使うのには適さ
+ないが)もできる。SambaサーバをLMBにするには、以下の、
+<link linkend="lmbexample">ローカルマスタブラウザのsmb.conf</link>で示されているよ
+うに、&smb.conf;ファイルの<smbconfsection name="[global]"/>セクション中に以下の
+オプションを記述する。
 </para>
 
 <example id="lmbexample">
-<title>Local master browser smb.conf</title>
+<title>ローカルマスタブラウザのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain master">no</smbconfoption>
@@ -851,29 +853,31 @@ set the following options in the <smbconfsection name="[global]"/> section of th
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
-Do not do this for more than one Samba server on each subnet, or they will war with
-each other over which is to be the LMB.
+おのおののサブネットごとに1つ以上のSambaサーバに対してこれを行わないこと。そう
+しないと、LMBになるための競合が発生してしまう。
 </para>
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>browser election</primary></indexterm>
-The <smbconfoption name="local master"/> parameter allows Samba to act as a
-LMB. The <smbconfoption name="preferred master"/> causes <command>nmbd</command>
-to force a browser election on startup and the <smbconfoption name="os level"/>
-parameter sets Samba high enough so it should win any browser elections.
+<indexterm><primary>ブラウザ選択</primary></indexterm>
+<smbconfoption name="local master"/>パラメータはSambaに、LMBとして機能するように
+させる。<smbconfoption name="preferred master"/>は、<command>nmbd</command>に対
+して起動時にブラウザ選択を強制的に実行するようにさせ、
+<smbconfoption name="os level"/>パラメータは、Sambaが、ブラウザ選択に勝つために
+必要十分となる大きな値を設定する。
 </para>
 
 <para>
-<indexterm><primary>disable LMB</primary></indexterm>
-If you have an NT machine on the subnet that you wish to be the LMB, you can disable Samba from
-becoming an LMB by setting the following options in the <smbconfsection name="[global]"/> section of the
-&smb.conf; file as shown in <link linkend="nombexample">smb.conf for Not Being a Master Browser</link>.
+<indexterm><primary>LMBを無効</primary></indexterm>
+もしもLMBにしたいNTマシンがサブネット上にある場合、以下の、
+<link linkend="nombexample">マスタブラウザにならないsmb.conf</link>で
+示されているように、&smb.conf;ファイル中の<smbconfsection name="[global]"/>
+セクション中に、以下のパラメータを設定して、SambaがLMBにならないようにする。
 </para>
 
 <para>
 <example id="nombexample">
-<title>smb.conf for Not Being a Master Browser</title>
+<title>マスタブラウザにならないsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain master">no</smbconfoption>
@@ -887,21 +891,22 @@ becoming an LMB by setting the following options in the <smbconfsection name="[g
 </sect2>
 
 <sect2>
-<title>Domain Browsing Configuration</title>
+<title>ドメインブラウジングの設定</title>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>registers</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-If you are adding Samba servers to a Windows NT domain, then you must not set up a Samba server as a DMB.  By
-default, a Windows NT PDC for a domain is also the DMB for that domain. Network browsing may break if a Samba
-server other than the PDC registers the DMB NetBIOS name (<replaceable>DOMAIN</replaceable>&lt;1B&gt;) with
-WINS.
+もしも、Windows NTドメインにSambaサーバを追加する場合、SambaサーバをDMBとして設
+定してはならない。既定値では、ドメインに対するWindows NT PDCはそのドメインに対
+するDMBでもある。WINSを使って、DMB NetBIOS名
+(<replaceable>DOMAIN</replaceable>&lt;1B&gt;)をSambaサーバがPDCとして登録すると、
+ネットワークブラウジングは崩壊する。
 </para>
 
 <para>
-<indexterm><primary>Local Master Browser</primary></indexterm>
+<indexterm><primary>ローカルマスタブラウザ</primary></indexterm>
 For subnets other than the one containing the Windows NT PDC, you may set up Samba servers as LMBs as
 described. To make a Samba server a Local Master Browser, set the following options in the <smbconfsection
 name="[global]"/> section of the &smb.conf; file as shown in <link linkend="remsmb">Local Master Browser
