@@ -754,39 +754,45 @@ have to put up with protracted inability to use the network services.
 <indexterm><primary>サブネット間でのブラウジング</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>/etc/hosts</primary></indexterm>
-Samba supports a feature that allows forced synchronization of browse lists across routed networks using the
-<smbconfoption name="remote browse sync"/> parameter in the &smb.conf; file. This causes Samba to contact the
-LMB on a remote network and to request browse list synchronization. This effectively bridges two networks that
-are separated by routers. The two remote networks may use either broadcast-based name resolution or WINS-based
-name resolution, but it should be noted that the <smbconfoption name="remote browse sync"/> parameter provides
-browse list synchronization &smbmdash; and that is distinct from name-to-address resolution. In other words,
-for cross-subnet browsing to function correctly, it is essential that a name-to-address resolution mechanism
-be provided. This mechanism could be via DNS, <filename>/etc/hosts</filename>, and so on.
+Sambaは&smb.conf;ファイル中に<smbconfoption name="remote browse sync"/>
+パラメータを使うことで、ルーティングされたネットワーク越しにブラウズリストの
+同期を強制的に行う機能をサポートしている。この機能のためにSambaはリモートネットワーク上
+のLMBに接続し、ブラウズリストの同期を要求する。これはルータによって分離された2
+つのネットワークを効果的に接続する。2つのリモートネットワークはブロードキャスト
+ベースの名前解決か、WINSベースの名前解決のどちらを使っても良いが、
+<smbconfoption name="remote browse sync"/>パラメータがブラウズリストの同期を提
+供するが、&smbmdash;それは名前からアドレスへの解決とは異なることに注意する必要
+がある。別の言い方をすると、サブネット間のブラウジングをきちんと機能させるため
+には、名前解決メカニズムが提供されていることが基本であるということである。この
+メカニズムとはDNS、<filename>/etc/hosts</filename>、あるいはその他である。
 </para>
 
 <sect2 id="DMB">
-<title>Configuring Workgroup Browsing</title>
+<title>ワークグループのブラウジングの設定</title>
 
 <para>
-<indexterm><primary>cross-subnet browsing</primary></indexterm>
+<indexterm><primary>サブネット間のブラウジング</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>isolated workgroup</primary></indexterm>
-<indexterm><primary>workgroup</primary></indexterm>
-To configure cross-subnet browsing on a network containing machines in a workgroup, not an NT domain, you need
-to set up one Samba server to be the DMB (note that this is not the same as a Primary Domain Controller,
-although in an NT domain the same machine plays both roles). The role of a DMB is to collate the browse lists
-from LMB on all the subnets that have a machine participating in the workgroup. Without one machine configured
-as a DMB, each subnet would be an isolated workgroup unable to see any machines on another subnet. It is the
-presence of a DMB that makes cross-subnet browsing possible for a workgroup.
+<indexterm><primary>分離されたワークグループ</primary></indexterm>
+<indexterm><primary>ワークグループ</primary></indexterm>
+ネットワークが、NTドメインでない、ワークグループに属するマシンを含むサブネット
+間のブラウジングを設定するために、ある1つのSambaサーバをDMBにする必要がある(
+NTドメイン中では両方の役割を同じマシンが担うが、これはPDCとは違うと言うことに注
+意)。DMBの役割はワークグループ中に参加しているマシンがあるすべてのサブネット上
+のLMBからブラウズリストを収集することである。DMBとして設定されたマシンがないと、
+おのおののサブネットは分離された、他のサブネットのマシンを見ることができないワー
+クグループとなってしまう。これが、ワークグループに対してサブネット間ブラウジングをさせ
+るDMBの存在理由である。
 </para>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
-In a workgroup environment the DMB must be a Samba server, and there must only be one DMB per workgroup name.
-To set up a Samba server as a DMB, set the following option in the <smbconfsection name="[global]"/> section
-of the &smb.conf; file:
+ワークグループ環境で、DMBはSambaサーバでなければならず、ワークグループ名につき1
+つのDMBでなければならない。SambaサーバをDMBとして設定するためには、&smb.conf;
+ファイル中の<smbconfsection name="[global]"/>セクションに以下のオプションを記述
+する:
 </para>
 
 <para>
@@ -798,13 +804,14 @@ of the &smb.conf; file:
 <para>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-The DMB should preferably be the LMB for its own subnet. In order to achieve this, set the following options
-in the <smbconfsection name="[global]"/> section of the &smb.conf; file as shown in <link
-linkend="dmbexample">Domain Master Browser smb.conf</link>
+DMBはそれがいるサブネット上でのLMBであるべきである。これを達成するためには、
+&smb.conf;ファイル中の<smbconfsection name="[global]"/>セクション中に、
+<link linkend="dmbexample">ドメインマスタブラウザのsmb.conf</link>
+で示されるオプションを設定する:
 </para>
 
 <example id="dmbexample">
-<title>Domain Master Browser smb.conf</title>
+<title>ドメインマスタブラウザのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain master">yes</smbconfoption>
@@ -816,12 +823,12 @@ linkend="dmbexample">Domain Master Browser smb.conf</link>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
-<indexterm><primary>WINS server</primary></indexterm>
-The DMB may be the same machine as the WINS server, if necessary.
+<indexterm><primary>WINSサーバ</primary></indexterm>
+必要であれば、DMBはWINSサーバと同じマシンでも良い。
 </para>
 
 <para>
-<indexterm><primary>subnets</primary></indexterm>
+<indexterm><primary>サブネット</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>rebooted</primary></indexterm>
 Next, you should ensure that each of the subnets contains a machine that can act as an LMB for the workgroup.
