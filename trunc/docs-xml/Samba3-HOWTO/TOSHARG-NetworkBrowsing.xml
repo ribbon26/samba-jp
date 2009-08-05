@@ -302,7 +302,7 @@ SambaがSMBサーバ技術のみのネットワーク中では<filename>nmbd</fi
 る唯一の方法は<smbconfoption name="remote announce"/>と
 <smbconfoption name="remote browse sync"/>パラメータを&smb.conf;ファイルで
 使うことである。
-
+</para>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
@@ -568,7 +568,7 @@ BIND9を使うときに望まれるため、Active DirectoryでDDNSを使うこ�
 
 		<listitem><para>
 		_kpasswd._tcp.quenya.org &smbmdash; ユーザパスワード変更を行う
-		ことを許可するためにconstant>kpasswd</constant>を探すときに使う。これはポート
+		ことを許可するために<constant>kpasswd</constant>を探すときに使う。これはポート
 		464でなければならない。
 		</para></listitem>
 
@@ -907,14 +907,15 @@ Windows 9x/Meマシン(しばしばリブートの必要があるため、この
 
 <para>
 <indexterm><primary>ローカルマスタブラウザ</primary></indexterm>
-For subnets other than the one containing the Windows NT PDC, you may set up Samba servers as LMBs as
-described. To make a Samba server a Local Master Browser, set the following options in the <smbconfsection
-name="[global]"/> section of the &smb.conf; file as shown in <link linkend="remsmb">Local Master Browser
-smb.conf</link>
+Windows NT PDCを含んでいる以外のサブネットでは、Sambaサーバを説明しているように
+LMBとして設定しても良い。SambaサーバをLMBにするためには、以下の
+<link linkend="remsmb">ローカルマスタブラウザにするためのsmb.conf</link>
+のように、&smb.conf;ファイル中の<smbconfsection name="[global]"/>セクション中に
+以下のオプションを設定する。
 </para>
 
 <example id="remsmb">
-<title>Local Master Browser smb.conf</title>
+<title>ローカルマスタブラウザにするためのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain master">no</smbconfoption>
@@ -925,7 +926,7 @@ smb.conf</link>
 </example>
 
 <para>
-<indexterm><primary>election</primary></indexterm>
+<indexterm><primary>選択</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 If you wish to have a Samba server fight the election with machines on the same subnet, you may set the
 <smbconfoption name="os level"/> parameter to lower levels.  By doing this you can tune the order of machines
