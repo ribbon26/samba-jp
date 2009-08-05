@@ -928,25 +928,29 @@ LMBとして設定しても良い。SambaサーバをLMBにするためには、
 <para>
 <indexterm><primary>選択</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-If you wish to have a Samba server fight the election with machines on the same subnet, you may set the
-<smbconfoption name="os level"/> parameter to lower levels.  By doing this you can tune the order of machines
-that will become LMBs if they are running. For more details on this, refer to <link
-linkend="browse-force-master">Forcing Samba to Be the Master</link>.
+もしも、同じサブネット上のマシンとの間で選択作業を行いたいのであれば、
+<smbconfoption name="os level"/>パラメータをより小さな値に設定しても良い。
+これを行うことで、LMBになり得る、動いているマシンの順番を調整することができる。
+より詳細については
+<link linkend="browse-force-master">強制的にSambaをマスタにする</link>
+を参照のこと。
 </para>
 
 <para>
-<indexterm><primary>domain members</primary></indexterm>
-<indexterm><primary>browser elections</primary></indexterm>
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>ブラウザ選択</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-If you have Windows NT machines that are members of the domain on all subnets and you are sure they will
-always be running, you can disable Samba from taking part in browser elections and ever becoming an LMB by
-setting the following options in the <smbconfsection name="[global]"/> section of the &smb.conf; file as shown
-in <link linkend="xremmb">&smb.conf; for Not Being a master browser</link>
+もしもすべてのサブネット上でのドメインのメンバであるWindows NTマシンがあり、
+それが常時確実に動いているならば、以下で示される、
+<link linkend="xremmb">マスタにブラウザにならない&smb.conf;</link>
+のように、&smb.conf;ファイル中の<smbconfsection name="[global]"/>
+セクション中で以下のオプションを指定することで、Sambaがブラウザ選択を
+しなくなり、LMBに絶対にならないようにすることができる。
 </para>
 
 <para>
 <example id="xremmb">
-<title>&smb.conf; for Not Being a master browser</title>
+<title>マスタブラウザにならない&smb.conf;</title>
 <smbconfsection name="[global]"/>
 <smbconfoption name="domain master">no</smbconfoption>
 <smbconfoption name="local master">no</smbconfoption>
@@ -958,15 +962,15 @@ in <link linkend="xremmb">&smb.conf; for Not Being a master browser</link>
 </sect2>
 
 <sect2 id="browse-force-master">
-<title>Forcing Samba to Be the Master</title>
+<title>強制的にSambaをマスタにする</title>
 
 <para>
-<indexterm><primary>master browser</primary></indexterm>
-<indexterm><primary>election process</primary></indexterm>
-<indexterm><primary>broadcasts</primary></indexterm>
+<indexterm><primary>マスタブラウザ</primary></indexterm>
+<indexterm><primary>選択プロセス</primary></indexterm>
+<indexterm><primary>ブロードキャスト</primary></indexterm>
 <indexterm><primary>election packet</primary></indexterm>
 <indexterm><primary>bias</primary></indexterm>
-<indexterm><primary>election</primary></indexterm>
+<indexterm><primary>選択</primary></indexterm>
 <indexterm><primary>precedence</primary></indexterm>
 Who becomes the master browser is determined by an election process using broadcasts. Each election packet
 contains a number of parameters that determine what precedence (bias) a host should have in the election. By
