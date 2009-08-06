@@ -1022,13 +1022,14 @@ Windows 9x/Meに勝つが、Microsoft NT/200x サーバには勝てない。Micr
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>automatic redundancy</primary></indexterm>
 <indexterm><primary>UDP</primary></indexterm>
-<indexterm><primary>network bandwidth</primary></indexterm>
-<indexterm><primary>browser elections</primary></indexterm>
-It is possible to configure two Samba servers to attempt to become the DMB for a domain. The first server that
-comes up will be the DMB. All other Samba servers will attempt to become the DMB every 5 minutes. They will
-find that another Samba server is already the DMB and will fail. This provides automatic redundancy should the
-current DMB fail. The network bandwidth overhead of browser elections is relatively small, requiring
-approximately four UDP packets per machine per election. The maximum size of a UDP packet is 576 bytes.
+<indexterm><primary>ネットワークバンド幅</primary></indexterm>
+<indexterm><primary>ブラウザ選択</primary></indexterm>
+2つのSambaサーバがドメイン用にDMBになるように試みることは出来る。最初のサーバは
+DMBになる。その他のすべてのサーバは5分ごとにDMBになるように試行する。それらは、
+すでに他のSambaサーバがDMBであることを見つけて失敗する。これは、現在動いている
+DMBが故障したときに、自動的な冗長性を提供する。ブラウザ選択のネットワークバンド
+幅のオーバヘッドは相対的に小さく、おおよそ1つの選択ごとかつ1つのマシンごとに4つのUDPパ
+ケットを要求する。最小のUDPパケットは576バイトである。
 </para>
 
 </sect2>
@@ -1039,39 +1040,45 @@ approximately four UDP packets per machine per election. The maximum size of a U
 <para>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>collating</primary></indexterm>
-<indexterm><primary>browse lists</primary></indexterm>
-<indexterm><primary>browsing</primary></indexterm>
-The domain master browser is responsible for collating the browse lists of multiple subnets so browsing can
-occur between subnets. You can make Samba act as the domain master browser by setting <smbconfoption name="domain
-master">yes</smbconfoption> in &smb.conf;. By default it will not be a domain master browser.
+<indexterm><primary>ブラウズリスト</primary></indexterm>
+<indexterm><primary>ブラウジング</primary></indexterm>
+ドメインマスタブラウザは複数のサブネットのブラウザリストを集めることに責任があ
+り、それゆえ、サブネット間でのブラウジングが可能になる。&smb.conf;中に
+<smbconfoption name="domain master">yes</smbconfoption>を設定することで、Samba
+をドメインマスタブラウザにすることが出来る。既定値では、ドメインマスタになる設
+定ではない。
 </para>
 
 <para>
-<indexterm><primary>workgroup</primary></indexterm>
-<indexterm><primary>network browsing problems</primary></indexterm>
-Do not set Samba to be the domain master for a workgroup that has the same name as an NT/200x domain.  If
-Samba is configured to be the domain master for a workgroup that is present on the same network as a Windows
-NT/200x domain that has the same name, network browsing problems will certainly be experienced.
+<indexterm><primary>ワークグループ</primary></indexterm>
+<indexterm><primary>ネットワークブラウジングの問題</primary></indexterm>
+SambaをNT/200xドメインと同じ名前を持つワークグループ向けのドメインマスタに設定
+してはならない。もしも、同じネットワーク上で同じ名前を持つWindows NT/200xドメイ
+ンと同じワークグループ名用にドメインマスタとしてSambaを設定すると、ネットワーク
+ブラウジングの問題が確実に発生する。
 </para>
 
 <para>
-When Samba is the domain master and the master browser, it will listen for master announcements (made roughly
-every 12 minutes) from LMBs on other subnets and then contact them to synchronize browse lists.
+Sambaがドメインマスタでマスタブラウザの場合、他のサブネット上のLMBからのマスタ
+アナウンスをリッスンし(おおよそ12分間隔)、ブラウザリストの同期を行うために、そ
+のマシンに接続する。
 </para>
 
 <para>
-<indexterm><primary>win election</primary></indexterm>
-<indexterm><primary>force election</primary></indexterm>
-If you want Samba to be the domain master, you should also set the <smbconfoption name="os level"/> high
-enough to make sure it wins elections, and set <smbconfoption name="preferred master"/> to
-<constant>yes</constant>, to get Samba to force an election on startup.
+<indexterm><primary>選択に勝つ</primary></indexterm>
+<indexterm><primary>強制選択</primary></indexterm>
+Sambaをドメインマスタにしたい場合、選択に勝つために、
+<smbconfoption name="os level"/>を十分に大きな値にすべきであり、
+<smbconfoption name="preferred master"/>を<constant>yes</constant>にし、
+起動時にSambaに強制的に選択を行わせるようにする。
 </para>
 
 <para>
-<indexterm><primary>WINS server</primary></indexterm>
-<indexterm><primary>resolve NetBIOS names</primary></indexterm>
-All servers (including Samba) and clients should be using a WINS server to resolve NetBIOS names. If your
-clients are only using broadcasting to resolve NetBIOS names, then two things will occur:
+<indexterm><primary>WINSサーバr</primary></indexterm>
+<indexterm><primary>NetBIOS名の解決</primary></indexterm>
+(Sambaを含む)すべてのサーバとクライアントは、NetBIOS名を解決するためにWINSサー
+バを使うべきである。もしもクライアントがNetBIOS名を解決するためにブロードキャス
+トのみを使うと、以下の2つが発生する:
 </para>
 
 <orderedlist>
@@ -1079,22 +1086,23 @@ clients are only using broadcasting to resolve NetBIOS names, then two things wi
 	<para>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
-	LMBs will be unable to find a DMB because they will be looking only on the local subnet.
+	ローカルサブネットのみしか見えないため、LMBはDMBを見つけられなくなる。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-<indexterm><primary>domain-wide browse list</primary></indexterm>
-	If a client happens to get hold of a domain-wide browse list and a user attempts to access a
-	host in that list, it will be unable to resolve the NetBIOS name of that host.
+<indexterm><primary>ドメイン全体のブラウズリスト</primary></indexterm>
+	もしもクライアントがドメイン全体のブラウズリストを入手し、そのリストに
+	あるホストにアクセスしようとした場合、そのホストに対するNetBIOS名の解決
+	が出来なくなる。
 	</para>
 </listitem>
 </orderedlist>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-If, however, both Samba and your clients are using a WINS server, then:
+しかし、Sambaとクライアント両方がWINSを使う場合:
 </para>
 
 <orderedlist>
