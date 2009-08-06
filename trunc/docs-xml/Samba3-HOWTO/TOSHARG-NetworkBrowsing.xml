@@ -972,35 +972,37 @@ LMBとして設定しても良い。SambaサーバをLMBにするためには、
 <indexterm><primary>bias</primary></indexterm>
 <indexterm><primary>選択</primary></indexterm>
 <indexterm><primary>precedence</primary></indexterm>
-Who becomes the master browser is determined by an election process using broadcasts. Each election packet
-contains a number of parameters that determine what precedence (bias) a host should have in the election. By
-default Samba uses a low precedence and thus loses elections to just about every Windows network server or
-client.
+マスタブラウズになるマシンはブロードキャストを使った選択プロセスで決められる。
+各選択パケットには選択作業において、ホストがどのような優先項目(バイアス)を持つ
+べきかを決定するための、たくさんのパラメータを含んでいる。既定値では、Sambaは、
+各Windowsサーバ又はクライアントについて、低い優先度を持ち結果として選択からは外
+れる。
 </para>
 
 <para>
-If you want Samba to win elections, set the <smbconfoption name="os level"/> global option in &smb.conf; to a
-higher number. It defaults to 20. Using 34 would make it win all elections over every other system (except
-other Samba systems).
+Sambaを選択したい場合には、&smb.conf;中の<smbconfoption name="os level"/>グロー
+バルオプションをより大きい数字に設定する。既定値では20である。34を使うと、他の
+すべてのシステム(他のSambaシステムを除く)との選択に勝つ。
 </para>
 
 <para>
-An <smbconfoption name="os level"/> of two would make it beat Windows for Workgroups and Windows 9x/Me, but
-not MS Windows NT/200x Server. An MS Windows NT/200x Server domain controller uses level 32. The maximum os
-level is 255.
+<smbconfoption name="os level"/>が2の場合はWindows for Workgroupsと
+Windows 9x/Meに勝つが、Microsoft NT/200x サーバには勝てない。Microsoft Windows NT/200x
+サーバのドメインコントローラはレベル32を使う。os levelの最大値は255である。
 </para>
 
 <para>
-<indexterm><primary>force an election</primary></indexterm>
-<indexterm><primary>potential master browsers</primary></indexterm>
-<indexterm><primary>local subnet</primary></indexterm>
+<indexterm><primary>選択作業の強制</primary></indexterm>
+<indexterm><primary>ポテンシャルマスタブラウザ</primary></indexterm>
+<indexterm><primary>ローカルサブネット</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-If you want Samba to force an election on startup, set the <smbconfoption name="preferred master"/> global
-option in &smb.conf; to <constant>yes</constant>.  Samba will then have a slight advantage over other
-potential master browsers that are not preferred master browsers.  Use this parameter with care, because if
-you have two hosts (whether they are Windows 9x/Me or NT/200x/XP or Samba) on the same local subnet both set
-with <smbconfoption name="preferred master"/> to <constant>yes</constant>, then periodically and continually
-they will force an election in order to become the LMB.
+もしも、起動時にSambaに選択を強制させたいならば、&smb.conf;中の
+<smbconfoption name="preferred master"/>グローバルオプションを
+<constant>yes</constant>に設定する。Sambaは優先マスタブラウザでない、他のポテン
+シャルマスタブラウザよりも若干の優位性を持つようになる。これは注意深く使うこと。
+そうしないと、同じローカルサブネット上で<smbconfoption name="preferred master"/>を
+<constant>yes</constant>に設定した2つのホスト(Windows 9x/MeかNT/200x/XPかSamba)
+があった場合、LMBになるための強制的な選択が、定期的かつ継続的に発生してしまう。
 </para>
 
 <para>
@@ -1008,10 +1010,12 @@ they will force an election in order to become the LMB.
 <indexterm><primary>LAN</primary></indexterm>
 <indexterm><primary>WAN</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>broadcast isolated subnet</primary></indexterm>
-If you want Samba to be a <emphasis>DMB</emphasis>, then it is recommended that you also set <smbconfoption
-name="preferred master"/> to <constant>yes</constant>, because Samba will not become a DMB for the whole of
-your LAN or WAN if it is not also a LMB on its own broadcast isolated subnet.
+<indexterm><primary>ブロードキャストが届かないサブネット</primary></indexterm>
+もしも、Sambaを<emphasis>DMB</emphasis>にしたいならば、ブロードキャストが届かな
+い分離されたサブネット上のLMBでもない、LANまたはWAN全体のDMBにSambaがならないと
+いう理由で、
+<smbconfoption name="preferred master"/>も<constant>yes</constant>に設定するこ
+とを推奨する。
 </para>
 
 <para>
@@ -1030,7 +1034,7 @@ approximately four UDP packets per machine per election. The maximum size of a U
 </sect2>
 
 <sect2>
-<title>Making Samba the Domain Master</title>
+<title>Sambaをドメインマスタにする</title>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
