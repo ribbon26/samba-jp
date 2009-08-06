@@ -1108,16 +1108,17 @@ Sambaをドメインマスタにしたい場合、選択に勝つために、
 <orderedlist>
 <listitem>
 	<para>
-	LMBs will contact the WINS server and, as long as Samba has registered that it is a DMB with the WINS
-	server, the LMB will receive Samba's IP address as its DMB.
+	LMBはWINSサーバに接続し、SambaがDMBである間はWINSサーバに登録を行い、
+	LMBはDMBとしてSambaのIPアドレスを受け取る。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	When a client receives a domain-wide browse list and a user attempts to access a host in that list, it will
-	contact the WINS server to resolve the NetBIOS name of that host. As long as that host has registered its
-	NetBIOS name with the same WINS server, the user will be able to see that host..
+	クライアントがドメイン全体のブラウズリストを入手し、ユーザがそのリスト
+	中のホストに接続しようとしたとき、そのホストに対するNetBIOS名を解決する
+	ために、WINSサーバに接続する。同じWINSサーバにホストのNetBIOS名が登録さ
+	れている間はそのホストを認識することが出来る。
 	</para>
 </listitem>
 </orderedlist>
@@ -1125,27 +1126,29 @@ Sambaをドメインマスタにしたい場合、選択に勝つために、
 </sect2>
 
 <sect2>
-<title>Note about Broadcast Addresses</title>
+<title>ブロードキャストアドレスについての注意</title>
 
 <para>
-<indexterm><primary>zero-based broadcast</primary></indexterm>
-If your network uses a zero-based broadcast address (for example, if it ends in a 0), then you will strike
-problems. Windows for Workgroups does not seem to support a zeros broadcast, and you will probably find that
-browsing and name lookups will not work.
+<indexterm><primary>ゼロベースのブロードキャスト</primary></indexterm>
+ゼロベースのブロードキャストアドレスをネットワークが使っている場合(たとえば、0
+で終わる)、問題が発生する。Windows fore Workgroupはゼロベースのブロードキャスト
+をサポートしていないようなので、ブラウジングと名前検索が動かないだろう。
 </para>
 </sect2>
 
 <sect2>
-<title>Multiple Interfaces</title>
+<title>複数のインタフェース</title>
 
 <para>
 <indexterm><primary>multiple network interfaces</primary></indexterm>
-Samba supports machines with multiple network interfaces. If you have multiple interfaces, you will
-need to use the <smbconfoption name="interfaces"/> option in &smb.conf; to configure them. For example, the
-machine you are working with has 4 network interfaces; <literal>eth0</literal>, <literal>eth1</literal>,
-<literal>eth2</literal>, <literal>eth3</literal> and only interfaces <literal>eth1</literal> and
-<literal>eth4</literal> should be used by Samba. In this case, the following &smb.conf; file entries would
-permit that intent:
+Sambaは複数のネットワークインタフェースをサポートする。もしも複数のインタフェー
+スがある場合、&smb.conf;中の<smbconfoption name="interfaces"/>オプションを使っ
+て設定を行う必要がある。たとえば、<literal>eth0</literal>,
+<literal>eth1</literal>,<literal>eth2</literal>, <literal>eth3</literal>
+という4つのネットワークインタフェースを持つマシンがあり、
+<literal>eth1</literal>と<literal>eth4</literal>のみSambaが使う場合があったとす
+る。この場合、この意図に合わせるようにするためには、&smb.conf;ファイル中に以下
+のエントリを記述する:
 <smbconfblock>
 <smbconfoption name="interfaces">eth1, eth4</smbconfoption>
 <smbconfoption name="bind interfaces only">Yes</smbconfoption>
@@ -1157,22 +1160,26 @@ permit that intent:
 <indexterm><primary>port 445</primary></indexterm>
 <indexterm><primary>UDP</primary></indexterm>
 <indexterm><primary>TCP</primary></indexterm>
-The <smbconfoption name="bind interfaces only">Yes</smbconfoption> is necessary to exclude TCP/IP session
-services (ports 135, 139, and 445) over the interfaces that are not specified. Please be aware that
-<command>nmbd</command> will listen for incoming UDP port 137 packets on the unlisted interfaces, but it will
-not answer them. It will, however, send its broadcast packets over the unlisted interfaces. Total isolation of
-ethernet interface requires the use of a firewall to block ports 137 and 138 (UDP), and ports 135, 139, and
-445 (TCP) on all network interfaces that must not be able to access the Samba server.
+<smbconfoption name="bind interfaces only">Yes</smbconfoption>は指定されていな
+いインタフェース上でTCP/IPセッションサービス(ポート135,139と445)を含めない時に
+必要である。<command>nmbd</command>はリストされていないポート上でのUDPポート137
+から来るパケットをリッスンするが、それには返答しないことに気がつくこと。しかし
+ながら、リストされていないインタフェース上でブロードキャストパケットは送信する。
+完全にイーサネットインタフェースを分離するには、Sambaサーバがアクセスできないよ
+うにしなければならないすべてのネットワークインタフェース上で、ポート137と
+138(UDP)、ポート135、139と445(TCP)をファイアウォール上でブロックすることが必要
+である。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Use of the Remote Announce Parameter</title>
+<title>リモートアナウンスパラメータの使用</title>
 <para>
-The <smbconfoption name="remote announce"/> parameter of &smb.conf; can be used to forcibly ensure that all
-the NetBIOS names on a network get announced to a remote network.  The syntax of the <smbconfoption
-name="remote announce"/> parameter is:
+&smb.conf;中の<smbconfoption name="remote announce"/>パラメータは
+ネットワーク上のすべてのNetBIOS名がリモートネットワークにアナウンス
+されることを保証するために使うことが出来る。
+<smbconfoption name="remote announce"/>パラメータの文法は以下の通り:
 <smbconfblock>
 <smbconfoption name="remote announce">192.168.12.23 [172.16.21.255] ...</smbconfoption>
 </smbconfblock>
@@ -1181,12 +1188,12 @@ name="remote announce"/> parameter is:
 <smbconfoption name="remote announce">192.168.12.23/MIDEARTH [172.16.21.255/ELVINDORF] ...</smbconfoption>
 </smbconfblock>
 
-where:
+ここで:
 <variablelist>
 	<varlistentry><term><replaceable>192.168.12.23</replaceable> and <replaceable>172.16.21.255</replaceable></term>
 		<listitem><para>
-<indexterm><primary>LMB</primary><see>Local Master Browser</see></indexterm>
-<indexterm><primary>Local Master Browser</primary></indexterm>
+<indexterm><primary>LMB</primary><see>ローカルマスタブラウザ</see></indexterm>
+<indexterm><primary>ローカルマスタブラウザ</primary></indexterm>
 		is either the LMB IP address or the broadcast address of the remote network.
 		That is, the LMB is at 192.168.1.23, or the address could be given as 172.16.21.255 where the netmask
 		is assumed to be 24 bits (255.255.255.0). When the remote announcement is made to the broadcast
