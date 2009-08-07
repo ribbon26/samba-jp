@@ -1288,46 +1288,48 @@ WINSサーバに問い合わせる。これはブロードキャストトラフ�
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>ブラウズリスト</primary></indexterm>
-WINS also forces browse list synchronization by all LMBs. LMBs must synchronize their browse list with the
-DMB, and WINS helps the LMB to identify its DMB. By definition this will work only within a single workgroup.
-Note that the DMB has nothing to do with what is referred to as an MS Windows NT domain. The latter is a
-reference to a security environment, while the DMB refers to the master controller for browse list information
-only.
+WINSはすべてのLMBによってブラウズリストの同期を強制的に行う。LMBはDMB
+を使ってそのブラウズリストを同期し、WINSはそのDMBの識別をLMBに対して
+手助けする。定義によって、これは単一のワークグループ内でのみ動作する。
+DMBはMicrosoft NTドメインとして呼ばれているとは無関係であることに注意。
+DMBがブラウズリスト情報のみに関してマスタコントローラとしてDMBが言及する
+間、後者はセキュリティ環境について言及する。
 </para>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>TCP/IP protocol stack</primary></indexterm>
-<indexterm><primary>WINS servers</primary></indexterm>
+<indexterm><primary>TCP/IPプロトコルスタック</primary></indexterm>
+<indexterm><primary>WINSサーバ</primary></indexterm>
 <indexterm><primary>name-to-address</primary></indexterm>
-WINS will work correctly only if every client TCP/IP protocol stack
-is configured to use the WINS servers. Any client that is not
-configured to use the WINS server will continue to use only broadcast-based
-name registration, so WINS may never get to know about it. In any case,
-machines that have not registered with a WINS server will fail name-to-address
-lookup attempts by other clients and will therefore cause workstation access
-errors.
+WINSは、WINSサーバのためにすべてのTCP/IPプロトコルスタックが設定されて
+いる時のみ正しく動作する。あるクライアントがWINSサーバを使うように設定
+されておらず、ブロードキャストでの名前登録のみを引き続き使うようになって
+いる場合、WINSはそれを認識できない。この場合、WINSサーバで名前登録を
+行わないマシンは、他のクライアントによる名前-アドレス変換が失敗し、
+それゆえ、ワークステーションへのアクセスエラーが発生する。
 </para>
 
 <para>
-To configure Samba as a WINS server, just add
-<smbconfoption name="wins support">yes</smbconfoption> to the &smb.conf;
-file [global] section.
+SambaをWINSサーバとして設定するためには、
+&smb.conf;ファイルの[global]セクションで、
+<smbconfoption name="wins support">yes</smbconfoption>を追加する。
 </para>
 
 <para>
-To configure Samba to register with a WINS server, just add <smbconfoption name="wins
-server">10.0.0.18</smbconfoption> to your &smb.conf; file <smbconfsection name="[global]"/> section.
+SambaがWINSサーバに登録するためには、&smb.conf;ファイルの
+<smbconfsection name="[global]"/>セクションで
+<smbconfoption name="wins server">10.0.0.18</smbconfoption>を追加する。
 </para>
 
 <important><para>
-Never use <smbconfoption name="wins support">yes</smbconfoption> together with <smbconfoption name="wins
-server">10.0.0.18</smbconfoption> particularly not using its own IP address. Specifying both will cause &nmbd;
-to refuse to start!
+特にその固有IPアドレスを指定して、
+<smbconfoption name="wins support">yes</smbconfoption>と一緒に、
+<smbconfoption name="wins server">10.0.0.18</smbconfoption>
+を使わないこと。両者を同時に&smb.conf;で指定すると起動しなくなる!
 </para></important>
 
 <sect2>
-<title>WINS Server Configuration</title>
+<title>WINSサーバの設定</title>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
