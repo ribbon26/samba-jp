@@ -1194,19 +1194,22 @@ Sambaは複数のネットワークインタフェースをサポートする。
 		<listitem><para>
 <indexterm><primary>LMB</primary><see>ローカルマスタブラウザ</see></indexterm>
 <indexterm><primary>ローカルマスタブラウザ</primary></indexterm>
-		is either the LMB IP address or the broadcast address of the remote network.
-		That is, the LMB is at 192.168.1.23, or the address could be given as 172.16.21.255 where the netmask
-		is assumed to be 24 bits (255.255.255.0). When the remote announcement is made to the broadcast
-		address of the remote network, every host will receive our announcements. This is noisy and therefore
-		undesirable but may be necessary if we do not know the IP address of the remote LMB.
+		はリモートネットワークのLMBのIPアドレスか、ブロードキャストアド
+		レスである。これは、LMBが192.168.1.23か、ネットマスクが24ビット
+		(255.255.255.0)であるときに172.16.21.255として与えられる。
+		リモートアナウンスがリモートネットワークのブロードキャストに対
+		して行われるとき、各ホストはこのアナウンスを受け取る。これはノイズであり、
+		好ましくないが、もしもリモートLMBのIPアドレスが分からないときには必要である。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
-		<term><replaceable>WORKGROUP</replaceable></term>
-		<listitem><para>is optional and can be either our own workgroup or that of the remote network. If you use the
-		workgroup name of the remote network, our NetBIOS machine names will end up looking like
-		they belong to that workgroup. This may cause name resolution problems and should be avoided.
+		<term><replaceable>ワークグループ</replaceable></term>
+		<listitem><para>はオプションで、自ワークグループかリモートネッ
+		トワークのワークグループを指定できる。リモートのネットワークの
+		ワークグループ名を使う場合、自マシンのNetBIOS名はそのネット
+		ワークに所属するように見えるようになる。これは名前解決問題
+		を引き起こしかねず、避けるべきである。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
@@ -1215,26 +1218,27 @@ Sambaは複数のネットワークインタフェースをサポートする。
 </sect2>
 
 <sect2>
-<title>Use of the Remote Browse Sync Parameter</title>
+<title>Remote Browse Syncパラメータの使用</title>
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>synchronize</primary></indexterm>
-The <smbconfoption name="remote browse sync"/> parameter of &smb.conf; is used to announce to another LMB that
-it must synchronize its NetBIOS name list with our Samba LMB. This works only if the Samba server that has
-this option is simultaneously the LMB on its network segment.
+<indexterm><primary>同期</primary></indexterm>
+&smb.conf;の<smbconfoption name="remote browse sync"/>パラメータは
+手元のSamba LMBとの間で同期を取らなければならない他のLMBへアナウンスを行うのに
+使用する。これは、そのネットワークセグメント上でSambaサーバがが同時にLMBの時に
+のみ動作する。
 </para>
 
 <para>
-The syntax of the <smbconfoption name="remote browse sync"/> parameter is:
+<smbconfoption name="remote browse sync"/>パラメータの文法は以下の通り:
 
 <smbconfblock>
 <smbconfoption name="remote browse sync"><replaceable>192.168.10.40</replaceable></smbconfoption>
 </smbconfblock>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>remote segment</primary></indexterm>
-where <replaceable>192.168.10.40</replaceable> is either the IP address of the
-remote LMB or the network broadcast address of the remote segment.
+<indexterm><primary>リモートセグメント</primary></indexterm>
+ここで、<replaceable>192.168.10.40</replaceable>は、リモートのLMBのIP
+アドレスか、リモートセグメントのネットワークブロードキャストアドレスである。
 </para>
 
 </sect2>
@@ -1246,48 +1250,44 @@ remote LMB or the network broadcast address of the remote segment.
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>name_type</primary></indexterm>
-<indexterm><primary>LanManager-compatible</primary></indexterm>
-Use of WINS (either Samba WINS or MS Windows NT Server WINS) is highly
-recommended. Every NetBIOS machine registers its name together with a
-name_type value for each of several types of service it has available.
-It registers its name directly as a unique (the type 0x03) name.
-It also registers its name if it is running the LanManager-compatible
-server service (used to make shares and printers available to other users)
-by registering the server (the type 0x20) name.
+<indexterm><primary>名前タイプ</primary></indexterm>
+<indexterm><primary>LanManager互換</primary></indexterm>
+WINSの使用(Samba WINS又はWindows NTサーバWINS)は強く推奨する。
+各NetBIOSマシンは、有効なサービスのサービスタイプの名前タイプの値と共に、
+名前を登録する。ユニーク名(タイプ0x03)として名前を直接登録する。
+また、LanManager互換のサーバサービス(他のユーザに対してファイル共有と
+プリンタ共有を提供する)が動いているときには、サーバ名(タイプ0x20)
+を登録することによりその名前も登録する。
 </para>
 
 <para>
-<indexterm><primary>NetBIOS name length</primary></indexterm>
-<indexterm><primary>name_type</primary></indexterm>
-All NetBIOS names are up to 15 characters in length. The name_type variable
-is added to the end of the name, thus creating a 16 character name. Any
-name that is shorter than 15 characters is padded with spaces to the 15th
-character. Thus, all NetBIOS names are 16 characters long (including the
-name_type information).
+<indexterm><primary>NetBIOS名の長さ</primary></indexterm>
+<indexterm><primary>名前タイプ</primary></indexterm>
+すべてのNetBIOS名は最大15文字である。名前タイプの値が名前の後に付加され、
+合計16文字となる。15文字より小さい名前は15文字になるように空白が埋め込まれる。
+そのため、すべてのNetBIOS名は16文字(名前タイプ情報を含め)である。
 </para>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>registered</primary></indexterm>
-<indexterm><primary>NetLogon service</primary></indexterm>
+<indexterm><primary>NetLogonサービス</primary></indexterm>
 <indexterm><primary>lmhosts</primary></indexterm>
-WINS can store these 16-character names as they get registered. A client
-that wants to log onto the network can ask the WINS server for a list
-of all names that have registered the NetLogon service name_type. This saves
-broadcast traffic and greatly expedites logon processing. Since broadcast
-name resolution cannot be used across network segments, this type of
-information can only be provided via WINS or via a statically configured
-<filename>lmhosts</filename> file that must reside on all clients in the
-absence of WINS.
+WINは登録された16文字長の名前を格納できる。ネットワークにログオンしたい
+クライアントはNetLogonサービス名前タイプで登録されたすべての名前のリストを
+WINSサーバに問い合わせる。これはブロードキャストトラフィックを減少し、
+ログオン処理を高速化する。ネットワークセグメント越しにブロードキャスト
+による名前解決が出来ないため、このタイプの情報はWINSサーバがいないときに、
+すべてのクライアントが内包しなければならない<filename>lmhosts</filename>
+ファイルを固定的に設定するか、WINSサーバによってのみ提供される。
 </para>
 
 <para>
-<indexterm><primary>synchronization</primary></indexterm>
+<indexterm><primary>同期</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-<indexterm><primary>browse list</primary></indexterm>
+<indexterm><primary>ブラウズリスト</primary></indexterm>
 WINS also forces browse list synchronization by all LMBs. LMBs must synchronize their browse list with the
 DMB, and WINS helps the LMB to identify its DMB. By definition this will work only within a single workgroup.
 Note that the DMB has nothing to do with what is referred to as an MS Windows NT domain. The latter is a
