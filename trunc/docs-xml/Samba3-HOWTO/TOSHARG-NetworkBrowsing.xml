@@ -1333,10 +1333,10 @@ SambaがWINSサーバに登録するためには、&smb.conf;ファイルの
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-Either a Samba server or a Windows NT server machine may be set up
-as a WINS server. To configure a Samba server to be a WINS server, you must
-add to the &smb.conf; file on the selected Server the following line to
-the <smbconfsection name="[global]"/> section:
+SambaサーバまたはWindows NTサーバのどちらも、WINSサーバとして設定できる。
+SambaサーバをWINSサーバとして設定するためには、選択したサーバの&smb.conf;
+ファイルに以下を<smbconfsection name="[global]"/>セクションに追加しなけ
+ればならない:
 </para>
 
 <para>
@@ -1347,52 +1347,56 @@ the <smbconfsection name="[global]"/> section:
 
 <para>
 <indexterm><primary>Samba 1.9.17</primary></indexterm>
-Versions of Samba prior to 1.9.17 had this parameter default to
-yes. If you have any older versions of Samba on your network, it is
-strongly suggested you upgrade to a recent version, or at the very
-least set the parameter to <quote>no</quote> on all these machines.
+Samba 1.9.17より前のバージョンでは、このパラメータは既定値でyesになって
+いる。もしも、ネットワーク上で古いバージョンのSambaを使っている場合、
+最新のバージョンへのアップグレードを強く推奨する。そうしないと、
+それらすべてのマシンでこのパラメータを<quote>no</quote>に設定しなければ
+ならなくなる。
 </para>
 
 <para>
-Machines configured with <smbconfoption name="wins support">yes</smbconfoption> will keep a list of
-all NetBIOS names registered with them, acting as a DNS for NetBIOS names.
+<smbconfoption name="wins support">yes</smbconfoption>を設定したマシンは、
+登録されたすべてのNetBIOS名を保持し、NetBIOS名のためのDNSとして機能する。
 </para>
 
 <para>
-<indexterm><primary>only one WINS server</primary></indexterm>
-It is strongly recommended to set up only one WINS server. Do not set the <smbconfoption name="wins
-support">yes</smbconfoption> option on more than one Samba server on a network.
+<indexterm><primary>単一のWINSサーバ</primary></indexterm>
+単一のWINSサーバを設定することを強く推奨する。ネットワーク上で2つ以上の
+サーバに、<smbconfoption name="wins support">yes</smbconfoption>を
+指定しないこと。
 </para>
 
 <para>
-<indexterm><primary>replication</primary><secondary>WINS</secondary></indexterm>
+<indexterm><primary>複製</primary><secondary>WINS</secondary></indexterm>
 <indexterm><primary>Windows NT/200x</primary></indexterm>
-<indexterm><primary>WINS service</primary></indexterm>
-<indexterm><primary>replication protocols</primary></indexterm>
-<indexterm><primary>WINS server</primary></indexterm>
-To configure Windows NT/200x Server as a WINS server, install and configure the WINS service. See the Windows
-NT/200x documentation for details.  Windows NT/200x WINS servers can replicate to each other, allowing more
-than one to be set up in a complex subnet environment. Because Microsoft refuses to document the replication
-protocols, Samba cannot currently participate in these replications. It is possible that a Samba-to-Samba WINS
-replication protocol may be defined in the future, in which case more than one Samba machine could be set up
-as a WINS server.  Currently only one Samba server should have the <smbconfoption name="wins
-support">yes</smbconfoption> parameter set.
+<indexterm><primary>WINSサービス</primary></indexterm>
+<indexterm><primary>複製プロトコル</primary></indexterm>
+<indexterm><primary>WINSサーバ</primary></indexterm>
+Windows NT/200xサーバをWINSサーバとして設定するためにはWINSサービスを設定する。
+詳細は、Windows NT/200xの説明書を参照のこと。Windows NT/200xのWINSサーバは、
+お互いに複製が出来、複雑なサブネット環境で2つ以上設定できる。Microsoftが
+複製プロトコルの開示を行っていないため、Sambaは現在それらの複製機能に参加でき
+ない。Samba間同士のWINS複製プロトコルは将来作成する予定だが、その場合、2つ
+以上のSambaマシンがWINSサーバとして設定できるようになる。現在は、1台のみの
+Sambaサーバが<smbconfoption name="wins support">yes</smbconfoption>と設定
+できる。
 </para>
 
 <para>
-<indexterm><primary>WINS server</primary></indexterm>
-<indexterm><primary>Primary WINS Server</primary></indexterm>
-After the WINS server has been configured, you must ensure that all machines participating on the network are
-configured with the address of this WINS server. If your WINS server is a Samba machine, fill in the Samba
-machine IP address in the <guilabel>Primary WINS Server</guilabel> field of the <guilabel>Control
-Panel->Network->Protocols->TCP->WINS Server</guilabel> dialogs in Windows 9x/Me or Windows NT/200x. To tell a
-Samba server the IP address of the WINS server, add the following line to the <smbconfsection
-name="[global]"/> section of all &smb.conf; files:
+<indexterm><primary>WINSサーバ</primary></indexterm>
+<indexterm><primary>プライマリWINSサーバ</primary></indexterm>
+WINSサーバを設定後、ネットワークに参加しているすべてのマシンはこのWINSサーバ
+のアドレスを設定するようにしなければならない。もしも、WINSサーバがSambaマシン
+ならば、<guilabel>コントロールパネル->ネットワーク接続->ローカルエリア接続等->
+プロパティ->インターネットプロトコル(TCP/IP)->プロパティ->詳細設定->
+WINS</guilabel>ダイアログ中の<guilabel>WINSアドレス</guilabel>フィールド
+にSambaマシンのIPアドレスを設定する(WindowsXPの場合)。SambaサーバにWINS
+サーバのIPアドレスを設定する場合には、すべての&smb.conf;ファイルの
+<smbconfsection name="[global]"/>セクションに以下を追加する:
 <smbconfblock>
-<smbconfoption name="wins server">&lt;name or IP address&gt;</smbconfoption>
+<smbconfoption name="wins server">&lt;名前またはIPアドレス&gt;</smbconfoption>
 </smbconfblock>
-where &lt;name or IP address&gt; is either the DNS name of the WINS server
-machine or its IP address.
+ここで、&lt;名前またはIPアドレス&gt;は、WINSサーバのDNS名かそのIPアドレスである。
 </para>
 
 <para>
