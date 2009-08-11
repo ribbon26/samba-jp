@@ -1448,179 +1448,185 @@ Samba-3バージョン3.0.21から、Samba-4のWINSサーバを並列に動か�
 <indexterm><primary>wins.dat</primary></indexterm>
 <indexterm><primary>/usr/local/samba/var/locks</primary></indexterm>
 <indexterm><primary>/var/run/samba</primary></indexterm>
-Adding static entries to your Samba WINS server is actually fairly easy.  All you have to do is add a line to
-<filename>wins.dat</filename>, typically located in <filename
-class="directory">/usr/local/samba/var/locks</filename> or <filename>/var/run/samba</filename>.
+Samba WINSサーバに静的な円入折りを追加するのはとても簡単である。
+通常<filename class="directory">/usr/local/samba/var/locks</filename>
+か <filename>/var/run/samba</filename>にある
+<filename>wins.dat</filename>ファイルに行を追加するだけである。
 </para>
 
 <para>
-Entries in <filename>wins.dat</filename> take the form of:
+<filename>wins.dat</filename>中のエントリは以下の形式である:
 <programlisting>
 "NAME#TYPE" TTL ADDRESS+ FLAGS
 </programlisting>
 <indexterm><primary>TTL</primary></indexterm>
-<indexterm><primary>time-to-live</primary><see>TTL</see></indexterm>
-where NAME is the NetBIOS name, TYPE is the NetBIOS type, TTL is the time-to-live as an absolute time in
-seconds, ADDRESS+ is one or more addresses corresponding to the registration, and FLAGS are the NetBIOS flags
-for the registration.
+<indexterm><primary>生存時間</primary><see>TTL</see></indexterm>
+ここでNAMEはNetBIOS名、TYPEはNetBIOS名前タイプ、TTLはそのエントリの、秒単位の
+生存時間、ADDRESS+は登録したい1つ以上のアドレス、FLAGは登録時に使うNetBIOS
+フラグである。
 </para>
 
 <note><para>
-A change that has been made to the <filename>wins.dat</filename> will not take effect until &nmbd; has been
-restarted. It should be noted that since the <filename>wins.dat</filename> file changes dynamically, &nmbd;
-should be stopped before editting this file. Do not forget to restart &nmbd; when this file has been editted.
+&nmbd;を再起動するまで、<filename>wins.dat</filename>への変更は反映されない。
+<filename>wins.dat</filename>は動的に変更されるので、&nmbd;はこのファイルを
+変更する前に停止しておかなければならないことに注意。このファイルを編集後、
+&nmbd;を再起動するのを忘れないこと。
 </para></note>
 
 <para>
-A typical dynamic entry looks like this:
+通常の動的エントリは以下のようになる:
 <programlisting>
 "MADMAN#03" 1155298378 192.168.1.2 66R
 </programlisting>
-To make a NetBIOS name static (permanent), simply set the TTL to 0, like this:
+NetBIOS名を静的に(恒久的に)するためには、以下のように、単純にTTLを0にする:
 <programlisting>
 "MADMAN#03" 0 192.168.1.2 66R
 </programlisting>
 </para>
 
 <para>
-<indexterm><primary>NetBIOS flags</primary></indexterm>
-<indexterm><primary>Broadcast node</primary></indexterm>
-<indexterm><primary>Peer node</primary></indexterm>
-<indexterm><primary>Meta node</primary></indexterm>
-<indexterm><primary>Hybrid node</primary></indexterm>
-<indexterm><primary>Permanent name</primary></indexterm>
+<indexterm><primary>NetBIOSフラグ</primary></indexterm>
+<indexterm><primary>Bノード</primary></indexterm>
+<indexterm><primary>Pノード</primary></indexterm>
+<indexterm><primary>Mノード</primary></indexterm>
+<indexterm><primary>Hノード</primary></indexterm>
+<indexterm><primary>恒久名</primary></indexterm>
 <indexterm><primary>nameserv.h</primary></indexterm>
-The NetBIOS flags may be interpreted as additive hexadecimal values: 00 - Broadcast node registration, 20 -
-Peer node registration, 40 - Meta node registration, 60 - Hybrid node registration, 02 - Permanent name, 04 -
-Active name, 80 - Group name. The 'R' indicates this is a registration record. Thus 66R means: Hybrid node
-active and permanent NetBIOS name. These values may be found in the <filename>nameserv.h</filename> header
-file from the Samba source code repository. These are the values for the NB flags.
+NetBIOSフラグは16進数で、ビット単位に意味を持つ: 00 - Bノードの登録、20 - Pノードの
+登録、40 - Mノードの登録、60 - Hノードの登録、02 - 恒久名、04 - アクティブ名、
+80 - グループ名 である。'R'は登録レコードであることを表示する。そのため、 66Rは
+ハイブリッドノードで、アクティブで、恒久的なNetBIOS名であることを意味する。これら
+の値は、Sambaソースコードリポジトリの<filename>nameserv.h</filename>で定義されて
+いる。それらはNBフラグのための値である。
 </para>
 
 <para>
-<indexterm><primary>WINS replication</primary></indexterm>
-Though this method works with early Samba-3 versions, there is a possibility that it may change in future
-versions if WINS replication is added.
+<indexterm><primary>WINS複製</primary></indexterm>
+初期のSamba-3バージョンから、この方法は動作するが、WINS複製機能が追加された、
+将来のバージョンでは変更の可能性がある。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Helpful Hints</title>
+<title>役に立つヒント</title>
 
 <para>
-The following hints should be carefully considered because they are stumbling points
-for many new network administrators.
+多くのネットワーク管理者がつまずく点なので、以下のヒントは十分に検討する
+必要がある。
 </para>
 
 <sect2>
-<title>Windows Networking Protocols</title>
+<title>Windowsのネットワークプロトコル</title>
 
 <para>
-<indexterm><primary>browsing problems</primary></indexterm>
-<indexterm><primary>more than one protocol</primary></indexterm>
-A common cause of browsing problems results from the installation of more than one protocol on an MS Windows
-machine.
+<indexterm><primary>ブラウジングの問題</primary></indexterm>
+<indexterm><primary>1つ以上のプロトコル</primary></indexterm>
+Microsoft Windowsマシン上で2つ以上のプロトコルをインストールした場合、
+よくあるブラウジングの問題が発生する。
 </para>
 
 <warning><para>
-Do not use more than one protocol on MS Windows clients.
+2つ以上のプロトコルをMicrosoft Windowsクライアントでは使わない。
 </para></warning>
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
-Every NetBIOS machine takes part in a process of electing the LMB (and DMB)
-every 15 minutes. A set of election criteria is used to determine the order
-of precedence for winning this election process. A machine running Samba or
-Windows NT will be biased, so the most suitable machine will predictably
-win and thus retain its role.
+すべてのNetBIOSマシンは15分間隔のLMB(とDMB)の選択プロセスに参加する。
+複数の選択基準がこの選択プロセスでの決定の順番を決めるのに使われる。
+動作しているSambaまたはWindows NTは優先順位が変更されていて、そのため、
+最も適したマシンが予想通り決定に勝ち、この役割を保持する。
 </para>
 
 <para>
-<indexterm><primary>NetBIOS network interface</primary></indexterm>
+<indexterm><primary>NetBIOS ネットワークインタフェース</primary></indexterm>
 <indexterm><primary>TCP/IP</primary></indexterm>
 <indexterm><primary>IPX</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>Windows 9x/Me</primary></indexterm>
-<indexterm><primary>TCP/IP-only</primary></indexterm>
-The election process is <emphasis>fought out, so to speak</emphasis> over every NetBIOS network interface. In
-the case of a Windows 9x/Me machine that has both TCP/IP and IPX installed and has NetBIOS enabled over both
-protocols, the election will be decided over both protocols. As often happens, if the Windows 9x/Me machine is
-the only one with both protocols, then the LMB may be won on the NetBIOS interface over the IPX protocol.
-Samba will then lose the LMB role because Windows 9x/Me will insist it knows who the LMB is. Samba will then
-cease to function as an LMB, and browse list operation on all TCP/IP-only machines will therefore fail.
+<indexterm><primary>TCP/IPのみ</primary></indexterm>
+選択プロセスはすべてのNetBIOSネットワークインタフェースで、
+<emphasis>いわば、最後まで行われる。</emphasis>
+TCP/IPとIPXがインストールされ、NetBIOSが両方のプロトコルで有効な
+Windows 9x/Meマシンの場合、選択は両方のプロトコル上で行われる。しばしば
+発生するが、もし、Windows 9x/Meマシンが両方のプロトコルを持つ唯一のマシン
+ならば、LMBはIPXプロトコル上でのNetBIOSインタフェース上で勝つ。
+Sambaは、Windows 9x/Meが、LMBがどのマシンかということを知っていると
+主張することによって、LMBでなくなる。SambaはLMB機能をやめるため、
+すべてのTCP/IPのみで動くマシンのブラウズリスト操作はそのために失敗する。
 </para>
 
 <para>
 <indexterm><primary>Windows 9x/Me</primary></indexterm>
-<indexterm><primary>extended protocol</primary></indexterm>
-Windows 95, 98, 98se, and Me are referred to generically as Windows 9x/Me.  The Windows NT4, 200x, and XP use
-common protocols. These are roughly referred to as the Windows NT family, but it should be recognized that
-2000 and XP/2003 introduce new protocol extensions that cause them to behave differently from MS Windows NT4.
-Generally, where a server does not support the newer or extended protocol, these will fall back to the NT4
-protocols.
+<indexterm><primary>拡張プロトコル</primary></indexterm>
+Windows 95、98、98SEとMeは一般的に Windows9x/Meと言われる。Windows NT4、
+200xとXPは共通のプロトコルを使う。これらはざっとWindows NTファミリと言われるが、
+2000と XP/2003は、Microsoft Windows NT4とは異なる動作をする新しい
+拡張プロトコルを導入したと認識されねばならない。一般的に、サーバはより新しいか
+拡張プロトコルをサポートせず、NT4プロトコルで処理をするようになる。
 </para>
 
 <para>
-The safest rule of all to follow is: Use only one protocol!
+最も安全な、従うべきルールのすべては単一のプロトコルを使う! である。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Name Resolution Order</title>
+<title>名前解決の順序</title>
 
 <para>
-<indexterm><primary>NetBIOS names</primary></indexterm>
-<indexterm><primary>name_type</primary></indexterm>
-Resolution of NetBIOS names to IP addresses can take place using a number
-of methods. The only ones that can provide NetBIOS name_type information
-are:
+<indexterm><primary>NetBIOS名</primary></indexterm>
+<indexterm><primary>名前タイプ</primary></indexterm>
+NetBIOS名からIPアドレスへの名前解決は、いくつもの方式を使って行われる。
+NetBIOS名前タイプ情報を提供可能なものは以下の通り:
 </para>
 
 <itemizedlist>
-	<listitem><para>WINS &smbmdash; the best tool.</para></listitem>
-	<listitem><para>LMHOSTS &smbmdash; static and hard to maintain.</para></listitem>
-	<listitem><para>Broadcast &smbmdash; uses UDP and cannot resolve names across remote segments.</para></listitem>
+	<listitem><para>WINS &smbmdash; 最適の方法。</para></listitem>
+	<listitem><para>LMHOSTS &smbmdash; 静的でメンテナンスしづらい。</para></listitem>
+	<listitem><para>Broadcast &smbmdash; UDPを使うが他セグメントの名前を解決できない。</para></listitem>
 </itemizedlist>
 
 <para>
-Alternative means of name resolution include:
+名前解決の別の意味は以下を含む:
 </para>
 <itemizedlist>
-<listitem><para>Static <filename>/etc/hosts</filename> &smbmdash;  hard to maintain and lacks name_type info.</para></listitem>
-<listitem><para>DNS &smbmdash; is a good choice but lacks essential NetBIOS name_type information.</para></listitem>
+<listitem><para>Static <filename>/etc/hosts</filename> &smbmdash;  メンテナンスしづらく、名前タイプ情報が欠落している。</para></listitem>
+<listitem><para>DNS &smbmdash; は良い選択肢だが、基本的なNetBIOS名前タイプ情報が欠落している。</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>restrict DNS</primary></indexterm>
-<indexterm><primary>name resolve order</primary></indexterm>
-Many sites want to restrict DNS lookups and avoid broadcast name
-resolution traffic. The <parameter>name resolve order</parameter> parameter is of great help here.
-The syntax of the <parameter>name resolve order</parameter> parameter is:
+<indexterm><primary>制限されたDNS</primary></indexterm>
+<indexterm><primary>名前解決の順序</primary></indexterm>
+ブロードキャスト名前解決のトラフィックを防ぐこととDNS検索の制限をしたい
+と考えているサイトが多数ある。<parameter>name resolve order</parameter>
+パラメータはこれをとても助ける。<parameter>name resolve order</parameter>
+パラメータの文法は以下の通り:
 <smbconfblock>
 <smbconfoption name="name resolve order">wins lmhosts bcast host</smbconfoption>
 </smbconfblock>
 <emphasis>or</emphasis>
 <smbconfblock>
-<smbconfoption name="name resolve order">wins lmhosts  	(eliminates bcast and host)</smbconfoption>
+<smbconfoption name="name resolve order">wins lmhosts  	(bcastとhostを省略)</smbconfoption>
 </smbconfblock>
-The default is:
+既定値は:
 <smbconfblock>
-<smbconfoption name="name resolve order">host lmhost wins bcast</smbconfoption>,
+<smbconfoption name="name resolve order">host lmhost wins bcast</smbconfoption>で、
 </smbconfblock>
-<indexterm><primary>gethostbyname() function call</primary></indexterm>
-where <quote>host</quote> refers to the native methods used by the UNIX system to implement the
-gethostbyname() function call. This is normally controlled by <filename>/etc/host.conf</filename>,
-<filename>/etc/nsswitch.conf</filename> and <filename>/etc/resolv.conf</filename>.
+<indexterm><primary>gethostbyname() 関数呼び出し</primary></indexterm>
+ここで、<quote>host</quote>は、UNIXシステムに実装されているgethostbyname()
+呼び出しを使う方法である。これは、通常<filename>/etc/host.conf</filename>、
+<filename>/etc/nsswitch.conf</filename>と<filename>/etc/resolv.conf</filename>
+によって制御される。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Technical Overview of Browsing</title>
+<title>ブラウジングの技術的な概要</title>
 
 <para>
 <indexterm><primary>SMB</primary></indexterm>
