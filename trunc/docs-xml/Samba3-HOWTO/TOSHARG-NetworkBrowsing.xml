@@ -1780,39 +1780,42 @@ guest account)アクセスを無効に出来る。この場合、SMB/CIFSクラ�
 
 <para>
 <indexterm><primary>ブロードキャストアドレス</primary></indexterm>
-The other big problem people have is that their broadcast address,
-netmask, or IP address is wrong (specified with the <smbconfoption name="interfaces"></smbconfoption> option
-in &smb.conf;)
+他の大きな問題はブロードキャストアドレス、ネットマスク、あるいはIPアドレスが
+間違っている場合(&smb.conf;中で<smbconfoption name="interfaces"></smbconfoption>
+を指定した場合)である。
 </para>
 </sect2>
 
 <sect2>
-<title>Cross-Subnet Browsing</title>
+<title>サブネット間のブラウジング</title>
 
 <para>
-<indexterm><primary>replication</primary><secondary>browse lists</secondary></indexterm>
-<indexterm><primary>browse across subnet</primary></indexterm>
-Since the release of Samba 1.9.17 (alpha1), Samba has supported the replication of browse lists across subnet
-boundaries. This section describes how to set this feature up in different settings.
+<indexterm><primary>複製</primary><secondary>ブラウズリスト</secondary></indexterm>
+<indexterm><primary>サブネット越しのブラウズ</primary></indexterm>
+Samba1.9.17(α1)のリリースから、Sambaはサブネット境界をまたがってのブラウズリスト
+の複製をサポートしてきた。この節ではどのようにこの機能を異なった設定中で設定
+するかを説明する。
 </para>
 
 <para>
-<indexterm><primary>browse lists</primary></indexterm>
-<indexterm><primary>broadcast traffic</primary></indexterm>
+<indexterm><primary>ブラウズリスト</primary></indexterm>
+<indexterm><primary>ブロードキャストのトラフィック</primary></indexterm>
 <indexterm><primary>UDP</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>remote announce</primary></indexterm>
 <indexterm><primary>remote browse sync</primary></indexterm>
-To see browse lists that span TCP/IP subnets (i.e., networks separated by routers that do not pass broadcast
-traffic), you must set up at least one WINS server. The WINS server acts as a DNS for NetBIOS names. This will
-allow NetBIOS name-to-IP address translation to be completed by a direct query of the WINS server. This is
-done via a directed UDP packet on port 137 to the WINS server machine. The WINS server avoids the necessity of
-default NetBIOS name-to-IP address translation, which is done using UDP broadcasts from the querying machine.
-This means that machines on one subnet will not be able to resolve the names of machines on another subnet
-without using a WINS server. The Samba hacks, <parameter>remote browse sync</parameter>, and <parameter>remote
-announce</parameter> are designed to get around the natural limitations that prevent UDP broadcast
-propagation. The hacks are not a universal solution and they should not be used in place of WINS, they are
-considered last resort methods.
+TCP/IPサブネットをまたがったブラウズリストを見るために(すなわち、ブロードキャスト
+パケットが通らない、ルータによって分離されたネットワーク)、少なくとも1つのWINS
+サーバを設定する必要がある。WINSサーバはNetBIOS名のためのDNS都市的脳する。これは、
+WINSサーバに直接問い合わせを行う事によって、NetBIOS名からIPアドレスへの変換を
+可能にする。これは、WINSサーバマシンのポート137に直接UDPパケットを投げることで
+行われる。WINSサーバは、問い合わせたマシンからのUDPを使うことによって行われる、
+既定値のNetBIOSからIPアドレスへの変換の必要性を防ぐ。これは、ある1つのサブネット
+は、WINSサーバを使わないで他のサブネット上のマシンの名前を解決することができない
+ということである。Sambaのハック、すなわち<parameter>remote browse sync</parameter>
+と<parameter>remote announce</parameter>はUDPのブロードキャストによる伝搬を防ぐ
+普通の制限をうまく乗り越えるようにできている。ハックは一般的な解ではなく、
+WINSがあるところでは使うべきではなく、最後の手段として考えるべきである。
 </para>
 
 <para>
