@@ -1697,87 +1697,89 @@ NTドメインにおいて同じ名前を持つ、ワークグループのドメ
 <note><para>
 <indexterm><primary>nmbd</primary></indexterm>
 <indexterm><primary>WINSサーバ</primary></indexterm>
-<command>nmbd</command> can be configured as a WINS server, but it is not
-necessary to specifically use Samba as your WINS server. MS Windows
-NT4, Server or Advanced Server 200x can be configured as
-your WINS server. In a mixed NT/200x server and Samba environment on
-a WAN, it is recommended that you use the Microsoft
-WINS server capabilities. In a Samba-only environment, it is
-recommended that you use one and only one Samba server as the WINS server.
+<command>nmbd</command>はWINSサーバとして設定できるが、特段、Sambaを
+WINSサーバとして使用することは必要ない。Microsoft Windows NT4、
+Microsoft Windows Server又は Advanced Server 200xをWINSサーバとして
+設定できる。WAN上でのNT/200xとSambaの混在環境では、Microsoft WINS
+サーバの能力を使うことを推奨する。Sambaのみの環境では、ある1つのSamba
+サーバをWINSサーバとして使うことを推奨する。
 </para></note>
 
 <para>
 <indexterm><primary>nmbd</primary></indexterm>
-To get browsing to work, you need to run <command>nmbd</command> as usual, but must
-use the <smbconfoption name="workgroup"/> option in &smb.conf;
-to control what workgroup Samba becomes a part of.
+ブラウジングを機能させるために、<command>nmbd</command>を通常どおり動作
+させるが、どのワークグループにSambaが属するかを制御する、&smb.conf;
+中の<smbconfoption name="workgroup"/>オプションを使わなければならない。
 </para>
 
-<para>
-<indexterm><primary>browsing another subnet</primary></indexterm>
-Samba also has a useful option for a Samba server to offer itself for browsing on another subnet. It is
-recommended that this option is used only for <quote>unusual</quote> purposes: announcements over the
-Internet, for example. See <smbconfoption name="remote announce"/> in the &smb.conf; man page.
+<indexterm><primary>他のサブネットのブラウジング</primary></indexterm>
+Sambaは他のサブネット上のブラウジングのために、それ自身を提供するために
+便利なオプションも持っている。このオプションは<quote>通常でない</quote>
+使い方のためにのみ使うことを推奨する。例をあげると、インターネット越しの通知
+である。&smb.conf;マニュアルページの<smbconfoption name="remote announce"/>
+を参照のこと。
 </para>
 </sect2>
 
 <sect2>
-<title>Problem Resolution</title>
+<title>問題の解決方法</title>
 
 <para>
 <indexterm><primary>log.nmbd</primary></indexterm>
 <indexterm><primary>browse.dat</primary></indexterm>
-If something does not work, the <filename>log.nmbd</filename> file will help
-to track down the problem. Try a <smbconfoption name="log level"></smbconfoption> of 2 or 3 for finding
-problems. Also note that the current browse list usually gets stored
-in text form in a file called <filename>browse.dat</filename>.
+もしもうまく動かない場合、問題を把握するために<filename>log.nmbd</filename>
+ファイルが役に立つ。問題を発見するために、<smbconfoption name="log level"></smbconfoption>
+を2または3にしてみる。現在のブラウズリストは<filename>browse.dat</filename>
+というファイル中に、テキスト形式で格納されていることにも注意。
 </para>
 
 <para>
 <indexterm><primary>\\SERVER</primary></indexterm>
-<indexterm><primary>filemanager</primary></indexterm>
-If it does not work, you should still be able to
-type the server name as <filename>\\SERVER</filename> in <command>filemanager</command>, then
-press enter, and <command>filemanager</command> should display the list of available shares.
+<indexterm><primary>ファイルマネージャ</primary></indexterm>
+もしもうまく動かない場合、<command>ファイルマネージャ</command>中で
+サーバ名を<filename>\\SERVER</filename>という形で入力することが出来、
+enterを入力すると、<command>ファイルマネージャ</command>は有効な共有の
+一覧を表示する。
 </para>
 
 <para>
 <indexterm><primary>IPC$</primary></indexterm>
 <indexterm><primary>guest account</primary></indexterm>
-Some people find browsing fails because they do not have the global
-<smbconfoption name="guest account"/> set to a valid account. Remember that the
-IPC$ connection that lists the shares is done as guest and so you must have a valid guest account.
+[global]セクションで<smbconfoption name="guest account"/>を
+有効なアカウントとして設定していないと、何人かはブラウジングに失敗する。
+共有を表示するためのIPC$接続は、guestで行われ、そのため、有効なguest account
+を設定しておかなければならない。
 </para>
 
 <note><para>
 <indexterm><primary>IPC$</primary></indexterm>
-<indexterm><primary>Windows Explorer</primary></indexterm>
+<indexterm><primary>Windowsエクスプローラ</primary></indexterm>
 <indexterm><primary>browse resources</primary></indexterm>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
-<indexterm><primary>My Network Places</primary></indexterm>
-The <literal>IPC$</literal> share is used by all SMB/CIFS clients to obtain the list of resources that is
-available on the server. This is the source of the list of shares and printers when browsing an SMB/CIFS
-server (also Windows machines) using the Windows Explorer to browse resources through the Windows Network
-Neighborhood (also called My Network Places) through to a Windows server. At this point, the client has opened
-a connection to the <literal>\\server\IPC4</literal> resource.  Clicking on a share will then open up a
-connection to the <literal>\\server\share</literal>.
+<indexterm><primary>ネットワークコンピュータ</primary></indexterm>
+<indexterm><primary>マイネットワーク</primary></indexterm>
+<literal>IPC$</literal>共有はすべてのSMB/CIFSクライアントで、
+サーバ上で有効なリソースのリストを得るために使われる。
+これは、SMB/CIFSサーバが、Windowsサーバに対してマイネットワーク経由で
+Windowsエクスプローラがリソースを閲覧するために使われる時の、共有とプリンタの
+リストの元になるものである。この時点で、クライアントは
+<literal>\\server\IPC$</literal>リソースに接続を行う。共有をクリックすると、
+<literal>\\server\share</literal>に接続する。
 </para></note>
 
 <para>
 <indexterm><primary>guest account</primary></indexterm>
-<indexterm><primary>anonymous access</primary></indexterm>
+<indexterm><primary>匿名アクセス</primary></indexterm>
 <indexterm><primary>IPC$</primary></indexterm>
-<indexterm><primary>browse server resources</primary></indexterm>
-MS Windows 2000 and later (as with Samba) can be configured to disallow
-anonymous (i.e., guest account) access to the IPC$ share. In that case, the
-MS Windows 2000/XP/2003 machine acting as an SMB/CIFS client will use the
-name of the currently logged-in user to query the IPC$ share. MS Windows
-9x/Me clients are not able to do this and thus will not be able to browse
-server resources.
+<indexterm><primary>サーバリソースのブラウズ</primary></indexterm>
+Microsoft Windows 2000とその後継(Sambaも)はIPC$共有に対する匿名(すなわち
+guest account)アクセスを無効に出来る。この場合、SMB/CIFSクライアントとして
+動作するMicrosoft Windows 2000/XP/2003マシンは、IPC$共有に問い合わせるために
+現在ログインしているユーザの名前を使う。Microsoft Windows 9x/Meはこれが
+できず、サーバリソースをブラウズできない。
 </para>
 
 <para>
-<indexterm><primary>broadcast address</primary></indexterm>
+<indexterm><primary>ブロードキャストアドレス</primary></indexterm>
 The other big problem people have is that their broadcast address,
 netmask, or IP address is wrong (specified with the <smbconfoption name="interfaces"></smbconfoption> option
 in &smb.conf;)
