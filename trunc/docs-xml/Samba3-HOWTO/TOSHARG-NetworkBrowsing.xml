@@ -1844,54 +1844,57 @@ DNSレコードが挿入されるDNSを経由してブラウジングをサポ�
 <title>サブネット間ブラウジングの動作</title>
 
 <para>
-<indexterm><primary>cross-subnet browsing</primary></indexterm>
-<indexterm><primary>complicated</primary></indexterm>
-Cross-subnet browsing is a complicated dance, containing multiple moving parts. It has taken Microsoft several
-years to get the code that correctly achieves this, and Samba lags behind in some areas.  Samba is capable of
-cross-subnet browsing when configured correctly.
+<indexterm><primary>サブネット間のブラウジング</primary></indexterm>
+<indexterm><primary>複雑</primary></indexterm>
+サブネット間のブラウジングはとても複雑で、多数の動いている部分を含んでいる。
+正確に動くコードが出来るまで、Microsoftは数年掛けることになり、Sambaは
+それから数年遅れて追いついている。設定が正しければ、Sambaはサブネット間の
+ブラウジングが出来る機能がある。
 </para>
 
 <para>
-Consider a network set up as in <link linkend="browsing1">Cross-Subnet Browsing Example</link>.
+<link linkend="browsing1">サブネット間ブラウジングの例</link>のようなネット
+ワーク設定を考えてみることにする。
 </para>
 
 <figure id="browsing1">
-	<title>Cross-Subnet Browsing Example.</title>
+	<title>サブネット間のブラウジングの例</title>
 	<imagefile scale="40">browsing1</imagefile>
 </figure>
 
 <para>
-<indexterm><primary>broadcasts</primary></indexterm>
+<indexterm><primary>ブロードキャスト</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-This consists of three subnets (1, 2, 3) connected by two routers (R1, R2), which do not pass broadcasts.
-Subnet 1 has five machines on it, subnet 2 has four machines, and subnet 3 has four machines. Assume for the
-moment that all machines are configured to be in the same workgroup (for simplicity's sake). Machine N1_C on
-subnet 1 is configured as the DMB (i.e., it will collate the browse lists for the workgroup). Machine N2_D is
-configured as a WINS server, and all the other machines are configured to register their NetBIOS names with
-it.
+これは、2つのルータ(R1,R2)で接続されている3つのサブネット(1,2,3)から成り立ち、
+それらはブロードキャストが届かない。サブネット1はその中に5つのマシンがあり、
+サブネット2は4つ、サブネット3は4つマシンがある。すべてのマシンは同じワーク
+グループ名(単純にするために)に設定されている。サブネット1上のマシンN1-Cは
+DMB(すなわち、ワークグループのブラウズリストを集める)として設定されている。
+マシンN2_DはWINSサーバとして設定されていて、すべての他のマシンはそのNetBIOS名
+をそこに登録している。
 </para>
 
 <para>
-<indexterm><primary>master browsers</primary></indexterm>
+<indexterm><primary>マスタブラウザ</primary></indexterm>
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>DMB</primary></indexterm>
-As these machines are booted up, elections for master browsers
-take place on each of the three subnets. Assume that machine
-N1_C wins on subnet 1, N2_B wins on subnet 2, and N3_D wins on
-subnet 3. These machines are known as LMBs for
-their particular subnet. N1_C has an advantage in winning as the
-LMB on subnet 1 because it is set up as DMB.
+それらのマシンが起動するとき、3つのサブネット上それぞれで、マスタブラウザの
+選択作業が発生する。サブネット1上ではマシンN1_Cが選択され、サブネット2上で
+はN2_Bが、サブネット3上ではN3_Dが選択されると仮定する。それらのマシンはその
+マシンがいるサブネット上ではLMBとなる。N1_CはそれがDMBとして設定されている
+ために、サブネット1上のLMBとなる。
 </para>
 
 <para>
 <indexterm><primary>LMB</primary></indexterm>
-<indexterm><primary>browse list</primary></indexterm>
-On each of the three networks, machines that are configured to offer sharing services will broadcast that they
-are offering these services. The LMB on each subnet will receive these broadcasts and keep a record of the
-fact that the machine is offering a service. This list of records is the basis of the browse list. For this
-case, assume that all the machines are configured to offer services, so all machines will be on the browse
-list.
+<indexterm><primary>ブラウズリスト</primary></indexterm>
+各3ネットワーク上で、共有サービスを提供するように設定されたマシンは、その
+サービスを提供していることをブロードキャストする。各サブネット上のLMBは
+そのブロードキャストを受け取り、マシンがサービスを提供していることを記録
+する。この記録のリストはブラウズリストの基礎となるものである。この場合、
+すべてのマシンがサービスを提供するように設定されていることを仮定しているので、
+すべてのマシンがブラウズリスト上に載る。
 </para>
 
 <para>
@@ -1900,6 +1903,7 @@ list.
 <indexterm><primary>verifiable</primary></indexterm>
 <indexterm><primary>trusted</primary></indexterm>
 <indexterm><primary>non-authoritative</primary></indexterm>
+各ネットワークで、そのネットワークのLMBは、
 For each network, the LMB on that network is
 considered <emphasis>authoritative</emphasis> for all the names it receives via
 local broadcast. This is because a machine seen by the LMB
