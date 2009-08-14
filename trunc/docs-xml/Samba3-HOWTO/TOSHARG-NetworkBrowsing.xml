@@ -1948,61 +1948,65 @@ DMB(すなわち、ワークグループのブラウズリストを集める)と
 <indexterm><primary>LMB</primary></indexterm>
 <indexterm><primary>同期</primary></indexterm>
 <indexterm><primary>WINS</primary></indexterm>
-Now examine subnet 2 in <link linkend="brsbex">Browse Subnet Example 2</link>.  As soon as N2_B has become the
-LMB, it looks for a DMB with which to synchronize its browse list. It does this by querying the WINS server
-(N2_D) for the IP address associated with the NetBIOS name WORKGROUP&lt;1B&gt;. This name was registered by
-the DMB (N1_C) with the WINS server as soon as it was started.
+次に、<link linkend="brsbex">サブネットのブラウズの例2</link>中のサブネット2を
+眺めてみよう。NB_2がLMBになると同時に、そのブラウズリストを同期するDMBを探す。
+これは、NetBIOS名 WORKGROUP&lt;1B&gt;に関連づけられているIPアドレスをWINS
+サーバ(N2_D)に問い合わせることによって行われる。この名前は、WINSサーバが起動
+するとすぐにDMB(N1_C)によって登録される。
 </para>
 
 <para>
-<indexterm><primary>MasterAnnouncement</primary></indexterm>
+<indexterm><primary>マスタアナウンス</primary></indexterm>
 <indexterm><primary>NetServerEnum2</primary></indexterm>
-<indexterm><primary>synchronization</primary></indexterm>
-<indexterm><primary>browse lists</primary></indexterm>
-Once N2_B knows the address of the DMB, it tells the DMB that it is the LMB
-for subnet 2 by sending the DMB a
-<emphasis>MasterAnnouncement</emphasis> packet to UDP port 138.  It then
-synchronizes with the DMB by
-doing a <emphasis>NetServerEnum2</emphasis> call. This tells the DMB to
-send the sender all the server names it knows
-about. Once the DMB receives the <emphasis>MasterAnnouncement</emphasis> packet, it schedules a
-synchronization request to the sender of that packet. After both synchronizations are complete, the browse
-lists look like those in <link linkend="brsbex">Browse Subnet Example 2</link>
+<indexterm><primary>同期作業</primary></indexterm>
+<indexterm><primary>ブラウズリスト</primary></indexterm>
+N2_BがDMBのアドレスを知ると、DMBに対して、UDPのポート138を使って、
+<emphasis>マスタアナウンス</emphasis>パケットを送ることによって、サブネット2
+のLMBであることを告げる。次に、<emphasis>NetServerEnum2</emphasis>コールを
+行うことで、DMBとの同期作業を行う。これは、DMBが知っているすべてのサーバ名を
+送信元に送るようにさせる。DMBが<emphasis>マスタアナウンス</emphasis>パケットを
+受け取ると、そのパケットの送信者への同期要求をスケジュールする。両方の同期が
+終了すると、ブラウズリストは、
+<link linkend="brsbex">サブネットのブラウズの例2</link>中のようになる。
 </para>
 
 <table frame="all" id="brsbex">
-	<title>Browse Subnet Example 2</title>
+	<title>サブネットブラウズの例2</title>
 	<tgroup	cols="3">
 		<colspec align="left"/>
 		<colspec align="left"/>
 		<colspec align="justify" colwidth="1*"/>
 	<thead>
-		<row><entry>Subnet</entry><entry>Browse Master</entry><entry>List</entry></row>
+		<row><entry>サブネット</entry><entry>ブラウズマスタ</entry><entry>リスト</entry></row>
 	</thead>
 
 	<tbody>
-		<row><entry>Subnet1</entry><entry>N1_C</entry><entry>N1_A, N1_B, N1_C, N1_D, N1_E,
+		<row><entry>サブネット1</entry><entry>N1_C</entry><entry>N1_A, N1_B, N1_C, N1_D, N1_E,
 N2_A(*), N2_B(*), N2_C(*), N2_D(*)</entry></row>
-		<row><entry>Subnet2</entry><entry>N2_B</entry><entry>N2_A, N2_B, N2_C, N2_D, N1_A(*),
+		<row><entry>サブネット2</entry><entry>N2_B</entry><entry>N2_A, N2_B, N2_C, N2_D, N1_A(*),
 N1_B(*), N1_C(*), N1_D(*), N1_E(*)</entry></row>
-		<row><entry>Subnet3</entry><entry>N3_D</entry><entry>N3_A, N3_B, N3_C, N3_D</entry></row>
+		<row><entry>サブネット3</entry><entry>N3_D</entry><entry>N3_A, N3_B, N3_C, N3_D</entry></row>
 	</tbody>
 	</tgroup>
 </table>
 
 <para>
 <indexterm><primary>non-authoritative</primary></indexterm>
-Servers with an (*) after them are non-authoritative names.
+サーバ名の後に(*)が付いたものは信頼されていない名前である。
 </para>
 
 <para>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
-At this point users looking in their Network Neighborhood on subnets 1 or 2 will see all the servers on both;
-users on subnet 3 will still see only the servers on their own subnet.
+<indexterm><primary>ネットワークコンピュータ</primary></indexterm>
+この時点で、ユーザは、サブネット1または2上で両方のすべてのサーバを、ネット
+ワークコンピュータで見ることができる。サブネット3上のユーザは引き続き
+自分がいるサブネット上のもののみが見える。
 </para>
 
 <para>
 <indexterm><primary>DMB</primary></indexterm>
+N2_Bで起きた同じ手順のイベントがサブネット3のLMB(N3_D)に対して起こる。DMB(N1_A)
+とブラウズリストの同期を行うと、サブネット1とサブネット2のサーバエントリを得る。
+N3_DがN1_Cと同期を取るとvica versa、
 The same sequence of events that occurred for N2_B now occurs for the LMB on subnet 3 (N3_D). When it
 synchronizes browse lists with the DMB (N1_A) it gets both the server entries on subnet 1 and those on subnet
 2. After N3_D has synchronized with N1_C and vica versa, the browse lists will appear as shown in <link
