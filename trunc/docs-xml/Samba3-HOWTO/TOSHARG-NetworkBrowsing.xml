@@ -2293,25 +2293,31 @@ Microsoft Windowsエクスプローラが無反応になると言う現象を引
 <para>
 この現象を除くために、腐ったキャッシュされた参照は取り除かれるべきである。
 これは自動的には起こらず、手動での作業が必要である。これはMicrosoft Windows
-のデザインによるものであり、Sambaで変えることは出来ない。
-To eliminate the problem the stale cached references should be removed. This does not happen automatically and
-requires manual intervention. This is a design feature of MS Windows and not anything that Samba can change.
-To remove the stale shortcuts found in <emphasis>My Network Places</emphasis> which refer to what are now
-invalid shares or servers it is necessary to edit the Windows Registry under
-<literal>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\</literal>. Edit the entry
-<literal>MountPoints2</literal> (on Windows XP and later, or <literal>MountPoints</literal> on Windows 2000
-and earlier). Remove all keys named <literal>\\server\share</literal> (where 'server' and 'share' refer to a
-non-existent server or share).
+のデザインによるものであり、Sambaで変えることは出来ない。現時点で無効になって
+いる、<emphasis>マイネットワーク</emphasis>内の共有またはサーバへの無効な
+ショートカットを削除するためには、
+<literal>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\</literal>
+配下にあるWindows レジストリを編集する必要がある。エントリ
+<literal>MountPoints2</literal>(Windows XP以降、またはWindows 2000以前では
+<literal>MountPoints</literal>)を編集する。
+<literal>\\server\share</literal>という名前(ここで'server'と'share'は
+存在しないサーバまたは共有を参照している)のすべてのキーを削除する。
 </para>
 
 <note><para>
-Removal of stale network links needs to be done on a per-user basis. Alternately, you can delete the
-shortcuts from the MS Windows Explorer in <literal>My Network Places</literal> just by right-clicking them and
-selecting <emphasis>Delete.</emphasis>
+存在しないネットワークリンクの削除はユーザ単位で行う必要がある。言い換えると、
+Microsoft Windowsエクスプローラ内での<literal>マイネットワーク</literal>
+中のショートカットは、右クリックして<emphasis>削除</emphasis>を選択することで
+削除できる。
 </para></note>
 
 <para>
-<indexterm><primary>slow network browsing</primary></indexterm>
+<indexterm><primary>ネットワークブラウジングが遅い</primary></indexterm>
+Sambaのユーザは、Windows、SambaとNovellサーバのネットワークブラウジングに
+対して、これらの存在しない参照が、悪影響を及ぼすと報告している。これは
+Sambaサーバに関連しない一般的な問題であると思われる。Sambaユーザは、
+Sambaが、時として人柱ツールとして見られていることがあるために、しばしば
+これを経験するかもしれない。
 Samba users have reported that these stale references negatively affect network browsing with Windows, Samba,
 and Novell servers. It is suspected to be a universal problem not directly related to the Samba
 server. Samba users may experience this more often due to Samba being somewhat viewed as an experimenter's
