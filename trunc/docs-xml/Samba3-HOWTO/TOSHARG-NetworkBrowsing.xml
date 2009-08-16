@@ -2167,67 +2167,69 @@ SambaのNetBIOS名キャッシュをフラッシュする効果があり、再�
 <sect2>
 	<title>サーバリソースがリスト出来ない</title>
 
-<para><quote>My Client Reports "<quote>This server is not configured to list shared resources."</quote></quote></para>
+<para><quote>あるクライアントは"<quote>This server is not configured to list shared resources."と報告した。</quote></quote></para>
 
 
 <para>
-Your guest account is probably invalid for some reason. Samba uses the
-guest account for browsing in <command>smbd</command>. Check that your guest account is
-valid.
+おそらく何らかの理由でゲストアカウントが無効になっている。Sambaは
+<command>smbd</command>でブラウジングするためにゲストアカウントを使う。
+ゲストアカウントが有効か確認する。
 </para>
 
-<para>Also see <smbconfoption name="guest account"/> in the &smb.conf; man page.</para>
+<para>&smb.conf; マニュアルページの<smbconfoption name="guest account"/>も参照
+のこと。</para>
 
 </sect2>
 
 <sect2>
-	<title>I Get an "<errorname>Unable to browse the network</errorname>" Error</title>
+	<title>"<errorname>Unable to browse the network</errorname>"というエラーメッセージが出た。</title>
 
-	<para>This error can have multiple causes:
-<indexterm><primary>browsing problems</primary></indexterm>
+	<para>このエラーは複数の原因が考えられる:
+<indexterm><primary>ブラウジングの問題</primary></indexterm>
 	</para>
 
 	<itemizedlist>
-		<listitem><para>There is no LMB. Configure &nmbd;
-			or any other machine to serve as LMB.</para></listitem>
-		<listitem><para>You cannot log onto the machine that is the LMB.
-			Can you log on to it as a guest user? </para></listitem>
-		<listitem><para>There is no IP connectivity to the LMB.
-			Can you reach it by broadcast?</para></listitem>
+		<listitem><para>LMBがない。&nmbd;を設定するか、他のマシンでLMBを立てる。
+			</para></listitem>
+		<listitem><para>LMBマシンにログオンできない。
+		        ゲストユーザでログオンできるか?</para></listitem>
+		<listitem><para>LMBに対してIPレベルで接続できない。
+		        ブロードキャストで到達可能か?</para></listitem>
 </itemizedlist>
 </sect2>
 
 <sect2>
-<title>Browsing of Shares and Directories is Very Slow</title>
+<title>共有とディレクトリのブラウジングが非常に遅い</title>
 
 <para><quote>
-<indexterm><primary>slow browsing</primary></indexterm>
-There are only two machines on a test network. One is a Samba server, the other a Windows XP machine.
-Authentication and logons work perfectly, but when I try to explore shares on the Samba server, the
-Windows XP client becomes unresponsive. Sometimes it does not respond for some minutes. Eventually,
-Windows Explorer will respond and displays files and directories without problem.
+<indexterm><primary>ブラウジングが遅い</primary></indexterm>
+テストネットワークに2台だけマシンがあったとする。1つはSambaサーバで他はWindows XPマシンである。
+認証とログオンは正常に動作するが、Sambaサーバ上の共有を表示させようとするとWindows XP
+クライアントは反応がなくなる。時々、数分反応がなくなる。最終的にはWindowsエクスプローラは
+反応して問題なくファイルとディレクトリを表示する。
 </quote>
 </para>
 
 <para><quote>
 <indexterm><primary>cmd</primary></indexterm>
-But, the share is immediately available from a command shell (<command>cmd</command>, followed by
-exploration with DOS command. Is this a Samba problem, or is it a Windows problem? How can I solve this?
+しかし、共有はコマンドシェル(<command>cmd</command>)でDOSコマンドを使うと
+すぐに使える。これはSambaの問題か、それともWindowsの問題か?この問題の解決
+方法は?
 </quote></para>
 
 <para>
-Here are a few possibilities:
+いくつかの可能性がある:
 </para>
 
 <variablelist>
 	<varlistentry>
-		<term>Bad Networking Hardware</term>
+		<term>ネットワークハードウェアの不良</term>
 		<listitem><para>
-<indexterm><primary>bad hardware</primary></indexterm>
+<indexterm><primary>ハードウェア不良</primary></indexterm>
 <indexterm><primary>WebClient</primary></indexterm>
-<indexterm><primary>defective hardware</primary></indexterm>
-<indexterm><primary>Bad networking hardware</primary></indexterm>
-<indexterm><primary>data corruption</primary></indexterm>
+<indexterm><primary>不完全なハードウェア</primary></indexterm>
+<indexterm><primary>ネットワークハードウェアの不良</primary></indexterm>
+<indexterm><primary>データの破損</primary></indexterm>
 		Most common defective hardware problems center around low cost or defective hubs, routers,
 		network interface controllers (NICs), and bad wiring. If one piece of hardware is defective,
 		the whole network may suffer. Bad networking hardware can cause data corruption. Most bad
