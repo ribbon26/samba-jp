@@ -2230,62 +2230,70 @@ SambaのNetBIOS名キャッシュをフラッシュする効果があり、再�
 <indexterm><primary>不完全なハードウェア</primary></indexterm>
 <indexterm><primary>ネットワークハードウェアの不良</primary></indexterm>
 <indexterm><primary>データの破損</primary></indexterm>
-		Most common defective hardware problems center around low cost or defective hubs, routers,
-		network interface controllers (NICs), and bad wiring. If one piece of hardware is defective,
-		the whole network may suffer. Bad networking hardware can cause data corruption. Most bad
-		networking hardware problems are accompanied by an increase in apparent network traffic,
-		but not all.
+	最も一般的な、不完全なハードウェアの問題は、低コストまたは不完全なハブ、
+	ルータ、ネットワークインタフェース(NIC)と良くないケーブルに集中する。
+	もしも、ハードウェアの1部分が不良だと、ネットワーク全体が被害を受ける
+	かもしれない。悪いハードウェアはデータの喪失を引き起こす。ほとんどの
+	ネットワークハードウェアの不良問題は見た目のネットワークトラフィックの
+	増大をもたらすがそれだけではない。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
-		<term>The Windows XP WebClient</term>
+		<term>Windows XPのWebClient</term>
 		<listitem><para>
-<indexterm><primary>network browsing problems</primary></indexterm>
-		A number of sites have reported similar slow network browsing problems and found that when
-		the WebClient service is turned off, the problem disappears. This is certainly something
-		that should be explored because it is a simple solution &smbmdash; if it works.
+<indexterm><primary>ネットワークブラウジングの問題</primary></indexterm>
+		数多くのサイトで、同様のネットワークブラウジングが遅くなる問題が報告され、
+		WebClientサービスを停止すると、問題が出なくなることがわかっている。これは、
+		動けば簡単な解であるという理由で&smbmdash;、確かに探求されるべきことで
+		ある。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
-		<term>Inconsistent WINS Configuration</term>
+		<term>矛盾しているWINSの設定</term>
 		<listitem><para>
-<indexterm><primary>WINS Configuration</primary></indexterm>
-<indexterm><primary>WINS server</primary></indexterm>
-		This type of problem is common when one client is configured to use a WINS server (that is
-		a TCP/IP configuration setting) and there is no WINS server on the network. Alternatively,
-		this will happen if there is a WINS server and Samba is not configured to use it. The use of
-		WINS is highly recommended if the network is using NetBIOS over TCP/IP protocols. If use
-		of NetBIOS over TCP/IP is disabled on all clients, Samba should not be configured as a WINS
-		server, nor should it be configured to use one.
+<indexterm><primary>WINSの設定</primary></indexterm>
+<indexterm><primary>WINSサーバ</primary></indexterm>
+		このタイプの問題は、あるクライアントがWINSサーバを使うように設定され
+		て(それはTCP/IP設定で)、ネットワーク上にWINSサーバがない場合である。
+		言い換えると、WINSサーバがあり、Sambaがそれを使うように設定されて
+		いない場合である。NetBIOS over TCP/IPを使う場合はWINSの使用は強く
+		推奨される。すべてのクライアントでNetBIOS over TCP/IPを無効にしている
+		ならば、SambaはWINSサーバとして設定されるべきでも、それを使うように
+		されるべきでもない。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
-		<term>Incorrect DNS Configuration</term>
+		<term>不正なDNS設定</term>
 		<listitem><para>
-<indexterm><primary>DNS Configuration</primary></indexterm>
-<indexterm><primary>NetBIOS over TCP/IP disabled</primary></indexterm>
-		If use of NetBIOS over TCP/IP is disabled, Active Directory is in use and the DNS server
-		has been incorrectly configured. For further information refer to
-		<link linkend="adsdnstech">DNS and Active Directory</link>.
+<indexterm><primary>DNS設定</primary></indexterm>
+<indexterm><primary>NetBIOS over TCP/IPが無効</primary></indexterm>
+		もしも、NetBIOS over TCP/IPが無効になっているならば、Active Directory
+		が使われ、DNSサーバが正しく設定されない。詳細な情報は、
+                <link linkend="adsdnstech">DNSとActive Directory</link>
+		を参照のこと。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
 
 </sect2>
 <sect2>
-<title>Invalid Cached Share References Affects Network Browsing</title>
+<title>不正なキャッシュされた共有参照はネットワークブラウジングに影響する</title>
 <para>
-<indexterm><primary>cached references</primary></indexterm>
+<indexterm><primary>キャッシュされた参照</primary></indexterm>
 <indexterm><primary>stale network links</primary></indexterm>
-Cached references on your MS Windows client (workstation or server) to shares or servers that no longer exist
-can cause MS Windows Explorer to appear unresponsive as it tries to connect to these shares. After a delay
-(can take a long time) it times out and browsing will appear to be mostly normal again.
+Microsoft Windowsクライアント(ワークステーションまたはサーバ)上での、存在しない
+共有あるいはサーバに対するキャッシュされた参照はそれらの共有に接続する際に、
+Microsoft Windowsエクスプローラが無反応になると言う現象を引き起こす。しばらく経つと
+(かなり長い時間だが)、タイムアウトになり、ブラウジングが通常通りになる。
 </para>
 
 <para>
+この現象を除くために、腐ったキャッシュされた参照は取り除かれるべきである。
+これは自動的には起こらず、手動での作業が必要である。これはMicrosoft Windows
+のデザインによるものであり、Sambaで変えることは出来ない。
 To eliminate the problem the stale cached references should be removed. This does not happen automatically and
 requires manual intervention. This is a design feature of MS Windows and not anything that Samba can change.
 To remove the stale shortcuts found in <emphasis>My Network Places</emphasis> which refer to what are now
