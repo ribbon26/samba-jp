@@ -24,9 +24,9 @@
 <indexterm><primary>パスワードバックエンド</primary></indexterm>
 <indexterm><primary>拡張性</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-Early releases of Samba-3 implemented new capability to work concurrently with multiple account backends. This
-capability was removed beginning with release of Samba 3.0.23. Commencing with Samba 3.0.23 it is possible to
-work with only one specified passwd backend.
+以前のSamba3リリースでは複数のアカウント情報バックエンドを同時に動作させることが
+できた。この機能はSamba3.0.23からなくなった。Samba3.0.23からは、passdbバックエンド
+は1つのみ指定できる。
 </para>
 
 <para>
@@ -35,65 +35,69 @@ work with only one specified passwd backend.
 <indexterm><primary>tdbsam</primary></indexterm>
 <indexterm><primary>ldapsam</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-<indexterm><primary>single repository</primary></indexterm>
-The three passdb backends that are fully maintained (actively supported) by the Samba Team are:
-<literal>smbpasswd</literal> (being obsoleted), <literal>tdbsam</literal> (a tdb-based binary file format),
-and <literal>ldapsam</literal> (LDAP directory).  Of these, only the <literal>ldapsam</literal> backend
-stores both POSIX (UNIX) and Samba user and group account information in a single repository. The
-<literal>smbpasswd</literal> and <literal>tdbsam</literal> backends store only Samba user accounts.
+<indexterm><primary>単一のリポジトリ</primary></indexterm>
+3つのpassdbバックエンドがSambaチームで完全なメンテナンスが行われており、それは以下である:
+<literal>smbpasswd</literal> (旧式)、<literal>tdbsam</literal>(tdbベースのバイナリファイル
+形式)と<literal>ldapsam</literal>(LDAP)。もちろん、<literal>ldapsam</literal>バックエンド
+のみが、POSIX(UNIX)とSambaのユーザとグループアカウント情報を単一のリポジトリに格納できる。
+<literal>smbpasswd</literal>と<literal>tdbsam</literal>バックエンドはSambaユーザ
+アカウントのみ格納する。
 </para>
 
 <para>
-In a strict sense, there are three supported account storage and access systems. One of these is considered
-obsolete (smbpasswd). It is recommended to use the <literal>tdbsam</literal> method for all simple systems. Use
-<literal>ldapsam</literal> for larger and more complex networks.
+厳密な意味で、3つのアカウントストレージとアクセスシステムがサポートされている。それらの
+1つは旧式である(smbpasswd)。すべての簡単なシステムには <literal>tdbsam</literal>方式
+を使用することを推奨する。<literal>ldapsam</literal>はもっと大規模か、複雑なネット
+ワークで使用すること。
 </para>
 
 <para>
 <indexterm><primary>passdb backend</primary></indexterm>
-<indexterm><primary>account storage mechanisms</primary></indexterm>
+<indexterm><primary>account格納の方式</primary></indexterm>
 <indexterm><primary>account storage system</primary></indexterm>
-<indexterm><primary>user and trust accounts</primary></indexterm>
-<indexterm><primary>machine trust accounts</primary></indexterm>
-<indexterm><primary>computer accounts</primary></indexterm>
-<indexterm><primary>interdomain trust accounts</primary></indexterm>
-In a strict and literal sense, the passdb backends are account storage mechanisms (or methods) alone. The choice
-of terminology can be misleading, however we are stuck with this choice of wording. This chapter documents the
-nature of the account storage system with a focus on user and trust accounts. Trust accounts have two forms,
-machine trust accounts (computer accounts) and interdomain trust accounts. These are all treated as user-like
-entities.
+<indexterm><primary>ユーザと信頼アカウント</primary></indexterm>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
+<indexterm><primary>ドメイン間信頼アカウント</primary></indexterm>
+厳格かつ文字通りの意味で、passdbバックエンドはアカウント格納メカニズム(あるいは方法)
+のみである。技術の選択はミスリードの可能性があるが、言い回しの選択で困っている。
+この章では、ユーザと信頼アカウントにフォーカスをあてたアカウント格納システムの
+本質について記述する。信頼アカウントは2つの形式があり、それはマシン信頼アカウント
+(コンピュータアカウント)とドメイン間信頼アカウントである。それらはユーザのような
+エントリとして扱われる。
 </para>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-Samba-3 provides for complete backward compatibility with Samba-2.2.x functionality
-as follows:
+Samba-3 は Samba-2.2.x の以下の機能について完全な下位互換性を提供する:
 <indexterm><primary>SAM backend</primary><secondary>smbpasswd</secondary></indexterm>
 <indexterm><primary>SAM backend</primary><secondary>ldapsam_compat</secondary></indexterm>
-<indexterm><primary>encrypted passwords</primary></indexterm>
+<indexterm><primary>暗号化パスワード</primary></indexterm>
 </para>
 
 <sect2>
-	<title>Backward Compatibility Account Storage Systems</title>
+	<title>下位互換性のあるバックエンド</title>
 
 <variablelist>
-	<varlistentry><term>Plaintext</term>
+	<varlistentry><term>平文</term>
 		<listitem>
 			<para>
-<indexterm><primary>plaintext</primary></indexterm>
-<indexterm><primary>plaintext authentication</primary></indexterm>
+<indexterm><primary>平文</primary></indexterm>
+<indexterm><primary>平文認証</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>/etc/shadow</primary></indexterm>
 <indexterm><primary>PAM</primary></indexterm>
-			This isn't really a backend at all, but is listed here for simplicity.  Samba can be configured to pass
-			plaintext authentication requests to the traditional UNIX/Linux <filename>/etc/passwd</filename> and
-			<filename>/etc/shadow</filename>-style subsystems.  On systems that have Pluggable Authentication Modules
-			(PAM) support, all PAM modules are supported. The behavior is just as it was with Samba-2.2.x, and the
-			protocol limitations imposed by MS Windows clients apply likewise. Please refer to <link
-			linkend="passdbtech">Technical Information</link>, for more information regarding the limitations of plaintext
-			password usage.
+		これは全く持ってバックエンドではないが、単純化のためにここに表示する。
+		Sambaは伝統的なUNIX/Linuxの<filename>/etc/passwd</filename>と
+                <filename>/etc/shadow</filename>形式のサブシムに平文認証要求を渡す
+		ように設定できる。Pluggable Authentication Modules (PAM) サポートの
+		あるシステム上では、 全てのPAMモジュールがサポートされる。動作は、
+		Samba-2.2.x の場合と全く同様で、Microsoft Windowsクライアントにより
+		課されるプロトコルの制約も同様に適用される。平文パスワードの使用に
+		関する制約に関する詳細情報は、
+		<link linkend="passdbtech">技術情報の項</link>を参照のこと。
 			</para>
 		</listitem>
 	</varlistentry>
@@ -102,36 +106,36 @@ as follows:
 		<listitem>
 			<para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-<indexterm><primary>LanMan passwords</primary></indexterm>
-<indexterm><primary>NT-encrypted passwords</primary></indexterm>
+<indexterm><primary>LanManパスワード</primary></indexterm>
+<indexterm><primary>NT方式による暗号化パスワード</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
-			This option allows continued use of the <filename>smbpasswd</filename>
-			file that maintains a plain ASCII (text) layout that includes the MS Windows
-			LanMan and NT-encrypted passwords as well as a field that stores some
-			account information. This form of password backend does not store any of
-			the MS Windows NT/200x SAM (Security Account Manager) information required to
-			provide the extended controls that are needed for more comprehensive
-			interoperation with MS Windows NT4/200x servers.
+		このオプションは、Microsoft Windows LanMan と NT の暗号化パスワード
+		及び一部のアカウント情報を格納するフィールドを含む平文ASCII(テキスト)
+		レイアウトを維持する<filename>smbpasswd</filename>ファイルの継続的
+		使用を可能にする。この種のパスワードバックエンドは、Microsoft 
+		Windows NT4/200xサーバと包括的な相互運用を行うために必要な拡張
+		コントロールを提供するための、Microsoft Windows NT/200x SAM
+		(Security Account Manager)情報を一切格納しない。
 			</para>
 
 			<para>
-			This backend should be used only for backward compatibility with older
-			versions of Samba. It may be deprecated in future releases.
+		このバックエンドは、Samba のより古いバージョンとの下位互換性のために
+		のみ使用するべきである。将来のリリースでは、切り捨てられていくかもしれない。
 			</para>
 		</listitem>
 	</varlistentry>
 
-	<varlistentry><term>ldapsam_compat (Samba-2.2 LDAP Compatibility)</term>
+	<varlistentry><term>ldapsam_compat (Samba-2.2 LDAP互換)</term>
 		<listitem>
 			<para>
 <indexterm><primary>ldapsam_compat</primary></indexterm>
-<indexterm><primary>Samba-2.2.x LDAP schema</primary></indexterm>
-<indexterm><primary>OpenLDAP backend</primary></indexterm>
-			There is a password backend option that allows continued operation with
-			an existing OpenLDAP backend that uses the Samba-2.2.x LDAP schema extension.
-			This option is provided primarily as a migration tool, although there is
-			no reason to force migration at this time. This tool will eventually
-			be deprecated.
+<indexterm><primary>Samba-2.2.x LDAPスキーマ</primary></indexterm>
+<indexterm><primary>OpenLDAPバックエンド</primary></indexterm>
+		これは、Samba-2.2.x LDAP スキーマ拡張を使用する、既存のOpenLDAP
+		バックエンドとの継続的運用を可能にするパスワードバックエンドの
+		オプションである。このオプションはマイグレーションツールとして
+		提供されているが、この時点で強制的にマイグレーションする意味はない。
+		このツールは最終的には切り捨てられることになる。
 			</para>
 		</listitem>
 	</varlistentry>
@@ -140,10 +144,10 @@ as follows:
 </sect2>
 
 <sect2>
-<title>New Account Storage Systems</title>
+<title>新しいアカウント格納システム</title>
 
 <para>
-Samba-3 introduces a number of new password backend capabilities.
+Samba-3では多数の新しいパスワードバックエンド機能が導入された。
 <indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
 <indexterm><primary>SAM backend</primary><secondary>ldapsam</secondary></indexterm>
 </para>
