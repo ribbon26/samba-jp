@@ -241,45 +241,49 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 	<para>
 <indexterm><primary>平文パスワード</primary></indexterm>
 <indexterm><primary>暗号化パスワード</primary></indexterm>
-	Old Windows clients send plaintext passwords over the wire. Samba can check these
-	passwords by encrypting them and comparing them to the hash stored in the UNIX user database.
+	古いWindowsクライアントは、平文パスワードを送信する。Sambaはこれらの
+	パスワードを暗号化し、UNIXユーザデータベースに格納されているハッシュと
+	比較することにより、確認することができる。
 	</para>
 
 	<para>
-<indexterm><primary>encrypted passwords</primary></indexterm>
+<indexterm><primary>暗号化パスワード</primary></indexterm>
 <indexterm><primary>LanMan</primary></indexterm>
-<indexterm><primary>plaintext passwords</primary></indexterm>
-<indexterm><primary>registry</primary></indexterm>
-	Newer Windows clients send encrypted passwords (LanMan and NT hashes) instead of plaintext passwords over
-	the wire. The newest clients will send only encrypted passwords and refuse to send plaintext passwords unless
-	their registry is tweaked.
+<indexterm><primary>平文パスワード</primary></indexterm>
+<indexterm><primary>レジストリ</primary></indexterm>
+	より新しいWindowsクライアントは、平文パスワードのかわりに、暗号化された
+	パスワード(Lanman及びNTハッシュと呼ばれるもの)を送信する。最新のクライアントは、
+	暗号化されたパスワードのみを送信し、クライアントのレジストリが改変されていない
+	限り、平文パスワードを送信することを拒否する。
 	</para>
 
 	<para>
-<indexterm><primary>UNIX-style encrypted passwords</primary></indexterm>
-<indexterm><primary>converted</primary></indexterm>
-	Many people ask why Samba cannot simply use the UNIX password database. Windows requires
-	passwords that are encrypted in its own format.  The UNIX passwords can't be converted to
-	UNIX-style encrypted passwords. Because of that, you can't use the standard UNIX user
-	database, and you have to store the LanMan and NT hashes somewhere else.
+<indexterm><primary>UNIX風の暗号化パスワード</primary></indexterm>
+<indexterm><primary>変換</primary></indexterm>
+	Sambaはなぜ単純にUNIXパスワードデータベースを使うことが出来ないかという質問は
+	多くの人から聞く。Windowsは、パスワードに対してそれ固有の暗号化形式を要求する。
+	WindowsのパスワードはUNIX形式の暗号化パスワードに変換できない。そのため、標準
+	UNIXユーザデータベースを使うことが出来ず、Lanman ハッシュとNTハッシュは別の所に
+	格納しなければならない。
 	</para>
 
 	<para>
-<indexterm><primary>differently encrypted passwords</primary></indexterm>
-<indexterm><primary>profile</primary></indexterm>
-<indexterm><primary>workstations</primary></indexterm>
+<indexterm><primary>異なる暗号化パスワード方式</primary></indexterm>
+<indexterm><primary>プロファイル</primary></indexterm>
+<indexterm><primary>ワークステーション</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
-	In addition to differently encrypted passwords, Windows also stores certain data for each
-	user that is not stored in a UNIX user database: for example, workstations the user may logon from,
-	the location where the user's profile is stored, and so on. Samba retrieves and stores this
-	information using a <smbconfoption name="passdb backend"/>. Commonly available backends are LDAP,
-	tdbsam, and plain text file. For more information, see the man page for &smb.conf; regarding the
-	<smbconfoption name="passdb backend"/> parameter.
+	パスワードの暗号化方式が異なるのみならず、WindowsはUNIXユーザデータベースには
+	格納されないような各ユーザに関する特定のデータを格納する。例えば、ユーザが
+	ログインする可能性のあるワークステーション、ユーザのプロファイルが格納されて
+	いる場所等々である。Sambaは<smbconfoption name="passdb backend"/>を使用して
+	この情報を取り出し、格納する。 通常、使用できるバックエンドは、LDAP、tdbsum
+	および平文ファイルである。<smbconfoption name="passdb backend"/>のパラメーター
+	に関する詳細は、&smb.conf;のマニュアルページを参照のこと。
 	</para>
 
 
 	<figure id="idmap-sid2uid">
-		<title>IDMAP: Resolution of SIDs to UIDs.</title>
+		<title>IDMAP: SIDのUIDへの解決</title>
 		<imagefile scale="40">idmap-sid2uid</imagefile>
 	</figure>
 
@@ -287,44 +291,44 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 	<indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-	The resolution of SIDs to UIDs is fundamental to correct operation of Samba. In both cases shown, if winbindd
-	is not running or cannot be contacted, then only local SID/UID resolution is possible. See <link
-	linkend="idmap-sid2uid">resolution of SIDs to UIDs</link> and <link linkend="idmap-uid2sid">resolution of UIDs
-	to SIDs</link> diagrams.
+	SIDのUIDへの解決は、Samba の適正運用の根幹を成す。以下の両例で、winbinddが
+	稼動していないか、あるいは、接続できない状況のとき、ローカルのSID/UID解決
+	のみが可能である。<link linkend="idmap-sid2uid">SIDのUIDへの解決</link>
+	および<link linkend="idmap-uid2sid">UIDのSIDへの解決</link>の図を参照のこと。
 	</para>
 
 	<figure id="idmap-uid2sid">
-		<title>IDMAP: Resolution of UIDs to SIDs.</title>
+		<title>IDMAP: SIDのUIDへの解決</title>
 		<imagefile scale="50">idmap-uid2sid</imagefile>
 	</figure>
 
 	<sect2>
-	<title>Important Notes About Security</title>
+	<title>セキュリティに関する重要な注意事項</title>
 
 		<para>
-<indexterm><primary>SMB password encryption</primary></indexterm>
-<indexterm><primary>clear-text passwords</primary></indexterm>
+<indexterm><primary>SMBパスワードの暗号化</primary></indexterm>
+<indexterm><primary>平文パスワード</primary></indexterm>
 <indexterm><primary>hashed password equivalent</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>secret</primary></indexterm>
-		The UNIX and SMB password encryption techniques seem similar on the surface. This
-		similarity is, however, only skin deep. The UNIX scheme typically sends clear-text
-		passwords over the network when logging in. This is bad. The SMB encryption scheme
-		never sends the clear-text password over the network, but it does store the 16-byte
-		hashed values on disk. This is also bad. Why? Because the 16 byte hashed values
-		are a <quote>password equivalent.</quote> You cannot derive the user's password from them, but
-		they could potentially be used in a modified client to gain access to a server.
-		This would require considerable technical knowledge on behalf of the attacker but
-		is perfectly possible. You should therefore treat the data stored in whatever passdb
-		backend you use (smbpasswd file, LDAP) as though it contained the clear-text
-		passwords of all your users. Its contents must be kept secret, and the file should
-		be protected accordingly.
+	UNIXとSMBのパスワード暗号化のテクニックは、一見、類似しているように見える。しかし、
+	この類似性は、皮一枚だけの表面的なものである。。UNIXのスキームでは、通常 ログインの際に、
+	平文パスワードをネットワークを通して送信します。これは悪い方法である。SMBの暗号化
+	スキームは、ネットワークを通して平文パスワードを送信することは絶対にないが、ディスク上に
+	16バイトのハッシュ値を格納する。これも悪い方法である。なぜか。それは、16バイトのハッシュ
+	値は、<quote>パスワードと同等</quote>だからである。ユーザのパスワードをハッシュ値から
+	導き出すことはできないが、クライアントに手を加えれば、サーバにアクセスするために使える
+	可能性がある。これは、侵入者の側にかなりの技術的知識があることを前提としてるが、それでも
+	可能であることは確かである。従って、(smbpasswdファイル、 LDAP)いずれのパスワードデータ
+	ベースバックエンドを使用していても、そこに格納されたデータが、全ユーザの平文パスワードを
+	持っているかのように、慎重に取り扱わなければならない。これらのデータベースの内容は極秘とし、
+	ファイルは、適切に保護されていなければならない。
 		</para>
 
 		<para>
-<indexterm><primary>password scheme</primary></indexterm>
-<indexterm><primary>plaintext passwords</primary></indexterm>
-<indexterm><primary>compatible</primary></indexterm>
+<indexterm><primary>パスワードスキーム</primary></indexterm>
+<indexterm><primary>平文パスワード</primary></indexterm>
+<indexterm><primary>互換</primary></indexterm>
 		Ideally, we would like a password scheme that involves neither plaintext passwords
 		on the network nor plaintext passwords on disk. Unfortunately, this is not available because Samba is stuck with
 		having to be compatible with other SMB systems (Windows NT, Windows for Workgroups, Windows 9x/Me).
