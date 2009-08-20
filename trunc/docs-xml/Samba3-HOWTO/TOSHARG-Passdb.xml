@@ -411,93 +411,97 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 
 			<itemizedlist>
 				<listitem><para>
-<indexterm><primary>passed across the network</primary></indexterm>
-<indexterm><primary>network sniffer</primary></indexterm>
-<indexterm><primary>SMB server</primary></indexterm>
-				Plaintext passwords are not passed across the network. Someone using a network sniffer
-				cannot just record passwords going to the SMB server.
+<indexterm><primary>ネットワーク経由での送信</primary></indexterm>
+<indexterm><primary>ネットワークスニファ</primary></indexterm>
+<indexterm><primary>SMBサーバ</primary></indexterm>
+		平文パスワードがネットワーク経由で送信されない。誰かがネットワーク
+		スニファーを使用して、SMBサーバに送られるパスワードを記録することができない。
 				</para></listitem>
 
 				<listitem><para>
-<indexterm><primary>not stored anywhere</primary></indexterm>
-<indexterm><primary>memory</primary></indexterm>
-<indexterm><primary>disk</primary></indexterm>
-				Plaintext passwords are not stored anywhere in memory or on disk.
+<indexterm><primary>どこにも保存されない</primary></indexterm>
+<indexterm><primary>メモリ</primary></indexterm>
+<indexterm><primary>ディスク</primary></indexterm>
+		平文パスワードが、メモリにもディスクにも、どこにも保存されない。
 				</para></listitem>
  
 				<listitem><para>
-<indexterm><primary>encrypted passwords</primary></indexterm>
-<indexterm><primary>user-level security</primary></indexterm>
-<indexterm><primary>password prompt</primary></indexterm>
-<indexterm><primary>SMB encryption</primary></indexterm>
-				Windows NT does not like talking to a server that does not support encrypted passwords. It will refuse to
-				browse the server if the server is also in user-level security mode. It will insist on prompting the user for
-				the password on each connection, which is very annoying. The only thing you can do to stop this is to use SMB
-				encryption.
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+<indexterm><primary>ユーザレベルのセキュリティ</primary></indexterm>
+<indexterm><primary>パスワードプロンプト</primary></indexterm>
+<indexterm><primary>SMB暗号化</primary></indexterm>
+		Windows NTは暗号化パスワードをサポートしないサーバとやりとりする
+		ことを好まない。また、サーバーが「userレベル」のセキュリティモード
+		になっているとき、そのサーバを ブラウズすることを拒否する。そのため、
+		接続の度に、ユーザにパスワードを入力するように要求するので、大変厄介
+		である。 これを止めさせる唯一の方法は、SMB暗号を使用することである。
 				</para></listitem>
 
 				<listitem><para>
-<indexterm><primary>encrypted password</primary></indexterm>
-<indexterm><primary>automatic reconnects</primary></indexterm>
-				Encrypted password support allows automatic share (resource) reconnects.
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+<indexterm><primary>自動再接続</primary></indexterm>
+		暗号化パスワードのサポートにより、共有(リソース)への自動再接続が可能になる。
 				</para></listitem>
 
 				<listitem><para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-				Encrypted passwords are essential for PDC/BDC operation.
+		PDC/BDC の運用に暗号化パスワードは不可欠である。 
 				</para></listitem>
 			</itemizedlist>
 		</sect3>
 
 
 		<sect3>
-		<title>Advantages of Non-Encrypted Passwords</title>
+		<title>暗号化されていないパスワードの長所</title>
 
 			<itemizedlist>
 				<listitem><para>
-<indexterm><primary>cached in memory</primary></indexterm>
-				Plaintext passwords are not kept on disk and are not cached in memory.
+<indexterm><primary>メモリ中へのキャッシュ</primary></indexterm>
+		平文パスワードは、ディスクに保存されず、メモリにキャッシュされない。
 				</para></listitem>
 
 				<listitem><para>
 <indexterm><primary>Login</primary></indexterm>
 <indexterm><primary>FTP</primary></indexterm>
-				Plaintext passwords use the same password file as other UNIX services, such as Login and FTP.
+		平文パスワードは、LoginやFTPなどの、UNIXの他のサービスと同じパスワード
+		ファイルが使用できる。
 				</para></listitem>
 
 				<listitem><para>
 <indexterm><primary>Telnet</primary></indexterm>
 <indexterm><primary>FTP</primary></indexterm>
-				Use of other services (such as Telnet and FTP) that send plaintext passwords over
-				the network makes sending them for SMB not such a big deal.
+		TelnetやFTPなどの他のサービスが、平文パスワードをネットワーク上で
+		送信している。従って、SMBのために送信しても大勢に影響はない。
 				</para></listitem>
 			</itemizedlist>
 		</sect3>
 	</sect2>
 
 	<sect2>
-	<title>Mapping User Identifiers between MS Windows and UNIX</title>
+	<title>Microsoft Windows と UNIX の間の、ユーザー識別子のマッピング</title>
 
 	<para>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-<indexterm><primary>mapping</primary></indexterm>
-	Every operation in UNIX/Linux requires a user identifier (UID), just as in
-	MS Windows NT4/200x this requires a security identifier (SID). Samba provides
-	two means for mapping an MS Windows user to a UNIX/Linux UID.
+<indexterm><primary>マッピング</primary></indexterm>
+	Microsoft Windows NT4/200xがセキュリティ識別子(SID)を要求するのと同様に、
+	UNIX/Linuxの全ての操作は、ユーザ識別子(UID)を要求する。SambaはMicrosoft Windows
+	のユーザーをUNIX/LinuxのUID にマッピングするために、二つの方法を提供する。
 	</para>
 
 	<para>
 <indexterm><primary>Samba SAM</primary></indexterm>
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
-<indexterm><primary>account information database</primary></indexterm>
-<indexterm><primary>local user account</primary></indexterm>
-	First, all Samba SAM database accounts require a UNIX/Linux UID that the account will map to. As users are
-	added to the account information database, Samba will call the <smbconfoption name="add user script"/>
-	interface to add the account to the Samba host OS. In essence all accounts in the local SAM require a local
-	user account.
+<indexterm><primary>アカウント情報データベース</primary></indexterm>
+<indexterm><primary>ローカルユーザアカウント</primary></indexterm>
+	第一に、すべてのSamba SAM(セキュリティアカウントマネージャデータベース)
+	アカウントが、そのアカウントとマッピングされるべきUNIX/Linux UID を必要とする。
+	アカウント情報データベースにユーザが追加されるにつれ、SambaはSambaのホストOSに
+	そのアカウントを追加するために、<smbconfoption name="add user script"/>
+	インタフェースを呼ぶ。本質的には、ローカルSAMの中の全アカウントが、
+	ローカルユーザアカウントを必要とする。
 	</para>
 
 	<para>
