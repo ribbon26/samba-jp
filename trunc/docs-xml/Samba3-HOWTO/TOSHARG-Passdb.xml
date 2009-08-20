@@ -329,44 +329,45 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>パスワードスキーム</primary></indexterm>
 <indexterm><primary>平文パスワード</primary></indexterm>
 <indexterm><primary>互換</primary></indexterm>
-		Ideally, we would like a password scheme that involves neither plaintext passwords
-		on the network nor plaintext passwords on disk. Unfortunately, this is not available because Samba is stuck with
-		having to be compatible with other SMB systems (Windows NT, Windows for Workgroups, Windows 9x/Me).
+	理想的には、ネットワーク上でもディスク上でも平文パスワードを持ったり送信したり
+	しないようなパスワードのスキームが欲しいところである。残念ながら、Sambaは他の
+	SMBシステム(Windows NT、Windows for Workgroups、Windows 9x/Me)との互換性を
+	確保しなければならないという要件のために、これは実現できない。
 		</para>
 
 		<para>
-<indexterm><primary>encrypted passwords</primary></indexterm>
-<indexterm><primary>plaintext passwords</primary></indexterm>
-		Windows NT 4.0 Service Pack 3 changed the default setting so plaintext passwords
-		are disabled from being sent over the wire. This mandates either the use of encrypted
-		password support or editing the Windows NT registry to re-enable plaintext passwords.
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+<indexterm><primary>平文パスワード</primary></indexterm>
+	Windows NT 4.0 サービスパック 3は既定値で平文パスワードの送信を無効化している。
+	これにより、暗号化されたパスワードのサポートを使用するか、平文パスワードを再度
+	有効化するように Windows NT レジストリを編集するか、どちらかが必要となる。
 		</para>
 
 		<para>
-<indexterm><primary>domain security</primary></indexterm>
-<indexterm><primary>domain environment</primary></indexterm>
-		The following versions of Microsoft Windows do not support full domain security protocols,
-		although they may log onto a domain environment:
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<indexterm><primary>ドメイン環境</primary></indexterm>
+	Microsoft Windowsの下記のバージョンは、ドメイン環境にログオンする可能性があるにも
+	かかわらず、完全なドメインセキュリティのプロトコルをサポートしていない:
 		</para>
 
 		<itemizedlist>
-			<listitem><para>MS DOS Network client 3.0 with the basic network redirector installed.</para></listitem>
-			<listitem><para>Windows 95 with the network redirector update installed.</para></listitem>
-			<listitem><para>Windows 98 [Second Edition].</para></listitem>
-			<listitem><para>Windows Me.</para></listitem>
+			<listitem><para>MS DOS ネットワーククライアント3.0で基本的なネットワーク リダイレクタがインストールされているもの</para></listitem>
+			<listitem><para>Windows 95で、アップデートされたネットワークリダイレクタがインストールされているもの</para></listitem>
+			<listitem><para>Windows 98 [Second Edition]</para></listitem>
+			<listitem><para>Windows Me</para></listitem>
 		</itemizedlist>
 
 		<note>
 		<para>
 <indexterm><primary>Windows XP Home</primary></indexterm>
-<indexterm><primary>domain member</primary></indexterm>
-<indexterm><primary>domain logons</primary></indexterm>
- 		MS Windows XP Home does not have facilities to become a domain member, and it cannot participate in domain logons.
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>ドメインログオン</primary></indexterm>
+ 	MS Windows XP Home は、ドメインメンバになる機能はなく、ドメインログオンは実行できない。
 		</para>
 		</note>
 
 		<para>
-		The following versions of MS Windows fully support domain security protocols.
+	下記のバージョンのMicrosoft Windowsは、ドメインセキュリティのプロトコルを完全にサポートしている。
 		</para>
 
 		<itemizedlist>
@@ -379,34 +380,34 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 
 		<para>
 <indexterm><primary>SMB/CIFS</primary></indexterm>
-<indexterm><primary>authentication</primary></indexterm>
-<indexterm><primary>challenge/response mechanis</primary></indexterm>
-<indexterm><primary>clear-text</primary></indexterm>
-<indexterm><primary>encrypted</primary></indexterm>
-<indexterm><primary>negotiate</primary></indexterm>
-		All current releases of Microsoft SMB/CIFS clients support authentication via the
-		SMB challenge/response mechanism described here. Enabling clear-text authentication
-		does not disable the ability of the client to participate in encrypted authentication.
-		Instead, it allows the client to negotiate either plaintext or encrypted password
-		handling.
+<indexterm><primary>認証</primary></indexterm>
+<indexterm><primary>チャレンジ/レスポンスメカニズム</primary></indexterm>
+<indexterm><primary>平文</primary></indexterm>
+<indexterm><primary>暗号化</primary></indexterm>
+<indexterm><primary>ネゴシエート</primary></indexterm>
+	Microsoft SMB/CIFS クライアントの現在のリリース版は全て、ここに説明するSMBの
+	チャレンジ/ レスポンス認証の仕組みをサポートしている。平文認証を有効化しても、
+	クライアントが暗号化による認証に参加する能力を無効化するわけではない。そうではなく、
+	クライアントが平文でも暗号化でもどちらのパスワード認証方式にも対応できるようにする。
 		</para>
 
 		<para>
-<indexterm><primary>cached encrypted password</primary></indexterm>
-<indexterm><primary>plaintext passwords</primary></indexterm>
-<indexterm><primary>registry change</primary></indexterm>
-<indexterm><primary>auto-reconnect</primary></indexterm>
-<indexterm><primary>encrypted passwords</primary></indexterm>
-		MS Windows clients will cache the encrypted password alone. Where plaintext passwords
-		are re-enabled through the appropriate registry change, the plaintext password is never
-		cached. This means that in the event that a network connections should become disconnected
-		(broken), only the cached (encrypted) password will be sent to the resource server to
-		effect an auto-reconnect. If the resource server does not support encrypted passwords, the
-		auto-reconnect will fail. Use of encrypted passwords is strongly advised.
+<indexterm><primary>キャッシュされた暗号化パスワード</primary></indexterm>
+<indexterm><primary>平文パスワード</primary></indexterm>
+<indexterm><primary>レジストリ変更</primary></indexterm>
+<indexterm><primary>自動再接続</primary></indexterm>
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+	Microsoft Windowsのクライアントは、暗号化されたパスワードのみキャッシュする。
+	レジストリの変更により、平文パスワードが再度有効化されても、平文パスワードは
+	キャッシュされない。このことは、ネットワーク接続が切れた場合、 キャッシュされた
+	(即ち暗号化された)パスワードのみがリソースサーバに送られて、自動再接続を実行する
+	ために使用されるということを意味する。リソースサーバが暗号化された パスワードを
+	サポートしていない場合、自動再接続はできない。暗号化されたパスワードの使用を強く
+	推奨する。
 		</para>
 
 		<sect3>
-		<title>Advantages of Encrypted Passwords</title>
+		<title>暗号化されたパスワードの長所</title>
 
 			<itemizedlist>
 				<listitem><para>
