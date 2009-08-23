@@ -47,8 +47,8 @@
 	<para>Samba の net ユーティリティは Windows や DOS に存在する
 	NET コマンドと同様の位置づけのものである。
 	先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。
-	ADS は Active Directory が、RAP は従来の (Windows 9x / Windows
-	NT 3.x) クライアントが、 RPC は Windows NT 4.0 および Windows
+	ADS は Active Directory によって、RAP は従来の (Windows 9x / Windows
+	NT 3.x) クライアントによって、 RPC は Windows NT 4.0 および Windows
 	2000 によって使用されている。
 	この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。
 	すべてのコマンドがすべてのプロトコル上で使用できるわけではない。</para>
@@ -142,8 +142,7 @@
 <title>CHANGESECRETPW</title>
 
 <para>
-このコマンドにより、Samba のコンピュータアカウントのパスワードを外部のアプリケーションから 
-Active Directory に格納済のものに設定させることが可能となる。
+このコマンドにより、Samba のコンピュータアカウントのパスワードを外部アプリケーションが Active Directory に格納済のものに（手動で）設定することが可能となる。
 何が行なわれるかを理解しない限り、このコマンドを用いないこと。
 このコマンドを用いるには、強制フラグ (-f) を併せて設定する必要がある。
 コマンドプロンプトのインタフェースは存在しない。
@@ -1538,9 +1537,9 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 <refsect2>
 <title>EVENTLOG</title>
 
-<para>バージョン3.4.0から、netはネイティブなwin32イベントログファイル
-(通常 *.evt)を読み、ダンプ、インポート、エクスポート出来る。 evtファイル
-はネイティブなWindowsイベントビューワツールによって使われる。
+<para>Samba 3.4.0 から、net コマンドはネイティブな WIN32 イベントログファイル
+(通常 *.evt) の読み取り、ダンプ、インポート、エクスポートが可能となった。
+evt ファイルはネイティブな Windows のイベントビューワツールによって使われる。
 </para>
 
 <para>
@@ -1550,11 +1549,11 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 <manvolnum>5</manvolnum></citerefentry> マニュアルページを参照のこと。
 </para>
 
-<para>eventlogコマンドは以下の通り:
+<para>eventlog のサブコマンドは以下の通り:
 <simplelist>
-<member>net eventlog dump - 画面上にイベントログ *.evtファイルをダンプする。</member>
-<member>net eventlog import - *.evtイベントログファイルを、イベントログを保持するSamba内部のtdbファイルにインポートする。</member>
-<member>net eventlog export - Samba内部のtdb形式によるイベントログを*.evtイベントログファイルにエクスポートする。</member>
+<member>net eventlog dump - イベントログファイル *.evt の内容を画面上にダンプする。</member>
+<member>net eventlog import - イベントログファイル *.evt を、イベントログを保持する Samba 内部の tdb ファイルにインポートする。</member>
+<member>net eventlog export - Samba内部の tdb 形式によるイベントログをイベントログファイル *.evt にエクスポートする。</member>
 </simplelist>
 </para>
 
@@ -1562,7 +1561,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 <title>EVENTLOG DUMP <replaceable>filename</replaceable></title>
 
 <para>
-標準出力に*.evtイベントログファイルを出力する。
+標準出力にイベントログファイル *.evt を出力する。
 </para>
 </refsect3>
 
@@ -1570,11 +1569,11 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 <title>EVENTLOG IMPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
 
 <para>
-<replaceable>filename</replaceable>によって定義された*.evtイベントログファイル
-を、<replaceable>eventlog</replaceable>で定義したSamba内部のtdb形式によるイベン
+<replaceable>filename</replaceable>によって定義されたイベントログファイル *.evt 
+を、<replaceable>eventlog</replaceable>で定義した Samba 内部の tdb 形式によるイベン
 トログファイルにインポートする。
-<replaceable>eventlog</replaceable>はsmb.conf中で定義されている
-<parameter>eventlog list</parameter>の一部を必要とする。詳細は、
+<replaceable>eventlog</replaceable> には smb.conf 中で定義されている
+<parameter>eventlog list</parameter> が一部必要となる。詳細は、
 <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
 マニュアルページを参照のこと。
 </para>
@@ -1586,8 +1585,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 
 <para>
 <replaceable>eventlog</replaceable>で定義されている、Samba内部のtdb形式によるイベントログを
-<replaceable>filename</replaceable>で定義されている*.evtイベントログファイルに
-エクスポートする。
+<replaceable>filename</replaceable>で定義されているイベントログファイル *.evt にエクスポートする。
 <replaceable>eventlog</replaceable>はsmb.conf中で定義されている
 <parameter>eventlog list</parameter>の一部を必要とする。詳細は、
 <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
