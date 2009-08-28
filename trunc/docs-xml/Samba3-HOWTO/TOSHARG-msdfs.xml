@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="msdfs">
 
@@ -17,56 +17,62 @@
 	<pubdate>12 Jul 2000</pubdate>
 </chapterinfo>
 
-<title>Hosting a Microsoft Distributed File System Tree</title>
+<title>Microsoft 分散ファイルシステムツリーのホスティング</title>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>特徴と利点</title>
 
 	<para>
-<indexterm><primary>distributed file system</primary><see>DFS</see></indexterm>
-<indexterm><primary>physical locations</primary></indexterm>
-<indexterm><primary>higher availability</primary></indexterm>
-<indexterm><primary>load balancing</primary></indexterm>
-<indexterm><primary>logical directories</primary></indexterm>
-	The distributed file system (DFS) provides a means of separating the logical
-	view of files and directories that users see from the actual physical locations
-	of these resources on the network. It allows for higher availability, smoother
-	storage expansion, load balancing, and so on.
+<indexterm><primary>分散ファイルシステム</primary><see>DFS</see></indexterm>
+<indexterm><primary>物理的な配置</primary></indexterm>
+<indexterm><primary>高可用性</primary></indexterm>
+<indexterm><primary>負荷分散</primary></indexterm>
+<indexterm><primary>論理ディレクトリ</primary></indexterm>
+	分散ファイルシステム (DFS) はネットワーク上にある資源について実際の物理的な配置
+	から、ユーザが見ているファイルとディレクトリの論理的ビューを切り離す手
+	段を提供する。
+	高い可用性と円滑なストレージ拡張、負荷分散などを可能にする。
 	</para>
 
 	<para>
 <indexterm><primary>DFS</primary></indexterm>
-<indexterm><primary>DFS tree</primary></indexterm>
-<indexterm><primary>DFS-aware</primary></indexterm>
-	For information about DFS, refer to the <ulink
+<indexterm><primary>DFS ツリー</primary></indexterm>
+<indexterm><primary>DFS 対応</primary></indexterm>
+	DFS の情報について、<ulink
 	url="http://www.microsoft.com/NTServer/nts/downloads/winfeatures/NTSDistrFile/AdminGuide.asp">Microsoft
-	documentation</ulink>.  This document explains how to host a DFS tree on a UNIX machine (for DFS-aware clients
-	to browse) using Samba.
+	documentation</ulink>を参照のこと。 この文書は、 Samba を利用している
+	UNIX で (DFS対応クライアントがブラウズするため) DFS ツリーを
+	どのようにホスティングするか説明する。
 	</para>
 
 	<para>
-<indexterm><primary>DFS server</primary></indexterm>
+<indexterm><primary>DFS サーバ</primary></indexterm>
 <indexterm><primary>share-level</primary></indexterm>
-<indexterm><primary>DFS junction</primary></indexterm>
-<indexterm><primary>DFS-aware</primary></indexterm>
-	A Samba server can be made a DFS server by setting the global Boolean <smbconfoption name="host msdfs"/>
-	parameter in the &smb.conf; file. You designate a share as a DFS root using the share-level Boolean
-	<smbconfoption name="msdfs root"/> parameter. A DFS root directory on Samba hosts DFS links in the form of
-	symbolic links that point to other servers. For example, a symbolic link
-	<filename>junction-&gt;msdfs:storage1\share1</filename> in the share directory acts as the DFS junction. When
-	DFS-aware clients attempt to access the junction link, they are redirected to the storage location (in this
-	case, <parameter>\\storage1\share1</parameter>).
+<indexterm><primary>DFS ジャンクション</primary></indexterm>
+<indexterm><primary>DFS 対応</primary></indexterm>
+	Samba サーバは、&smb.conf; ファイルのグローバル Boolean パラメータ
+	<smbconfoption name="host msdfs"/>を設定することで DFS サーバにできる。
+	share-level Boolean パラメータ<smbconfoption name="msdfs root"/>によっ
+	て share を DFS ルートとして指定できる。
+	Samba 上の DFS ルートディレクトリはシンボリックリンクの形式で DFS リンクを提供
+	できる。例えば、共有ディレクトリ内のシンボリックリンク 
+	<filename>junction-&gt;msdfs:storage1\share1</filename> は DFS ジャン
+	クション (接点) として機能する。 DFS 対応クライアントがジャンクションリ
+	ンクにアクセスしようとするとき、それらは実際のストレージ ( この場合
+	は <parameter>\\storage1\share1</parameter> ) にリダイレクトされる。
 	</para>
 
 	<para>
-<indexterm><primary>DFS-aware</primary></indexterm>
-<indexterm><primary>DFS tree</primary></indexterm>
-<indexterm><primary>DFS links</primary></indexterm>
+<indexterm><primary>DFS 対応</primary></indexterm>
+<indexterm><primary>DFS ツリー</primary></indexterm>
+<indexterm><primary>DFS リンク</primary></indexterm>
 <indexterm><primary>DFS</primary></indexterm>
-	DFS trees on Samba work with all DFS-aware clients ranging from Windows 95 to 200x.
-	<link linkend="dfscfg">The following sample configuration</link> shows how to setup a DFS tree on a Samba server.
-	In the <filename>/export/dfsroot</filename> directory, you set up your DFS links to 
-	other servers on the network.
+	Samba 上の DFS ツリーは、 Windows 95 から Windows 200x までの DFS 対応クライア
+	ントをサポートしている。
+	<link linkend="dfscfg">以下の設定例</link>は、 Samba サーバでどのよう
+	に DFS ツリーを設定するかを示す。
+	ディレクトリ<filename>/export/dfsroot</filename> 内で、他のネットワーク上のサー
+	バへの DFS リンクを設定する。
 <screen>
 &rootprompt;<userinput>cd /export/dfsroot</userinput>
 &rootprompt;<userinput>chown root /export/dfsroot</userinput>
@@ -77,7 +83,7 @@
 </para>
 
 <example id="dfscfg">
-<title>smb.conf with DFS Configured</title>
+<title>DFS が設定された smb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="netbios name">&example.server.samba;</smbconfoption>
@@ -90,83 +96,93 @@
 </example>
 
 	<para>
-<indexterm><primary>DFS root</primary></indexterm>
-<indexterm><primary>msdfs links</primary></indexterm>
-<indexterm><primary>symbolic links</primary></indexterm>
-	You should set up the permissions and ownership of the directory acting as the DFS root so that only
-	designated users can create, delete, or modify the msdfs links. Also note that symlink names should be all
-	lowercase. This limitation exists to have Samba avoid trying all the case combinations to get at the link
-	name. Finally, set up the symbolic links to point to the network shares you want and start Samba.
+<indexterm><primary>DFS ルート</primary></indexterm>
+<indexterm><primary>msdfs リンク</primary></indexterm>
+<indexterm><primary>シンボリックリンク</primary></indexterm>
+	DFS ルートとして使用しているディレクトリのパーミションとオーナーの設定を行い、 
+	特定のユーザーだけが msdfs リンクを作成、削除、変更できるように設定すべきであ
+	る。
+	シンボリックリンク名は、すべて小文字にすべきことに留意すること．この制約は、
+	Samba が、リンク名を取得するために、すべての大文字、小文字の組み合わせを試
+	すことを避けるために設けられている。
+	最後に、ネットワーク上の共有したいところへシンボリックリンクを張り、Sambaを起動する。
 	</para>
 
 	<para>
-<indexterm><primary>DFS-aware clients</primary></indexterm>
-<indexterm><primary>DFS tree</primary></indexterm>
-	Users on DFS-aware clients can now browse the DFS tree on the Samba server at
-	<constant>\\samba\dfs</constant>. Accessing links linka or linkb (which appear as directories to the client)
-	takes users directly to the appropriate shares on the network.
+<indexterm><primary>DFS 対応 クライアント</primary></indexterm>
+<indexterm><primary>DFS ツリー</primary></indexterm>
+	これで DFS 対応クライアントは、 <constant>\\samba\dfs</constant> にある Samba
+	サーバー上の DFS ツリーをブラウズすることができる．
+	リンクa,リンクb（クライアントからはディレクトリとしてみることができる）
+	に アクセスすると、ユーザーは直接ネットワーク上の共有資源にアクセスす
+	ることになる。
 	</para>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>ありふれたエラー</title>
 	<itemizedlist>
-		<listitem><para>Windows clients need to be rebooted 
-		if a previously mounted non-DFS share is made a DFS 
-		root, or vice versa. A better way is to introduce a 
-		new share and make it the DFS root.</para>
+		<listitem><para>Windows　クライアントは、以前 DFS でなくマウン
+		トされていたものが、 DFS ルートとしてマウントされたり、その逆
+		を行ったりすると、
+		リブートする必要がある． よりよい解決方法は、新規の共有として
+		公開し、DFS ルートとすることである。</para>
 		</listitem>
-		
-		<listitem><para>Currently, there's a restriction that msdfs 
-		symlink names should all be lowercase.</para>
+
+		<listitem><para>現状では制約事項として、msdfs シンボリックリン
+		ク名はすべて小文字で記述される必要がある。</para>
 		</listitem>
-		
-		<listitem><para>For security purposes, the directory 
-		acting as the root of the DFS tree should have ownership 
-		and permissions set so only designated users can 
-		modify the symbolic links in the directory.</para>
+
+		<listitem><para>セキュリティーのために、DFS ツリーのルートとな
+		るディレクトリは、特定のユーザのみがそのディレクトリ内でシンボ
+		リックリンクを変更できるように所有者とパーミッションを設定する
+		必要がある。</para>
 		</listitem>
+
+
 	</itemizedlist>
 
 	<sect2>
 		<title>MSDFS UNIX Path Is Case-Critical</title>
 
 		<para>
-		A network administrator sent advice to the Samba mailing list
-		after long sessions trying to determine why DFS was not working.
-		His advice is worth noting.
+		あるネットワーク管理者は何故 DFS が機能しなかったかを究明しようとした長い会議
+		の後に Samba メーリングリストにアドバイスを送った。
+		彼のアドバイスには注意する価値がある。
 		</para>
 
 		<para><quote>
-		I spent some time trying to figure out why my particular
-		DFS root wasn't working. I noted in the documentation that
-		the symlink should be in all lowercase. It should be
-		amended that the entire path to the symlink should all be
-		in lowercase as well.
+		私の特定の DFS ルートが機能しない理由を解明するためにいくらかの時間を費やした。
+		私はシンボリックリンクはすべて小文字で記述するべきであると文書に書かれているこ
+		とに気がついた。シンボリックリンクへのフルパスをも小文字で書き直すことにした。
 		</quote></para>
 
 		<para>
-		<quote>For example, I had a share defined as such:</quote>
+		<quote>設定例： 以下のように定義された共有がある</quote>
 		<smbconfblock>
 		<smbconfsection name="[pub]"/>
 		<smbconfoption name="path">/export/home/Shares/public_share</smbconfoption>
 		<smbconfoption name="msdfs root">yes</smbconfoption>
 		</smbconfblock>
-		<quote>and I could not make my Windows 9x/Me (with the dfs client installed) follow this symlink:</quote>
+		<quote>そして (DFS クライアントがインストールされた) Windows
+		で、以下のシンボリックリンクをたどることができなかった。
+		</quote>
 		<screen>
 		damage1 -> msdfs:damage\test-share
 		</screen>
 		</para>
 
 		<para>
-		<quote>Running a debug level of 10 reveals:</quote>
+		<quote>デバッグレベルを10にして実行して明らかになったこと</quote>
 		<programlisting>
 		[2003/08/20 11:40:33, 5] msdfs/msdfs.c:is_msdfs_link(176)
 		  is_msdfs_link: /export/home/shares/public_share/* does not exist.
 		</programlisting>
-		<quote>Curious. So I changed the directory name from <constant>.../Shares/...</constant> to
-		<constant>.../shares/...</constant> (along with my service definition) and it worked!</quote>
+		<quote>気になる。 私はディレクトリ名
+		を <constant>.../Shares/...</constant> から
+		<constant>.../shares/...</constant> に変更した。 (サービス定義
+		に伴って) そして、機能するようになった！</quote>
 		</para>
 
 	</sect2>
