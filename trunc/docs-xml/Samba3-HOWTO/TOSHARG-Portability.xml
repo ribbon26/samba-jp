@@ -23,16 +23,20 @@ Samba は広い範囲のプラットフォームで機能する。しかし、
 <para>
 <indexterm><primary>/etc/logingroup</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
-Hewlett-Packard's implementation of supplementary groups is nonstandard (for
-historical reasons). There are two group files, <filename>/etc/group</filename> and
-<filename>/etc/logingroup</filename>; the system maps UIDs to numbers using the former, but
-initgroups() reads the latter. Most system admins who know the ropes
-symlink <filename>/etc/group</filename> to <filename>/etc/logingroup</filename>
-(hard-link does not work for reasons too obtuse to go into here). initgroups() will complain if one of the
-groups you're in, in <filename>/etc/logingroup</filename>, has what it considers to be an invalid
-ID, which means outside the range <constant>[0..UID_MAX]</constant>, where <constant>UID_MAX</constant> is
-60000 currently on HP-UX. This precludes -2 and 65534, the usual <constant>nobody</constant>
-GIDs.
+ヒューレットパッカーの補助グループの実装が非標準である (歴史的な理由により)。
+<filename>/etc/group</filename> と <filename>/etc/logingroup</filename> の
+２つのグループファイルがある。システムは UID を前者のファイルを使用して割り当
+てるが、 initgroups() は後者を参照する。
+コツを知っている大抵のシステム管理者は、シンボリックリン
+ク <filename>/etc/group</filename> 
+を <filename>/etc/logingroup</filename> へ張る (ここに入ることができない愚鈍な
+理由でハードリンクでは機能しない) 。
+もし、所属しているグループのうちの一つが、<filename>/etc/logingroup</filename>
+の中で、不正な ID であると考えられた場合はエラーを出す。
+ここで言う不正な ID とは <constant>[0..UID_MAX]</constant> の範囲を超えた場合
+であり、<constant>UID_MAX</constant> は HP-UX で現在のところ 60000 である。
+この範囲は、-2 と 65534 を除外している。これは通常 <constant>nobody</constant>
+GID である。
 </para>
 
 <para>
