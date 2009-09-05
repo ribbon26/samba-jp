@@ -1694,10 +1694,11 @@ Samba-3リリースファイル中の、この機能に関する特定の更新�
 		<indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>account import/export</primary></indexterm>
 <indexterm><primary>authentication</primary></indexterm>
-		The <command>pdbedit</command> tool allows import/export of authentication (account)
-		databases from one backend to another. For example, to import/export accounts from an
-		old <filename>smbpasswd</filename> database to a <parameter>tdbsam</parameter>
-		backend:
+		<command>pdbedit</command>ツールはあるバックエンドからほかのものに
+		認証情報(アカウント)データベースのインポート/エクスポートができる。
+		例えば、古い<filename>smbpasswd</filename>データベースから
+		<parameter>tdbsam</parameter>バックエンドにアカウントをインポート/
+		エクスポートするためには以下のように行う:
 		</para>
 
 		<procedure>
@@ -1710,8 +1711,9 @@ Samba-3リリースファイル中の、この機能に関する特定の更新�
 
 			<step><para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-			Replace the <parameter>smbpasswd</parameter> with <parameter>tdbsam</parameter> in the
-			<parameter>passdb backend</parameter> configuration in &smb.conf;.
+		&smb.conf;中の<parameter>passdb backend</parameter>の設定を
+		<parameter>smbpasswd</parameter>から<parameter>tdbsam</parameter>に
+		置き換える。
 			</para></step>
 		</procedure>
 
@@ -1720,55 +1722,56 @@ Samba-3リリースファイル中の、この機能に関する特定の更新�
 </sect1>
 
 <sect1>
-<title>Password Backends</title>
+<title>パスワードバックエンド</title>
 
 <para>
-<indexterm><primary>account database</primary></indexterm>
-<indexterm><primary>SMB/CIFS server</primary></indexterm>
-Samba offers flexibility in backend account database design. The flexibility is immediately obvious as one
-begins to explore this capability. Recent changes to Samba (since 3.0.23) have removed the mulitple backend
-feature in order to simplify problems that broke some installations. This removal has made the internal
-operation of Samba-3 more consistent and predictable.
+<indexterm><primary>アカウントデータベース</primary></indexterm>
+<indexterm><primary>SMB/CIFSサーバ</primary></indexterm>
+Sambaはバックエンドアカウントデータベースのデザインに柔軟性を提供する。この柔軟性
+は探せばすぐに見つかる。Sambaにおける最近の変更(Samba 3.0.23以降)はいくつかのインストール時
+にうまくいかなくなる問題を単純化するために複数バックエンド機能が削除された。この
+削除によりSamba-3の内部動作はより首尾一貫し安定した。
 </para>
 
 <para>
-<indexterm><primary>multiple backends</primary></indexterm>
-<indexterm><primary>tdbsam databases</primary></indexterm>
-Beginning with Samba 3.0.23 it is no longer possible to specify use of mulitple passdb backends. Earlier
-versions of Samba-3 made it possible to specify multiple password backends, and even multiple
-backends of the same type. The multiple passdb backend capability caused many problems with name to SID and
-SID to name ID resolution.  The Samba team wrestled with the challenges and decided that this feature needed
-to be removed.
+<indexterm><primary>複数のバックエンド</primary></indexterm>
+<indexterm><primary>tdbsam データベース</primary></indexterm>
+Samba 3.0.23から、もはや複数のpassdbバックエンドを指定して使うことは出来なくなった。
+それ以前のSamba-3では、同じタイプのバックエンドを含む複数のpassdbバックエンドが指定できた。
+複数のpassdbバックエンド機能は名前->SID変換とSID->名前解決で多くの問題を引き起こした。
+Sambaチームはいろいろと検討した結果この機能を取り除く必要があると決定した。
 </para>
 
 	<sect2>
-	<title>Plaintext</title>
+	<title>平文</title>
 
 		<para>
-<indexterm><primary>user database</primary></indexterm>
+<indexterm><primary>ユーザデータベース</primary></indexterm>
 <indexterm><primary>/etc/samba/smbpasswd</primary></indexterm>
 <indexterm><primary>/etc/smbpasswd</primary></indexterm>
-<indexterm><primary>password encryption</primary></indexterm>
+<indexterm><primary>パスワードの暗号化</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>PAM</primary></indexterm>
-		Older versions of Samba retrieved user information from the UNIX user database
-		and eventually some other fields from the file <filename>/etc/samba/smbpasswd</filename>
-		or <filename>/etc/smbpasswd</filename>. When password encryption is disabled, no
-		SMB-specific data is stored at all. Instead, all operations are conducted via the way
-		that the Samba host OS will access its <filename>/etc/passwd</filename> database.
-		On most Linux systems, for example, all user and group resolution is done via PAM.
+		古いバージョンのSambaではUNIXユーザデータベースからユーザ情報を検索し、
+		結局いくつかの他のフィールドは<filename>/etc/samba/smbpasswd</filename>
+		か<filename>/etc/smbpasswd</filename>ファイルから得ていた。パスワードの
+		暗号化が無効になっている時、SMB固有のデータは全く格納されない。その代わり、
+		すべての操作はSambaホストOSがその<filename>/etc/passwd</filename>
+		データベースによってアクセスする方法経由で制御される。ほとんどのLinux
+		システムでは、たとえば、すべてのユーザとグループの解決はPAM経由で行われる。
 		</para>
 
 	</sect2>
 
 	<sect2>
-	<title>smbpasswd: Encrypted Password Database</title>
+	<title>smbpasswd: 暗号化したパスワードデータベース</title>
 
 		<para>
-		<indexterm><primary>SAM backend</primary><secondary>smbpasswd</secondary></indexterm>
-<indexterm><primary>user account</primary></indexterm>
-<indexterm><primary>LM/NT password hashes</primary></indexterm>
+		<indexterm><primary>SAM バックエンド</primary><secondary>smbpasswd</secondary></indexterm>
+<indexterm><primary>ユーザアカウント</primary></indexterm>
+<indexterm><primary>LM/NT パスワードハッシュ</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
+		伝統的に
 		Traditionally, when configuring <smbconfoption name="encrypt passwords">yes</smbconfoption>
 		in Samba's &smb.conf; file, user account information such as username, LM/NT password hashes,
 		password change times, and account flags have been stored in the <filename>smbpasswd(5)</filename>
