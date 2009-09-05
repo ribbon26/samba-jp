@@ -1258,52 +1258,55 @@ marvel$:1011:BF709959C3C94E0B3958B7B84A3BB6F3:
 </screen>
 <indexterm><primary>login id</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
-<indexterm><primary>LanManger password</primary></indexterm>
-<indexterm><primary>NT password</primary></indexterm>
-<indexterm><primary>Account Flags</primary></indexterm>
-<indexterm><primary>LCT</primary><see>last change time</see></indexterm>
-		The account information that was returned by this command in order from left to right
-		consists of the following colon separated data:
+<indexterm><primary>LanMangerのパスワード</primary></indexterm>
+<indexterm><primary>NTのパスワード</primary></indexterm>
+<indexterm><primary>アカウントフラグ</primary></indexterm>
+<indexterm><primary>LCT</primary><see>最終変更時刻</see></indexterm>
+		このコマンドが返すアカウント情報は、左から右に、以下の、コロンで
+		分離されたデータを含む:
 		</para>
 
 		<itemizedlist>
-			<listitem><para>Login ID.</para></listitem>
-			<listitem><para>UNIX UID.</para></listitem>
+			<listitem><para>ログインID。</para></listitem>
+			<listitem><para>UNIX UID。</para></listitem>
 			<listitem>
-				<para>Microsoft LanManager password hash (password converted to upper-case then hashed.</para>
+			  <para>Microsoft LanManagerパスワードハッシュ(パスワードは大文字に変換された後ハッシュされる)。</para>
 			</listitem>
-			<listitem><para>Microsoft NT password hash (hash of the case-preserved password).</para></listitem>
-			<listitem><para>Samba SAM Account Flags.</para></listitem>
-			<listitem><para>The LCT data (password last change time).</para></listitem>
+			<listitem><para>Microsoft NTパスワードハッシュ(大文字小文字の状態を保持したパスワードのハッシュ)。</para></listitem>
+			<listitem><para>Samba SAM アカウントフラグ。</para></listitem>
+			<listitem><para>LCTデータ(パスワード最終変更時刻)。</para></listitem>
 		</itemizedlist>
 
 		<para>
-<indexterm><primary>Account Flags</primary></indexterm>
+<indexterm><primary>アカウントフラグ</primary></indexterm>
 <indexterm><primary>pdbedit</primary></indexterm>
-		The Account Flags parameters are documented in the <command>pdbedit</command> man page, and are
-		briefly documented in <link linkend="TOSHARG-acctflags">the Account Flags Management section</link>.
+		アカウントフラグパラメータは<command>pdbedit</command>マニュアルページに
+		説明があり、
+		<link linkend="TOSHARG-acctflags">アカウントフラグ管理の節</link>
+		で簡単に説明されている。
 		</para>
 
 		<para>
-<indexterm><primary>last change time</primary></indexterm>
-		The LCT data consists of 8 hexadecimal characters representing the time since January 1, 1970, of
-		the time when the password was last changed.
+<indexterm><primary>最終変更時刻</primary></indexterm>
+		LCTデータは8桁の16進値で、最後にパスワードが変更された時刻の、
+		1970年1月1日からの値を保持している。
 		</para>
 
 		</sect4>
 
 		<sect4>
-		<title>Adding User Accounts</title>
+		<title>ユーザアカウントの追加</title>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>add a user account</primary></indexterm>
-<indexterm><primary>standalone server</primary></indexterm>
-<indexterm><primary>domain</primary></indexterm>
+<indexterm><primary>スタンドアロンサーバ</primary></indexterm>
+<indexterm><primary>ドメイン</primary></indexterm>
 <indexterm><primary>SambaSAMAccount</primary></indexterm>
-		The <command>pdbedit</command> can be used to add a user account to a standalone server
-		or to a domain. In the example shown here the account for the user <literal>vlaan</literal>
-		has been created before attempting to add the SambaSAMAccount.
+		<command>pdbedit</command>は、スタンドアロンサーバまたはドメインに
+		ユーザアカウントを追加する時に使える。ここで紹介する例では、
+		 <literal>vlaan</literal>というユーザのアカウントが、SambaSAMAccount
+		を追加する前に作成されている。
 <screen>
 &rootprompt; pdbedit -a vlaan
 new password: secretpw
@@ -1337,14 +1340,15 @@ Logon hours         : FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 		</sect4>
 
 		<sect4>
-		<title>Deleting Accounts</title>
+		<title>アカウントの削除</title>
 
 		<para>
-<indexterm><primary>account deleted</primary></indexterm>
+<indexterm><primary>アカウントの削除</primary></indexterm>
 <indexterm><primary>SambaSAMAccount</primary></indexterm>
 <indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>passdb backend</primary></indexterm>
-		An account can be deleted from the SambaSAMAccount database
+<indexterm><primary>passdbバックエンド</primary></indexterm>
+		以下のコマンドを実行することで、SambaSAMAccountデータベースから
+		アカウントを削除できる。
 <screen>
 &rootprompt; pdbedit -x vlaan
 </screen>
