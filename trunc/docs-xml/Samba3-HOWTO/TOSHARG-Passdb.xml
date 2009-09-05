@@ -1177,31 +1177,34 @@ Sambaはユーザとマシンアカウントを管理するための2つのツ�
 <indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
 <indexterm><primary>add user script</primary></indexterm>
 <indexterm><primary>interface scripts</primary></indexterm>
-		The <command>pdbedit</command> tool, like the <command>smbpasswd</command> tool, requires
-		that a POSIX user account already exists in the UNIX/Linux system accounts database (backend).
-		Neither tool will call out to the operating system to create a user account because this is
-		considered to be the responsibility of the system administrator. When the Windows NT4 domain
-		user manager is used to add an account, Samba will implement the <literal>add user script</literal>
-		(as well as the other interface scripts) to ensure that user, group and machine accounts are
-		correctly created and changed. The use of the <command>pdbedit</command> tool does not
-		make use of these interface scripts.
+		<command>pdbedit</command>ツールは<command>smbpasswd</command>ツールと
+		同様、UNIX/Linuxシステムアカウントデータベース(バックエンド)中にすでに
+		存在するPOSIXユーザアカウントを必要とする。システム管理者の責任と
+		考えられるので、ユーザアカウントを作成するためにOSを呼び出すことは
+		どちらのツールも行わない。NT4のドメインユーザマネージャがアカウント
+		を追加するために使われた時、Sambaは、ユーザ、グループ、マシンアカウント
+		が正しく作成され、変更されることを行うために、(他のインタフェース
+		スクリプトと同様)<literal>add user script</literal>を使う。
+		 <command>pdbedit</command>ツールを使用しても、それらのインタフェース
+		 スクリプトは使わない。
 		</para>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>POSIX account</primary></indexterm>
-		Before attempting to use the <command>pdbedit</command> tool to manage user and machine
-		accounts, make certain that a system (POSIX) account has already been created.
+<indexterm><primary>POSIXアカウント</primary></indexterm>
+		<command>pdbedit</command>を、ユーザとマシンアカウントを管理
+		するために使うことを試みる前に、システム(POSIX)アカウントが
+		すでに作成されているかを確かめておくこと。
 		</para>
 
 		<sect4>
-		<title>Listing User and Machine Accounts</title>
+		<title>ユーザとマシンアカウントの表示</title>
 
 		<para>
 <indexterm><primary>tdbsam</primary></indexterm>
-<indexterm><primary>password backend</primary></indexterm>
-		The following is an example of the user account information that is stored in
-		a tdbsam password backend. This listing was produced by running:
+<indexterm><primary>パスワードバックエンド</primary></indexterm>
+		以下は、tdbsamパスワードバックエンド中に格納されているユーザアカウント
+		情報の例である。表示は以下のコマンドを実行することで行える:
 <screen>
 &prompt;<userinput>pdbedit -Lv met</userinput>
 UNIX username:        met
@@ -1228,8 +1231,8 @@ Password must change: Mon, 18 Jan 2038 20:14:07 GMT
 		</para>
 
 		<para>
-<indexterm><primary>smbpasswd format</primary></indexterm>
-		Accounts can also be listed in the older <literal>smbpasswd</literal> format:
+<indexterm><primary>smbpasswd形式</primary></indexterm>
+		アカウントは古い<literal>smbpasswd</literal>形式でも表示出来る:
 <screen>
 &rootprompt;<userinput>pdbedit -Lw</userinput>
 root:0:84B0D8E14D158FF8417EAF50CFAC29C3:
