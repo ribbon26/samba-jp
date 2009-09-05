@@ -1352,32 +1352,33 @@ Logon hours         : FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <screen>
 &rootprompt; pdbedit -x vlaan
 </screen>
-		The account is removed without further screen output. The account is removed only from the
-		SambaSAMAccount (passdb backend) database, it is not removed from the UNIX account backend.
+		アカウントは出力結果なしで削除される。アカウントはSambaSAMAccount
+		(passdb バックエンド)データベースからのみ削除され、UNIXアカウント
+		バックエンドからは削除されない。
 		</para>
 
 		<para>
 <indexterm><primary>delete user script</primary></indexterm>
 <indexterm><primary>pdbedit</primary></indexterm>
-		The use of the NT4 domain user manager to delete an account will trigger the <parameter>delete user
-		script</parameter>, but not the <command>pdbedit</command> tool.
+		アカウントを削除するためにNT4ドメインユーザマネージャを使うと、
+		<parameter>delete user script</parameter>を起動するが、それは
+		<command>pdbedit</command>ツールではない。
 		</para>
 
 		</sect4>
 
 		<sect4>
-		<title>Changing User Accounts</title>
+		<title>ユーザアカウントの変更</title>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
-		Refer to the <command>pdbedit</command> man page for a full synopsis of all operations
-		that are available with this tool.
+		<command>pdbedit</command>マニュアルページにこのツールで有効な
+		すべての操作の完全な詳細が記述されている。
 		</para>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
-		An example of a simple change in the user account information is the change of the full name
-		information shown here:
+		下記は、ユーザアカウント情報の、フルネーム情報を変更する例である:
 <screen>
 &rootprompt; pdbedit -r --fullname="Victor Aluicious Laan" vlaan
 ...
@@ -1390,12 +1391,12 @@ Home Directory:       \\frodo\vlaan
 
 		<para>
 <indexterm><primary>grace time</primary></indexterm>
-<indexterm><primary>password expired</primary></indexterm>
-<indexterm><primary>expired password</primary></indexterm>
-		Let us assume for a moment that a user's password has expired and the user is unable to
-		change the password at this time. It may be necessary to give the user additional grace time
-		so that it is possible to continue to work with the account and the original password. This
-		demonstrates how the password expiration settings may be updated
+<indexterm><primary>パスワード満了</primary></indexterm>
+<indexterm><primary>満了したパスワード</primary></indexterm>
+		ユーザのパスワードが満了して、ユーザがパスワードを変更できなくなった
+		を仮定してみよう。そのアカウントと本来のパスワードで作業が出来るように
+		するには、ユーザに追加の猶予時間が必要かもしれない。これは、どのように
+		パスワード満了の設定を更新できるかの例を示している。
 <screen>
 &rootprompt; pdbedit -Lv vlaan
 ...
@@ -1408,8 +1409,9 @@ Bad password count  : 2
 </screen>
 <indexterm><primary>bad logon attempts</primary></indexterm>
 <indexterm><primary>lock the account</primary></indexterm>
-		The user has recorded 2 bad logon attempts and the next will lock the account, but the
-		password is also expired. Here is how this account can be reset:
+		ユーザは2回ログオンに失敗し、次でアカウントがロックされるが、
+		パスワードはすでに満了している。以下で、どのようにこのアカウントを
+		リセットするかを示す。
 <screen>
 &rootprompt; pdbedit -z vlaan
 ...
@@ -1420,7 +1422,8 @@ Last bad password   : 0
 Bad password count  : 0
 ...
 </screen>
-		The <literal>Password must change:</literal> parameter can be reset like this:
+		<literal>Password must change:</literal>パラメータは以下のようにして
+		リセットする:
 <screen>
 &rootprompt; pdbedit --pwd-must-change-time=1200000000 vlaan
 ...
@@ -1429,7 +1432,7 @@ Password can change:  Thu, 03 Jan 2002 15:08:35 GMT
 Password must change: Thu, 10 Jan 2008 14:20:00 GMT
 ...
 </screen>
-		Another way to use this tools is to set the date like this:
+		別の方法として、このツールで日付を設定する方法もある:
 <screen>
 &rootprompt; pdbedit --pwd-must-change-time="2010-01-01" \
               --time-format="%Y-%m-%d" vlaan
@@ -1440,45 +1443,47 @@ Password must change: Fri, 01 Jan 2010 00:00:00 GMT
 ...
 </screen>
 <indexterm><primary>strptime</primary></indexterm>
-<indexterm><primary>time format</primary></indexterm>
-		Refer to the strptime man page for specific time format information.
+<indexterm><primary>時刻の形式</primary></indexterm>
+		時刻の形式についての情報は、strptimeマニュアルページを参照のこと。
 		</para>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>SambaSAMAccount</primary></indexterm>
-		Please refer to the pdbedit man page for further information relating to SambaSAMAccount
-		management.
+		SambaSAMAccountの操作に関するさらなる情報はpdbeditのマニュアルページ
+		を参照のこと。
 		</para>
 
 		<sect5 id="TOSHARG-acctflags">
-		<title>Account Flags Management</title>
+		<title>アカウントフラグ管理</title>
 
 		<para>
-<indexterm><primary>Samba SAM account flags</primary></indexterm>
+<indexterm><primary>Samba SAMアカウントフラグ</primary></indexterm>
 <indexterm><primary>account control block</primary><see>ACB</see></indexterm>
 <indexterm><primary>account encode_bits</primary></indexterm>
 <indexterm><primary>account control flags</primary></indexterm>
-		The Samba SAM account flags are properly called the ACB (account control block) within
-		the Samba source code. In some parts of the Samba source code they are referred to as the
-		account encode_bits, and also as the account control flags.
+		Samba SAMアカウントフラグはSambaソースコード中で、ACB
+		(account control block)と呼ばれている。Sambaソースコードの一部では、
+		これらはaccount encode_bitsやaccount control flagsとしても参照される。
 		</para>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>user account</primary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
-<indexterm><primary>trust account</primary></indexterm>
-<indexterm><primary>damaged data</primary></indexterm>
-		The manual adjustment of user, machine (workstation or server) or an inter-domain trust
-		account account flgas should not be necessary under normal conditions of use of Samba. On the other hand,
-		where this information becomes corrupted for some reason, the ability to correct the damaged data is certainly
-		useful. The tool of choice by which such correction can be affected is the <command>pdbedit</command> utility.
+<indexterm><primary>ユーザアカウント</primary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
+<indexterm><primary>信頼アカウント</primary></indexterm>
+<indexterm><primary>壊れたデータ</primary></indexterm>
+		手動での、ユーザ、マシン(ワークステーションまたはサーバ)、あるいは
+		ドメイン間信頼アカウントのアカウントフラグの調整は、通常Sambaを
+		使用している場合には必要ない。別の観点からすると、何らかの理由で
+		この情報が壊れた場合、壊れたデータの修正ができる可能性があると便利で
+		ある。そのような修正のためのツールの選択枝は<command>pdbedit</command>
+		ユーティリティである。
 		</para>
 
 		<para>
-<indexterm><primary>account flags</primary></indexterm>
-<indexterm><primary>LDAP directory</primary></indexterm>
+<indexterm><primary>アカウントフラグ</primary></indexterm>
+<indexterm><primary>LDAP ディレクトリ</primary></indexterm>
 		There have been a few requests for information regarding the account flags from developers
 		who are creating their own Samba management tools. An example of a need for information regarding
 		the proper management of the account flags is evident when developing scripts that will be used
