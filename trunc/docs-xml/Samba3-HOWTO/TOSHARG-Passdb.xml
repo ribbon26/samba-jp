@@ -1074,42 +1074,42 @@ Sambaはユーザとマシンアカウントを管理するための2つのツ�
                 </thead>
                 <tbody>
                     <row>
-					<entry><para>Maximum Password Age</para></entry>
+					<entry><para>Maximum Password Age(パスワード有効期間)</para></entry>
 					<entry><para>maximum password age</para></entry>
-					<entry><para>0 - 999 (days)</para></entry>
-					<entry><para>0 - 4294967295 (sec)</para></entry>
+					<entry><para>0 - 999 (日)</para></entry>
+					<entry><para>0 - 4294967295 (秒)</para></entry>
 					<entry><para>4294967295</para></entry>
                     </row>
                     <row>
-					<entry><para>Minimum Password Age</para></entry>
+					<entry><para>Minimum Password Age(パスワード変更禁止期間)</para></entry>
 					<entry><para>minimum password age</para></entry>
-					<entry><para>0 - 999 (days)</para></entry>
-					<entry><para>0 - 4294967295 (sec)</para></entry>
+					<entry><para>0 - 999 (日)</para></entry>
+					<entry><para>0 - 4294967295 (秒)</para></entry>
 					<entry><para>0</para></entry>
                     </row>
                     <row>
-					<entry><para>Mimimum Password Length</para></entry>
+					<entry><para>Mimimum Password Length(最小パスワード長)</para></entry>
 					<entry><para>min password length</para></entry>
-					<entry><para>1 - 14 (Chars)</para></entry>
-					<entry><para>0 - 4294967295 (Chars)</para></entry>
+					<entry><para>1 - 14 (文字)</para></entry>
+					<entry><para>0 - 4294967295 (文字)</para></entry>
 					<entry><para>5</para></entry>
                     </row>
                     <row>
-					<entry><para>Password Uniqueness</para></entry>
+					<entry><para>Password Uniqueness(パスワード履歴)</para></entry>
 					<entry><para>password history</para></entry>
 					<entry><para>0 - 23 (#)</para></entry>
 					<entry><para>0 - 4294967295 (#)</para></entry>
 					<entry><para>0</para></entry>
                     </row>
                     <row>
-					<entry><para>Account Lockout - Reset count after</para></entry>
+					<entry><para>Account Lockout - Reset count after(アカウントロックアウト期間)</para></entry>
 					<entry><para>reset count minutes</para></entry>
-					<entry><para>1 - 99998 (min)</para></entry>
-					<entry><para>0 - 4294967295 (min)</para></entry>
+					<entry><para>1 - 99998 (分)</para></entry>
+					<entry><para>0 - 4294967295 (分)</para></entry>
 					<entry><para>30</para></entry>
                     </row>
                     <row>
-					<entry><para>Lockout after bad logon attempts</para></entry>
+					<entry><para>Lockout after bad logon attempts(ロックアウトの閾値)</para></entry>
 					<entry><para>bad lockout attempt</para></entry>
 					<entry><para>0 - 998 (#)</para></entry>
 					<entry><para>0 - 4294967295 (#)</para></entry>
@@ -1123,7 +1123,7 @@ Sambaはユーザとマシンアカウントを管理するための2つのツ�
 					<entry><para>0</para></entry>
                     </row>
                     <row>
-					<entry><para>Lockout Duration</para></entry>
+					<entry><para>Lockout Duration(ロックアウト閾値のリセット)</para></entry>
 					<entry><para>lockout duration</para></entry>
 					<entry><para>1 - 99998 (min)</para></entry>
 					<entry><para>0 - 4294967295 (min)</para></entry>
@@ -1138,7 +1138,7 @@ Sambaはユーザとマシンアカウントを管理するための2つのツ�
                     </row>
                     <row>
 					<entry><para>*** Registry Setting ***</para></entry>
-					<entry><para>refuse machine password change</para></entry>
+					<entry><para>refuse machine password change(マシンパスワード変更の禁止)</para></entry>
 					<entry><para>0/1</para></entry>
 					<entry><para>0 - 4294967295</para></entry>
 					<entry><para>0</para></entry>
@@ -1149,31 +1149,32 @@ Sambaはユーザとマシンアカウントを管理するための2つのツ�
 
 		<para>
 		<indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>policy settings</primary></indexterm>
-<indexterm><primary>account security</primary></indexterm>
+<indexterm><primary>ポリシー設定</primary></indexterm>
+<indexterm><primary>アカウントセキュリティ</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
-		The <command>pdbedit</command> tool is the only one that can manage the account
-		security and policy settings. It is capable of all operations that smbpasswd can
-		do as well as a superset of them.
+		<command>pdbedit</command>ツールはアカウントセキュリティとポリシー
+		設定を管理できる唯一のツールである。これは、smbpasswdが出来ること
+		と同様のことを含むスーパーセットである。
 		</para>
 
 		<para>
 		<indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>account import/export</primary></indexterm>
-<indexterm><primary>passdb backend</primary></indexterm>
-		One particularly important purpose of the <command>pdbedit</command> is to allow
-		the import/export of account information from one passdb backend to another.
+<indexterm><primary>アカウントのインポート/エクスポート</primary></indexterm>
+<indexterm><primary>passdbバックエンド</primary></indexterm>
+		<command>pdbedit</command>の用途の中で特に重要なものの一つとして、
+		passdbバックエンドから他へのアカウント情報のインポート/エクスポート
+		機能がある。
 		</para>
 
 		<sect3>
-		<title>User Account Management</title>
+		<title>ユーザアカウントマネージャ</title>
 
 		<para>
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
-<indexterm><primary>system accounts</primary></indexterm>
-<indexterm><primary>user account</primary></indexterm>
-<indexterm><primary>domain user manager</primary></indexterm>
+<indexterm><primary>システムアカウント</primary></indexterm>
+<indexterm><primary>ユーザアカウント</primary></indexterm>
+<indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
 <indexterm><primary>add user script</primary></indexterm>
 <indexterm><primary>interface scripts</primary></indexterm>
 		The <command>pdbedit</command> tool, like the <command>smbpasswd</command> tool, requires
