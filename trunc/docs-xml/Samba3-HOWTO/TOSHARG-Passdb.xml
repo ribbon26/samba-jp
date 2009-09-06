@@ -1771,53 +1771,54 @@ Sambaチームはいろいろと検討した結果この機能を取り除く必
 <indexterm><primary>ユーザアカウント</primary></indexterm>
 <indexterm><primary>LM/NT パスワードハッシュ</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
-		伝統的に
-		Traditionally, when configuring <smbconfoption name="encrypt passwords">yes</smbconfoption>
-		in Samba's &smb.conf; file, user account information such as username, LM/NT password hashes,
-		password change times, and account flags have been stored in the <filename>smbpasswd(5)</filename>
-		file. There are several disadvantages to this approach for sites with large numbers of users
-		(counted in the thousands).
+		伝統的に<smbconfoption name="encrypt passwords">yes</smbconfoption>
+		とSambaの&smb.conf;ファイル中で設定した時、ユーザ名、LM/NTパスワード
+		ハッシュ、パスワード変更時間とアカウントフラグのようなユーザアカウント
+		情報は<filename>smbpasswd(5)</filename>ファイルに格納される。これは、
+		たくさんのユーザ(数千くらい)を抱えるサイトに対するアプローチとしては
+		不利である。
 		</para>
 
 		<itemizedlist>
 		<listitem><para>
 <indexterm><primary>lookups</primary></indexterm>
-		The first problem is that all lookups must be performed sequentially. Given that
-		there are approximately two lookups per domain logon (one during intial logon validation
-		and one for a session connection setup, such as when mapping a network drive or printer), this
-		is a performance bottleneck for large sites. What is needed is an indexed approach
-		such as that used in databases.
+		最初の問題は、すべての検索がシーケンシャルに行わなければならないという
+		ことである。ドメインログオン時におおよそ二つの検索(1つは最初のログオン
+		検証で、もう1つはセッション接続セットアップで、それはネットワーク
+		ドライブやプリンタのマッピング)が行われ、これは、大きなサイトでは、
+		性能のボトルネックになる。この場合必要なことは、データベースを使う
+		ような、インデックスを使うアプローチである。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-<indexterm><primary>replicate</primary></indexterm>
+<indexterm><primary>複製</primary></indexterm>
 <indexterm><primary>rsync</primary></indexterm>
 <indexterm><primary>ssh</primary></indexterm>
-<indexterm><primary>custom scripts</primary></indexterm>
-		The second problem is that administrators who desire to replicate an smbpasswd file
-		to more than one Samba server are left to use external tools such as
-		<command>rsync(1)</command> and <command>ssh(1)</command> and write custom,
-		in-house scripts.
+<indexterm><primary>カスタムスクリプト</primary></indexterm>
+		二番目の問題は、一つ以上のSambaサーバにsmbpasswdファイルを複製しよう
+		とする管理者は、たとえば、<command>rsync(1)</command>と
+		<command>ssh(1)</command>と、内製したカスタムスクリプトのような
+		外部ツールを使うことになるということである。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>smbpasswd</primary></indexterm>
-<indexterm><primary>home directory</primary></indexterm>
+<indexterm><primary>ホームディレクトリ</primary></indexterm>
 <indexterm><primary>password expiration</primary></indexterm>
-<indexterm><primary>relative identifier</primary></indexterm>
-<indexterm><primary>relative identifier</primary><see>RID</see></indexterm>
-		Finally, the amount of information that is stored in an smbpasswd entry leaves
-		no room for additional attributes such as a home directory, password expiration time,
-		or even a relative identifier (RID).
+<indexterm><primary>相対識別子</primary></indexterm>
+<indexterm><primary>相対識別子</primary><see>RID</see></indexterm>
+		最後に、smbpasswdエントリ中に格納されている情報の量には、たとえば
+		ホームディレクトリ、パスワード満了時刻や相対識別子(RID)のような
+		追加の属性を入れる領域がない。
 		</para></listitem>
 		</itemizedlist>
 
 		<para>
-<indexterm><primary>user attributes</primary></indexterm>
+<indexterm><primary>ユーザ属性</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>API</primary></indexterm>
-<indexterm><primary>samdb interface</primary></indexterm>
+<indexterm><primary>samdbインタフェース</primary></indexterm>
 		As a result of these deficiencies, a more robust means of storing user attributes
 		used by smbd was developed. The API that defines access to user accounts
 		is commonly referred to as the samdb interface (previously, this was called the passdb
