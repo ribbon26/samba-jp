@@ -1819,21 +1819,22 @@ Sambaチームはいろいろと検討した結果この機能を取り除く必
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>API</primary></indexterm>
 <indexterm><primary>samdbインタフェース</primary></indexterm>
-		As a result of these deficiencies, a more robust means of storing user attributes
-		used by smbd was developed. The API that defines access to user accounts
-		is commonly referred to as the samdb interface (previously, this was called the passdb
-		API and is still so named in the Samba source code trees).
+		これらの機能不足の点から、ユーザ属性を格納するより堅牢な手段を
+		smbdによって使うことが開発されてきた。ユーザアカウントにアクセス
+		することを定義するAPIは、共通的にsamdbインタフェースとして参照される
+		(以前には、これはpassdb APIとして呼ばれていて、現在もSambaソース
+		コード中ではそのように名前が付けられている)。
 		</para>
 
 		<para>
-<indexterm><primary>passdb backends</primary></indexterm>
-<indexterm><primary>smbpasswd plaintext database</primary></indexterm>
+<indexterm><primary>passdbバックエンド</primary></indexterm>
+<indexterm><primary>smbpasswd平文データベース</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
 <indexterm><primary>ldapsam</primary></indexterm>
-<indexterm><primary>enterprise</primary></indexterm>
-		Samba provides an enhanced set of passdb backends that overcome the deficiencies
-		of the smbpasswd plaintext database. These are tdbsam and ldapsam.
-		Of these, ldapsam will be of most interest to large corporate or enterprise sites.
+<indexterm><primary>エンタープライズ</primary></indexterm>
+		Sambaは、Samba平文データベースの機能不足点を克服する一連の拡張された
+		passdbバックエンドを提供している。これらはtdbsamとldapsamである。
+		もちろん、ldapsamは、大きな会社や巨大サイトが興味を持つものである。
 		</para>
 
 	</sect2>
@@ -1842,12 +1843,13 @@ Sambaチームはいろいろと検討した結果この機能を取り除く必
 	<title>tdbsam</title>
 
 		<para>
-		<indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
+		<indexterm><primary>SAMバックエンド</primary><secondary>tdbsam</secondary></indexterm>
 <indexterm><primary>trivial database</primary><see>TDB</see></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
-		Samba can store user and machine account data in a <quote>TDB</quote> (trivial database).
-		Using this backend does not require any additional configuration. This backend is
-		recommended for new installations that do not require LDAP.
+<indexterm><primary>マシンアカウント</primary></indexterm>
+		Sambaは<quote>TDB</quote>(trivial database)中にユーザとマシンアカウント
+		を格納できる。このバックエンドを使う時には追加の設定は不要である。
+		このバックエンドはLDAPを必要としない、新しくインストールする場合に
+		推奨される。
 		</para>
 
 		<para>
@@ -1855,34 +1857,34 @@ Sambaチームはいろいろと検討した結果この機能を取り除く必
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>scalability</primary></indexterm>
-		As a general guide, the Samba Team does not recommend using the tdbsam backend for sites
-		that have 250 or more users. Additionally, tdbsam is not capable of scaling for use
-		in sites that require PDB/BDC implementations that require replication of the account
-		database. Clearly, for reason of scalability, the use of ldapsam should be encouraged.
+		一般的なガイドとして、Sambaチームは250人あるいはそれ以上のユーザが
+		いるサイトに、tdbsamバックエンドを使うことを推奨していない。さらに
+		追加で、tdbsamは、アカウントデータベースを複製することが要求される
+		PDC/BDC実装を要求するサイト中で使うための拡張性の能力はない。
+		明確にいうと、拡張性という理由で、ldapsamを使用すべきである。
 		</para>
 
 		<para>
-<indexterm><primary>250-user limit</primary></indexterm>
-<indexterm><primary>performance-based</primary></indexterm>
+<indexterm><primary>250ユーザ制限</primary></indexterm>
+<indexterm><primary>パフォーマンスベース</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
-		The recommendation of a 250-user limit is purely based on the notion that this
-		would generally involve a site that has routed networks, possibly spread across
-		more than one physical location. The Samba Team has not at this time established
-		the performance-based scalability limits of the tdbsam architecture.
+		250ユーザ制限の推奨は、純粋に、一般的に、おそらく一つ以上の物理配置
+		にまたがってばらけている、ルーティングネットワークを持つサイトを必要
+		とするという概念に基づいている。Sambaチームは現時点で、tdbsam
+		アーキテクチャのパフォーマンスベースの拡張性制限を認識していない。
 		</para>
 
 		<para>
-<indexterm><primary>4,500 user accounts</primary></indexterm>
-<indexterm><primary>passdb backend</primary></indexterm>
+<indexterm><primary>4,500ユーザアカウント</primary></indexterm>
+<indexterm><primary>passdbバックエンド</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
 <indexterm><primary>SambaSAMAccount</primary></indexterm>
-		There are sites that have thousands of users and yet require only one server.
-		One site recently reported having 4,500 user accounts on one UNIX system and
-		reported excellent performance with the <literal>tdbsam</literal> passdb backend.
-		The limitation of where the <literal>tdbsam</literal> passdb backend can be used
-		is not one pertaining to a limitation in the TDB storage system, it is based
-		only on the need for a reliable distribution mechanism for the SambaSAMAccount
-		backend.
+		数千のユーザを抱えているが、1台のサーバだけを必要とするサイトがある。
+		1つのサイトは最近UNIXシステム上で4500ユーザを保持していることを報告し、
+		<literal>tdbsam</literal>passdbバックエンドでよい性能が出たことを
+		報告した。<literal>tdbsam</literal>passdbバックエンドを使う場合の制限は、
+		TDB格納場所の制限に関連し、それはSambaSAMAccountバックエンドのための
+		分散メカニズムの必要性にのみ基づく。
 		</para>
 
 	</sect2>
