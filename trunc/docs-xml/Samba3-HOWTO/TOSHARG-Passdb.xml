@@ -1974,26 +1974,29 @@ Sambaチームはいろいろと検討した結果この機能を取り除く必
 <indexterm><primary>ldapsam</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
 <indexterm><primary>Netscape's Directory Server</primary></indexterm>
-			The LDAP ldapsam code was developed and tested using the OpenLDAP 2.x server and
-			client libraries. The same code should work with Netscape's Directory Server and client SDK.
-			However, there are bound to be compile errors and bugs. These should not be hard to fix.
-			Please submit fixes via the process outlined in <link linkend="bugreport">Reporting Bugs</link>.
+		LDAPのldapsamコードはOpenLDAP 2.xサーバとクライアントライブラリを
+		使って開発とテストが行われている。同じコードはNetscape's Directory Server
+		とクライアントSDKでも動作する。しかし、それらはコンパイルエラーとバグが
+		必ず生じる。それらを直すのはとても難しい。
+		<link linkend="bugreport">バグ報告</link>中で概要が説明されている手順
+		経由で修正を投稿してほしい。
 			</para>
 
 			<para>
-			Samba is capable of working with any standards-compliant LDAP server.
+			Sambaは任意の標準準拠のLDAPサーバとともに動作できる。
 			</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Schema and Relationship to the RFC 2307 posixAccount</title>
+		<title>RFC 2307 posixAccountとの関係とスキーマ</title>
 
 
 			<para>
-			Samba-3.0 includes the necessary schema file for OpenLDAP 2.x in the
-			<filename>examples/LDAP/samba.schema</filename> directory of the source code distribution
-			tarball. The schema entry for the sambaSamAccount ObjectClass is shown here:
+			Samba-3.0はソースコードディストリビューション中の
+			<filename>examples/LDAP/samba.schema</filename>中にある
+			OpenLDAP 2.x用に必要なスキーマファイルを用意している。
+			sambaSamAccountオブジェクトクラスのスキーマエントリは以下の通り:
 <programlisting>
 ObjectClass (1.3.6.1.4.1.7165.2.2.6 NAME 'sambaSamAccount' SUP top AUXILIARY
     DESC 'Samba-3.0 Auxiliary SAM Account'
@@ -2011,6 +2014,12 @@ ObjectClass (1.3.6.1.4.1.7165.2.2.6 NAME 'sambaSamAccount' SUP top AUXILIARY
 <indexterm><primary>samba.schema</primary></indexterm>
 <indexterm><primary>OpenLDAP</primary></indexterm>
 <indexterm><primary>OID</primary></indexterm>
+			<filename>samba.schema</filename>ファイルはOpenLDAP 2.0/2.1
+			用の形式である。Sambaチームは上記のスキーマとそれが使う
+			reccomendsによって使われるOID空間を所有している。もしも
+			Netscape DSが使うようにスキーマを変換したならば、
+			<ulink url="mailto:jerry@samba.org">jerry@samba.org</ulink>
+			にパッチとしてスキーマファイルを送ってほしい。
 			The <filename>samba.schema</filename> file has been formatted for OpenLDAP 2.0/2.1.
 			The Samba Team owns the OID space used by the above schema and recommends its use.
 			If you translate the schema to be used with Netscape DS, please submit the modified
@@ -2025,17 +2034,18 @@ ObjectClass (1.3.6.1.4.1.7165.2.2.6 NAME 'sambaSamAccount' SUP top AUXILIARY
 <indexterm><primary>ObjectClass</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>RFC 2307.</primary></indexterm>
-			Just as the smbpasswd file is meant to store information that provides information
-			additional to  a user's <filename>/etc/passwd</filename> entry, so is the sambaSamAccount
-			object meant to supplement the UNIX user account information. A sambaSamAccount is an
-			<constant>AUXILIARY</constant> ObjectClass, so it can be used to augment existing
-			user account information in the LDAP directory, thus providing information needed
-			for Samba account handling. However, there are several fields (e.g., uid) that overlap
-			with the posixAccount ObjectClass outlined in RFC 2307. This is by design.
+		smbpasswdファイルが、ユーザの<filename>/etc/passwd</filename>エントリ
+		に追加の情報を提供する情報を格納するように、sambaSamAccountアカウント
+		オブジェクトはUNIXユーザアカウント情報を補う。sambaSamAccountは
+		<constant>補助型</constant>オブジェクトクラスであるので、LDAP
+		ディレクトリ中の存在するユーザアカウント情報に付随するものとして
+		使うことが出来、Sambaアカウントの操作のために必要な情報を提供する。
+		しかし、RFC2307で定義されているposixAccountオブジェクトクラスと
+		重複するいくつかのフィールド(たとえばuid)がある。これはデザインによる。
 			</para>
 
 			<para>
-<indexterm><primary>account information</primary></indexterm>
+<indexterm><primary>アカウント情報</primary></indexterm>
 <indexterm><primary>sambaSamAccount</primary></indexterm>
 <indexterm><primary>posixAccount</primary></indexterm>
 <indexterm><primary>ObjectClasses</primary></indexterm>
@@ -2192,7 +2202,6 @@ objectclass: top
 objectclass: organizationalRole
 objectclass: simpleSecurityObject
 userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
-
 # Setting up container for groups
 dn: ou=Groups,dc=quenya,dc=org
 objectclass: top
