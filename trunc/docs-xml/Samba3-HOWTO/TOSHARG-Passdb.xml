@@ -2170,9 +2170,9 @@ index   default               sub
 <indexterm><primary>account containers</primary></indexterm>
 <indexterm><primary>LDIF file</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
-		Before you can add accounts to the LDAP database, you must create the account containers
-		that they will be stored in. The following LDIF file should be modified to match your
-		needs (DNS entries, and so on):
+		LDAPデータベースにアカウントが追加できる前に、格納するためのアカウント
+		コンテナを作成する必要がある。以下のLDIFファイルは必要に応じて変更
+		する必要がある(DNSエントリなど):
 <programlisting>
 # Organization for Samba Base
 dn: dc=quenya,dc=org
@@ -2234,14 +2234,14 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 		<para>
 <indexterm><primary>userPassword</primary></indexterm>
 <indexterm><primary>slappasswd</primary></indexterm>
-		The userPassword shown above should be generated using <command>slappasswd</command>.
+		上記で示されているuserPasswordは<command>slappasswd</command>を使って
+		生成する必要がある。
 		</para>
 
 		<para>
 <indexterm><primary>LDIF</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-		The following command will then load the contents of the LDIF file into the LDAP
-		database.
+		以下のコマンドでLDAPデータベース中にLDIFの内容をロードする。
 <indexterm><primary>slapadd</primary></indexterm>
 <screen>
 &prompt;<userinput>slapadd -v -l initldap.dif</userinput>
@@ -2249,14 +2249,15 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 		</para>
 
 		<para>
-		Do not forget to secure your LDAP server with an adequate access control list
-		as well as an admin password.
+		adminパスワードと同様に、アクセス制御リストを十分に使ってLDAPサーバの
+		安全性を確保することを忘れないこと。
 		</para>
 
 		<note><para>
 <indexterm><primary>secrets.tdb</primary></indexterm>
-		Before Samba can access the LDAP server, you need to store the LDAP admin password
-		in the Samba-3 <filename>secrets.tdb</filename> database by:
+		SambaがLDAPサーバにアクセスできる前に、Samba-3の
+		<filename>secrets.tdb</filename>データベース中にLDAP adminパスワード
+		以下のようにしてを格納する必要がある:
 <indexterm><primary>smbpasswd</primary></indexterm>
 <screen>
 &rootprompt;<userinput>smbpasswd -w <replaceable>secret</replaceable></userinput>
@@ -2266,14 +2267,15 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 		</sect3>
 
 		<sect3>
-		<title>Configuring Samba</title>
+		<title>Sambaの設定</title>
 
 			<para>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
-			The following parameters are available in &smb.conf; only if your version of Samba was built with
-			LDAP support. Samba automatically builds with LDAP support if the LDAP libraries are found. The
-			best method to verify that Samba was built with LDAP support is:
+		以下の&smb.conf;中のパラメータは、SambaがLDAPサポートを出来るように
+		構築された場合にのみ有効である。Sambaは、LDAPライブラリを見つけると、
+		自動的にLDAPをサポートするように構築する。LDAPをサポートしているか
+		否かを調べる最も良い方法は以下の通り:
 <screen>
 &rootprompt; smbd -b | grep LDAP
    HAVE_LDAP_H
@@ -2285,12 +2287,12 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
    HAVE_LIBLDAP
    LDAP_SET_REBIND_PROC_ARGS
 </screen>
-			If the build of the <command>smbd</command> command you are using does not produce output
-			that includes <literal>HAVE_LDAP_H</literal> it is necessary to discover why the LDAP headers
-			and libraries were not found during compilation.
+		もしも使用した<command>smbd</command>コマンドが<literal>HAVE_LDAP_H</literal>
+		を出力しない場合、なぜLDAPヘッダとライブラリがコンパイル中に見つから
+		なかったかということを調べる必要がある。
 			</para>
 
-			<para>LDAP-related smb.conf options include these:
+			<para>LDAP関連のsmb.confオプションは以下の通り:
 			<smbconfblock>
 			<smbconfoption name="passdb backend">ldapsam:url</smbconfoption>
 			<smbconfoption name="ldap admin dn"/>
@@ -2310,12 +2312,13 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 			</para>
 
 			<para>
-			These are described in the &smb.conf; man page and so are not repeated here. However, an example
-			for use with an LDAP directory is shown in <link linkend="confldapex">the Configuration with LDAP.</link>
+		これらは&smb.conf;マニュアルページに説明があり、ここでは繰り返さない。
+		しかし、LDAPディレクトリを使うための例は
+		<link linkend="confldapex">LDAP使用の設定例</link>にある。
 			</para>
 
 <example id="confldapex">
-<title>Configuration with LDAP</title>
+<title>LDAP使用の設定例</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="security">user</smbconfoption>
@@ -2323,17 +2326,17 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 <smbconfoption name="netbios name">MORIA</smbconfoption>
 <smbconfoption name="workgroup">NOLDOR</smbconfoption>
 
-<smbconfcomment>LDAP related parameters:</smbconfcomment>
+<smbconfcomment>LDAP関連のパラメータ:</smbconfcomment>
 
-<smbconfcomment>Define the DN used when binding to the LDAP servers.</smbconfcomment>
-<smbconfcomment>The password for this DN is not stored in smb.conf</smbconfcomment>
-<smbconfcomment>Set it using 'smbpasswd -w secret' to store the</smbconfcomment>
-<smbconfcomment>passphrase in the secrets.tdb file.</smbconfcomment>
-<smbconfcomment>If the "ldap admin dn" value changes, it must be reset.</smbconfcomment>
+<smbconfcomment>LDAPサーバにバインドする時に使うDNの定義。</smbconfcomment>
+<smbconfcomment>smb.conf中にはこのDNのパスワードは格納されない。</smbconfcomment>
+<smbconfcomment>これは'smbpasswd -w secret'を使って</smbconfcomment>
+<smbconfcomment>secrets.tdbファイル中にパスフレーズを格納する。</smbconfcomment>
+<smbconfcomment>"ldap admin dn"を変更する場合、再設定する必要がある。</smbconfcomment>
 <smbconfoption name="ldap admin dn">"cn=Manager,dc=quenya,dc=org"</smbconfoption>
 
-<smbconfcomment>SSL directory connections can be configured by:</smbconfcomment>
-<smbconfcomment>('off', 'start tls', or 'on' (default))</smbconfcomment>
+<smbconfcomment>SSLディレクトリ接続は以下のように設定する:</smbconfcomment>
+<smbconfcomment>('off', 'start tls', または 'on' (既定値))</smbconfcomment>
 <smbconfoption name="ldap ssl">start tls</smbconfoption>
 
 <smbconfcomment>syntax: passdb backend = ldapsam:ldap://server-name[:port]</smbconfcomment>
@@ -2342,16 +2345,16 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 <smbconfcomment>smbpasswd -x delete the entire dn-entry</smbconfcomment>
 <smbconfoption name="ldap delete dn">no</smbconfoption>
 
-<smbconfcomment>The machine and user suffix are added to the base suffix</smbconfcomment>
-<smbconfcomment>wrote WITHOUT quotes. NULL suffixes by default</smbconfcomment>
+<smbconfcomment>マシンとユーザサフィックスはベースサフィックスに追加される</smbconfcomment>
+<smbconfcomment>引用符なしで記述すること。未定義状態が既定値である</smbconfcomment>
 <smbconfoption name="ldap user suffix">ou=People</smbconfoption>
 <smbconfoption name="ldap group suffix">ou=Groups</smbconfoption>
 <smbconfoption name="ldap machine suffix">ou=Computers</smbconfoption>
 
-<smbconfcomment>Trust UNIX account information in LDAP</smbconfcomment>
-<smbconfcomment> (see the smb.conf man page for details)</smbconfcomment>
+<smbconfcomment>LDAP中の信頼UNIXアカウント情報</smbconfcomment>
+<smbconfcomment> (詳細はsmb.confマニュアルページを参照)</smbconfcomment>
 
-<smbconfcomment>Specify the base DN to use when searching the directory</smbconfcomment>
+<smbconfcomment>ディレクトリを検索する時に使うベースDNの指定</smbconfcomment>
 <smbconfoption name="ldap suffix">dc=quenya,dc=org</smbconfoption>
 </smbconfblock>
 </example>
@@ -2359,7 +2362,7 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 		</sect3>
 
 		<sect3>
-		<title>Accounts and Groups Management</title>
+		<title>アカウントとグループの管理</title>
 
 			<para>
 			<indexterm><primary>User Management</primary></indexterm>
