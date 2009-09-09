@@ -2683,54 +2683,59 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 		<title>パスワードの同期</title>
 
 		<para>
-		Samba-3 and later can update the non-Samba (LDAP) password stored with an account. When
-		using pam_ldap, this allows changing both UNIX and Windows passwords at once.
+		Samba-3とその後のものはアカウントとして格納される非Samba(LDAP)パスワード
+		を更新できる。pam_ldapを使う場合、UNIXとWindowsパスワードを同時に変更できる。
 		</para>
 
-		<para>The <smbconfoption name="ldap passwd sync"/> options can have the  values shown in
-		<link linkend="ldappwsync">Possible <emphasis>ldap passwd sync</emphasis> Values</link>.</para>
+		<para>
+		<smbconfoption name="ldap passwd sync"/>オプションでは、
+		<link linkend="ldappwsync">設定可能な<emphasis>ldap passwd sync</emphasis>
+		  の値</link>にある値を使うことが出来る。</para>
 
 		<table frame="all" id="ldappwsync">
-		<title>Possible <parameter>ldap passwd sync</parameter> Values</title>
+		<title>設定可能な<parameter>ldap passwd sync</parameter>の値</title>
 		<tgroup cols="2">
 			<colspec align="left" colwidth="1*"/>
 			<colspec align="justify" colwidth="4*"/>
 		<thead>
-			<row><entry align="left">Value</entry><entry align="center">Description</entry></row>
+			<row><entry align="left">値</entry><entry align="center">説明</entry></row>
 		</thead>
 		<tbody>
-		<row><entry>yes</entry><entry><para>When the user changes his password, update
-			       <constant>SambaNTPassword</constant>, <constant>SambaLMPassword</constant>,
-			       and the <constant>password</constant> fields.</para></entry></row>
+		<row><entry>yes</entry><entry><para>ユーザがパスワード変更時に
+		      <constant>SambaNTPassword</constant>, <constant>SambaLMPassword</constant>
+		      と<constant>password</constant>フィールドを更新する。</para></entry></row>
 
-		<row><entry>no</entry><entry><para>Only update <constant>SambaNTPassword</constant> and
-					<constant>SambaLMPassword</constant>.</para></entry></row>
+		<row><entry>no</entry><entry><para><constant>SambaNTPassword</constant>と
+					<constant>SambaLMPassword</constant>のみ更新する。</para></entry></row>
 
-		<row><entry>only</entry><entry><para>Only update the LDAP password and let the LDAP server
-			worry about the other fields.  This option is only available on some LDAP servers and
-			only when the LDAP server supports LDAP_EXOP_X_MODIFY_PASSWD.</para></entry></row>
+		<row><entry>only</entry><entry><para>LDAPパスワードとLDAPサーバに他の
+		      フィールドについても更新を行う。このオプションはいくつかのLDAP
+		      サーバと、LDAPサーバがLDAP_EXOP_X_MODIFY_PASSWDをサポートする
+		      時のみ有効である。</para></entry></row>
 		</tbody>
 		</tgroup>
 		</table>
 
 
-		<para>More information can be found in the &smb.conf; man page.</para>
+		<para>より詳細な情報は &smb.conf; マニュアルページにある。</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Using OpenLDAP Overlay for Password Syncronization</title>
+		<title>パスワード同期のためのOpenLDAPオーバレイの使用</title>
 
 		<para>
-		Howard Chu has written a special overlay called <command>smbk5pwd</command>. This tool  modifies the
-		<literal>SambaNTPassword</literal>, <literal>SambaLMPassword</literal> and <literal>Heimdal</literal>
-		hashes in an OpenLDAP entry when an LDAP_EXOP_X_MODIFY_PASSWD operation is performed.
+		Howard Chuは、<command>smbk5pwd</command>という特別なオーバレイを書いた。
+		このツールは、LDAP_EXOP_X_MODIFY_PASSWD操作が実行される時に、
+		OpenLDAPエントリ中の<literal>SambaNTPassword</literal>,
+		<literal>SambaLMPassword</literal>と<literal>Heimdal</literal>ハッシュを
+		変更する。
 		</para>
 
 		<para>
-		The overlay is shipped with OpenLDAP-2.3 and can be found in the
-		<filename>contrib/slapd-modules/smbk5pwd</filename> subdirectory. This module can also be used with
-		OpenLDAP-2.2.
+		オーバレイはOpenLDAP-2.3に含まれ、
+		<filename>contrib/slapd-modules/smbk5pwd</filename>サブディレクトリ
+		にある。このモジュールはOpenLDAPでも使える。
 		</para>
 
 		</sect3>
@@ -2740,15 +2745,16 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 	<sect2>
-		<title>Users Cannot Logon</title>
+		<title>ユーザがログオンできない</title>
 
-		<para><quote>I've installed Samba, but now I can't log on with my UNIX account! </quote></para>
+		<para><quote>Sambaをインストールしたが、UNIXアカウントを使ってログオンできない!</quote></para>
 
-		<para>Make sure your user has been added to the current Samba <smbconfoption name="passdb backend"/>.
-		Read the <link linkend="acctmgmttools">Account Management Tools,</link> for details.</para>
+		<para>現在の<smbconfoption name="passdb backend"/>にユーザが追加されて
+		  いるかを確認すること。詳細は
+		<link linkend="acctmgmttools">アカウント管理ツール</link>を読むこと。</para>
 
 	</sect2>
 
