@@ -2609,25 +2609,27 @@ access to attrs=SambaLMPassword,SambaNTPassword
 <indexterm><primary>sambaSamAccount</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>smbHome</primary></indexterm>
-			These attributes are only stored with the sambaSamAccount entry if
-			the values are non-default values. For example, assume MORIA has now been
-			configured as a PDC and that <smbconfoption name="logon home">\\%L\%u</smbconfoption> was defined in
-			its &smb.conf; file. When a user named <quote>becky</quote> logs on to the domain,
-			the <smbconfoption name="logon home"/> string is expanded to \\MORIA\becky.
-			If the smbHome attribute exists in the entry <quote>uid=becky,ou=People,dc=samba,dc=org</quote>,
-			this value is used. However, if this attribute does not exist, then the value
-			of the <smbconfoption name="logon home"/> parameter is used in its place. Samba
-			will only write the attribute value to the directory entry if the value is
-			something other than the default (e.g., <filename>\\MOBY\becky</filename>).
+			これらの属性は、値が既定値でない場合にのみsambaSamAccountに
+			格納される。例えば、MORIAがPDCとして設定され、その&smb.conf;
+			ファイル中で<smbconfoption name="logon home">\\%L\%u</smbconfoption>
+			が定義されているとする。<quote>becky</quote>という名前のユーザが
+			がドメインにログオンした時には<smbconfoption name="logon home"/>
+			文字列は\\MORIA\beckyに展開される。もしも、smbHome属性が
+			<quote>uid=becky,ou=People,dc=samba,dc=org</quote>エントリ中に
+			存在するならば、この値が使われる。しかし、もしもこの属性が存在
+			しない場合、<smbconfoption name="logon home"/>パラメータの値が
+			その場所に使われる。Sambaは、値が既定値以外の何かである場合
+			(例えば<filename>\\MOBY\becky</filename>)にのみ、属性値を
+			ディレクトリエントリに書き込む。
 			</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Example LDIF Entries for a sambaSamAccount</title>
+		<title>sambaSamAccountのLDIFエントリの例</title>
 
 			<para>
-			The following is a working LDIF that demonstrates the use of the SambaSamAccount ObjectClass:
+			以下は、SambaSamAccountオブジェクトクラスの、動作するLDIFの使用例である。
 <programlisting>
 dn: uid=guest2, ou=People,dc=quenya,dc=org
 sambaLMPassword: 878D8014606CDA29677A44EFA1353FC7
@@ -2647,8 +2649,8 @@ sambaPwdCanChange: 0
 			</para>
 
 			<para>
-			The following is an LDIF entry for using both the sambaSamAccount and
-			posixAccount ObjectClasses:
+			以下はsambaSamAccountとposixAccountオブジェクトクラスに対するLDIF
+			エントリである:
 <programlisting>
 dn: uid=gcarter, ou=People,dc=quenya,dc=org
 sambaLogonTime: 0
@@ -2678,7 +2680,7 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 		</sect3>
 
 		<sect3>
-		<title>Password Synchronization</title>
+		<title>パスワードの同期</title>
 
 		<para>
 		Samba-3 and later can update the non-Samba (LDAP) password stored with an account. When
