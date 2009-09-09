@@ -2452,23 +2452,23 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 <indexterm><primary>LDAPS</primary></indexterm>
 <indexterm><primary>StartTLS</primary></indexterm>
 <indexterm><primary>LDAPv3</primary></indexterm>
-			Note that the LDAPS protocol is deprecated in favor of the LDAPv3 StartTLS
-			extended operation. However, the OpenLDAP library still provides support for
-			the older method of securing communication between clients and servers.
+			LDAPプロトコルはLDAPv3 StartTLS拡張オプションを優先して、非推奨
+			であることに注意。しかし、OpenLDAPライブラリは引き続きクライ
+			アントとサーバ間の古い安全な通信方法をサポートする。
 			</para>
 
 			<para>
 <indexterm><primary>harvesting password hashes</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
 <indexterm><primary>slapd.conf</primary></indexterm>
-			The second security precaution is to prevent non-administrative users from
-			harvesting password hashes from the directory. This can be done using the
-			following ACL in <filename>slapd.conf</filename>:
+			次の安全対策は、管理者以外がディレクトリからパスワードハッシュを
+			得ることを防ぐことである。これは<filename>slapd.conf</filename>
+			中に以下のALCを使うことで行える:
 			</para>
 
 <para>
 <programlisting>
-## allow the "ldap admin dn" access, but deny everyone else
+## "ldap admin dn" アクセスは許可するがそれ以外は拒否
 access to attrs=SambaLMPassword,SambaNTPassword
      by dn="cn=Samba Admin,ou=People,dc=quenya,dc=org" write
      by * none
@@ -2478,34 +2478,34 @@ access to attrs=SambaLMPassword,SambaNTPassword
 		</sect3>
 
 		<sect3>
-		<title>LDAP Special Attributes for sambaSamAccounts</title>
+		<title>sambaSamAccountsのための特別なLDAP属性</title>
 
-			<para> The sambaSamAccount ObjectClass is composed of the attributes shown in next tables: <link
-			linkend="attribobjclPartA">Part A</link>, and <link linkend="attribobjclPartB">Part B</link>.
+			<para>sambaSamAccountオブジェクトクラスは以下の表にあるような属性の集合である:
+			  <link	linkend="attribobjclPartA">Part A</link>と<link linkend="attribobjclPartB">Part B</link>。
 			</para>
 
 			<table frame="all" id="attribobjclPartA">
-				<title>Attributes in the sambaSamAccount ObjectClass (LDAP), Part A</title>
+				<title>Attributes in the sambaSamAccountのオブジェクトクラス(LDAP), Part A</title>
 			<tgroup cols="2" align="justify">
 					<colspec align="left"/>
 					<colspec align="justify" colwidth="1*"/>
 			<tbody>
-				<row><entry><constant>sambaLMPassword</constant></entry><entry>The LanMan password 16-byte hash stored as a character
-						representation of a hexadecimal string.</entry></row>
-				<row><entry><constant>sambaNTPassword</constant></entry><entry>The NT password 16-byte hash stored as a character
-						representation of a hexadecimal string.</entry></row>
-				<row><entry><constant>sambaPwdLastSet</constant></entry><entry>The integer time in seconds since 1970 when the
-						<constant>sambaLMPassword</constant> and <constant>sambaNTPassword</constant> attributes were last set.
-				</entry></row>
+				<row><entry><constant>sambaLMPassword</constant></entry>
+				     <entry>16進文字列表現で格納されているLanManパスワードの16バイトハッシュ値が格納。</entry></row>
+				<row><entry><constant>sambaNTPassword</constant></entry>
+				     <entry>16進文字列表現でのNTパスワードの16バイトハッシュ値が格納。</entry></row>
+				<row><entry><constant>sambaPwdLastSet</constant></entry>
+				     <entry><constant>sambaLMPassword</constant>と<constant>sambaNTPassword</constant>が
+				       最後に設定された、1970年からの経過秒数(整数値)。</entry></row>
 
-				<row><entry><constant>sambaAcctFlags</constant></entry><entry>String of 11 characters surrounded by square brackets [ ]
-						representing account flags such as U (user), W (workstation), X (no password expiration),
-						I (domain trust account), H (home dir required), S (server trust account),
-						and D (disabled).</entry></row>
+				<row><entry><constant>sambaAcctFlags</constant></entry>
+				     <entry>大カッコ[]で囲まれた11文字の文字列で、U(ユーザ)、W(ワークステーション)、
+				       X(パスワード満了なし)、I(ドメイン信頼アカウント)、H(ホームディレクトリが必要)、
+				       S(サーバ信頼アカウント)とD(無効)のようなアカウントフラグが格納。</entry></row>
 
-				<row><entry><constant>sambaLogonTime</constant></entry><entry>Integer value currently unused.</entry></row>
+				<row><entry><constant>sambaLogonTime</constant></entry><entry>未使用(整数値)。</entry></row>
 
-				<row><entry><constant>sambaLogoffTime</constant></entry><entry>Integer value currently unused.</entry></row>
+				<row><entry><constant>sambaLogoffTime</constant></entry><entry>未使用(整数値)。</entry></row>
 
 				<row><entry><constant>sambaKickoffTime</constant></entry><entry>Specifies the time (UNIX time format) when the user
 				will be locked down and cannot login any longer. If this attribute is omitted, then the account will never expire.
