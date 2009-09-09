@@ -2538,39 +2538,48 @@ access to attrs=SambaLMPassword,SambaNTPassword
 				    &smb.conf;マニュアルページの<smbconfoption name="logon script"/>
 				    パラメータを参照のこと。</entry></row>
 
-				<row><entry><constant>sambaProfilePath</constant></entry><entry>Specifies a path to the user's profile.
-				This value can be a null string, a local absolute path, or a UNC path. Refer to the
-				<smbconfoption name="logon path"/> parameter in the &smb.conf; man page for more information.</entry></row>
+				<row><entry><constant>sambaProfilePath</constant></entry>
+				  <entry>ユーザのプロファイルのパスを指定。この値は空白、ローカル
+				    な絶対パス、あるいはUNPパスが使える。詳細な情報は、&smb.conf;
+				    マニュアルページの<smbconfoption name="logon path"/>パラメータ
+				    を参照のこと。</entry></row>
 
-				<row><entry><constant>sambaHomePath</constant></entry><entry>The sambaHomePath property specifies the path of
-				the home directory for the user. The string can be null. If sambaHomeDrive is set and specifies
-				a drive letter, sambaHomePath should be a UNC path. The path must be a network
-				UNC path of the form <filename>\\server\share\directory</filename>. This value can be a null string.
-				Refer to the <command>logon home</command> parameter in the &smb.conf; man page for more information.
+				<row><entry><constant>sambaHomePath</constant></entry>
+				  <entry>ユーザのホームディレクトリのパスを指定するsambaHomePath
+				    プロパティ。この値は空白でも良い。もしもsambaHomeDriveが
+				    設定され、ドライブ名の場合、sambaHomePathはUNCパスである
+				    必要がある。パスは<filename>\\server\share\directory</filename>
+				    のようなネットワークUNCパスでなければならない。詳細な情報は、
+				    &smb.conf;マニュアルページの<command>logon home</command>
+				    パラメータを参照のこと。
 				</entry></row>
 			</tbody>
 			</tgroup></table>
 
 
 			<table frame="all" id="attribobjclPartB">
-				<title>Attributes in the sambaSamAccount ObjectClass (LDAP), Part B</title>
+				<title>sambaSamAccountオブジェクトクラスの属性, Part B</title>
 			<tgroup cols="2" align="justify">
 					<colspec align="left"/>
 					<colspec align="justify" colwidth="1*"/>
 			<tbody>
-				<row><entry><constant>sambaUserWorkstations</constant></entry><entry>Here you can give a comma-separated list of machines
-				on which the user is allowed to login. You may observe problems when you try to connect to a Samba domain member.
-				Because domain members are not in this list, the domain controllers will reject them. Where this attribute is omitted,
-				the default implies no restrictions.
+				<row><entry><constant>sambaUserWorkstations</constant></entry>
+				  <entry>ユーザのログイン可能な、カンマで分離されたマシンのリスト。
+				    Sambaドメインメンバに接続することを試みる時に問題が発生する
+				    かもしれない。なぜならば、ドメインメンバはこのリストになく、
+				    ドメインコントローラはそれを拒否する。この属性が省略された
+				    場合、既定値は何の制限がないことを仮定する。
 				</entry></row>
 
-				<row><entry><constant>sambaSID</constant></entry><entry>The security identifier(SID) of the user.
-				The Windows equivalent of UNIX UIDs.</entry></row>
+				<row><entry><constant>sambaSID</constant></entry>
+				  <entry>ユーザのセキュリティ識別子(SID)。WindowsにおけるUNIX
+				    UID相当のもの。</entry></row>
 
-				<row><entry><constant>sambaPrimaryGroupSID</constant></entry><entry>The security identifier (SID) of the primary group
-				of the user.</entry></row>
+				<row><entry><constant>sambaPrimaryGroupSID</constant></entry>
+				  <entry>ユーザのプライマリグループのセキュリティ識別子(SID)。</entry></row>
 
-				<row><entry><constant>sambaDomainName</constant></entry><entry>Domain the user is part of.</entry></row>
+				<row><entry><constant>sambaDomainName</constant></entry>
+				  <entry>ユーザが属するドメイン。</entry></row>
 			</tbody>
 			</tgroup></table>
 
@@ -2578,10 +2587,11 @@ access to attrs=SambaLMPassword,SambaNTPassword
 			<para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>sambaSamAccount</primary></indexterm>
-			The majority of these parameters are only used when Samba is acting as a PDC of
-			a domain (refer to <link linkend="samba-pdc">Domain Control</link>, for details on
-			how to configure Samba as a PDC). The following four attributes
-			are only stored with the sambaSamAccount entry if the values are non-default values:
+			これらのパラメータの大多数はSambaがドメイン
+			(どのようにSambaをPDCとして設定するかについての詳細がある
+			<link linkend="samba-pdc">ドメイン制御</link>を参照)として振る舞う
+			時にのみ使われる。以下の4つの属性は、値が既定値でない場合にのみ
+			sambaSamAccountエントリに格納される。
 			</para>
 
 			<itemizedlist>
