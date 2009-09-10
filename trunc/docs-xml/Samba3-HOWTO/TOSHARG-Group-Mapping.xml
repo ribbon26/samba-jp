@@ -18,37 +18,39 @@
 <indexterm><primary>UNIXグループ</primary></indexterm>
 <indexterm><primary>groupmap</primary></indexterm>
 <indexterm><primary>net</primary></indexterm>
-	Starting with Samba-3, new group mapping functionality is available to create associations
-	between Windows group SIDs and UNIX group GIDs. The <command>groupmap</command> subcommand
-	included with the &net; tool can be used to manage these associations.
+	Samba-3からWindowsのグループSIDとUNIXのグループを関連づける新しいグループ
+	マッピング機能が利用できる。&net;ツールに含まれる。<command>groupmap</command>
+	サブコマンドを、 関連づけの管理に使用する。
 	</para>
 
 	<para>
-<indexterm><primary>group mapping</primary></indexterm>
-<indexterm><primary>domain groups</primary></indexterm>
-	The new facility for mapping NT groups to UNIX system groups allows the administrator to decide
-	which NT domain groups are to be exposed to MS Windows clients. Only those NT groups that map
-	to a UNIX group that has a value other than the default (<constant>-1</constant>) will be exposed
-	in group selection lists in tools that access domain users and groups.
+<indexterm><primary>グループマッピング</primary></indexterm>
+<indexterm><primary>ドメイングループ</primary></indexterm>
+	NTのグループとUNIXのシステムグループをマッピングするこの新しい機能では、
+	管理者が、どのNTドメイングループをMicrosoft Windowsクライアントに公開するか
+	を決定することができる。既定値(<constant>-1</constant>)以外の値を持つ
+	UNIXのグループにマッピングするNT のグループのみが、ドメインユーザ及び
+	グループにアクセスするツールのグループ選択リストに含まれる。
 	</para>
 
 	<warning>
 	<para>
 	<indexterm><primary>domain admin group</primary></indexterm>
 <indexterm><primary>Windows group</primary></indexterm>
-	The <parameter>domain admin group</parameter> parameter has been removed in Samba-3 and should no longer
-	be specified in &smb.conf;. In Samba-2.2.x, this parameter was used to give the listed users membership in the
-	<constant>Domain Admins</constant> Windows group, which gave local admin rights on their workstations
-	(in default configurations).
+	Samba-3では<parameter>domain admin group</parameter>パラメータが削除されたので、
+	&smb.conf;中にもはや指定してはならない。Samba-2.2.x中では、このパラメータは
+	このパラメータは、一覧表示されたユーザに、 ワークステーション上でローカル管理
+	権限を与える<constant>Domain Admins</constant>Windowsグループのメンバーシップを
+	付与するのに使用されていた(既定値の設定では)。
 	</para>
 	</warning>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 	<para>
-	Samba allows the administrator to create MS Windows NT4/200x group accounts and to
-	arbitrarily associate them with UNIX/Linux group accounts.
+	Sambaでは、管理者がMicrosoft Windows NT4/200x グループアカウントを作成し、それらを
+	任意にUNIX/Linuxのグループアカウントと関連づけることができる。
 	</para>
 
 	<para>
@@ -58,23 +60,23 @@
 <indexterm><primary>MMC</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>ID range</primary></indexterm>
-<indexterm><primary>group accounts</primary></indexterm>
-	Group accounts can be managed using the MS Windows NT4 or MS Windows 200x/XP Professional MMC tools.
-	Appropriate interface scripts should be provided in &smb.conf; if it is desired that UNIX/Linux system
-	accounts should be automatically created when these tools are used. In the absence of these scripts, and
-	so long as <command>winbindd</command> is running, Samba group accounts that are created using these
-	tools will be allocated UNIX UIDs and GIDs from the ID range specified by the
-	<smbconfoption name="idmap uid"/>/<smbconfoption name="idmap gid"/>
-	parameters in the &smb.conf; file.
+<indexterm><primary>グループアカウント</primary></indexterm>
+	グループアカウントは、Microsoft Windows NT4またはMicrosoft Windows 200x/XP Professional
+	のMMCツールを使用して管理することができる。これらのツールを使って自動的にUNIX/Linux
+	のシステムアカウントを作成するには、適切なスクリプトを&smb.conf;で提供する必要が
+	ある。それらのスクリプトが無い場合、<command>winbindd</command>が動作している
+	限りは、これらのツールを使って作成されたSambaグループアカウントは&smb.conf;
+	ファイル中の<smbconfoption name="idmap uid"/>/<smbconfoption name="idmap gid"/>
+	パラメータで指定されているID範囲内でUNIX UID/GIDを割り当てられる。
 	</para>
 
 	<figure id="idmap-sid2gid">
-		<title>IDMAP: Group SID-to-GID Resolution.</title>
+		<title>IDMAP: グループSIDからGIDへの解決</title>
 		<imagefile scale="50">idmap-sid2gid</imagefile>
 	</figure>
 
 	<figure id="idmap-gid2sid">
-		<title>IDMAP: GID Resolution to Matching SID.</title>
+		<title>IDMAP: GIDから対応するSIDへの解決</title>
 	<imagefile scale="50">idmap-gid2sid</imagefile>
 	</figure>
 
@@ -83,30 +85,31 @@
 <indexterm><primary>SID-to-GID</primary></indexterm>
 <indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
 <indexterm><primary>group mappings</primary></indexterm>
-	In both cases, when winbindd is not running, only locally resolvable groups can be recognized. Please refer to
-	<link linkend="idmap-sid2gid">IDMAP: Group SID-to-GID Resolution</link> and <link
-	linkend="idmap-gid2sid">IDMAP: GID Resolution to Matching SID</link>.  The <command>net groupmap</command> is
-	used to establish UNIX group to NT SID mappings as shown in <link linkend="idmap-store-gid2sid">IDMAP: storing
-	group mappings</link>.
+	どちらのケースでもwinbinddが動作していない場合は、ローカルで解決可能なグループ
+	のみが認識される。<link linkend="idmap-sid2gid">IDMAP: グループSIDからGIDへの解決</link>
+	と<link linkend="idmap-gid2sid">IDMAP: GIDから対応するSIDへの解決</link>を
+	参照のこと。<link linkend="idmap-store-gid2sid">IDMAPのグループマッピングの保存</link>
+	で示すように、<command>net groupmap</command>が、NTのSIDに対応するUNIXグループの
+	作成に使用される。
 	</para>
 
 	<figure id="idmap-store-gid2sid">
-		<title>IDMAP Storing Group Mappings.</title>
+		<title>IDMAPのグループマッピングの保存</title>
 		<imagefile scale="50">idmap-store-gid2sid</imagefile>
 	</figure>
 
 	<para>
 	<indexterm><primary>groupadd</primary></indexterm>
 	<indexterm><primary>groupdel</primary></indexterm>
-<indexterm><primary>shadow utilities</primary></indexterm>
+<indexterm><primary>shadowユーティリティ</primary></indexterm>
 <indexterm><primary>groupmod</primary></indexterm>
-	Administrators should be aware that where &smb.conf; group interface scripts make
-	direct calls to the UNIX/Linux system tools (the shadow utilities, <command>groupadd</command>,
-	<command>groupdel</command>, and <command>groupmod</command>), the resulting UNIX/Linux group names will be subject
-	to any limits imposed by these tools. If the tool does not allow uppercase characters
-	or space characters, then the creation of an MS Windows NT4/200x-style group of
-	<literal>Engineering Managers</literal> will attempt to create an identically named
-	UNIX/Linux group, an attempt that will of course fail.
+	&smb.conf;のグループインタフェーススクリプトが、直接UNIX/Linuxシステムツール
+	(shadowユーティリティ,<command>groupadd</command>,<command>groupdel</command>と
+	<command>groupmod</command>)を呼び出した場合、UNIX/Linuxグループ名は、これらの
+	ツールが課す制約を受けることを、管理者は知っていなければならない。もし、
+	ツールが、大文字や空白文字を認めない場合、Microsoft Windows NT4/200x風の
+	<literal>Engineering Managers</literal>というグループの作成は、同名のUNIX/Linux
+	グループの作成が試みられることになるが、それはもちろん失敗する。
 	</para>
 
 	<para>
