@@ -313,24 +313,34 @@
 <indexterm><primary>ローカルグループ</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
 <indexterm><primary>不明なアカウント</primary></indexterm>
-	Unraveling the file ownership mess is an unenviable administrative task that can be avoided simply
-	by using local groups to control all file and directory access control. In this case, only the members
-	of the local groups will have been lost. The files and directories in the storage subsystem will still
-	be owned by the local groups. The same goes for all ACLs on them. It is administratively much simpler
-	to delete the <constant>Account Unknown</constant> membership entries inside local groups with appropriate
-	entries for domain global groups in the new domain that the server has been made a member of.
+	ファイル所有権の混乱を解決することは、すべてのファイルとディレクトリアクセス
+	制御をコントロールするためにローカルグループを用いて簡単に避けられることが
+	できる面白くない管理業務である。この場合、ローカルグループのメンバのみが
+	失われる。記憶サブシステム中のファイルとディレクトリは引き続きローカル
+	グループによって所有される。同じことはそれらに対するすべてのACLについても
+	存在する。サーバがメンバとなった新しいドメイン中のドメイングローバルグループ
+	のための適当なエントリをもつローカルグループ内の
+	<constant>不明なアカウント</constant>メンバシップエントリを削除するのは
+	管理的により簡単である。
 	</para>
 
 	<para>
-<indexterm><primary>nested groups</primary></indexterm>
+<indexterm><primary>ネストされたグループ</primary></indexterm>
 <indexterm><primary>administrative privileges</primary></indexterm>
-<indexterm><primary>domain member workstations</primary></indexterm>
-<indexterm><primary>domain member servers</primary></indexterm>
-<indexterm><primary>member machine</primary></indexterm>
-<indexterm><primary>full rights</primary></indexterm>
+<indexterm><primary>ドメインメンバのワークステーション</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+<indexterm><primary>メンバマシン</primary></indexterm>
+<indexterm><primary>完全な権限</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
 <indexterm><primary>local administrative privileges</primary></indexterm>
-	Another prominent example of the use of nested groups involves implementation of administrative privileges
+	ネストされたグループを使用する、もう一つの突出した例は、ドメインメンバワーク
+	ステーションとサーバーで管理特権の実装を伴う。管理特権は各ドメインメンバマシンの
+	ビルトイン<constant>Administrators</constant>ローカルグループのすべてのメンバに
+	与えられる。すべてのdomain administratorsがメンバサーバまたはワークステーション
+	に対してとドメインの参加に対して完全な権限を持つようにするには、
+	<constant>Domain Admins</constant>グループをローカルのAdministratorsグループに
+	追加する。
+Another prominent example of the use of nested groups involves implementation of administrative privileges
 	on domain member workstations and servers. Administrative privileges are given to all members of the
 	built-in local group <constant>Administrators</constant> on each domain member machine. To ensure that all domain
 	administrators have full rights on the member server or workstation, on joining the domain, the
