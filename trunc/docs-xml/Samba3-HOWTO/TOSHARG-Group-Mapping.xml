@@ -339,27 +339,22 @@
 	与えられる。すべてのdomain administratorsがメンバサーバまたはワークステーション
 	に対してとドメインの参加に対して完全な権限を持つようにするには、
 	<constant>Domain Admins</constant>グループをローカルのAdministratorsグループに
-	追加する。
-Another prominent example of the use of nested groups involves implementation of administrative privileges
-	on domain member workstations and servers. Administrative privileges are given to all members of the
-	built-in local group <constant>Administrators</constant> on each domain member machine. To ensure that all domain
-	administrators have full rights on the member server or workstation, on joining the domain, the
-	<constant>Domain Admins</constant> group is added to the local Administrators group. Thus everyone who is
-	logged into the domain as a member of the Domain Admins group is also granted local administrative
-	privileges on each domain member.
+	追加する。そのため、Domain Adminsグループのメンバとしてドメインにログオンする
+	誰もが、各ドメインメンバ上のローカル管理特権をも持つ。
 	</para>
 
 	<para>
-<indexterm><primary>nested groups</primary></indexterm>
+<indexterm><primary>ネストされたグループ</primary></indexterm>
 <indexterm><primary>auxiliary members</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
 <indexterm><primary>winbind</primary></indexterm>
-	UNIX/Linux has no concept of support for nested groups, and thus Samba has for a long time not supported
-	them either. The problem is that you would have to enter UNIX groups as auxiliary members of a group in
-	<filename>/etc/group</filename>. This does not work because it was not a design requirement at the time
-	the UNIX file system security model was implemented. Since Samba-2.2, the winbind daemon can provide
-	<filename>/etc/group</filename> entries on demand by obtaining user and group information from the domain
-	controller that the Samba server is a member of.
+	UNIX/Linuxはネストされたグループという概念を持たないので、Sambaは長い間それを
+	サポートしてこなかった。問題は、<filename>/etc/group</filename>中の追加グループ
+	のメンバとしてUNIXグループを入力しなければならないことである。これは、今実装
+	されているUNIXファイルシステムセキュリティモデルのデザインの要求でないために
+	動作しない。Samba-2.2以降、winbindは、メンバであるSambaサーバのドメイン
+	コントローラからのユーザとグループ情報をオンデマンドで
+	<filename>/etc/group</filename>に提供出来る。
 	</para>
 
 	<para>
@@ -368,38 +363,43 @@ Another prominent example of the use of nested groups involves implementation of
 <indexterm><primary>local groups</primary></indexterm>
 <indexterm><primary>Domain Users</primary></indexterm>
 <indexterm><primary>alias group</primary></indexterm>
-	In effect, Samba supplements the <filename>/etc/group</filename> data via the dynamic
-	<command>libnss_winbind</command> mechanism. Beginning with Samba-3.0.3, this facility is used to provide
-	local groups in the same manner as Windows. It works by expanding the local groups on the
-	fly as they are accessed. For example, the <constant>Domain Users</constant> group of the domain is made
-	a member of the local group <constant>demo</constant>. Whenever Samba needs to resolve membership of the
-	<constant>demo</constant> local (alias) group, winbind asks the domain controller for demo members of the Domain Users
-	group. By definition, it can only contain user objects, which can then be faked to be member of the
-	UNIX/Linux group <constant>demo</constant>.
+	実際、Sambaは動的な<command>libnss_winbind</command>メカニズム経由で
+	<filename>/etc/group</filename>データを補完する。Samba-3.0.3から、この機能は
+	Windowsが行うのと同じ方式でローカルグループを提供するために使われる。これは、
+	アクセス時にその場でローカルグループに展開されることによって動作する。たとえば、
+	ドメインの<constant>Domain Users</constant>グループがローカルグループ
+	<constant>demo</constant>のメンバになるというようなことである。Sambaが
+	ローカル(alias)グループ<constant>demo</constant>のメンバであることを解決する
+	必要がある時はいつも、winbindはDomain Usersグループのdemoメンバーについて
+	ドメインコントローラに問い合わせる。定義によって、UNIX/Linuxグループ
+	<constant>demo</constant>のメンバであるように見せかけることが出来る、ユーザ
+	オブジェクトのみを含むことが出来る。
 	</para>
 
 	<para>
-<indexterm><primary>nested groups</primary></indexterm>
+<indexterm><primary>ネストされたグループ</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
 <indexterm><primary>winbind</primary></indexterm>
-<indexterm><primary>local groups</primary></indexterm>
-<indexterm><primary>Domain User Manager</primary></indexterm>
+<indexterm><primary>ローカルグループ</primary></indexterm>
+<indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group</tertiary></indexterm>
-	To enable the use of nested groups, <command>winbindd</command> must be used with NSS winbind.
-	Creation and administration of the local groups is done best via the Windows Domain User Manager or its
-	Samba equivalent, the utility <command>net rpc group</command>. Creating the local group
-	<constant>demo</constant> is achieved by executing:
+	ネストされたグループを有効にするために、<command>winbindd</command>はNSS winbind
+	と一緒に使わなければならない。ローカルグループの作成と管理はWindowsのドメイン
+	ユーザマネージャかそれのSambaでの相当品、<command>net rpc group</command>
+	ユーティリティ経由が最適である。ローカルグループ<constant>demo</constant>
+	の作成は以下のように行う:
 	<screen>
 	&rootprompt; net rpc group add demo -L -Uroot%not24get
 	</screen>
 <indexterm><primary>addmem</primary></indexterm>
 <indexterm><primary>delmem</primary></indexterm>
-	Here the -L switch means that you want to create a local group. It may be necessary to add -S and -U
-	switches for accessing the correct host with appropriate user or root privileges. Adding and removing
-	group members can be done via the <constant>addmem</constant> and <constant>delmem</constant> subcommands of
-	<command>net rpc group</command> command. For example, addition of <quote>DOM\Domain Users</quote> to the
-	local group <constant>demo</constant> is done by executing:
+	ここで、-Lスイッチはローカルグループ作成を意味する。適切なユーザかルート権限で
+	正しいホストにアクセスするために、-Sと-Uスイッチの追加が必要かもしれない。
+	グループメンバの追加と削除は<command>net rpc group</command>コマンドの
+	<constant>addmem</constant>と<constant>delmem</constant>サブコマンド経由で
+	行える。たとえば、ローカルグループ<constant>demo</constant>に
+	<quote>DOM\Domain Users</quote>を追加するのは以下のように行う:
 	<screen>
 	net rpc group addmem demo "DOM\Domain Users"
 	</screen>
