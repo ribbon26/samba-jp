@@ -214,104 +214,105 @@
 
 	<para>
 	<indexterm><primary>groups</primary><secondary>domain</secondary></indexterm>
-	It is possible to map any arbitrary UNIX group to any Windows NT4/200x group as well as
-	to make any UNIX group a Windows domain group. For example, if you wanted to include a
-	UNIX group (e.g., acct) in an ACL on a local file or printer on a Domain Member machine,
-	you would flag that group as a domain group by running the following on the Samba PDC:
+	任意のUNIXグループを任意のWindows NT4/200xグループにマッピングしたり、UNIX
+	グループをWindowsドメイングループにすることが可能である。例えば、あるUNIXグループ
+	(例: acct)をドメインメンバマシンのローカルファイルやプリンターのACLに含めたい場合、
+	以下のコマンドをSamba PDC上で実行して、そのグループをドメイングループにする:
 	</para>
 
 	<para>
 <screen>
 &rootprompt;<userinput>net groupmap add rid=1000 ntgroup="Accounting" unixgroup=acct type=d</userinput>
 </screen>
-	The <literal>ntgroup</literal> value must be in quotes if it contains space characters to prevent
-	the space from being interpreted as a command delimiter.
+	<literal>ntgroup</literal>の値は、コマンドのデリミタとして解釈されてしまうことを
+	防ぐために、空白が入っている場合には引用符で囲まなければならない。
 	</para>
 
 	<para>
 <indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>assigned RID</primary></indexterm>
-	Be aware that the RID parameter is an unsigned 32-bit integer that should
-	normally start at 1000. However, this RID must not overlap with any RID assigned
-	to a user. Verification for this is done differently depending on the passdb backend
-	you are using. Future versions of the tools may perform the verification automatically,
-	but for now the burden is on you.
+	RIDパラメーターは通常1000から始まる符号なしの32ビット整数である。しかし、このRIDは
+	ユーザーに割り当てられるRIDと重複してはならない。これを検証する方法は、使用して
+	いるpassdbバックエンドによって異なる。このツールの今後のバージョンでは自動検証が
+	可能になるかもしれまないが、現行では、使用者が自分でやらなければならない。
 	</para>
 
 	<sect2>
-	<title>Warning: User Private Group Problems</title>
+	<title>警告:ユーザ固有のグループ問題</title>
 
 	<para>
 <indexterm><primary>group accounts</primary></indexterm>
 <indexterm><primary>Red Hat Linux</primary></indexterm>
 <indexterm><primary>private groups</primary></indexterm>
-	Windows does not permit user and group accounts to have the same name.
-	This has serious implications for all sites that use private group accounts.
-	A private group account is an administrative practice whereby users are each
-	given their own group account. Red Hat Linux, as well as several free distributions
-	of Linux, by default create private groups.
+	Windowsは同じ名前のユーザとグループアカウントを許可しない。これは、プライベート
+	グループを使っているすべてのサイトに重大な影響がある。プライベートグループ
+	アカウントは、ユーザがおのおの固有のグループアカウントを持つという管理上の
+	設定である。Red Hat Linuxやいくつかの自由なLinuxディストリビューションでは、
+	既定値でプライベートグループを作成する。
 	</para>
 
 	<para>
 <indexterm><primary>UNIX/Linux group</primary></indexterm>
 <indexterm><primary>Windows group</primary></indexterm>
-	When mapping a UNIX/Linux group to a Windows group account, all conflict can
-	be avoided by assuring that the Windows domain group name does not overlap
-	with any user account name.
+	UNIX/LinuxグループアカウントがWindowsグループアカウントにマップされた場合、
+	すべての競合は、任意のユーザアカウント名にWindowsドメイングループ名が
+	オーバラップしないことを保証することで防げる。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Nested Groups: Adding Windows Domain Groups to Windows Local Groups</title>
+	<title>ネストされたグループ: WindowsドメイングループをWindowsローカルグループに追加</title>
 
 	<indexterm><primary>groups</primary><secondary>nested</secondary></indexterm>
 
 	<para>
-<indexterm><primary>nested groups</primary></indexterm>
-	This functionality is known as <constant>nested groups</constant> and was first added to
-	Samba-3.0.3.
+<indexterm><primary>nested groups</primary></
+	<constant>nested groups</constant>として知られているこの機能は、Samba-3.0.3
+	で初めて追加された。
 	</para>
 
 	<para>
 <indexterm><primary>nested groups</primary></indexterm>
-	All MS Windows products since the release of Windows NT 3.10 support the use of nested groups.
-	Many Windows network administrators depend on this capability because it greatly simplifies security
-	administration.
+	Windows NT 3.10リリース以降のすべてのMicrosoft Windows製品は、ネストされた
+	グループをサポートしている。セキュリティ管理をとても簡単にするので、多くの
+	Windowsネットワーク管理者はこの機能に依存している。
 	</para>
 
 	<para>
 <indexterm><primary>nested group</primary></indexterm>
-<indexterm><primary>group membership</primary></indexterm>
-<indexterm><primary>domain security</primary></indexterm>
-<indexterm><primary>domain member server</primary></indexterm>
-<indexterm><primary>local groups</primary></indexterm>
-<indexterm><primary>domain global groups</primary></indexterm>
-<indexterm><primary>domain global users</primary></indexterm>
-	The nested group architecture was designed with the premise that day-to-day user and group membership
-	management should be performed on the domain security database. The application of group security
-	should be implemented on domain member servers using only local groups. On the domain member server,
-	all file system security controls are then limited to use of the local groups, which will contain
-	domain global groups and domain global users.
+<indexterm><primary>グループメンバシップ</primary></indexterm>
+<indexterm><primary>ドメインセキュリティ</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+<indexterm><primary>ローカルグループ</primary></indexterm>
+<indexterm><primary>ドメイングローバルグループ</primary></indexterm>
+<indexterm><primary>ドメイングローバルユーザ</primary></indexterm>
+	ネストされたグループアーキテクチャは、日々のユーザとグループメンバ管理をドメイン
+	セキュリティデータベース上で実行されるべきという理由でデザインされた。グループ
+	セキュリティの応用は、ローカルグループのみを使うドメインメンバサーバ上で実装
+	されるべきである。ドメインメンバサーバ上で、すべてのファイルシステムセキュリティ
+	制御は、ドメイングローバルグループとドメイングローバルユーザを含むローカル
+	グループの使用を制限する。
 	</para>
 
 	<para>
 <indexterm><primary>individual domain user</primary></indexterm>
 <indexterm><primary>domain group settings</primary></indexterm>
-<indexterm><primary>Account Unknown</primary></indexterm>
-	You may ask, What are the benefits of this arrangement? The answer is obvious to those who have plumbed
-	the dark depths of Windows networking architecture. Consider for a moment a server on which are stored
-	200,000 files, each with individual domain user and domain group settings. The company that owns the
-	file server is bought by another company, resulting in the server being moved to another location, and then
-	it is made a member of a different domain. Who would you think now owns all the files and directories?
-	Answer: Account Unknown.
+<indexterm><primary>不明なアカウント</primary></indexterm>
+	この取り決めの利便性は何か、という疑問があるかもしれない。Windowsネットワーク
+	アーキテクチャの深い闇を知っている人にとって、答えは明確である。20万ものファイル
+	があり、各ファイルは個別のドメインユーザとドメイングループに設定されているサーバ
+	について考えてみよう。ファイルサーバを持つ会社が別の会社を買い、その結果、サーバ
+	を別の場所に移動し、別のドメインのメンバにするとする。誰がすべてのファイルと
+	ディスクを所有すると思うか?
+	答えは「不明なアカウント」である。
 	</para>
 
 	<para>
-<indexterm><primary>directory access control</primary></indexterm>
-<indexterm><primary>local groups</primary></indexterm>
+<indexterm><primary>ディスクアクセス制御</primary></indexterm>
+<indexterm><primary>ローカルグループ</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
-<indexterm><primary>Account Unknown</primary></indexterm>
+<indexterm><primary>不明なアカウント</primary></indexterm>
 	Unraveling the file ownership mess is an unenviable administrative task that can be avoided simply
 	by using local groups to control all file and directory access control. In this case, only the members
 	of the local groups will have been lost. The files and directories in the storage subsystem will still
