@@ -115,69 +115,74 @@
 	<para>
 	<indexterm><primary>GID</primary></indexterm>
 	<indexterm><primary>SID</primary></indexterm>
-	There are several possible workarounds for the operating system tools limitation. One
-	method is to use a script that generates a name for the UNIX/Linux system group that
-	fits the operating system limits and that then just passes the UNIX/Linux group ID (GID)
-	back to the calling Samba interface. This will provide a dynamic workaround solution.
+	このOSツールの制約に対しては幾つかの回避策がある。一つはOSの制約に合うUNIX/Linux
+	システムグループ名を作成し、Sambaインターフェースの呼び出しには、UNIX/Linuxの
+	グループID(GID)を返すようなスクリプトを使う方法である。これは、動的な回避策である。
 	</para>
 
 	<para>
 <indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
-	Another workaround is to manually create a UNIX/Linux group, then manually create the
-	MS Windows NT4/200x group on the Samba server, and then use the <command>net groupmap</command>
-	tool to connect the two to each other.
+	もう一つの回避策は、手動でUNIX/Linuxグループを作成し、次に手動でSamba サーバに
+	Microsoft Windows NT4/200xグループを作成し、そして<command>net groupmap</command>
+	ツールを使ってこの2つを互いに関連付けることである。
 	</para>
 
 </sect1>
 
 <sect1>
-<title>Discussion</title>
+<title>議論</title>
 
 	<para>
 <indexterm><primary>Windows NT4/200x</primary></indexterm>
-<indexterm><primary>group privileges</primary></indexterm>
-	When you install <application>MS Windows NT4/200x</application> on a computer, the installation
-	program creates default users and groups, notably the <constant>Administrators</constant> group,
-	and gives that group privileges necessary to perform essential system tasks,
-	such as the ability to change the date and time or to kill (or close) any process running on the
-	local machine.
+<indexterm><primary>グループ権限</primary></indexterm>
+	コンピュータに<application>Microsoft Windows NT4/200x</application>をインストール
+	するとき、インストールプログラムは既定値のユーザとグループを作成し、特に、
+	<constant>Administrators</constant>グループの場合は、必須のシステムタスクを実行
+	するのに必要な権限をグループに付与する。例えば、ローカルマシンの日付や時間を変更
+	したり、ローカルマシン上の実行中のプロセスを止める(又は閉じる)ような権限である。
 	</para>
 	
 	<para>
 	<indexterm><primary>Administrator</primary></indexterm>
-	The <constant>Administrator</constant> user is a member of the <constant>Administrators</constant> group, and thus inherits
-	<constant>Administrators</constant> group privileges. If a <constant>joe</constant> user is created to be a member of the
-	<constant>Administrators</constant> group, <constant>joe</constant> has exactly the same rights as the user
-	<constant>Administrator</constant>.
+	<constant>Administrator</constant>ユーザは<constant>Administrators</constant>
+	グループのメンバで、そのため、<constant>Administrators</constant>グループの
+	権限を引き継ぐ。もし、<constant>joe</constant>というユーザが
+	<constant>Administrators</constant>グループのメンバとして作成された場合、
+	<constant>joe</constant>は<constant>Administrator</constant>というユーザと
+	全く同じ権限を持つ。
 	</para>
 
 	<para>
-<indexterm><primary>domain member</primary></indexterm>
+<indexterm><primary>ドメインメンバ</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
-<indexterm><primary>inherits rights</primary></indexterm>
+<indexterm><primary>権限の継承</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-	When an MS Windows NT4/200x/XP machine is made a domain member, the <quote>Domain Admins</quote> group of the
-	PDC is added to the local <constant>Administrators</constant> group of the workstation. Every member of the
-	<constant>Domain Admins</constant> group inherits the rights of the local <constant>Administrators</constant> group when
-	logging on the workstation.
+	Microsoft Windows NT4/200x/XPマシンがドメインメンバになる場合、
+	PDCの<quote>Domain Admins</quote>グループは、ワークステーションのローカル
+	<constant>Administrators</constant>グループに追加される。
+	<constant>Domain Admins</constant>グループのいずれのメンバもワークステーション
+	にログオンすると、ローカルの<constant>Administrators</constant>グループの
+	権限を継承する。
 	</para>
 
 	<para>
 <indexterm><primary>Domain Admins</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-	The following steps describe how to make Samba PDC users members of the <constant>Domain Admins</constant> group.
+	以下のステップは、Samba PDCユーザを<constant>Domain Admins</constant>グループの
+	メンバにする方法を説明する。
 	</para>
 
 	<orderedlist>
 		<listitem><para>
-		Create a UNIX group (usually in <filename>/etc/group</filename>); let's call it <constant>domadm</constant>.
+		<constant>domadm</constant>と呼ばれるUNIXグループを作成(通常<filename>/etc/group</filename>の中に)。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>/etc/group</primary></indexterm>
-		Add to this group the users that must be <quote>Administrators</quote>. For example,
-		if you want <constant>joe, john</constant>, and <constant>mary</constant> to be administrators,
-		your entry in <filename>/etc/group</filename> will look like this:
+		このグループに<quote>Administrators</quote>にならなければならないユーザを
+		追加。たとえば、<constant>joe, john</constant>と<constant>mary</constant>
+		administratorsにしたいならば、<filename>/etc/group</filename>のエントリは
+		下記のようになる:
 		</para>
 
 		<para><programlisting>
@@ -186,7 +191,8 @@
 		</para></listitem>
 
 		<listitem><para>
-		Map this domadm group to the <quote>Domain Admins</quote> group by executing the command:
+		以下のコマンドを実行して、<quote>Domain Admins</quote>グループをdomadm
+		グループにマップする:
 		</para>
 
 		<para>
@@ -197,13 +203,13 @@
 		
 		<para>
 		<indexterm><primary>Domain Admins group</primary></indexterm>
-		The quotes around <quote>Domain Admins</quote> are necessary due to the space in the group name.
-		Also make sure to leave no white space surrounding the equal character (=).
+		<quote>Domain Admins</quote>の両側の引用符は、グループ名に空白があるために
+		必要である。また、イコール記号(=)の前後に空白を入れないこと。
 		</para></listitem>
 	</orderedlist>
 
 	<para>
-	Now <constant>joe, john</constant>, and <constant>mary</constant> are domain administrators.
+	これで<constant>joe, john</constant>と<constant>mary</constant>はdomain administratorsになった。
 	</para>
 
 	<para>
