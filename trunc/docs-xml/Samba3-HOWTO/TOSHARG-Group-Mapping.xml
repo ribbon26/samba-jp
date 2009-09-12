@@ -407,67 +407,71 @@
 <indexterm><primary>trusted domain</primary></indexterm>
 <indexterm><primary>foreign domain</primary></indexterm>
 <indexterm><primary>local access permissions</primary></indexterm>
-	Having completed these two steps, the execution of <command>getent group demo</command> will show demo
-	members of the global <constant>Domain Users</constant> group as members of  the group
-	<constant>demo</constant>.  This also works with any local or domain user. In case the domain DOM trusts
-	another domain, it is also possible to add global users and groups of the trusted domain as members of
-	<constant>demo</constant>. The users from the foreign domain who are members of the group that has been
-	added to the <constant>demo</constant> group now have the same local access permissions as local domain
-	users have. 
+	これら2つのステップを完了し、<command>getent group demo</command>を実行すると、
+	グループ<constant>demo</constant>のメンバとしてグローバルな
+	<constant>Domain Users</constant>グループのメンバとしてdemoを表示する。
+	これはまた、任意のローカルまたはドメインユーザでも動作する。ドメインDOMが
+	他のドメインを信頼している場合、信頼されたドメインに、
+	<constant>demo</constant>のメンバとしてグローバルユーザとグループを追加すること
+	も可能である。<constant>demo</constant>グループに追加されたグループのメンバで
+	ある他のドメインからのユーザはローカルドメインユーザが持つのと同じアクセス許可を
+	持つことになる。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Important Administrative Information</title>
+	<title>管理に関する重要な情報</title>
 
 	<para>
-	Administrative rights are necessary in two specific forms:
+	管理者権限は以下の二つの用途に対して必要である:
 	</para>
 
 	<orderedlist>
-		<listitem><para>For Samba-3 domain controllers and domain member servers/clients.</para></listitem>
-		<listitem><para>To manage domain member Windows workstations.</para></listitem>
+		<listitem><para>Samba-3のドメインコントローラ、ドメインメンバサーバ及びクライアントのため。</para></listitem>
+		<listitem><para>Windowsのドメインメンバワークステーション管理のため。</para></listitem>
 	</orderedlist>
 
 	<para>
 <indexterm><primary>rights and privileges</primary></indexterm>
-<indexterm><primary>domain member client</primary></indexterm>
-<indexterm><primary>group account</primary></indexterm>
-	Versions of Samba up to and including 3.0.10 do not provide a means for assigning rights and privileges
-	that are necessary for system administration tasks from a Windows domain member client machine, so
-	domain administration tasks such as adding, deleting, and changing user and group account information, and
-	managing workstation domain membership accounts, can be handled by any account other than root.
+<indexterm><primary>ドメインメンバクライアント</primary></indexterm>
+<indexterm><primary>グループアカウント</primary></indexterm>
+	Samba 3.0.10までのバージョンは、Windowsドメインメンバークライアントマシンから
+	システム管理作業のために必要である権利と特権を割り当てる機能は提供しない。その
+	ため、ユーザの追加、削除とユーザとグループ情報の変更と、ワークステーションの
+	ドメインメンバシップ管理のような管理作業はroot以外のどのようなアカウントでも
+	扱える。
 	</para>
 
 	<para>
 <indexterm><primary>privilege management</primary></indexterm>
 <indexterm><primary>delegated</primary></indexterm>
 <indexterm><primary>Administrator</primary></indexterm>
-	Samba-3.0.11 introduced a new privilege management interface (see <link linkend="rights">User Rights and Privileges</link>)
-	that permits these tasks to be delegated to non-root (i.e., accounts other than the equivalent of the
-	MS Windows Administrator) accounts.
+	Samba-3.0.11から、管理作業を非root(すなわち、Microsoft Windows Administratorと
+	同等以外のアカウント)に委譲できる新しい特権管理インタフェースが含まれるように
+	なった(<link linkend="rights">ユーザの権限と権利</link>を参照)。
 	</para>
 
 	<para>
 <indexterm><primary>mapped</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
-	Administrative tasks on a Windows domain member workstation can be done by anyone who is a member of the
-	<constant>Domain Admins</constant> group. This group can be mapped to any convenient UNIX group.
+	Windowsドメインメンバワークステーション上の管理作業は<constant>Domain Admins</constant>
+	グループのメンバの誰かによって行える。このグループは任意の適切なUNIXグループに
+	マップできる。
 	</para>
 
 	<sect3>
-	<title>Applicable Only to Versions Earlier than 3.0.11</title>
+	<title>3.0.11より前のバージョンのみに適用</title>
 
 	<para>
 <indexterm><primary>privilege</primary></indexterm>
-	Administrative tasks on UNIX/Linux systems, such as adding users or groups, requires
-	<constant>root</constant>-level privilege. The addition of a Windows client to a Samba domain involves the
-	addition of a user account for the Windows client.
+	ユーザの追加削除のようなUNIX/Linux上の管理作業は<constant>root</constant>と
+	同等の権限が必要である。Samba のドメインに対するWindowsクライアントの追加は、
+	Windows クライアントに対するユーザアカウントの追加が含まれる。
 	</para>
 
 	<para>
-<indexterm><primary>system security</primary></indexterm>
+<indexterm><primary>システムセキュリティ</primary></indexterm>
 <indexterm><primary>privileges</primary></indexterm>
 	Many UNIX administrators continue to request that the Samba Team make it possible to add Windows workstations, or 
 	the ability to add, delete, or modify user accounts, without requiring <constant>root</constant> privileges. 
