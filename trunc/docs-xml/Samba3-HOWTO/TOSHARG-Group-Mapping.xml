@@ -473,25 +473,27 @@
 	<para>
 <indexterm><primary>システムセキュリティ</primary></indexterm>
 <indexterm><primary>privileges</primary></indexterm>
-	Many UNIX administrators continue to request that the Samba Team make it possible to add Windows workstations, or 
-	the ability to add, delete, or modify user accounts, without requiring <constant>root</constant> privileges. 
-	Such a request violates every understanding of basic UNIX system security.
+	多くのUNIX管理者がSamba Teamに対して<constant>root</constant>の権限を持たなくても
+	Windowsクライアントの追加、ユーザの追加、変更、削除ができるようにしてほしいという
+	要望を寄せ続けている。このような要望はUNIXシステムの基本的なセキュリティの観念と
+	接触するものある。
 	</para>
 
 	<para>
 <indexterm><primary>privileges</primary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
-<indexterm><primary>Domain Server Manager</primary></indexterm>
-<indexterm><primary>Domain User Manager</primary></indexterm>
-<indexterm><primary>manage share-level ACL</primary></indexterm>
-<indexterm><primary>share-level ACLs</primary></indexterm>
-	There is no safe way to provide access on a UNIX/Linux system without providing
-	<constant>root</constant>-level privileges. Provision of <constant>root</constant> privileges can be done
-	either by logging on to the Domain as the user <constant>root</constant> or by permitting particular users to
-	use a UNIX account that has a UID=0 in the <filename>/etc/passwd</filename> database. Users of such accounts
-	can use tools like the NT4 Domain User Manager and the NT4 Domain Server Manager to manage user and group
-	accounts as well as domain member server and client accounts. This level of privilege is also needed to manage
-	share-level ACLs.
+<indexterm><primary>ドメインサーバマネージャ</primary></indexterm>
+<indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
+<indexterm><primary>共有レベルACLの管理</primary></indexterm>
+<indexterm><primary>共有レベルのACL</primary></indexterm>
+	<constant>root</constant>レベルの権限を与えずにUNIX/Linuxシステムに対してアクセス
+	する安全な方法はない。<constant>root</constant>権限は、ドメインに
+	<constant>root</constant>ユーザでログインするか、ある特定のユーザを、
+	<filename>/etc/passwd</filename>データベースの中にUID=0とすることで可能となる。
+	それらの ユーザは、NT4 のドメインユーザマネージャやドメインサーバマネージャ
+	などのツールを使用してユーザやグループに加えドメインメンバサーバやクライアント
+	アカウントの管理ができる。また、このレベルの権限が、共有レベルのACL管理には
+	必要である。
 	</para>
 
 	</sect3>
@@ -499,60 +501,61 @@
 	</sect2>
 
 	<sect2>
-	<title>Default Users, Groups, and Relative Identifiers</title>
+	<title>既定値のユーザ、グループと相対識別子</title>
 
 	<para>
-	<indexterm><primary>Relative Identifier</primary><see>RID</see></indexterm>
+	<indexterm><primary>相対識別子</primary><see>RID</see></indexterm>
 	<indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>Windows NT4/200x/XP</primary></indexterm>
-<indexterm><primary>well-known RID</primary></indexterm>
-<indexterm><primary>domain groups</primary></indexterm>
+<indexterm><primary>よく知られているRID</primary></indexterm>
+<indexterm><primary>ドメイングループ</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-<indexterm><primary>NT groups</primary></indexterm>
-	When first installed, Windows NT4/200x/XP are preconfigured with certain user, group, and
-	alias entities. Each has a well-known RID. These must be preserved for continued
-	integrity of operation. Samba must be provisioned with certain essential domain groups that require
-	the appropriate RID value. When Samba-3 is configured to use <constant>tdbsam</constant>, the essential
-	domain groups are automatically created. It is the LDAP administrator's responsibility to create
-	(provision) the default NT groups.
+<indexterm><primary>NTグループ</primary></indexterm>
+	インストール直後、Windows NT4/200x/XPは特定のユーザ、グループ及び別名のエントリ
+	が事前に設定される。それらはよく知られている相対識別子(RID)を持つ。これらは
+	運用の継続的な整合性のために維持しなければならない。Sambaは必須のドメイン
+	グループを持たなければならず、それらのグループは適切なRID値を必要とするSamba-3
+	が<constant>tdbsam</constant>を使用するよう設定されていると、必須のドメイン
+	グループは自動的に作成される。その既定値のNTグループを作成(準備)するのはLDAP
+	管理者の責任である。
 	</para>
 
 	<para>
-<indexterm><primary>default users</primary></indexterm>
-<indexterm><primary>default groups</primary></indexterm>
-<indexterm><primary>default aliases</primary></indexterm>
+<indexterm><primary>既定値のユーザ</primary></indexterm>
+<indexterm><primary>既定値のグループ</primary></indexterm>
+<indexterm><primary>既定値の別名</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
-	Each essential domain group must be assigned its respective well-known RID. The default users, groups,
-	aliases, and RIDs are shown in <link linkend="WKURIDS">Well-Known User Default RIDs</link>.
+	必須のドメイングループには良く知られているRIDを割り当てなければならない。既定値の
+	ユーザ、グループ、別名とRIDは
+	<link linkend="WKURIDS">よく知られているユーザのRID既定値</link>を参照のこと。
 	</para>
 
 	<note><para>
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>ldapsam</primary></indexterm>
-<indexterm><primary>domain groups</primary></indexterm>
+<indexterm><primary>ドメイングループ</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
-	It is the administrator's responsibility to create the essential domain groups and to assign each
-	its default RID.
+	必須のドメイングループ作成と、それに既定値のRIDを割り当てるのは管理者の責任である。
 	</para></note>
 
 	<para>
-<indexterm><primary>domain groups</primary></indexterm>
+<indexterm><primary>ドメイングループ</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
-	It is permissible to create any domain group that may be necessary; just make certain that the essential
-	domain groups (well known) have been created and assigned their default RIDs. Other groups you create may
-	be assigned any arbitrary RID you care to use.
+	他にも必要なドメイングループを作成することは問題ありませんが、必須のドメイン
+	グループ(良く知られているもの)が作成済みで、既定値のRIDが割り当てられている
+	ことを確認すること。作成する他のグループには任意のRIDを割り当てることができる。
 	</para>
 
 	<para>
-	Be sure to map each domain group to a UNIX system group. That is the only way to ensure that the group
-	will be available for use as an NT domain group.
+	各ドメイングループをUNIXシステムグループにマッピングすること。それが、これらの
+	グループをNTドメイングループとして使用できる唯一の方法である。
 	</para>
 
 	<para>
 	<table frame="all" id="WKURIDS">
-	<title>Well-Known User Default RIDs</title>
+	<title>よく知られているユーザのRID既定値</title>
 		<tgroup cols="4" align="left">
 			<colspec align="left"/>
 			<colspec align="left"/>
@@ -560,10 +563,10 @@
 			<colspec align="center"/>
 			<thead>
 				<row>
-					<entry>Well-Known Entity</entry>
+					<entry>よく知られているエントリ</entry>
 					<entry>RID</entry>
-					<entry>Type</entry>
-					<entry>Essential</entry>
+					<entry>タイプ</entry>
+					<entry>必須</entry>
 				</row>
 			</thead>
 			<tbody>
@@ -707,7 +710,7 @@
 	</sect2>
 
 	<sect2>
-	<title>Example Configuration</title>
+	<title>設定例</title>
 
 		<para>
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>list</tertiary></indexterm>
