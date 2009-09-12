@@ -714,8 +714,8 @@
 
 		<para>
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>list</tertiary></indexterm>
-		You can list the various groups in the mapping database by executing
-		<command>net groupmap list</command>. Here is an example:
+		<command>net groupmap list</command>を実行することでマッピングデータ
+		ベース中の種々のグループを表示出来る。以下が例である:
 		</para>
 
 		<para>
@@ -729,7 +729,7 @@ Domain Guests (S-1-5-21-2547222302-1596225915-2414751004-514) -> domguest
 		</para>
 
 		<para>
-		For complete details on <command>net groupmap</command>, refer to the net(8) man page.
+		<command>net groupmap</command>の完全な詳細は、net(8)のマニュアルを参照のこと。
 		</para>
 
 	</sect2>
@@ -737,15 +737,15 @@ Domain Guests (S-1-5-21-2547222302-1596225915-2414751004-514) -> domguest
 </sect1>
 
 <sect1>
-<title>Configuration Scripts</title>
+<title>設定スクリプト</title>
 
 	<para>
-	Everyone needs tools. Some of us like to create our own, others prefer to use canned tools
-	(i.e., prepared by someone else for general use). 
+	誰もがツールを必要とする。自分のツールを作ることが好きな人もいれば、既成のツール
+	(汎用に誰かが作成したもの)を好む人もいる。
 	</para>
 
 	<sect2>
-	<title>Sample &smb.conf; Add Group Script</title>
+	<title>&smb.conf;にグループを追加するスクリプト例</title>
 
 		<para>
 		<indexterm><primary>smbgrpadd.sh</primary></indexterm>
@@ -753,28 +753,28 @@ Domain Guests (S-1-5-21-2547222302-1596225915-2414751004-514) -> domguest
 		<indexterm><primary>smbgrpadd.sh</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
 <indexterm><primary>groupadd</primary></indexterm>
-		A script to create complying group names for use by the Samba group interfaces
-		is provided in <link linkend="smbgrpadd.sh">smbgrpadd.sh</link>. This script
-		adds a temporary entry in the <filename>/etc/group</filename> file and then renames
-		it to the desired name. This is an example of a method to get around operating
-		system maintenance tool limitations such as those present in some version of the
-		<command>groupadd</command> tool.
+		Sambaのグループインタフェースで使用するグループ名を作成するスクリプトは
+		<link linkend="smbgrpadd.sh">smbgrpadd.sh</link>で提供されている。
+		このスクリプトは一時的なエントリを<filename>/etc/group</filename>
+		ファイルに追加し、指定された名前に改名する。これは、いくつかの
+		バージョンの<command>groupadd</command>ツールに存在する、OS管理ツールの
+		制限を避ける方法の例である。
 <example id="smbgrpadd.sh">
 <title>smbgrpadd.sh</title>
 <programlisting>
 #!/bin/bash
 
-# Add the group using normal system groupadd tool.
+# 通常のgroupaddツールを使ってのグループ追加。
 groupadd smbtmpgrp00
 
 thegid=`cat /etc/group | grep ^smbtmpgrp00 | cut -d ":" -f3`
 
-# Now change the name to what we want for the MS Windows networking end
+# 次にMicrosoft Windowsネットワーク用に使いたい名前に変更。
 cp /etc/group /etc/group.bak
 cat /etc/group.bak | sed "s/^smbtmpgrp00/$1/g" > /etc/group
 rm /etc/group.bak
 
-# Now return the GID as would normally happen.
+# 通常のようにGIDを返す。
 echo $thegid
 exit 0
 </programlisting>
@@ -782,11 +782,12 @@ exit 0
 </para>
 
 		<para>
-		The &smb.conf; entry for the above script shown in <link linkend="smbgrpadd">the configuration of
-		&smb.conf; for the add group Script</link> demonstrates how it may be used.
+		<link linkend="smbgrpadd">グループ追加スクリプトのための&smb.conf;エントリの設定</link>
+		中に示している上記のスクリプトのための&smb.conf;エントリは、どのように動くかを
+		デモする。
 
 <example id="smbgrpadd">
-<title>Configuration of &smb.conf; for the add group Script</title>
+<title>グループ追加スクリプトのための&smb.conf;エントリの設定</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="add group script">/path_to_tool/smbgrpadd.sh &quot;%g&quot;</smbconfoption>
@@ -797,7 +798,7 @@ exit 0
 	</sect2>
 	
 	<sect2>
-	<title>Script to Configure Group Mapping</title>
+	<title>グループマッピング設定のためのスクリプト</title>
 
 	<para>
 <indexterm><primary>initGroups.sh</primary></indexterm>
