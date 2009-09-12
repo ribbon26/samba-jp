@@ -802,11 +802,13 @@ exit 0
 
 	<para>
 <indexterm><primary>initGroups.sh</primary></indexterm>
-	In our example we have created a UNIX/Linux group called <literal>ntadmin</literal>.
-	Our script will create the additional groups <literal>Orks</literal>, <literal>Elves</literal>, and <literal>Gnomes</literal>.
-	It is a good idea to save this shell script for later use just in case you ever need to rebuild your mapping database.
-	For the sake of convenience we elect to save this script as a file called <filename>initGroups.sh</filename>.
-	This script is given in <link linkend="set-group-map">intGroups.sh</link>.
+	上記の例では、<literal>ntadmin</literal>と呼ばれるUNIX/Linuxグループを作成した。
+	このスクリプトで、<literal>Orks</literal>, <literal>Elves</literal>と
+	<literal>Gnomes</literal>という追加のグループも作成することにする。
+	後でマッピングデータベースを再作成する必要がある場合に備え、このシェルスクリプト
+	を保存することを推奨する。便宜上、<filename>initGroups.sh</filename>という
+	ファイル名で保存する。このスクリプトは
+	<link linkend="set-group-map">intGroups.sh</link>で提供されている。
 <indexterm><primary>initGroups.sh</primary></indexterm>
 <example id="set-group-map">
 <title>Script to Set Group Mapping</title>
@@ -829,18 +831,18 @@ net groupmap add ntgroup="Gnomes" unixgroup=Gnomes type=d
 	</para>
 
 	<para>
-	Of course it is expected that the administrator will modify this to suit local needs.
-	For information regarding the use of the <command>net groupmap</command> tool please
-	refer to the man page.
+	もちろん、必要に合わせて管理者がこれを編集することを想定している。
+	<command>net groupmap</command>ツールの使用方法の詳細についてはマニュアル
+	ページを参照のこと。
 	</para>
 
 	<note><para>
-	Versions of Samba-3 prior to 3.0.23 automatically create default group mapping for the
-	<literal>Domain Admins, Domain Users</literal> and <literal>Domain Guests</literal> Windows
-	groups, but do not map them to UNIX GIDs. This was a cause of administrative confusion and 
-	trouble. Commencing with Samba-3.0.23 this annomaly has been fixed - thus all Windows groups
-	must now be manually and explicitly created and mapped to a valid UNIX GID by the Samba 
-	administrator.
+	Sambaのバージョン3.0.23未満では、
+	<literal>Domain Admins, Domain Users</literal>と<literal>Domain Guests</literal>
+	Windowsグループに対する既定値のグループマッピングを自動的に生成する。しかし、
+	UNIX GIDへのマップは行わない。これは管理者の混乱と障害を引き起こす。Samba-3.0.23
+	以降はこの異常は修正された。そのため、Windowsグループは、手動かつ明示的にSamba
+	管理者によって有効なUNIX GIDへのマップの作成とマッピングを行わなければならない。
 	</para></note>
 
 	</sect2>
@@ -848,97 +850,100 @@ net groupmap add ntgroup="Gnomes" unixgroup=Gnomes type=d
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
-At this time there are many little surprises for the unwary administrator. In a real sense
-it is imperative that every step of automated control scripts be carefully tested
-manually before putting it into active service.
+この時点で、油断していると管理者はいろいろな細かいことにびっくりされられることになる。
+現実問題として、自動の制御スクリプトの全ステップを本番環境に移す前には、注意深く手動で
+テストしなければならない。
 </para>
 
 	<sect2>
-	<title>Adding Groups Fails</title>
+	<title>グループの追加が失敗する</title>
 
 		<para>
 <indexterm><primary>groupadd</primary></indexterm>
-		This is a common problem when the <command>groupadd</command> is called directly
-		by the Samba interface script for the <smbconfoption name="add group script"/> in
-		the &smb.conf; file.
+		これはSambaインタフェーススクリプトが&smb.conf;ファイル中の
+		<smbconfoption name="add group script"/>として直接
+		<command>groupadd</command>呼んだ時によくある問題である。
 		</para>
 
 		<para>
-<indexterm><primary>uppercase character</primary></indexterm>
-<indexterm><primary>space character</primary></indexterm>
-		The most common cause of failure is an attempt to add an MS Windows group account
-		that has an uppercase character and/or a space character in it.
+<indexterm><primary>大文字</primary></indexterm>
+<indexterm><primary>空白文字</primary></indexterm>
+		もっともよくある失敗の原因は、名前に大文字かつまたはスペースを含む
+		Microsoft Windows グループアカウントを追加しようとしたということである。
 		</para>
 
 		<para>
 <indexterm><primary>groupadd</primary></indexterm>
-		There are three possible workarounds. First, use only group names that comply
-		with the limitations of the UNIX/Linux <command>groupadd</command> system tool.
-		Second, it involves the use of the script mentioned earlier in this chapter, and
-		third is the option is to manually create a UNIX/Linux group account that can substitute
-		for the MS Windows group name, then use the procedure listed above to map that group
-		to the MS Windows group.
+		これには 3 つの回避策がある。一つ目は、UNIX/Linuxの<command>groupadd</command>
+		システムツールの制約に沿うグループ名のみを使用することである。二つ目は、
+		この章で先に言及したスクリプトを使用することである。三つ目は、
+		Microsoft Windowsグループ名に代わるUNIX/Linuxグループアカウントを手動で作成し、
+		上で説明した手順でそのグループをMicrosoft Windows グループにマッピングする
+		という方法である。
 		</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Adding Domain Users to the Workstation Power Users Group</title>
+	<title>ワークステーションのPower UsersグループへのDomain Usersの追加</title>
 
 		<para><quote>
-		What must I do to add domain users to the Power Users group?
+		domain usersをPower Usersグループに追加するにはどうすればいいですか?
 		</quote></para>
 
 		<para>
-<indexterm><primary>Domain Users group</primary></indexterm>
-		The Power Users group is a group that is local to each Windows 200x/XP Professional workstation.
-		You cannot add the Domain Users group to the Power Users group automatically, it must be done on
-		each workstation by logging in as the local workstation <emphasis>administrator</emphasis> and
-		then using the following procedure:
+<indexterm><primary>Domain Usersグループ</primary></indexterm>
+		Power Usersグループは各Windows 200x/XP Professionalワークステーションの
+		ローカルグループである。Domain Usersグループは自動でPower Usersグループに
+		追加することはできない。ローカルマシンに<emphasis>administrator</emphasis>
+		としてローカルワークステーションにログオンすることで、各ワークステーション
+		でこの作業を行わなければならず、その後以下の手続きを行う:
 		</para>
 
 		<procedure>
 			<step><para>
-			Click <guimenu>Start -> Control Panel -> Users and Passwords</guimenu>.
+			Click <guimenu>スタート -> コントロールパネル -> ユーザとパスワードをクリック。</guimenu>
 			</para></step>
 
 			<step><para>
-			Click the <guimenuitem>Advanced</guimenuitem> tab.
+			<guimenuitem>詳細</guimenuitem>タブをクリック。
 			</para></step>
 
 			<step><para>
-			Click the <guibutton>Advanced</guibutton> button.
+			<guibutton>詳細</guibutton>ボタンをクリック。
 			</para></step>
 
 			<step><para>
-			Click <constant>Groups</constant>.
+			<constant>グループ</constant>をクリック。
 			</para></step>
 
 			<step><para>
-			Double-click <constant>Power Users</constant>. This will launch the panel to add users or groups
-			to the local machine <constant>Power Users</constant> group.
+			<constant>Power Users</constant>をダブルクリック。この作業後、ローカル
+			マシンの<constant>Power Users</constant>グループにユーザとグループを
+			追加するパネルが起動する。
 			</para></step>
 
 			<step><para>
-			Click the <guibutton>Add</guibutton> button.
+			<guibutton>追加</guibutton>ボタンをクリック。
 			</para></step>
 
 			<step><para>
-			Select the domain from which the <constant>Domain Users</constant> group is to be added.
+			<constant>Domain Users</constant>グループに追加するドメインを選択。
 			</para></step>
 
 			<step><para>
-			Double-click the <constant>Domain Users</constant> group.
+			<constant>Domain Users</constant>グループをダブルクリック。
 			</para></step>
 
 			<step><para>
-			Click the <guibutton>OK</guibutton> button. If a logon box is presented during this process, 
-			please remember to enter the connect as <constant>DOMAIN\UserName</constant>, that is, for the
-			domain <constant>MIDEARTH</constant> and the user <constant>root</constant> enter
-			<constant>MIDEARTH\root</constant>.
+			<guibutton>OK</guibutton>ボタンをクリック。この作業中にログオン
+			ボックスが表示されたならば、 接続するために
+			<constant>DOMAIN\UserName</constant>を入力することを忘れないこと。
+			すなわち、ドメイン<constant>MIDEARTH</constant>とユーザ
+			<constant>root</constant>を<constant>MIDEARTH\root</constant>として入力する。
 			</para></step>
 		</procedure>
 	</sect2>
