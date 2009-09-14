@@ -112,37 +112,39 @@ Samba-3管理者は、そうすることが、自ら招いた痛み、苦しみ�
 	<para>
 <indexterm><primary>net</primary></indexterm>
 <indexterm><primary>man pages</primary></indexterm>
-	The overall picture should be clear now: the <command>net</command> command plays a central role
-	on the Samba-3 stage. This role will continue to be developed. The inclusion of this chapter is
-	evidence of its importance, one that has grown in complexity to the point that it is no longer considered
-	prudent to cover its use fully in the online UNIX man pages.
+	全体の構成は今明確にすべきである:<command>net</command>はSamba-3の動作において
+	重要な役割を演じる。その役割は継続して開発されている。この章に含まれているもの
+	は、その重要性の証拠であり、それは、完全にオンラインUNIXマニュアル中でその
+	使用をカバーすることが賢明であるとは、もはや考えられない点において、複雑に成長
+	してきた。
 	</para>
 
 	</sect1>
 	
 	<sect1>
-	<title>Administrative Tasks and Methods</title>
+	<title>管理者の作業と手段</title>
 
 	<para>
 <indexterm><primary>net</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>Distributed Computing Environment</primary><see>DCE</see></indexterm>
-<indexterm><primary>Remote Procedure Call</primary><see>RPC</see></indexterm>
-	The basic operations of the <command>net</command> command are documented here. This documentation is not
-	exhaustive, and thus it is incomplete. Since the primary focus is on migration from Windows servers to a Samba
-	server, the emphasis is on the use of the Distributed Computing Environment Remote Procedure Call (DCE RPC)
-	mode of operation. When used against a server that is a member of an Active Directory domain, it is preferable
-	(and often necessary) to use ADS mode operations. The <command>net</command> command supports both, but not
-	for every operation. For most operations, if the mode is not specified, <command>net</command> will
-	automatically fall back via the <constant>ads</constant>, <constant>rpc</constant>, and
-	<constant>rap</constant> modes.  Please refer to the man page for a more comprehensive overview of the
-	capabilities of this utility.
+<indexterm><primary>分散コンピューティング環境</primary><see>DCE</see></indexterm>
+<indexterm><primary>リモートプロシジャーコール</primary><see>RPC</see></indexterm>
+	<command>net</command>の基本的な動作はここに文書化されている。この文書は完璧
+	ではなく、不完全である。WindowsサーバからSambaサーバへの移行について最も着目
+	しているので、分散コンピューティング環境のリモートプロシジャーコール(DCE RPC)
+	モードの操作について強調している。Active Directoryドメインのメンバであるサーバに
+	対して使用されるとき、ADSモード操作を使うことは望ましい(そして、それはしばしば
+	必要である)。<command>net</command>は両方ともサポートするが、すべての操作に
+	対してではない。モードが指定されない多くの操作では、<command>net</command>は
+	自動的に<constant>ads</constant>, <constant>rpc</constant>と
+	<constant>rap</constant>モードにフォールバックする。このユーティリティの
+	能力についてのより包括的な概要はマニュアルページを参照のこと。
 	</para>
 
 	</sect1>
 
 	<sect1>
-	<title>UNIX and Windows Group Management</title>
+	<title>UNIXとWindowsのグループ管理</title>
 
 	<para>
 <indexterm><primary>Active Directory</primary></indexterm>
@@ -150,39 +152,42 @@ Samba-3管理者は、そうすることが、自ら招いた痛み、苦しみ�
 <indexterm><primary>net</primary><secondary>ads</secondary></indexterm>
 <indexterm><primary>net</primary><secondary>rap</secondary></indexterm>
 <indexterm><primary>RAP</primary></indexterm>
-	As stated, the focus in most of this chapter is on use of the <command>net rpc</command> family of
-	operations that are supported by Samba. Most of them are supported by the <command>net ads</command>
-	mode when used in connection with Active Directory. The <command>net rap</command> operating mode is
-	also supported for some of these operations. RAP protocols are used by IBM OS/2 and by several
-	earlier SMB servers.
+	初めに、この章の主要な注目点は、Sambaによってサポートされている
+	<command>net rpc</command>ファミリの動作の使用方法である。それらの大半は、
+	Active Directoryに接続したときに使われる<command>net ads</command>モードでも
+	サポートされる。<command>net rap</command>動作モードもそれらの操作のいくつかで
+	サポートされる。RAPプロトコルはIBM OS/2といくつかの初期のSMBサーバによって
+	使われる。
 	</para>
 
 	<para>
 <indexterm><primary>net</primary></indexterm>
-<indexterm><primary>user management</primary></indexterm>
-<indexterm><primary>group management</primary></indexterm>
-	Samba's <command>net</command> tool implements sufficient capability to permit all common administrative
-	tasks to be completed from the command line. In this section each of the essential user and group management
-	facilities are explored.
+<indexterm><primary>ユーザ管理</primary></indexterm>
+<indexterm><primary>グループ管理</primary></indexterm>
+	Sambaの<command>net</command>ツールはコマンドラインで完結するための、すべての
+	共通な管理作業が出来る十分な能力を実装している。このセクションでは、必須の
+	ユーザとグループ管理機能のそれぞれについて説明している。
 	</para>
 
 	<para>
-<indexterm><primary>groups</primary></indexterm>
-<indexterm><primary>domain</primary><secondary>groups</secondary></indexterm>
-<indexterm><primary>local</primary><secondary>groups</secondary></indexterm>
-<indexterm><primary>domain user accounts</primary></indexterm>
-	Samba-3 recognizes two types of groups: <emphasis>domain groups</emphasis> and <emphasis>local
-	groups</emphasis>. Domain groups can contain (have as members) only domain user accounts. Local groups
-	can contain local users, domain users, and domain groups as members.
+<indexterm><primary>グループ</primary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>groups</secondary></indexterm>
+<indexterm><primary>ローカル</primary><secondary>groups</secondary></indexterm>
+<indexterm><primary>ドメインユーザアカウント</primary></indexterm>
+	Samba-3は2種類のグループを認識する。それは、<emphasis>ドメイングループ</emphasis>
+	と<emphasis>ローカルグループ</emphasis>である。ドメイングループは(メンバとして)
+	ドメインユーザアカウントのみを含むことは出来る。ローカルグループはローカル
+	グループ、ドメインユーザとメンバとしてのドメイングループをを含むことが出来る。
 	</para>
 
 	<para>
-	The purpose of a local group is to permit file permission to be set for a group account that, like the
-	usual UNIX/Linux group, is persistent across redeployment of a Windows file server.
+	ローカルグループの目的は、そのグループアカウントに対して、通常のUNIX/Linux
+	グループのようにファイルのアクセス権を	設定することであり、また、Windows
+	ファイルサーバを再配置しても継続的である。
 	</para>
 
 	<sect2>
-	<title>Adding, Renaming, or Deletion of Group Accounts</title>
+	<title>グループアカウントの追加、改名、あるいは削除</title>
 
 	<para>
 	Samba provides file and print services to Windows clients. The file system resources it makes available
