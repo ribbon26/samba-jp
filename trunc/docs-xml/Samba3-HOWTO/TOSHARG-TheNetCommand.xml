@@ -190,37 +190,38 @@ Samba-3管理者は、そうすることが、自ら招いた痛み、苦しみ�
 	<title>グループアカウントの追加、改名、あるいは削除</title>
 
 	<para>
-	Samba provides file and print services to Windows clients. The file system resources it makes available
-	to the Windows environment must, of necessity, be provided in a manner that is compatible with the
-	Windows networking environment. UNIX groups are created and deleted as required to serve operational
-	needs in the UNIX operating system and its file systems.
+	SambaはWindowsクライアントにファイルと印刷サービスを提供する。Windows環境に
+	対して有効にしたファイルシステムリソースは、必要に応じてWindowsネットワーク
+	環境と互換の方式で提供しなければならない。UNIXグループはUNIX OSとそのファイル
+	システム内で、操作の必要で提供するために要求に応じて作成および削除される。
 	</para>
 
 	<para>
-	In order to make available to the Windows environment, Samba has a facility by which UNIX groups can
-	be mapped to a logical entity, called a Windows (or domain) group. Samba supports two types of Windows
-	groups, local and global. Global groups can contain as members, global users. This membership is
-	affected in the normal UNIX manner, but adding UNIX users to UNIX groups. Windows user accounts consist
-	of a mapping between a user SambaSAMAccount (logical entity) and a UNIX user account. Therefore, 
-	a UNIX user is mapped to a Windows user (i.e., is given a Windows user account and password) and the
-	UNIX groups to which that user belongs, is mapped to a Windows group account. The result is that in
-	the Windows account environment that user is also a member of the Windows group account by virtue
-	of UNIX group memberships.
+	Windows環境に対して有効にするために、Sambaは、Windows(あるいはドメイン)グループ
+	と呼ばれる論理的なエントリに、UNIXグループをマップされることが出来る機能を持つ。
+	Sambaはローカルとグローバルと言う2つのタイプのWindowsグループをサポートする。
+	グローバルグループはメンバとグローバルユーザを含むことが出来る。このメンバシップは
+	通常のUNIX流儀に影響されるが、UNIXユーザをUNIXグループに追加する。Windowsユーザ
+	アカウントはユーザのSambaSAMAccount(論理エントリ)とUNIXユーザアカウントとの
+	マッピングから成り立つ。そのため、UNIXユーザはWindowsユーザにマップされ(すなわち、
+	Windowsユーザアカウントとパスワードが与えられる)、そのユーザに属するUNIX
+	グループはWindowsグループアカウントにマップされる。この結果は、Windowsアカウント
+	環境においてそのユーザが、UNIXグループメンバシップであるという理由で、Windows
+	グループアカウントのメンバでもあるということである。
 	</para>
 
 	<para>
-	The following sub-sections that deal with management of Windows groups demonstrates the relationship
-	between the UNIX group account and its members to the respective Windows group accounts. It goes on to
-	show how UNIX group members automatically pass-through to Windows group membership as soon as a logical
-	mapping has been created.
+	Windowsグループ管理を扱う以下の項では、Windowsグループアカウントとそのメンバの
+	間の関係について、それぞれのWindowsグループアカウントの関係をデモする。これは、
+	論理マッピングが作成されるとすぐに、どのように自動的にUNIXグループメンバをWindows
+	グループメンバシップに渡すかを表示する。
 	</para>
 
 	<sect3>
-	<title>Adding or Creating a New Group</title>
+	<title>新しいグループの追加又は作成</title>
 
 	<para>
-	Before attempting to add a Windows group account, the currently available groups can be listed as shown
-	here:
+	Windowsグループアカウントを追加する前に、現在有効なグループは以下のようにして表示できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group</tertiary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group list</tertiary></indexterm>
 <screen>
@@ -239,14 +240,14 @@ Engineers
 
 <?latex \newpage ?>
 	<para>
-	A Windows group account called <quote>SupportEngrs</quote> can be added by executing the following
-command:
+	<quote>SupportEngrs</quote>というWindowsグループアカウントは、以下のコマンドを
+	実行することで追加できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group add</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group add "SupportEngrs" -Uroot%not24get
 </screen>
-	The addition will result in immediate availability of the new group account as validated by executing
-this command:
+	以下のコマンドを実行することで、新しいグループアカウント追加の結果が有効になって
+いることが検証できる:
 <screen>
 &rootprompt; net rpc group list -Uroot%not24get
 Password:
