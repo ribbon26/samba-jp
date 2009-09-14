@@ -99,21 +99,22 @@ SCO から直接バイナリパッケージを入手ことの方がとても容�
 <title>DNIX</title>
 
 <para>
-DNIX has a problem with seteuid() and setegid(). These routines are
-needed for Samba to work correctly, but they were left out of the DNIX
-C library for some reason.
+DNIX は seteuid() と setegid() に問題がある。これらのルーチンは Samba が正しく
+機能するために必要である。しかし、それらはいくつかの理由により DNIX の C ライ
+ブラリから抜け落ちている。
 </para>
 
 <para>
-For this reason Samba by default defines the macro NO_EID in the DNIX
-section of includes.h. This works around the problem in a limited way,
-but it is far from ideal, and some things still will not work right.
+この理由により Samba は includes.h の DNIX セクションにてデフォルトで NO_EID
+マクロを定義している。
+これは問題のまわりで、限られた方法で機能する。しかし理想からは程遠く
+いくつかの事柄はまだ正しく機能しないだろう。
 </para>
 
 <para> 
-To fix the problem properly, you need to assemble the following two
-functions and then either add them to your C library or link them into
-Samba. Put the following in the file <filename>setegid.s</filename>:
+この問題を正しく解決するため、以下の２つの関数をアセンブルする必要がある。
+そしてそれらを C ライブラリに加えるか、 Samba にリンクすること。
+以下のコードを <filename>setegid.s</filename> の中ににおくこと。
 </para>
 
 <para><programlisting>
@@ -132,7 +133,7 @@ _setegid:
 </programlisting></para>
 
 <para>
-Put this in the file <filename>seteuid.s</filename>:
+以下を <filename>seteuid.s</filename> の中におくこと。
 </para>
 
 <para><programlisting>
@@ -151,7 +152,7 @@ _seteuid:
 </programlisting></para>
 
 <para>
-After creating the files, you then assemble them using
+ファイルを作成した後に、それらを以下のようにアセンブルする。
 </para>
 
 <screen>
