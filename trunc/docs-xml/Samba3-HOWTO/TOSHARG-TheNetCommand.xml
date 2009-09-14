@@ -267,9 +267,9 @@ SupportEngrs
 <indexterm><primary>POSIX</primary></indexterm>
 <indexterm><primary>smbldap-groupadd</primary></indexterm>
 <indexterm><primary>getent</primary></indexterm>
-	The following demonstrates that the POSIX (UNIX/Linux system account) group has been created by calling
-	the <smbconfoption name="add group script">/opt/IDEALX/sbin/smbldap-groupadd -p "%g"</smbconfoption> interface
-	script:
+	以下はPOSIX(UNIX/Linuxシステムアカウント)グループが、
+	<smbconfoption name="add group script">/opt/IDEALX/sbin/smbldap-groupadd -p "%g"</smbconfoption>
+	インタフェーススクリプトを呼び出すことによって作成されたことを表示する:
 <screen>
 &rootprompt; getent group
 ...
@@ -283,9 +283,8 @@ Domain Computers:x:553:
 Engineers:x:1002:jht
 SupportEngrs:x:1003:
 </screen>
-	The following demonstrates that the use of the <command>net</command> command to add a group account
-results in immediate mapping of the POSIX group that has been created to the Windows group account as shown
-here:
+	以下は、グループアカウントを追加する<command>net</command>の使用で、Windows
+	グループアカウントのために作られたPOSIXグループの即時的なマッピング中での結果を示す:
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>list</tertiary></indexterm>
 <screen>
 &rootprompt; net groupmap list
@@ -304,16 +303,16 @@ SupportEngrs (S-1-5-21-72630-4128915-11681869-3007) -> SupportEngrs
 	</sect3>
 
 	<sect3>
-	<title>Mapping Windows Groups to UNIX Groups</title>
+	<title>WindowsグループからUNIXグループへのマッピング</title>
 
 	<para>
 <indexterm><primary>mapped</primary></indexterm>
-<indexterm><primary>Windows groups</primary></indexterm>
-<indexterm><primary>system groups</primary></indexterm>
-<indexterm><primary>access controls</primary></indexterm>
-	Windows groups must be mapped to UNIX system (POSIX) groups so that file system access controls
-	can be asserted in a manner that is consistent with the methods appropriate to the operating
-	system that is hosting the Samba server.
+<indexterm><primary>Windowsグループ</primary></indexterm>
+<indexterm><primary>システムグループ</primary></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
+	Windowsグループは、SambaサーバをホスティングしているOSに適した方法での首尾一貫
+	した方法で主張できるファイルシステムのアクセス制御が出来るように、UNIXシステム
+	(POSIX)グループにマップされる必要がある。
 	</para>
 
 	<para>
@@ -321,22 +320,24 @@ SupportEngrs (S-1-5-21-72630-4128915-11681869-3007) -> SupportEngrs
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>locally known UID</primary></indexterm>
-	All file system (file and directory) access controls, within the file system of a UNIX/Linux server that is
-	hosting a Samba server, are implemented using a UID/GID identity tuple. Samba does not in any way override
-	or replace UNIX file system semantics. Thus it is necessary that all Windows networking operations that
-	access the file system provide a mechanism that maps a Windows user to a particular UNIX/Linux group
-	account. The user account must also map to a locally known UID. Note that the <command>net</command>
-	command does not call any RPC-functions here but directly accesses the passdb.
+	SambaサーバをホスティングしているUNIX/Linuxサーバのファイルシステムで、すべての
+	ファイルシステム(ファイルとディレクトリ)アクセス制御はUID/GID識別の組を使って
+	実装される。SambaはUNIXファイルシステムの仕組みに優先したり、置き換えることは
+	しない。これは、ファイルシステムにアクセスするすべてのWindowsネットワーク操作は、
+	Windowsユーザから特定のUNIX/Linuxグループアカウントにマップするメカニズムを
+	提供する。ユーザアカウントはローカルに知られているUIDにもマップする必要がある。
+	<command>net</command>コマンドはここでは任意のRPC機能は呼び出さないが、passdbに
+	直接アクセスすることに注意。
 	</para>
 
 	<para>
-<indexterm><primary>default mappings</primary></indexterm>
+<indexterm><primary>既定値のマッピング</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
 <indexterm><primary>Domain Users</primary></indexterm>
 <indexterm><primary>Domain Guests</primary></indexterm>
-<indexterm><primary>Windows group</primary></indexterm>
-<indexterm><primary>UNIX group</primary></indexterm>
-<indexterm><primary>mapping</primary></indexterm>
+<indexterm><primary>Windowsグループ</primary></indexterm>
+<indexterm><primary>UNIXグループ</primary></indexterm>
+<indexterm><primary>マッピング</primary></indexterm>
 	Samba depends on default mappings for the <constant>Domain Admins, Domain Users</constant>, and
 	<constant>Domain Guests</constant> global groups. Additional groups may be added as shown in the
 	examples just given. There are times when it is necessary to map an existing UNIX group account
