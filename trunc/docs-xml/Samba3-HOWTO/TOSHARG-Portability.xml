@@ -4,7 +4,8 @@
 <chapterinfo>
 	&author.jelmer;
 	&author.jht;
-	<!-- Some other people as well, but there were no author names in the text files this file is based on-->
+	<!-- この文書がベースとしているテキストファイルに著者名がない何人か他
+	の人々 -->
 </chapterinfo>
 
 <title>移植性</title>
@@ -166,8 +167,8 @@ which should produce the files <filename>seteuid.o</filename> and
 </para>
 
 <para>
-Next you need to add these to the LIBSM line in the DNIX section of
-the Samba Makefile. Your LIBSM line will look something like this:
+次に Samba の Makefile にて DNIX セクションの中の LIBSM 行にそれらを加える。
+LIBSM 行は以下に多少似るだろう。
 </para>
 
 <para><programlisting>
@@ -175,14 +176,14 @@ LIBSM = setegid.o seteuid.o -ln
 </programlisting></para>
 
 <para>
-You should then remove the line:
+次に以下の行を削除する。
 </para>
 
 <para><programlisting>
 #define NO_EID
 </programlisting></para>
 
-<para>from the DNIX section of <filename>includes.h</filename>.</para>
+<para><filename>includes.h</filename> の DNIX セクションから。</para>
 
 </sect1>
 
@@ -190,15 +191,15 @@ You should then remove the line:
 <title>Red Hat Linux</title>
 
 <para>
-By default during installation, some versions of Red Hat Linux add an
-entry to <filename>/etc/hosts</filename> as follows:
+デフォルトにてインストール中に、Red Hat Linux のいくつかのバージョンでは以下の
+ようなエントリを<filename>/etc/hosts</filename>に追加する。
 <programlisting>
 127.0.0.1 loopback "hostname"."domainname"
 </programlisting>
 </para>
 
 <para>
-<indexterm><primary>loopback interface</primary></indexterm>
+<indexterm><primary>ループバックインタフェース</primary></indexterm>
 This causes Samba to loop back onto the loopback interface.
 The result is that Samba fails to communicate correctly with
 the world and therefore may fail to correctly negotiate who
