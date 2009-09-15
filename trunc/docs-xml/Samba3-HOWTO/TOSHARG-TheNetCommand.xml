@@ -553,42 +553,44 @@ MIDEARTH\vlendecke
 	</para>
 
 	<note><para>
-	An attempt to specify the group name as <constant>MIDEARTH\Domain Users</constant> in place of
-	just simply <constant>Domain Users</constant> will fail. The default behavior of the net rpc group
-	is to direct the command at the local machine. The Windows group is treated as being local to the machine.
-	If it is necessary to query another machine, its name can be specified using the <constant>-S
-	servername</constant> parameter to the <command>net</command> command.
+	単純に<constant>Domain Users</constant>の代わりに
+	<constant>MIDEARTH\Domain Users</constant>という形でグループ名を指定しても
+	失敗する。net rpc group の既定値の動作はローカルマシンへコマンドの動作を
+	行うからである。Windowsグループはマシンに対してローカルなように扱われる。
+	もしも他のマシンに対して問い合わせが必要ならば、その名前は、
+	<command>net</command>コマンドの<constant>-S servername</constant>
+	パラメータを使って指定する。
 	</para></note>
 
 	</sect2>
 
 	<sect2 id="nestedgrpmgmgt">
-	<title>Nested Group Support</title>
+	<title>ネストされたグループのサポート</title>
 
 	<para>
-	It is possible in Windows (and now in Samba also) to create a local group that has members (contains),
-	domain users, and domain global groups.  Creation of the local group <constant>demo</constant> is
-	achieved by executing:
+	ドメインユーザとドメイングループのメンバである(含む)ローカルグループを作成する
+	ことはWindows(と現在はSambaも)で可能である。<constant>demo</constant>という
+	ローカルグループは以下のようにして作成できる:
 <screen>
 &rootprompt; net rpc group add demo -L -S MORDON -Uroot%not24get
 </screen>
-	The -L switch means create a local group. Use the -S argument to direct the operation to a particular
-	server. The parameters to the -U argument should be for a user who has appropriate administrative right
-	and privileges on the machine.
+	ここで、-L スイッチはローカルグループ作成を意味する。特定のサーバに対しての
+	動作を行う場合は、 -S 引数を使う。-U引数はマシン上で適切な権限と権利を持つ
+	ユーザを指定するのに使う。
 	</para>
 
 	<para>
-	Addition and removal of group members can be achieved using the <constant>addmem</constant> and
-	<constant>delmem</constant> subcommands of <command>net rpc group</command> command. For example,
-	addition of <quote>DOM\Domain Users</quote> to the local group <constant>demo</constant> would be
-	done by executing:
+	グループメンバの追加と削除は<command>net rpc group</command>コマンドの
+	<constant>addmem</constant>と<constant>delmem</constant>サブコマンドを使う
+	ことで行える。たとえば、ローカルグループ<constant>demo</constant>に対して
+	<quote>DOM\Domain Users</quote>を追加するには以下のように行う:
 <screen>
 &rootprompt; net rpc group addmem demo "DOM\Domain Users" -Uroot%not24get
 </screen>
 	</para>
 
 	<para>
-	The members of a nested group can be listed by executing the following:
+	以下のようにして、ネストされたグループのメンバを表示することが出来る:
 <screen>
 &rootprompt; net rpc group members demo -Uroot%not24get
 DOM\Domain Users
@@ -599,14 +601,14 @@ DOM\jht
 	</para>
 
 	<para>
-	Nested group members can be removed (deleted) as shown here:
+	ネストされたグループメンバは以下のようにして削除出来る:
 <screen>
 &rootprompt; net rpc group delmem demo "DOM\jht" -Uroot%not24get
 </screen>
 	</para>
 
 	<sect3>
-	<title>Managing Nest Groups on Workstations from the Samba Server</title>
+	<title>Sambaサーバからのワークステーション上のネストされたグループの管理</title>
 
 	<para>
 	Windows network administrators often ask on the Samba mailing list how it is possible to grant everyone
