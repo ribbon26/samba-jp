@@ -338,93 +338,99 @@ SupportEngrs (S-1-5-21-72630-4128915-11681869-3007) -> SupportEngrs
 <indexterm><primary>Windowsグループ</primary></indexterm>
 <indexterm><primary>UNIXグループ</primary></indexterm>
 <indexterm><primary>マッピング</primary></indexterm>
-	Samba depends on default mappings for the <constant>Domain Admins, Domain Users</constant>, and
-	<constant>Domain Guests</constant> global groups. Additional groups may be added as shown in the
-	examples just given. There are times when it is necessary to map an existing UNIX group account
-	to a Windows group. This operation, in effect, creates a Windows group account as a consequence
-	of creation of the mapping.
+	Sambaは<constant>Domain Admins, Domain Users</constant>と
+	<constant>Domain Guests</constant>グローバルグループの既定値のマッピングに
+	依存する。追加のグループはサンプルで与えられた中でのように追加できる。存在する
+	UNIXグループアカウントをWindowsグループにマップすることが必要なときがある。
+	この操作は実際Windowsグループアカウントをマップ生成の結果として作成する。
 	</para>
 
 	<para>
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>modify</tertiary></indexterm>
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>add</tertiary></indexterm>
 <indexterm><primary>net</primary><secondary>groupmap</secondary><tertiary>delete</tertiary></indexterm>
-	The operations that are permitted include: <constant>add</constant>, <constant>modify</constant>,
-	and <constant>delete</constant>. An example of each operation is shown here.
+	<constant>add</constant>、<constant>modify</constant>と<constant>delete</constant>
+	を含む操作が許可される。それぞれの操作の例はここで示される。
 	</para>
 
 	<note><para>
-	Commencing with Samba-3.0.23 Windows Domain Groups must be explicitly created. By default, all
-	UNIX groups are exposed to Windows networking as Windows local groups.
+	Samba-3.0.23で始まるWindowsドメイングループは明示的に作成する必要がある。既定値
+	では、すべてのUNIXグループはWindowsローカルグループとしてWindowsネットワーク
+	に対して公開される。
 	</para></note>
 
 	<para>
-	An existing UNIX group may be mapped to an existing Windows group by this example:
+	存在するUNIXグループは以下の例のようにして存在するWindowsグループにマップされる:
 <screen>
 &rootprompt; net groupmap modify ntgroup="Domain Users" unixgroup=users
 </screen>
-	An existing UNIX group may be mapped to a new Windows group as shown here:
+	存在するUNIXグループは以下の例のようにして新しいWindowsグループにマップされる:
 <screen>
 &rootprompt; net groupmap add ntgroup="EliteEngrs" unixgroup=Engineers type=d
 </screen>
-	Supported mapping types are 'd' (domain global) and 'l' (domain local).
-	A Windows group may be deleted, and then a new Windows group can be mapped to the UNIX group by
-	executing these commands:
+	サポートされているマッピングタイプは'd'(ドメイングローバル)と'l'(ドメインローカル)
+	である。Windowsグループは削除でき、新しいWindowsグループは以下のコマンドでUNIX
+	グループにマップ出来る:
 <screen>
 &rootprompt; net groupmap delete ntgroup=Engineers
 &rootprompt; net groupmap add ntgroup=EngineDrivers unixgroup=Engineers type=d
 </screen>
-	The deletion and addition operations affected only the logical entities known as Windows groups, or domain
-	groups. These operations are inert to UNIX system groups, meaning that they neither delete nor create UNIX
-	system groups. The mapping of a UNIX group to a Windows group makes the UNIX group available as Windows
-	groups so that files and folders on domain member clients (workstations and servers) can be given
-	domain-wide access controls for domain users and groups.
+	削除と追加操作はWindowsグループかドメイングループとして知られている論理エントリ
+	のみに影響する。操作は、UNIXシステムグループの削除も作成もしないので、UNIX
+	システムグループには影響しない。UNIXグループからWindowsグループへのマッピングは、
+	ドメインメンバクライアント上(ワークステーションとサーバ)のファイルとフォルダが、
+	ドメインユーザとグループに対してドメイン全体のアクセス制御を得ることが出来る
+	ようにするために、WindowsグループとしてWindowsグループを有効にさせる。
 	</para>
 
 	<para>
-	Two types of Windows groups can be created: <constant>domain (global)</constant> and <constant>local</constant>.
-	In the previous examples the Windows groups created were of type <constant>domain</constant> or global. The
-	following command will create a Windows group of type <constant>local</constant>.
+	<constant>domain(グローバル)</constant>と<constant>local</constant>という
+	二種類のWindowsグループか作成できる。前者の例では、作成されたWindowsグループは
+	<constant>domain</constant>かグローバルタイプである。以下のコマンドでは、
+	<constant>local</constant>タイプのWindowsグループを作成する。
 <screen>
 &rootprompt; net groupmap add ntgroup=Pixies unixgroup=pixies type=l
 </screen>
-	Supported mapping types are 'd' (domain global) and 'l' (domain local), a domain local group in Samba is
-	treated as local to the individual Samba server. Local groups can be used with Samba to enable multiple
-	nested group support.
+	サポートされているマッピングタイプは'd' (ドメイングローバル)と 'l' (ドメイン
+	ローカル)で、Samba中でのドメインローカルグループは個別のSambaサーバに対する
+	ローカルなものとして扱われる。ローカルグループは、複数ネストされたグループの
+	サポートを有効にするためにSambaで使うことができる。
 	</para>
 
 	</sect3>
 
 	<sect3>
-	<title>Deleting a Group Account</title>
+	<title>グループアカウントの削除</title>
 
 	<para>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group delete</tertiary></indexterm>
-	A group account may be deleted by executing the following command:
+	グループアカウントは以下のコマンドで削除できる:
 <screen>
 &rootprompt; net rpc group delete SupportEngineers -Uroot%not24get
 </screen>
 	</para>
 
 	<para>
-	Validation of the deletion is advisable. The same commands may be executed as shown above.
+	削除の検証は有効である。同じコマンドは以下で示されるように実行できる。
 	</para>
 
 	</sect3>
 
 	<sect3>
-	<title>Rename Group Accounts</title>
+	<title>グループアカウントの改名</title>
 
 	<note><para>
-	This command is not documented in the man pages; it is implemented in the source code, but it does not
-	work at this time. The example given documents, from the source code, how it should work. Watch the
-	release notes of a future release to see when this may have been fixed.
+	このコマンドはマニュアルページには記述がない。ソースコード上では実装されているが、
+	現時点では動作しない。ソースコード上から得られた文書例は、どのようにそれが
+	動くかを示す。これがいつ修正されるかを、今後のリリースにおけるリリースノート
+	で確認すること(訳注:3.4.0でもマニュアルに記載はない)。
 	</para></note>
 
 	<para>
-	Sometimes it is necessary to rename a group account. Good administrators know how painful some managers'
-	demands can be if this simple request is ignored. The following command demonstrates how the Windows group
-	<quote>SupportEngrs</quote> can be renamed to <quote>CustomerSupport</quote>:
+	時々グループアカウントの改名が必要なときがある。良い管理者は、この単純な要求が
+	無視されるならば、何人かのマネージャの要求がどのくらい痛ましくなるかを知っている。
+	以下のコマンドは、どのようにWindowsグループ<quote>SupportEngrs</quote>が
+	<quote>CustomerSupport</quote>に改名できるかを示す:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group rename</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group rename SupportEngrs \
@@ -437,12 +443,12 @@ SupportEngrs (S-1-5-21-72630-4128915-11681869-3007) -> SupportEngrs
 	</sect2>
 
 	<sect2 id="grpmemshipchg">
-	<title>Manipulating Group Memberships</title>
+	<title>グループメンバシップの操作</title>
 
 	<para>
-	Three operations can be performed regarding group membership. It is possible to (1) add Windows users
-	to a Windows group, to (2) delete Windows users from Windows groups, and to (3) list the Windows users that are
-	members of a Windows group.
+	3つの操作をグループメンバシップに関して行うことが出来る。それは、(1)Windows
+	ユーザをWindowsグループに追加する、(2)WindowsグループからWindowsユーザを削除する、
+	(3)Windowsグループに属するWindowsユーザを表示する である。
 	</para>
 
 	<para>
