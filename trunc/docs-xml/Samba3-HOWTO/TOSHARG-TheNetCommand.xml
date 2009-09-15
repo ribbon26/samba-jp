@@ -452,11 +452,13 @@ SupportEngrs (S-1-5-21-72630-4128915-11681869-3007) -> SupportEngrs
 	</para>
 
 	<para>
-	To avoid confusion, it makes sense to check group membership before attempting to make any changes.
-	The <command>getent group</command> will list UNIX/Linux group membership. UNIX/Linux group members are
-	seen also as members of a Windows group that has been mapped using the <command>net groupmap</command>
-	command (see <link linkend="groupmapping"/>). The following list of UNIX/Linux group membership shows
-	that the user <constant>ajt</constant> is a member of the UNIX/Linux group <constant>Engineers</constant>.
+	混乱を防ぐため、何らかの変更を行う前に、グループメンバシップを確認することは
+	意味がある。<command>getent group</command>はUNIX/Linuxのグループメンバシップを
+	表示する。UNIX/Linuxグループメンバは<command>net groupmap</command>コマンド
+	(<link linkend="groupmapping"/>を参照)で、マップされたWindowsグループのメンバ
+	としても見ることができる。以下のUNIX/Linuxメンバシップは、<constant>ajt</constant>
+	というユーザが<constant>Engineers</constant>というUNIX/Linuxのグループのメンバ
+	であることを示している。
 <screen>
 &rootprompt; getent group
 ...
@@ -469,7 +471,7 @@ Replicator:x:552:
 Domain Computers:x:553:
 Engineers:x:1000:jht,ajt
 </screen>
-	The UNIX/Linux groups have been mapped to Windows groups, as is shown here:
+	WindowsグループにマップされたUNIX/Linuxのグループは以下のようになる:
 <screen>
 &rootprompt; net groupmap list
 Domain Admins (S-1-5-21-72630-412605-116429-512) -> Domain Admins
@@ -484,21 +486,22 @@ Engineers (S-1-5-21-72630-412605-116429-3001) -> Engineers
 	</para>
 
 	<para>
-	Given that the user <constant>ajt</constant> is already a member of the UNIX/Linux group and, via the
-	group mapping, a member of the Windows group, an attempt to add this account again should fail. This is
-	demonstrated here:
+	与えられた<constant>ajt</constant>というユーザは、すでにUNIX/Linuxグループの
+	メンバで、グループマッピング経由、Windowsグループのメンバで、このアカウントを
+	再度追加する試みは失敗する。これのデモは以下の通り:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group addmem</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group addmem "MIDEARTH\Engineers" ajt -Uroot%not24get
 Could not add ajt to MIDEARTH\Engineers: NT_STATUS_MEMBER_IN_GROUP
 </screen>
-	This shows that the group mapping between UNIX/Linux groups and Windows groups is effective and
-	transparent.
+	これは、UNIX/LinuxグループとWindowsグループの間のグループマッピングは有効でかつ
+	透過的であることを示している。
 	</para>
 
 	<para>
-	To permit the user <constant>ajt</constant> to be added using the <command>net rpc group</command> utility,
-	this account must first be removed. The removal and confirmation of its effect is shown here:
+	ユーザ<constant>ajt</constant>を、<command>net rpc group</command>ユーティリティ
+	を使って追加することを許可するために、このアカウントは最初に削除されねばならない。
+	削除とその確認は以下のようになる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group delmem</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group delmem "MIDEARTH\Engineers" ajt -Uroot%not24get
@@ -507,12 +510,12 @@ Engineers:x:1000:jht
 &rootprompt; net rpc group members Engineers -Uroot%not24get
 MIDEARTH\jht
 </screen>
-	In this example both at the UNIX/Linux system level, the group no longer has the <constant>ajt</constant>
-	as a member. The above also shows this to be the case for Windows group membership.
+	この例2つの中で、UNIX/Linuxシステムレベルで、グループはもはや<constant>ajt</constant>
+	をメンバとしてはいない。上記は又Windowsグループメンバシップの場合も示している。
 	</para>
 
 	<para>
-	The account is now added again, using the <command>net rpc group</command> utility:
+	<command>net rpc group</command>ユーティリティを使ってアカウントは再度追加される:
 <screen>
 &rootprompt; net rpc group addmem "MIDEARTH\Engineers" ajt -Uroot%not24get
 &rootprompt; getent group Engineers
@@ -524,9 +527,10 @@ MIDEARTH\ajt
 	</para>
 
 	<para>
-	In this example the members of the Windows <constant>Domain Users</constant> account are validated using
-	the <command>net rpc group</command> utility. Note the this contents of the UNIX/Linux group was shown
-	four paragraphs earlier. The Windows (domain) group membership is shown here:
+	この例では、Windowsの<constant>Domain Users</constant>アカウントのメンバは
+	<command>net rpc group</command>ユーティリティを使って検証される。この
+	UNIX/Linuxグループの内容は4つ前のパラグラフで示されていることに注意。
+	Windows(ドメイン)グループメンバシップは以下のようになる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group members</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group members "Domain Users" -Uroot%not24get
@@ -536,8 +540,8 @@ MIDEARTH\ajt
 MIDEARTH\met
 MIDEARTH\vlendecke
 </screen>
-	This express example shows that Windows group names are treated by Samba (as with
-	MS Windows) in a case-insensitive manner:
+	この特別な例は、Windowsグループ名が、大文字小文字を区別しない流儀で
+	(Microsoft Windowsと同じ)Sambaによって扱われることを示す:
 <screen>
 &rootprompt; net rpc group members "DomAiN USerS" -Uroot%not24get
 MIDEARTH\jht
