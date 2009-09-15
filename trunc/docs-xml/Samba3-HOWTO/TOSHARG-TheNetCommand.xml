@@ -611,9 +611,11 @@ DOM\jht
 	<title>Sambaサーバからのワークステーション上のネストされたグループの管理</title>
 
 	<para>
-	Windows network administrators often ask on the Samba mailing list how it is possible to grant everyone
-	administrative rights on their own workstation. This is of course a very bad practice, but commonly done
-	to avoid user complaints. Here is how it can be done remotely from a Samba PDC or BDC:
+	Windowsネットワーク管理者はしばしばSambaメーリングリストに、個々のワーク
+	ステーション上ですべての人に管理者権限を許可することが可能かと言うことを
+	質問してくる。これは、もちろんとても悪い習慣ではあるが、一般的にユーザの不満を
+	防ぐために行われる。個々では、どのようにSamba PDCまたはBDCからリモートでそれが
+	出来るかを示す:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group addmem</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc group addmem "Administrators" "Domain Users" \
@@ -622,23 +624,25 @@ DOM\jht
 	</para>
 
 	<para>
-	This can be scripted, and can therefore be performed as a user logs onto the domain from a Windows
-	workstation. Here is a simple example that shows how this can be done.
+	これはスクリプト化出来、そのためにWindowsワークステーションからドメインに
+	ログオンするユーザとして実行できる。どのようにそれが行われるかの簡単な例を
+	以下に示す。
 	</para>
 
 	<procedure>
-	<title>Automating User Addition to the Workstation Power Users Group</title>
+	<title>ワークステーションの Power Usersグループへの自動的なユーザの追加</title>
 
 		<step><para>
-		Create the script shown in <link linkend="autopoweruserscript"></link> and locate it in
-		the directory <filename>/etc/samba/scripts</filename>, named as <filename>autopoweruser.sh</filename>.
+		<link linkend="autopoweruserscript"></link>で示されているスクリプトを
+		作成し、<filename>autopoweruser.sh</filename>という名前で
+		ディレクトリ<filename>/etc/samba/scripts</filename>中に配置する。
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>group addmem</tertiary></indexterm>
 <indexterm><primary>autopoweruser.sh</primary></indexterm>
 <indexterm><primary>/etc/samba/scripts</primary></indexterm>
 		</para></step>
 
 <example id="autopoweruserscript">
-<title>Script to Auto-add Domain Users to Workstation Power Users Group</title>
+<title>ワークステーションのPower UsersグループにDomain Users を自動で追加するスクリプト</title>
 <screen>
 #!/bin/bash
 
@@ -650,7 +654,7 @@ exit 0
 </example>
 
 		<step><para>
-		Set the permissions on this script to permit it to be executed as part of the logon process:
+		ログオンプロセスの一部として実行できるようにスクリプトにパーを設定する:
 <screen>
 &rootprompt; chown root:root /etc/samba/autopoweruser.sh
 &rootprompt; chmod 755 /etc/samba/autopoweruser.sh
@@ -658,12 +662,13 @@ exit 0
 		</para></step>
 
 		<step><para>
-		Modify the &smb.conf; file so the <literal>NETLOGON</literal> stanza contains the parameters
-		shown in <link linkend="magicnetlogon">the Netlogon Example smb.conf file</link>.
+		<link linkend="magicnetlogon">Netlogonのsmb.confファイルでの例</link>
+		で示されるような<literal>NETLOGON</literal>セクションが含むパラメータ
+		のように&smb.conf;ファイルを変更する。
 		</para></step>
 
 <example id="magicnetlogon">
-<title>A Magic Netlogon Share</title>
+<title>Magic Netlogon共有</title>
 <smbconfblock>
 <smbconfsection name="[netlogon]"/>
 <smbconfoption name="comment">Netlogon Share</smbconfoption>
@@ -675,19 +680,21 @@ exit 0
 </example>
 
 		<step><para>
-		Ensure that every Windows workstation Administrator account has the same password that you
-		have used in the script shown in <link linkend="magicnetlogon">the Netlogon Example smb.conf
-		file</link>
+		すべてのWindowsワークステーション管理者アカウントが、
+		<link linkend="magicnetlogon">Netlogonのsmb.confファイルでの例</link>
+		にあるようなスクリプト中で使われるのと同じパスワードを持つようにする。
+		</link>
 		</para></step>
 
 </procedure>
 
 	<para>
-	This script will be executed every time a user logs on to the network. Therefore every user will
-	have local Windows workstation management rights. This could of course be assigned using a group,
-	in which case there is little justification for the use of this procedure. The key justification
-	for the use of this method is that it will guarantee that all users have appropriate rights on
-	the workstation.
+	このスクリプトはユーザがネットワークにログオンする時には毎回実行される。
+	そのため、すべてのユーザはローカルWindowsワークステーションの管理権限を
+	持つ。これはもちろんグループを使って割り当てることが出来、その場合、
+	この手続きの使用のためには微少な修正ですむ。この方法の使用のための修正
+	点の肝心なところは、すべてのユーザがワークステーション上で適切な権限を
+	持つことを保証することである。
 	</para>
 
 	</sect3>
@@ -697,7 +704,7 @@ exit 0
 	</sect1>
 
 	<sect1>
-	<title>UNIX and Windows User Management</title>
+	<title>UNIXとWindowsのユーザ管理</title>
 
 	<para>
 <indexterm><primary>user account</primary></indexterm>
