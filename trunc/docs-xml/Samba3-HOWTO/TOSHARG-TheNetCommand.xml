@@ -852,34 +852,34 @@ marygee: geeringm
 <indexterm><primary>共有管理</primary></indexterm>
 <indexterm><primary>グループ管理</primary></indexterm>
 <indexterm><primary>ユーザ管理</primary></indexterm>
-	With all versions of Samba earlier than 3.0.11 the only account on a Samba server that could
-	manage users, groups, shares, printers, and such was the <constant>root</constant> account. This caused
-	problems for some users and was a frequent source of scorn over the necessity to hand out the
-	credentials for the most security-sensitive account on a UNIX/Linux system.
+	3.0.11より前のすべてのSambaは、Sambaサーバ上で、ユーザ、グループ、共有、プリンタ
+	とその他の管理を行うのに、<constant>root</constant>アカウントしか使えなかった。
+	これは、何人かのユーザには問題を引き起こし、しばしばUNIX/Linuxシステム上で、最も
+	セキュリティに敏感なアカウントの権限を渡す必要があるという弱点の元であった。
 	</para>
 
 	<para>
-<indexterm><primary>delegate administrative privileges</primary></indexterm>
-<indexterm><primary>normal user</primary></indexterm>
-<indexterm><primary>rights and privilege</primary></indexterm>
-<indexterm><primary>privilege management</primary></indexterm>
-<indexterm><primary>groups of users</primary></indexterm>
-	New to Samba version 3.0.11 is the ability to delegate administrative privileges as necessary to either
-	a normal user or to groups of users. The significance of the administrative privileges is documented
-	in <link linkend="rights"/>. Examples of use of the <command>net</command> for user rights and privilege
-	management is appropriate to this chapter.
+<indexterm><primary>管理者権限の委譲</primary></indexterm>
+<indexterm><primary>通常のユーザ</primary></indexterm>
+<indexterm><primary>権利と権限</primary></indexterm>
+<indexterm><primary>特権管理</primary></indexterm>
+<indexterm><primary>ユーザのグループ</primary></indexterm>
+	Sambaバージョン3.0.11から、ユーザまたはユーザが属するグループに対して必要に応じて
+	管理者権限を委譲する機能が加わった。管理者特権の重要性は<link linkend="rights"/>に
+	説明がある。ユーザ権限と権利管理に関する<command>net</command>コマンドの使用例は
+	この章の適切な箇所にある。
 	</para>
 
 	<note><para>
-	When user rights and privileges are correctly set, there is no longer a need for a Windows
-	network account for the <constant>root</constant> user (nor for any synonym of it) with a UNIX UID=0.
-	Initial user rights and privileges can be assigned by any account that is a member of the <constant>
-	Domain Admins</constant> group. Rights can be assigned to user as well as group accounts.
+	ユーザ権限と権利が正しく設定した場合、UNIX UID=0である<constant>root</constant>ユーザ
+	(およびその同義語)のためのWindowsネットワークアカウントの必要がなくなる。初期のユーザ
+	権限と権利は、<constant>Domain Admins</constant>グループのメンバの任意のアカウントに
+	割り当てることが出来る。権利はグループアカウントと同じように割り当てられる。
 	</para></note>
 
 	<para>
-	By default, no privileges and rights are assigned. This is demonstrated by executing the command
-	shown here:
+	既定値では、何らの権利と権限も割り当てられない。これは以下のコマンドを実行する
+	ことで以下のように表示される:
 <screen>
 &rootprompt; net rpc rights list accounts -U root%not24get
 BUILTIN\Print Operators
@@ -903,8 +903,8 @@ No privileges assigned
 	</para>
 
 	<para>
-	The <command>net</command> command can be used to obtain the currently supported capabilities for rights
-	and privileges using this method:
+	<command>net</command>コマンドは、以下の方法で現在サポートされている権利と
+	権限を得るのに使える:
 <indexterm><primary>SeMachineAccountPrivilege</primary></indexterm>
 <indexterm><primary>SePrintOperatorPrivilege</primary></indexterm>
 <indexterm><primary>SeAddUsersPrivilege</primary></indexterm>
@@ -925,15 +925,13 @@ No privileges assigned
             SeRestorePrivilege  Restore files and directories
       SeTakeOwnershipPrivilege  Take ownership of files or other objects
 </screen>
-	Machine account privilege is necessary to permit a Windows NT4 or later network client to be added to the
-	domain. The disk operator privilege is necessary to permit the user to manage share ACLs and file and
-	directory ACLs for objects not owned by the user.
+	Machine account権限は、Windows NT4以降のネットワーククライアントをドメインに
+	参加させるために必要である。disk operator権限は、ユーザが所有していない
+	オブジェクトの、共有のACLとファイルとディレクトリのACLを管理するために必要である。
 	</para>
 
 	<para>
-	In this example, all rights are assigned to the <constant>Domain Admins</constant> group. This is a good
-	idea since members of this group are generally expected to be all-powerful. This assignment makes that
-	the reality:
+	この例では、すべての権利は<constant>Domain Admins</constant>グループに割り当てられる。これは、このグループのメンバが通常全権を有することになっている。この割り当ては以下のようになっている:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>rights grant</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc rights grant "MIDEARTH\Domain Admins" \
