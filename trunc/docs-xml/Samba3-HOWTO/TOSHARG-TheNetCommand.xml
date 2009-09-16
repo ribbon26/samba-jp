@@ -785,13 +785,14 @@ Deleted user account
 	<title>ユーザアカウントの管理</title>
 
 	<para>
-	Two basic user account operations are routinely used: change of password and querying which groups a user
-	is a member of. The change of password operation is shown in <link linkend="sbeuseraddn"/>.
+	2の基本的なユーザアカウント操作が定常的に使われる:パスワード変更とどのグループに
+	ユーザが所属しているかの問い合わせである。パスワード変更操作は
+	<link linkend="sbeuseraddn"/>の通り。
 	</para>
 
 	<para>
-	The ability to query Windows group membership can be essential. Here is how a remote server may be
-	interrogated to find which groups a user is a member of:
+	Windowsグループのメンバシップの問い合わせ能力は基本的である。以下では、リモート
+	サーバが、どのグループにユーザが属しているかを調べることが出来るかを示す:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user info</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc user info jacko -S SAURON -Uroot%not24get
@@ -806,37 +807,36 @@ Emergency Services
 	</para>
 
 	<para>
-	It is also possible to rename user accounts:
-<indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user rename</tertiary></indexterm>oldusername newusername
-	Note that this operation does not yet work against Samba Servers. It is, however, possible to rename useraccounts on
-	Windows Servers.
+	古いユーザ名から新しいユーザ名へのユーザアカウントの改名も可能である。ただし、この操作はSambaサーバに対しては動作しないことに注意。しかし、ユーザ名の改名はWindowsサーバでは可能である。
+<indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user rename</tertiary></indexterm>
 
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>User Mapping</title>
+	<title>ユーザのマッピング</title>
 
 	<para>
-<indexterm><primary>logon name</primary></indexterm>
+<indexterm><primary>ログイン名</primary></indexterm>
 <indexterm><primary>/etc/samba/smbusers</primary></indexterm>
 <indexterm><primary>username map</primary></indexterm>
-	In some situations it is unavoidable that a user's Windows logon name will differ from the login ID
-	that user has on the Samba server. It is possible to create a special file on the Samba server that
-	will permit the Windows user name to be mapped to a different UNIX/Linux user name. The &smb.conf;
-	file must also be amended so that the <constant>[global]</constant> stanza contains the parameter:
+	ある条件下で、ユーザのWindowsにおけるログオン名はSambaサーバ上で持つユーザの
+	ログインIDと異なることは避けられない。Sambaサーバ上で、Windowsユーザ名を
+	異なったUNIX/Linuxユーザ名にマップできる特別なファイルを作ることが出来る。
+	&smb.conf;ファイルも、<constant>[global]</constant>セクションで以下の
+	パラメータを含むように変更しなければならない。
 <screen>
 username map = /etc/samba/smbusers
 </screen>
-	The content of the <filename>/etc/samba/smbusers</filename> file is shown here:
+	<filename>/etc/samba/smbusers</filename>ファイルの内容は以下の通り:
 <screen>
 parsonsw: "William Parsons"
 marygee: geeringm
 </screen>
-	In this example the Windows user account <quote>William Parsons</quote> will be mapped to the UNIX user
-	<constant>parsonsw</constant>, and the Windows user account <quote>geeringm</quote> will be mapped to the
-	UNIX user <constant>marygee</constant>.
+	この例では、Windowsユーザアカウント<quote>William Parsons</quote>はUNIXユーザ
+	<constant>parsonsw</constant>にマップされ、Windowsユーザアカウント
+	<quote>geeringm</quote>はUNIXユーザconstant>marygee</constant>にマップされる。
 	</para>
 
 	</sect2>
@@ -844,14 +844,14 @@ marygee: geeringm
 	</sect1>
 
 	<sect1>
-	<title>Administering User Rights and Privileges</title>
+	<title>管理ユーザの権限と権利</title>
 
 	<para>
 <indexterm><primary>credentials</primary></indexterm>
-<indexterm><primary>manage printers</primary></indexterm>
-<indexterm><primary>manage shares</primary></indexterm>
-<indexterm><primary>manage groups</primary></indexterm>
-<indexterm><primary>manage users</primary></indexterm>
+<indexterm><primary>プリンタ管理</primary></indexterm>
+<indexterm><primary>共有管理</primary></indexterm>
+<indexterm><primary>グループ管理</primary></indexterm>
+<indexterm><primary>ユーザ管理</primary></indexterm>
 	With all versions of Samba earlier than 3.0.11 the only account on a Samba server that could
 	manage users, groups, shares, printers, and such was the <constant>root</constant> account. This caused
 	problems for some users and was a frequent source of scorn over the necessity to hand out the
