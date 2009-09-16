@@ -707,53 +707,53 @@ exit 0
 	<title>UNIXとWindowsのユーザ管理</title>
 
 	<para>
-<indexterm><primary>user account</primary></indexterm>
-<indexterm><primary>UNIX/Linux user account</primary></indexterm>
+<indexterm><primary>ユーザアカウント</primary></indexterm>
+<indexterm><primary>UNIX/Linuxのユーザアカウント</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
-<indexterm><primary>POSIX account</primary></indexterm>
-<indexterm><primary>range</primary></indexterm>
-<indexterm><primary>Windows user accounts</primary></indexterm>
+<indexterm><primary>POSIXアカウント</primary></indexterm>
+<indexterm><primary>レンジ</primary></indexterm>
+<indexterm><primary>Windowsのユーザアカウント</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>account information</primary></indexterm>
-	Every Windows network user account must be translated to a UNIX/Linux user account. In actual fact,
-	the only account information the UNIX/Linux Samba server needs is a UID.  The UID is available either
-	from a system (POSIX) account or from a pool (range) of UID numbers that is set aside for the purpose
-	of being allocated for use by Windows user accounts. In the case of the UID pool, the UID for a
-	particular user will be allocated by <command>winbindd</command>.
+<indexterm><primary>アカウント情報</primary></indexterm>
+	すべてのWindowsネットワークユーザアカウントはUNIX/Linuxユーザアカウントに変換
+	されねばならない。実際には、UNIX/LinuxのSambaサーバは、アカウント情報の内のUID
+	のみを必要とする。UIDは、システム(POSIX)アカウントか、Windowsユーザアカウントに
+	よって使われるために割り当てられる目的で予約されるUID番号の事前割当範囲(レンジ)
+	から取得される。この場合、UID事前割当範囲(訳注:pool)の場合、特定のユーザに
+	対するUIDは<command>winbindd</command>によって割り当てられる。
 	</para>
 
 	<para>
-	Although this is not the appropriate place to discuss the <smbconfoption name="username map"/> facility,
-	this interface is an important method of mapping a Windows user account to a UNIX account that has a
-	different name. Refer to the man page for the &smb.conf; file for more information regarding this
-	facility. User name mappings cannot be managed using the <command>net</command> utility.
+	ここは、異なった名前を持つUNIXアカウントにWindowsユーザアカウントをマッピング
+	する重要な方法であ<smbconfoption name="username map"/>インタフェース機能を
+	議論するのにふさわしい場所ではない。この機能についての詳細は&smb.conf;ファイルの
+	マニュアルページを参照のこと。
 	</para>
 
 	<sect2 id="sbeuseraddn">
-	<title>Adding User Accounts</title>
+	<title>ユーザアカウントの追加</title>
 
 	<para>
-	The syntax for adding a user account via the <command>net</command> (according to the man page) is shown
-	here:
+	<command>net</command>経由(詳細はマニュアルページ)でのユーザの追加は以下の通り:
 <screen>
 net [&lt;method&gt;] user ADD &lt;name&gt; [-c container] [-F user flags] \
     [misc. options] [targets]
 </screen>
-	The user account password may be set using this syntax:
+	ユーザアカウントのパスワードは以下の方法で設定できる:
 <screen>
 net rpc password &lt;username&gt; [&lt;password&gt;] -Uadmin_username%admin_pass
 </screen>
 	</para>
 
 	<para>
-	The following demonstrates the addition of an account to the server <constant>FRODO</constant>:
+	以下ではサーバ<constant>FRODO</constant>にアカウントを追加する例を示す:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user add</tertiary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user password</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc user add jacko -S FRODO -Uroot%not24get
 Added user jacko
 </screen>
-	The account password can be set with the following methods (all show the same operation):
+	アカウントのパスワードは以下の方法で追加できる(すべて同じ操作を示す):
 <screen>
 &rootprompt; net rpc password jacko f4sth0rse -S FRODO -Uroot%not24get
 &rootprompt; net rpc user password jacko f4sth0rse \
@@ -764,14 +764,14 @@ Added user jacko
 	</sect2>
 
 	<sect2>
-	<title>Deletion of User Accounts</title>
+	<title>ユーザアカウントの削除</title>
 
 	<para>
-	Deletion of a user account can be done using the following syntax:
+	ユーザアカウントの削除方法は以下の通り:
 <screen>
 net [&lt;method&gt;] user DELETE &lt;name&gt; [misc. options] [targets]
 </screen>
-	The following command will delete the user account <constant>jacko</constant>:
+	以下ではユーザアカウント<constant>jacko</constant>を削除する:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user delete</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc user delete jacko -Uroot%not24get
@@ -782,7 +782,7 @@ Deleted user account
 	</sect2>
 
 	<sect2>
-	<title>Managing User Accounts</title>
+	<title>ユーザアカウントの管理</title>
 
 	<para>
 	Two basic user account operations are routinely used: change of password and querying which groups a user
