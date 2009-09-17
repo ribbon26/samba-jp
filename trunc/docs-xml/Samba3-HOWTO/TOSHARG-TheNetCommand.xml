@@ -1164,11 +1164,11 @@ none
 DAMNATION$:1016:9AC1F121DF897688AAD3B435B51404EE: \
 7F845808B91BB9F7FEF44B247D9DC9A6:[I         ]:LCT-428934B1:
 </screen>
-	A trust account will always have an I in the field within the square brackets.
+	信頼アカウントはいつでも大括弧の中にIという値を持っている。
 	</para>
 
 	<para>
-	If the trusting domain is not capable of being reached, the following command will fail:
+	もしも信頼されているドメインへ接続できないと、以下のコマンドは失敗する:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>trustdom list</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc trustdom list -Uroot%not24get
@@ -1194,9 +1194,9 @@ DAMNATION           domain controller is not responding
 	</para>
 
 	<para>
-	Where a trust account has been created on a foreign domain, Samba is able to establish the trust (connect with)
-	the foreign account. In the process it creates a one-way trust to the resources on the remote domain. This
-	command achieves the objective of joining the trust relationship:
+	信頼アカウントが外部ドメインで作成された場合、Sambaは信頼関係を外部アカウントに
+	対して(接続して)確立する。プロセスの中で、リモートドメイン上でリソースに対する
+	1方向の信頼を確立する。このコマンドは信頼関係に参加する目的を達成する:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>trustdom establish</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc trustdom establish DAMNATION
@@ -1204,7 +1204,7 @@ Password: xxxxxxx	== f00db4r
 Could not connect to server TRANSGRESSION
 Trust to domain DAMNATION established
 </screen>
-	Validation of the two-way trust now established is possible as shown here:
+	今確立した双方向の信頼関係の表示は以下のように行える:
 <screen>
 &rootprompt; net rpc trustdom list -Uroot%not24get
 Trusted domains list:
@@ -1218,8 +1218,8 @@ DAMNATION           S-1-5-21-1385457007-882775198-1210191635
 	</para>
 
 	<para>
-	Sometimes it is necessary to remove the ability for local users to access a foreign domain. The trusting
-	connection can be revoked as shown here:
+	時々、外部ドメインにアクセするためのローカルユーザのための能力を取り去る必要が
+	ある。信頼している接続は以下のように取り去ることが出来る:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>trustdom revoke</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc trustdom revoke DAMNATION -Uroot%not24get
@@ -1237,18 +1237,19 @@ DAMNATION           S-1-5-21-1385457007-882775198-1210191635
 	</sect1>
 
 	<sect1>
-	<title>Managing Security Identifiers (SIDS)</title>
+	<title>セキュリティ識別子(SID)の管理</title>
 
 	<para>
-<indexterm><primary>security identifier</primary></indexterm>
+<indexterm><primary>セキュリティ識別子</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-<indexterm><primary>desktop profiles</primary></indexterm>
+<indexterm><primary>デスクトッププロファイル</primary></indexterm>
 <indexterm><primary>user encoded</primary></indexterm>
-<indexterm><primary>group SID</primary></indexterm>
-	The basic security identifier that is used by all Windows networking operations is the Windows security
-	identifier (SID). All Windows network machines (servers and workstations), users, and groups are
-	identified by their respective SID. All desktop profiles are also encoded with user and group SIDs that
-	are specific to the SID of the domain to which the user belongs.
+<indexterm><primary>グループSID</primary></indexterm>
+	すべてのWindowsネットワーキング操作で使われる基本的なセキュリティ識別子は
+	Windowsセキュリティ識別子(SID)である。すべてのWindowsネットワークマシン(サーバと
+	ワークステーション)、ユーザとグループはそれぞれのSIDで確認される。すべてのデス
+	クトッププロファイルも、ユーザが存在しているドメインのSIDに固有のユーザと
+	グループSIDでエンコードされる。
 	</para>
 
 	<para>
@@ -1256,25 +1257,29 @@ DAMNATION           S-1-5-21-1385457007-882775198-1210191635
 <indexterm><primary>domain SID</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>rejoin</primary></indexterm>
-	It is truly prudent to store the machine and/or domain SID in a file for safekeeping. Why? Because 
-	a change in hostname or in the domain (workgroup) name may result in a change in the SID. When you
-	have the SID on hand, it is a simple matter to restore it. The alternative is to suffer the pain of
-	having to recover user desktop profiles and perhaps rejoin all member machines to the domain.
+	保護のためにマシンやドメインのSIDをファイルに保存することは、本当に重要である。
+	なぜか?なぜならば、ホスト名中かドメイン(ワークグループ)中の名前の変更点が、
+	SID内の変更になるかもしれないからである。SIDが手元にある場合、それを回復さ
+	せることは簡単な問題である。別の方法を取ると、ユーザデスクトッププロファイルを
+	回復しなければならず、すべてのメンバメンバマシンを再結合しなければならないとい
+	う手間暇で苦しむことになる。
 	</para>
 
 	<para>
-	First, do not forget to store the local SID in a file. It is a good idea to put this in the directory
-	in which the &smb.conf; file is also stored. Here is a simple action to achieve this:
+	最初に、ファイル中にローカルSIDを格納することを忘れないこと。&smb.conf;が保存
+	されているディレクトリ中に配置しておくのは良い方法である。これを行うのは
+	以下のように行う:
 <indexterm><primary>net</primary><secondary>getlocalsid</secondary></indexterm>
 <screen>
 &rootprompt; net getlocalsid > /etc/samba/my-sid
 </screen>
-	Good, there is now a safe copy of the local machine SID. On a PDC/BDC this is the domain SID also.
+	これで、ローカルのマシンSIDが安全に保存できた。PDC/BDC上ではドメインSID
+	でもある。
 	</para>
 
 	<para>
-	The following command reveals what the former one should have placed into the file called
-	<filename>my-sid</filename>:
+	以下のコマンドは、前者が<filename>my-sid</filename>と呼ばれているファイル中に
+	入れなければならなかったことを明らかにする:
 <screen>
 &rootprompt; net getlocalsid
 SID for domain MERLIN is: S-1-5-21-726309263-4128913605-1168186429
@@ -1282,9 +1287,9 @@ SID for domain MERLIN is: S-1-5-21-726309263-4128913605-1168186429
 	</para>
 
 	<para>
-	If ever it becomes necessary to restore the SID that has been stored in the <filename>my-sid</filename>
-	file, simply copy the SID (the string of characters that begins with <constant>S-1-5-21</constant>) to
-	the command line shown here:
+	もしも、<filename>my-sid</filename>ファイル中に格納されたSIDをリストアする
+	必要性がある場合、単純にSID(<constant>S-1-5-21</constant>で始まる文字列)を
+	以下のコマンドラインのように行う:
 <indexterm><primary>net</primary><secondary>setlocalsid</secondary></indexterm>
 <screen>
 &rootprompt; net setlocalsid S-1-5-21-1385457007-882775198-1210191635
