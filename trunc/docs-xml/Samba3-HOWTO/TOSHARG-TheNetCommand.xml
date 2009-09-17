@@ -1056,27 +1056,30 @@ Joined domain MIDEARTH.
 merlin$:1009:9B4489D6B90461FD6A3EC3AB96147E16:\
 176D8C554E99914BDF3407DEA2231D80:[S          ]:LCT-42891919:
 </screen>
-	The S in the square brackets means this is a server (PDC/BDC) account. The domain join can be cast to join
-	purely as a workstation, in which case the S is replaced with a W (indicating a workstation account). The
-	following command can be used to affect this:
+	大カッコの中のSは、これがサーバ(PDC/BDC)アカウントであることを意味する。
+	ドメインの参加は、純粋にワークステーションとして参加するために処理が行われ、
+	その場合はSはW(ワークステーションアカウントを意味する)に置き換えられる。
+	これを行うには以下のコマンドを使う:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>join member</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc join member -S FRODO -Uroot%not24get
 Joined domain MIDEARTH.
 </screen>
-	Note that the command-line parameter <constant>member</constant> makes this join specific. By default
-	the type is deduced from the &smb.conf; file configuration. To specifically join as a PDC or BDC, the
-	command-line parameter will be <constant>[PDC | BDC]</constant>. For example:
+	コマンドラインパラメータ<constant>member</constant>はこれをjoin固有にすること
+	に注意。既定値では、タイプは&smb.conf;ファイルの設定から推測される。特に、PDC又は
+	BDCとしてjoinするためには、コマンドラインパラメータを
+	<constant>[PDC | BDC]</constant>とする。例をあげると、
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>join bdc</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc join bdc -S FRODO -Uroot%not24get
 Joined domain MIDEARTH.
 </screen>
-	It is best to let Samba figure out the domain join type from the settings in the &smb.conf; file.
+	となる。これは、&smb.conf;ファイル中の設定からドメインへのjoinのタイプを
+	Sambaに理解させるのに最も良い方法である。
 	</para>
 
 	<para>
-	The command to join a Samba server to a Windows ADS domain is shown here:
+	Windows ADSにSambaサーバをjoinさせるコマンドは以下の通り:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>join</tertiary></indexterm>
 <screen>
 &rootprompt; net ads join -UAdministrator%not24get
@@ -1086,22 +1089,23 @@ Joined 'FRANDIMITZ' to realm 'GDANSK.ABMAS.BIZ'
 	</para>
 
 	<para>
-	There is no specific option to remove a machine account from an NT4 domain. When a domain member that is a
-	Windows machine is withdrawn from the domain, the domain membership account is not automatically removed
-	either. Inactive domain member accounts can be removed using any convenient tool. If necessary, the
-	machine account can be removed using the following <command>net</command> command:
+	NT4ドメインからマシンを削除するための特定のオプションはない。ドメインから削除
+	されるドメインメンバがWindowsマシンの場合、ドメインメンバシップアカウントは自動的
+	には削除されない。無効になっているドメインアカウントは、何らかのツールで削除する
+	ことが出来る。もしも必要ならば、マシンアカウントは以下の<command>net</command>
+	コマンドで削除できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>user delete</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc user delete HERRING\$ -Uroot%not24get
 Deleted user account.
 </screen>
-	The removal is made possible because machine accounts are just like user accounts with a trailing $
-	character. The account management operations treat user and machine accounts in like manner.
+	削除は、マシンアカウントが末尾に$が付いたユーザアカウントのようになっている
+	ために可能となる。アカウント管理操作はユーザとマシンアカウントの間で同じ方法で
+	扱える。
 	</para>
 
 	<para>
-	A Samba-3 server that is a Windows ADS domain member can execute the following command to detach from the
-	domain:
+	Windows ADS メンバであるSamba-3サーバはドメインから、以下のコマンドで離脱できる:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>leave</tertiary></indexterm>
 <screen>
 &rootprompt; net ads leave
@@ -1109,8 +1113,7 @@ Deleted user account.
 	</para>
 
 	<para>
-	Detailed information regarding an ADS domain can be obtained by a Samba DMS machine by executing the
-	following:
+	ADSドメインについての詳細な情報は、以下を使ってSamba DMSマシンから得られる:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>status</tertiary></indexterm>
 <screen>
 &rootprompt; net ads status
