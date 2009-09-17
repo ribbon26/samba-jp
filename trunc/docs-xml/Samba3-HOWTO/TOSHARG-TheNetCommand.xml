@@ -1294,64 +1294,68 @@ SID for domain MERLIN is: S-1-5-21-726309263-4128913605-1168186429
 <screen>
 &rootprompt; net setlocalsid S-1-5-21-1385457007-882775198-1210191635
 </screen>
-	Restoration of a machine SID is a simple operation, but the absence of a backup copy can be very
-	problematic.
+	マシンSIDのリストアは単純な操作であるが、バックアップコピーがないととて
+	も大変である。
 	</para>
 
 	<para>
-	The following operation is useful only for machines that are being configured as a PDC or a BDC.
-	DMS and workstation clients should have their own machine SID to avoid
-	any potential namespace collision. Here is the way that the BDC SID can be synchronized to that
-	of the PDC (this is the default NT4 domain practice also):
+	以下の操作はマシンがPDCまたはBDCに設定されている時のみ有用である。DMSとワーク
+	ステーションクライアントは名前空間の競合の可能性を防ぐために固有のSIDを持つ
+	べきである。以下は、BDCのSIDをPDCに同期する例である(これは既定値の NT4
+	ドメインの動作である):
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>getsid</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc getsid -S FRODO -Uroot%not24get
 Storing SID S-1-5-21-726309263-4128913605-1168186429 \
     for Domain MIDEARTH in secrets.tdb
 </screen>
-	Usually it is not necessary to specify the target server (-S FRODO) or the administrator account
-	credentials (-Uroot%not24get).
+	通常、ターゲットのサーバ(-S FRODO)や管理者アカウントのパスワード(-Uroot%not24get)
+	を指定する必要はない。
 	</para>
 
 	</sect1>
 	
 	<sect1>
-	<title>Share Management</title>
+	<title>共有管理</title>
 
 	<para>
-	Share management is central to all file serving operations. Typical share operations include:
+	共有管理は、すべてのファイルサービス操作にとって主要なものである。通常の共有
+	操作は以下を含む:
 	</para>
 
 	<itemizedlist>
-		<listitem><para>Creation/change/deletion of shares</para></listitem>
-		<listitem><para>Setting/changing ACLs on shares</para></listitem>
-		<listitem><para>Moving shares from one server to another</para></listitem>
-		<listitem><para>Change of permissions of share contents</para></listitem>
+		<listitem><para>共有の作成/変更/削除</para></listitem>
+		<listitem><para>共有へのACLの設定/変更</para></listitem>
+		<listitem><para>サーバ間での共有の移動</para></listitem>
+		<listitem><para>共有内容のパーミッションの変更</para></listitem>
 	</itemizedlist>
 
 	<para>
-	Each of these are dealt with here insofar as they involve the use of the <command>net</command>
-	command. Operations outside of this command are covered elsewhere in this document.
+	上記のおのおのは、それらが必要としている範囲において、
+	<command>net</command>コマンドを使ってここで分けられる。このコマンドの
+	範囲外の操作はこの文書のどこかで触れられている。
 	</para>
 
 	<sect2>
-	<title>Creating, Editing, and Removing Shares</title>
+	<title>共有の作成、編集と削除</title>
 
 	<para>
-	A share can be added using the <command>net rpc share</command> command capabilities.
-	The target machine may be local or remote and is specified by the -S option. It must be noted
-	that the addition and deletion of shares using this tool depends on the availability of a suitable
-	interface script. The interface scripts Sambas <command>smbd</command> uses are called
-	<smbconfoption name="add share command"/>, <smbconfoption name="delete share command"/> and
-	<smbconfoption name="change share command"/> A set of example scripts are provided in the Samba source
-	code tarball in the directory <filename>~samba/examples/scripts</filename>.
+	共有は<command>net rpc share</command>の能力を使って追加できる。ターゲットマシン
+	はローカルまたは-Sオプションを指定することでリモートでもよい。このツールを使った
+	共有の追加と削除は、適切なインタフェーススクリプトが有効であることに依存する
+	ことに注意しなければならない。Sambaの<command>smbd</command>が使うインタフェース
+	スクリプトは、<smbconfoption name="add share command"/>、
+	<smbconfoption name="delete share command"/>と
+	smbconfoption name="change share command"/>と呼ばれる。スクリプトの例一式は、
+	Sambaのソース内のディレクトリ<filename>~samba/examples/scripts</filename>
+	で提供されている。
 	</para>
 
 	<para>
-	The following steps demonstrate the use of the share management capabilities of the <command>net</command>
-	utility. In the first step a share called <constant>Bulge</constant> is added. The sharepoint within the
-	file system is the directory <filename>/data</filename>. The command that can be executed to perform the
-	addition of this share is shown here:
+	以下のステップは、<command>net</command>ユーティリティの共有管理能力を使う例を
+	表示する。最初のステップで、<constant>Bulge</constant>という共有が追加される。
+	ファイルシステム内の共有ポイントは<filename>/data</filename>というディレクトリ
+	である。この共有を追加するためのコマンドの実行例は以下の通り:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>share add</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc share add Bulge=/data -S MERLIN -Uroot%not24get
