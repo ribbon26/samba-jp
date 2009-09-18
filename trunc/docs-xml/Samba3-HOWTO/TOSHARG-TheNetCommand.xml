@@ -1404,7 +1404,7 @@ kyocera
 
 	<para>
 	現時点で、<command>net</command>ツールはSamba共有上のACLを管理するのには使えない。
-	Microsoft Windowsの用語で、これは、共有リソースのアクセス許可(訳注:Share Permissions)
+	Microsoft Windowsの用語で、これは、共有のアクセス許可(訳注:Share Permissions)
 	と呼ばれる。
 	</para>
 
@@ -1430,80 +1430,81 @@ kyocera
 	</para>
 
 	<para>
-	The <command>net rpc share</command> command may be used to migrate shares, directories,
-	files, and all relevant data from a Windows server to a Samba server.
+	<command>net rpc share</command>コマンドは共有、ディレクトリ、ファイルとその他の
+	該当するデータをWindowsサーバからSambaサーバに移行するのに使うことが出来る。
 	</para>
 
 	<para>
-	A set of command-line switches permit the creation of almost direct clones of Windows file
-	servers. For example, when migrating a fileserver, file ACLs and DOS file attributes from
-	the Windows server can be included in the migration process and will reappear, almost identically,
-	on the Samba server when the migration has been completed.
+	コマンドラインスイッチは、Windowsファイルサーバのほとんど直接のクローンを作成できる。
+	たとえば、ファイルサーバを移行するとき、WindowsサーバのファイルのACLとDOSファイル
+	属性は以降プロセスの中に含まれ、移行が完了したときにSambaサーバ上で、ほとんど同じ
+	ように現れる。
 	</para>
 
 	<para>
-	The migration process can be completed only with the Samba server already being fully operational.
-	The user and group accounts must be migrated before attempting to migrate data
-	share, files, and printers. The migration of files and printer configurations involves the use
-	of both SMB and MS DCE RPC services. The benefit of the manner in which the migration process has
-	been implemented is that the possibility now exists to use a Samba server as a man-in-middle migration
-	service that affects a transfer of data from one server to another. For example, if the Samba
-	server is called MESSER, the source Windows NT4 server is called PEPPY, and the target Samba
-	server is called GONZALES, the machine MESSER can be used to effect the migration of all data
-	(files and shares) from PEPPY to GONZALES. If the target machine is not specified, the local
-	server is assumed by default - as net's general rule of thumb .
+	以降プロセスはSambaサーバが完全に動作可能な時にのみ完了できる。ユーザとグループ
+	アカウントは、データの共有、ファイルとプリンタを移行する前に移行されねばならない。
+	ファイルとプリンタ設定の移行は、SMBとMS DCE RPCサービスの両方を使用する。移行の
+	プロセスでの良い方法は、あるサーバから他へのデータの転送に影響する"中間者"
+	(訳注:man-in-middle)による移行としてSambaサーバを使うために現在存在するように
+	実装されている。たとえば、もしもSambaサーバがMESSERという名前で、移行元の
+	Windows NTサーバがPEPPYという名前で、移行先のSambaサーバがGONZALESであれば、
+	マシンMESSERはすべてのデータ(ファイルと共有)をPEPPYからGONZALESに移行を行う
+	のに使うことが出来る。もしも移行先が指定されていない場合、ローカルサーバが
+	既定値として、ネットワーク上での一般的な原則のように仮定される。
 	</para>
 
 	<para>
-	The success of server migration requires a firm understanding of the structure of the source
-	server (or domain) as well as  the processes on which the migration is critically dependant.
+	サーバ移行を成功裏に行うには、移行作業がとても依存するプロセスのように移行元の
+	サーバ(かドメイン)の構造をしっかり理解しておくことが要求される。
 	</para>
 
 	<para>
-	There are two known limitations to the migration process:
+	移行プロセスでは2つの制限が知られている:
 	</para>
 
 	<orderedlist>
 		<listitem><para>
-		The <command>net</command> command requires that the user credentials provided exist on both
-		the migration source and the migration target.
+		<command>net</command>コマンドは移行元と移行先両方でユーザ資格証明が
+		存在することを必要とする。
 		</para></listitem>
 
 		<listitem><para>
-		Printer settings may not be fully or may be incorrectly migrated. This might in particular happen
-		when migrating a Windows 2003 print server to Samba.
+		プリンタの設定は完全に移行できないか不正になるかもしれない。これは、
+		Windows 2003 サーバをSambaに移行する際に特に発生するかもしれない。
 		</para></listitem>
 	</orderedlist>
 
 	<sect3>
-	<title>Share Migration</title>
+	<title>共有の移行</title>
 
 	<para>
-	The <command>net rpc share migrate</command> command operation permits the migration of plain
-	share stanzas. A stanza contains the parameters within which a file or print share are defined.
-	The use of this migration method will create share stanzas that have as parameters the file
-	system directory path, an optional description, and simple security settings that permit write
-	access to files. One of the first steps necessary following migration is to review the share
-	stanzas to ensure that the settings are suitable for use.
+	<command>net rpc share migrate</command>コマンド操作は簡単な共有セクションの移行
+	ができる。セクションはファイル又はプリンタ共有が定義されているパラメータを含む。
+	この移行方法はパラメータとして、ファイルシステムディレクトリパス、オプション記述
+	と、ファイルへの書き込み許可を行う単純なセキュリティ設定を持つ共有セクションを
+	作成する。以下の移行で必要な最初のステップの1つは、共有セクションの設定が利用に
+	適しているかを確認することである。
 	</para>
 
 	<para>
-	The shares are created on the fly as part of the migration process. The <command>smbd</command>
-	application does this by calling on the operating system to execute the script specified by the 
-	&smb.conf; parameter <parameter>add share command</parameter>.
+	共有は移行プロセスの一部として動的に作成される。<command>smbd</command>は、
+	&smb.conf;パラメータの<parameter>add share command</parameter>によって
+	指定されるスクリプトを実行するためにOSを呼び出すことでこのことを行う。
 	</para>
 
 	<para>
-	There is a suitable example script for the <parameter>add share command</parameter> in the
-	<filename>$SAMBA_SOURCES/examples/scripts</filename> directory. It should be noted that
-	the account that is used to drive the migration must, of necessity, have appropriate file system
-	access privileges and have the right to create shares and to set ACLs on them. Such rights are
-	conferred by these rights: <parameter>SeAddUsersPrivilege</parameter> and <parameter>SeDiskOperatorPrivilege</parameter>.
-	For more information regarding rights and privileges please refer to <link linkend="rights"/>.
+	<filename>$SAMBA_SOURCES/examples/scripts</filename>ディレクトリ中に
+	<parameter>add share command</parameter>のための適切な例がある。移行を
+	行うときに使うアカウントは、必要に応じて、適切なファイルシステムへのアクセス
+	権とそれらに対するACL設定および共有の作成権限を持たねばならないことに注意。
+	そのような権限は、<parameter>SeAddUsersPrivilege</parameter>と
+	<parameter>SeDiskOperatorPrivilege</parameter>という権限である。
+	権限と権利についてのより詳細な情報は、<link linkend="rights"/>を参照のこと。
 	</para>
 
 	<para>
-	The syntax of the share migration command is shown here:
+	共有の移行のためのコマンドの文法は以下の通り:
 <screen>
 net rpc share MIGRATE SHARES &lt;share-name&gt; -S &lt;source&gt;
         [--destination=localhost] [--exclude=share1,share2] [-v]
