@@ -1584,30 +1584,33 @@ net rpc share MIGRATE FILES &lt;share-name&gt; -S &lt;source&gt;
 	</para>
 
 	<para>
-	Where it is necessary to preserve all file ACLs, the <parameter>--acls</parameter> switch should be added
-	to the above command line. Original file timestamps can be preserved by specifying the
-	<parameter>--timestamps</parameter> switch, and the DOS file attributes (i.e., hidden, archive, etc.) can
-	be preserved by specifying the <parameter>--attrs</parameter> switch.
+	すべてのファイルのACLを保存することが必要な場合、<parameter>--acls</parameter>
+	スイッチは上記のコマンドラインに追加すべきである。オリジナルのファイルの
+	タイムスタンプは<parameter>--timestamps</parameter>スイッチを指定することで
+	保存でき、DOSファイル属性(すなわち hidden,archiveなど)は
+	<parameter>--attrs</parameter>スイッチを指定することで保存できる。
 	</para>
 
 	<note><para>
-	The ability to preserve ACLs depends on appropriate support for ACLs as well as the general file system
-	semantics of the host operating system on the target server. A migration from one Windows file server to
-	another will perfectly preserve all file attributes. Because of the difficulty of mapping Windows ACLs
-	onto a POSIX ACLs-supporting system, there can be no perfect migration of Windows ACLs to a Samba server.
+	ACLの保存の能力は、移行先のサーバ上のホストOSの一般的なファイルシステムの機能と
+	同じように適切なACLのサポートに依存する。Windowsファイルサーバから他への
+	移行は、すべてのファイル属性を完全に保存する。WindowsのACLをPOSIX ACLをサポート
+	しているシステム上へのマッピングが困難なため、Windows ACLをSambaサーバへ
+	完全に移行することはできない。
 	</para></note>
 
 	<para>
-	The ACLs that result on a Samba server will most probably not match the originating ACLs. Windows supports
-	the possibility of files that are owned only by a group. Group-alone file ownership is not possible under
-	UNIX/Linux. Errors in migrating group-owned files can be avoided by using the &smb.conf; file
-	<smbconfoption name="force unknown acl user">yes</smbconfoption> parameter. This facility will
-	automatically convert group-owned files into correctly user-owned files on the Samba server.
+	Sambaサーバ上でのACLの結果はオリジナルのACLには、おおかた一致しない。Windowsは
+	グループのみで所有されるファイルをサポートしている。グループのみが所有する
+	ファイルはUNIX/Linuxでは不可能である。移行におけるエラーは、&smb.conf;ファイル
+	中に<smbconfoption name="force unknown acl user">yes</smbconfoption>
+	パラメータを使うことで防ぐことが出来る。この機能は自動的に、グループのみが所有
+	するファイルを、Windows上でユーザが所有するファイルに修正する。
 	</para>
 
 	<para>
-	An example for migration of files from a machine called <constant>nt4box</constant> to the Samba server
-	from which the process will be handled is shown here:
+	<constant>nt4box</constant>というマシンから、Sambaサーバへのファイルの移行の
+	手続きの例は以下の通り:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>share migrate files</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc share migrate files -S nt4box --acls \
@@ -1616,16 +1619,21 @@ net rpc share MIGRATE FILES &lt;share-name&gt; -S &lt;source&gt;
 	</para>
 
 	<para>
-	This command  will migrate all files and directories from all file shares on the Windows server called
-	<constant>nt4box</constant> to the Samba server from which migration is initiated. Files that are group-owned
-	will be owned by the user account <constant>administrator</constant>.
+	このコマンドは、<constant>nt4box</constant>というWindowsサーバから、移行作業を
+	始めるSambaサーバに、すべての共有の、すべてのファイルとディレクトリを移行する。
+	グループのみが所有するファイルは <constant>administrator</constant>という
+	ユーザアカウントが所有するようになる。
 	</para>
 
 	</sect3>
 	
 	<sect3>
-	<title>Share-ACL Migration</title>
+	<title>共有ACLの移行</title>
 	<para>
+	Administratorでさえも出来ない、その中に任意のファイルやディレクトリをコピー
+	できる、共有のACL(セキュリティ記述子)を持つことは可能である。そのため、共有
+	ACLは分離された機能中でおかれる:
+
 	It is possible to have share-ACLs (security descriptors) that won't allow you, even as Administrator, to
 	copy any files or directories into it. Therefor the migration of the share-ACLs has been put into a separate
 	function:
