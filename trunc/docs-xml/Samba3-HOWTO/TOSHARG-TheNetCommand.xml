@@ -1517,67 +1517,70 @@ net rpc share MIGRATE SHARES &lt;share-name&gt; -S &lt;source&gt;
 &rootprompt; net rpc share migrate shares myshare\
          -S win2k -U administrator%secret"
 </screen>
-	This will migrate the share <constant>myshare</constant> from the server <constant>win2k</constant>
-	to the Samba Server using the permissions that are tied to the account <constant>administrator</constant> 
-	with the password <constant>secret</constant>. The account that is used must be the same on both the
-	migration source server and the target Samba server. The use of the <command>net rpc
-	vampire</command>, prior to attempting the migration of shares, will ensure that accounts will be
-	identical on both systems. One precaution worth taking before commencement of migration of shares is
-	to validate that the migrated accounts (on the Samba server) have the needed rights and privileges.
-	This can be done as shown here:
+	これは、パスワードが<constant>secret</constant>であるアカウント
+	<constant>administrator</constant>に結びついたパーミッションを使ったSambaサーバに
+	<constant>win2k</constant>というサーバから共有<constant>myshare</constant>を
+	移行する。使用するアカウントは移行元と移行先のSambaサーバで同じでなければ
+	ならない。共有の移行に先だって<command>net rpc vampire</command>を使用する
+	には、両方のシステムでアカウントが同じにしておく必要がある。共有の移行開始の
+	前に行う価値があることは、移行するアカウント(Sambaサーバ上)が必要とする権利と
+	権限について確認しておくことである。これは以下のように行う:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>right list accounts</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc right list accounts -Uroot%not24get
 </screen>
-	The steps taken so far perform only the migration of shares. Directories and directory contents
-	are not migrated by the steps covered up to this point.
+	ここまでの手順で実行されることは、共有の移行だけである。ディレクトリと
+	ディレクトリ中に含まれるものは、この時点で、今までの手順では移行されない。
 	</para>
 
 	</sect3>
 
 	<sect3>
-	<title>File and Directory Migration</title>
+	<title>ファイルとディレクトリの移行</title>
 
 	<para>
-	Everything covered to this point has been done in preparation for the migration of file and directory
-	data. For many people preparation is potentially boring and the real excitement only begins when file
-	data can be used. The next steps demonstrate the techniques that can be used to transfer (migrate)
-	data files using the <command>net</command> command.
+	この時点でカバーされてきたすべてのことは、ファイルとディレクトリデータの移行の
+	準備である。多くの人にとって、準備作業は退屈であり、ファイルとデータを使える
+	時になってやっと感激が得られる。次の手順は、<command>net</command>コマンドを
+	使ってデータファイルを転送(移行)するのに使えるテクニックを示す:
 	</para>
 
 	<para>
-	Transfer of files from one server to another has always been a challenge for MS Windows
-	administrators because Windows NT and 200X servers do not always include the tools needed. The
-	<command>xcopy</command> from Windows NT is not capable of preserving file and directory ACLs, 
-	it does so only with Windows 200x. Microsoft does provide a
-	utility that can copy ACLs (security settings) called <command>scopy</command>, but it is provided only
-	as part of the Windows NT or 200X Server Resource Kit.
+	1つのサーバから他にファイルを転送することは、Windows NTと200xサーバが、いつでも
+	必要とされるツールを含んでいないために、Microsoft Windows管理者にとって挑戦的な
+	作業である。Windows NTからの<command>xcopy</command>コマンドはファイルと
+	ディレクトリのACLを保存する能力がなく、Windows 200xのみができる。Microsoftは
+	<command>scopy</command>と呼ばれる、ACL(セキュリティの設定)をコピーできる
+	ユーティリティを提供していないが、それは、Windows NT か 200xのサーバリソース
+	キットの一部として提供している。
 	</para>
 
 	<para>
-	There are several tools, both commercial and freeware, that can be used from a Windows server to copy files
-	and directories with full preservation of security settings. One of the best known of the free tools is
-	called <command>robocopy</command>.
+	商用またはフリーウェアでWindowsサーバから、完全なセキュリティ設定の維持をしながら
+	ファイルとディレクトリのコピーを行うのに使えるツールがある。よく知られている
+	フリーなツールで一番よいものは、<command>robocopy</command>というものである。
 	</para>
 
 	<para>
-	The <command>net</command> utility can be used to copy files and directories with full preservation of
-	ACLs as well as DOS file attributes. Note that including ACLs makes sense only where the destination
-	system will operate within the same security context as the source system. This applies both to a
-	DMS and to domain controllers that result from a vampired domain.
-	Before file and directory migration, all shares must already exist.
+	<command>net</command>ユーティリティは、DOSファイル属性と同じように、完全にACLを
+	保持しながらファイルとディレクトリのコピーを行うのに使える。注意すべきは、
+	ACLを含むことは、移行先のシステムが、移行元のシステムと同じセキュリティ
+	コンテキストの範囲内で	操作できるときにのみ意味をなすと言うことである。これは、
+	vawpireコマンドを使われたドメインからの結果のDMSとドメインコントローラの両方に
+	適用される。ファイルとディレクトリの移行の前にすべての共有はすでに存在しなければ
+	ならない。
 	</para>
 
 	<para>
-	The syntax for the migration commands is shown here:
+	移行コマンドの文法は以下の通りである:
 <screen>
 net rpc share MIGRATE FILES &lt;share-name&gt; -S &lt;source&gt;
     [--destination=localhost] [--exclude=share1,share2]
     [--acls] [--attrs] [--timestamps] [-v]
 </screen>
-	If the &lt;share-name&gt; parameter is omitted, all shares will be migrated. The potentially large
-	list of shares on the source system can be restricted using the <parameter>--exclude</parameter> command
-	switch.
+	もしも、&lt;share-name&gt;パラメータが省略された場合、すべての共有が移行される。
+	移行元システム上での、潜在的にある大量の共有の一覧は、
+	<parameter>--exclude</parameter>コマンドスイッチで制限できる。
 	</para>
 
 	<para>
