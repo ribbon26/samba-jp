@@ -1713,38 +1713,40 @@ net rpc share MIGRATE ALL &lt;share-name&gt; -S &lt;source&gt;
 	</itemizedlist>
 
 	<para>
-	The Samba <command>net</command> utility permits printer migration from one Windows print server
-	to another. When this tool is used to migrate printers to a Samba server <command>smbd</command>,
-	the application that receives the network requests to create the necessary services must call out
-	to the operating system in order to create the underlying printers. The call-out is implemented
-	by way of an interface script that can be specified by the &smb.conf; file parameter
-	<smbconfoption id="add printer script"/>. This script is essential to the migration process.
-	A suitable example script may be obtained from the <filename>$SAMBA_SOURCES/examples/scripts</filename>
-	directory. Take note that this script must be customized to suit the operating system environment
-	and may use its tools to create a print queue.
+	Sambaの<command>net</command>ユーティリティは1つのWindowsプリントサーバから
+	他への移行ができる。このツールをSambaサーバ<command>smbd</command>に対して
+	プリンタを移行するのに使った時、必要なサービスを作成するためにネットワーク
+	リクエストを受け取るアプリケーションは、配下のプリンタを作成するためにOS
+	を呼び出さなければならない。OS呼び出しは、&smb.conf;ファイル中のパラメータ
+	<smbconfoption id="add printer script"/>で指定することが出来るインタフェース
+	パラメータを経由して行われる。このスクリプトは移行プロセスで必須である。
+	適切なスクリプトの例は、
+	<filename>$SAMBA_SOURCES/examples/scripts</filename>から得られる。
+	このスクリプトはOS環境に適するようにカスタマイズせねばならず、また、プリント
+	キューを作成するためにこのツールを使うことも出来る。
 	</para>
 
 	<para>
-	Each of the components listed above can be completed separately, or they can be completed as part of an
-	automated operation. Many network administrators prefer to deal with migration issues in a manner that
-	gives them the most control, particularly when things go wrong. The syntax for each operation is now
-	briefly described.
+	上記で説明した各コンポーネントは、個別に完了することが出来、また、自動操作の
+	一部として完了することができる。多くのネットワーク管理者は、特に事がうまく
+	行かない時、移行の問題を最も手慣れた手法で対処することを好む。各操作の
+	文法を簡単に以下で説明する。
 	</para>
 
 	<para>
-	Printer migration from a Windows print server (NT4 or 200x) is shown. This instruction causes the
-	printer share to be created together with the underlying print queue:
+	Windows サーバ(NT4または200x)からのプリンタ移行は以下である。この手順は、
+	プリンタ共有を、ベースとなるプリントキューとともに作成する:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>printer migrate printers</tertiary></indexterm>
 <screen>
 net rpc printer MIGRATE PRINTERS [printer] [misc. options] [targets]
 </screen>
-	Printer drivers can be migrated from the Windows print server to the Samba server using this
-	command-line instruction:
+	プリンタドライバをWindowsプリントサーバからSambaサーバに移行するのには、この
+	コマンドライン操作を使用する:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>printer migrate drivers</tertiary></indexterm>
 <screen>
 net rpc printer MIGRATE DRIVERS [printer] [misc. options] [targets]
 </screen>
-	Printer forms can be migrated with the following operation:
+	以下の操作でプリンタフォームを移行できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>printer migrate forms</tertiary></indexterm>
 <screen>
 net rpc printer MIGRATE FORMS [printer] [misc. options] [targets]
