@@ -1224,8 +1224,8 @@ DAMNATION           S-1-5-21-1385457007-882775198-1210191635
 <screen>
 &rootprompt; net rpc trustdom revoke DAMNATION -Uroot%not24get
 </screen>
-	At other times it becomes necessary to remove the ability for users from a foreign domain to be able to
-	access resources in the local domain. The command shown here will do that:
+	また別の時には、ローカルドメイン内のリソースにアクセス出来る外部ドメインから、
+	ユーザを削除する機能が必要な時がある。以下はこれを行えるようにする:
 <screen>
 &rootprompt; net rpc trustdom del DAMNATION -Uroot%not24get
 </screen>
@@ -1640,16 +1640,18 @@ net rpc share MIGRATE FILES &lt;share-name&gt; -S &lt;source&gt;
 	</para>
 
 	<para>
-	This command will only copy the share-ACL of each share on nt4box to your local samba-system.
+	このコマンドは、ローカルのSambaシステムへ、nt4box上の各共有のにおける、共有の
+	アクセス許可のみをコピーする。
 	</para>
 	</sect3>
 
 	<sect3>
-	<title>Simultaneous Share and File Migration</title>
+	<title>共有とファイルの同時移行</title>
 
 	<para>
-	The operating mode shown here is just a combination of the previous three. It first migrates
-	share definitions and then all shared files and directories and finally migrates the share-ACLs:
+	以下で示される動作モードは今まで示したものを組み合わせたものである。これは
+	最初に共有の定義を移行し、次にすべての共有されているファイルとディレクトリを、
+	最後に共有のアクセス許可を移行する:
 <screen>
 net rpc share MIGRATE ALL &lt;share-name&gt; -S &lt;source&gt;
     [--exclude=share1, share2] [--acls] [--attrs] [--timestamps] [-v]
@@ -1657,12 +1659,12 @@ net rpc share MIGRATE ALL &lt;share-name&gt; -S &lt;source&gt;
 	</para>
 
 	<para>
-	An example of simultaneous migration is shown here:
+	組み合わせ移行の例は以下の通り:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>share migrate all</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc share migrate all -S w2k3server -U administrator%secret
 </screen>
-	This will generate a complete server clone of the <parameter>w2k3server</parameter> server.
+	これは、<parameter>w2k3server</parameter>サーバの完全な複製を生成する。
 	</para>
 
 	</sect3>
@@ -1670,43 +1672,44 @@ net rpc share MIGRATE ALL &lt;share-name&gt; -S &lt;source&gt;
 	</sect2>
 
 	<sect2>
-	<title>Printer Migration</title>
+	<title>プリンタの移行</title>
 
 	<para>
-	The installation of a new server, as with the migration to a new network environment, often is similar to
-	building a house; progress is very rapid from the laying of foundations up to the stage at which
-	the house can be locked up, but the finishing off appears to take longer and longer as building
-	approaches completion.
+	新しいネットワーク環境への移行と同様、新しいサーバをインストールすることは、
+	しばしば家を建てることと類似している。基礎を作るところから家の構造部分の
+	完成までのステージは進歩がとても早いが、建築作業が完成に近づくにつれ、
+	仕上げ作業はより長くかかるように見える。
 	</para>
 
 	<para>
-	Printing needs vary greatly depending on the network environment and may be very simple or complex. If
-	the need is very simple, the best solution to the implementation of printing support may well be to
-	re-install everything from a clean slate instead of migrating older configurations. On the other hand,
-	a complex network that is integrated with many international offices and a multiplexity of local branch
-	offices, each of which form an inter-twined maze of printing possibilities, the ability to migrate all
-	printer configurations is decidedly beneficial. To manually re-establish a complex printing network
-	will take much time and frustration. Often it will not be possible to find driver files that are
-	currently in use, necessitating the installation of newer drivers. Newer drivers often implement
-	printing features that will necessitate a change in the printer usage. Additionally, with very complex
-	printer configurations it becomes almost impossible to re-create the same environment &smbmdash; no matter
-	how extensively it has been documented.
+	印刷の必要性は、ネットワーク環境にとても大きく依存し、とても簡単かもしれないが、
+	複雑かもしれない。もし必要性がとても単純ならば、印刷サポートを実装する最も良い
+	解決法は、古い設定から移行する代わりに、白紙の状態からすべてを再インストール
+	することである。別の言い方をすると、たくさんの国際オフィスとたくさんある
+	ローカルな支店が、印刷機能の拠点間で複雑怪奇になっているように統合された複雑な
+	ネットワークのプリンタ設定を移行することは、とてつもなく有望である。手動で
+	複雑な印刷ネットワークを再インストールするのは、とても時間がかかり、
+	フラストレーションが溜まる。しばしば、今使っているドライバファイルを見つける
+	のが困難で、より新しいバージョンのドライバのインストールが必要となる。新しい
+	ドライバはしばしばプリンタの使用方法の変更を必要とする印刷機能を実装している。
+	更に追加で、非常に複雑な印刷設定は、それがどんなに広範囲に文書化されたとしても、
+	同じ環境を再作成することはほとんど不可能になる。&smbmdash;、
 	</para>
 
 	<para>
-	The migration of an existing printing architecture involves the following:
+	既存の印刷構成の移行は以下のように行う:
 	</para>
 
 	<itemizedlist>
-		<listitem><para>Establishment of print queues.</para></listitem>
+		<listitem><para>印刷キューを確立する。</para></listitem>
 
-		<listitem><para>Installation of printer drivers (both for the print server and for Windows clients.</para></listitem>
+		<listitem><para>プリンタドライバをインストールする(プリントサーバとWindowsクライアント上両方)。</para></listitem>
 
-		<listitem><para>Configuration of printing forms.</para></listitem>
+		<listitem><para>印刷フォームを設定する。</para></listitem>
 
-		<listitem><para>Implementation of security settings.</para></listitem>
+		<listitem><para>セキュリティの設定を行う。</para></listitem>
 
-		<listitem><para>Configuration of printer settings.</para></listitem>
+		<listitem><para>プリンタの設定を行う。</para></listitem>
 	</itemizedlist>
 
 	<para>
