@@ -24,20 +24,22 @@ Windowsのセキュリティ識別子(SID)をUNIXのUIDとGIDについての識�
 </para>
 
 <para>
-To ensure sufficient coverage, each possible Samba deployment type is discussed.
-This is followed by an overview of how the IDMAP facility may be implemented.
+いろいろな場面において十分に適用出来るようにするため、各可能なSambaの配布タイプに
+ついて解説を行う。これは、どのようにIDMAP機能が実装されたかについての概要によって
+フォローされる。
 </para>
 
 <para>
-<indexterm><primary>network client</primary></indexterm>
+<indexterm><primary>ネットワーククライアント</primary></indexterm>
 <indexterm><primary>IDMAP</primary></indexterm>
 <indexterm><primary>IDMAP infrastructure</primary></indexterm>
-<indexterm><primary>default behavior</primary></indexterm>
-The IDMAP facility is of concern where more than one Samba server (or Samba network client)
-is installed in a domain. Where there is a single Samba server, do not be too concerned regarding
-the IDMAP infrastructure &smbmdash; the default behavior of Samba is nearly always sufficient.
-Where mulitple Samba servers are used it is often necessary to move data off one server and onto
-another, and that is where the fun begins!
+<indexterm><primary>既定値の動作</primary></indexterm>
+IDMAP機能は、複数のSambaサーバ(またはSambaネットワーククライアント)がドメイン中で
+インストールされている場合に重要である。単一のSambaサーバにおいては、IDMAP基盤
+については余り気にかける必要はない。&smbmdash;既定値におけるSambaの動作はほとんど
+の場合、十分に使えるものである。複数のSambaサーバが使われる場合、あるサーバから
+別のサーバにデータを移動する時にはしばしばこれが必要で、それはやっかい事が始まる
+所でもある!
 </para>
 
 <para>
@@ -46,9 +48,16 @@ another, and that is where the fun begins!
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
 <indexterm><primary>nss_ldap</primary></indexterm>
-<indexterm><primary>NT4 domain members</primary></indexterm>
-<indexterm><primary>ADS domain members</primary></indexterm>
+<indexterm><primary>NT4のドメインメンバ</primary></indexterm>
+<indexterm><primary>ADSのドメインメンバ</primary></indexterm>
 <indexterm><primary>security name-space</primary></indexterm>
+LDAPディレクトリ中にユーザとグループアカウント情報が格納されている場合、すべてのサーバは
+ユーザとグループに対して一貫したUIDとGIDを使うことが出来る。これは、NSSとnss_ldapツール
+を使うことで出来る。Sambaはローカルアカウントのみを使うように設定出来、その場合、IDMAP
+での問題の範囲は若干少なくなる。これは、サーバが単一のドメインに属していて、ドメイン間の
+信頼関係が必要ない時に有効に動作する。別の言い方をすると、もしもSambaサーバがNT4
+ドメインのメンバかADSのドメインメンバである場合か、セキュリティ名前空間(すなわち、ユーザ
+<literal>DOMINICUS\FJones</literal>は
 Where user and group account information is stored in an LDAP directory every server can have the same
 consistent UID and GID for users and groups. This is achieved using NSS and the nss_ldap tool. Samba
 can be configured to use only local accounts, in which case the scope of the IDMAP problem is somewhat
