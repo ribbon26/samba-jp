@@ -1751,13 +1751,13 @@ net rpc printer MIGRATE DRIVERS [printer] [misc. options] [targets]
 <screen>
 net rpc printer MIGRATE FORMS [printer] [misc. options] [targets]
 </screen>
-	Printer security settings (ACLs) can be migrated from the Windows server to the Samba server using this command:
+	プリンタのセキュリティ設定(ACL)は以下のコマンドを使うことでWindowsサーバからSambaサーバに移行できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>printer migrate security</tertiary></indexterm>
 <screen>
 net rpc printer MIGRATE SECURITY [printer] [misc. options] [targets]
 </screen>
-	Printer configuration settings include factors such as paper size and default paper orientation.
-	These can be migrated from the Windows print server to the Samba server with this command:
+	プリンタ構成の設定は、紙のサイズや既定値の紙の方向のような要素を含む。
+	これらは以下のコマンドを使うことでWindowsサーバからSambaサーバに移行できる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>printer migrate settings</tertiary></indexterm>
 <screen>
 net rpc printer MIGRATE SETTINGS [printer] [misc. options] [targets]
@@ -1765,8 +1765,7 @@ net rpc printer MIGRATE SETTINGS [printer] [misc. options] [targets]
 	</para>
 
 	<para>
-	Migration of printers including the above-mentioned sets of information may be completed
-	with a single command using this syntax:
+	上記で説明した情報を含むプリンタの移行は、以下の文法を使う単一のコマンドで完了しても良い:
 <screen>
 net rpc printer MIGRATE ALL [printer] [misc. options] [targets]
 </screen>
@@ -1777,22 +1776,23 @@ net rpc printer MIGRATE ALL [printer] [misc. options] [targets]
 	</sect1>
 
 	<sect1>
-	<title>Controlling Open Files</title>
+	<title>オープンしているファイルの制御</title>
 
 	<para>
-	The man page documents the <command>net file</command> function suite, which provides the tools to
-	close open files using either RAP or RPC function calls. Please refer to the man page for specific
-	usage information.
+	マニュアルページには、RAPかRPC機能呼び出しのどちらかを使うオープンしている
+	ファイルをクローズするためのツールを提供する、<command>net file</command>
+	コマンドの機能について説明がある。特定なし用法の情報についてのマニュアル
+	ページを参照してほしい。
 	</para>
 
 	</sect1>
 
 	<sect1>
-	<title>Session and Connection Management</title>
+	<title>セッションとコネクションの管理</title>
 
 	<para>
-	The session management interface of the <command>net session</command> command uses the old RAP
-	method to obtain the list of connections to the Samba server, as shown here:
+	<command>net session</command>コマンドのセッション管理インタフェースは、以下の
+	ようにSambaサーバへの接続の一覧を示すための古いRAPメソッドを使う:
 <indexterm><primary>net</primary><secondary>rap</secondary><tertiary>session</tertiary></indexterm>
 <screen>
 &rootprompt; net rap session -S MERLIN -Uroot%not24get
@@ -1806,7 +1806,7 @@ Computer             User name            Client Type        Opens Idle time
 	</para>
 
 	<para>
-	A session can be closed by executing a command as shown here:
+	セッションは以下のコマンドを実行することでクローズできる:
 <screen>
 &rootprompt; net rap session close marvel -Uroot%not24get
 </screen>
@@ -1815,27 +1815,27 @@ Computer             User name            Client Type        Opens Idle time
 	</sect1>
 
 	<sect1>
-	<title>Printers and ADS</title>
+	<title>プリンタとADS/title>
 
 	<para>
-	When Samba-3 is used within an MS Windows ADS environment, printers shared via Samba will not be browseable
-	until they have been published to the ADS domain. Information regarding published printers may be obtained
-	from the ADS server by executing the <command>net ads print info</command> command following this syntax:
+	Samba-3がMicrosoft Windows ADS環境で使われる場合、Samba経由で共有されるプリンタは
+	ADSドメインに対して公開されるまではブラウズできない。公開されたプリンタに関する
+	情報は以下の文法で、<command>net ads print info</command>コマンドを実行する
+	ことで、ADSから入手できる:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>printer info</tertiary></indexterm>
 <screen>
 net ads printer info &lt;printer_name&gt; &lt;server_name&gt; -Uadministrator%secret
 </screen>
-	If the asterisk (*) is used in place of the printer_name argument, a list of all printers will be
-	returned.
+	もしも星印(*)がプリンタ名引数の場所で使われた場合、すべてのプリンタの一覧が返る。
 	</para>
 
 	<para>
-	To publish (make available) a printer to ADS, execute the following command:
+	ADSに対してプリンタを公開する(有効にする)には、以下のコマンドを実行する:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>printer publish</tertiary></indexterm>
 <screen>
 net ads printer publish &lt;printer_name&gt; -Uadministrator%secret
 </screen>
-	This publishes a printer from the local Samba server to ADS.
+	これはローカルSambaサーバのプリンタをADSに公開する。
 	</para>
 
 	<para>
