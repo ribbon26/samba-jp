@@ -1839,7 +1839,7 @@ net ads printer publish &lt;printer_name&gt; -Uadministrator%secret
 	</para>
 
 	<para>
-	Removal of a Samba printer from ADS is achieved by executing this command:
+	ADSからSambaプリンタを削除するには、以下のコマンドを実行する:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>printer remove</tertiary></indexterm>
 <screen>
 net ads printer remove &lt;printer_name&gt; -Uadministrator%secret
@@ -1847,7 +1847,7 @@ net ads printer remove &lt;printer_name&gt; -Uadministrator%secret
 	</para>
 
 	<para>
-	A generic search (query) can also be made to locate a printer across the entire ADS domain by executing:
+	ADSドメイン全体に渡ってプリンタの場所を調べる一般的な検索(問い合わせ)も、以下を使うことで出来る:
 <indexterm><primary>net</primary><secondary>ads</secondary><tertiary>printer search</tertiary></indexterm>
 <screen>
 net ads printer search &lt;printer_name&gt; -Uadministrator%secret
@@ -1857,44 +1857,47 @@ net ads printer search &lt;printer_name&gt; -Uadministrator%secret
 	</sect1>
 
 	<sect1>
-	<title>Manipulating the Samba Cache</title>
+	<title>Sambaキャッシュの操作</title>
 
 	<para>
-	Please refer to the <command>net</command> command man page for information regarding cache management.
+	キャッシュ管理についての情報は、<command>net</command>マニュアルページを参照のこと。
 	</para>
 
 	</sect1>
 
 	<sect1>
-	<title>Managing IDMAP UID/SID Mappings</title>
+	<title>IDMAP UID/SIDマッピングの管理</title>
 
 	<para>
-	The IDMAP UID to SID, and SID to UID, mappings that are created by <command>winbindd</command> can be
-	backed up to a text file. The text file can be manually edited, although it is highly recommended that
-	you attempt this only if you know precisely what you are doing.
+	<command>winbindd</command>によって、IDMAP UIDからSIDとSIDからUIDへのマッピング
+	は、テキストファイルにバックアップできる。テキストファイルは、手動で編集
+	できるが、自分自身が正確に何をやっているのかを知っている時にのみ、それを行う
+	ことを強く推奨する。
 	</para>
 
 	<para>
-	An IDMAP text dump file can be restored (or reloaded). There are two situations that may necessitate
-	this action: a) The existing IDMAP file is corrupt, b) It is necessary to install an editted version
-	of the mapping information.
+	IDMAP テキストダンプファイルはリストア(再ロード)できる。この動作が必要とされる
+	2つの状況は次の通り: a) 存在するIDMAPファイルが壊れたか、b)編集されたマッピング
+	情報をインストールする必要がある場合。
 	</para>
 
 	<para>
-	Winbind must be shut down to dump the IDMAP file. Before restoring a dump file, shut down
-	<command>winbindd</command> and delete the old <filename>winbindd_idmap.tdb</filename> file.
+	WinbindはIDMAPファイルをダンプするためには停止しなければならない。ダンプファイルを
+	リストアする前に、<command>winbindd</command>を停止し、古い
+	<filename>winbindd_idmap.tdb</filename>ファイルを削除する。
 	</para>
 
 	<sect2>
-	<title>Creating an IDMAP Database Dump File</title>
+	<title>IDMAPデータベースダンプファイルの作成</title>
 
 	<para>
-	The IDMAP database can be dumped to a text file as shown here:
+	IDMAPデータベースは以下の方法でテキストファイルにダンプできる:
 <screen>
 net idmap dump &lt;full_path_and_tdb_filename&gt; &gt; dumpfile.txt
 </screen>
-	Where a particular build of Samba the run-time tdb files are stored in the
-	<filename>/var/lib/samba</filename> directory the following commands to create the dump file will suffice:
+	ここで、特定のSambaのビルドのランタイムtdbファイルが、ダンプファイルを
+	作成するための以下のコマンドで、<filename>/var/lib/samba</filename>
+	ディレクトリに格納される:
 <screen>
 net idmap dump /var/lib/samba/winbindd_idmap.tdb &gt; idmap_dump.txt
 </screen>
@@ -1903,15 +1906,16 @@ net idmap dump /var/lib/samba/winbindd_idmap.tdb &gt; idmap_dump.txt
 	</sect2>
 
 	<sect2>
-	<title>Restoring the IDMAP Database Dump File</title>
+	<title>IDMAPデータベースダンプファイルのリストア</title>
 
 	<para>
-	The IDMAP dump file can be restored using the following command:
+	IDMAPダンプファイルは以下のコマンドを実行することでリストアできる:
 <screen>
 net idmap restore idmap_dump.txt
 </screen>
-	Where the Samba run-time tdb files are stored in the <filename>/var/lib/samba</filename> directory
-    the following command can be used to restore the data to the tdb file:
+	ここで、データをtdbファイルにリストアするために使える以下のコマンドで、
+	<filename>/var/lib/samba</filename>ディレクトリ中にSambaのランタイムtdb
+	ファイルが格納される:
 <screen>
 net idmap restore /var/lib/samba/winbindd_idmap.tdb &lt; idmap_dump.txt
 </screen>
@@ -1922,11 +1926,11 @@ net idmap restore /var/lib/samba/winbindd_idmap.tdb &lt; idmap_dump.txt
 	</sect1>
 
 	<sect1 id="netmisc1">
-	<title>Other Miscellaneous Operations</title>
+	<title>その他の雑多な操作</title>
 
 	<para>
-	The following command is useful for obtaining basic statistics regarding a Samba domain. This command does
-	not work with current Windows XP Professional clients.
+	以下のコマンドは、Sambaドメインに関して基本的な統計を取るのに便利である。
+	このコマンドは現在のWindows XP Professionalクライアントでは動作しない。
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>info</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc info
@@ -1940,28 +1944,28 @@ Num local groups: 6
 	</para>
 
 	<para>
-	Another useful tool is the <command>net time</command> tool set. This tool may be used to query the
-	current time on the target server as shown here:
+	そのほかの便利なツールは、<command>net time</command>サブコマンド群である。この
+	サブコマンド群は以下のように、対象のサーバ上の現在の時刻を問い合わせるのに使える:
 <indexterm><primary>net</primary><secondary>time</secondary></indexterm>
 <screen>
 &rootprompt; net time -S SAURON
 Tue May 17 00:50:43 2005
 </screen>
-	In the event that it is the intent to pass the time information obtained to the UNIX
-	<command>/bin/time</command>, it is a good idea to obtain the time from the target server in a format
-	that is ready to be passed through. This may be done by executing:
+	UNIXの<command>/bin/time</command>から得られる時刻情報を渡すことが目的の場合は、
+	渡すために準備されたフォーマットで対象のサーバから時刻を得るのはよい方法である。
+	これは、以下を実行することで行える:
 <indexterm><primary>net</primary><secondary>time</secondary><tertiary>system</tertiary></indexterm>
 <screen>
 &rootprompt; net time system -S FRODO
 051700532005.16
 </screen>
-	The time can be set on a target server by executing:
+	対象のサーバ上で時刻を設定するためには以下のようにする:
 <indexterm><primary>net</primary><secondary>time</secondary><tertiary>set</tertiary></indexterm>
 <screen>
 &rootprompt; net time set -S MAGGOT -U Administrator%not24get
 Tue May 17 00:55:30 MDT 2005
 </screen>
-	It is possible to obtain the time zone of a server by executing the following command against it:
+	以下のコマンドを実行することで、サーバのタイムゾーンを得ることが出来る:
 <indexterm><primary>net</primary><secondary>time</secondary><tertiary>zone</tertiary></indexterm>
 <screen>
 &rootprompt; net time zone -S SAURON
