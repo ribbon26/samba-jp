@@ -318,22 +318,26 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 				<indexterm><primary>UID</primary></indexterm>
 				<indexterm><primary>idmapバックエンド</primary></indexterm>
 				<indexterm><primary>自動マッピング</primary></indexterm>
-				This facility requires the allocation of the <parameter>idmap uid</parameter> and the
-				<parameter>idmap gid</parameter> ranges, and within the <parameter>idmap uid</parameter>
-				it is possible to allocate a subset of this range for automatic mapping of the relative
-				identifier (RID) portion of the SID directly to the base of the UID plus the RID value.
-				For example, if the <parameter>idmap uid</parameter> range is <constant>1000-100000000</constant>
-				and the <parameter>idmap backend = idmap_rid:DOMAIN_NAME=1000-50000000</parameter>, and
-				a SID is encountered that has the value <constant>S-1-5-21-34567898-12529001-32973135-1234</constant>,
-				the resulting UID will be <constant>1000 + 1234 = 2234</constant>.
+				この機能は<parameter>idmap uid</parameter>と
+				<parameter>idmap gid</parameter>のレンジを割り当てることを
+				要求し、それが、SIDの相対識別子(RID)の部分を直接UIDのベースにRIDの
+				値を足した分に、自動マッピングするための、このレンジの
+				サブセットを割り当てることが可能な
+				<parameter>idmap uid</parameter>の範囲内であることを要求する。
+				たとえば、もしも<parameter>idmap uid</parameter>の範囲が
+				<constant>1000-100000000</constant>で、
+				<parameter>idmap backend = idmap_rid:DOMAIN_NAME=1000-50000000</parameter>
+				で、発生したSIDが
+				<constant>S-1-5-21-34567898-12529001-32973135-1234</constant>
+				という値ならば、結果のUIDは<constant>1000 + 1234 = 2234</constant>である。
 				</para>
 			</listitem>
 		</varlistentry>
 
-		<varlistentry><term>Winbind with an NSS/LDAP backend-based IDMAP facility: </term>
+		<varlistentry><term>WinbindとNSS/LDAPバックエンドベースのIDMAP機能: </term>
 			<listitem>
 				<para>
-				<indexterm><primary>Domain Member</primary></indexterm>
+				<indexterm><primary>ドメインメンバ</primary></indexterm>
 				<indexterm><primary>winbind</primary></indexterm>
 				<indexterm><primary>SID</primary></indexterm>
 				<indexterm><primary>UID</primary></indexterm>
@@ -341,54 +345,64 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 				<indexterm><primary>idmap gid</primary></indexterm>
 				<indexterm><primary>idmap uid</primary></indexterm>
 				<indexterm><primary>LDAP</primary></indexterm>
-				In this configuration <command>winbind</command> resolved SIDs to UIDs and GIDs from
-				the <parameter>idmap uid</parameter> and <parameter>idmap gid</parameter> ranges specified
-				in the &smb.conf; file, but instead of using a local winbind IDMAP table, it is stored
-				in an LDAP directory so that all domain member machines (clients and servers) can share
-				a common IDMAP table.
+				この設定では、<command>winbind</command>は&smb.conf;ファイル内で
+				指定された<parameter>idmap uid</parameter>と
+				<parameter>idmap gid</parameter>の範囲からSIDからUIDとGIDに
+				解決を行うが、ローカルのwinbind IDMAPテーブルを使う代わりに、
+				すべてのドメインメンバマシン(クライアントとサーバ)が共通の
+				IDMAPテーブルを共有できるためのLDAPディレクトリ中に格納された
+				ものを使う。
 				</para>
 
 				<para>
-				<indexterm><primary>idmap backend</primary></indexterm>
-				<indexterm><primary>LDAP server</primary></indexterm>
+				<indexterm><primary>idmapバックエンド</primary></indexterm>
+				<indexterm><primary>LDAPサーバ</primary></indexterm>
 				<indexterm><primary>LDAP redirects</primary></indexterm>
-				It is important that all LDAP IDMAP clients use only the master LDAP server because the
-				<parameter>idmap backend</parameter> facility in the &smb.conf; file does not correctly
-				handle LDAP redirects.
+				すべてのLDAP IDMAPクライアントは、&smb.conf;ファイル中の
+				<parameter>idmap backend</parameter>機能がLDAPリダイレクトを
+				正しく扱えないため、マスタLDAPサーバのみを使うということは
+				重要である。
 				</para>
 			</listitem>
 		</varlistentry>
 
-		<varlistentry><term>Winbind with NSS to resolve UNIX/Linux user and group IDs: </term>
+		<varlistentry><term>UNIX/LinuxのユーザとグループIDを解決するためにNSSを使うwinbindの場合: </term>
 			<listitem>
 				<para>
-				The use of LDAP as the passdb backend is a smart solution for PDC, BDC, and
-				domain member servers. It is a neat method for assuring that UIDs, GIDs, and the matching
-				SIDs are consistent across all servers.
+				passdb バックエンドとしてのLDAPの使用はPDC、BDCとドメイン
+				メンバサーバに対する優れた解である。それは、UID、GIDと
+				一致したSIDがすべてのサーバ間で首尾一貫している事を
+				保証するきちんとした解である。
 				</para>
 
 				<para>
 				<indexterm><primary>LDAP</primary></indexterm>
 				<indexterm><primary>PADL</primary></indexterm>
-				The use of the LDAP-based passdb backend requires use of the PADL nss_ldap utility or
-				an equivalent. In this situation winbind is used to handle foreign SIDs, that is, SIDs from
-				standalone Windows clients (i.e., not a member of our domain) as well as SIDs from 
-				another domain. The foreign UID/GID is mapped from allocated ranges (idmap uid and idmap gid)
-				in precisely the same manner as when using winbind with a local IDMAP table.
+				LDAPベースのpassdbバックエンドの使用は、PADL nss_ldap
+				ユーティリティか同等品を要求する。この状況の場合、
+				winbindは外部のSID、すなわち、スタンドアロン
+				WindowsクライアントからのSID(すなわち、このドメインの
+				メンバでない)を他のドメインからのSIDと同じように
+				扱うために使われる。外部のUID/GIDは、ローカルのIDMAP
+				テーブルでwinbindを使う時と同じ方法で正確に、
+				割り当てられた範囲(idmap uidとidmap gid)にマップされる。
 				</para>
 
 				<para>
 				<indexterm><primary>nss_ldap</primary></indexterm>
 				<indexterm><primary>AD4UNIX</primary></indexterm>
 				<indexterm><primary>MMC</primary></indexterm>
-				The nss_ldap tool set can be used to access UIDs and GIDs via LDAP as well as via Active
-				Directory. In order to use Active Directory, it is necessary to modify the ADS schema by
-				installing either the AD4UNIX schema extension or using the Microsoft Services for UNIX
-				version 3.5 or later to extend the ADS schema so it maintains UNIX account credentials.
-				Where the ADS schema is extended, a Microsoft Management Console (MMC) snap-in is also
-				installed to permit the UNIX credentials to be set and managed from the ADS User and Computer
-				Management tool. Each account must be separately UNIX-enabled before the UID and GID data can
-				be used by Samba.
+				nss_ldapツールセットはActive Directory経由と同様に、LDAP
+				経由でUIDとGIDにアクセスするために使われる。Active Directory
+				を使うために、AD4UNIXスキーマ拡張か、Microsoft Services for
+				UNIXバージョン3.5かそれ以降のどちらかをを、UNIXアカウント
+				認証情報を管理するために、ADSスキーマを	拡張するために
+				インストールしてADSスキーマを変更することが必要である。
+				ADSスキーマが拡張されると、Microsoft管理コンソール(MMC)
+				スナップインもADSのユーザとコンピュータ管理ツールから
+				UNIXの認証情報を設定/管理することが出来るようにインストール
+				される。各アカウントは、UIDとGIDデータがSambaによって使われる
+				ことが出来る前に、UNIXで有効な状態と分離されなければならない。
 				</para>
 			</listitem>
 		</varlistentry>
@@ -398,27 +412,28 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 	</sect2>
 
 	<sect2>
-	<title>Primary Domain Controller</title>
+	<title>プライマリドメインコントローラ</title>
 
 	<para>
-	<indexterm><primary>domain security</primary></indexterm>
+	<indexterm><primary>ドメインセキュリティ</primary></indexterm>
 	<indexterm><primary>SID</primary></indexterm>
 	<indexterm><primary>RID</primary></indexterm>
 	<indexterm><primary>algorithmic mapping</primary></indexterm>
-	Microsoft Windows domain security systems generate the user and group SID as part
-	of the process of creation of an account. Windows does not have a concept of the UNIX UID or a GID; rather,
-	it has its own type of security descriptor. When Samba is used as a domain controller, it provides a method
-	of producing a unique SID for each user and group. Samba generates a machine and a domain SID to which it
-	adds an RID that is calculated algorithmically from a base value that can be specified
-	in the &smb.conf; file, plus twice (2x) the UID or GID. This method is called <quote>algorithmic mapping</quote>.
+	Microsoft Windowsドメインセキュリティシステムは、アカウント作成のプロセスの
+	一部として、ユーザとグループSIDを生成する。WindowsはUNIXのUIDかGIDのような
+	概念を持たない。その代わり、固有のタイプのセキュリティ記述子を持つ。Sambaが
+	ドメインコントローラとして使われる時、各ユーザとグループに固有のSIDを生成する
+	手段を提供する。Sambaは、&smb.conf;ファイル中で指定されたベースの値にUID
+	またはGIDを2倍した値を足すという算術的に計算されたRIDを足すマシンとドメイン
+	SIDを生成する。この方法は<quote>算術的マッピング</quote>と呼ばれる。
 	</para>
 
 	<para>
 	<indexterm><primary>RID base</primary></indexterm>
-	For example, if a user has a UID of 4321, and the algorithmic RID base has a value of 1000, the RID will
-	be <literal>1000 + (2 x 4321) = 9642</literal>. Thus, if the domain SID is
-	<literal>S-1-5-21-89238497-92787123-12341112</literal>, the resulting SID is
-	<literal>S-1-5-21-89238497-92787123-12341112-9642</literal>.
+	例をあげると、もしもユーザのUIDが4321の場合、算術的なRIDベースが1000だとすると、
+	RIDは<literal>1000 + (2 x 4321) = 9642</literal>となる。そのため、もしもドメイン
+	SIDが<literal>S-1-5-21-89238497-92787123-12341112</literal>ならば、
+	結果のSIDは<literal>S-1-5-21-89238497-92787123-12341112-9642</literal>となる。
 	</para>
 
 	<para>
