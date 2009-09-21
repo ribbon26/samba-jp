@@ -272,21 +272,14 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 				<indexterm><primary>GID</primary></indexterm>
 				<indexterm><primary>IDMAP</primary></indexterm>
 				<indexterm><primary>corrupted file</primary></indexterm>
-				この設定は、複数のSambaサーバとそれがすべてのサーバ間で
-				同じUIDとGIDが同じユーザとグループになる事を要求する
-				サイト中では便利でも実際的でもない。この方法の危険性の
-				1つは、winbindのIDMAPデータベースファイルが壊れるか
-				無くなった場合、修正あるいは再構成れれたIDMAPファイルは、
-				現時点で正しい所有者に所属していない、Sambaサーバ上に格納
-				された、Microsoft Windowsファイルの以前の結果から異なる
-				ユーザとグループに割り当てるかもしれないということである。
-				This configuration is not convenient or practical in sites that have more than one
-				Samba server and that require the same UID or GID for the same user or group across
-				all servers. One of the hazards of this method is that in the event that the winbind
-				IDMAP file becomes corrupted or lost, the repaired or rebuilt IDMAP file may allocate
-				UIDs and GIDs to different users and groups from what was there previously with the
-				result that MS Windows files that are stored on the Samba server may now not belong to
-				the rightful owners.
+				この設定は、複数のSambaサーバにまたがってUID/GIDとユーザや
+				グループとのマッピングが同一であることが求められる環境(サイト)
+				では実用的でない。この方法の危険性の1つは、winbind機構の
+				IDMAPデータベースファイルが壊れるか喪失した場合、IDMAP
+				ファイル修正、再生成しても、UIDやGIDが以前と異なるユーザや
+				グループにマッピングされてしまい、結果としてSambaサーバ上に
+				格納されたWindowsファイルの所有者が不正になってしまう可能性
+				がある点である。
 				</para>
 			</listitem>
 		</varlistentry>
