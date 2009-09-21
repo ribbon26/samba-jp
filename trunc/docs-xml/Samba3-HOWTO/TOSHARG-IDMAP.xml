@@ -54,21 +54,16 @@ IDMAP機能は、複数のSambaサーバ(またはSambaネットワーククラ�
 LDAPディレクトリ中にユーザとグループアカウント情報が格納されている場合、すべてのサーバは
 ユーザとグループに対して一貫したUIDとGIDを使うことが出来る。これは、NSSとnss_ldapツール
 を使うことで出来る。Sambaはローカルアカウントのみを使うように設定出来、その場合、IDMAP
-での問題の範囲は若干少なくなる。これは、サーバが単一のドメインに属していて、ドメイン間の
-信頼関係が必要ない時に有効に動作する。別の言い方をすると、もしもSambaサーバがNT4
-ドメインのメンバかADSのドメインメンバである場合か、セキュリティ名前空間(すなわち、ユーザ
-<literal>DOMINICUS\FJones</literal>は
-Where user and group account information is stored in an LDAP directory every server can have the same
-consistent UID and GID for users and groups. This is achieved using NSS and the nss_ldap tool. Samba
-can be configured to use only local accounts, in which case the scope of the IDMAP problem is somewhat
-reduced. This works reasonably well if the servers belong to a single domain, and interdomain trusts
-are not needed. On the other hand, if the Samba servers are NT4 domain members, or ADS  domain members,
-or if there is a need to keep the security name-space separate (i.e., the user
-<literal>DOMINICUS\FJones</literal> must not be given access to the account resources of the user 
-<literal>FRANCISCUS\FJones</literal><footnote>Samba local account mode results in both
-<literal>DOMINICUS\FJones</literal> and <literal>FRANCISCUS\FJones</literal> mapping to the UNIX user
-<literal>FJones</literal>.</footnote> free from inadvertent cross-over, close attention should be given
-to the way that the IDMAP facility is configured.
+での問題が発生する範囲は若干少なくなる。これは、サーバが単一のドメインに属していて、
+ドメイン間の信頼関係が必要ない時に有効に動作する。別の言い方をすると、もしもSamba
+サーバがNT4ドメインのメンバかADSのドメインメンバである場合か、不慮のクロスオーバが
+ないように、セキュリティ名前空間を保持する必要がある場合、(すなわち、ユーザ
+<literal>DOMINICUS\FJones</literal>は<literal>FRANCISCUS\FJones</literal>という
+ユーザのアカウントリソースへのアクセスが出来ないようにしなければならない)
+<footnote>Sambaローカルアカウントモードは、<literal>DOMINICUS\FJones</literal>と
+<literal>FRANCISCUS\FJones</literal>の両者について、UNIXユーザ
+<literal>FJones</literal>へマッピングを行う。</footnote>クローズする試みは、
+IDMAP機能が設定されているという方法に対して提供されなければならない。
 </para>
 
 <para>
@@ -78,50 +73,51 @@ to the way that the IDMAP facility is configured.
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>one domain</primary></indexterm>
-The use of IDMAP is important where the Samba server will be accessed by workstations or servers from
-more than one domain, in which case it is important to run winbind so it can handle the resolution (ID mapping)
-of foreign SIDs to local UNIX UIDs and GIDs.
+IDMAPの使用は、Sambaサーバが一つ以上のドメインからワークステーションまたはサーバによって
+アクセスされる場合に重要であり、そのような場合、winbindを動作させることが重要で、そうする
+と、外部のSIDをローカルのUNIX UIDとGIDに解決(IDマッピング)することが出来るようになる。
 </para>
 
 <para>
 <indexterm><primary>winbindd</primary></indexterm>
-The use of the IDMAP facility requires the execution of the <command>winbindd</command> upon Samba startup.
+IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要とする。
 </para>
 
 <sect1>
-<title>Samba Server Deployment Types and IDMAP</title>
+<title>SambaサーバのサーバタイプとIDMAP</title>
 
 <para>
-<indexterm><primary>Server Types</primary></indexterm>
-There are four basic server deployment types, as documented in <link linkend="ServerType">the chapter
-on Server Types and Security Modes</link>.
+<indexterm><primary>サーバタイプ</primary></indexterm>
+4つの基本的なサーバタイプがあり、これは、
+ <link linkend="ServerType">サーバタイプとセキュリティモードの章</link>に
+説明がある。
 </para>
 
 	<sect2>
-	<title>Standalone Samba Server</title>
+	<title>スタンドアロンSambaサーバ</title>
 
 	<para>
-	<indexterm><primary>stand-alone server</primary></indexterm>
+	<indexterm><primary>スタンドアロンサーバ</primary></indexterm>
 	<indexterm><primary>Active Directory</primary></indexterm>
-	<indexterm><primary>NT4 Domain</primary></indexterm>
-	A standalone Samba server is an implementation that is not a member of a Windows NT4 domain,
-	a Windows 200X Active Directory domain, or a Samba domain.
+	<indexterm><primary>NT4ドメイン</primary></indexterm>
+	スタンドアロンSambaサーバはWindows NT4ドメイン、Windows 200x Active Directory
+	ドメインかSambaドメインのメンバでない形で動く。
 	</para>
 
 	<para>
 	<indexterm><primary>IDMAP</primary></indexterm>
 	<indexterm><primary>identity</primary></indexterm>
-	<indexterm><primary>local user</primary></indexterm>
-	By definition, this means that users and groups will be created and controlled locally, and
-	the identity of a network user must match a local UNIX/Linux user login. The IDMAP facility
-	is therefore of little to no interest, winbind will not be necessary, and the IDMAP facility
-	will not be relevant or of interest.
+	<indexterm><primary>ローカルユーザ</primary></indexterm>
+	定義により、これは、ユーザとグループはローカルに作成/制御され、ネットワーク
+	ユーザの識別はローカルのUNIX/Linuxユーザログイン情報に一致しなければならない。
+	そのため、IDMAP機能はほとんど関心を払う必要はなく、winbindも不要で、IDMAP
+	機能は関連しないか、興味を持つべきものではない。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Domain Member Server or Domain Member Client</title>
+	<title>ドメインメンバサーバかドメインメンバクライアント</title>
 
 	<para>
 	<indexterm><primary>PDC</primary></indexterm>
