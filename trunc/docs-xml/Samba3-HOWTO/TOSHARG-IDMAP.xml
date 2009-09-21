@@ -125,81 +125,86 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 	<indexterm><primary>NT4</primary></indexterm>
 	<indexterm><primary>SID</primary></indexterm>
 	<indexterm><primary>Active Directory</primary></indexterm>
-	Samba-3 can act as a Windows NT4 PDC or BDC, thereby providing domain control protocols that
-	are compatible with Windows NT4. Samba-3 file and print sharing protocols are compatible with
-	all versions of MS Windows products. Windows NT4, as with MS Active Directory,
-	extensively makes use of Windows SIDs.
+	Samba-3はWindows NT4 PDCまたはBDCとして動作でき、それによって、Windows NT4と
+	互換性を持つドメイン制御プロトコルを提供する。Samba-3のファイルと印刷共有
+	プロトコルはすべてのバージョンのMicrosoft Windows製品と互換がある。Windows NT4は
+	Microsoft Windows Active Directoryと同様、広範囲にWindows SIDを使用する。
 	</para>
 
 	<para>
 	<indexterm><primary>MS Windows SID</primary></indexterm>
 	<indexterm><primary>UID</primary></indexterm>
 	<indexterm><primary>GID</primary></indexterm>
-	Samba-3 domain member servers and clients must interact correctly with MS Windows SIDs. Incoming
-	Windows SIDs must be translated to local UNIX UIDs and GIDs. Outgoing information from the Samba
-	server must provide to MS Windows clients and servers appropriate SIDs.
+	Samba-3ドメインメンバサーバとクライアントはMicrosoft Windows SIDと正しく相互に
+	処理を行わなければならない。入力されたSIDはローカルのUNIX UIDとGIDに変換され
+	なければならない。Sambaサーバから出力する情報は、適切なSIDでMicrosoft Windows
+	クライアントとサーバに提供されなければならない。
 	</para>
 
 	<para>
 	<indexterm><primary>ADS</primary></indexterm>
 	<indexterm><primary>winbind</primary></indexterm>
-	A Samba member of a Windows networking domain (NT4-style or ADS) can be configured to handle 
-	identity mapping in a variety of ways. The mechanism it uses depends on whether or not
-	the <command>winbindd</command> daemon is used and how the winbind functionality is configured.
-	The configuration options are briefly described here:
+	Windowsネットワークドメイン(NT4形式またはADS)のメンバであるSambaはいろいろな
+	方法で識別情報のマッピングを扱うように設定出来る。使用するメカニズムは、
+	<command>winbindd</command>デーモンが使われるか否かとどのようにwinbindの
+	機能が設定されているかに依存する。設定オプションの簡単な説明は以下の通り:
 	</para>
 
 	<variablelist>
-		<varlistentry><term>Winbind is not used; users and groups are local: </term>
+		<varlistentry><term>Winbindが使用されず、ユーザとグループがローカルの場合: </term>
 			<listitem>
 				<para>
 				<indexterm><primary>winbindd</primary></indexterm>
 				<indexterm><primary>smbd</primary></indexterm>
-				<indexterm><primary>network traffic</primary></indexterm>
+				<indexterm><primary>ネットワークトラフィック</primary></indexterm>
 				<indexterm><primary>LoginID</primary></indexterm>
-				<indexterm><primary>account name</primary></indexterm>
+				<indexterm><primary>アカウント名</primary></indexterm>
 				<indexterm><primary>getpwnam</primary></indexterm>
 				<indexterm><primary>NSS</primary></indexterm>
-				<indexterm><primary>local users</primary></indexterm>
-				<indexterm><primary>local groups</primary></indexterm>
+				<indexterm><primary>ローカルユーザ</primary></indexterm>
+				<indexterm><primary>ローカルグループ</primary></indexterm>
 				<indexterm><primary>/etc/passwd</primary></indexterm>
 				<indexterm><primary>/etc/group</primary></indexterm>
-				Where <command>winbindd</command> is not used Samba (<command>smbd</command>)
-				uses the underlying UNIX/Linux mechanisms to resolve the identity of incoming
-				network traffic. This is done using the LoginID (account name) in the
-				session setup request and passing it to the getpwnam() system function call.
-				This call is implemented using the name service switch (NSS) mechanism on
-				modern UNIX/Linux systems. By saying "users and groups are local,"
-				we are implying that they are stored only on the local system, in the
-				<filename>/etc/passwd</filename> and <filename>/etc/group</filename> respectively.
+				<command>winbindd</command>が使われないと、Samba
+				(<command>smbd</command>)は、入力されたネットワークからの
+				情報の識別を解決するための、基本的なUNIX/Linuxメカニズムを
+				使用する。これは、セッションセットアップ要求時にLoginID
+				(アカウント名)を使い、getpwnam()システムファンクションコール
+				にそれを渡す。この呼び出しは最近のUNIX/Linuxシステム上では
+				ネームサービススイッチ(NSS)メカニズムを使うように実装されて
+				いる。"ユーザとグループがローカル"という場合、それらは
+				ローカルシステム上の、<filename>/etc/passwd</filename>と
+				<filename>/etc/group</filename>にそれぞれ格納されることを
+				意味する。
 				</para>
 
 				<para>
 				<indexterm><primary>SessionSetupAndX</primary></indexterm>
 				<indexterm><primary>/etc/passwd</primary></indexterm>
-				For example, when the user <literal>BERYLIUM\WambatW</literal> tries to open a
-				connection to a Samba server the incoming SessionSetupAndX request will make a 
-				system call to look up the user <literal>WambatW</literal> in the
-				<filename>/etc/passwd</filename> file.
+				たとえば、ユーザ<literal>BERYLIUM\WambatW</literal>が
+				Sambaサーバに対して接続をオープンしようとする場合、
+				入力されるSessionSetupAndX要求は、<filename>/etc/passwd</filename>
+				ファイル中のユーザ<literal>WambatW</literal>を検索するために
+				システムを呼び出す。
 				</para>
 
 				<para>
-				<indexterm><primary>standalone</primary></indexterm>
-				<indexterm><primary>domain member server</primary></indexterm>
+				<indexterm><primary>スタンドアロン</primary></indexterm>
+				<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
 				<indexterm><primary>NT4</primary></indexterm>
 				<indexterm><primary>ADS</primary></indexterm>
 				<indexterm><primary>PDC</primary></indexterm>
 				<indexterm><primary>smbpasswd</primary></indexterm>
 				<indexterm><primary>tdbsam</primary></indexterm>
-				<indexterm><primary>passdb backend</primary></indexterm>
-				This configuration may be used with standalone Samba servers, domain member
-				servers (NT4 or ADS), and for a PDC that uses either an smbpasswd
-				or a tdbsam-based Samba passdb backend.
+				<indexterm><primary>passdbバックエンド</primary></indexterm>
+				この設定は、スタンドアロンSambaサーバ、ドメインメンバサーバ
+				(NT4またはADS)とsmbpasswdまたはtdbsamベースのSamba passdb
+				バックエンドを使うPDCに対して使うことが出来る。
 				</para>
 			</listitem>
 		</varlistentry>
 	
-		<varlistentry><term>Winbind is not used; users and groups resolved via NSS: </term>
+		<varlistentry><term>Winbindは使わないが、ユーザとグループはNSS経由で解決する場合
 			<listitem>
 				<para>
 				<indexterm><primary>user accounts</primary></indexterm>
