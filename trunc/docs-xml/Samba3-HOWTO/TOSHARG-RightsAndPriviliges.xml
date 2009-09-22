@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="rights">
 <chapterinfo>
@@ -9,59 +9,57 @@
 <title>User Rights and Privileges</title>
 
 <para>
-<indexterm><primary>Windows user</primary></indexterm>
-<indexterm><primary>Windows group</primary></indexterm>
-<indexterm><primary>machine accounts</primary></indexterm>
+<indexterm><primary>Windowsのユーザ</primary></indexterm>
+<indexterm><primary>Windowsのグループ</primary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-The administration of Windows user, group, and machine accounts in the Samba
-domain-controlled network necessitates interfacing between the MS Windows
-networking environment and the UNIX operating system environment. The right
-(permission) to add machines to the Windows security domain can be assigned
-(set) to non-administrative users both in Windows NT4 domains and
-Active Directory domains.
+Sambaがドメインを制御しているネットワーク中で、Windowsのユーザ、グループとマシン
+アカウントを管理するには、Microsoft Windowsネットワーク環境とUNIX OS環境の間で
+インタフェースを取る必要がある。Windows セキュリティドメインにマシンを追加するための
+権利(許可)は、Windows NT4ドメインとActive Directoryドメインの両方で、非管理者ユーザに
+割り当て(設定)することができる。
 </para>
 
 <para>
 <indexterm><primary>Windows NT4/2kX/XPPro</primary></indexterm>
-<indexterm><primary>machine account</primary></indexterm>
+<indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>trusted</primary></indexterm>
-<indexterm><primary>user logons</primary></indexterm>
-The addition of Windows NT4/2kX/XPPro machines to the domain necessitates the
-creation of a machine account for each machine added. The machine account is
-a necessity that is used to validate that the machine can be trusted to permit
-user logons.
+<indexterm><primary>ユーザのログオン</primary></indexterm>
+ドメインへWindows NT4/2kX/XPProましんを追加するには、追加されるマシンごとにマシン
+アカウントを作成する必要がある。マシンアカウントは、ユーザのログオンを許可する
+ために信頼できるマシンを検証するために使うのに必要である。
 </para>
 
 <para>
-<indexterm><primary>user accounts</primary></indexterm>
-<indexterm><primary>special account</primary></indexterm>
-<indexterm><primary>account name</primary></indexterm>
+<indexterm><primary>ユーザアカウント</primary></indexterm>
+<indexterm><primary>特別なアカウント</primary></indexterm>
+<indexterm><primary>アカウント名</primary></indexterm>
 <indexterm><primary>/bin/false</primary></indexterm>
 <indexterm><primary>/dev/null</primary></indexterm>
 <indexterm><primary>man-in-the-middle</primary></indexterm>
-Machine accounts are analogous to user accounts, and thus in implementing them on a UNIX machine that is
-hosting Samba (i.e., on which Samba is running), it is necessary to create a special type of user account.
-Machine accounts differ from  normal user accounts in that the account name (login ID) is terminated with a
-<literal>$</literal> sign. An additional difference is that this type of account should not ever be able to
-log into the UNIX environment as a system user and therefore is set to have a shell of
-<command>/bin/false</command> and a home directory of <command>/dev/null.</command> The machine
-account is used only to authenticate domain member machines during start-up. This security measure
-is designed to block man-in-the-middle attempts to violate network integrity.
+マシンアカウントはユーザアカウントに類似していて、そのため、Sambaをホスティングしている
+UNIXマシンでの実装では(すなわちSambaが動いているマシン)、ユーザアカウントの特別なタイプ
+として作成する必要がある。マシンアカウントは、通常のユーザアカウントと比べて、
+アカウント名(ログインID)が<literal>$</literal>記号で終わっているところが異なる。
+更に、このタイプのアカウントは、システムユーザとしてUNIX環境に決してログイン出来ない
+ことと、ログインシェルが<command>/bin/false</command>に設定されていることと、ホーム
+ディレクトリが<command>/dev/null</command>に設定されていることも違う。マシンアカウントは
+起動時にドメインメンバのマシンであることを検証するためのみに使われる。このセキュリティ
+対応は、ネットワークの完全性を破る中間者攻撃をブロックするために設計されている。
 </para>
 
 <note><para>
-<indexterm><primary>computer accounts</primary></indexterm>
-<indexterm><primary>domain member servers</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>credentials</primary></indexterm>
-<indexterm><primary>secure authentication</primary></indexterm>
-Machine (computer) accounts are used in the Windows NT OS family to store security
-credentials for domain member servers and workstations. When the domain member
-starts up, it goes through a validation process that includes an exchange of
-credentials with a domain controller. If the domain member fails to authenticate
-using the credentials known for it by domain controllers, the machine will be refused
-all access by domain users. The computer account is essential to the way that MS 
-Windows secures authentication.
+<indexterm><primary>安全な認証</primary></indexterm>
+マシン(コンピュータ)アカウントは、ドメインメンバサーバとワークステーションのための
+セキュリティ証明書(credentials)を格納するために、Windows NT OSファミリで使われる。
+ドメインメンバの起動時、ドメインコントローラと証明書の交換を含む検証プロセスを
+行う。もしもドメインコントローラが保持している証明書を使っての認証に失敗した
+場合、マシンはドメインユーザからのアクセスが出来なくなる。コンピュータアカウント
+は、Microsoft Windowsのセキュアな認証方法において必須のものである。
 </para></note>
 
 <para>
