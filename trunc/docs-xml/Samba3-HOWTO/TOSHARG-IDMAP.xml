@@ -657,21 +657,21 @@ Join to domain 'MEGANET2' is not valid
 
 	<procedure>
 		<step><para>
-		Create or install an &smb.conf; file with the above configuration.
+		上記の設定で&smb.conf;ファイルを作成するかインストールする。
 		</para></step>
 
 		<step><para>
-		Edit the <filename>/etc/nsswitch.conf</filename> file as shown above.
+		上記で示されたように、<filename>/etc/nsswitch.conf</filename>ファイルを編集する。
 		</para></step>
 
 		<step><para>
-		Execute:
+		以下を実行する:
 		<indexterm><primary>net</primary><secondary>ads</secondary><tertiary>join</tertiary></indexterm>
 <screen>
 &rootprompt; net ads join -UAdministrator%password
 Joined domain BUTTERNET.
 </screen>
-	The success or failure of the join can be confirmed with the following command:
+	ドメインへの参加が成功するか失敗するかは以下のコマンドで確認出来る:
 <screen>
 &rootprompt; net ads testjoin
 Using short domain name -- BUTTERNET
@@ -680,7 +680,7 @@ Joined 'GARGOYLE' to realm 'BUTTERNET.BIZ'
 	</para>
 
 	<para>
-	An invalid or failed join can be detected by executing:
+	ドメインへの参加が不正か失敗するかは以下を実行することで検出できる:
 <screen>
 &rootprompt; net ads testjoin
 GARGOYLE$@'s password:
@@ -688,17 +688,19 @@ GARGOYLE$@'s password:
   ads_connect: No results returned
 Join to domain is not valid
 </screen>
-		<indexterm><primary>error message</primary></indexterm>
-		<indexterm><primary>failure</primary></indexterm>
-		<indexterm><primary>log level</primary></indexterm>
+		<indexterm><primary>エラーメッセージ</primary></indexterm>
+		<indexterm><primary>失敗</primary></indexterm>
+		<indexterm><primary>ログレベル</primary></indexterm>
 		<indexterm><primary>identify</primary></indexterm>
-		The specific error message may differ from the above because it depends on the type of failure that
-		may have occurred. Increase the <parameter>log level</parameter> to 10, repeat the test,
-		and then examine the log files produced to identify the nature of the failure.
+		特定のエラーメッセージは、発生した不成功のタイプに依存するため、
+		上記とは異なるかもしれない。<parameter>log level</parameter>を10まで
+		増やし、テストを再実行し、失敗の真の原因を探るために､生成されたログ
+		ファイルを調べること。
 		</para></step>
 
 		<step><para>
-		Start the <command>nmbd</command>, <command>winbind</command>, and <command>smbd</command> daemons in the order shown.
+		<command>nmbd</command>, <command>winbind</command>と <command>smbd</command>
+		デーモンをこの順番で起動する。
 		</para></step>
 
 	</procedure>
@@ -707,50 +709,52 @@ Join to domain is not valid
 	</sect2>
 
 	<sect2>
-	<title>IDMAP_RID with Winbind</title>
+	<title>IDMAP_RIDを使うWinbind</title>
 
 	<para>
 	<indexterm><primary>idmap_rid</primary></indexterm>
 	<indexterm><primary>SID</primary></indexterm>
 	<indexterm><primary>RID</primary></indexterm>
 	<indexterm><primary>IDMAP</primary></indexterm>
-	The <command>idmap_rid</command> facility is a new tool that, unlike native winbind, creates a
-	predictable mapping of MS Windows SIDs to UNIX UIDs and GIDs. The key benefit of this method
-	of implementing the Samba IDMAP facility is that it eliminates the need to store the IDMAP data
-	in a central place. The downside is that it can be used only within a single ADS domain and
-	is not compatible with trusted domain implementations.
+	<command>idmap_rid</command>機能は、ネイティブなwinbindとは異なり、新しい
+	ツールで、MicrosoftのSIDをUNIXのUIDとGIDに、予測可能なマッピングを作成する。
+	Samba IDMAP機能にこの手法を実装する一番の利点は、集中したIDMAPデータを保存する
+	必要性をなくすということである。不都合な点は、単一のADSドメイン内のみで使う
+	事ができる事と、ドメイン間信頼機能とは互換性がないことである。
 	</para>
 
 	<para>
 	<indexterm><primary>SID</primary></indexterm>
-	<indexterm><primary>allow trusted domains</primary></indexterm>
+	<indexterm><primary>ドメインの信頼を許可する</primary></indexterm>
 	<indexterm><primary>idmap uid</primary></indexterm>
 	<indexterm><primary>idmap gid</primary></indexterm>
-	This alternate method of SID to UID/GID  mapping can be achieved using the idmap_rid
-        plug-in. This plug-in uses the RID of the user SID to derive the UID and GID by adding the
-        RID to a base value specified. This utility requires that the parameter
-        <quote>allow trusted domains = No</quote> be specified, as it is not compatible
-        with multiple domain environments. The <parameter>idmap uid</parameter> and 
-	<parameter>idmap gid</parameter> ranges must be specified.
+	このSIDからUID/GIDへのマッピングにおける代替手法はidmap_ridプラグインを
+	使って実現できる。このプラグインは、RIDに指定されたベース値を加える事に
+	よってUIDとGIDを引き出すために、ユーザSIDのRIDを使う。このユーティリティは
+	複数のドメイン環境とは互換がない、<quote>allow trusted domains = No</quote>
+	パラメータを指定することを要求する。<parameter>idmap uid</parameter>と
+	<parameter>idmap gid</parameter>の範囲を指定する必要がある。
 	</para>
 
 	<para>
 	<indexterm><primary>idmap_rid</primary></indexterm>
 	<indexterm><primary>realm</primary></indexterm>
-	The idmap_rid facility can be used both for NT4/Samba-style domains and Active Directory.
-	To use this with an NT4 domain, do not include the <parameter>realm</parameter> parameter; additionally, the
-	method used to join the domain uses the <constant>net rpc join</constant> process.
+	idmap_rid機能はNT4/Samba形式のドメインとActive Directoryで使える。これをNT4
+	ドメインで使うためには、<parameter>realm</parameter>パラメータを含んでは
+	いけない。さらに、ドメインに参加するために使う手法は、
+	<constant>net rpc join</constant>を使う。
 	</para>
 
 	<para>
-	An example &smb.conf; file for and ADS domain environment is shown in <link linkend="idmapadsridDMS">ADS
-	Domain Member smb.conf using idmap_rid</link>.
+	ADSドメイン環境での&smb.conf;ファイルの例は、
+	<link linkend="idmapadsridDMS">idmap_ridを使うADSドメインメンバのsmb.conf</link>
+	である。
 	</para>
 
 <example id="idmapadsridDMS">
-<title>ADS Domain Member smb.conf using idmap_rid</title>
+<title>idmap_ridを使うADSドメインメンバのsmb.conf</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">KPAK</smbconfoption>
 <smbconfoption name="netbios name">BIGJOE</smbconfoption>
