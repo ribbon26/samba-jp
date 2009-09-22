@@ -529,17 +529,17 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 	</itemizedlist>
 
 	<sect3>
-	<title>NT4-Style Domains (Includes Samba Domains)</title>
+	<title>NT4形式のドメイン(Sambaドメインを含む)</title>
 
 	<para>
-	<link linkend="idmapnt4dms">NT4 Domain Member Server smb.con</link> is a simple example of an NT4 DMS
-	&smb.conf; file that shows only the global section.
+	<link linkend="idmapnt4dms">NT4ドメインメンバサーバのsmb.con</link>は、NT4
+	 DMSに対する&smb.conf;ファイルのグローバルセクション部分の例を示す。
 	</para>
 
 <example id="idmapnt4dms">
-<title>NT4 Domain Member Server smb.conf</title>
+<title>NT4形式のドメインメンバサーバのsmb.conf</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MEGANET2</smbconfoption>
 <smbconfoption name="security">DOMAIN</smbconfoption>
@@ -553,8 +553,8 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 	<para>
 	<indexterm><primary>winbind</primary></indexterm>
 	<indexterm><primary>/etc/nsswitch.conf</primary></indexterm>
-	The use of <command>winbind</command> requires configuration of NSS. Edit the <filename>/etc/nsswitch.conf</filename>
-	so it includes the following entries:
+	<command>winbind</command>の使用は、NSSの設定を必要とする。以下を含むように
+	<filename>/etc/nsswitch.conf</filename>のエントリを編集する:
 <screen>
 ...
 passwd: files winbind
@@ -564,31 +564,31 @@ group:  files winbind
 hosts:  files [dns] wins
 ...
 </screen>
-	The use of DNS in the hosts entry should be made only if DNS is used on site.
+	ホストエントリでDNSを使う場合は、サイト上でDNSが使われている場合にのみ行う。
 	</para>
 
 	<para>
-	The creation of the DMS requires the following steps:
+	DMSを作成するには以下のような手順を踏む:
 	</para>
 
 	<procedure>
 		<step><para>
-		Create or install an &smb.conf; file with the above configuration.
+		上記の設定を使って、&smb.conf;ファイルを作成するかインストールする。
 		</para></step>
 
 		<step><para>
-		Execute:
+		以下を実行する:
 <screen>
 &rootprompt; net rpc join -UAdministrator%password
 Joined domain MEGANET2.
 </screen>
 	<indexterm><primary>join</primary></indexterm>
-	The success of the join can be confirmed with the following command:
+	ドメインへの参加が成功するかどうかは、以下のコマンドで確認できる:
 <screen>
 &rootprompt; net rpc testjoin
 Join to 'MIDEARTH' is OK
 </screen>
-		A failed join would report an error message like the following:
+		ドメインへの参加が失敗した場合、以下のようなエラーメッセージが出力される:
 		<indexterm><primary>failed join</primary></indexterm>
 <screen>
 &rootprompt; net rpc testjoin
@@ -601,26 +601,27 @@ Join to domain 'MEGANET2' is not valid
 		<indexterm><primary>nmbd</primary></indexterm>
 		<indexterm><primary>winbind</primary></indexterm>
 		<indexterm><primary>smbd</primary></indexterm>
-		Start the <command>nmbd, winbind,</command> and <command>smbd</command> daemons in the order shown.
+		<command>nmbd, winbind,</command>と<command>smbd</command>をこの順番で起動する。
 		</para></step>
 	</procedure>
 
 	</sect3>
 
 	<sect3>
-	<title>ADS Domains</title>
+	<title>ADSドメイン</title>
 
 	<para>
 	<indexterm><primary>domain join</primary></indexterm>
-	<indexterm><primary>ADS domain</primary></indexterm>
-	The procedure for joining an ADS domain is similar to the NT4 domain join, except the &smb.conf; file
-	will have the contents shown in <link linkend="idmapadsdms">ADS Domain Member Server smb.conf</link>
+	<indexterm><primary>ADSドメイン</primary></indexterm>
+	ADSドメインへの参加手続きは、NT4ドメインへの参加と似ているが、&smb.conf;ファイルは
+	<link linkend="idmapadsdms">ADSドメインメンバサーバのsmb.conf</link>で示された
+	内容の部分が異なる。
 	</para>
 
 <example id="idmapadsdms">
-<title>ADS Domain Member Server smb.conf</title>
+<title>ADSドメインメンバサーバのsmb.conf</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">BUTTERNET</smbconfoption>
 <smbconfoption name="netbios name">GARGOYLE</smbconfoption>
@@ -643,14 +644,15 @@ Join to domain 'MEGANET2' is not valid
 	<indexterm><primary>MIT kerberos</primary></indexterm>
 	<indexterm><primary>Heimdal</primary></indexterm>
 	<indexterm><primary>Heimdal kerberos</primary></indexterm>
-	ADS DMS operation requires use of kerberos (KRB). For this to work, the <filename>krb5.conf</filename>
-	must be configured. The exact requirements depends on which version of MIT or Heimdal Kerberos is being
-	used. It is sound advice to use only the latest version, which at this time are MIT Kerberos version
-	1.3.5 and Heimdal 0.61.
+	ADSのDMS操作はkerberos(KRB)を使用すること要求する。これを動作させるため、
+	<filename>krb5.conf</filename>ファイルを設定する必要がある。正確な要求
+	内容は、どのバージョンのMITかHeimdal kerberosが使われているかに依存する。
+	現時点でMIT Kerberosのバージョンが1.3.5で、Heimdal が 0.61である最新の
+	バージョンのみを使うことを推奨する。
 	</para>
 
 	<para>
-	The creation of the DMS requires the following steps:
+	DMSを作成するには以下のステップを必要とする:
 	</para>
 
 	<procedure>
