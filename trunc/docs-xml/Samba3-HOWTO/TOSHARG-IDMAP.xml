@@ -476,22 +476,21 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 
 	<para>
 	<indexterm><primary>BDC</primary></indexterm>
-	<indexterm><primary>read-only access</primary></indexterm>
+	<indexterm><primary>リードオンリアクセス</primary></indexterm>
 	<indexterm><primary>security credentials</primary></indexterm>
 	<indexterm><primary>LDAP</primary></indexterm>
-	<indexterm><primary>group account</primary></indexterm>
+	<indexterm><primary>グループアカウント</primary></indexterm>
 	<indexterm><primary>write changes</primary></indexterm>
-	<indexterm><primary>directory</primary></indexterm>
-	BDCs have read-only access to security credentials that are stored in LDAP.
-	Changes in user or group account information are passed by the BDC to the PDC. Only the PDC can write
-	changes to the directory.
+	<indexterm><primary>ディレクトリ</primary></indexterm>
+	ユーザとグループアカウントの中の情報の変更はBDCからPDCに送られる。PDCのみが
+	ディレクトリに対して書き込むことができる。
 	</para>
 
 	<para>
-	IDMAP information can be written directly to the LDAP server so long as all domain controllers
-	have access to the master (writable) LDAP server. Samba-3 at this time does not handle LDAP redirects
-	in the IDMAP backend. This means that it is is unsafe to use a slave (replicate) LDAP server with
-	the IDMAP facility.
+	IDMAPの情報は、すべてのドメインコントローラがマスタ(書き込み可能な)LDAPサーバに
+	対してアクセス可能である限り、LDAPサーバに直接書き込める。Samba-3は現時点で
+	IDMAPバックエンド中でLDAPリダイレクトを扱えない。これは、IDMAP機能をスレーブ
+	(複製される)LDAPサーバで使うのは危険だということである。
 	</para>
 
 	</sect2>
@@ -499,33 +498,33 @@ IDMAP機能は、Samba起動時に<command>winbindd</command>の実行を必要�
 </sect1>
 
 <sect1>
-<title>Examples of IDMAP Backend Usage</title>
+<title>IDMAPバックエンドの使用例</title>
 
 <para>
-<indexterm><primary>Domain Member Server</primary><see>DMS</see></indexterm>
-<indexterm><primary>Domain Member Client</primary><see>DMC</see></indexterm>
+<indexterm><primary>ドメインメンバサーバ</primary><see>DMS</see></indexterm>
+<indexterm><primary>ドメインメンバクライアント</primary><see>DMC</see></indexterm>
 <indexterm><primary>DMS</primary></indexterm>
 <indexterm><primary>DMC</primary></indexterm>
 <indexterm><primary>winbind</primary></indexterm>
-Anyone who wishes to use <command>winbind</command> will find the following example configurations helpful.
-Remember that in the majority of cases <command>winbind</command> is of primary interest for use with
-domain member servers (DMSs) and domain member clients (DMCs).
+<command>winbind</command>を使う誰にとっても、下記の設定例は有用である。多くの場合、
+<command>winbind</command>は、ドメインメンバサーバ(DMS)とドメインメンバクライアント
+(DMC)を使うために一番興味がある事項である。
 </para>
 
 	<sect2>
-	<title>Default Winbind TDB</title>
+	<title>規定値のWinbind TDB</title>
 
 	<para>
-	Two common configurations are used:
+	2つの共通的な設定が使われる:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		Networks that have an NT4 PDC (with or without BDCs) or a Samba PDC (with or without BDCs).
+		ネットワーク上にNT4 PDC(BDCがあってもなくても)かSambaPDC(BDCがあってもなくても)がある。
 		</para></listitem>
 
 		<listitem><para>
-		Networks that use MS Windows 200x ADS.
+		ネットワークは Microsoft Windows 200x ADSを使っている。
 		</para></listitem>
 	</itemizedlist>
 
