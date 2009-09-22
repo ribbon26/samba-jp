@@ -775,24 +775,26 @@ Join to domain is not valid
 </example>
 
 	<para>
-	<indexterm><primary>large domain</primary></indexterm>
+	<indexterm><primary>大きなドメイン</primary></indexterm>
 	<indexterm><primary>Active Directory</primary></indexterm>
 	<indexterm><primary>response</primary></indexterm>
 	<indexterm><primary>getent</primary></indexterm>
-	In a large domain with many users it is imperative to disable enumeration of users and groups.
-	For example, at a site that has 22,000 users in Active Directory the winbind-based user and
-	group resolution is unavailable for nearly 12 minutes following first startup of 
-	<command>winbind</command>. Disabling enumeration resulted in instantaneous response.
-	The disabling of user and group enumeration means that it will not be possible to list users
-	or groups using the <command>getent passwd</command> and <command>getent group</command>
-	commands. It will be possible to perform the lookup for individual users, as shown in the following procedure.
+	たくさんのユーザが居る大きなドメイン中で、ユーザとグループを列挙することを無効に
+	することは避けられない。例えば、Active Directory中に22000人ものユーザが居る
+	サイトで、winbindベースのユーザとグループの解決は、<command>winbind</command>を
+	最初に開始する時点から12分以上利用できない。列挙を無効にすると、瞬間的に反応が
+	返る。ユーザとグループの列挙を無効にすると言うことは、<command>getent passwd</command>
+	と<command>getent group</command>コマンドを使ってユーザかグループの一覧を
+	表示することが出来ないと言うことである。特定のユーザのみを検索することは
+	以下のような方法で可能である。
 	</para>
 
 	<para>
 	<indexterm><primary>NSS</primary></indexterm>
 	<indexterm><primary>/etc/nsswitch.conf</primary></indexterm>
-	The use of this tool requires configuration of NSS as per the native use of winbind. Edit the
-	<filename>/etc/nsswitch.conf</filename> so it has the following parameters:
+	このツールを使用するには、ネイティブなwinbindの使用ごとにNSSの設定を必要とする。
+	以下のパラメータを含むように<filename>/etc/nsswitch.conf</filename>ファイルを
+	編集する。
 <screen>
 ...
 passwd: files winbind
@@ -805,20 +807,20 @@ hosts:  files wins
 	</para>
 
 	<para>
-	The following procedure can use the idmap_rid facility:
+	以下の手順でidmap_rid機能を使うことが出来る:
 	</para>
 
 	<procedure>
 		<step><para>
-		Create or install an &smb.conf; file with the above configuration.
+		上記の設定で&smb.conf;ファイルを作成またはインストールする。
 		</para></step>
 
 		<step><para>
-		Edit the <filename>/etc/nsswitch.conf</filename> file as shown above.
+		    上記で示されたように<filename>/etc/nsswitch.conf</filename>ファイルを編集する。
 		</para></step>
 
 		<step><para>
-		Execute:
+		以下を実行する:
 <screen>
 &rootprompt; net ads join -UAdministrator%password
 Using short domain name -- KPAK
@@ -828,7 +830,7 @@ Joined 'BIGJOE' to realm 'CORP.KPAK.COM'
 
 		<para>
 		<indexterm><primary>failed join</primary></indexterm>
-		An invalid or failed join can be detected by executing:
+		ドメインへの参加が不正または失敗するかは以下を実行することで検出できる:
 <screen>
 &rootprompt; net ads testjoin
 BIGJOE$@'s password:
@@ -836,17 +838,19 @@ BIGJOE$@'s password:
   ads_connect: No results returned
 Join to domain is not valid
 </screen>
-		The specific error message may differ from the above because it depends on the type of failure that
-		may have occurred. Increase the <parameter>log level</parameter> to 10, repeat the test,
-		and then examine the log files produced to identify the nature of the failure.
+		特定のエラーメッセージは、発生した問題のタイプに依存するため、上記と
+		異なるかもしれない。<parameter>log level</parameter>を10まであげて、
+		テストを再実行し、失敗の真の原因を識別するために生成したログファイルを
+		調べること。
 		</para></step>
 
 		<step><para>
-		Start the <command>nmbd</command>, <command>winbind</command>, and <command>smbd</command> daemons in the order shown.
+		<command>nmbd</command>, <command>winbind</command>と<command>smbd</command>
+		デーモンをこの順番で起動する。
 		</para></step>
 
 		<step><para>
-		Validate the operation of this configuration by executing:
+		この設定の動作は以下を実行することで検証できる:
 		<indexterm><primary></primary></indexterm>
 <screen>
 &rootprompt; getent passwd administrator
@@ -858,27 +862,27 @@ administrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash
 	</sect2>
 
 	<sect2>
-	<title>IDMAP Storage in LDAP Using Winbind</title>
+	<title>Winbindを使ったIDMAPデータのLDAPへの格納</title>
 
 	<para>
 	<indexterm><primary>ADAM</primary></indexterm>
 	<indexterm><primary>ADS</primary></indexterm>
-	The storage of IDMAP information in LDAP can be used with both NT4/Samba-3-style domains and
-	ADS domains. OpenLDAP is a commonly used LDAP server for this purpose, although any
-	standards-complying LDAP server can be used. It is therefore possible to deploy this IDMAP
-	configuration using the Sun iPlanet LDAP server, Novell eDirectory, Microsoft ADS plus ADAM,
-	and so on.
+	IDMAPの情報をLDAP中に格納することは、NT4/Samba-3形式のドメインとADSドメインで
+	利用できる。OpenLDAPは、多くの標準準拠のLDAPサーバが使われているにもかかわらず、
+	この目的に多用されているLDAPサーバである。従って、このIDMAP設定を、Sun iPlanet
+	LDAP Server,Novell eDirectory, Microsoft ADS plus ADAMやその他で使うことは可能で
+	ある。
 	</para>
 
 	<para>
-	An example is for an ADS domain is shown in <link linkend="idmapldapDMS">ADS Domain Member Server using
-	LDAP</link>.
+	ADSドメインのための例は、
+	<link linkend="idmapldapDMS">LDAPを使うADSドメインメンバサーバ</link>にある。
 	</para>
 
 <example id="idmapldapDMS">
-<title>ADS Domain Member Server using LDAP</title>
+<title>LDAPを使うADSドメインメンバサーバ</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">SNOWSHOW</smbconfoption>
 <smbconfoption name="netbios name">GOODELF</smbconfoption>
@@ -899,17 +903,18 @@ administrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash
 
 	<para>
 	<indexterm><primary>realm</primary></indexterm>
-	In the case of an NT4 or Samba-3-style domain the <parameter>realm</parameter> is not used, and the
-	command used to join the domain is <command>net rpc join</command>. The above example also demonstrates
-	advanced error-reporting techniques that are documented in <link linkend="dbglvl">Reporting Bugs</link>.
+	NT4またはSamba-3形式のドメインの場合、<parameter>realm</parameter>は使わず、
+	ドメインに参加するために使うコマンドは<command>net rpc join</command>である。
+	上記の例は、<link linkend="dbglvl">バグの報告</link>に記述されている高度な
+	エラー報告のテクニックも示している。
 	</para>
 
 	<para>
 	<indexterm><primary>MIT kerberos</primary></indexterm>
 	<indexterm><primary>Heimdal kerberos</primary></indexterm>
 	<indexterm><primary>/etc/krb5.conf</primary></indexterm>
-	Where MIT kerberos is installed (version 1.3.4 or later), edit the <filename>/etc/krb5.conf</filename> 
-	file so it has the following contents:
+	MIT kerberosがインストールされている場合(バージョン 1.3.4以降)、以下の内容を
+	含むように<filename>/etc/krb5.conf</filename>を編集する:
 <screen>
 [logging]
  default = FILE:/var/log/krb5libs.log
@@ -933,8 +938,8 @@ administrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash
 	</para>
 
 	<para>
-	Where Heimdal kerberos is installed, edit the <filename>/etc/krb5.conf</filename>
-        file so it is either empty (i.e., no contents) or it has the following contents:
+	Heimdal kerberosがインストールされている場合、<filename>/etc/krb5.conf</filename>
+	ファイルは空白にするか(すなわち内容が無い)、以下の内容を含むように編集する:
 <screen>
 [libdefaults]
         default_realm = SNOWSHOW.COM
@@ -951,13 +956,15 @@ administrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash
 	</para>
 
 	<note><para>
-	Samba cannot use the Heimdal libraries if there is no <filename>/etc/krb5.conf</filename> file.
-	So long as there is an empty file, the Heimdal kerberos libraries will be usable. There is no
-	need to specify any settings because Samba, using the Heimdal libraries, can figure this out automatically.
+	Sambaは、<filename>/etc/krb5.conf</filename>ファイルがない時はHeimdalライブラリを
+	使えない。それが空白のファイルであるならば、Heimdal kerberosライブラリは使用可能
+	である。SambaがHeimdalライブラリを使う時には、自動的にこれを見つけることが出来る
+	ので、特に何も設定しなくても良い。
 	</para></note>
 
 	<para>
-	Edit the NSS control file <filename>/etc/nsswitch.conf</filename> so it has the following entries:
+	以下のエントリを含むようにNSS制御ファイル<filename>/etc/nsswitch.conf</filename>
+	を編集する:
 <screen>
 ...
 passwd: files ldap
@@ -972,9 +979,10 @@ hosts:  files wins
 	<para>
 	<indexterm><primary>PADL</primary></indexterm>
 	<indexterm><primary>/etc/ldap.conf</primary></indexterm>
-	You will need the <ulink url="http://www.padl.com">PADL</ulink> <command>nss_ldap</command> 
-	tool set for this solution. Configure the <filename>/etc/ldap.conf</filename> file so it has 
-	the information needed. The following is an example of a working file:
+	この解決方法のためには、<ulink url="http://www.padl.com">PADL</ulink>の
+	<command>nss_ldap</command>ツールセットが必要である。必要とされる情報を
+	<filename>/etc/ldap.conf</filename>ファイルに設定すること。以下は、
+	動作するファイルの例である:
 <screen>
 host    192.168.2.1
 base    dc=snowshow,dc=com
@@ -991,30 +999,30 @@ ssl     no
 	</para>
 
 	<para>
-	The following procedure may be followed to effect a working configuration:
+	以下の手続きは動くようにするための設定手順である:
 	</para>
 
 	<procedure>
 		<step><para>
-		Configure the &smb.conf; file as shown above.
+		上記で示されたように&smb.conf;ファイルを設定する。
 		</para></step>
 
 		<step><para>
-		Create the <filename>/etc/krb5.conf</filename> file as shown above.
+		上記で示されたように<filename>/etc/krb5.conf</filename>ファイルを作成する。
 		</para></step>
 
 		<step><para>
-		Configure the <filename>/etc/nsswitch.conf</filename> file as shown above.
+		上記で示されたように<filename>/etc/nsswitch.conf</filename>ファイルを設定する。
 		</para></step>
 
 		<step><para>
-		Download, build, and install the PADL nss_ldap tool set. Configure the 
-		<filename>/etc/ldap.conf</filename> file as shown above.
+		PADL nss_ldapツールセットをダウンロードし、コンパイルし、インストールする。
+		上記で示されたように<filename>/etc/ldap.conf</filename>ファイルを設定する。
 		</para></step>
 
 		<step><para>
-		Configure an LDAP server and initialize the directory with the top-level entries needed by IDMAP,
-		shown in the following LDIF file:
+		LDAPサーバを設定し、以下のLDIFファイルで示されるような、IDMAPによって
+		必要とされるトップレベルのエントリをディレクトリに追加(初期化)する。
 <screen>
 dn: dc=snowshow,dc=com
 objectClass: dcObject
@@ -1035,7 +1043,7 @@ ou: idmap
 		</para></step>
 
 		<step><para>
-		Execute the command to join the Samba DMS to the ADS domain as shown here:
+		Samba DMSをADSドメインに、以下のコマンドを使って参加させる:
 <screen>
 &rootprompt; net ads testjoin
 Using short domain name -- SNOWSHOW
@@ -1044,32 +1052,34 @@ Joined 'GOODELF' to realm 'SNOWSHOW.COM'
 		</para></step>
 
 		<step><para>
-		Store the LDAP server access password in the Samba <filename>secrets.tdb</filename> file as follows:
+		以下のようにして、Sambaの<filename>secrets.tdb</filename>ファイルに
+		LDAPサーバへのアクセスパスワードを格納する:
 <screen>
 &rootprompt; smbpasswd -w not24get
 </screen>
 		</para></step>
 
 		<step><para>
-		Start the <command>nmbd</command>, <command>winbind</command>, and <command>smbd</command> daemons in the order shown.
+		<command>nmbd</command>, <command>winbind</command>と<command>smbd</command>
+		デーモンをこの順番で起動する。
 		</para></step>
 	</procedure>
 
 	<para>
-	<indexterm><primary>diagnostic</primary></indexterm>
-	Follow the diagnositic procedures shown earlier in this chapter to identify success or failure of the join.
-	In many cases a failure is indicated by a silent return to the command prompt with no indication of the
-	reason for failure.
+	<indexterm><primary>診断</primary></indexterm>
+	ドメインへの参加が成功するか失敗するかを識別するため、この章の始めの方で
+	紹介された診断手続きに従うこと。多くの場合、失敗の理由が何も示されない
+	コマンドプロンプトの静かな結果によって、失敗は表示される。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>IDMAP and NSS Using LDAP from ADS with RFC2307bis Schema Extension</title>
+	<title>RFC2307bis Schema拡張を使ったADSからのIDMAPとNSSに対するLDAPの使用</title>
 
 	<para>
 	<indexterm><primary>rfc2307bis</primary></indexterm>
-	<indexterm><primary>schema</primary></indexterm>
+	<indexterm><primary>スキーマ</primary></indexterm>
 	The use of this method is messy. The information provided in the following is for guidance only
 	and is very definitely not complete. This method does work; it is used in a number of large sites
 	and has an acceptable level of performance.
