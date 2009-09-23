@@ -278,11 +278,11 @@ root ユーザ(UID=0)としてのアクセスは、すべての権限チェッ�
 <indexterm><primary>privileges</primary></indexterm>
 <indexterm><primary>additional privileges</primary></indexterm>
 <indexterm><primary>house-keeping</primary></indexterm>
-The privileges that have been implemented in Samba-3.0.11 are shown below.  It is possible, and likely, that
-additional privileges may be implemented in later releases of Samba. It is also likely that any privileges
-currently implemented but not used may be removed from future releases as a housekeeping matter, so it is
-important that the successful as well as unsuccessful use of these facilities should be reported on the Samba
-mailing lists.
+Samba-3.0.11で実装された権限は以下の通りである。ありそうではあるが、可能であれば、
+この後のSambaのリリースで権限が追加実装されるかもしれない。また、現在実装されて
+いるが、使われていないものは、管理項目として将来のリリースで削除されるかも
+しれないので、それらの機能を使った時の成功/失敗はSambaメーリングリスト上で報告
+することは重要である。
 </para>
 
 <variablelist>
@@ -291,33 +291,32 @@ mailing lists.
 <indexterm><primary>SeAddUsersPrivilege</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>net rpc user add</primary></indexterm>
-		This right determines whether or not smbd will allow the
-		user to create new user or group accounts via such tools
-		as <command>net rpc user add</command> or 
-		<command>NT4 User Manager for Domains.</command>
+		この権利は、<command>net rpc user add</command>か、
+		<command>NT4 User Manager for Domains</command>のような
+		ツール経由で新しいユーザまたはグループアカウントを作成
+		するか否かをsmbdがユーザに許可することを決める。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>SeDiskOperatorPrivilege</term>
 		<listitem><para>
 <indexterm><primary>SeDiskOperatorPrivilege</primary></indexterm>
-<indexterm><primary>add/delete/change share</primary></indexterm>
+<indexterm><primary>共有の追加/削除/変更</primary></indexterm>
 <indexterm><primary>ACL</primary></indexterm>
-		Accounts that possess this right will be able to execute
-		scripts defined by the <command>add/delete/change</command>
-		share command in &smb.conf; file as root.  Such users will
-		also be able to modify the ACL associated with file shares
-		on the Samba server.
+		この権利を所有するアカウントは、 &smb.conf;ファイル中で定義した
+		共有を<command>追加/削除/変更</command>するコマンドをrootとして
+		実行出来る。このようなユーザはSambaサーバ上のファイル共有に関連
+		づけられているACLを変更も出来る。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>SeMachineAccountPrivilege</term>
 		<listitem><para>
 <indexterm><primary>SeMachineAccountPrivilege</primary></indexterm>
-<indexterm><primary>right to join domain</primary></indexterm>
-<indexterm><primary>join client</primary></indexterm>
-		This right controls whether or not the user can join client
-		machines to a Samba-controlled domain.
+<indexterm><primary>ドメインへの参加権利</primary></indexterm>
+<indexterm><primary>クライアントのドメインへの参加</primary></indexterm>
+		この権利は、ユーザがSambaが制御しているドメインにクライアント
+		マシンを参加させることが出来るか否かを制御する。
 		</para></listitem>
 	</varlistentry>
 
@@ -326,28 +325,26 @@ mailing lists.
 <indexterm><primary>SePrintOperatorPrivilege</primary></indexterm>
 <indexterm><primary>privilege</primary></indexterm>
 <indexterm><primary>global right</primary></indexterm>
-<indexterm><primary>administrative rights</primary></indexterm>
+<indexterm><primary>管理者の権利</primary></indexterm>
 <indexterm><primary>printers admin</primary></indexterm>
-		This privilege operates identically to the <smbconfoption name="printer admin"/>
-		option in the &smb.conf; file (see section 5 man page for &smb.conf;)
-		except that it is a global right (not on a per-printer basis). 
-		Eventually the smb.conf option will be deprecated and administrative
-		rights to printers will be controlled exclusively by this right and
-		the security descriptor associated with the printer object in the
-		<filename>ntprinters.tdb</filename> file.
+		この権限は&smb.conf;ファイル中の<smbconfoption name="printer admin"/>
+		オプションと、それがグローバルな権利であるという(プリンタ単位毎ではない)
+		ことを除いて同じように動作する(セクション5の&smb.conf;マニュアルページ
+		参照)。結局smb.confのオプションは無効となり、プリンタへの管理者権限は
+		このオプションと、<filename>ntprinters.tdb</filename>ファイル中にある
+		プリンタオブジェクトに対するセキュリティ記述子によって排他的に制御される。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>SeRemoteShutdownPrivilege</term>
 		<listitem><para>
 <indexterm><primary>SeRemoteShutdownPrivilege</primary></indexterm>
-<indexterm><primary>rebooting server</primary></indexterm>
-<indexterm><primary>aborting shutdown</primary></indexterm>
-		Samba provides two hooks for shutting down or rebooting
-		the server and for aborting a previously issued shutdown
-		command.  Since this is an operation normally limited by
-		the operating system to the root user, an account must possess this
-		right to be able to execute either of these hooks.
+<indexterm><primary>サーバの再起動</primary></indexterm>
+<indexterm><primary>シャットダウンの中止</primary></indexterm>
+		Sambaはサーバのシャットダウンと再起動のためと、直前に出されたシャット
+		ダウンコマンドを中止するためののフックを提供する。この操作は通常OS
+		によってrootユーザにのみ制限されているので、上記のフックのどれかを使う
+		ことができるアカウントはこの権利を持っていなければならない。
 		</para></listitem>
 	</varlistentry>
 
@@ -355,7 +352,7 @@ mailing lists.
 		<listitem><para>
 <indexterm><primary>SeTakeOwnershipPrivilege</primary></indexterm>
 <indexterm><primary>take ownership</primary></indexterm>
-		This right permits users to take ownership of files and directories.
+		この権利はファイルとディレクトリの所有権を得る事を許可する。
 		</para></listitem>
 	</varlistentry>
 
