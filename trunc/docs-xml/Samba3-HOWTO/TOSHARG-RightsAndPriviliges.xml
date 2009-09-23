@@ -174,67 +174,66 @@ Samba 3.0.11から、Windowsの権限モデルのサポートが導入された�
 <indexterm><primary>ドメインに対するNT4ユーザマネージャ</primary></indexterm>
 <indexterm><primary>コマンドラインユーティリティ</primary></indexterm>
 <indexterm><primary>管理操作</primary></indexterm>
-There are two primary means of managing the rights assigned to users and groups
-on a Samba server.  The <command>NT4 User Manager for Domains</command> may be
-used from any Windows NT4, 2000, or XP Professional domain member client to
-connect to a Samba domain controller and view/modify the rights assignments.
-This application, however, appears to have bugs when run on a client running
-Windows 2000 or later; therefore, Samba provides a command-line utility for
-performing the necessary administrative actions.
+Sambaサーバ上でユーザとグループに権利を割り当てる管理には2つの主要な手段がある。
+<command>止め引用のNT4ユーザマネージャ</command>はSambaドメインコントローラに接続
+するためにWindows NT4、2000かXP Professionalのドメインメンバクライアントのどれから
+でも使うことが出来、権限の割り当てを表示したり修正できる。しかし、このアプリケーション
+は、Windows 2000かそれ以降のクライアント上で動かす時にはバグがある。そのため、管理
+操作の実行を行うために必要なコマンドラインユーティリティを提供している。
 </para>
 
 <para>
-The <command>net rpc rights</command> utility in Samba 3.0.11 has three new subcommands:
+Samba-3.0.11以降の<command>net rpc rights</command>ユーティリティは新しい3つの
+サブコマンドを提供している:
 </para>
 
 <variablelist>
 	<varlistentry><term>list [name|accounts]</term>
 		<listitem><para>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>list</tertiary></indexterm>
-<indexterm><primary>available rights</primary></indexterm>
-<indexterm><primary>privileges assigned</primary></indexterm>
-<indexterm><primary>privileged accounts</primary></indexterm>
-		When called with no arguments, <command>net rpc list</command>
-		simply lists the available rights on the server.  When passed
-		a specific user or group name, the tool lists the privileges
-		currently assigned to the specified account.  When invoked using
-		the special string <constant>accounts</constant>,
-		<command>net rpc rights list</command> returns a list of all
-		privileged accounts on the server and the assigned rights.
+<indexterm><primary>有効な権利</primary></indexterm>
+<indexterm><primary>割り当てられた権限</primary></indexterm>
+<indexterm><primary>特権アカウント</primary></indexterm>
+		引数なしで起動した場合、<command>net rpc list</command>は単純にサーバ
+		上の有効な権利の一覧を表示する。特定のユーザまたはグループを指定した
+		場合、ツールは指定されたアカウントに割り当てられている現在の権限を
+		表示する。<constant>accounts</constant>という特別な文字列を付けて起動
+		した場合、<command>net rpc rights list</command>はサーバ上のすべての
+		特権アカウントの一覧とそれに割り当てられた権利を表示する。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>grant &lt;user&gt; &lt;right [right ...]&gt;</term>
 		<listitem><para>
-<indexterm><primary>assign rights</primary></indexterm>
-<indexterm><primary>grant rights</primary></indexterm>
-<indexterm><primary>add client machines</primary></indexterm>
-<indexterm><primary>user or group</primary></indexterm>
-		When called with no arguments, this function is used to assign
-		a list of rights to a specified user or group.  For example,
-		to grant the members of the Domain Admins group on a Samba domain controller,
-		the capability to add client machines to the domain, one would run:
+<indexterm><primary>権利の割り当て</primary></indexterm>
+<indexterm><primary>権利の許可</primary></indexterm>
+<indexterm><primary>クライアントマシンの追加</primary></indexterm>
+<indexterm><primary>ユーザかグループ</primary></indexterm>
+		引数なしで起動すると、この機能は指定されたユーザかグループに一連の
+		権利を割り当てるのに使う。例えば、Sambaドメインコントローラ上の
+		Domain Admins groupのメンバに、ドメインにクライアントマシンを追加する
+		能力を許可するためには、以下のように実行する:
 <screen>
 &rootprompt; net -S server -U domadmin rpc rights grant \
 	 'DOMAIN\Domain Admins' SeMachineAccountPrivilege
 </screen>
-		The following syntax has the same result:
+		以下のような指定も同じ結果となる:
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>rights grant</tertiary></indexterm>
 <screen>
 &rootprompt; net rpc rights grant 'DOMAIN\Domain Admins' \
      SeMachineAccountPrivilege -S server -U domadmin
 </screen>
-		More than one privilege can be assigned by specifying a
-		list of rights separated by spaces. The parameter 'Domain\Domain Admins'
-		must be quoted with single ticks or using double-quotes to prevent
-		the backslash and the space from being interpreted by the system shell.
+		空白で区切った権利の一覧を指定することで、複数の権限を割り当てることも
+		可能である。パラメータ'Domain\Domain Admins'はシステムシェルによって
+		バックスラッシュと空白が解釈されてしまうのを防ぐために、シングルクォート
+		かダブルクォートで囲まなければならない。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>revoke &lt;user&gt; &lt;right [right ...]&gt;</term>
 		<listitem><para>
-		This command is similar in format to <command>net rpc rights grant</command>.  Its
-		effect is to remove an assigned right (or list of rights) from a user or group.
+		このコマンドは<command>net rpc rights grant</command>と形式が似ている。
+		これは、ユーザとグループから割り当てられた権利(か権利の一覧)を削除する。
 		</para></listitem>
 	</varlistentry>
 
@@ -243,36 +242,37 @@ The <command>net rpc rights</command> utility in Samba 3.0.11 has three new subc
 <note><para>
 <indexterm><primary>member</primary></indexterm>
 <indexterm><primary>Domain Admins</primary></indexterm>
-<indexterm><primary>revoke privileges</primary></indexterm>
-You must be connected as a member of the Domain Admins group to be able to grant or revoke privileges assigned
-to an account.  This capability is inherent to the Domain Admins group and is not configurable. There are no
-default rights and privileges, except the ability for a member of the Domain Admins group to assign them.
-This means that all administrative rights and privileges (other than the ability to assign them) must be 
-explicitly assigned, even for the Domain Admins group.
+<indexterm><primary>権限の削除</primary></indexterm>
+、アカウントに割り当てられる権限の設定か削除を可能にするため、Domain Admins グループ
+メンバとして接続する必要がある。この能力はDomain Adminsグループに固有で変更できない。
+Domain Adminsのメンバに割り当てられた能力以外、既定値の権利と権限はない。これは、
+すべての管理者の権利と権限(それらに割り当てられた能力以外)は、Domain Adminsグループ
+でも明示的に割り当てられなければならないということを意味する。
 </para></note>
 
 <para>
-<indexterm><primary>performed as root</primary></indexterm>
-<indexterm><primary>necessary rights</primary></indexterm>
+<indexterm><primary>rootとして実行</primary></indexterm>
+<indexterm><primary>必要な権利</primary></indexterm>
 <indexterm><primary>add machine script</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-By default, no privileges are initially assigned to any account because certain actions will be performed as
-root once smbd determines that a user has the necessary rights.  For example, when joining a client to a
-Windows domain, <parameter>add machine script</parameter> must be executed with superuser rights in most 
-cases.  For this reason, you should be very careful about handing out privileges to accounts.
+いったんsmbdが、ユーザが必要な権利を持っていると確認した場合、特定の操作はrootとして
+実行されるので、初期状態では、どのユーザに対しても、何らの権利は割り当てられない。
+例えば、Windowsドメインにクライアントを参加させる時、<parameter>add machine script</parameter>
+はほとんどの場合、スーパーユーザの権利で動作させる必要がある。この理由のため、アカウントに
+対して権限を割り当てるのはとても注意すべきである。
 </para>
 
 <para>
 <indexterm><primary>Access</primary></indexterm>
 <indexterm><primary>root user</primary></indexterm>
-<indexterm><primary>bypasses privilege</primary></indexterm>
-Access as the root user (UID=0) bypasses all privilege checks.
+<indexterm><primary>権限のバイパス</primary></indexterm>
+root ユーザ(UID=0)としてのアクセスは、すべての権限チェックをバイパスする。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Description of Privileges</title>
+<title>権限の説明</title>
 
 <para>
 <indexterm><primary>privileges</primary></indexterm>
