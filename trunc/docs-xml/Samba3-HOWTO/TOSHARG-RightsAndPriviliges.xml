@@ -63,53 +63,50 @@ UNIXマシンでの実装では(すなわちSambaが動いているマシン)、
 </para></note>
 
 <para>
-<indexterm><primary>UNIX system accounts</primary></indexterm>
-<indexterm><primary>system administrator</primary></indexterm>
+<indexterm><primary>UNIXシステムアカウント</primary></indexterm>
+<indexterm><primary>システム管理者</primary></indexterm>
 <indexterm><primary>root</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
-The creation of UNIX system accounts has traditionally been the sole right of
-the system administrator, better known as the <constant>root</constant> account.
-It is possible in the UNIX environment to create multiple users who have the
-same UID. Any UNIX user who has a UID=0 is inherently the same as the
-<constant>root</constant> account user.
+UNIXシステムアカウントの作成は、<constant>root</constant>アカウントと言う方が通りがよい、
+システム管理者の伝統的な唯一の権利であった。UNIX環境では、同じUIDを持つ複数のユーザを
+作ることが可能である。UID=0のUNIXユーザはだれでも<constant>root</constant>アカウント
+ユーザと本質的に同じである。
 </para>
 
 <para>
-<indexterm><primary>system interface scripts</primary></indexterm>
-<indexterm><primary>CIFS function calls</primary></indexterm>
-<indexterm><primary>root account</primary></indexterm>
-<indexterm><primary>UNIX host system</primary></indexterm>
-All versions of Samba call system interface scripts that permit CIFS function
-calls that are used to manage users, groups, and machine accounts
-in the UNIX environment. All versions of Samba up to and including version 3.0.10
-required the use of a Windows administrator account that unambiguously maps to
-the UNIX <constant>root</constant> account to permit the execution of these
-interface scripts. The requirement to do this has understandably met with some
-disdain and consternation among Samba administrators, particularly where it became
-necessary to permit people who should not possess <constant>root</constant>-level
-access to the UNIX host system.
+<indexterm><primary>システムインタフェーススクリプト</primary></indexterm>
+<indexterm><primary>CIFS機能呼び出し</primary></indexterm>
+<indexterm><primary>rootアカウント</primary></indexterm>
+<indexterm><primary>UNIXホストシステム</primary></indexterm>
+すべてのバージョンのSambaは、UNIX環境で、ユーザ、グループとマシンアカウントを管理する
+ためのCIFS機能呼び出しを許可するシステムインタフェーススクリプトを呼び出す。3.0.10
+を含むそれまでのすべてのバージョンのSambaは、それらのインタフェーススクリプトを
+実行するために、明確にUNIXの<constant>root</constant>アカウントにマップされる
+Windows管理者アカウントを使用することを要求する。こうする必要性は、無理もない話だが、
+特に、UNIXホストシステムでconstant>root</constant>レベルのアクセスを行ってはならない
+人が特権を得てしまう事について、Samba管理者の間では評判が悪い。
 </para>
 
 <sect1>
-<title>Rights Management Capabilities</title>
+<title>権利の管理能力</title>
 
 <para>
-<indexterm><primary>Windows privilege model</primary></indexterm>
-<indexterm><primary>privilege model</primary></indexterm>
-<indexterm><primary>rights assigned</primary></indexterm>
+<indexterm><primary>Windowsの権限モデル</primary></indexterm>
+<indexterm><primary>権限モデル</primary></indexterm>
+<indexterm><primary>割り当てられた権利</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-Samba 3.0.11 introduced support for the Windows privilege model.  This model
-allows certain rights to be assigned to a user or group SID.  In order to enable
-this feature, <smbconfoption name="enable privileges">yes</smbconfoption>
-must be defined in the <smbconfsection name="global"/> section of the &smb.conf; file.
+Samba 3.0.11から、Windowsの権限モデルのサポートが導入された。このモデルは、特定の
+権利をユーザかグループSIDに割り当てるというものである。この機能を有効にするため、
+&smb.conf;ファイル中の<smbconfsection name="global"/>セクション中で、
+<smbconfoption name="enable privileges">yes</smbconfoption>を定義しなければならない。
 </para>
 
 <para>
-<indexterm><primary>rights</primary></indexterm>
-<indexterm><primary>privileges</primary></indexterm>
-<indexterm><primary>manage privileges</primary></indexterm>
-Currently, the rights supported in Samba-3 are listed in <link linkend="rp-privs"/>.
-The remainder of this chapter explains how to manage and use these privileges on Samba servers.
+<indexterm><primary>権利</primary></indexterm>
+<indexterm><primary>権限</primary></indexterm>
+<indexterm><primary>権限の管理</primary></indexterm>
+現在、Samba-3でサポートされている権利は<link linkend="rp-privs"/>に一覧がある。
+この章の残りでは、Sambaサーバ上でどのように権限を管理し使うかについて説明する。
 </para>
 
 <indexterm><primary>SeMachineAccountPrivilege</primary></indexterm>
@@ -119,36 +116,36 @@ The remainder of this chapter explains how to manage and use these privileges on
 <indexterm><primary>SeDiskOperatorPrivilege</primary></indexterm>
 <indexterm><primary>SeTakeOwnershipPrivilege</primary></indexterm>
 <table id="rp-privs">
-        <title>Current Privilege Capabilities</title>
+        <title>現在有効な権限の一覧</title>
         <tgroup cols="2">
                 <colspec align="right"/>
                 <colspec align="left"/>
                 <thead>
                         <row>
-                                <entry align="left">Privilege</entry>
-                                <entry align="left">Description</entry>
+                                <entry align="left">権限</entry>
+                                <entry align="left">説明</entry>
                         </row>
                 </thead>
                 <tbody>
                         <row>
                                 <entry><para>SeMachineAccountPrivilege</para></entry>
-                                <entry><para>Add machines to domain</para></entry>
+                                <entry><para>マシンをドメインに追加する</para></entry>
                         </row>
                         <row>
                                 <entry><para>SePrintOperatorPrivilege</para></entry>
-                                <entry><para>Manage printers</para></entry>
+                                <entry><para>プリンタの管理</para></entry>
                         </row>
                         <row>
                                 <entry><para>SeAddUsersPrivilege</para></entry>
-                                <entry><para>Add users and groups to the domain</para></entry>
+                                <entry><para>ドメインへのユーザとグループの追加</para></entry>
                         </row>
                         <row>
                                 <entry><para>SeRemoteShutdownPrivilege</para></entry>
-                                <entry><para>Force shutdown from a remote system</para></entry>
+                                <entry><para>リモートシステムの強制シャットダウン</para></entry>
                         </row>
                         <row>
                                 <entry><para>SeDiskOperatorPrivilege</para></entry>
-                                <entry><para>Manage disk share</para></entry>
+                                <entry><para>ディスク共有の管理</para></entry>
                         </row>
 <!-- These are not used at this time - so void them from the docs.
                         <row>
@@ -162,21 +159,21 @@ The remainder of this chapter explains how to manage and use these privileges on
 **** End of commented out section **** -->    
                         <row>
                                 <entry><para>SeTakeOwnershipPrivilege</para></entry>
-                                <entry><para>Take ownership of files or other objects</para></entry>
+                                <entry><para>ファイルか他のオブジェクトに対する所有権の取得</para></entry>
                         </row>
             </tbody>
         </tgroup>
 </table>
 
 <sect2>
-<title>Using the <quote>net rpc rights</quote> Utility</title>
+<title><quote>net rpc rights</quote>ユーティリティの使用</title>
 
 <para>
-<indexterm><primary>managing rights</primary></indexterm>
-<indexterm><primary>rights assigned</primary></indexterm>
-<indexterm><primary>NT4 User Manager for Domains</primary></indexterm>
-<indexterm><primary>command-line utility</primary></indexterm>
-<indexterm><primary>administrative actions</primary></indexterm>
+<indexterm><primary>権利の管理</primary></indexterm>
+<indexterm><primary>割り当てられた権利</primary></indexterm>
+<indexterm><primary>ドメインに対するNT4ユーザマネージャ</primary></indexterm>
+<indexterm><primary>コマンドラインユーティリティ</primary></indexterm>
+<indexterm><primary>管理操作</primary></indexterm>
 There are two primary means of managing the rights assigned to users and groups
 on a Samba server.  The <command>NT4 User Manager for Domains</command> may be
 used from any Windows NT4, 2000, or XP Professional domain member client to
