@@ -558,32 +558,35 @@ Sambaバージョン 3.0.11以降のリリースでは、WindowsのユーザかW
 <indexterm><primary>Power Users</primary></indexterm>
 <indexterm><primary>ドメイングローバルユーザ</primary></indexterm>
 <indexterm><primary>ドメイングローバルグループ</primary></indexterm>
-	This is often not the most desirable solution because it means that the user will have administrative
-	rights and privileges on domain servers also. The <literal>Power Users</literal> group on Windows client
-	workstations permits local administration of the workstation alone. Any domain global user or domain global
-	group can be added to the membership of the local workstation group <literal>Power Users</literal>.
+	これは、ユーザがドメインサーバ上でも管理者の権利と権限を持ってしまうために、
+	必ずしもすべての場合において良い解決方法とは言えない。Windowsクライアント上の
+	<literal>Power Users</literal>グループはワークステーションのみのローカルな
+	管理者権限を持つ。任意のグローバルユーザかドメイングローバルグループは、
+	ローカルワークステーションの<literal>Power Users</literal>グループのメンバに
+	追加できる。
 	</para>
 
 	<para>
-<indexterm><primary>Nested Group Support</primary></indexterm>
-<indexterm><primary>add domain users and groups to a local group</primary></indexterm>
+<indexterm><primary>ネストされたグループのサポート</primary></indexterm>
+<indexterm><primary>ローカルグループへのドメインユーザとグループの追加</primary></indexterm>
 <indexterm><primary>net</primary></indexterm>
-<indexterm><primary>Windows workstation.</primary></indexterm>
-	See <link linkend="nestedgrpmgmgt">Nested Group Support</link> for an example of how to add domain users
-	and groups to a local group that is on a Windows workstation. The use of the <command>net</command>
-	command permits this to be done from the Samba server.
+<indexterm><primary>Windowsワークステーション</primary></indexterm>
+	<link linkend="nestedgrpmgmgt">ネストされたグループのサポート</link>に、Windows
+	ワークステーション上でのローカルグループにドメインユーザとグループを追加する
+	方法の例がある。Sambaサーバから<command>net</command>を使うことで、この作業が
+	行える。
 	</para>
 
 	<para>
 <indexterm><primary>cmd</primary></indexterm>
 <indexterm><primary>cmd shell</primary></indexterm>
 <indexterm><primary>net</primary><secondary>localgroup</secondary></indexterm>
-	Another way this can be done is to log onto the Windows workstation as the user
-	<literal>Administrator</literal>, then open a <command>cmd</command> shell, then execute:
+	これを行う別の方法は、Windowsワークステーションに<literal>Administrator</literal>
+	としてログオンし、<command>cmd</command>シェルを開き、以下を実行する:
 <screen>
 &dosprompt; net localgroup administrators /add <userinput>domain_name\entity</userinput>
 </screen>
-	where <literal>entity</literal> is either a domain user or a domain group account name.
+	ここで、<literal>entity</literal>は、ドメインユーザかドメイングループのアカウント名である。
 	</para>
 
 	</sect2>
