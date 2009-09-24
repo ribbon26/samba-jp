@@ -493,18 +493,19 @@ SeIncreaseBasePriorityPrivilege  Increase scheduling priority
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>net getlocalsid</primary></indexterm>
-Please note that every Windows NT4 and later server requires a domain Administrator account. Samba versions
-commencing with 3.0.11 permit Administrative duties to be performed via assigned rights and privileges
-(see <link linkend="rights">User Rights and Privileges</link>).  An account in the server's passdb backend can
-be set to the well-known RID of the default administrator account.  To obtain the domain SID on a Samba domain
-controller, run the following command:
+すべてのWindows NT4とそれ以降のサーバはdomain Administratorアカウントを必要とすることに
+注意。Sambaバージョン3.0.11以降は、割り当てられた権利と権限
+(<link linkend="rights">ユーザの権利と権限</link>を参照)経由で管理者の任務を実行する
+ことを許可する。サーバのpassdbバックエンド中のアカウントは、よく知られている既定値の
+管理者アカウントのRIDに設定できる。Sambaドメインコントローラ上のドメインSIDを得る
+ためには、以下のコマンドを実行する:
 <screen>
 &rootprompt; net getlocalsid
 SID for domain FOO is: S-1-5-21-4294955119-3368514841-2087710299
 </screen>
 <indexterm><primary>RID</primary></indexterm>
-You may assign the domain administrator RID to an account using the <command>pdbedit</command>
-command as shown here:
+以下のように、<command>pdbedit</command>を使ってアカウントにドメイン管理者のRIDを
+割り当てても良い:
 <indexterm><primary>pdbedit</primary></indexterm>
 <screen>
 &rootprompt; pdbedit -U S-1-5-21-4294955119-3368514841-2087710299-500 -u root -r
@@ -513,49 +514,50 @@ command as shown here:
 
 <note><para>
 <indexterm><primary>RID 500</primary></indexterm>
-<indexterm><primary>well known RID</primary></indexterm>
-<indexterm><primary>rights and privileges</primary></indexterm>
-<indexterm><primary>root account</primary></indexterm>
-The RID 500 is the well known standard value of the default Administrator account. It is the RID
-that confers the rights and privileges that the Administrator account has on a Windows machine
-or domain. Under UNIX/Linux the equivalent is UID=0 (the root account).
+<indexterm><primary>よく知られたRID</primary></indexterm>
+<indexterm><primary>権利と権限</primary></indexterm>
+<indexterm><primary>rootアカウント</primary></indexterm>
+500というRIDの値は、よく知られた既定値のAdministratorアカウントの標準値である。これは、
+Windowsマシン上かドメイン上のAdministratorアカウントが持つ権利と権限を割り当てるRIDで
+ある。UNIX/Linux環境下では、同等なものはUID=0(rootアカウント)である。
 </para></note>
 
 <para>
-<indexterm><primary>without Administrator account</primary></indexterm>
+<indexterm><primary>Administratorアカウントなし</primary></indexterm>
 <indexterm><primary>equivalent rights and privileges</primary></indexterm>
-<indexterm><primary>Windows group account</primary></indexterm>
+<indexterm><primary>Windowsのグループアカウント</primary></indexterm>
 <indexterm><primary>3.0.11</primary></indexterm>
-Releases of Samba version 3.0.11 and later make it possible to operate without an Administrator account
-provided equivalent rights and privileges have been established for a Windows user or a Windows
-group account. 
+Sambaバージョン 3.0.11以降のリリースでは、WindowsのユーザかWindowsのグループアカウントの
+ために設定された権利と権限と同等のものを提供するAdministratorアカウントなしで動作させる
+ことが可能である。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 	<sect2>
-	<title>What Rights and Privileges Will Permit Windows Client Administration?</title>
+	<title>Windowsクライアントの管理が出来る権利と権限は何か?</title>
 
 	<para>
 <indexterm><primary>domain global</primary></indexterm>
-<indexterm><primary>local group</primary></indexterm>
-<indexterm><primary>administrative rights</primary></indexterm>
-<indexterm><primary>Windows client</primary></indexterm>
-	When a Windows NT4 (or later) client joins a domain, the domain global <literal>Domain Admins</literal> group
-	is added to the membership of the local <literal>Administrators</literal> group on the client. Any user who is
-	a member of the domain global <literal>Domain Admins</literal> group will have administrative rights on the
-	Windows client.
+<indexterm><primary>ローカルグループ</primary></indexterm>
+<indexterm><primary>管理者の権利</primary></indexterm>
+<indexterm><primary>Windowsクライアント</primary></indexterm>
+	Windows NT4(とそれ以降)のクライアントがドメインに参加したとき、ドメイン全体での
+	<literal>Domain Admins</literal>グループはクライアント上のローカルな
+	<literal>Administrators</literal>グループのメンバシップに追加される。ドメイン
+	グローバルの<literal>Domain Admins</literal>グループのメンバであるユーザは誰でも
+	Windowsクライアント上で管理者の権利と権限を持つ。
 	</para>
 
 	<para>
-<indexterm><primary>desirable solution</primary></indexterm>
-<indexterm><primary>administrative rights and privileges</primary></indexterm>
+<indexterm><primary>望ましい解決方法</primary></indexterm>
+<indexterm><primary>管理者の権利と権限</primary></indexterm>
 <indexterm><primary>Power Users</primary></indexterm>
-<indexterm><primary>domain global user</primary></indexterm>
-<indexterm><primary>domain global group</primary></indexterm>
+<indexterm><primary>ドメイングローバルユーザ</primary></indexterm>
+<indexterm><primary>ドメイングローバルグループ</primary></indexterm>
 	This is often not the most desirable solution because it means that the user will have administrative
 	rights and privileges on domain servers also. The <literal>Power Users</literal> group on Windows client
 	workstations permits local administration of the workstation alone. Any domain global user or domain global
