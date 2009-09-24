@@ -36,43 +36,42 @@ Samba-3はNT4形式のドメイン信頼関係をサポートする。NT4形式�
 
 <para>
 <indexterm><primary>winbind</primary></indexterm>
-<indexterm><primary>UID range</primary></indexterm>
-<indexterm><primary>GID range</primary></indexterm>
+<indexterm><primary>UIDレンジ</primary></indexterm>
+<indexterm><primary>GIDレンジ</primary></indexterm>
 <indexterm><primary>daemon</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-The use of interdomain trusts requires use of <command>winbind</command>, so the
-<command>winbindd</command> daemon must be running. Winbind operation in this mode is
-dependent on the specification of a valid UID range and a valid GID range in the &smb.conf; file.
-These are specified respectively using:
+ドメイン間の信頼関係を使う場合、<command>winbind</command>を使うことが必要であるので、
+<command>winbindd</command>が動いていなければならない。このモードにおけるwinbindの
+動作は、&smb.conf;ファイル中の有効なUIDレンジと有効なGIDレンジの指定に依存する。
+これらは以下のように指定する:
 <smbconfblock>
 <smbconfoption name="idmap uid">10000-20000</smbconfoption>
 <smbconfoption name="idmap gid">10000-20000</smbconfoption>
 </smbconfblock>
-<indexterm><primary>passdb backend</primary></indexterm>
-<indexterm><primary>POSIX user accounts</primary></indexterm>
-<indexterm><primary>maximum value</primary></indexterm>
+<indexterm><primary>passdbバックエンド</primary></indexterm>
+<indexterm><primary>POSIXユーザアカウント</primary></indexterm>
+<indexterm><primary>最大値</primary></indexterm>
 <indexterm><primary>4294967295</primary></indexterm>
-The range of values specified must not overlap values used by the host operating system and must
-not overlap values used in the passdb backend for POSIX user accounts. The maximum value is
-limited by the upper-most value permitted by the host operating system. This is a UNIX kernel
-limited parameter. Linux kernel 2.6-based systems support a maximum value of 4294967295 
-(32-bit unsigned variable).
+指定されたレンジの値はホストOSで使っている値とPOSIXユーザアカウント用のpassdbバック
+エンドで使っている値を上書きしてはならない。最大値はホストOSによって許可されている
+上限の値で制限される。これはUNIXカーネルで制限されるパラメータである。Linux kernel
+2.6ベースのシステムは最大値として4294967295(符号なし32ビット値)である。
 </para>
 
 <note><para>
 <indexterm><primary>winbind</primary></indexterm>
-<indexterm><primary>trusting domain</primary></indexterm>
-<indexterm><primary>trusted domain</primary></indexterm>
-The use of winbind is necessary only when Samba is the trusting domain, not when it is the
-trusted domain.
+<indexterm><primary>信頼しているドメイン</primary></indexterm>
+<indexterm><primary>信頼されたドメイン</primary></indexterm>
+winbindを使用するのはSambaが信頼しているドメインの時のみであり、信頼されたドメインの時
+には不要である。
 </para></note>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-<indexterm><primary>scalability</primary></indexterm>
-<indexterm><primary>trust relationships</primary></indexterm>
+<indexterm><primary>拡張性</primary></indexterm>
+<indexterm><primary>信頼関係</primary></indexterm>
 Samba-3 can participate in Samba-to-Samba as well as in Samba-to-MS Windows NT4-style
 trust relationships. This imparts to Samba scalability similar to that with MS Windows NT4.
 </para>
