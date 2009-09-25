@@ -153,67 +153,68 @@ NT4形式のMicrosoft セキュリティドメインでは、全ての信頼は�
 
 <para>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>security contexts</primary></indexterm>
-<indexterm><primary>trust relationships</primary></indexterm>
-<indexterm><primary>two-way trust</primary></indexterm>
+<indexterm><primary>セキュリティコンテキスト</primary></indexterm>
+<indexterm><primary>信頼関係</primary></indexterm>
+<indexterm><primary>双方向の信頼</primary></indexterm>
 <indexterm><primary>Windows 2000</primary></indexterm>
-<indexterm><primary>security domains</primary></indexterm>
-<indexterm><primary>NT4-style domains</primary></indexterm>
-New to MS Windows 2000 ADS security contexts is the fact that trust relationships are two-way by default.
-Also, all inter-ADS domain trusts are transitive. In the case of the red, white, and blue domains, with
-Windows 2000 and ADS, the red and blue domains can trust each other. This is an inherent feature of ADS
-domains. Samba-3 implements MS Windows NT4-style interdomain trusts and interoperates with MS Windows 200x ADS
-security domains in similar manner to MS Windows NT4-style domains.
+<indexterm><primary>セキュリティドメイン</primary></indexterm>
+<indexterm><primary>NT4形式のドメイン</primary></indexterm>
+Microsoft Windows 2000から登場した新たなADSセキュリティの方式では、信頼関係は既定値で
+双方向になっている。また、全てのADSドメイン間の信頼は推移的である。上の赤、白、青
+ドメインの例では、Windows 2000及びADSを使用する場合、赤と青ドメインは互いに信頼できる。
+これはADSドメインの本質的な特長である。Samba-3 はMicrosoft Windows NT4方式のドメイン間
+信頼機能を実装し、Microsoft Windows NT4方式のドメインと類似した方法で、
+Microsoft Windows 200x ADS セキュリティドメインとの相互運用を実現している。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Native MS Windows NT4 Trusts Configuration</title>
+<title>ネイティブなMicrosoft Windows NT4の信頼関係の設定</title>
 
 <para>
 <indexterm><primary>Interdomain Trusts</primary><secondary>creating</secondary></indexterm>
-<indexterm><primary>two-way trust</primary></indexterm>
+<indexterm><primary>双方向の信頼</primary></indexterm>
 <indexterm><primary>security credentials</primary></indexterm>
-There are two steps to creating an interdomain trust relationship. To effect a two-way trust
-relationship, it is necessary for each domain administrator to create a trust account for the 
-other domain to use in verifying security credentials.
+ドメイン間信頼関係を作成するには二つのステップがある。双方向の信頼関係を有効にする
+ためには、双方のドメイン管理者が相手のドメインのために信頼アカウントを作成し、
+セキュリティに関する信用情報を確認する際に使用できるようにしなければならない。
 </para>
 
 
 <sect2>
-<title>Creating an NT4 Domain Trust</title>
+<title>NT4ドメイン信頼関係の作成</title>
 
 <para>
-<indexterm><primary>domain trust</primary></indexterm>
-<indexterm><primary>trust relationships</primary></indexterm>
-<indexterm><primary>>Domain User Manager</primary></indexterm>
-<indexterm><primary>remote domain</primary></indexterm>
+<indexterm><primary>ドメインの信頼</primary></indexterm>
+<indexterm><primary>信頼関係</primary></indexterm>
+<indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
+<indexterm><primary>リモートドメイン</primary></indexterm>
 <indexterm><primary>standard confirmation</primary></indexterm>
-For MS Windows NT4, all domain trust relationships are configured using the 
-<application>Domain User Manager</application>. This is done from the Domain User Manager Policies
-entry on the menu bar. From the <guimenu>Policy</guimenu> menu, select
-<guimenuitem>Trust Relationships</guimenuitem>. Next to the lower box labeled
-<guilabel>Permitted to Trust this Domain</guilabel> are two buttons, <guibutton>Add</guibutton>
-and <guibutton>Remove</guibutton>. The <guibutton>Add</guibutton> button will open a panel in which
-to enter the name of the remote domain that will be able to assign access rights to users in 
-your domain. You will also need to enter a password for this trust relationship, which the 
-trusting domain will use when authenticating users from the trusted domain.
-The password needs to be typed twice (for standard confirmation).
+Microsoft Windows NT4では、全てのドメインの信頼関係は
+<application>ドメインユーザーマネジャ</application>を使って設定する。これは、
+メニューバーのドメインユーザーマネジャーポリシーのエントリから行う。
+<guimenu>ポリシー</guimenu>メニューから<guimenuitem>信頼関係</guimenuitem>を選択する。
+<guimenuitem>信頼する側のドメイン</guimenuitem>と記された低い方のボックスの隣に二つの
+ボタンがある。 <guibutton>追加</guibutton>と<guibutton>削除</guibutton>である。
+<guibutton>追加</guibutton>ボタンは、自ドメイン内のユーザにアクセス権限を付与することが
+できるリモートドメイン名を入力するパネルを開く。また、信頼するドメインが信頼される
+ドメインのユーザを認証するときに使用する、信頼関係のパスワードも入力する必要がある。
+パスワードは(標準的な確認の手続きとして)二度入力しなければならない。
 </para>
 
 </sect2>
 
 
 <sect2>
-<title>Completing an NT4 Domain Trust</title>
+<title>NT4ドメイン信頼関係の構築完了</title>
 
 <para>
-<indexterm><primary>trust relationship</primary></indexterm>
-<indexterm><primary>trusting domain</primary></indexterm>
-<indexterm><primary>trusted domain</primary></indexterm>
-<indexterm><primary>remote domain</primary></indexterm>
-<indexterm><primary>password assigned</primary></indexterm>
+<indexterm><primary>信頼関係</primary></indexterm>
+<indexterm><primary>信頼しているドメイン</primary></indexterm>
+<indexterm><primary>信頼されたドメイン</primary></indexterm>
+<indexterm><primary>リモートドメイン</primary></indexterm>
+<indexterm><primary>パスワードが割り当てられた</primary></indexterm>
 <indexterm><primary>Interdomain Trusts</primary><secondary>Completing</secondary></indexterm>
 A trust relationship will work only when the other (trusting) domain makes the appropriate connections
 with the trusted domain. To consummate the trust relationship, the administrator launches the
