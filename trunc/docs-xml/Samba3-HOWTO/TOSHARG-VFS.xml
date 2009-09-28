@@ -67,6 +67,10 @@ VFS モジュールを使用するには、以下の例に類似した共有を�
 <indexterm><primary>ウィルススキャナ</primary></indexterm>
 <indexterm><primary>スキャナモジュール</primary></indexterm>
 <indexterm><primary>recycle bin</primary></indexterm>
+モジュールは指定された順に使用される。例えば、ウィルススキャナモジュールとごみ箱
+モジュールを両方使用したいとする。この場合、ファイルに関して他のアクションが
+取られる前に、最初にウィルスを検知するよう、ウィルススキャナモジュールを最初の
+モジュールとし、このモジュールが最初に動くようにすべきである。
 The modules are used in the order in which they are specified.  Let's say that you want to both have a virus
 scanner module and a recycle bin module. It is wise to put the virus scanner module as the first one so that
 it is the first to get run and may detect a virus immediately, before any action is performed on that file.
@@ -76,21 +80,22 @@ it is the first to get run and may detect a virus immediately, before any action
 <para>
 <indexterm><primary>/usr/local/samba/lib/vfs</primary></indexterm>
 <indexterm><primary>/usr/lib/samba/vfs</primary></indexterm>
-Samba will attempt to load modules from the <filename>/lib</filename> directory in the root directory of the
-Samba installation (usually <filename>/usr/lib/samba/vfs</filename> or
-<filename>/usr/local/samba/lib/vfs</filename>).
+SambaはSambaをインストールしたサーバのrootディレクトリ中の<filename>/lib</filename>
+からいくつかのモジュールをロードしようとする(通常は
+<filename>/usr/lib/samba/vfs</filename>か<filename>/usr/local/samba/lib/vfs</filename>)。
 </para>
 
 <para>
-<indexterm><primary>modules</primary></indexterm>
+<indexterm><primary>モジュール</primary></indexterm>
 <indexterm><primary>VFS</primary></indexterm>
-<indexterm><primary>multiple modules</primary></indexterm>
-<indexterm><primary>multiple VFS</primary></indexterm>
-Some modules can be used twice for the same share.  This can be done using a configuration similar to the one
-shown in <link linkend="multimodule">the smb.conf with multiple VFS modules</link>.
+<indexterm><primary>複数のモジュール</primary></indexterm>
+<indexterm><primary>複数のVFS</primary></indexterm>
+いくつかのモジュールは同じ共有に対して二度使用できる。これは
+<link linkend="multimodule">複数のVFSモジュールを使用するsmb.confの例</link>の
+ような設定で可能となる。
 
 <example id="multimodule">
-<title>smb.conf with multiple VFS modules</title>
+<title>複数のVFSモジュールを使用するsmb.confの例</title>
 <smbconfblock>
 <smbconfsection name="[test]"/>
 <smbconfoption name="comment">VFS TEST</smbconfoption>
@@ -108,13 +113,13 @@ shown in <link linkend="multimodule">the smb.conf with multiple VFS modules</lin
 </sect1>
 
 <sect1>
-<title>Included Modules</title>
+<title>含まれるモジュール</title>
 
 	<sect2>
 	<title>audit</title>
 
 		<para>
-<indexterm><primary>audit file access</primary></indexterm>
+<indexterm><primary>ファイルアクセスの監査</primary></indexterm>
 		A simple module to audit file access to the syslog facility. The following operations are logged:
 		<itemizedlist>
 			<listitem><para>share</para></listitem>
