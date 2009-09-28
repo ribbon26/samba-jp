@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="VFS">
 <chapterinfo>
@@ -10,46 +10,49 @@
 	<author><firstname>Stefan</firstname><surname>Metzmacher</surname><contrib>Update for multiple modules</contrib></author>
 	<author><firstname>Ed</firstname><surname>Riddle</surname><contrib>original shadow_copy docs</contrib></author>
 </chapterinfo>
-<title>Stackable VFS modules</title>
+<title>スタッカブルVFSモジュール</title>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
 <indexterm><primary>Virtual File System</primary><see>VFS</see></indexterm>
 <indexterm><primary>modules</primary></indexterm>
-<indexterm><primary>loaded modules</primary></indexterm>
-Stackable VFS (Virtual File System) modules support was new to Samba-3 and has proven quite popular. Samba
-passes each request to access the UNIX file system through the loaded VFS modules. This chapter covers the
-modules that come with the Samba source and provides references to some external modules.
+<indexterm><primary>ロードされたモジュール</primary></indexterm>
+Samba-3から、スタッカブルVFS(バーチャルファイルシステム)モジュールがサポートされる。
+SambaはUNIXファイルシステムへのアクセスリクエストの一つ一つを、ロードされた
+VFSモジュールに渡す。この章は、Sambaのソースに附属のモジュールについて説明すると同時に、
+一部の外部モジュールについても言及する。
 </para>
 
 
 </sect1>
 
 <sect1>
-<title>Discussion</title>
+<title>議論</title>
 
 <para>
 <indexterm><primary>IRIX</primary></indexterm>
 <indexterm><primary>GNU/Linux</primary></indexterm>
-If not supplied with your platform distribution binary Samba package, you may have problems compiling these
-modules, as shared libraries are compiled and linked in different ways on different systems. They currently
-have been tested against GNU/Linux and IRIX.
+異なるシステムでは異なる方法で共用ライブラリーをコンパイルしリンクするので、これらの
+モジュールが、プラットフォームディストリビューションのバイナリSambaパッケージと共に
+供給されない場合、モジュールをコンパイルするのが困難になるかもしれない。これらの
+モジュールは、GNU/Linux及びIRIXに関してテスト済みである。
 </para>
 
 <para>
-<indexterm><primary>VFS modules</primary></indexterm>
-<indexterm><primary>modules</primary></indexterm>
+<indexterm><primary>VFSモジュール</primary></indexterm>
+<indexterm><primary>モジュール</primary></indexterm>
 <indexterm><primary>recycle bin</primary></indexterm>
-To use the VFS modules, create a share similar to the one below. The important parameter is the <smbconfoption
-name="vfs objects"/> parameter where you can list one or more VFS modules by name. For example, to log all
-access to files and put deleted files in a recycle bin, see <link linkend="vfsrecyc">the smb.conf with VFS
-modules example</link>:
+VFS モジュールを使用するには、以下の例に類似した共有を作成すること。重要なパラメータは、
+一つ以上のVFSモジュールを名前順に一覧表示できる<smbconfoption name="vfs objects"/>
+パラメータである。例えば、ファイルへのアクセスをすべてログに取り、削除されたファイルを
+ゴミ箱に入れるには、<link linkend="vfsrecyc">VFSモジュールを使うsmb.confの例</link>を
+参照のこと:
 </para>
 
 <example id="vfsrecyc">
-<title>smb.conf with VFS modules</title>
+<title>VFSモジュールを使うsmb.confの例</title>
 <smbconfblock>
 <smbconfsection name="[audit]"/>
 <smbconfoption name="comment">Audited /data directory</smbconfoption>
@@ -61,8 +64,8 @@ modules example</link>:
 </example>
 
 <para>
-<indexterm><primary>virus scanner</primary></indexterm>
-<indexterm><primary>scanner module</primary></indexterm>
+<indexterm><primary>ウィルススキャナ</primary></indexterm>
+<indexterm><primary>スキャナモジュール</primary></indexterm>
 <indexterm><primary>recycle bin</primary></indexterm>
 The modules are used in the order in which they are specified.  Let's say that you want to both have a virus
 scanner module and a recycle bin module. It is wise to put the virus scanner module as the first one so that
