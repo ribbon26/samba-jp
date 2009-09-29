@@ -120,7 +120,7 @@ SambaはSambaをインストールしたサーバのrootディレクトリ中の
 
 		<para>
 <indexterm><primary>ファイルアクセスの監査</primary></indexterm>
-		A simple module to audit file access to the syslog facility. The following operations are logged:
+		syslog機能へのファイルアクセスを監査するシンプルなモジュールである。 以下の操作のログが取られる:
 		<itemizedlist>
 			<listitem><para>share</para></listitem>
 			<listitem><para>connect/disconnect</para></listitem>
@@ -135,46 +135,48 @@ SambaはSambaをインストールしたサーバのrootディレクトリ中の
 	<title>default_quota</title>
 
 	<para>
-	This module allows the default quota values, in the windows explorer GUI, to be stored on a Samba-3 server.
-	The challenge is that linux filesystems only store quotas for users and groups, but no default quotas.
+	このモジュールは、Samba-3サーバ上で格納される既定値のquota値を、Windowsのエクスプローラの
+	GUI画面で設定できるようにする。この試みはLinuxファイルシステムでユーザとグループに対する
+	quotaを格納する場合のみだが、それは既定値を持たない。
 	</para>
 
 	<para>
-	Samba returns NO_LIMIT as the default quotas by default and refuses to update them. With this module you 
-	can store the default quotas that are reported to a windows client, in the quota record of a user. By
-	default the root user is taken because quota limits for root are typically not enforced.
+	Sambaは既定値としてNO_LIMITをquotaの既定値として返し、それは更新できない。このモジュールを
+	使うと、ユーザに対するquotaレコード中でWindowsクライアントに表示される既定値のquota値を
+	格納できる。既定値では、通常quota制限がrootには適用されないため、rootユーザが既定値として
+	利用される。
 	</para>
 
 	<para>
-	This module takes 2 parametric entries in the &smb.conf; file.  The default prefix for each is the
-	<quote>default_quota</quote>. This can be overwrittem when you load the module in the <emphasis>vfs
-	modules</emphasis> parameter like this:
+	このモジュールには&smb.conf;ファイル中で2つのパラメータを設定する。おのおのの既定値の
+	プレフィックスは<quote>default_quota</quote>である。これは、以下のようにして、
+	<emphasis>vfs modules</emphasis>パラメータ中でモジュールをロードしたときに上書きできる:
 <screen>
 vfs objects = default_quota:myprefix
 </screen>
 	</para>
 
 	<para>
-	The parametric entries that may be specified for the default_quotas module are:
+	default_quotasモジュールに対して指定することが出来るパラメータのエントリは以下の通り:
 	</para>
 
 	<variablelist>
 		<varlistentry>
             <term>myprefix:uid</term>
 			<listitem><para>
-			This parameter takes a integer argument that specifies the uid of the quota record that will be 
-			used for storing the default user quotas.
+			既定値のユーザquotaを格納するために使われるquotaレコードのためのuidを
+			指定する整数値。
 			</para>
 
 			<para>
-			The default value is 0 (for root user). An example of use is:
+			既定値は0(ルートユーザ)。使用例は以下の通り:
 <screen>
 vfs objects = default_quota
 default_quota:	uid = 65534
 </screen>
-			The above demonstrates the case where the <constant>myprefix</constant> was omitted, thus the
-			default prefix is the name of the module. When a <constant>myprefix</constant> parameter is
-			specified the above can be re-written like this:
+			上記の例では<constant>myprefix</constant>が省略され、そのため、既定値の
+			プレフィックスはモジュールの名前になる。<constant>myprefix</constant>
+			パラメータが指定されると、上記は以下のように書き換えられる:
 <screen>
 vfs objects = default_quota:myprefix
 myprefix:	uid = 65534
@@ -185,14 +187,14 @@ myprefix:	uid = 65534
 		<varlistentry>
             <term>myprefix:uid nolimit</term>
 			<listitem><para>
-			This parameter takes a boolean argument that specifies if the stored default quota values also be
-			reported for the user record, or if the value <constant>NO_LIMIT</constant> should be reported to 
-			the windows client for the user specified by the <parameter>prefix:uid</parameter> parameter.
+			既定値のquota値がユーザのレコードとしても表示される場合か、
+			<constant>NO_LIMIT</constant>が、<parameter>prefix:uid</parameter>パラメータに
+			よって指定されたユーザとしてWindowsクライアントに表示される場合、この
+			パラメータは論理値となる。
 			</para>
 
 			<para>
-			The default value is <constant>yes</constant> (which means to report NO_LIMIT). An example of use
-			is shown here:
+			既定値は<constant>yes</constant>である(NO_LIMITが表示される)。使用例は以下の通り:
 <screen>
 vfs objects = default_quota:myprefix
 myprefix:	uid nolimit = no
@@ -203,12 +205,13 @@ myprefix:	uid nolimit = no
 		<varlistentry>
 			<term>myprefix:gid</term>
 			<listitem><para>
-			This parameter takes an integer argument, it's just like the <parameter>prefix>:uid</parameter> but 
-			for group quotas.  NOTE: group quotas are not supported from the windows explorer.
+			このパラメータは<parameter>prefix>:uid</parameter>と同じように整数値を引数と
+			して取るが、グループquotaであるところが違う。注意:グループquotaはWindows
+			エクスプローラではサポートされていない。
 			</para>
 
 			<para>
-			The default value is 0 (for root group). An example of use is shown here:
+			既定値は0である(rootグループ)。使用例は以下の通り:
 <screen>
 vfs objects = default_quota
 default_quota:	gid = 65534
@@ -219,13 +222,13 @@ default_quota:	gid = 65534
 		<varlistentry>
 			<term>myprefix:gid nolimit</term>
 			<listitem><para>
-			This parameter takes a boolean argument, just like the <parameter>prefix>:uid nolimit</parameter> 
-			but for group quotas.  NOTE: group quotas are not supported from the windows explorer.
+			このパラメータは、<parameter>prefix>:uid nolimit</parameter>と同じように
+			真理値を取るが、グループquotaであることが違う。注意:グループquotaは
+			Windowsエクスプローラではサポートされていない。
 			</para>
 
 			<para>
-			The default value is <constant>yes</constant> (which means to report NO_LIMIT). An example of use
-			is shown here:
+			既定値は<constant>yes</constant>(NO_LIMITが表示される)。使用例は以下の通り:
 <screen>
 vfs objects = default_quota
 default_quota:	uid nolimit = no
@@ -235,7 +238,7 @@ default_quota:	uid nolimit = no
 	</variablelist>
 
 	<para>
-	An example of use of multiple parametric specifications is shown here:
+	複数のパラメータを組み合わせた使用例は以下の通り:
 <screen>
 ...
 vfs objects = default_quota:quotasettings
