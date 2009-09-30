@@ -460,7 +460,7 @@ quotasettings:	gid nolimit = no
 			<term>recycle:exclude</term>
 				<listitem><para>
 <indexterm><primary>recycle:exclude</primary></indexterm>
-				List of files that should not be put into the recycle bin when deleted, but deleted in the regular way.
+				ごみ箱に入れないで、普通に削除するべきファイルをリストする。
 				</para></listitem>
 			</varlistentry>
 
@@ -468,10 +468,8 @@ quotasettings:	gid nolimit = no
 			<term>recycle:exclude_dir</term>
 				<listitem><para>
 <indexterm><primary>recycle:exclude_dir</primary></indexterm>
-				Contains a list of directories. When files from these directories are
-				deleted, they are not put into the
-				recycle bin but are deleted in the
-				regular way.
+				ディレクトリのリストを指定する。これらのディレクトリから
+				ファイルが削除されると、ごみ箱には入れずに、普通に削除する。
 				</para></listitem>
 			</varlistentry>
 
@@ -479,8 +477,9 @@ quotasettings:	gid nolimit = no
 			<term>recycle:noversions</term>
 				<listitem><para>
 <indexterm><primary>recycle:noversions</primary></indexterm>
-				Specifies a list of paths (wildcards such as * and ? are supported) for which no versioning
-				should be used. Only useful when <emphasis>recycle:versions</emphasis> is enabled.
+				recycle:versionsの反対である(*や?のワイルドカードもサポート)
+				する。<emphasis>recycle:versions</emphasis>が有効な時に
+				便利である。
 				</para></listitem>
 			</varlistentry>
 		</variablelist>
@@ -493,14 +492,16 @@ quotasettings:	gid nolimit = no
 
 		<para>
 <indexterm><primary>netatalk</primary></indexterm>
-		A netatalk module will ease co-existence of Samba and netatalk file sharing services.
+		netatalkモジュールは、Sambaとnetatalkのファイル共有サービスの共存を
+		やり易くする。
 		</para>
 
-		<para>Advantages compared to the old netatalk module:
+		<para>従前のnetatalkモジュールと比較した長所は以下の通り:
 		<itemizedlist>
 <indexterm><primary>.AppleDouble</primary></indexterm>
-			<listitem><para>Does not care about creating .AppleDouble forks, just keeps them in sync.</para></listitem>
-			<listitem><para>If a share in &smb.conf; does not contain .AppleDouble item in hide or veto list, it will be added automatically.</para></listitem>
+			<listitem><para>.AppleDouble フォークの作成を気にかけず、ただ同期を取る。</para></listitem>
+			<listitem><para>&smb.conf;中の共有の「隠し(hide)」または「拒否(veto)」
+			 リスト中に.AppleDoubleのアイテムを含まないとき、自動的に追加される。</para></listitem>
 		</itemizedlist>
 		</para>
 
@@ -511,56 +512,62 @@ quotasettings:	gid nolimit = no
 
 	<warning><para>
 <indexterm><primary>shadow_copy</primary></indexterm>
-	<emphasis>THIS IS NOT A BACKUP, ARCHIVAL, OR VERSION CONTROL SOLUTION!</emphasis>
+	<emphasis>これはバックアップでも、アーカイブでも、バージョンコントロールソリューションでもない!</emphasis>
 	</para>
 
 	<para>
 <indexterm><primary>version control</primary></indexterm>
-	With Samba or Windows servers, shadow_copy is designed to be an end-user tool only.  It does not replace or
-	enhance your backup and archival solutions and should in no way be considered as such.  Additionally, if you
-	need version control, implement a version control system.  You have been warned.
+	SambaかWindowsサーバでは、shadow_copyはエンドユーザツールとしてのみ設計されて
+	いる。バックアップやアーカイブソリューションの機能強化や置き換えにはならず、
+	そのように考えてはいけない。更に、バージョンコントロール機能が必要な場合には、
+	バージョンコントロールシステムを入れること。これは警告である。
 	</para></warning>
 
 
 	<para>
-	The shadow_copy module allows you to setup functionality that is similar to MS shadow copy services.  When
-	setup properly, this module allows Microsoft shadow copy clients to browse "shadow copies" on Samba shares.
-	You will need to install the shadow copy client.  You can get the MS shadow copy client <ulink noescape="1"
-	url="http://www.microsoft.com/windowsserver2003/downloads/shadowcopyclient.mspx">here.</ulink>.  Note the
-	additional requirements for pre-Windows XP clients.  I did not test this functionality with any pre-Windows XP
-	clients.  You should be able to get more information about MS Shadow Copy <ulink noescape="1"
-	url="http://www.microsoft.com/windowsserver2003/techinfo/overview/scr.mspx">from the Microsoft's site</ulink>.
+	shadow_copyモジュールはMicrosoftシャドーコピーサービスに似た機能を提供する。
+	適切に設定された場合、Sambaの共有上で、Microsoftシャドーコピークライアントが
+	"シャドーコピー"を見えるようにする。シャドーコピークライアントのインストール
+	が必要である。Microsoftシャドーコピークライアントは
+	<ulink noescape="1" url="http://www.microsoft.com/windowsserver2003/downloads/shadowcopyclient.mspx">ここ</ulink>
+	から入手できる。Windows XPより前のクライアントには追加の要求があることに注意。
+	この機能はWindows XPより前のバージョンではテストされていない。Microsoftシャドーコピー
+	に関するより詳細な情報は、
+	<ulink noescape="1" url="http://www.microsoft.com/windowsserver2003/techinfo/overview/scr.mspx">Microsoftのサイト</ulink>
+	を参照のこと。
 	</para>
 
 	<para>
 <indexterm><primary>shadow_copy</primary></indexterm>
-<indexterm><primary>VFS module</primary></indexterm>
-<indexterm><primary>shadow_copy module</primary></indexterm>
+<indexterm><primary>VFSモジュール</primary></indexterm>
+<indexterm><primary>shadow_copyモジュール</primary></indexterm>
 <indexterm><primary>LVM</primary></indexterm>
 <indexterm><primary>EVMS</primary></indexterm>
-<indexterm><primary>Logical Volume Manager</primary><see>LVM</see></indexterm>
-	The shadow_copy VFS module requires some underlying file system setup with some sort of Logical Volume Manager
-	(LVM) such as LVM1, LVM2, or EVMS.  Setting up LVM is beyond the scope of this document; however, we will
-	outline the steps we took to test this functionality for <emphasis>example purposes only.</emphasis> You need
-	to make sure the LVM implementation you choose to deploy is ready for production.  Make sure you do plenty of
-	tests.
+<indexterm><primary>論理ボリュームマネージャ</primary><see>LVM</see></indexterm>
+	shadow_copy VFSモジュールはLVM1、LVM2かEVMSのような、ある種の論理ボリューム
+	マネージャ(LVM)でセットアップしたものがベースのファイルシステムを要求する。
+	LVMの設定はこの文書の範囲外である。しかし、<emphasis>例としてのみ</emphasis>
+	この機能をテストするために行う手順の概要を示す。使いたいとしているLVMの
+	実装が使用対象に対して準備されているかを確かめる必要がある。十分にテストは
+	されなければならない。
 	</para>
 
 	<para>
-	Here are some common resources for LVM and EVMS:
+	以下は、LVMとEVMSに対するよく使われる情報源である:
 	</para>
 
 	<itemizedlist>
 	  <listitem>
 	    <para><ulink noescape="1"
-	    url="http://www.sistina.com/products_lvm_download.htm">Sistina's
-	    LVM1 and LVM2</ulink></para>
+	    url="http://www.sistina.com/products_lvm_download.htm">Sistinaの
+	    LVM1と LVM2に関する情報</ulink></para>
 	  </listitem>
 	  <listitem>
 	    <para><ulink url="http://evms.sourceforge.net/">Enterprise Volume Management System (EVMS)</ulink></para>
 	  </listitem>
 	  <listitem>
-	    <para><ulink url="http://tldp.org/HOWTO/LVM-HOWTO/">The LVM HOWTO</ulink></para>
+	    <para><ulink url="http://tldp.org/HOWTO/LVM-HOWTO/">The LVM HOWTO</ulink>
+	    (訳注:日本語訳は<ulink url="http://www.linux.or.jp/JF/JFdocs/LVM-HOWTO.html">こちら</ulink>)</para>
 	  </listitem>
 	  <listitem>
 	    <para>
