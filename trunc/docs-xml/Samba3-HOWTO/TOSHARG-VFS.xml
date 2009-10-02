@@ -586,48 +586,46 @@ quotasettings:	gid nolimit = no
 	これを書いている時点では、十分なテストは終わっていない。シャドーコピーVFS
 	モジュールを、製品環境では展開していないが、概念の照明としてはより多く、
 	特定のシナリオでテストした。シナリオはXFSファイルシステムとLVM1を使う
-	Debian Sarge上のSamba-3サーバで改良された。
-	
-	At the time of this writing, not much testing has been done.  I tested the shadow copy VFS module with a
-	specific scenario which was not deployed in a production environment, but more as a proof of concept.  The
-	scenario involved a Samba-3 file server on Debian Sarge with an XFS file system and LVM1.  I do NOT recommend
-	you use this as a solution without doing your own due diligence with regard to all the components presented
-	here.  That said, following is an basic outline of how I got things going.
+	Debian Sarge上のSamba-3サーバで改良された。ここで提示されたすべてのコンポーネント
+	に関して、十分な評価をしないでソリューションとして使うことは推奨しない。
+	すなわち、以下は動作させたまでの基本的な概要である。
 	</para>
 
 	<orderedlist>
 	  <listitem>
-	    <formalpara><title>Installed Operating System </title> 
+	    <formalpara><title>インストールされたOS</title> 
 	    <para>
-		In my tests, I used <ulink url="http://www.debian.org/devel/debian-installer/">Debian
-		Sarge</ulink> (i.e., testing) on an XFS file system.  Setting up the OS is a bit beyond the scope of this
-		document.  It is assumed that you have a working OS capable of running Samba.
+		テストを行うにあたっては、
+		<ulink url="http://www.debian.org/devel/debian-installer/">Debian Sarge</ulink>
+		(すなわちテスト版)をXFSファイルシステム上で使用した。OSの設定は、
+		この文書の範囲外である。Sambaが動作するOSがあるものと仮定する。
 		</para></formalpara>
 	  </listitem>
 
 	  <listitem>
-	    <formalpara><title>Install &amp; Configure Samba</title>
+	    <formalpara><title>Sambaのインストールと設定</title>
 		<para>
-		See the <link linkend="introduction">installation section</link> of this HOWTO for more detail on this.
-		It doesn't matter if it is a Domain Controller or Member File Server, but it is assumed that you have a
-		working Samba 3.0.3 or later server running.
+		この件についてはこのHOWTOの<link linkend="introduction">インストールの章</link>
+		を参照のこと。ドメインコントローラかメンバファイルサーバであることは重要では
+		ないが、Samba 3.0.3かそれ以降のサーバが動作していることを仮定する。
 		</para></formalpara>
 	  </listitem>
 
 	  <listitem>
-	    <formalpara><title>Install &amp; Configure LVM</title>
+	    <formalpara><title>LVMのインストールと設定</title>
 		<para>
-<indexterm><primary>shadow copies</primary></indexterm>
-<indexterm><primary>Snapshots</primary></indexterm>
-		Before you can make shadow copies available to the client, you have to create the shadow copies.  This is
-		done by taking some sort of file system snapshot.  Snapshots are a typical feature of Logical Volume
-		Managers such as LVM, so we first need to have that setup.
+<indexterm><primary>シャドーコピー</primary></indexterm>
+<indexterm><primary>スナップショット</primary></indexterm>
+		クライアントに対してシャドーコピーを有効にする前に、シャドーコピーを
+		作っておく必要がある。これはファイルシステムのスナップショットのような
+		事を行う事でできる。スナップショットはLVMのような、論理ボリューム
+		マネージャでの一般的な機能であり、まずこれを最初に設定する必要がある。
 		</para></formalpara>
 
 	    <itemizedlist>
 		<para>
-		The following is provided as an example and will be most helpful for Debian users.  Again, this was tested
-		using the "testing" or "Sarge" distribution.
+		以下は、Debianユーザにとっては最も手助けとなる例である。繰り返すが、
+		これは"testing"または"Sarge"を使ってテストしている。
 		</para>
 
 			<listitem>
@@ -637,14 +635,16 @@ quotasettings:	gid nolimit = no
 <indexterm><primary>Debian</primary></indexterm>
 <indexterm><primary>xfsprogs</primary></indexterm>
 <indexterm><primary>apt-get</primary></indexterm>
-			Install lvm10 and devfsd packages if you have not done so already.  On Debian systems, you are warned of the
-			interaction of devfs and lvm1 which requires the use of devfs filenames.  Running <command>apt-get update
-			&amp;&amp; apt-get install lvm10 devfsd xfsprogs</command> should do the trick for this example.
+			まだ入れていないのであれば、lvm10とdevfsdパッケージをインストールする。
+			Debianシステム上では、devfsファイル名を要求するdevfsとlvm1が相互に
+			影響するので警告が出る。
+			<command>apt-get update &amp;&amp; apt-get install lvm10 devfsd xfsprogs</command>
+			を実行してこの例のためのトリックを行う。
 			</para></listitem>
 
 			<listitem><para>
-<indexterm><primary>create volume</primary></indexterm>
-<indexterm><primary>create partition</primary></indexterm>
+<indexterm><primary>ボリュームの作成</primary></indexterm>
+<indexterm><primary>パーティションの作成</primary></indexterm>
 <indexterm><primary>fdisk</primary></indexterm>
 <indexterm><primary>cfdisk</primary></indexterm>
 <indexterm><primary>Linux LVM</primary></indexterm>
