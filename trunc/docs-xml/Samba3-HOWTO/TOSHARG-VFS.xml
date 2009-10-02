@@ -648,46 +648,50 @@ quotasettings:	gid nolimit = no
 <indexterm><primary>fdisk</primary></indexterm>
 <indexterm><primary>cfdisk</primary></indexterm>
 <indexterm><primary>Linux LVM</primary></indexterm>
-			Now you need to create a volume.  You will need to create a partition (or partitions) to add to your volume.
-			Use your favorite partitioning tool (e.g., Linux fdisk, cfdisk, etc.).  The partition type should be set to
-			0x8e for "Linux LVM."  In this example, we will use /dev/hdb1.
+			次にボリュームを作成する。そしてボリュームにパーティションを作成する
+			必要がある。好みのパーティション作成ツールを使うこと(たとえば、
+			Linuxのfdisk、cfdiskなど)。パーティションタイプは"Linux LVM"を
+			表す 0x8eに設定すべきである。この例では/dev/hdb1を使う。
 			</para>
 
 			<para>
-<indexterm><primary>Linux LVM partition</primary></indexterm>
-<indexterm><primary>LVM volume</primary></indexterm>
+<indexterm><primary>Linux LVMのパーティション</primary></indexterm>
+<indexterm><primary>LVM ボリューム</primary></indexterm>
 <indexterm><primary>modprobe</primary></indexterm>
-			Once you have the Linux LVM partition (type 0x8e), you can run a series of commands to create the LVM volume.
-			You can use several disks and/or partitions, but we will use only one in this example.  You may also need to
-			load the kernel module with something like <command>modprobe lvm-mod</command> and set your system up to load
-			it on reboot by adding it to (<filename>/etc/modules</filename>).
+			LVMパーティション(タイプ0x8e)が出来ると、LVMボリュームを作成するための
+			一連のコマンドを実行出来る。いくつかのディスクとパーティションを
+			使うことが出来るが、この例では一つのみを使う。
+			<command>modprobe lvm-mod</command>のようにしてカーネルモジュールを
+			ロードしてもよく、また、(<filename>/etc/modules</filename>に追加
+			することによって)起動時にロードするように、rebootしても良い。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>pvcreate</primary></indexterm>
-			Create the physical volume with <command>pvcreate /dev/hdb1</command>
+			<command>pvcreate /dev/hdb1</command>で物理ボリュームを作成する。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>vgcreate</primary></indexterm>
-<indexterm><primary>volume group</primary></indexterm>
-			Create the volume group and add /dev/hda1 to it with <command>vgcreate shadowvol /dev/hdb1</command>
+<indexterm><primary>ボリュームグループ</primary></indexterm>
+			<command>vgcreate shadowvol /dev/hdb1</command>でボリュームグループを作成し、/dev/hda1に追加する。
 			</para>
 
 			<para>
 <indexterm><primary>vgdisplay</primary></indexterm>
-			You can use <command>vgdisplay</command> to review information about the volume group.
+			<command>vgdisplay</command>を使ってボリュームグループについての情報を見る事ができる。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>lvcreate</primary></indexterm>
-			Now you can create the logical volume with something like <command>lvcreate -L400M -nsh_test shadowvol</command>
+			この時点で<command>lvcreate -L400M -nsh_test shadowvol</command>のようにして、論理ボリュームを作成できる。
 			</para>
 
 			<para>
 <indexterm><primary>/dev/shadowvol</primary></indexterm>
-			This creates the logical volume of 400 MBs named "sh_test" in the volume group we created called shadowvol.
-			If everything is working so far, you should see them in <filename>/dev/shadowvol</filename>.
+			これは、shadowvolとして作成したボリュームグループ内に、400MBの、
+			"sh_test"という論理ボリュームを作成する。すべてがうまくいくと、
+			<filename>/dev/shadowvol</filename>中にそれらを見る事ができる。
 			</para></listitem>
 
 			<listitem><para>
