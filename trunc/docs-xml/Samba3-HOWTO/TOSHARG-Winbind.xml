@@ -106,15 +106,16 @@
 
 	<note><para>
 	<indexterm><primary>winbindd</primary></indexterm>
-	<indexterm><primary>starting samba</primary><secondary>winbindd</secondary></indexterm>
+	<indexterm><primary>sambaの起動</primary><secondary>winbindd</secondary></indexterm>
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
-	If <command>winbindd</command> is not running, smbd (which calls <command>winbindd</command>) will fall back to
-	using purely local information from <filename>/etc/passwd</filename> and <filename>/etc/group</filename> and no dynamic
-	mapping will be used. On an operating system that has been enabled with the NSS,
-	the resolution of user and group information will be accomplished via NSS.
+	もしも<command>winbindd</command>が実行中ではないとき、smbd
+	(<command>winbindd</command>を呼び出す方)は、代替手段として純粋にローカルな
+	<filename>/etc/passwd</filename>と<filename>/etc/group</filename>からの情報を
+	使用することにし、動的マッピングは使用しない。OSでNSSが有効になっている場合、
+	ユーザとグループ情報の解決はNSS経由で行われる。
 	</para></note>
 
 
@@ -127,82 +128,74 @@
 
 
 <sect1>
-	<title>Introduction</title>
+	<title>はじめに</title>
 
-	<para>It is well known that UNIX and Microsoft Windows NT have
-	different models for representing user and group information and
-	use different technologies for implementing them. This fact has
-	made it difficult to integrate the two systems in a satisfactory
-	manner.</para>
+	<para>UNIXとMicrosoft Windows NTでは、ユーザ及びグループ情報の見せ方のモデルも、
+	それを実行するために使用している技術も異なるのは周知の事実である。これが、
+	二つのシステムを統合して、満足の行く運用をすることを困難にしてきた。
+	</para>
 
 	<para>
-<indexterm><primary>synchronization problems</primary></indexterm>
-<indexterm><primary>passwords</primary></indexterm>
-	One common solution in use today has been to create
-	identically named user accounts on both the UNIX and Windows systems
-	and use the Samba suite of programs to provide file and print services
-	between the two. This solution is far from perfect, however, because
-	adding and deleting users on both sets of machines becomes a chore,
-	and two sets of passwords are required &smbmdash; both of which
-	can lead to synchronization problems between the UNIX and Windows
-	systems and confusion for users.</para>
+<indexterm><primary>同期の問題</primary></indexterm>
+<indexterm><primary>パスワード</primary></indexterm>
+	これに対してよく行われる解決策は、UNIXとWindowsの両システム上に全く同名の
+	ユーザアカウントを作成し、Sambaを使用して、両システム間のファイルサービスと
+	印刷サービスを提供するというやり方であった。ただし、この解決策は、双方の
+	マシンにユーザを追加したり削除したりする作業が面倒でパスワードも2セット
+	持たなければならず、その両方がUNIXとWindowsシステム間の同期のずれの問題に
+	つながり、ユーザの混乱を招くという、完璧には程遠いものである。</para>
 
-	<para>We divide the unified logon problem for UNIX machines into
-	three smaller problems:</para>
+	<para>UNIX マシンのための統一されたログオンという問題を、次のように三つの
+	構成要素に分けることができる:</para>
 
 	<itemizedlist>
-		<listitem><para>Obtaining Windows NT user and group information.
+		<listitem><para>Windows NTのユーザ及びグループ情報を取得する。
 		</para></listitem>
 
-		<listitem><para>Authenticating Windows NT users.
+		<listitem><para>Windows NT ユーザを認証する。
 		</para></listitem>
 
-		<listitem><para>Password changing for Windows NT users.
+		<listitem><para>Windows NT ユーザのためにパスワードを変更する。
 		</para></listitem>
 	</itemizedlist>
 
 
 	<para>
-<indexterm><primary>unified logon</primary></indexterm>
-<indexterm><primary>duplication of information</primary></indexterm>
-	Ideally, a prospective solution to the unified logon problem
-	would satisfy all the above components without duplication of
-	information on the UNIX machines and without creating additional
-	tasks for the system administrator when maintaining users and
-	groups on either system. The Winbind system provides a simple
-	and elegant solution to all three components of the unified logon
+<indexterm><primary>統一されたログオン</primary></indexterm>
+<indexterm><primary>情報の複製</primary></indexterm>
+	理想的には、統一されたログオンという問題の解決方法は、UNIXマシン上に情報を複製する
+	ことなく、上記の問題を全て満足させ、しかも、 ユーザやグループ情報をどちらの
+	システムで維持しても、システム管理者の仕事を増やさないというものであってほしい。
+	Winbind システムは、統一されたログオンという問題の三つの構成要素を簡単に優雅に
+	こなすソリューションを提供するものである。
 	problem.</para>
 </sect1>
 
 
 <sect1>
-	<title>What Winbind Provides</title>
+	<title>Winbindが提供するもの</title>
 
 	<para>
-<indexterm><primary>Windows account management</primary></indexterm>
-<indexterm><primary>UNIX users</primary></indexterm>
-<indexterm><primary>UNIX groups</primary></indexterm>
-<indexterm><primary>NT domain</primary></indexterm>
-	Winbind unifies UNIX and Windows NT account management by
-	allowing a UNIX box to become a full member of an NT domain. Once
-	this is done, the UNIX box will see NT users and groups as if
-	they were <quote>native</quote> UNIX users and groups, allowing the NT domain
-	to be used in much the same manner that NIS+ is used within
-	UNIX-only environments.</para>
+<indexterm><primary>Windowsアカウント管理</primary></indexterm>
+<indexterm><primary>UNIXユーザ</primary></indexterm>
+<indexterm><primary>UNIXグループ</primary></indexterm>
+<indexterm><primary>NTドメイン</primary></indexterm>
+	Winbindは、UNIXとWindows NTのアカウント管理を、UNIXマシンがNTドメインの完全な
+	メンバになることを可能にすることによって統一する。一旦これを行えば、UNIX
+	マシンは、NTユーザやグループをあたかも<quote>ネイティブな</quote>UNIXユーザや
+	グループであるかのように見ることができるようなり、UNIXのみの環境でNIS+を使用
+	するのとほぼ同様に、NTドメインを使用することができるようになる。</para>
 
 	<para>
 <indexterm><primary>Winbind hooks</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
-<indexterm><primary>redirection</primary></indexterm>
-	The end result is that whenever a
-	program on the UNIX machine asks the operating system to look up
-	a user or group name, the query will be resolved by asking the
-	NT domain controller for the specified domain to do the lookup.
-	Because Winbind hooks into the operating system at a low level
-	(via the NSS name resolution modules in the C library), this
-	redirection to the NT domain controller is completely
-	transparent.</para>
+<indexterm><primary>リダイレクション</primary></indexterm>
+	その結果、UNIX マシン上のプログラムのいずれかが、OSにユーザ名やグループ名の検索を
+	依頼すると、指定されたドメインを担当する NT のドメインコントローラにその検索を
+	依頼することにより、問い合わせは解決する。Winbind は低レベル(Cライブラリ内の
+	NSS名前解決モジュール経由)でOSに繋がるので、NT ドメインコントローラへの上記の
+	リダイレクションは、完全に透過である。</para>
 
 	<para>
 <indexterm><primary>user and group</primary></indexterm>
