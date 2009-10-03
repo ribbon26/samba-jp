@@ -696,63 +696,71 @@ quotasettings:	gid nolimit = no
 
 			<listitem><para>
 <indexterm><primary>mkfs.xfs</primary></indexterm>
-			Now we should be ready to format the logical volume we named sh_test with <command>mkfs.xfs
-			/dev/shadowvol/sh_test</command>
+			この時点でsh_testという論理ボリュームを
+			<command>mkfs.xfs /dev/shadowvol/sh_test</command>
+			というコマンドでフォーマットできる準備が出来た。
 			</para>
 
 			<para>
-<indexterm><primary>logical volume</primary></indexterm>
+<indexterm><primary>論理ボリューム</primary></indexterm>
 <indexterm><primary>LVM</primary></indexterm>
 <indexterm><primary>freezing</primary></indexterm>
-<indexterm><primary>resizing</primary></indexterm>
-<indexterm><primary>growing</primary></indexterm>
-			You can format the logical volume with any file system you choose, but make sure to use one that allows you to
-			take advantage of the additional features of LVM such as freezing, resizing, and growing your file systems.
+<indexterm><primary>リサイズ</primary></indexterm>
+<indexterm><primary>拡張</primary></indexterm>
+			選択した任意のファイルシステムで論理ボリュームをフォーマット
+			できるが、ファイルシステムのフリーズ、リサイズや拡張のような
+			LVMの便利な追加機能を使えるようにしておくこと。
 			</para>
 
 			<para>
-<indexterm><primary>LVM volume</primary></indexterm>
-<indexterm><primary>shadow_copy</primary></indexterm>
-<indexterm><primary>module</primary></indexterm>
-			Now we have an LVM volume where we can play with the shadow_copy VFS module.
+<indexterm><primary>LVMボリューム</primary></indexterm>
+<indexterm><primary>シャドーコピー</primary></indexterm>
+<indexterm><primary>モジュール</primary></indexterm>
+			これで、シャドーコピーVFSモジュールを使えるLVMボリュームが
+			準備できた。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>mkdir</primary></indexterm>
-<indexterm><primary>permissions</primary></indexterm>
+<indexterm><primary>パーミッション</primary></indexterm>
 <indexterm><primary>chmod</primary></indexterm>
-			Now we need to prepare the directory with something like
+			以下のようにしてディレクトリを準備する必要がある。
+Now we need to prepare the directory with something like
 <screen>
 &rootprompt; mkdir -p /data/shadow_share
 </screen>
-			or whatever you want to name your shadow copy-enabled Samba share.  Make sure you set the permissions so that
-			you can use it.  If in doubt, use <command>chmod 777 /data/shadow_share</command> and tighten the permissions
-			once you get things working.
+			あるいは、シャドーコピーが有効になったSamba共有の希望する名前を
+			指定する。その上で使えるように、パーミッションの設定をきちんと
+			行う事。もしも、わからなければ、
+			<command>chmod 777 /data/shadow_share</command>を使い、うまく
+			動いてからパーミッションをきつくする。
 			</para></listitem>
 
 			<listitem><para>
-<indexterm><primary>mount</primary></indexterm>
-			Mount the LVM volume using something like <command>mount /dev/shadowvol/sh_test /data/shadow_share</command>
+<indexterm><primary>マウント</primary></indexterm>
+			<command>mount /dev/shadowvol/sh_test /data/shadow_share</command>
+			のようにしてLVMボリュームをマウントする。
 			</para>
 
 			<para>
 <indexterm><primary>/etc/fstab</primary></indexterm>
-			You may also want to edit your <filename>/etc/fstab</filename> so that this partition mounts during the system boot.
+			システム起動時にこのパーティションをマウントできるよう、
+			<filename>/etc/fstab</filename>を編集しても良い。
 			</para></listitem>
 		</itemizedlist>
 
 		</listitem>
 
 	  <listitem>
-	    <formalpara><title>Install &amp; Configure the shadow_copy VFS Module</title>
+	    <formalpara><title>シャドーコピーVFSモジュールのインストールと設定</title>
 		<para>
-		Finally we get to the actual shadow_copy VFS module.  The shadow_copy VFS module should be available in Samba
-		3.0.3 and higher.  The smb.conf configuration is pretty standard.  Here is our example of a share configured
-		with the shadow_copy VFS module:
+		最後に実際のシャドーコピーVFSモジュールを設定する。シャドーコピーVFS
+		モジュールはSamba 3.0.3以降で有効である。smb.confの設定はとても標準的
+		である。以下はシャドーコピーVFSモジュールを使う共有定義の例である:
 		</para></formalpara>
 
 		<example id="vfsshadow">
-		<title>Share With shadow_copy VFS</title>
+		<title>シャドーコピーVFSを使う共有</title>
 		<smbconfblock>
 		<smbconfsection name="[shadow_share]"/>
 		<smbconfoption name="comment">Shadow Copy Enabled Share</smbconfoption>
