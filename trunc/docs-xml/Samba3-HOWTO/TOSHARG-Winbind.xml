@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="winbind">
 
@@ -30,28 +30,27 @@
 	<pubdate>June 15, 2005</pubdate>
 </chapterinfo>
 
-<title>Winbind: Use of Domain Accounts</title>
+<title>Winbind: ドメインアカウントの使用</title>
 
 <sect1>
-	<title>Features and Benefits</title>
+	<title>機能と利便性</title>
 
 	<para>
-<indexterm><primary>holy grail</primary></indexterm>
-<indexterm><primary>heterogeneous computing</primary></indexterm>
-	Integration of UNIX and Microsoft Windows NT through a unified logon has
-	been considered a <quote>holy grail</quote> in heterogeneous computing environments for
-	a long time.
+<indexterm><primary>聖杯</primary></indexterm>
+<indexterm><primary>混成のコンピューティング</primary></indexterm>
+	UNIXとMicrosoft Windows NTを統合化されたログオンで統合することは、長い間
+	異機種間コンピューティング環境において<quote>聖杯</quote>と考えられてきた。
 	</para>
 
 	<para>
-<indexterm><primary>interoperability</primary></indexterm>
-<indexterm><primary>domain user</primary></indexterm>
-<indexterm><primary>domain group</primary></indexterm>
-<indexterm><primary>group ownership</primary></indexterm>
-	There is one other facility without which UNIX and Microsoft Windows network
-	interoperability would suffer greatly. It is imperative that there be a
-	mechanism for sharing files across UNIX systems and to be able to assign
-	domain user and group ownerships with integrity.
+<indexterm><primary>相互運用性</primary></indexterm>
+<indexterm><primary>ドメインユーザ</primary></indexterm>
+<indexterm><primary>ドメイングループ</primary></indexterm>
+<indexterm><primary>グループの所有者</primary></indexterm>
+	もう一つ、この機能がなければ、UNIXとMicrosoft Windowsネットワークの相互運用性が
+	著しく限定されるというものがある。UNIXシステム全般に渡ってファイル共有を
+	可能にし、ドメインユーザとグループの所有者を整合性のある形で割り当てられる
+	機構がなければならない。
 	</para>
 
 	<para>
@@ -59,31 +58,31 @@
 <indexterm><primary>winbind</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
 <indexterm><primary>RPC</primary></indexterm>
-	<emphasis>winbind</emphasis> is a component of the Samba suite of programs that
-	solves the unified logon problem. Winbind uses a UNIX implementation of Microsoft
-	RPC calls, Pluggable Authentication Modules (PAMs), and the name service switch (NSS) to
-	allow Windows NT domain users to appear and operate as UNIX users on a UNIX
-	machine. This chapter describes the Winbind system, the functionality
-	it provides, how it is configured, and how it works internally.
+	<emphasis>winbind</emphasis>は、Sambaシステム中で、統一されたログオンの
+	問題を解決するコンポーネントである。Winbind は、Microsoft RPC コール、
+	Pluggable Authentication Modules (PAM)、Name Service SwitchのUNIXの実装を
+	使用して、Windows NTのドメインユーザがUNIXマシン上のUNIXユーザとして動作
+	できるようにする。この章は、Winbindシステムについて、その機能、設定の仕方、
+	及び内部的にどのように動いているのかを説明する。
 	</para>
 
 	<para>
-	Winbind provides three separate functions:
+	Winbind は、三つの別々の機能を提供する。
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>NT4 domain</primary></indexterm>
-		Authentication of user credentials (via PAM). This makes it possible to
-		log onto a UNIX/Linux system using user and group accounts from a Windows
-		NT4 (including a Samba domain) or an Active Directory domain.
+<indexterm><primary>NT4 ドメイン</primary></indexterm>
+		ユーザの本人確認情報の認証(PAM経由)。これは、Windows NT4ドメインか
+		(Sambaドメインも含む)Active Directoryドメインからユーザとグループ
+		アカウントを使ってUNIX/Linuxシステムにログオンすることを可能にする。
 		</para></listitem>
 
 		<listitem><para>
-<indexterm><primary>identity resolution</primary></indexterm>
+<indexterm><primary>IDの解決</primary></indexterm>
 <indexterm><primary>NSS</primary></indexterm>
-		Identity resolution (via NSS). This is the default when winbind is not used.
+		IDの解決(NSS経由)。これは、winbindが使われなかった時の既定値である。
 		</para></listitem>
 
 		<listitem><para>
@@ -93,14 +92,15 @@
 <indexterm><primary>idmap uid</primary></indexterm>
 <indexterm><primary>idmap gid</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
-<indexterm><primary></primary>LDAP</indexterm>
-		Winbind maintains a database called winbind_idmap.tdb in which it stores
-		mappings between UNIX UIDs, GIDs, and NT SIDs. This mapping is used only
-		for users and groups that do not have a local UID/GID. It stores the UID/GID
-		allocated from the idmap uid/gid range that it has mapped to the NT SID.
-		If <parameter>idmap backend</parameter> has been specified as <constant>ldap:ldap://hostname[:389]</constant>,
-		then instead of using a local mapping, Winbind will obtain this information
-		from the LDAP database.
+<indexterm><primary>LDAP</primary></indexterm>
+		Winbindは、winbind_idmap.tdbと呼ばれるデータベースを維持し、その中に、
+		UNIX UID/GIDとNT SID間のマッピング情報を格納する。このマッピングは、
+		ローカルUID/GIDを持たないユーザまたはグループにのみ使用する。
+		idmap uid/gid の範囲から割り当てられ、NTのSIDにマッピングされた
+		UID/GIDが格納される。<parameter>idmap backend</parameter>が
+		<constant>ldap:ldap://hostname[:389]</constant>に指定されている場合、
+		ローカルのマッピングを使用する代わりに、Winbindは、この情報をLDAP
+		データベースから取得する。
 		</para></listitem>
 	</itemizedlist>
 
