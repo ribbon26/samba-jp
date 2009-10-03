@@ -774,20 +774,22 @@ Now we need to prepare the directory with something like
 		</listitem>
 
 		<listitem>
-	    <formalpara><title>Create Snapshots and Make Them Available to shadow_copy.so</title> 
+	    <formalpara><title>スナップショットの作成とシャドーコピーとしての有効化</title> 
 		<para>
-<indexterm><primary>shadow_copy</primary></indexterm>
-<indexterm><primary>LVM snapshots</primary></indexterm>
-<indexterm><primary>module</primary></indexterm>
-		Before you can browse the shadow copies, you must create them and mount them.  This will most likely be done
-		with a script that runs as a cron job.  With this particular solution, the shadow_copy VFS module is used to
-		browse LVM snapshots.  Those snapshots are not created by the module.  They are not made available by the
-		module either.  This module allows the shadow copy-enabled client to browse the snapshots you take and make
-		available.
+<indexterm><primary>シャドーコピー</primary></indexterm>
+<indexterm><primary>LVMスナップショット</primary></indexterm>
+<indexterm><primary>モジュール</primary></indexterm>
+		シャドーコピーを閲覧できる前に、それを作成してマウントする必要がある。
+		これは、cronジョブとして動作するスクリプトで行うのが最も良い。この特定の
+		解決方法に、LVMスナップショットを閲覧するのにシャドーコピーVFSモジュールが
+		使える。これらのスナップショットはモジュールによっては作成されない。また、
+		モジュールによって有効化もされない。このモジュールは、有効になったスナップ
+		ショットを閲覧する事を、シャドーコピーが有効になったクライアントに対して
+		行う。
 		</para></formalpara>
 
 	    <para>
-		Here is a simple script used to create and mount the snapshots:
+		以下はスナップショットの作成とマウントを行う単純なスクリプトである:
 <screen>
 #!/bin/bash
 # This is a test, this is only a test
@@ -799,18 +801,20 @@ mkdir /data/shadow_share/@GMT-$SNAPNAME
 mount /dev/shadowvol/$SNAPNAME \
        /data/shadow_share/@GMT-$SNAPNAME -onouuid,ro
 </screen>
-		Note that the script does not handle other things like remounting snapshots on reboot.
+		このスクリプトはリブート時にスナップショットの再マウントのような事は扱わないことに注意。
 	    </para></listitem>
 
 		<listitem>
-	    <formalpara><title>Test From Client</title>
+	    <formalpara><title>クライアントからのテスト</title>
 		<para>
-		To test, you will need to install the shadow copy client which you can obtain from the <ulink
-		url="http://www.microsoft.com/windowsserver2003/downloads/shadowcopyclient.mspx">Microsoft web site.</ulink> I
-		only tested this with an XP client so your results may vary with other pre-XP clients.  Once installed, with
-		your XP client you can right-click on specific files or in the empty space of the shadow_share and view the
-		"properties."  If anything has changed, then you will see it on the "Previous Versions" tab of the properties
-		window.
+		テストのために、
+		<ulink url="http://technet.microsoft.com/ja-jp/windowsserver/bb405951.aspx">MicrosoftのWebサイト</ulink>
+		からシャドーコピークライアントを入手し、インストールする必要がある
+		(訳注:URLは日本語版に差し替え済み)。これはXPクライアントでのみテストして
+		いるので、他のXP以前のクライアントでは結果が異なる可能性がある。一度
+		XPクライアントにインストール後、指定したファイルかshadow_shareの
+		空白部分で右クリックすると、"プロパティ"が表示される。何か変更があると、
+		プロパティウィンドウの中に"以前のバージョン"が表示される。
 		</para></formalpara>
 	  </listitem>
 	</orderedlist>
@@ -821,17 +825,17 @@ mount /dev/shadowvol/$SNAPNAME \
 </sect1>
 
 <sect1>
-<title>VFS Modules Available Elsewhere</title>
+<title>他で入手可能なVFSモジュール</title>
 
 <para>
-<indexterm><primary>VFS modules</primary></indexterm>
-This section contains a listing of various other VFS modules that have been posted but do not currently reside
-in the Samba CVS tree for one reason or another (e.g., it is easy for the maintainer to have his or her own
-CVS tree).
+<indexterm><primary>VFSモジュール</primary></indexterm>
+この節では、投稿されてはいるが、SambaCVSツリー(訳注:現在はgit)には何らかの理由(例えば、
+管理者が独自のCVSツリーを持つ方が管理しやすいなどの理由)で、現行のものには含まれない、
+各種のVFSモジュールを紹介する。
 </para>
 
 <para>
-No statements about the stability or functionality of any module should be implied due to its presence here.
+ここで言及したからと言って、そのモジュールの安定性や機能性の良し悪しを示唆したとは解釈しないこと。
 </para>
 
 <sect2>
@@ -846,17 +850,19 @@ Taylors University DatabaeFS</ulink>
 <para>By <ulink url="mailto:elorimer@css.tayloru.edu">Eric Lorimer.</ulink></para>
 
 <para>
-I have created a VFS module that implements a fairly complete read-only filesystem. It presents information
-from a database as a filesystem in a modular and generic way to allow different databases to be used.
-(Originally designed for organizing MP3s under directories such as <quote>Artists,</quote> <quote>Song
-Keywords,</quote> and so on. I have since easily applied it to a student roster database.) The directory
-structure is stored in the database itself and the module makes no assumptions about the database structure
-beyond the table it requires to run.
+私は、かなり完成された読み込み専用のファイルシステムを実現する VFS モジュールを作成した。
+これは、異なるデータベースを使用するための、モジュール式あるいは一般的な方式のファイル
+システムとしてデータベースからの情報を表示する(元々は、<quote>アーティスト</quote>や
+<quote>歌詞</quote>といったディレクトリでMP3ファイルを整理するために設計されたもので
+ある。これを私は、学生名簿データベースに応用した)。ディレクトリ構造はデータベース自身に
+保存されており、その表を確認するプログラムが走りますが、それ以外に、データベース構造に
+関して何らかの推定をすることはしない。
 </para>
 
 <para>
-Any feedback would be appreciated: comments, suggestions, patches, and so on. If nothing else, it
-might prove useful for someone else who wishes to create a virtual filesystem.
+フィードバックを歓迎する。コメント、提案、パッチ、その他何でも送ってほしい。他に何の
+役にも立たなくても、最低、誰かが仮想ファイルシステムを作成したい場合に役に立つことを
+願っている。
 </para>
 
 </sect2>
@@ -871,8 +877,9 @@ Open Anti-Virus vscan</ulink>
 
 <para>
 <indexterm><primary>samba-vscan</primary></indexterm>
-samba-vscan is a proof-of-concept module for Samba, which provides on-access anti-virus support for files
-shared using Samba.  samba-vscan supports various virus scanners and is maintained by Rainer Link.
+Samba-vscan は、Sambaが使う共有化のファイルのための、オンアクセスアンチウィルス機能を提供する、
+コンセプト実証(POC)モジュールである。samba-vscan は、各種のウィルス・スキャナーをサポートし、
+Rainer Linkがメンテナンスを行っている。
 </para>
 
 </sect2>
