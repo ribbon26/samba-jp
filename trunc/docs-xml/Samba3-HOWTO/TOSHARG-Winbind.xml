@@ -513,61 +513,64 @@ passwd: files example
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-		An active directory system can generate a lot of user and group name lookups. To reduce the network
-		cost of these lookups, Winbind uses a caching scheme based on the SAM sequence number supplied by NT domain
-		controllers. User or group information returned by a PDC is cached by Winbind along with a sequence number
-		also returned by the PDC. This sequence number is incremented by Windows NT whenever any user or group
-		information is modified. If a cached entry has expired, the sequence number is requested from the PDC and
-		compared against the sequence number of the cached entry.  If the sequence numbers do not match, then the
-		cached information is discarded and up-to-date information is requested directly from the PDC.
+		Active Directoryシステムは、数多くのユーザ名やグループ名の検索を発行
+		する。 これらの検索に係るネットワークの負担を軽減するため、Winbindは、
+		NTドメインコントローラから供給されるSAM シーケンス番号に基づいて、
+		キャッシュに保存する。PDCから返されたユーザ情報やグループ情報は、
+		同じくPDCから返されたシーケンス番号と一緒に、Winbindによってキャッシュに
+		保存される。ユーザ情報やグループ情報が変更される度に、Windows NTは
+		シーケンス番号を増やす。キャッシュに保存されたエントリが満了になる
+		ときに、シーケンス番号をPDC からリクエストし、キャッシュのエントリの
+		シーケンス番号と比較する。番号が一致しないときは、キャッシュに保存された
+		情報を捨て、PDCから直接更新情報をもらうように更新を行う。
 		</para>
 	</sect2>
 </sect1>
 
 
 <sect1>
-	<title>Installation and Configuration</title>
+	<title>インストールと設定</title>
 
 <sect2>
-<title>Introduction</title>
+<title>はじめに</title>
 
 <para>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>authentication control</primary></indexterm>
-This section describes the procedures used to get Winbind up and running. Winbind is capable of providing
-access and authentication control for Windows Domain users through an NT or Windows 200x PDC for regular
-services, such as telnet and ftp, as well for Samba services.
+<indexterm><primary>認証制御</primary></indexterm>
+この節では、Winbindを入手して使えるようにするまでの手順を説明する。WinbindはNTまたは
+Windows 200xの PDCを通して、Windowsのドメインユーザにtelnetやftpのような通常のサービス
+と、Sambaの各種サービスのためのアクセス制御と認証管理の機能を提供することができる。
 </para>
 
 <itemizedlist>
 <listitem>
 	<para>
-	<emphasis>Why should I do this?</emphasis>
+	<emphasis>どうして、これをやるべきなのか?</emphasis>
 	</para>
 
 	<para>
-<indexterm><primary>Samba administrator</primary></indexterm>
-<indexterm><primary>authentication mechanisms</primary></indexterm>
-<indexterm><primary>domain members</primary></indexterm>
-<indexterm><primary>accounts</primary></indexterm>
-This allows the Samba administrator to rely on the authentication mechanisms on the Windows NT/200x PDC
-for the authentication of domain members. Windows NT/200x users no longer need to have separate accounts on
-the Samba server.
+<indexterm><primary>Samba管理者</primary></indexterm>
+<indexterm><primary>認証メカニズム</primary></indexterm>
+<indexterm><primary>ドメインメンバ</primary></indexterm>
+<indexterm><primary>アカウント</primary></indexterm>
+これにより、Samba管理者がドメインメンバの認証のために、Windows NT/200x PDCの認証機構を
+頼れるようになる。Windows NT/200xユーザは、Sambaサーバ上に別のアカウントを持つ必要が
+なくなる。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	<emphasis>Who should be reading this document?</emphasis>
+	<emphasis>この文書は誰が読むべきものか?</emphasis>
 	</para>
 
 	<para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>Windows NT/200x</primary></indexterm>
-This document is designed for system administrators. If you are implementing Samba on a file server and wish
-to (fairly easily) integrate existing Windows NT/200x users from your PDC onto the Samba server, this document
-is for you.
+この文書はシステム管理者のためのものである。この文書は、Sambaをファイルサーバ上に実装する
+予定であり、既存のWindows NT/200xユーザを、PDCからSambaサーバへ(比較的簡単に)統合したい
+場合のものである。
 	</para>
 </listitem>
 </itemizedlist>
@@ -575,12 +578,12 @@ is for you.
 
 
 <sect2>
-<title>Requirements</title>
+<title>用件</title>
 
 <para>
 <indexterm><primary>PAM</primary></indexterm>
-<indexterm><primary>back up</primary></indexterm>
-<indexterm><primary>boot disk`</primary></indexterm>
+<indexterm><primary>バックアップ</primary></indexterm>
+<indexterm><primary>ブートディスク</primary></indexterm>
 If you have a Samba configuration file that you are currently using, <emphasis>BACK IT UP!</emphasis>
 If your system already uses PAM, <emphasis>back up the <filename>/etc/pam.d</filename> directory
 contents!</emphasis> If you haven't already made a boot disk, <emphasis>MAKE ONE NOW!</emphasis>
