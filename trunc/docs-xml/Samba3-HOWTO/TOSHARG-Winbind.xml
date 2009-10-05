@@ -445,13 +445,14 @@ passwd: files example
 		<para>
 <indexterm><primary>PAM</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
-<indexterm><primary>authentication management</primary></indexterm>
-<indexterm><primary>password management</primary></indexterm>
+<indexterm><primary>認証管理</primary></indexterm>
+<indexterm><primary>パスワード管理</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-		Winbind uses the authentication management and password management PAM interface to integrate Windows
-		NT users into a UNIX system. This allows Windows NT users to log in to a UNIX machine and be authenticated
-		against a suitable PDC.  These users can also change their passwords and have this change take effect directly
-		on the PDC.
+		Winbind は、認証管理とパスワード管理のPAMインタフェースを使用して、
+		Windows NTユーザをUNIXシステムに統合する。これにより、 Windows NT
+		ユーザはUNIXマシンにログインでき、適切なPDCの認証を受けることが
+		できるようになる。このようなユーザはパスワードの変更もできる上、
+		その変更内容をPDCに直に反映させることができる。
 		</para>
 
 		<para>
@@ -459,44 +460,52 @@ passwd: files example
 <indexterm><primary>/etc/pam.d/</primary></indexterm>
 <indexterm><primary>pam_winbind.so</primary></indexterm>
 <indexterm><primary>/lib/security/</primary></indexterm>
-		PAM is configured by providing control files in the directory <filename>/etc/pam.d/</filename> for
-		each of the services that require authentication. When an authentication request is made by an application,
-		the PAM code in the C library looks up this control file to determine what modules to load to do the
-		authentication check and in what order. This interface makes adding a new authentication service for Winbind
-		very easy: simply copy the <filename>pam_winbind.so</filename> module to <filename>/lib/security/</filename>,
-		and the PAM control files for relevant services are updated to allow authentication via Winbind. See the PAM
-		documentation in <link linkend="pam">PAM-Based Distributed Authentication</link>, for more information.
+		PAMは、認証を必要とするサービスごとに、<filename>/etc/pam.d/<filename>の
+		ディレクトリに管理ファイルを設けて設定する。アプリケーションが認証要求を
+		出すと、Cライブラリ内のPAMコードが、認証を行うために、どのモジュールを
+		どの順番でロードするべきかを決定するためにこの管理ファイルを検索する。
+		このインタフェースにより、Winbindに新しい認証サービスを追加することが
+		簡単になる。必要な手順は、<filename>/lib/security/</filename>に
+		<filename>pam_winbind.so</filename>モジュールをコピーすることと、
+		Winbind 経由の認証を可能にするために、関連するサービスのPAM管理ファイルを
+		更新することである。詳細は、
+		<link linkend="pam">PAMベースの分散型認証</link>のPAMの説明を参照のこと。
 		</para>
 	</sect2>
 
 	<sect2>
-		<title>User and Group ID Allocation</title>
+		<title>ユーザとグループIDの割り当て</title>
 
 		<para>
 <indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>UNIX ID</primary></indexterm>
-		When a user or group is created under Windows NT/200x, it is allocated a numerical relative identifier
-		(RID). This is slightly different from UNIX, which has a range of numbers that are used to identify users and
-		the same range used to identify groups. It is Winbind's job to convert RIDs to UNIX ID numbers and vice versa.
-		When Winbind is configured, it is given part of the UNIX user ID space and a part of the UNIX group ID space
-		in which to store Windows NT users and groups. If a Windows NT user is resolved for the first time, it is
-		allocated the next UNIX ID from the range. The same process applies for Windows NT groups. Over time, Winbind
-		will have mapped all Windows NT users and groups to UNIX user IDs and group IDs.
+		Windows NT/200xでユーザまたはグループが作成されると、数字で構成される
+		相対ID(RID)を割り当てられる。これは、UNIXとは幾分異なる。UNIXでは、
+		ユーザIDに使用される数字の範囲と、グループIDに使用される数字の範囲が
+		別々になっている。RIDをUNIXのIDに変換する、またはその逆を行うのが
+		Winbindの仕事である。Winbindを設定する際、UNIXユーザIDのスペースの
+		一部とUNIX グループIDのスペースの一部を、Windows NTのユーザと
+		グループを格納する場所である。Windows NTユーザが最初に解決されるとき、
+		上記の範囲の中から次の空き番号をUNIX上のIDとして割り当てる。この
+		同じプロセスがWindows NTグループに対しても適用される。こうして一定の
+		時間が経つと、全てのWindows NTユーザとグループはWinbindにより、対応
+		するUNIXユーザIDとグループIDへマッピングされることになる。
 		</para>
 
 		<para>
-<indexterm><primary>ID mapping database</primary></indexterm>
+<indexterm><primary>IDマッピングデータベース</primary></indexterm>
 <indexterm><primary>tdb</primary></indexterm>
 <indexterm><primary>UNIX ID</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
-		The results of this mapping are stored persistently in an ID mapping database held in a tdb database.
-		This ensures that RIDs are mapped to UNIX IDs in a consistent way.
+		このマッピングの結果は、tdbのデータベース内のIDマッピングデータベースに
+		一貫して格納されていく。これにより、RIDが一貫した方法でUNIXのIDに
+		マッピングされていくことを確保している。
 		</para>
 	</sect2>
 
 	<sect2>
-		<title>Result Caching</title>
+		<title>結果のキャッシュ保存</title>
 
 		<para>
 <indexterm><primary>SAM</primary></indexterm>
