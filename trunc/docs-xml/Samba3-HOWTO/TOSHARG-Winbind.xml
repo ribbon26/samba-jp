@@ -824,61 +824,60 @@ Management Guide: Operating System and Devices</ulink>にある。
 <indexterm><primary>domain security</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-All machines that will participate in domain security should be members of
-the domain. This applies also to the PDC and all BDCs.
+ドメインセキュリティに関与するすべてのマシンはドメインのメンバであるべきである。
+これはPDCとすべてのBDCにも適用される。
 </para>
 
 <para>
-<indexterm><primary>joining domain</primary></indexterm>
-<indexterm><primary>domain join</primary></indexterm>
+<indexterm><primary>ドメインへの参加</primary></indexterm>
+<indexterm><primary>ドメインに参加</primary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>join</tertiary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>MS DCE RPC</primary></indexterm>
 <indexterm><primary>DCE RPC</primary></indexterm>
 <indexterm><primary>RPC</primary></indexterm>
-The process of joining a domain requires the use of the <command>net rpc join</command>
-command. This process communicates with the domain controller it will register with
-(usually the PDC) via MS DCE RPC. This means, of course, that the <command>smbd</command>
-process must be running on the target domain controller. It is therefore necessary to temporarily
-start Samba on a PDC so that it can join its own domain.
+ドメインへの参加手続きは、<command>net rpc join</command>コマンドを使って行う。この
+手続きは、MS DCE RPC経由で登録された(通常はPDC)ドメインコントローラと通信を行う。これは、
+もちろん、<command>smbd</command>プロセスが対象のドメインコントローラ上で動作
+していなければならないということである。それ自身のドメインに参加できるように、一時的に
+PDCとしてSambaを起動することは、そのために必要である。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>administrative privileges</primary></indexterm>
+<indexterm><primary>管理者権限</primary></indexterm>
 <indexterm><primary>Administrator</primary></indexterm>
-Enter the following command to make the Samba server join the domain, where <replaceable>PDC</replaceable> is
-the name of your PDC and <replaceable>Administrator</replaceable> is a domain user who has administrative
-privileges in the domain.
+<replaceable>PDC</replaceable>という名前のPDCで、ドメイン中で管理者権限を持つドメイン
+ユーザが<replaceable>Administrator</replaceable>である時、以下のコマンドを入力し、
+Sambaサーバをドメインに参加させる。
 </para>
 
 <note><para>
-<indexterm><primary>domain controller</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>tcp ports</primary></indexterm>
-<indexterm><primary>udp ports</primary></indexterm>
-Before attempting to join a machine to the domain, verify that Samba is running
-on the target domain controller (usually PDC) and that it is capable of being reached via ports
-137/udp, 135/tcp, 139/tcp, and 445/tcp (if Samba or Windows Server 2Kx).
+<indexterm><primary>tcpポート</primary></indexterm>
+<indexterm><primary>udpポート</primary></indexterm>
+ドメインにマシンを参加させる前に、対象のドメインコントローラ(通常はPDC)でSambaが
+動作しているかを確認し、ポート137/udp, 135/tcp, 139/tcp, と 445/tcpが開いているかを
+確認する(もしもPDCがSambaかWindows Server 2Kxの場合)。
 </para></note>
 
 <para>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>join</tertiary></indexterm>
-The use of the <command>net rpc join</command> facility is shown here:
+<command>net rpc join</command>機能の使用方法は以下の通り:
 <screen>
 &rootprompt;<userinput>/usr/local/samba/bin/net rpc join -S PDC -U Administrator</userinput>
 </screen>
-The proper response to the command should be <quote>Joined the domain
-<replaceable>DOMAIN</replaceable></quote> where <replaceable>DOMAIN</replaceable>
-is your domain name.
+このコマンドへの正しい解答は、<quote>Joined the domain<replaceable>DOMAIN</replaceable></quote>
+である。ここで、<replaceable>DOMAIN</replaceable>は対象のドメイン名である。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Starting and Testing the <command>winbindd</command> Daemon</title>
+<title><command>winbindd</command>daemonの開始とテスト</title>
 
 <para>
 <indexterm><primary>startup script</primary></indexterm>
