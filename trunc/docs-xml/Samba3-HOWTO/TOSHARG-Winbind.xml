@@ -719,16 +719,16 @@ dynamic link loaderによって使われる現在の検索パスを返す。<com
 <indexterm><primary>/usr/local/lib</primary></indexterm>
 <indexterm><primary>リンクローダの設定</primary></indexterm>
 <indexterm><primary>object module dependencies</primary></indexterm>
-The Sun Solaris dynamic link loader management tool is called <command>crle</command>. The
-use of this tool is necessary to instruct the dynamic link loader to search directories that
-contain library files that were not supplied as part of the original operating system platform.
-The following example shows how to use this tool to add the directory <filename>/usr/local/lib</filename>
-to the dynamic link loader's search path:
+Sun Solarisのダイナミックリンクローダ管理ツールは<command>crle</command>と呼ばれる。
+このツールは元々のOS環境の一部として提供されていないライブラリファイルを含む
+ディレクトリを検索するよう指示するために必要である。以下の例は、ダイナミックリンク
+ローダの検索パスに、どのようにして<filename>/usr/local/lib</filename>ディレクトリを
+追加するために使うかを示す:
 <screen>
 &rootprompt; crle -u -l /usr/lib:/usr/local/lib
 </screen>
-When executed without arguments, <command>crle</command> reports the current dynamic
-link loader configuration. This is demonstrated here:
+引数なしで実行した場合、<command>crle</command>は現在のダイナミックリンクローダの
+設定を表示する。それは以下の通り:
 <screen>
 &rootprompt; crle
 
@@ -739,16 +739,17 @@ Configuration file [version 4]: /var/ld/ld.config
 Command line:
   crle -c /var/ld/ld.config -l /lib:/usr/lib:/usr/local/lib
 </screen>
-From this it is apparent that the <filename>/usr/local/lib</filename> directory is included
-in the search dynamic link libraries in order to satisfy object module dependencies.
+これから、<filename>/usr/local/lib</filename>ディレクトリは、オブジェクトモジュールの
+依存関係を満足させるために、ダイナミックリンクライブラリの検索中に含まれていることが
+わかる。
 </para>
 
 </sect3>
 
 <sect3>
-<title>NSS Winbind on AIX</title>
+<title>AIXにおけるNSS Winbind</title>
 
-<para>(This section is only for those running AIX.)</para>
+<para>(この節はAIXを動作させている人にのみ関係する。)</para>
 
 <para>
 <indexterm><primary>AIX</primary></indexterm>
@@ -757,53 +758,57 @@ in the search dynamic link libraries in order to satisfy object module dependenc
 <indexterm><primary>authentication module API</primary></indexterm>
 <indexterm><primary>/usr/lib/security/methods.cfg</primary></indexterm>
 <indexterm><primary>PAM module</primary></indexterm>
-The Winbind AIX identification module gets built as <filename>libnss_winbind.so</filename> in the
-nsswitch directory of the Samba source. This file can be copied to <filename>/usr/lib/security</filename>,
-and the AIX naming convention would indicate that it should be named WINBIND. A stanza like the following:
+Winbind AIX識別モジュールは、Sambaソースのnsswitchディレクトリ内に 
+<filename>libnss_winbind.so</filename>として構築される。このファイルは、
+<filename>/usr/lib/security</filename>にコピーでき、AIXの名前変換から、WINBIND
+という名前にするべきであると指示してくる。次の節では、以下のようにして、
 <programlisting>
 WINBIND:
         program = /usr/lib/security/WINBIND
         options = authonly
 </programlisting>
-can then be added to <filename>/usr/lib/security/methods.cfg</filename>. This module only supports
-identification, but there have been reports of success using the standard Winbind PAM module for
-authentication. Use caution configuring loadable authentication modules, since misconfiguration can make
-it impossible to log on to the system.  Information regarding the AIX authentication module API can
-be found in the <quote>Kernel Extensions and Device Support Programming Concepts for AIX</quote> document that
-describes the <ulink url="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/kernextc/sec_load_mod.htm">
-Loadable Authentication Module Programming Interface</ulink> for AIX. Further information on administering the modules
-can be found in the <ulink url="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixbman/baseadmn/iandaadmin.htm">System
-Management Guide: Operating System and Devices.</ulink>
+<filename>/usr/lib/security/methods.cfg</filename>が追加できるようなる。このモジュールは
+識別のみサポートするが、標準のWinbind PAMモジュールを認証に使用して成功した例が報告されて
+いる。ローダブルな認証モジュール設定の際には、システムにログオンできない状態になって
+しまうこともあり得るので、慎重に行なうこと。AIX認証モジュールAPIに関する詳細情報は、
+AIXのための、
+<ulink url="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/kernextc/sec_load_mod.htm">
+Loadable Authentication Module Programming Interface</ulink>で記述されている、
+<quote>Kernel Extensions and Device Support Programming Concepts for AIX</quote>
+という文書にある。モジュールの管理に関するさらなる情報は、
+<ulink url="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixbman/baseadmn/iandaadmin.htm">System
+Management Guide: Operating System and Devices</ulink>にある。
 </para>
 </sect3>
 
 <sect3>
-<title>Configure smb.conf</title>
+<title>smb.confの設定</title>
 
 <para>
 <indexterm><primary>winbind</primary></indexterm>
 <indexterm><primary>man page</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-Several parameters are needed in the &smb.conf; file to control the behavior of &winbindd;. These
-are described in more detail in the <citerefentry><refentrytitle>winbindd</refentrytitle>
-<manvolnum>8</manvolnum></citerefentry> man page. My &smb.conf; file, as shown in <link
-linkend="winbindcfg">the smb.conf for Winbind Setup</link>, was modified to include the necessary entries in the [global] section.
+&winbind;の動作を制御するために、&smb.conf;ファイルにいくつかのパラメータを設定する必要が
+ある。これについては、<citerefentry><refentrytitle>winbindd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry>マニュアルページに、より詳細に説明されている。
+以下の<link linkend="winbindcfg">Winbind設定のためのsmb.conf</link>による&smb.conf;は、
+[global]セクションの中の必要なエントリーも含むように変更したものである。
 </para>
 
 <example id="winbindcfg">
-<title>smb.conf for Winbind Setup</title>
+<title>Winbind設定のためのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
-<smbconfcomment> separate domain and username with '\', like DOMAIN\username</smbconfcomment>
+<smbconfcomment>DOMAIN\username のように、ドメインとユーザ名を '\'を挟んで分ける。</smbconfcomment>
 <smbconfoption name="winbind separator">\</smbconfoption>
-<smbconfcomment> use uids from 10000 to 20000 for domain users</smbconfcomment>
+<smbconfcomment>ドメインユーザには、10000から20000のUIDを使用する。</smbconfcomment>
 <smbconfoption name="idmap uid">10000-20000</smbconfoption>
-<smbconfcomment> use gids from 10000 to 20000 for domain groups</smbconfcomment>
+<smbconfcomment>ドメイングループには、10000から20000のGIDを使用する。</smbconfcomment>
 <smbconfoption name="idmap gid">10000-20000</smbconfoption>
-<smbconfcomment> allow enumeration of winbind users and groups</smbconfcomment>
+<smbconfcomment>winbindユーザとグループの列挙を可能にする。</smbconfcomment>
 <smbconfoption name="winbind enum users">yes</smbconfoption>
 <smbconfoption name="winbind enum groups">yes</smbconfoption>
-<smbconfcomment> give winbind users a real shell (only needed if they have telnet access)</smbconfcomment>
+<smbconfcomment>winbind ユーザに本当のシェルを与える(telnetアクセスを持つ場合のみ必要)</smbconfcomment>
 <smbconfoption name="template homedir">/home/winnt/%D/%U</smbconfoption>
 <smbconfoption name="template shell">/bin/bash</smbconfoption>
 </smbconfblock>
@@ -813,7 +818,7 @@ linkend="winbindcfg">the smb.conf for Winbind Setup</link>, was modified to incl
 
 
 <sect3>
-<title>Join the Samba Server to the PDC Domain</title>
+<title>SambaサーバをPDCドメインに参加させる</title>
 
 <para>
 <indexterm><primary>domain security</primary></indexterm>
