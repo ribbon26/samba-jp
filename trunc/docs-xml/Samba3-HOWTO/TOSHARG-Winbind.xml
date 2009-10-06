@@ -880,30 +880,31 @@ Sambaサーバをドメインに参加させる。
 <title><command>winbindd</command>daemonの開始とテスト</title>
 
 <para>
-<indexterm><primary>startup script</primary></indexterm>
+<indexterm><primary>起動スクリプト</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>Winbind services</primary></indexterm>
-Eventually, you will want to modify your Samba startup script to automatically invoke the winbindd daemon when
-the other parts of Samba start, but it is possible to test out just the Winbind portion first. To start up
-Winbind services, enter the following command as root:
+<indexterm><primary>Winbindサービス</primary></indexterm>
+最終的には、Sambaのその他の部分が立ち上がるときに、自動的にwinbindd daemonを呼び出す
+ように、Sambaの起動スクリプトを変更したいと思うかもしれないが、Winbind部分だけを最初に
+テストしておくことは可能である。Winbind のサービスを立ち上げるには、以下のコマンドを
+rootとして入力する:
 <screen>
 &rootprompt;<userinput>/usr/local/samba/sbin/winbindd</userinput>
 </screen>
-Use the appropriate path to the location of the <command>winbindd</command> executable file.
+<command>winbindd</command>実行ファイルの位置への適切なパスを使用すること。
 </para>
 
 <note><para>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>/usr/local/samba</primary></indexterm>
-The command to start up Winbind services assumes that Samba has been installed in the
-<filename>/usr/local/samba</filename> directory tree. You may need to search for the location of Samba files
-if this is not the location of <command>winbindd</command> on your system.
+上記は、<filename>/usr/local/samba</filename>のディレクトリツリーの中にSamba を
+インストールしたと仮定している。使用するシステム上で<command>winbindd</command>が別の
+所にある場合は、Sambaファイルの位置を探す必要がある。
 </para></note>
 
 <para>
 <indexterm><primary>paranoid</primary></indexterm>
 <indexterm><primary>daemon running</primary></indexterm>
-I'm always paranoid and like to make sure the daemon is really running.
+心配性な人の場合、daemonが本当に動いているかは以下で確認出来る。
 <screen>
 &rootprompt;<userinput>ps -ae | grep winbindd</userinput>
 </screen>
@@ -911,7 +912,7 @@ I'm always paranoid and like to make sure the daemon is really running.
 
 <para>
 <indexterm><primary>winbindd</primary></indexterm>
-This command should produce output like the following if the daemon is running.
+このコマンドは、daemonが動いているなら、以下のような結果を返してくるはずである。
 <screen>
 3025 ?        00:00:00 winbindd
 </screen>
@@ -920,12 +921,12 @@ This command should produce output like the following if the daemon is running.
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>wbinfo</primary></indexterm>
-Now, for the real test, try to get some information about the users on your PDC:
+次に、本当のテスト用に、PDC上にあるユーザ情報を取得する:
 <screen>
 &rootprompt;<userinput>/usr/local/samba/bin/wbinfo -u</userinput>
 </screen>
-This should echo back a list of users on your Windows users on your PDC. For example, I get the following
-response:
+これは、PDC上のWindowsユーザ情報に入っているユーザの一覧をエコーバックするはずである。
+例えば、以下のような結果が表示される:
 <screen>
 CEO\Administrator
 CEO\burdell
@@ -934,14 +935,14 @@ CEO\jt-ad
 CEO\krbtgt
 CEO\TsInternetUser
 </screen>
-Obviously, I have named my domain <quote>CEO</quote> and my <smbconfoption name="winbind separator"/> is
-<quote>\</quote>.
+もちろん、ドメイン名は<quote>CEO</quote>で、<smbconfoption name="winbind separator"/>は
+<quote>\</quote>である。
 </para>
 
 <para>
 <indexterm><primary>wbinfo</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-You can do the same sort of thing to get group information from the PDC:
+同様にPDCからグループ情報を取得することができる:
 <screen>
 &rootprompt;<userinput>/usr/local/samba/bin/wbinfo -g</userinput>
 CEO\Domain Admins
@@ -961,10 +962,10 @@ CEO\Group Policy Creator Owners
 <indexterm><primary>/etc/passwd</primary></indexterm>
 <indexterm><primary>UID</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
-<indexterm><primary>home directories</primary></indexterm>
-<indexterm><primary>default shells</primary></indexterm>
-The function <command>getent</command> can now be used to get unified lists of both local and PDC users and
-groups. Try the following command:
+<indexterm><primary>ホームディレクトリ</primary></indexterm>
+<indexterm><primary>既定値のシェル</primary></indexterm>
+ここで、<command>getent</command>コマンドを使用して、ローカルとPDCの両方からユーザと
+グループの統合された一覧を表示させることができる。以下のコマンドを入力する:
 <screen>
 &rootprompt;<userinput>getent passwd</userinput>
 </screen>
