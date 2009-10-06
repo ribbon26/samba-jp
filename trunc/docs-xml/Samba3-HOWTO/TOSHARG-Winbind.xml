@@ -617,16 +617,11 @@ Samba-3の最新バージョンには、正常に機能する winbindd daemonが
 設定しなければならない。Winbindモジュールをコンパイルするには、システム上に最低でもPAM
 開発ライブラリがインストールされていなければならない。
 <ulink url="http://www.kernel.org/pub/linux/libs/pam/">PAMのウェブサイト</ulink>を参照のこと。
-
-To allow domain users the ability to access Samba shares and files, as well as potentially other services
-provided by your Samba machine, PAM must be set up properly on your
-machine. In order to compile the Winbind modules, you should have at least the PAM development libraries installed
-on your system. Please refer to the PAM Web site <ulink url="http://www.kernel.org/pub/linux/libs/pam/"/>.
 </para>
 </sect2>
 
 <sect2>
-<title>Testing Things Out</title>
+<title>テスト</title>
 
 <para>
 <indexterm><primary>smbd</primary></indexterm>
@@ -634,33 +629,35 @@ on your system. Please refer to the PAM Web site <ulink url="http://www.kernel.o
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>/etc/pam.d</primary></indexterm>
 <indexterm><primary>PAM</primary></indexterm>
-Before starting, it is probably best to kill off all the Samba-related daemons running on your server.
-Kill off all &smbd;, &nmbd;, and &winbindd; processes that may be running. To use PAM,
-make sure that you have the standard PAM package that supplies the <filename>/etc/pam.d</filename>
-directory structure, including the PAM modules that are used by PAM-aware services, several PAM libraries,
-and the <filename>/usr/doc</filename> and <filename>/usr/man</filename> entries for PAM. Winbind is built
-better in Samba if the pam-devel package is also installed. This package includes the header files
-needed to compile PAM-aware applications.
+開始する前に、使用しているサーバ上で走っている全てのSamba関連のデーモンを止めておくことを
+推奨する。動いているかもしれない&smbd;、&nmbd;、及び&winbindd;の全プロセスを停止する。
+PAMを使用するには、PAMを認識するサービスが使用するPAMモジュール、複数のPAMライブラリ、及び
+PAMのための<filename>/usr/doc</filename>と<filename>/usr/man</filename>のエントリを含む、
+<filename>/etc/pam.d</filename>のディレクトリ構造を提供する、標準PAM パッケージを持って
+いることを確認する。WinbindをSamba内で構築する際、pam-devel パッケージをインストールして
+いると、よりうまくいく。このパッケージには、PAMを認識するアプリケーションをコンパイルする
+のに必要なヘッダファイルが含まれる。
 </para>
 
 <sect3>
-<title>Configure <filename>nsswitch.conf</filename> and the Winbind Libraries on Linux and Solaris</title>
+<title><filename>nsswitch.conf</filename>とWinbindライブラリをLinuxとSolaris上で設定する</title>
 
 <para>
 <indexterm><primary>PAM</primary></indexterm>
 <indexterm><primary>pam-devel</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>/etc/nsswitch.conf</primary></indexterm>
-PAM is a standard component of most current generation UNIX/Linux systems. Unfortunately, few systems install
-the <filename>pam-devel</filename> libraries that are needed to build PAM-enabled Samba. Additionally, Samba-3
-may auto-install the Winbind files into their correct locations on your system, so before you get too far down
-the track, be sure to check if the following configuration is really
-necessary. You may only need to configure
-<filename>/etc/nsswitch.conf</filename>.
+PAMは、最新世代のUNIX/Linuxシステムの標準コンポーネントである。しかし、残念ながら
+PAM対応のSambaを構築するのに必要な<filename>pam-devel</filename>ライブラリをインストール
+しているシステムは数が限られている。また、Samba-3はWinbindファイルを使用中のシステム上の
+正しい位置に自動インストールするかもしれない。そこでこれ以上先に進む前に、以下に説明する
+設定が本当に必要かどうか確認すること。もしかしたら、
+<filename>/etc/nsswitch.conf<filename>の設定だけで済むかもしれない。
 </para>
 
 <para>
-The libraries needed to run the &winbindd; daemon through nsswitch need to be copied to their proper locations:
+&winbindd; daemonをnsswitch経由で走らせるために必要なライブラリを正しい場所にコピー
+しなければならない:
 </para>
 
 <para>
@@ -671,14 +668,14 @@ The libraries needed to run the &winbindd; daemon through nsswitch need to be co
 </para>
 
 <para>
-I also found it necessary to make the following symbolic link:
+また、以下のシンボリック・リンクを作成することが必要である:
 </para>
 
 <para>
 &rootprompt; <userinput>ln -s /lib/libnss_winbind.so /lib/libnss_winbind.so.2</userinput>
 </para>
 
-<para>And, in the case of Sun Solaris:
+<para>さらに、Sun Solarisの場合は以下が必要である:
 <indexterm><primary>nss_winbind.so.1</primary></indexterm>
 <screen>
 &rootprompt;<userinput>ln -s /usr/lib/libnss_winbind.so /usr/lib/libnss_winbind.so.1</userinput>
@@ -689,8 +686,9 @@ I also found it necessary to make the following symbolic link:
 
 <para>
 <indexterm><primary>/etc/nsswitch.conf</primary></indexterm>
-As root, edit <filename>/etc/nsswitch.conf</filename> to allow user and group entries to be visible from the
-&winbindd; daemon. My <filename>/etc/nsswitch.conf</filename> file looked like this after editing:
+次に、rootになって、&winbindd; daemonからユーザやグループのエントリが見えるように、
+<filename>/etc/nsswitch.conf</filename>を編集する。たとえば<filename>/etc/nsswitch.conf</filename>
+ファイルを以下のように編集する:
 <programlisting>
 passwd:     files winbind
 shadow:     files
@@ -703,23 +701,23 @@ group:      files winbind
 <indexterm><primary>libnss_winbind</primary></indexterm>
 <indexterm><primary>grep</primary></indexterm>
 <indexterm><primary>dynamic link loader</primary></indexterm>
-The libraries needed by the <command>winbindd</command> daemon will be automatically
-entered into the <command>ldconfig</command> cache the next time
-your system reboots, but it is faster (and you do not need to reboot) if you do it manually:
+<command>winbindd</command> daemonが必要とするライブラリは、次回システムが再起動する
+とき、自動的に<command>ldconfig</command>のキャッシュに入るが、手動で以下を行う方が
+早い(それに、再起動する必要もない):
 <screen>
 &rootprompt;<userinput>/sbin/ldconfig -v | grep winbind</userinput>
 </screen>
-This makes <filename>libnss_winbind</filename> available to winbindd and reports the current
-search path that is used by the dynamic link loader. The use of the <command>grep</command>
-filters the output of the <command>ldconfig</command> command so that we may see proof that
-this library is indeed recognized by the dynamic link loader.
+これにより、winbinddが<filename>libnss_winbind</filename>を使える状態になり、
+dynamic link loaderによって使われる現在の検索パスを返す。<command>ldconfig</command>
+コマンドの出力に<command>grep</command>フィルタを適用することで、このライブラリが
+本当にdynamic link loaderによって認識されるかの確証を確認できる。
 </para>
 
 <para>
 <indexterm><primary>dynamic link loader</primary></indexterm>
 <indexterm><primary>crle</primary></indexterm>
 <indexterm><primary>/usr/local/lib</primary></indexterm>
-<indexterm><primary>link loader configuration</primary></indexterm>
+<indexterm><primary>リンクローダの設定</primary></indexterm>
 <indexterm><primary>object module dependencies</primary></indexterm>
 The Sun Solaris dynamic link loader management tool is called <command>crle</command>. The
 use of this tool is necessary to instruct the dynamic link loader to search directories that
