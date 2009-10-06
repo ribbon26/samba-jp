@@ -460,7 +460,7 @@ passwd: files example
 <indexterm><primary>/etc/pam.d/</primary></indexterm>
 <indexterm><primary>pam_winbind.so</primary></indexterm>
 <indexterm><primary>/lib/security/</primary></indexterm>
-		PAMは、認証を必要とするサービスごとに、<filename>/etc/pam.d/<filename>の
+		PAMは、認証を必要とするサービスごとに、<filename>/etc/pam.d/</filename>の
 		ディレクトリに管理ファイルを設けて設定する。アプリケーションが認証要求を
 		出すと、Cライブラリ内のPAMコードが、認証を行うために、どのモジュールを
 		どの順番でロードするべきかを決定するためにこの管理ファイルを検索する。
@@ -584,34 +584,40 @@ Windows 200xの PDCを通して、Windowsのドメインユーザにtelnetやftp
 <indexterm><primary>PAM</primary></indexterm>
 <indexterm><primary>バックアップ</primary></indexterm>
 <indexterm><primary>ブートディスク</primary></indexterm>
-If you have a Samba configuration file that you are currently using, <emphasis>BACK IT UP!</emphasis>
-If your system already uses PAM, <emphasis>back up the <filename>/etc/pam.d</filename> directory
-contents!</emphasis> If you haven't already made a boot disk, <emphasis>MAKE ONE NOW!</emphasis>
+現在使用しているSamba設定ファイルがあるなら、<emphasis>バックアップを取ること!</emphasis>。
+使用中のシステムが既にPAMを使用しているなら、<emphasis>
+<filename>/etc/pam.d</filename>ディレクトリの内容をバックアップすること!</emphasis>。
+起動ディスクをまだ作成していないのなら<emphasis>今すぐに作ること!</emphasis>。
 </para>
 
 <para>
-<indexterm><primary>PAM configuration</primary></indexterm>
+<indexterm><primary>PAMの設定</primary></indexterm>
 <indexterm><primary>/etc/pam.d</primary></indexterm>
-<indexterm><primary>single-user mode</primary></indexterm>
-Messing with the PAM configuration files can make it nearly impossible to log in to your machine. That's
-why you want to be able to boot back into your machine in single-user mode and restore your
-<filename>/etc/pam.d</filename> to the original state it was in if you get frustrated with the
-way things are going.
+<indexterm><primary>シングルユーザモード</primary></indexterm>
+PAM設定ファイルを間違って修正すると、使用中のマシンにログインするのがほとんど不可能に
+なってしまうことがある。このため、うまくいかない時にはマシンをシングルユーザモードで
+立ち上げ、<filename>/etc/pam.d</filename>を元の状態に戻せるようにすること。
 </para>
 
 <para>
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>daemon</primary></indexterm>
-The latest version of Samba-3 includes a functioning winbindd daemon. Please refer to the <ulink
-url="http://samba.org/">main Samba Web page</ulink>, or better yet, your closest Samba mirror site for
-instructions on downloading the source code.
+Samba-3の最新バージョンには、正常に機能する winbindd daemonが含まれている。ソースコードを
+ダウンロードする手順については、 <ulink url="http://samba.org/">Samba Webページ</ulink>か
+最寄のSamba ミラーサイトにある説明を参照のこと。
 </para>
 
 <para>
-<indexterm><primary>domain users</primary></indexterm>
-<indexterm><primary>shares and files</primary></indexterm>
+<indexterm><primary>ドメインユーザ</primary></indexterm>
+<indexterm><primary>共有とファイル</primary></indexterm>
 <indexterm><primary>PAM</primary></indexterm>
-<indexterm><primary>development libraries</primary></indexterm>
+<indexterm><primary>開発ライブラリ</primary></indexterm>
+ドメインユーザがSambaの共有やファイルにアクセスできるようにし、また使用するマシンが
+提供するその他のサービスにもアクセスできるようにするには、PAMを使用するマシン上で正しく
+設定しなければならない。Winbindモジュールをコンパイルするには、システム上に最低でもPAM
+開発ライブラリがインストールされていなければならない。
+<ulink url="http://www.kernel.org/pub/linux/libs/pam/">PAMのウェブサイト</ulink>を参照のこと。
+
 To allow domain users the ability to access Samba shares and files, as well as potentially other services
 provided by your Samba machine, PAM must be set up properly on your
 machine. In order to compile the Winbind modules, you should have at least the PAM development libraries installed
