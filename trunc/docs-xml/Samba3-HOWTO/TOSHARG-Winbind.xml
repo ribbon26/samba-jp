@@ -969,13 +969,12 @@ CEO\Group Policy Creator Owners
 <screen>
 &rootprompt;<userinput>getent passwd</userinput>
 </screen>
-You should get a list that looks like your <filename>/etc/passwd</filename>
-list followed by the domain users with their new UIDs, GIDs, home
-directories, and default shells.
+<filename>/etc/passwd</filename>のような、ドメインユーザの新しいUID、GID、
+ホームディレクトリ及び既定値のシェルが表示される一覧が出てくるはずである。
 </para>
 
 <para>
-The same thing can be done for groups with the command:
+グループについても同様に以下のコマンドを実行できる:
 <screen>
 &rootprompt;<userinput>getent group</userinput>
 </screen>
@@ -985,7 +984,7 @@ The same thing can be done for groups with the command:
 
 
 <sect3>
-<title>Fix the init.d Startup Scripts</title>
+<title>init.d起動スクリプトの修正</title>
 
 <sect4>
 <title>Linux</title>
@@ -1000,12 +999,13 @@ The same thing can be done for groups with the command:
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
-The &winbindd; daemon needs to start up after the &smbd; and &nmbd; daemons are running.  To accomplish this
-task, you need to modify the startup scripts of your system.  They are located at
-<filename>/etc/init.d/smb</filename> in Red Hat Linux and in <filename>/etc/init.d/samba</filename> in Debian
-Linux. Edit your script to add commands to invoke this daemon in the proper sequence. My startup script starts
-up &smbd;, &nmbd;, and &winbindd; from the <filename>/usr/local/samba/bin</filename> directory directly. The
-<command>start</command> function in the script looks like this:
+&winbindd; daemonは&smbd;と&nmbd; daemonが動き出してから起動する必要がある。これを
+行うには起動スクリプトを書き換える。それは、Red Hat Linuxでは
+<filename>/etc/init.d/samba</filename>にあり、Debian Linuxでは
+<filename>/etc/init.d/samba</filename>にある。これらのdaemonを正しい順序で走らせる
+ためのコマンドをスクリプトに加える。たとえば、起動スクリプトの例としては、
+&smbd;, &nmbd;, と &winbindd;を直接<filename>/usr/local/samba/bin</filename>ディレクトリ
+から起動する。このスクリプト中の<command>start</command>関数は以下の通り:
 <programlisting>
 start() {
         KIND="SMB"
@@ -1029,12 +1029,12 @@ start() {
 }
 </programlisting></para>
 
-<para>If you would like to run winbindd in dual daemon mode, replace the line:
+<para>winbindd をデュアル・デーモン・モードで走らせたい場合は、上記例の中の:
 <programlisting>
         daemon /usr/local/samba/sbin/winbindd
 </programlisting>
 
-in the example above with:
+の列を、以下に変える:
 
 <programlisting>
         daemon /usr/local/samba/sbin/winbindd -D
@@ -1042,7 +1042,7 @@ in the example above with:
 </para>
 
 <para>
-The <command>stop</command> function has a corresponding entry to shut down the services and looks like this:
+<command>stop</command>関数は、サービスを停止するために以下のように起動に対応するエントリを持つ:
 </para>
 
 <para><programlisting>
@@ -1073,7 +1073,7 @@ stop() {
 <title>Solaris</title>
 
 <para>
-Winbind does not work on Solaris 9; see <link linkend="winbind-solaris9">Winbind on Solaris 9 section</link>
+WinbindはSolaris 9では動作しない。 see <link linkend="winbind-solaris9">Solaris 9でのWinbind</link>の節を参照のこと。
 for details.
 </para>
 
@@ -1084,9 +1084,10 @@ for details.
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-On Solaris, you need to modify the <filename>/etc/init.d/samba.server</filename> startup script. It
-usually only starts smbd and nmbd but should now start winbindd, too. If you have Samba installed in
-<filename>/usr/local/samba/bin</filename>, the file could contains something like this:
+Solarisでは、<filename>/etc/init.d/samba.server</filename>起動スクリプトを変更する必要が
+ある。また、通常は smbd と nmbdのみを起動するが、winbinddも起動すべきである。Sambaが
+<filename>/usr/local/samba/bin</filename>にインストールされている場合、このファイルには
+以下のようなものを含むことが出来る:
 </para>
 
 <para>
@@ -1096,24 +1097,24 @@ usually only starts smbd and nmbd but should now start winbindd, too. If you hav
 	##
 
 	if [ ! -d /usr/bin ]
-	then                    # /usr not mounted
+	then                    # /usr がマウントされていない
 		exit
 	fi
 
-	killproc() {            # kill the named process(es)
+	killproc() {            # 名前指定でプロセスを停止
 		pid=`/usr/bin/ps -e |
 		     /usr/bin/grep -w $1 |
 		     /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
 		[ "$pid" != "" ] &amp;&amp; kill $pid
 	}
 
-	# Start/stop processes required for Samba server
+	# Sambaサーバに必要な起動/停止プロセス
 
 	case "$1" in
 
 	'start')
 	#
-	# Edit these lines to suit your installation (paths, workgroup, host)
+	# 使用環境(パス、ワークグループ、ホスト)に合わせて以下を編集すること
 	#
 	echo Starting SMBD
 	   /usr/local/samba/bin/smbd -D -s \
