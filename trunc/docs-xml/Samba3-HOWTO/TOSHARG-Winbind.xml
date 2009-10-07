@@ -1141,11 +1141,12 @@ Solarisでは、<filename>/etc/init.d/samba.server</filename>起動スクリプ�
 </programlisting></para>
 
 <para>
-Again, if you would like to run Samba in dual daemon mode, replace:
+繰り返すが、Winbind(訳注:原文ではSambaとなっている)をデュアルdaemonモードで動かしたい
+場合、上記の:
 <programlisting>
 /usr/local/samba/sbin/winbindd
 </programlisting>
-in the script above with:
+の部分を、下記に変える:
 <programlisting>
 /usr/local/samba/sbin/winbindd -D
 </programlisting>
@@ -1154,29 +1155,29 @@ in the script above with:
 </sect4>
 
 <sect4>
-<title>Restarting</title>
+<title>再起動</title>
 <para>
 <indexterm><primary>daemons</primary></indexterm>
 <indexterm><primary>local user</primary></indexterm>
-If you restart the &smbd;, &nmbd;, and &winbindd; daemons at this point, you
-should be able to connect to the Samba server as a domain member just as
-if you were a local user.
+この時点で&smbd;, &nmbd;, と &winbindd; daemonを再起動すると、まるでローカルユーザで
+あるかのように、Sambaサーバにドメインメンバとして接続できるはずである。
 </para>
 </sect4>
 </sect3>
 
 <sect3>
-<title>Configure Winbind and PAM</title>
+<title>WinbindとPAMの設定</title>
 
 <para>
 <indexterm><primary>winbindd</primary></indexterm>
 <indexterm><primary>authentication</primary></indexterm>
 <indexterm><primary>PAM</primary></indexterm>
 <indexterm><primary>/etc/pam.d</primary></indexterm>
-If you have made it this far, you know that <command>winbindd</command> and Samba are working together. If you
-want to use Winbind to provide authentication for other services, keep reading. The PAM configuration files
-need to be altered in this step. (Did you remember to make backups of your original
-<filename>/etc/pam.d</filename> files? If not, do it now.)
+ここまで来たということは、<command>winbindd</command>とSambaが一緒に動作している状態に
+なったと言うことである。Winbindを使用して、他のサービスに認証を提供できるようにしたい
+場合は、この先を読み進めること。PAMの設定ファイルを、この手順の中で変更する必要が出て
+くる(現在使っている<filename>/etc/pam.d</filename>ファイルのバックアップを取っていない
+ならば、今行うこと)。
 </para>
 
 <para>
@@ -1186,26 +1187,27 @@ need to be altered in this step. (Did you remember to make backups of your origi
 <indexterm><primary>/lib/security</primary></indexterm>
 <indexterm><primary>Solaris</primary></indexterm>
 <indexterm><primary>/usr/lib/security</primary></indexterm>
-You will need a PAM module to use winbindd with these other services. This module will be compiled in the
-<filename>../source/nsswitch</filename> directory by invoking the command:
+他のサービスでwinbinddを使用するためのPAM モジュールが必要になる。このモジュールは、
+以下のコマンドで、<filename>../source</filename>ディレクトリから
+<filename>../source/nsswitch</filename>ディレクトリにコンパイルされる:
 <screen>
 &rootprompt;<userinput>make nsswitch/pam_winbind.so</userinput>
 </screen>
-from the <filename>../source</filename> directory. The <filename>pam_winbind.so</filename> file should be
-copied to the location of your other PAM security modules. On my Red Hat system, this was the
-<filename>/lib/security</filename> directory. On Solaris, the PAM security modules reside in
-<filename>/usr/lib/security</filename>.
+<filename>pam_winbind.so</filename>ファイルは、他のPAMセキュリティモジュールのある
+場所にコピーしなければならない。Red Hat システムでは、<filename>/lib/security</filename>
+というディレクトリである。Solaris では、PAMセキュリティモジュールは、
+<filename>/usr/lib/security</filename>に入る。
 <screen>
 &rootprompt;<userinput>cp ../samba/source/nsswitch/pam_winbind.so /lib/security</userinput>
 </screen>
 </para>
 
 <sect4>
-<title>Linux/FreeBSD-Specific PAM Configuration</title>
+<title>Linux/FreeBSD固有のPAM設定</title>
 
 <para>
 <indexterm><primary>/etc/pam.d/samba</primary></indexterm>
-The <filename>/etc/pam.d/samba</filename> file does not need to be changed. I just left this file as it was:
+<filename>/etc/pam.d/samba</filename>ファイルは変更する必要がない。このファイルはそのまま残す:
 <programlisting>
 auth    required  /lib/security/pam_stack.so service=system-auth
 account required  /lib/security/pam_stack.so service=system-auth
@@ -1216,47 +1218,51 @@ account required  /lib/security/pam_stack.so service=system-auth
 <indexterm><primary>authentication service</primary></indexterm>
 <indexterm><primary>login</primary></indexterm>
 <indexterm><primary>console</primary></indexterm>
-<indexterm><primary>telnet logins</primary></indexterm>
-<indexterm><primary>ftp service</primary></indexterm>
+<indexterm><primary>telnetでのログイン</primary></indexterm>
+<indexterm><primary>ftpサービス</primary></indexterm>
 <indexterm><primary>/etc/xinetd.d</primary></indexterm>
 <indexterm><primary>/etc/inetd.conf</primary></indexterm>
 <indexterm><primary>/etc/xinetd.d/telnet</primary></indexterm>
-The other services that I modified to allow the use of Winbind as an authentication service were the normal
-login on the console (or a terminal session), telnet logins, and ftp service. In order to enable these
-services, you may first need to change the entries in <filename>/etc/xinetd.d</filename> (or
-<filename>/etc/inetd.conf</filename>).  Red Hat Linux 7.1 and later uses the new xinetd.d structure, in this
-case you need to change the lines in <filename>/etc/xinetd.d/telnet</filename> and
-<filename>/etc/xinetd.d/wu-ftp</filename> from:
+Winbindを認証サービスに使用できるように手を加えたその他のサービスは、コンソール上の通常
+ログイン(またはターミナルセッション)、telnetログイン、それにftpサービスである。これらの
+サービスを有効にするには、まず、<filename>/etc/xinetd.d</filename>(または
+<filename>/etc/inetd.conf</filename>)の中のエントリを変更する必要があるかも知れない。
+Red Hat Linux 7.1以降のバージョンは、新しい xinetd.d 構造を使用しており、この場合、
+<filename>/etc/xinetd.d/telnet</filename>と<filename>/etc/xinetd.d/wu-ftp</filename>
+の中の文字列を
 <programlisting>
 	enable = no
 </programlisting>
-to
+から
 <programlisting>
 	enable = yes
-</programlisting></para>
+</programlisting>
+に変更する必要がある。</para>
 
 <para>
-<indexterm><primary>ftp services</primary></indexterm>
-<indexterm><primary>home directory template</primary></indexterm>
-<indexterm><primary>domain users</primary></indexterm>
-For ftp services to work properly, you will also need to either have individual directories for the domain
-users already present on the server or change the home directory template to a general directory for all
-domain users. These can be easily set using the &smb.conf; global entry <smbconfoption name="template
-homedir"/>.
+<indexterm><primary>ftpサービス</primary></indexterm>
+<indexterm><primary>ホームディレクトリのテンプレート</primary></indexterm>
+<indexterm><primary>ドメインユーザ</primary></indexterm>
+ftpサービスを動作させるためには、既にサーバ上に存在するドメインユーザのために、個別に
+ディレクトリを用意するか、ホームディレクトリを全ドメインユーザ用の汎用ディレクトリに
+変更する必要がある。これらは、&smb.conf;の<smbconfoption name="template homedir"/>
+グローバルエントリで簡単に設定できる。
 </para>
 
 <note><para>
 <indexterm><primary>pam_mkhomedir</primary></indexterm>
-The directory in <smbconfoption name="template homedir"/> is not created automatically! Use pam_mkhomedir or
-pre-create the directories of users to make sure users can log in on UNIX with their own home directory.
+<smbconfoption name="template homedir"/>中のディレクトリは、自動的には生成されない!
+pam_mkhomedirか、あらかじめ当該ユーザに対してディレクトリを作成しておくようにして、
+固有のホームディレクトリを使ってUNIXにログインできるようにすること。
 </para></note>
 
 <para>
 <indexterm><primary>/etc/pam.d/ftp</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>ftp access</primary></indexterm>
-The <filename>/etc/pam.d/ftp</filename> file can be changed to allow Winbind ftp access in a manner similar to
-the samba file. My <filename>/etc/pam.d/ftp</filename> file was changed to look like this:
+<filename>/etc/pam.d/ftp</filename>ファイルは、samba(訳注smb.conf)ファイルと似たような
+形で、Winbindのftpアクセスを許可するように変更できる。変更後の
+<filename>/etc/pam.d/ftp</filename>ファイルは以下の通り:
 <programlisting>
 auth       required     /lib/security/pam_listfile.so item=user sense=deny \
 	 file=/etc/ftpusers onerr=succeed
@@ -1270,7 +1276,7 @@ session    required     /lib/security/pam_stack.so service=system-auth
 
 <para>
 <indexterm><primary>/etc/pam.d/login</primary></indexterm>
-The <filename>/etc/pam.d/login</filename> file can be changed in nearly the same way. It now looks like this:
+<filename>/etc/pam.d/login</filename>ファイルもほぼ同様に変更できる。以下のようになる:
 <programlisting>
 auth       required     /lib/security/pam_securetty.so
 auth       sufficient   /lib/security/pam_winbind.so
@@ -1286,26 +1292,28 @@ session    optional     /lib/security/pam_console.so
 <indexterm><primary>pam_winbind.so</primary></indexterm>
 <indexterm><primary>pam_securetty.so</primary></indexterm>
 <indexterm><primary>pam_unix.so</primary></indexterm>
-In this case, I added the <programlisting>auth sufficient /lib/security/pam_winbind.so</programlisting> lines
-as before, but also added the <programlisting>required pam_securetty.so</programlisting> above it to disallow
-root logins over the network. I also added a <programlisting>sufficient /lib/security/pam_unix.so
-use_first_pass</programlisting> line after the <command>winbind.so</command> line to get rid of annoying
-double prompts for passwords.
+この場合、前述のように
+<programlisting>auth sufficient /lib/security/pam_winbind.so</programlisting>
+を追加するが、それに加え
+<programlisting>required pam_securetty.so</programlisting>
+を加えることにより、ネットワーク上からのrootのログインを不許可とした。また、
+<programlisting>sufficient /lib/security/pam_unix.so use_first_pass</programlisting>
+行を<command>winbind.so</command>行の後に加え、パスワードからのプロンプトが二重表示される
+問題を解消した。
 </para>
 
 </sect4>
 
 <sect4>
-<title>Solaris-Specific Configuration</title>
+<title>Solaris固有の設定</title>
 
 <para>
 <indexterm><primary>/etc/pam.conf</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-The <filename>/etc/pam.conf</filename> needs to be changed. I changed this file so my Domain
-users can log on both locally as well as with telnet. The following are the changes
-that I made. You can customize the <filename>pam.conf</filename> file as per your requirements, but
-be sure of those changes because in the worst case it will leave your system
-nearly impossible to boot.
+<filename>/etc/pam.conf</filename>の変更が必要である。ドメインユーザがローカルにも
+telnetでもログオンできるように変更する。以下が変更内容である。<filename>pam.conf</filename>
+を要件に沿ってカスタマイズしてもよいが、最悪の場合、システムがほとんど起動不能になることが
+あるので、変更内容に十分自信がある場合のみ変更すること。
 <programlisting>
 #
 #ident "@(#)pam.conf 1.14 99/09/16 SMI"
@@ -1313,9 +1321,9 @@ nearly impossible to boot.
 # Copyright (c) 1996-1999, Sun Microsystems, Inc.
 # All Rights Reserved.
 #
-# PAM configuration
+# PAMの設定
 #
-# Authentication management
+# 認証管理
 #
 login   auth required   /usr/lib/security/pam_winbind.so
 login auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
@@ -1332,7 +1340,7 @@ rsh auth required /usr/lib/security/$ISA/pam_rhosts_auth.so.1
 other   auth sufficient /usr/lib/security/pam_winbind.so
 other auth required /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
 #
-# Account management
+# アカウント管理
 #
 login   account sufficient      /usr/lib/security/pam_winbind.so
 login account requisite /usr/lib/security/$ISA/pam_roles.so.1
@@ -1346,17 +1354,17 @@ other   account sufficient      /usr/lib/security/pam_winbind.so
 other account requisite /usr/lib/security/$ISA/pam_roles.so.1
 other account required /usr/lib/security/$ISA/pam_unix.so.1
 #
-# Session management
+# セッション管理
 #
 other session required /usr/lib/security/$ISA/pam_unix.so.1
 #
-# Password management
+# パスワード管理
 #
 #other   password sufficient     /usr/lib/security/pam_winbind.so
 other password required /usr/lib/security/$ISA/pam_unix.so.1
 dtsession auth required /usr/lib/security/$ISA/pam_unix.so.1
 #
-# Support for Kerberos V5 authentication (uncomment to use Kerberos)
+# Kerberos V5 認証のサポート(Kerberosを使用するにはアンコメントすること)
 #
 #rlogin auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
 #login auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
