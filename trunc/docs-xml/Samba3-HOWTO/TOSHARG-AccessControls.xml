@@ -104,45 +104,45 @@ UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境
 
 			<para>
 <indexterm><primary>share settings</primary></indexterm>
-			In configuring share settings and controls in the &smb.conf; file,
-			the network administrator can exercise overrides to native file
-			system permissions and behaviors. This can be handy and convenient
-			to effect behavior that is more like what MS Windows NT users expect,
-			but it is seldom the <emphasis>best</emphasis> way to achieve this.
-			The basic options and techniques are described herein.
+			共有の設定と制御を&smb.conf;ファイル中で設定するとき、ネットワーク
+			管理者は本来のファイルシステムのパーミッションと動作を上書き設定
+			することが出来る。これはMicrosoft Windows NTユーザがより期待する
+			ような動作を引き起こすために有用かつ便利であるが、それに到達する
+			<emphasis>最も良い</emphasis>方法は滅多にない。基本的なオプションと
+			テクニックはここで説明されている。
 			</para>
 		</listitem>
 
 		<listitem><para>
-		<emphasis>Samba Share ACLs</emphasis>
-		<indexterm><primary>ACLs</primary><secondary>share</secondary></indexterm>
+		<emphasis>Sambaの共有のACL</emphasis>
+		<indexterm><primary>ACLs</primary><secondary>共有</secondary></indexterm>
 		</para>
 
 			<para>
-<indexterm><primary>ACLs on shares</primary></indexterm>
-			Just as it is possible in MS Windows NT to set ACLs on shares
-			themselves, so it is possible to do in Samba.
-			Few people make use of this facility, yet it remains one of the
-			easiest ways to affect access controls (restrictions) and can often
-			do so with minimum invasiveness compared with other methods.
+<indexterm><primary>共有のACL</primary></indexterm>
+			共有それ自身に対するACLの設定がMicrosoft Windows NTで可能なように、
+			Sambaでもそれは可能である。この機能を使う人は少ないが、アクセス
+			制御(制限)に影響を与えるために簡便な方法の一つとして残っている
+			ことと、他の方法と比較して最小の影響でしばしばそれを行うことが
+			できる。
 			</para>
 		</listitem>
 
 		<listitem><para>
 				<indexterm><primary>ACLs</primary><secondary>POSIX</secondary></indexterm>
 				<indexterm><primary>ACLs</primary><secondary>Windows</secondary></indexterm>
-		<emphasis>MS Windows ACLs through UNIX POSIX ACLs</emphasis>
+		<emphasis>UNIX POSIX ACLを経由したMicrosoft Windows ACL</emphasis>
 		</para>
 
 			<para>
 <indexterm><primary>native ACLs</primary></indexterm>
-			The use of POSIX ACLs on UNIX/Linux is possible only if the underlying
-			operating system supports them. If not, then this option will not be
-			available to you. Current UNIX technology platforms have native support
-			for POSIX ACLs. There are patches for the Linux kernel that also provide
-			this support. Sadly, few Linux platforms ship today with native ACLs and
-			extended attributes enabled. This chapter has pertinent information
-			for users of platforms that support them.
+			UNIX/Linux上でPOSIX ACLを使う場合は、ベースとなるOSがそれをサポート
+			している場合にのみ可能である。もしもそうでない場合、このオプションは
+			有効ではない。現在のUNIX技術基盤ではPOSIX ACLを標準サポートしている。
+			このサポートを提供するLinux kernelへのパッチも存在する。残念なことに、
+			Linuxプラットフォームの一部のみがネイティブなACLと拡張属性を有効にして
+			現時点で提供を行っている。この節では、それをサポートしているプラット
+			フォームのユーザに対する関連情報が記述されている。
 			</para>
 		</listitem>
 	</itemizedlist>
@@ -150,31 +150,33 @@ UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境
 </sect1>
 
 <sect1>
-<title>File System Access Controls</title>
+<title>ファイルシステムのアクセス制御</title>
 
 <para>
-Perhaps the most important recognition to be made is the simple fact that MS Windows NT4/200x/XP
-implement a totally divergent file system technology from what is provided in the UNIX operating system
-environment. First we consider what the most significant differences are, then we look
-at how Samba helps to bridge the differences.
+おそらく、最も重要な認識される点は、UNIX OS環境で提供されているものと、Microsoft Windows NT4/200x/XP
+におけるフィルシステムの技術の実装が完全に異なるという単純な事実である。最初に最も
+有意義な違いが何かを考え、次にその違いを乗り越えるためにSambaが何をしているかを見てみる
+ことにする。
 </para>
 
 	<sect2>
-	<title>MS Windows NTFS Comparison with UNIX File Systems</title>
+	<title>Microsoft Windows NTFSとUNIXファイルシステムとの比較</title>
 
 	<para>
 	<indexterm><primary>NTFS</primary></indexterm>
-	<indexterm><primary>File System</primary></indexterm>
-	<indexterm><primary>File System</primary><secondary>UNIX</secondary></indexterm>
-	<indexterm><primary>File System</primary><secondary>Windows</secondary></indexterm>
-	Samba operates on top of the UNIX file system. This means it is subject to UNIX file system conventions
-	and permissions. It also means that if the MS Windows networking environment requires file system
-	behavior, that differs from UNIX file system behavior then somehow Samba is responsible for emulating
-	that in a transparent and consistent manner.
+	<indexterm><primary>ファイルシステム</primary></indexterm>
+	<indexterm><primary>ファイルシステム</primary><secondary>UNIX</secondary></indexterm>
+	<indexterm><primary>ファイルシステム</primary><secondary>Windows</secondary></indexterm>
+	SambaはUNIXファイルシステムの上で動作する。これは、UNIXファイルシステムの
+	取り決めとパーミッションの適用を受けることを意味する。また、もしも
+	Microsoft Windowsネットワーク環境がファイルシステムの動作を要求するならば、
+	それはUNIXファイルシステムの動作とは異なり、何らかの方法でSambaは透過的かつ
+	一貫した方法でエミュレートを行う。
 	</para>
 
 	<para>
-	It is good news that Samba does this to a large extent, and on top of that, provides a high degree
+	
+It is good news that Samba does this to a large extent, and on top of that, provides a high degree
 	of optional configuration to override the default behavior. We look at some of these overrides,
 	but for the greater part we stay within the bounds of default behavior. Those wishing to explore
 	the depths of control ability should review the &smb.conf; man page.
