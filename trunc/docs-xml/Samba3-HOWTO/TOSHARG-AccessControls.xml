@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 
 <chapter id="AccessControls">
@@ -8,97 +8,98 @@
 	<author>&person.jelmer;<contrib>drawing</contrib></author>
 	<pubdate>May 10, 2003</pubdate>
 </chapterinfo>
-<title>File, Directory, and Share Access Controls</title>
+<title>ファイル、ディレクトリと共有のアクセス制御</title>
 
 <para>
 <indexterm><primary>ACLs</primary></indexterm>
-<indexterm><primary>share</primary></indexterm>
-<indexterm><primary>network access controls</primary></indexterm>
-<indexterm><primary>unauthorized access</primary></indexterm>
-Advanced MS Windows users are frequently perplexed when file, directory, and share manipulation of
-resources shared via Samba do not behave in the manner they might expect. MS Windows network
-administrators are often confused regarding network access controls and how to
-provide users with the access they need while protecting resources from unauthorized access.
+<indexterm><primary>共有</primary></indexterm>
+<indexterm><primary>ネットワークアクセス制御</primary></indexterm>
+<indexterm><primary>未認証のアクセス</primary></indexterm>
+慣れたMicrosoft Windowsユーザは、期待しているようにはSamba経由で共有されている、
+ファイル、ディレクトリと共有リソース操作が動かないことに、しばしば当惑する。
+Microsoft Windowsネットワーク管理者は、ネットワークのアクセス制御と、未認証の
+アクセスからリソースを保護する時に、ユーザが必要とするアクセスを提供する方法
+についてしばしば当惑している。
 </para>
 
 <para>
-<indexterm><primary>file access permissions</primary></indexterm>
-<indexterm><primary>directory access permissions</primary></indexterm>
-Many UNIX administrators are unfamiliar with the MS Windows environment and in particular
-have difficulty in visualizing what the MS Windows user wishes to achieve in attempts to set file
-and directory access permissions. 
+<indexterm><primary>ファイルアクセスのパーミッション</primary></indexterm>
+<indexterm><primary>ディレクトリアクセスのパーミッション</primary></indexterm>
+多くのUNIX管理者は、Microsoft Windows環境には慣れておらず、ファイルとディレクトリの
+アクセスパーミッションを設定しようとするMicrosoft Windowsユーザが望むことを図式化する
+ことに困難が生じている。
 </para>
 
 <para>
 <indexterm><primary>bridge</primary></indexterm>
-<indexterm><primary>directory controls</primary></indexterm>
-<indexterm><primary>directory permissions</primary></indexterm>
+<indexterm><primary>ディレクトリ制御</primary></indexterm>
+<indexterm><primary>ディレクトリのパーミッション</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-The problem lies in the differences in how file and directory permissions and controls work
-between the two environments. This difference is one that Samba cannot completely hide, even
-though it does try to bridge the chasm to a degree.
+問題は、2つの環境の間で、ファイルとディレクトリのパーミッションと制御がどのように動くかの
+違いにある。この違いは、その大きな違いに橋を架けようとしても、Sambaが完全にはそれを
+隠せないということにある。
 </para>
 
 <para>
-<indexterm><primary>Extended Attributes</primary></indexterm>
+<indexterm><primary>拡張属性</primary></indexterm>
 <indexterm><primary>ACLs</primary><secondary>POSIX</secondary></indexterm>
-<indexterm><primary>Access Control List</primary></indexterm>
-<indexterm><primary>commercial Linux products</primary></indexterm>
-POSIX Access Control List technology has been available (along with extended attributes)
-for UNIX for many years, yet there is little evidence today of any significant use. This
-explains to some extent the slow adoption of ACLs into commercial Linux products. MS Windows
-administrators are astounded at this, given that ACLs were a foundational capability of the now
-decade-old MS Windows NT operating system.
+<indexterm><primary>アクセスコントロールリスト</primary></indexterm>
+<indexterm><primary>商用Linux製品</primary></indexterm>
+POSIX ACL技術は、現在有意義な使用の例があまりないにもかかわらず、長い期間UNIX用に
+(拡張属性と共に)提供されてきている。これは、商用Linux製品で、ACLの適用が遅い理由
+について、ある程度の説明になる。Microsoft Windows管理者にとっては、Microsoft Windows NT
+において10年以上も前から基本的な機能としてACLが提供されていることを鑑みると、
+このことは驚くべきことである。
 </para>
 
 <para>
-<indexterm><primary>network administrator</primary></indexterm>
-The purpose of this chapter is to present each of the points of control that are possible with
-Samba-3 in the hope that this will help the network administrator to find the optimum method
-for delivering the best environment for MS Windows desktop users.
+<indexterm><primary>ネットワーク管理者</primary></indexterm>
+この章の目的は、Microsoft Windowsデスクトップユーザに対して、最も良い環境を提供する
+ための、最適の方法を見つけるためにネットワーク管理者を手助けする、Samba-3で可能な、
+各制御の要点を提供することである。
 </para>
 
 <para>
-<indexterm><primary>interoperability</primary></indexterm>
-<indexterm><primary>data interchange</primary></indexterm>
-This is an opportune point to mention that Samba was created to provide a means of interoperability
-and interchange of data between differing operating environments. Samba has no intent to change
-UNIX/Linux into a platform like MS Windows. Instead the purpose was and is to provide a sufficient
-level of exchange of data between the two environments. What is available today extends well
-beyond early plans and expectations, yet the gap continues to shrink.
+<indexterm><primary>相互運用性</primary></indexterm>
+<indexterm><primary>データの交換</primary></indexterm>
+これは、異なったOS環境での相互運用性とデータの交換を提供するためにSambaが作成した
+ことを説明するのに良い機会である。SambaはMicrosoft Windowsのようなプラットフォームに
+UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境間で、十分なレベルでデータの
+交換を提供することを目的としている。現在利用可能なものは、当初の計画と希望から大きく
+拡大していているが、それでもギャップは縮み続けている。
 </para>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 	<para>
-	Samba offers much flexibility in file system access management. These are the key access control
-	facilities present in Samba today:
+	Sambaはファイルシステムアクセス管理に多くの自由度を提供する。現在のSambaでは
+	キーとなるアクセス制御機能が提供されている:
 	</para>
 
 	<itemizedlist>
-	<title>Samba Access Control Facilities</title>
+	<title>Sambaアクセス制御機能</title>
 		<listitem><para>
-		<indexterm><primary>permissions</primary><secondary>UNIX file and directory</secondary></indexterm>
-		<emphasis>UNIX File and Directory Permissions</emphasis>
+		<indexterm><primary>パーミッション</primary><secondary>UNIXのファイルとディレクトリ</secondary></indexterm>
+		<emphasis>UNIXのファイルとディレクトリのパーミッション</emphasis>
 		</para>
 
 			<para>
-<indexterm><primary>UNIX file system access controls</primary></indexterm>
-<indexterm><primary>access controls</primary></indexterm>
-<indexterm><primary>permissions and controls</primary></indexterm>
-			Samba honors and implements UNIX file system access controls. Users
-			who access a Samba server will do so as a particular MS Windows user.
-			This information is passed to the Samba server as part of the logon or
-			connection setup process. Samba uses this user identity to validate
-			whether or not the user should be given access to file system resources
-			(files and directories). This chapter provides an overview for those
-			to whom the UNIX permissions and controls are a little strange or unknown.
+<indexterm><primary>UNIXのファイルシステムアクセス制御</primary></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
+<indexterm><primary>パーミッションと制御</primary></indexterm>
+			SambaはUNIXファイルシステム制御を実装し、それを使う。Samba
+			サーバにアクセスするユーザは特定のMicrosoft Windowsユーザとして
+			そうする。この情報はログオンか接続のセットアップ手順の一部として
+			Sambaサーバに渡される。Sambaはこのユーザ識別情報を、ファイル
+			システムリソース(ファイルとディレクトリ)へのアクセス許可を与える
+			かどうかを検証するために使う。この章では、UNIXパーミッションと
+			制御が少々奇妙か未知な人について、概要を提供する。
 			</para>
 		</listitem>
 
 		<listitem><para>
-		<emphasis>Samba Share Definitions</emphasis>
+		<emphasis>Sambaの共有定義</emphasis>
 		</para>
 
 			<para>
