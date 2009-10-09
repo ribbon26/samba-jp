@@ -232,97 +232,106 @@ UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境
 		</screen></para>
 
 		<para>
-		So clearly, in an MS Windows file namespace these three files cannot co-exist, but in UNIX
-		they can.
+		明らかに、Microsoft Windowsファイルの名前空間ではこれらの3つのファイルは
+		同時に存在できないが、UNIXではできる。
 		</para>
 
 		<para>
-		So what should Samba do if all three are present? That which is lexically first will be
-		accessible to MS Windows users; the others are invisible and unaccessible &smbmdash; any
-		other solution would be suicidal. The Windows client will ask for a case-insensitive file
-		lookup, and that is the reason for which Samba must offer a consistent selection in the
-		event that the UNIX directory contains multiple files that would match a case insensitive
-		file listing.
+		もしも上記3つがすべて存在していたときにSambaは何をすべきか?
+		辞書的に最初のものがMicrosoft Windowsユーザから見えるようにすることで
+		ある。残りは見えず、アクセスも出来ない。&smbmdash;それ以外の解は自殺的
+		行為である。Windowsクライアントは大文字小文字を区別しないファイル検索を
+		要求するため、大文字小文字を区別しないファイルの一覧に一致する、
+		複数のファイルがあるUNIXディレクトリの場合、Sambaは一貫した選択方法を
+		提供しなければならないということになる。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>Directory Separators</term>
+		<term>ディレクトリの区切り文字</term>
 		<listitem><para>
-		<indexterm><primary>Directory Separators</primary></indexterm>
-		MS Windows and DOS use the backslash <constant>\</constant> as a directory delimiter, and UNIX uses
-		the forward-slash <constant>/</constant> as its directory delimiter. This is handled transparently by Samba.
+		<indexterm><primary>ディレクトリの区切り文字</primary></indexterm>
+		Microsoft Windows とDOSはディレクトリの区切り文字としてバックスラッシュ
+		<constant>\</constant>を使い、UNIXでは通常のスラッシュ<constant>/</constant>
+		をディレクトリの区切り文字として使う。これはSambaによって透過的に扱われる。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>Drive Identification</term>
+		<term>ドライブの識別</term>
 		<listitem><para>
-		<indexterm><primary>Drive Identification</primary></indexterm>
-		MS Windows products support a notion of drive letters, like <command>C:</command>, to represent
-		disk partitions. UNIX has no concept of separate identifiers for file partitions; each
-		such file system is mounted to become part of the overall directory tree.
-		The UNIX directory tree begins at <constant>/</constant> just as the root of a DOS drive is specified as
-		<constant>C:\</constant>.
+		<indexterm><primary>ドライブの識別</primary></indexterm>
+		Microsoft Windows製品は、ディレクトリのパーティションを表現するために、
+		<command>C:</command>のようなドライブレターの概念を持つ。UNIXはファイルの
+		パーティションに対して分離された識別子を持つという概念がない。そのような
+		各ファイルシステムはディレクトリツリー全体の一部としてマウントされる。
+		UNIXディレクトリツリーは、<constant>C:\</constant>のような、DOSの
+		ドライブのrootを指定するような形で、<constant>/</constant>から始まる。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>File Naming Conventions</term>
+		<term>ファイル名に関する規則</term>
 		<listitem><para>
-		<indexterm><primary>File Naming Conventions</primary></indexterm>
-		MS Windows generally never experiences file names that begin with a dot (<constant>.</constant>), while in UNIX these
-		are commonly found in a user's home directory. Files that begin with a dot (<constant>.</constant>) are typically
-		startup files for various UNIX applications, or they may be files that contain
-		startup configuration data.
+		<indexterm><primary>ファイル名に関する規則</primary></indexterm>
+		Microsoft Windowsは一般的に先頭がドット(<constant>.</constant>)で始まる
+		ファイル名は使わないがUNIXの場合、はユーザのホームディレクトリ中では
+		当たり前のように使われている。ドット(<constant>.</constant>)で始まる
+		ファイルは通常多くのUNIXアプリケーションの起動ファイルか、スタートアップ
+		設定データを含むファイルである。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>Links and Short-Cuts</term>
+		<term>リンクとショートカット</term>
 		<listitem><para>
-		<indexterm><primary>Links</primary><secondary>hard</secondary></indexterm>
-		<indexterm><primary>Links</primary><secondary>soft</secondary></indexterm>
-		<indexterm><primary>Shortcuts</primary></indexterm>
-		MS Windows make use of <emphasis>links and shortcuts</emphasis> that are actually special types of files that will
-		redirect an attempt to execute the file to the real location of the file. UNIX knows of file and directory
-		links, but they are entirely different from what MS Windows users are used to.
+		<indexterm><primary>リンク</primary><secondary>hard</secondary></indexterm>
+		<indexterm><primary>リンク</primary><secondary>soft</secondary></indexterm>
+		<indexterm><primary>ショートカット</primary></indexterm>
+		Microsoft Windowsは、実際の位置にあるファイルに対してそのファイルを実行する
+		ためにリダイレクトを行う、特別なタイプのファイルとして振る舞う
+		<emphasis>リンクとショートカット</emphasis>を使う。UNIXでは、ファイルと
+		ディレクトリのリンクを使うが、それはMicrosoft Windowsユーザが使っているもの
+		とは全く異なる。
 		</para>
 
 		<para>
-		Symbolic links are files in UNIX that contain the actual location of the data (file or directory). An
-		operation (like read or write) will operate directly on the file referenced. Symbolic links are also
-		referred to as <quote>soft links.</quote> A hard link is something that MS Windows is not familiar with. It allows
-		one physical file to be known simultaneously by more than one file name.
+		シンボリックリンクは、UNIX中ではデータ(ファイル又はディレクトリ)の実際の
+		位置を含むファイルである。(読み出しあるいは書き込みのような)操作は参照
+		されたファイルに対して直接行われる。シンボリックリンクは
+		<quote>ソフトリンク</quote>としても参照される。ハードリンクはMicrosoft
+		Windowsではなじみのないものである。これは、1つの物理的なファイルを、複数の
+		ファイル名で同時に参照できるようにするものである。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
 
 	<para>
-	There are many other subtle differences that may cause the MS Windows administrator some temporary discomfort
-	in the process of becoming familiar with UNIX/Linux. These are best left for a text that is dedicated to the
-	purpose of UNIX/Linux training and education.
+	Microsoft Windows管理者が、UNIX/Linuxを理解するようになるプロセス中で、一時的に
+	若干当惑することを引き起こすかもしれな微妙な違いがある。それらは、UNIX/Linuxの
+	トレーニングと教育の目的としての専用のテキストを見ると良い。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Managing Directories</title>
+	<title>ディレクトリの管理</title>
 
 	<para>
 <indexterm><primary>create</primary></indexterm>
 <indexterm><primary>delete</primary></indexterm>
 <indexterm><primary>rename</primary></indexterm>
-	There are three basic operations for managing directories: <command>create</command>, <command>delete</command>,
-	<command>rename</command>. <link linkend="TOSH-Accesstbl">Managing Directories with UNIX and
-	Windows</link> compares the commands in Windows and UNIX that implement these operations.
+	ディレクトリ操作には3つの基本的な操作がある。それは<command>作成</command>,
+	<command>削除</command>,<command>改名</command>である。
+	<link linkend="TOSH-Accesstbl">UNIXとWindowsによるディレクトリの管理</link>
+	では、WindowsとUNIX中でのコマンドにおける、上記の操作の実装について比較している。
 	</para>
 
 	<table frame="all" id="TOSH-Accesstbl">
-		<title>Managing Directories with UNIX and Windows</title>
+		<title>UNIXとWindowsによるディレクトリの管理</title>
 		<tgroup align="center" cols="3">
 		<thead>
-		<row><entry>Action</entry><entry>MS Windows Command</entry><entry>UNIX Command</entry></row>
+		<row><entry>動作</entry><entry>Microsoft Windowsのコマンド</entry><entry>UNIXのコマンド</entry></row>
 		</thead>
 	
 		<tbody>
@@ -336,7 +345,7 @@ UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境
 	</sect2>
 
 	<sect2>
-	<title>File and Directory Access Control</title>
+	<title>ファイルとディレクトリのアクセス制御</title>
 
 	<para>
 	<indexterm><primary>ACLs</primary><secondary>File System</secondary></indexterm>
