@@ -348,17 +348,18 @@ UNIX/Linuxを変化させるつもりはない。その代わり、2つの環境
 	<title>ファイルとディレクトリのアクセス制御</title>
 
 	<para>
-	<indexterm><primary>ACLs</primary><secondary>File System</secondary></indexterm>
+	<indexterm><primary>ACLs</primary><secondary>ファイルシステム</secondary></indexterm>
 <indexterm><primary>POSIX ACLs</primary></indexterm>
 <indexterm><primary>EAs</primary></indexterm>
-	The network administrator is strongly advised to read basic UNIX training manuals and reference materials
-	regarding file and directory permissions maintenance. Much can be achieved with the basic UNIX permissions
-	without having to resort to more complex facilities like POSIX ACLs or extended attributes (EAs).
+	ネットワーク管理者は、ファイルとディレクトリのパーミッションのメンテナンスに
+	関連する、基本的なUNIX学習マニュアルとリファレンス資料を読むことを強く推奨する。
+	POSIX ACLや拡張属性(EA)のようなより複雑な機能に訴求しない基本的なUNIXの
+	パーミッションについて多くの説明がある。
 	</para>
 
 	<para>
-	UNIX/Linux file and directory access permissions involves setting three primary sets of data and one control set.
-	A UNIX file listing looks as follows:
+	UNIX/Linuxのファイルとディレクトリアクセスパーミッションは3つの主要なデータの設定と
+	1つの制御の設定がある。UNIXでのファイル一覧は下記のようになる:
 <screen>
 &prompt;<userinput>ls -la</userinput>
 total 632
@@ -379,23 +380,23 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 	</para>
 
 	<para>
-	The columns represent (from left to right) permissions, number of hard links to file, owner, group, size
-	(bytes), access date, time of last modification, and file name.
+	1行の中の各項目は(左から右に)パーミッション、ファイルのハードリンク数、所有者、
+	グループ、サイズ(バイト)、アクセス日付、最終更新日付とファイル名である。
 	</para>
 
 	<para>
-	An overview of the permissions field is shown in <link linkend="access1">Overview of UNIX permissions
-	field</link>.
+	パーミッション欄の概要は<link linkend="access1">UNIXパーミッション欄の概要</link>
+	にある。
 	</para>
 
 	<figure id="access1">
-		<title>Overview of UNIX permissions field.</title>
+		<title>UNIXパーミッション欄の概要</title>
 		<imagefile scale="40">access1</imagefile>
 	</figure>
 
 	<para>
-		Any bit flag may be unset. An unset bit flag is the equivalent of "cannot" and is represented
-		as a <quote>-</quote> character (see <link linkend="access2"/>)
+		どのビットフラグもOFFにできる。OFFになったフラグは"できない"と同値で、
+		<quote>-</quote>文字で表現される(<link linkend="access2"/>を参照)。
 <indexterm><primary>read</primary></indexterm>
 <indexterm><primary>write</primary></indexterm>
 <indexterm><primary>execute</primary></indexterm>
@@ -405,23 +406,23 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 	</para>
 
 <example id="access2">
-<title>Example File</title>
+<title>サンプルファイル</title>
 <programlisting>
--rwxr-x---   Means: 
- ^^^                The owner (user) can read, write, execute
-    ^^^             the group can read and execute
-       ^^^          everyone else cannot do anything with it.
+-rwxr-x---   意味: 
+ ^^^                所有者(ユーザ)はこのファイルを読み、書き、実行できる。
+    ^^^             グループに属したユーザは読み、実行できる。
+       ^^^          それ以外のユーザはこのファイルに対して何も出来ない。
 </programlisting>
 </example>
 
 
 	<para>
-<indexterm><primary>character device</primary></indexterm>
-<indexterm><primary>block device</primary></indexterm>
-<indexterm><primary>pipe device</primary></indexterm>
-<indexterm><primary>UNIX Domain Socket</primary></indexterm>
-	Additional possibilities in the [type] field are c = character device, b = block device, p = pipe device,
-	s = UNIX Domain Socket.
+<indexterm><primary>キャラクタデバイス</primary></indexterm>
+<indexterm><primary>ブロックデバイス</primary></indexterm>
+<indexterm><primary>パイプデバイス</primary></indexterm>
+<indexterm><primary>UNIX ドメインソケット</primary></indexterm>
+	[タイプ]フィールドにはさらに別の意味もあり、それは、c = キャラクタデバイス、
+	b = ブロックデバイス、p = パイプデバイス、s = UNIXドメインソケットである。
 	</para>
 
 	<para>
@@ -430,16 +431,17 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 <indexterm><primary>execute</primary></indexterm>
 <indexterm><primary>SGID</primary></indexterm>
 <indexterm><primary>SUID</primary></indexterm>
-	The letters <constant>rwxXst</constant> set permissions for the user, group, and others as read (r), write (w),
-	execute (or access for directories) (x), execute  only  if  the  file  is a directory or already has execute
-	permission for some user (X), set user (SUID) or group ID (SGID) on execution (s), sticky (t).
+	文字<constant>rwxXst</constant>はユーザ、グループとその他に対して、読み出し(r)、
+	書き込み(w)、実行(あるいはディレクトリへのアクセス許可) (x)、ファイルが
+	ディレクトリかすでにあるユーザに対して実行許可を与えられた場合に実行可能(X)、
+	実行時にset user ID (SUID)か set group ID (SGID) (s)かスティッキー(t)である。
 	</para>
 
 	<para>
-<indexterm><primary>sticky bit</primary></indexterm>
+<indexterm><primary>スティッキービット</primary></indexterm>
 <indexterm><primary>unlinked</primary></indexterm>
 <indexterm><primary>/tmp</primary></indexterm>
-<indexterm><primary>world-writable</primary></indexterm>
+<indexterm><primary>誰でも書き込み可能</primary></indexterm>
 	When the sticky bit is set on a directory, files in that directory may be unlinked (deleted) or renamed only by root or their owner. 
 	Without the sticky  bit, anyone able to write to the directory can delete or rename files. The sticky bit is commonly found on
 	directories, such as <filename>/tmp</filename>, that are world-writable.
