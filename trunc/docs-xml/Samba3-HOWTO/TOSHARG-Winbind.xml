@@ -92,7 +92,6 @@
 <indexterm><primary>idmap uid</primary></indexterm>
 <indexterm><primary>idmap gid</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
-<indexterm><primary>LDAP</primary></indexterm>
 		Winbindは、winbind_idmap.tdbと呼ばれるデータベースを維持し、その中に、
 		UNIX UID/GIDとNT SID間のマッピング情報を格納する。このマッピングは、
 		ローカルUID/GIDを持たないユーザまたはグループにのみ使用する。
@@ -614,8 +613,8 @@ Samba-3の最新バージョンには、正常に機能する winbindd daemonが
 <indexterm><primary>開発ライブラリ</primary></indexterm>
 ドメインユーザがSambaの共有やファイルにアクセスできるようにし、また使用するマシンが
 提供するその他のサービスにもアクセスできるようにするには、PAMを使用するマシン上で正しく
-設定しなければならない。Winbindモジュールをコンパイルするには、システム上に最低でもPAM
-開発ライブラリがインストールされていなければならない。
+設定しなければならない。Winbindモジュールをコンパイルするには、PAM開発ライブラリを
+インストールすべきである。
 <ulink url="http://www.kernel.org/pub/linux/libs/pam/">PAMのウェブサイト</ulink>を参照のこと。
 </para>
 </sect2>
@@ -996,9 +995,6 @@ CEO\Group Policy Creator Owners
 <indexterm><primary>/etc/init.d/smb</primary></indexterm>
 <indexterm><primary>/etc/init.d/samba</primary></indexterm>
 <indexterm><primary>/usr/local/samba/bin</primary></indexterm>
-<indexterm><primary></primary></indexterm>
-<indexterm><primary></primary></indexterm>
-<indexterm><primary></primary></indexterm>
 &winbindd; daemonは&smbd;と&nmbd; daemonが動き出してから起動する必要がある。これを
 行うには起動スクリプトを書き換える。それは、Red Hat Linuxでは
 <filename>/etc/init.d/samba</filename>にあり、Debian Linuxでは
@@ -1141,8 +1137,7 @@ Solarisでは、<filename>/etc/init.d/samba.server</filename>起動スクリプ�
 </programlisting></para>
 
 <para>
-繰り返すが、Winbind(訳注:原文ではSambaとなっている)をデュアルdaemonモードで動かしたい
-場合、上記の:
+繰り返すが、Winbindをデュアルdaemonモードで動かしたい場合、上記の:
 <programlisting>
 /usr/local/samba/sbin/winbindd
 </programlisting>
@@ -1260,8 +1255,8 @@ pam_mkhomedirか、あらかじめ当該ユーザに対してディレクトリ�
 <indexterm><primary>/etc/pam.d/ftp</primary></indexterm>
 <indexterm><primary>Winbind</primary></indexterm>
 <indexterm><primary>ftp access</primary></indexterm>
-<filename>/etc/pam.d/ftp</filename>ファイルは、samba(訳注smb.conf)ファイルと似たような
-形で、Winbindのftpアクセスを許可するように変更できる。変更後の
+<filename>/etc/pam.d/ftp</filename>ファイルは、<filename>/etc/pam.d/samba</filename>
+ファイルと似たような形で、Winbindのftpアクセスを許可するように変更できる。変更後の
 <filename>/etc/pam.d/ftp</filename>ファイルは以下の通り:
 <programlisting>
 auth       required     /lib/security/pam_listfile.so item=user sense=deny \
