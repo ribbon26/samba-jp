@@ -442,37 +442,47 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 <indexterm><primary>unlinked</primary></indexterm>
 <indexterm><primary>/tmp</primary></indexterm>
 <indexterm><primary>誰でも書き込み可能</primary></indexterm>
-	When the sticky bit is set on a directory, files in that directory may be unlinked (deleted) or renamed only by root or their owner. 
-	Without the sticky  bit, anyone able to write to the directory can delete or rename files. The sticky bit is commonly found on
-	directories, such as <filename>/tmp</filename>, that are world-writable.
+	スティッキービットがディレクトリ上に設定された場合、そのディレクトリ内にある
+	ファイルは、rootか所有者のみunlink(削除)か改名できる。スティッキービットがない
+	場合、書き込み可能なディレクトリでは、誰でもファイルの削除や改名が出来る。
+	スティッキービットは、誰でも書き込み可能な、<filename>/tmp</filename>のような
+	ディレクトリでは一般的に使われる。
 	</para>
 
 	<para>
 <indexterm><primary>write</primary></indexterm>
 <indexterm><primary>read</primary></indexterm>
-<indexterm><primary>setting up directories</primary></indexterm>
+<indexterm><primary>ディレクトリの設定</primary></indexterm>
 <indexterm><primary>set user id</primary><see>SUID</see></indexterm>
 <indexterm><primary>set group id</primary><see>SGID</see></indexterm>
-	When the set user or group ID bit (s) is set on a directory, then all files created within it will be owned by the user and/or
+	set user か group IDビットがディレクトリに設定された場合、その中に作成された
+	ファイルは、'set user または group'ビットを設定したユーザまたはグループによって
+	所有される。これは、特にあるファイルのプライマリグループが、すべてのそのような
+	ユーザが属しているグループでないユーザによって独占的に所有されることが好ましく
+	ない場合、ファイルへの読み書きを出来るようにすべきであるグループ中にすべての
+	ユーザがいることが望まれるディレクトリを設定する場合に役に立つ。
+When the set user or group ID bit (s) is set on a directory, then all files created within it will be owned by the user and/or
 	group whose `set user or group' bit is set. This can be helpful in setting up directories for which it is desired that
 	all users who are in a group should be able to write to and read from a file, particularly when it is undesirable for that file
 	to be exclusively owned by a user whose primary group is not the group that all such users belong to.
 	</para>
 
 	<para>
-	When a directory is set <constant>d-wx--x---</constant>, the owner can read and create (write) files in it, but because
-	the (r) read flags are not set, files cannot be listed (seen) in the directory by anyone. The group can read files in the
-	directory but cannot create new files. If files in the directory are set to be readable and writable for the group, then
-	group members will be able to write to (or delete) them.
+	ディレクトリが<constant>d-wx--x---</constant>に設定された時、所有者はその中の
+	ファイルを読んだり作成(書き込み)出来るが、読み出し(r)フラグが設定されていない
+	ので、だれも、ファイルの一覧を表示(見る)事が出来ない。グループに属するユーザは
+	そのディレクトリ中のファイルを読めるが新しいファイルは作成できない。もしも、
+	ディレクトリ中のファイルがグループに対して読み書き可能なように設定された場合、
+	グループメンバはそれらに書き込み(または削除)ができる。
 	</para>
 
 	<sect3>
-	<title>Protecting Directories and Files from Deletion</title>
+	<title>ディレクトリとファイルの削除操作からの保護</title>
 
 	<para>
-<indexterm><primary>protect files</primary></indexterm>
-<indexterm><primary>protect directories</primary></indexterm>
-<indexterm><primary>access controls</primary></indexterm>
+<indexterm><primary>ファイルの保護</primary></indexterm>
+<indexterm><primary>ディレクトリの保護</primary></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
 <indexterm><primary>capability to delete</primary></indexterm>
 	People have asked on the Samba mailing list how is it possible to protect files or directories from deletion by users.
 	For example, Windows NT/2K/XP provides the capacity to set access controls on a directory into which people can
