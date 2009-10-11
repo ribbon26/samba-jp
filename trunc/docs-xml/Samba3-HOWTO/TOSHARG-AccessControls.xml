@@ -481,28 +481,31 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 <indexterm><primary>ディレクトリの保護</primary></indexterm>
 <indexterm><primary>アクセス制御</primary></indexterm>
 <indexterm><primary>capability to delete</primary></indexterm>
-	People have asked on the Samba mailing list how is it possible to protect files or directories from deletion by users.
-	For example, Windows NT/2K/XP provides the capacity to set access controls on a directory into which people can
-	write files but not delete them. It is possible to set an ACL on a Windows file that permits the file to be written to
-	but not deleted. Such concepts are foreign to the UNIX operating system file space. Within the UNIX file system
-	anyone who has the ability to create a file can write to it. Anyone who has write permission on the
-	directory that contains a file and has write permission for it has the capability to delete it.
+	どのように、ユーザの削除操作から、ファイルやディレクトリを保護したらよいか、
+	という事についてSambaメーリングリストに質問が来ることがある。例えば、Windows NT/2K/XP
+	は、ディレクトリ配下に、ファイルを書くことは出来るが削除できないというアクセス制御を
+	設定する機能がある。これは、ファイルに書き込みは出来るが、削除は出来ないというACLを
+	Windows上で設定することで可能になる。このような考え方はUNIX OSファイル空間ではない。
+	UNIXファイルシステムでは、ファイルを作成出来るユーザはファイルに書き込みが出来る。
+	ファイルがあるディレクトリへの書き込み権があり、ファイルへの書き込み権があるユーザは
+	それを削除できてしまう。
 	</para>
 
 	<para>
-<indexterm><primary>directory permissions</primary></indexterm>
-<indexterm><primary>delete a file</primary></indexterm>
-<indexterm><primary>write access</primary></indexterm>
-	For the record, in the UNIX environment the ability to delete a file is controlled by the permissions on
-	the directory that the file is in. In other words, a user can delete a file in a directory to which that
-	user has write access, even if that user does not own the file.
+<indexterm><primary>ディレクトリのパーミッション</primary></indexterm>
+<indexterm><primary>ファイルの削除</primary></indexterm>
+<indexterm><primary>書き込みアクセス</primary></indexterm>
+	確認ではあるが、UNIX環境では、ファイルの削除はそのファイルがいるディレクトリの
+	パーミッションによって制御される。別の言い方をすると、対象となるファイルの
+	所有者ではなくても、書き込み権があるユーザは、ディレクトリ中のファイルを
+	削除できる。
 	</para>
 	
 	<para>
 <indexterm><primary>file system capabilities</primary></indexterm>
-<indexterm><primary>inheritance</primary></indexterm>
+<indexterm><primary>継承</primary></indexterm>
 <indexterm><primary>POSIX ACLs</primary></indexterm>
-<indexterm><primary>extended attributes</primary></indexterm>
+<indexterm><primary>拡張属性</primary></indexterm>
 	Of necessity, Samba is subject to the file system semantics of the host operating system. Samba is therefore
 	limited in the file system capabilities that can be made available through Windows ACLs, and therefore performs
 	a "best fit" translation to POSIX ACLs. Some UNIX file systems do, however support, a feature known
