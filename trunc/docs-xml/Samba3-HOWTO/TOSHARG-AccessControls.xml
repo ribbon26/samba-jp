@@ -506,61 +506,69 @@ drwsrwsrwx    2 maryo   gnomes       48 2003-05-12 22:29 muchado08
 <indexterm><primary>継承</primary></indexterm>
 <indexterm><primary>POSIX ACLs</primary></indexterm>
 <indexterm><primary>拡張属性</primary></indexterm>
-	Of necessity, Samba is subject to the file system semantics of the host operating system. Samba is therefore
-	limited in the file system capabilities that can be made available through Windows ACLs, and therefore performs
-	a "best fit" translation to POSIX ACLs. Some UNIX file systems do, however support, a feature known
-	as extended attributes. Only the Windows concept of <emphasis>inheritance</emphasis> is implemented by Samba through
-	the appropriate extended attribute.
+	必要に応じて、SambaはホストOSのファイルシステムの構造を受け取る。Sambaは
+	Windows ACLを有効にすることについてと"最も最適な"POSIX ACLへの変換実行に
+	ついては、ファイルシステムの能力に制限される。いくつかのUNIXファイルシステム
+	では、拡張属性と呼ばれている機能をサポートしている。Windowsでの
+	<emphasis>継承</emphasis>という概念のみ、適切な拡張属性を使ってSambaは
+	実装している。
 	</para>	
 
 	<para>
-<indexterm><primary>extended attributes</primary></indexterm>
+<indexterm><primary>拡張属性</primary></indexterm>
 <indexterm><primary>immutible</primary></indexterm>
 <indexterm><primary>chattr</primary></indexterm>
 <indexterm><primary>CAP_LINUX_IMMUTABLE</primary></indexterm>
-	The specific semantics of the extended attributes are not consistent across UNIX and UNIX-like systems such as Linux.
-	For example, it is possible on some implementations of the extended attributes to set a flag that prevents the directory
-	or file from being deleted. The extended attribute that may achieve this is called the <constant>immutible</constant> bit.
-	Unfortunately, the implementation of the immutible flag is NOT consistent with published documentation. For example, the
-	man page for the <command>chattr</command> on SUSE Linux 9.2 says:
+	拡張属性の特定の動作は、UNIXと例えばLinuxのようなUNIX風のシステム全体には
+	一貫していない。例えば、ディレクトリやファイルを削除操作から防ぐためのフラグを
+	セットすることは、拡張属性の特定の実装では可能である。これを達成する拡張属性は
+	<constant>immutible</constant>ビットと呼ばれている。残念なことに、immutible
+	フラグの実装は公開された文書とは一致していない。たとえば、SuSE Linux 9.2上の
+	<command>chattr</command>のマニュアルには:
 <screen>
 A file with the i attribute cannot be modified: it cannot be deleted
 or renamed, no link can be created to this file and no data can be
 written to the file. Only the superuser or a process possessing the
 CAP_LINUX_IMMUTABLE capability can set or clear this attribute.
+(訳: i 属性を持つファイルは変更できない:削除も改名もこのファイルへの
+リンク作成も出来ないし、このファイルへの書き込みも出来ない。スーパー
+ユーザかCAP_LINUX_IMMUTABLE機能を所有するプロセスがこの属性を設定
+および削除できる)。
+
 </screen>
-	A simple test can be done to check if the immutible flag is supported on files in the file system of the Samba host
-	server.
+	immutible flag が、Sambaが動いているファイルシステム上でサポートされているか、
+	簡単なテストは以下のように出来る。
 	</para>
 
 	<procedure>
-	<title>Test for File Immutibility Support</title>
+	<title>ファイルの Immutibilityサポートのテスト</title>
 
 	<step><para>
-	Create a file called <filename>filename</filename>.
+	<filename>filename</filename>という名前のファイルを作成。
 	</para></step>
 
 	<step><para>
-	Login as the <constant>root</constant> user, then set the immutibile flag on a test file as follows:
+	<constant>root</constant>ユーザとしてログインし、以下のようにimmutibileフラグをテストファイルに設定:
 <screen>
 &rootprompt; chattr +i `filename'
 </screen>
 	</para></step>
 
 	<step><para>
-	Login as the user who owns the file (not root) and attempt to remove the file as follows:
+	ファイルを所有しているユーザ(非root)でログインし、以下のようにしてファイル削除を試みてみる:
 <screen>
 mystic:/home/hannibal > rm filename
 </screen>
-	It will not be possible to delete the file if the immutible flag is correctly honored.
+	immutibleが正しく効いているならばファイル削除は出来なくなっている。
 	</para></step>
 	</procedure>
 
 	<para>
-	On operating systems and file system types that support the immutible bit, it is possible to create directories
-	that cannot be deleted. Check the man page on your particular host system to determine whether or not
-	immutable directories are writable. If they are not, then the entire directory and its contents will effectively
-	be protected from writing (file creation also) and deletion.
+	immutible bitをサポートしているファイルシステムがあるOS上では、ディレクトリを
+	作成できるが削除できないようにするのは可能である。immutableディレクトリが書き込み
+	可能かどうかを、そのホストシステム上のマニュアルページでチェックすること。
+	もしも出来なければ、ディレクトリ全体とその内容は、書き込み(ファイル作成も)と
+	削除から効果的に保護される。
 	</para>
 
 	</sect3>
@@ -570,46 +578,50 @@ mystic:/home/hannibal > rm filename
 </sect1>
 
 <sect1>
-<title>Share Definition Access Controls</title>
+<title>共有のアクセス制御の定義</title>
 
 
 	<para>
 	<indexterm><primary>permissions</primary><secondary>share</secondary></indexterm>
-	The following parameters in the &smb.conf; file sections define a share control or affect access controls.
-	Before using any of the following options, please refer to the man page for &smb.conf;.
+	&smb.conf;セクション中の以下のパラメータは、共有の制御かアクセス制御の設定を
+	定義する。以下のオプションのどれかを使う前に、&smb.conf;のマニュアルページを
+	参照のこと。
 	</para>
 
 	<sect2>
-	<title>User- and Group-Based Controls</title>
+	<title>ユーザとグループベースの制御</title>
 
 	<para>
-	User- and group-based controls can prove quite useful. In some situations it is distinctly desirable to
-	force all file system operations as if a single user were doing so. The use of the
-	<smbconfoption name="force user"/> and <smbconfoption name="force group"/> behavior will achieve this.
-	In other situations it may be necessary to use a paranoia level of control to ensure that only particular
-	authorized persons will be able to access a share or its contents. Here the use of the
-	<smbconfoption name="valid users"/> or the <smbconfoption name="invalid users"/> parameter may be useful.
+	ユーザとグループベースの制御はとても便利なことがわかっている。ある特定の状態に
+	おいては、単一のユーザが行うような形で、すべてのファイルシステムへの操作を強制する
+	ことはとても望ましいことがある。<smbconfoption name="force user"/>と
+	<smbconfoption name="force group"/>の動作を使うとこれを行う事ができる。
+	他の状態においては、特定の認証された人のみが共有またはその内容にアクセス出来る
+	ようにさせるような、偏執的なレベルの制御を使うことが必要かもしれない。これには、
+	<smbconfoption name="valid users"/>か<smbconfoption name="invalid users"/>
+	パラメータが便利である。
 	</para>
 
 	<para>
-	As always, it is highly advisable to use the easiest to maintain and the least ambiguous method for
-	controlling access. Remember, when you leave the scene, someone else will need to provide assistance, and
-	if he or she finds too great a mess or does not understand what you have done, there is risk of
-	Samba being removed and an alternative solution being adopted.
+	いつものように、管理するためと、アクセスを制御する方法の不明確な点を最小化する、
+	一番簡単な方法を使うことを特に推奨する。覚えていてほしいが、状態をそのまま残すと、
+	他の誰かが手助けを提供する必要があり、もしもだれかが、あまりにも大きな混乱状態
+	を見つけるか、何をしていたかが理解できない場合、Sambaが削除され、別の解が適用
+	されてしまうと言う危険性が出てくる。
 	</para>
 
 	<para>
-	<link linkend="ugbc">User and Group Based Controls</link> enumerates these controls.
+	<link linkend="ugbc">ユーザとグループベースの制御</link>は上記の制御について列挙している。
 	</para>
 
-	<table frame='all' pgwide='0' id="ugbc"><title>User- and Group-Based Controls</title>
+	<table frame='all' pgwide='0' id="ugbc"><title>ユーザとグループベースの制御</title>
 	<tgroup cols='2'>
 		<colspec align="left"/>
 		<colspec align="justify" colwidth="1*"/>
 		<thead>
 		<row>
-			<entry align="center">Control Parameter</entry>
-			<entry align="center">Description, Action, Notes</entry>
+			<entry align="center">制御パラメータ</entry>
+			<entry align="center">説明、動作、備考</entry>
 		</row>
 		</thead>
 		<tbody>
