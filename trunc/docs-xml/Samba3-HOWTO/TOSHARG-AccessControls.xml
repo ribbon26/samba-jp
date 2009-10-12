@@ -706,92 +706,103 @@ mystic:/home/hannibal > rm filename
 	<title>ファイルとディレクトリに対するパーミッションベースの制御</title>
 
 	<para>
-	Directory permission-based controls, if misused, can result in considerable difficulty in diagnosing the causes of 
-	misconfiguration. Use them sparingly and carefully. By gradually introducing each, one at a time, undesirable side 
-	effects may be detected. In the event of a problem, always comment all of them out and then gradually reintroduce 
-	them in a controlled way.
+	ディレクトリパーミッションベースの制御は、間違って使った場合、間違った設定の
+	原因を診断するのにかなりの困難が生じる。控えめに、そして厳重に使うこと。
+	徐々に、1つずつ、おのおのを導入すると、好ましくない副作用が見つかるかもしれない。
+	問題発生時には、いつでもそれらをコメントアウトし、徐々に様子を見ながらそれらを
+	元に戻していく。
 	</para>
 
 	<para>
-	Refer to <link linkend="fdpbc">File and Directory Permission Based Controls</link> for information 
-	regarding the parameters that may be used to set file and directory permission-based access controls.
+	ファイルとディレクトリパーミッションベースのアクセス制御を使うためのパラメータに
+	関連する情報は、
+	<link linkend="fdpbc">ファイルとディレクトリパーミッションベースの制御</link>
+	を参照のこと。
 	</para>
 
-	<table frame='all' id="fdpbc"><title>File and Directory Permission-Based Controls</title>
+	<table frame='all' id="fdpbc"><title>ファイルとディレクトリパーミッションベースの制御</title>
 		<tgroup cols='2'>
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
 		<thead>
 		<row>
-			<entry align="center">Control Parameter</entry>
-			<entry align="center">Description, Action, Notes</entry>
+			<entry align="center">制御パラメータ</entry>
+			<entry align="center">説明、動作、備考</entry>
 		</row>
 		</thead>
 		<tbody>
 		<row>
 			<entry><smbconfoption name="create mask"/></entry>
 			<entry><para>
-			Refer to the &smb.conf; man page.
+			&smb.conf;マニュアルページを参照のこと
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="directory mask"/></entry>
 			<entry><para>
-			The octal modes used when converting DOS modes to UNIX modes when creating UNIX directories.
-			See also directory security mask.
+			UNIXディレクトリを作成する時に、DOSのモードをUNIXのモードに
+			変換する時に使う8進のモード値。directory security maskも参照。
 			</para></entry></row>
 		<row>
 			<entry><smbconfoption name="dos filemode"/></entry>
 			<entry><para>
-			Enabling this parameter allows a user who has write access to the file to modify the permissions on it.
+			このパラメータを有効にすると、ファイルに書き込み権があるユーザに
+			そのパーミッションの変更を許可する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="force create mode"/></entry>
 			<entry><para>
-			This parameter specifies a set of UNIX-mode bit permissions that will always be set on a file created by Samba.
+			このパラメータは、Sambaによって作成されたファイル上に常時設定
+			されるUNIXモードのビット単位のパーミッションを指定する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="force directory mode"/></entry>
 			<entry><para>
-			This parameter specifies a set of UNIX-mode bit permissions that will always be set on a directory created by Samba.
+			このパラメータは、Sambaによって作成されたディレクトリ上に常時設定
+			されるUNIXモードのビット単位のパーミッションを指定する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="force directory security mode"/></entry>
 			<entry><para>
-			Controls UNIX permission bits modified when a Windows NT client is manipulating UNIX permissions on a directory.
+			Windows NTクライアントがディレクトリ上のUNIXパーミッションを操作
+			する時に変更されるUNIXパーミッションビットを制御する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="force security mode"/></entry>
 			<entry><para>
-			Controls UNIX permission bits modified when a Windows NT client manipulates UNIX permissions.
+			Windows NTクライアントがUNIXパーミッションを操作する時に変更
+			されるUNIXパーミッションビットを制御する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="hide unreadable"/></entry>
 			<entry><para>
-			Prevents clients from seeing the existence of files that cannot be read.
+			読めないファイルを、クライアントから見えなくする。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="hide unwriteable files"/></entry>
 			<entry><para>
-			Prevents clients from seeing the existence of files that cannot be written to. Unwritable directories are shown as usual. 
+			書き込めないファイルをクライアントから見えなくする。書き込めない
+			ディレクトリは通常通り見える。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="nt acl support"/></entry>
 			<entry><para>
-			This parameter controls whether smbd will attempt to map UNIX permissions into Windows NT ACLs.
+			このパラメータはsmbdがUNIXパーミッションをWindows NT ACLにマップ
+			するかどうかを制御する。
 			</para></entry>
 		</row>
 		<row>
 			<entry><smbconfoption name="security mask"/></entry>
 			<entry><para>
-			Controls UNIX permission bits modified when a Windows NT client is manipulating the UNIX permissions on a file.
+			Windows NTクライアントがファイル上のUNIXパーミッションを操作する
+			時に変更されるUNIXパーミッションビットを制御する。
 			</para></entry>
 		</row>
 		</tbody>
@@ -801,10 +812,13 @@ mystic:/home/hannibal > rm filename
 	</sect2>
 
 	<sect2>
-	<title>Miscellaneous Controls</title>
+	<title>その他の制御</title>
 
 	<para>
-	The parameters documented in <link linkend="mcoc">Other Controls</link> are often used by administrators
+	<link linkend="mcoc">他の制御</link>中に記載があるパラメータはファイルアクセスへの
+	不注意によるバリアを作成する方向で、管理者によってしばしば使われる。それらは、
+	&smb.conf;のファイル設定の完全な影響がわからない結果である。
+The parameters documented in <link linkend="mcoc">Other Controls</link> are often used by administrators
 	in ways that create inadvertent barriers to file access. Such are the consequences of not understanding the 
 	full implications of &smb.conf; file settings.
 	</para>
