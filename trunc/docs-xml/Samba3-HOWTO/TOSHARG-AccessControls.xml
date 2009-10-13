@@ -924,57 +924,67 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 <indexterm><primary>specific restrictions</primary></indexterm>
 <indexterm><primary>共有アクセス</primary></indexterm>
 	<indexterm><primary>permissions</primary><secondary>share ACLs</secondary></indexterm>
-	This section deals with how to configure Samba per-share access control restrictions.
-	By default, Samba sets no restrictions on the share itself. Restrictions on the share itself
-	can be set on MS Windows NT4/200x/XP shares. This can be an effective way to limit who can
-	connect to a share. In the absence of specific restrictions, the default setting is to allow
-	the global user <constant>Everyone - Full Control</constant> (full control, change and read).
+	この節では、Sambaの共有単位でのアクセス制御における制限の設定方法について取り
+	扱う。既定値では、Sambaは共有自身には何らの制限も設定しない。共有自身への
+	制限は、Microsoft Windows NT4/200x/XP共有上で設定出来る。これは、共有に
+	接続する人を効果的に制限できる方法である。特定の制限がない場合、既定値の
+	設定はグローバルユーザに対して<constant>Everyone - フルコントロール</constant>
+	(フルコントロール、変更と読み出し)である。
 	</para>
 
 	<para>
-<indexterm><primary>access control</primary></indexterm>
+<indexterm><primary>アクセス制御</primary></indexterm>
 <indexterm><primary>MMC</primary></indexterm>
-<indexterm><primary>Computer Management</primary></indexterm>
-	At this time Samba does not provide a tool for configuring access control settings on the share
-	itself the only way to create those settings is to use either the NT4 Server Manager or the Windows 200x
-	Microsoft Management Console (MMC) for Computer Management. There are currently no plans to provide
-	this capability in the Samba command-line tool set.
+<indexterm><primary>コンピュータの管理</primary></indexterm>
+	現時点ではSambaは共有上のアクセス制御の設定を行うためのツールを提供していない
+	ので、それらの設定を作成する唯一の方法は、NT4のサーバマネージャか
+	Windows 200xの、コンピュータの管理のための、Microsoftマネジメントコンソール
+	(MMC)を使うことである。Sambaのコマンドラインツールでこの機能を提供することは
+	現時点では予定されていない。
 	</para>
 
 	<para>
 <indexterm><primary>share_info.tdb</primary></indexterm>
 <indexterm><primary>/usr/local/samba/var</primary></indexterm>
 <indexterm><primary>tdbdump</primary></indexterm>
-<indexterm><primary>tdb files</primary></indexterm>
-	Samba stores the per-share access control settings in a file called <filename>share_info.tdb</filename>.
-	The location of this file on your system will depend on how Samba was compiled. The default location
-	for Samba's tdb files is under <filename>/usr/local/samba/var</filename>. If the <filename>tdbdump</filename>
-	utility has been compiled and installed on your system, then you can examine the contents of this file
-	by executing <command>tdbdump share_info.tdb</command> in the directory containing the tdb files.
+<indexterm><primary>tdbファイル</primary></indexterm>
+	Sambaは<filename>share_info.tdb</filename>というファイル中に共有単位のアクセス
+	制御の設定を格納する。サーバ上にこのファイルがある場所は、Sambaがコンパイル
+	された状態に依存する。Sambaのtdbファイルがある既定値の位置は、
+	<filename>/usr/local/samba/var</filename>配下である。もしも<filename>tdbdump</filename>
+	ユーティリティがコンパイルされシステム中にインストールされているならば、
+	tdbファイルがあるディレクトリ中で<command>tdbdump share_info.tdb</command>を
+	実行する事によってこのファイルの内容を検査することが出来る。
 	</para>
 
 	<sect2>
-	<title>Share Permissions Management</title>
+	<title>共有のパーミッションの管理</title>
 
 		<para>
-		The best tool for share permissions management is platform-dependent. Choose the best tool for your environment.
+		共有のパーミッションの管理を行うための最適のツールはプラットフォーム
+		依存である。環境に応じて最適のツールを選択されたい。
 		</para>
 
 			<sect3>
 			<title>Windows NT4 Workstation/Server</title>
 			<para>
-<indexterm><primary>manage share permissions</primary></indexterm>
-<indexterm><primary>share permissions</primary></indexterm>
-<indexterm><primary>NT Server Manager</primary></indexterm>
+<indexterm><primary>共有のパーミッションの管理</primary></indexterm>
+<indexterm><primary>共有のパーミッション</primary></indexterm>
+<indexterm><primary>NT サーバマネージャ</primary></indexterm>
 <indexterm><primary>Windows NT4</primary></indexterm>
-			The tool you need to manage share permissions on a Samba server from a Windows NT4 Workstation or Server
-			is the NT Server Manager.  Server Manager is shipped with Windows NT4 Server products but not with Windows
-			NT4 Workstation.  You can obtain the NT Server Manager for MS Windows NT4 Workstation from the Microsoft
-			web site <ulink url="http://support.microsoft.com/default.aspx?scid=kb;en-us;173673">support</ulink> section.
+			Windows NT4 ワークステーションかサーバからSambaサーバ上の
+			共有のパーミッションを管理するのに必要なツールは、
+			NT サーバマネージャである。サーバマネージャはWindows NT4
+			サーバ製品とともに出荷されているが、Windows NT4ワークステーション
+			には付いていない。Microsoft Windows NT4 ワークステーション
+			用のNT サーバマネージャは、MicrosoftのWebサイト
+			<ulink url="http://support.microsoft.com/default.aspx?scid=kb;en-us;173673">support</ulink>
+			から入手できる(訳注:日本語版は
+<ulink url="http://support.microsoft.com/default.aspx?scid=kb;ja-jp;173673">こちらから</ulink>)。
 			</para>
 
 			<procedure>
-			<title>Instructions</title>
+			<title>手順</title>
 
 			<step><para>
 			Launch the <application>NT4 Server Manager</application> and click on the Samba server you want to
