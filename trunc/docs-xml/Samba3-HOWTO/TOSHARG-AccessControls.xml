@@ -1272,8 +1272,9 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 		</para>
 
 		<para>
-		Samba synthesizes these inherited permissions for NT by returning as an NT ACL the UNIX permission mode that a new file 
-		created by Samba on this share would receive.
+		SambaはNT用にそれら継承されたパーミッションをまとめ、NT ACLとして返すので、
+		Sambaによって新しく作成されたこの共有のUNIXパーミッションモードを
+		受け取れる。
 		</para>
 
 		</sect3>
@@ -1281,26 +1282,29 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	</sect2>
 		
 	<sect2>
-	<title>Modifying File or Directory Permissions</title>
+	<title>ファイルまたはディレクトリのパーミッションの変更</title>
 
 	<para>
-	Modifying file and directory permissions is as simple as changing the displayed permissions in the dialog box
-	and clicking on <guibutton>OK</guibutton>. However, there are limitations that a user needs to be aware of,
-	and also interactions with the standard Samba permission masks and mapping of DOS attributes that also need to
-	be taken into account.
+	ファイルとディレクトリのパーミッションの変更はダイアログボックス中に表示された
+	パーミッションの変更と同じくらい簡単で、<guibutton>OK</guibutton>をクリック
+	すればよい。しかし、ユーザが認識する必要がある制限があり、また、Samba標準の
+	パーミッションマスクと注意を払わなければならない事も必要なDOS属性のマッピング
+	も相互に影響する。
 	</para>
 
 	<para>
-	If the parameter <smbconfoption name="nt acl support"/> is set to <constant>false</constant>, any attempt to
-	set security permissions will fail with an <errorname>"Access Denied" </errorname> message.
+	もしも、<smbconfoption name="nt acl support"/>パラメータが<constant>false</constant>
+	ならば、<errorname>"アクセスが拒否されました" </errorname>というメッセージが
+	出力されて、セキュリティパーミッションを設定することは失敗する。
 	</para>
 
 	<para>
-	The first thing to note is that the <guibutton>Add</guibutton> button will not return a list of users in Samba
-	(it will give an error message saying <errorname>"The remote procedure call failed and did not
-	execute"</errorname>). This means that you can only manipulate the current user/group/world permissions listed
-	in the dialog box. This actually works quite well because these are the only permissions that UNIX actually
-	has.
+	最初に注意することは、<guibutton>追加</guibutton>ボタンはSamba中のユーザの一覧を
+	返さない事である(<errorname>"リモートプロ子ジャーコールは失敗し、実行出来ませんでした"</errorname>
+	というエラーメッセージが表示される)。これは、ダイアログボックス中に一覧表示されて
+	いる、現在のユーザ/グループ/その他 のパーミッションのみを操作できると言うことで
+	ある。これらはUNIXが実際に持っているパーミッションのみなので、これは実際にちゃん
+	と動く。
 	</para>
 
 	<para>
