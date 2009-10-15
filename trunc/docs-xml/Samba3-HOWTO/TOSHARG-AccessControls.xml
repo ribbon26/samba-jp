@@ -1141,83 +1141,95 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 		<title>ファイルの所有者の表示</title>
 
 		<para>
-		Clicking on the <guibutton>Ownership</guibutton> button brings up a dialog box telling you who owns
-		the given file. The owner name will be displayed like this:
+		<guibutton>所有者</guibutton>ボタンをクリックすると、ダイアログボックスが
+		表示され、そのファイルの所有者を表示する。所有者は以下のように表示される:
 		<screen>
-		<constant>SERVER\user (Long name)</constant>
+		<constant>SERVER\user (長い名前)</constant>
 		</screen>
-		<replaceable>SERVER</replaceable> is the NetBIOS name of the Samba server, <replaceable>user</replaceable>
-		is the username of the UNIX user who owns the file, and <replaceable>(Long name)</replaceable> is the
-		descriptive string identifying the user (normally found in the GECOS field of the UNIX password database).
-		Click on the <guibutton>Close</guibutton> button to remove this dialog.
+		ここで<replaceable>SERVER</replaceable>はSambaサーバのNetBIOS名である。
+		<replaceable>user</replaceable>はこのファイルを所有しているUNIXユーザ
+		のユーザ名であり、<replaceable>(長い名前)</replaceable>はユーザを識別
+		するための説明文字列である(通常はUNIXパスワードデータベースのGECOS
+		フィールドが使われる)。<guibutton>閉じる</guibutton>ボタンをクリック
+		して、このダイアログを閉じる。
 		</para>
 
 		<para>
-		If the parameter <smbconfoption name="nt acl support"/> is set to <constant>false</constant>,
-		the file owner will be shown as the NT user <emphasis>Everyone</emphasis>.
+		もしも<smbconfoption name="nt acl support"/>パラメータが
+		<constant>false</constant>に設定されているならば、ファイルの所有者は
+		NTユーザの<emphasis>Everyone</emphasis>として表示される。
 		</para>
 
 		<para>
-<indexterm><primary>Take Ownership</primary></indexterm>
-		The <guibutton>Take Ownership</guibutton> button will not allow you to change the ownership of this file to
-		yourself (clicking it will display a dialog box complaining that the user as whom you are currently logged onto
-		the NT client cannot be found). The reason for this is that changing the ownership of a file is a privileged
-		operation in UNIX, available only to the <emphasis>root</emphasis> user. Because clicking on this button causes
-		NT to attempt to change the ownership of a file to the current user logged into the NT client, this will
-		not work with Samba at this time.
+<indexterm><primary>所有権の取得</primary></indexterm>
+		<guibutton>所有権の取得</guibutton>ボタンでは異動したい先の人がこの
+		ファイルの所有権を取得することは出来ない(それをクリックすると、現在
+		NTクライアントにログオンしているユーザが見つからないということを通知する
+		ダイアログボックスが表示される)。この理由は、ファイルの所有者の変更は、
+		UNIX上では特権操作であり、<emphasis>root</emphasis>ユーザにのみ許可されて
+		いるからである。このボタンをクリックすると、NTに対してNTクライアントに
+		ログオンしている現在のユーザにファイルの所有者を変更するようにNTに指示
+		するが、これは現時点ではSambaでは動作しない。
 		</para>
 
 		<para>
 <indexterm><primary>chown</primary></indexterm>
 <indexterm><primary>ownership</primary></indexterm>
 <indexterm><primary>Seclib</primary></indexterm>
-		There is an NT <command>chown</command> command that will work with Samba and allow a user with administrator
-		privilege connected to a Samba server as root to change the ownership of files on both a local NTFS file system
-		or remote mounted NTFS or Samba drive. This is available as part of the <application>Seclib</application> NT
-		security library written by Jeremy Allison of the Samba Team and is downloadable from the main Samba FTP site.
+		NTにある<command>chown</command>コマンドはSambaでも動作し、rootとして
+		Sambaサーバに接続している管理者権限を持つユーザに、ローカルのNTFSファイル
+		システムとリモートマウントしたNTFSかSambaドライブの両方のファイルの所有者
+		の変更を許可する。これは、Sambaチームの一員であるJeremy Allisonによって
+		書かれたNTセキュリティライブラリである<application>Seclib</application>の
+		一部として提供されていて、これはSambaのFTPサイトからダウンロードできる。
 		</para>
 
 	</sect2>
 
 	<sect2>
-		<title>Viewing File or Directory Permissions</title>
+		<title>ファイルとディレクトリのパーミッションの表示</title>
 
 		<para>
-		The third button is the <guibutton>Permissions</guibutton> button. Clicking on it brings up a dialog box
-		that shows both the permissions and the UNIX owner of the file or directory. The owner is displayed like this:
+		3番目のボタンは<guibutton>アクセス許可</guibutton>である。これをクリックすると、
+		パーミッションとファイルかディレクトリのUNIXでの所有者の両方を表示する
+		ダイアログボックスが起動する。所有者は以下のように表示される:
 		</para>
 
 		<para><command><replaceable>SERVER</replaceable>\
 				<replaceable>user</replaceable> 
-				<replaceable>(Long name)</replaceable></command></para>
+				<replaceable>(長い名前)</replaceable></command></para>
 
-		<para><replaceable>SERVER</replaceable> is the NetBIOS name of the Samba server,
-		<replaceable>user</replaceable> is the username of the UNIX user who owns the file, and
-		<replaceable>(Long name)</replaceable> is the descriptive string identifying the user (normally found in the
-		GECOS field of the UNIX password database).</para>
+		<para><replaceable>SERVER</replaceable>はSambaサーバのNetBIOS名であり、
+		<replaceable>user</replaceable>はファイルを所有しているUNIXユーザの
+		ユーザ名であり、<replaceable>(長い名前)</replaceable>は、ユーザを識別
+		する説明文字列である(通常はUNIXパスワードデータベースのGECOSフィールドが
+		使われる)。</para>
 
 		<para>
-		If the parameter <smbconfoption name="nt acl support"/> is set to <constant>false</constant>,
-		the file owner will be shown as the NT user <constant>Everyone</constant>, and the permissions will be
-		shown as NT <emphasis>Full Control</emphasis>.
+		もしも<smbconfoption name="nt acl support"/>パラメータが
+		<constant>false</constant>に設定されている場合、ファイルの所有者は
+		<constant>Everyone</constant>というNTユーザとして表示され、パーミッション
+		はNTの<emphasis>フルコントロール</emphasis>として表示される。
 		</para>
 
 
 		<para>
-		The permissions field is displayed differently for files and directories. Both are discussed next.
+		パーミッション欄はファイルとディレクトリでは異なって表示される。詳細は次項で説明する。
 		</para>
 
 		<sect3>
-		<title>File Permissions</title>
+		<title>ファイルのパーミッション</title>
 
 		<para>
-		The standard UNIX user/group/world triplet and the corresponding <constant>read, write,
-		execute</constant> permissions triplets are mapped by Samba into a three-element NT ACL with the
-		<quote>r</quote>, <quote>w</quote>, and <quote>x</quote> bits mapped into the corresponding NT
-		permissions. The UNIX world permissions are mapped into the global NT group <constant>Everyone</constant>, followed 
-		by the list of permissions allowed for the UNIX world. The UNIX owner and group permissions are displayed as an NT 
-		<guiicon>user</guiicon> icon and an NT <guiicon>local group</guiicon> icon, respectively, followed by the list 
-		of permissions allowed for the UNIX user and group.
+		標準のUNIXユーザ/グループ/その他の三つ組みと、それに対応する
+		<constant>読み、書き、実行</constant>パーミッションの三つ組みは、Sambaによって
+		<quote>r</quote>, <quote>w</quote>, と <quote>x</quote>ビットが対応するNT
+		パーミッションにマップされる、NT ACLのパーミッションの3つの要素にマップされる。
+		UNIXの「その他」パーミッションは、UNIXの世界で許可されるパーミッションのリストを
+		伴ってグローバルNTグループの<constant>Everyone</constant>にマップされる。
+		UNIXの所有者とグループパーミッションは、それぞれUNIXのユーザとグループに
+		許可されるパーミッションのリストを伴って、NTの<guiicon>ユーザ</guiicon>アイコンと
+		NTの<guiicon>ローカルグループ</guiicon>アイコンとして表示される。
 		</para>
 
 		<para>
