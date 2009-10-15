@@ -1233,34 +1233,42 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 		</para>
 
 		<para>
-		Because many UNIX permission sets do not map into common NT names such as <constant>read</constant>,
-		<constant>change</constant>, or <constant>full control</constant>, usually the permissions will be prefixed
-		by the words <constant>Special Access</constant> in the NT display list.
+		多くのUNIXパーミッションのセットが、たとえば<constant>読み込み</constant>、
+		<constant>変更</constant>, あるいは <constant>フルコントロール</constant>
+		のような共通のNTの名前にマップしないという理由で、通常パーミッションは
+		NTの表示リスト中で<constant>特殊なアクセス許可</constant>という単語が
+		前に付く。
 		</para>
 
 		<para>
-		But what happens if the file has no permissions allowed for a particular UNIX user group or world component?
-		In order to  allow <emphasis>no permissions</emphasis> to be seen and modified, Samba then overloads the NT
-		<constant>Take Ownership</constant> ACL attribute (which has no meaning in UNIX) and reports a component with
-		no permissions as having the NT <command>O</command> bit set.  This was chosen, of course, to make it look
-		like a zero, meaning zero permissions. More details on the decision behind this action are given below.
+		しかし、もしもファイルに、特定のUNIXユーザ、グループ、その他に対して何も
+		許可しないパーミッションが付いているとどうなるだろうか?
+		<emphasis>アクセス権なし</emphasis>を見えるように、かつ変更できるように
+		するため、Sambaは<constant>所有権の取得</constant>というNTのACL属性を
+		上書きし(UNIXでは何の意味もない)、NTの<command>O</command>ビットを設定
+		して、アクセス権なしというコンポーネントを報告する。これはもちろん、
+		それを0のようにするために選ばれ、結局アクセス権なしの意味になる。
+		この動作の背景にある結論についての詳細は、以下に記述がある。
 		</para>
 
 		</sect3>
 		
 		<sect3>
-		<title>Directory Permissions</title>
+		<title>ディレクトリのパーミッション</title>
 
 		<para>
-		Directories on an NT NTFS file system have two different sets of permissions. The first set is the ACL set on the
-		directory itself, which is usually displayed in the first set of parentheses in the normal <constant>RW</constant> 
-		NT style. This first set of permissions is created by Samba in exactly the same way as normal file permissions are, described 
-		above, and is displayed in the same way.
+		NT NTFSファイルシステム上のディレクトリは、2つの異なったパーミッションの
+		組を持っている。最初の組は、通常の<constant>RW</constant> NT形式中での
+		最初の括弧の組中に表示される、ディレクトリそれ自身上のACLセットである。
+		このパーミッションの最初の組は通常のファイルのパーミッションに対して、
+		上記で説明があったようなのと正確に同じ方式で、Sambaによって作成され、
+		同じ方法で表示される。
 		</para>
 
 		<para>
-		The second set of directory permissions has no real meaning in the UNIX permissions world and represents the <constant>
-		inherited</constant> permissions that any file created within this directory would inherit.
+		2番目のディレクトリパーミッションの組はUNIXパーミッションの世界では実際の
+		意味を持たず、このディレクトリが継承する範囲内で作成された任意のファイルの
+		<constant>継承された</constant>パーミッションを表す。
 		</para>
 
 		<para>
