@@ -1383,43 +1383,38 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	強制的にセットされる。</para>
 
 	<para>
-	Essentially, bits set in the <parameter>force security mode</parameter> parameter
-	may be treated as a set of bits that, when modifying security on a file, the user 
-	has always set to be <emphasis>on</emphasis>.</para>
+	基本的に、<parameter>force security mode</parameter>パラメータ中でビットを設定
+	することは、ファイル上のセキュリティを変更する時、ユーザが常時<emphasis>on</emphasis>
+	に設定するとして、ビットのまとまりを扱っても良い。</para>
 
 	<para>
-	If not explicitly set, this parameter defaults to the same value 
-	as the <smbconfoption name="force create mode"/> parameter.
-	To allow a user to modify all the user/group/world permissions on a file
-	with no restrictions, set this parameter to 000. The
-	<smbconfoption name="security mask"/> and <parameter>force 
-	security mode</parameter> parameters are applied to the change 
-	request in that order.</para>
+	もしも、明示的に設定されない場合、このパラメータの既定値は、
+	<smbconfoption name="force create mode"/>パラメータでの値と同じになる。
+	何の制限もなしにすべてのユーザ/グループ/その他のパーミッションの変更を許可したい
+	ならば、このパラメータを000に設定する。
+	<smbconfoption name="security mask"/>と<parameter>force security mode</parameter>
+	パラメータはその順で、変更要求のために適用される。</para>
 
 	<para>
-	For a directory, Samba performs the same operations as 
-	described above for a file except it uses the parameter <parameter>
-	directory security mask</parameter> instead of <parameter>security 
-	mask</parameter>, and <parameter>force directory security mode
-	</parameter> parameter instead of <parameter>force security mode
-	</parameter>.</para>
+	ディレクトリには、<parameter>security mask</parameter>の代わりに
+	<parameter> directory security mask</parameter>を、
+	<parameter>force security mode</parameter>の代わりに
+	<parameter>force directory security mode</parameter>パラメータを使う点を除いて、
+	上記で説明したファイルへの操作と同じ動作をSambaは実行する。</para>
 
 	<para>
-	The <smbconfoption name="directory security mask"/> parameter 
-	by default is set to the same value as the <parameter>directory mask
-	</parameter> parameter and the <parameter>force directory security 
-	mode</parameter> parameter by default is set to the same value as 
-	the <smbconfoption name="force directory mode"/> parameter.
-	In this way Samba enforces the permission restrictions that 
-	an administrator can set on a Samba share, while still allowing users 
-	to modify the permission bits within that restriction.</para>
+	<smbconfoption name="directory security mask"/>パラメータの既定値は、
+	<parameter>directory mask</parameter>パラメータと同じ値に設定され、
+	<parameter>force directory security mode</parameter>パラメータの既定値は、
+	<smbconfoption name="force directory mode"/>パラメータと同じ値に設定される。
+	この方法で、その制限内で引き続きパーミッションビットをユーザに変更許可する
+	間、Samba共有上で管理者が設定出来るパーミッションの制限を実施する。</para>
 
 	<para>
-	If you want to set up a share that allows users full control
-	in modifying the permission bits on their files and directories and
-	does not force any particular bits to be set <emphasis>on</emphasis>,
-	then set the following parameters in the &smb.conf; file in that
-	share-specific section:
+	もしも、ファイルとディレクトリ上でパーミッションビットを変更する
+	フルコントロール権をユーザに許可するように、かつ、強制的に特定のビットを
+	<emphasis>on</emphasis>に設定しない、共有を設定したいならば、
+	&smb.conf;ファイル中の共有固有のセクションに、以下のパラメータを記述する:
 	</para>
 
 <?latex \newpage ?>
@@ -1433,7 +1428,7 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 </sect2>
 
 <sect2>
-	<title>Interaction with the Standard Samba File Attribute Mapping</title>
+	<title>標準Sambaファイル属性のマッピングの相互関係</title>
 
 	<note>
 	<para>
