@@ -1432,66 +1432,59 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 
 	<note>
 	<para>
-	Samba maps some of the DOS attribute bits (such as <quote>read-only</quote>)
-	into the UNIX permissions of a file. This means there can 
-	be a conflict between the permission bits set via the security 
-	dialog and the permission bits set by the file attribute mapping.
+	Sambaは(<quote>read-only</quote>のような)DOS属性の一部をファイルのUNIX
+	パーミッションにマップする。これは、セキュリティダイアログ経由での
+	パーミッションビットの設定とファイル属性マッピングによって設定されるビットとの
+	の間に競合が生じることがでてくる。
 	</para>
 	</note>
 
 	<para>
-	If a file has no UNIX read access for the owner, it will show up
-	as <quote>read-only</quote> in the standard file attributes tabbed dialog.
-	Unfortunately, this dialog is the same one that contains the security information
-	in another tab.
+	もしも、ファイルが所有者に対して読み込み権がない場合、これは標準ファイル属性
+	タブダイアログ中で<quote>読み取り専用</quote>として表示される。都合の悪いことに、
+	このダイアログは、他のタブ中にあるセキュリティ情報を含むものと同じである。
 	</para>
 
 	<para>
-	What this can mean is that if the owner changes the permissions
-	to allow himself or herself read access using the security dialog, clicks on
-	<guibutton>OK</guibutton> to get back to the standard attributes tab 
-	dialog, and clicks on <guibutton>OK</guibutton> on that dialog, then 
-	NT will set the file permissions back to read-only (as that is what 
-	the attributes still say in the dialog). This means that after setting 
-	permissions and clicking on <guibutton>OK</guibutton> to get back to the 
-	attributes dialog, you should always press <guibutton>Cancel</guibutton> 
-	rather than <guibutton>OK</guibutton> to ensure that your changes 
-	are not overridden.
+	これができる事が意味するものは、もしも所有者がセキュリティダイアログを使って
+	自分自身に読み込みを許可するためにパーミッションを修正するならば、
+	標準セキュリティダイアログに戻るために<guibutton>OK</guibutton>をクリックし、
+	次にNTはファイルのパーミッションを読み取りのみに戻す(ダイアログ中では引き続き
+	表示される属性)。これは、パーミッション設定後、属性ダイアログに戻るために
+	<guibutton>OK</guibutton>をクリックした後、変更を書き戻さないようにするため、
+	<guibutton>OK</guibutton>の代わりに<guibutton>キャンセル</guibutton>をクリック
+	する事を意味する。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Windows NT/200X ACLs and POSIX ACLs Limitations</title>
+	<title>Windows NT/200X ACLとPOSIX ACLの制限</title>
 
 	<para>
-	Windows administrators are familiar with simple ACL controls, and they typically
-	consider that UNIX user/group/other (ugo) permissions are inadequate and not
-	sufficiently fine-grained.
+	Windowsの管理者は簡単なACL制御になれていて、通常UNIXのユーザ/グループ/その他(ugo)
+	のパーミッションは不十分で十分にきめ細かくないと考えている。
 	</para>
 
 	<para>
-	Competing SMB implementations differ in how they handle Windows ACLs. Samba handles
-	Windows ACLs from the perspective of UNIX file system administration and thus adopts
-	the limitations of POSIX ACLs. Therefore, where POSIX ACLs lack a capability of the
-	Windows NT/200X ACLs, the POSIX semantics and limitations are imposed on the Windows
-	administrator.
+	競合しているSMBの実装は、Windows ACLをどのように取り扱うかについて異なる。Sambaは
+	Windows ACLを、UNIXのファイルシステム管理の構造で取り扱い、そのため、POSIX ACLの
+	制限が適用される。そのため、Windows NT/200X ACLの機能が POSIX ACLには欠如している
+	ので、POSIX ACLのセマンティックスと制限は、Windows管理者に課される。
 	</para>
 
 	<para>
-	POSIX ACLs present an interesting challenge to the UNIX administrator and therefore
-	force a compromise to be applied to Windows ACLs administration. POSIX ACLs are not
-	covered by an official standard; rather, the latest standard is a draft standard
-	1003.1e revision 17. This is the POSIX document on which the Samba implementation has
-	been implemented.
+	POSIX ACLはUNIX管理者におもしろい難問を提供し、そのため、Windows ACL管理に適用
+	するために妥協を強いる。POSIX ACLは公式の標準としては適用されていない。という
+	よりは、最終の標準は、draft standard 1003.1e revision 17である。これが、Samba
+	が実装しているPOSIX文書である。
 	</para>
 
 	<para>
-	UNIX vendors differ in the manner in which POSIX ACLs are implemented. There are a
-	number of Linux file systems that support ACLs. Samba has to provide a way to make
-	transparent all the differences between the various implementations of POSIX ACLs.
-	The pressure for ACLs support in Samba has noticeably increased the pressure to
-	standardize ACLs support in the UNIX world.
+	UNIXベンダは別々の流儀でPOSIX ACLを実装している。ACLをサポートしている数多くの
+	Linuxファイルシステムがある。Sambaは数多くのPOSIX ACLの実装間のすべての違いを
+	透過的にする仕組みを提供する必要がある。SambaにおけるACLサポートのプレッシャー
+	は、UNIXの世界でのACLサポートの標準化への圧力を顕著に増大する。
 	</para>
 
 	<para>
