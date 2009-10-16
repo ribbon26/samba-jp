@@ -1334,8 +1334,7 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	<para>
 	もしもすべてのパーミッションを、ユーザ/グループ/その他から取り去りたい場合、
 	コンポーネントをハイライトさせ、<guibutton>削除</guibutton>ボタンをクリック
-	するか、特別な<constant>所有権の取得</constant>パーミッション(
-	<command>O</command>として表示される)のみををハイライトさせてもよい。
+	するか、特別な<constant>所有権の取得</constant>パーミッション(<command>O</command>として表示される)のみををハイライトさせてもよい。
 	</para>
 
 	</sect2>
@@ -1344,7 +1343,7 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	<sect2>
 	<title>標準的なSambaの<quote>create mask</quote>パラメータとの相互作用</title>
 
-	<para>There are four parameters that control interaction with the standard Samba <parameter>create mask</parameter> parameters:
+	<para>標準的なSambaの<parameter>create mask</parameter>パラメータとの相互作用を制御する4つのパラメータがある:
 	
 
 	<itemizedlist>
@@ -1357,31 +1356,31 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	</para>
 
 	<para>
-	When a user clicks on <guibutton>OK</guibutton> to apply the 
-	permissions, Samba maps the given permissions into a user/group/world 
-	r/w/x triplet set, and then checks the changed permissions for a 
-	file against the bits set in the  
-	<smbconfoption name="security mask"/> parameter. Any bits that 
-	were changed that are not set to <emphasis>1</emphasis> in this parameter are left alone 
-	in the file permissions.</para>
+	ユーザがパーミッションを適用するために<guibutton>OK</guibutton>をクリックした
+	時、Sambaは与えられたパーミッションを、ユーザ/グループ/その他のr/w/x三つ組
+	にマップし、次に<smbconfoption name="security mask"/>パラメータ中で設定された
+	ビットに対し、ファイルに対して変更されたパーミッションを検査する。このパラメータ
+	中で<emphasis>1</emphasis>に設定されていない変更されたすべてのビットは、ファイル
+	パーミッション中でそのまま残る。</para>
 
 	<para>
-	Essentially, zero bits in the <smbconfoption name="security mask"/>
-	may be treated as a set of bits the user is <emphasis>not</emphasis> 
-	allowed to change, and one bits are those the user is allowed to change.
+	本質的に、<smbconfoption name="security mask"/>中のゼロビットは、ユーザが
+	変更を許可しないビットの組として、1のビットは変更を認めるビットとして扱っても
+	よい。
 	</para>
 
 	<para>
-	If not explicitly set, this parameter defaults to the same value as 
-	the <smbconfoption name="create mask"/> parameter. To allow a user to modify all the
-	user/group/world permissions on a file, set this parameter to 0777.
+	もしも明示的に設定されていない場合、このパラメータは既定値として
+	<smbconfoption name="create mask"/>パラメータと同じ値になる。ユーザにファイル
+	上のすべてのユーザ/グループ/その他 のパーミッションの設定変更を許可したいならば、
+	この値を0777にする。
 	</para>
 
 	<para>
-	Next Samba checks the changed permissions for a file against the bits set in the 
-	<smbconfoption name="force security mode"/> parameter. Any bits 
-	that were changed that correspond to bits set to <emphasis>1</emphasis> in this parameter 
-	are forced to be set.</para>
+	次にSambaは、<smbconfoption name="force security mode"/>パラメート中で設定された
+	ビットに対して、ファイルのパーミッションの変更点をチェックする。このパラメータ
+	中で<emphasis>1</emphasis>に設定されたものに対応する、変更された任意のビットは、
+	強制的にセットされる。</para>
 
 	<para>
 	Essentially, bits set in the <parameter>force security mode</parameter> parameter
