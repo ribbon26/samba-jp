@@ -1488,51 +1488,51 @@ The parameters documented in <link linkend="mcoc">Other Controls</link> are ofte
 	</para>
 
 	<para>
-	Samba has to deal with the complicated matter of handling the challenge of the Windows
-	ACL that implements <emphasis>inheritance</emphasis>, a concept not anticipated by POSIX
-	ACLs as implemented in UNIX file systems. Samba provides support for <emphasis>masks</emphasis>
-	that permit normal ugo and ACLs functionality to be overrided. This further complicates
-	the way in which Windows ACLs must be implemented.
+	SambaはUNIXファイルシステムで実装されているPOSIX ACLが予想していない、
+	<emphasis>継承</emphasis>を実装しているWindows ACLという難問を取り扱う
+	複雑な事項を扱う必要がある。Sambaは通常のugoとACL機能を上書きすることが出来る
+	<emphasis>masks</emphasis>のサポートを提供する。これは、WindowsのACLが
+	実装しなければならない方法を更に複雑にする。
 	</para>
 
 	<sect3>
-	<title>UNIX POSIX ACL Overview</title>
+	<title>UNIX POSIX ACLの概要</title>
 
 	<para>
-	In examining POSIX ACLs we must consider the manner in which they operate for 
-	both files and directories. File ACLs have the following significance:
+	POSIX ACLを調べる際に、ファイルとディレクトリ両方に対して操作する方法を
+	考えておかなければならない。ファイルのACLは以下の意味を持つ:
 <screen>
-# file: testfile      &lt;- the file name
-# owner: jeremy       &lt;-- the file owner
-# group: users        &lt;-- the POSIX group owner
-user::rwx             &lt;-- perms for the file owner (user)
-user:tpot:r-x         &lt;-- perms for the additional user `tpot'
-group::r--            &lt;-- perms for the file group owner (group)
-group:engrs:r--       &lt;-- perms for the additonal group `engineers'
-mask:rwx              &lt;-- the mask that is `ANDed' with groups
-other::---            &lt;-- perms applied to everyone else (other)
+# file: testfile      &lt;-- ファイル名
+# owner: jeremy       &lt;-- ファイルの所有者
+# group: users        &lt;-- POSIXグループの所有者
+user::rwx             &lt;-- ファイルの所有者に対する許可 (user)
+user:tpot:r-x         &lt;-- 追加のユーザに対する許可 `tpot'
+group::r--            &lt;-- ファイルグループの所有者に対する許可 (group)
+group:engrs:r--       &lt;-- 追加のグループに対する許可 `engineers'
+mask:rwx              &lt;-- グループに対して'論理積'を取る時のマスク値
+other::---            &lt;-- その他に対する許可 (other)
 </screen>
-	Directory ACLs have the following signficance:
+	ディレクトリのACLは以下の意味を持つ:
 <screen>
-# file: testdir       &lt;-- the directory name
-# owner: jeremy       &lt;-- the directory owner
-# group: jeremy       &lt;-- the POSIX group owner
-user::rwx             &lt;-- directory perms for owner (user)
-group::rwx            &lt;-- directory perms for owning group (group)
-mask::rwx             &lt;-- the mask that is `ANDed' with group perms
-other:r-x             &lt;-- perms applied to everyone else (other)
-default:user::rwx     &lt;-- inherited owner perms
-default:user:tpot:rwx &lt;-- inherited extra perms for user `tpot'
-default:group::r-x    &lt;-- inherited group perms
-default:mask:rwx      &lt;-- inherited default mask
-default:other:---     &lt;-- inherited permissions for everyone (other)
+# file: testdir       &lt;-- ディレクトリ名
+# owner: jeremy       &lt;-- ディレクトリの所有者
+# group: jeremy       &lt;-- POSIXグループの所有者
+user::rwx             &lt;-- 所有者に対するディレクトリの許可 (user)
+group::rwx            &lt;-- 周遊するグループに対するディレクトリの許可 (group)
+mask::rwx             &lt;-- グループに対して'論理積'を取る時のマスク値
+other:r-x             &lt;-- その他に対する許可 (other)
+default:user::rwx     &lt;-- 継承された所有者に対する許可
+default:user:tpot:rwx &lt;-- 継承されたあるユーザに対する許可 `tpot'
+default:group::r-x    &lt;-- 継承されたグループに対する許可
+default:mask:rwx      &lt;-- 継承された既定値のマスク
+default:other:---     &lt;-- 継承されたその他に対するパーミッション (other)
 </screen>
 	</para>
 
 	</sect3>
 
 	<sect3>
-	<title>Mapping of Windows File ACLs to UNIX POSIX ACLs</title>
+	<title>Windowsのファイル ACLsからUNIX POSIX ACLへのマッピング</title>
 
 	<para>
 	Microsoft Windows NT4/200X ACLs must of necessity be mapped to POSIX ACLs.
