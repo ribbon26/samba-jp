@@ -201,13 +201,9 @@ LIBSM = setegid.o seteuid.o -ln
 <para>
 <indexterm><primary>ループバックインタフェース</primary></indexterm>
 これは Samba にループバックインタフェースへループバックすることを引き起こす。
-
 結果として、Samba は他の PC と正常に通信することに失敗する。
 ひいてはマスターブラウズリストを保有者 と マスターブラウザ
-が誰なのか正常にネゴシエートすることもできない。
-The result is that Samba fails to communicate correctly with
-the world and therefore may fail to correctly negotiate who
-is the master browse list holder and who is the master browser.
+が誰なのか正常にネゴシエートすることも失敗するだろう。
 </para>
 
 <para>
@@ -216,37 +212,38 @@ is the master browse list holder and who is the master browser.
 </sect1>
 
 <sect1>
-<title>AIX: Sequential Read Ahead</title>
-<!-- From an email by William Jojo <jojowil@hvcc.edu> -->
+<title>AIX: シーケンシャル先読み</title>
+<!-- William Jojo <jojowil@hvcc.edu> からのメールより -->
 <para>
-Disabling sequential read ahead can improve Samba performance significantly
-when there is a relatively high level of multiprogramming (many smbd processes
-or mixed with another workload), not an abundance of physical memory or slower
-disk technology. These can cause AIX to have a higher WAIT values. Disabling
-sequential read-ahead can also have an adverse affect on other workloads in the
-system so you will need to evaluate other applications for impact.
+シーケンシャル先読みを無効にすると次の状況にて Samba のパフォーマンスを著しく
+改善できる。相対的に高度なマルチプログラミング(多数の smbd プロセスや他の負荷と
+の混合), 充分でない物理メモリ、またはより遅いディスク技術。
+これらは AIX に高いウエイト値の原因となる。
+シーケンシャル先読みを無効にすることはまたシステム上の他の負荷に対して反対の作用
+を及ぼすことがあるため他のアプリケーションへのインパクトを評価する必要があるだ
+ろう。
 </para>
 
 <para>
-It is recommended to use the defaults provided by IBM, but if you experience a
-high amount of wait time, try disabling read-ahead with the following commands:
+IBM によって提供されるデフォルトの利用が推奨される。しかし多数のウエイトタイム
+を経験した場合、以下のコマンドで先読みを無効にすることを試すこと。
 </para>
 
 <para>
-For AIX 5.1 and earlier: <userinput>vmtune -r 0</userinput>
+AIX 5.1 とそれ以前: <userinput>vmtune -r 0</userinput>
 </para>
 
 <para>
-For AIX 5.2 and later jfs filesystems: <userinput>ioo -o minpgahead=0</userinput>
+AIX 5.2 とそれ以降の jfs ファイルシステム: <userinput>ioo -o minpgahead=0</userinput>
 </para>
 
 <para>
-For AIX 5.2 and later jfs2 filesystems: <userinput>ioo -o j2_minPageReadAhead=0</userinput>
+AIX 5.2 とそれ以降の jfs2 ファイルシステム: <userinput>ioo -o j2_minPageReadAhead=0</userinput>
 </para>
 
 <para>
-If you have a mix of jfs and jfs2 filesystems on the same host, simply use both
-ioo commands.
+もし、jfs と jfs2 ファイルシステムが同一ホスト上に混合する場合、単純に
+双方の ioo コマンドを利用する。
 </para>
 </sect1>
 
