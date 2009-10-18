@@ -1659,39 +1659,40 @@ default:other:---     &lt;-- 継承されたその他に対するパーミッシ
 <title>よくあるエラー</title>
 
 <para>
-File, directory, and share access problems are common topics on the mailing list. The following
-are examples recently taken from the mailing list.
+ファイル、ディレクトリと共有アクセスの問題はメーリングリスト上での共通の話題である。
+以下は最近メーリングリストで話題になった例である。
 </para>
 
 
 	<sect2>
-	<title>Users Cannot Write to a Public Share</title>
+	<title>Publicな共有にユーザが書き込めない</title>
 
 	<para>
-	The following complaint has frequently been voiced on the Samba mailing list: 
+	以下の不満はSambaメーリングリスト上でしばしば聞かれる:
 	<quote>
-	We are facing some troubles with file/directory permissions. I can log on the domain as admin user (root),
-	and there's a public share on which everyone needs to have permission to create/modify files, but only
-	root can change the file, no one else can. We need to constantly go to the server to
-	<userinput>chgrp -R users *</userinput> and <userinput>chown -R nobody *</userinput> to allow
-	other users to change the file.
+	ファイルとディレクトリのパーミッションに関していくつかの問題に直面している。
+	ドメインにadmin user(root)としてログイン出来、ファイルを作成/変更するための
+	パーミッションを、誰でも持つ必要があるPublicな共有があるが、rootしかファイルを
+	変更できず、それ以外の人は出来ない。結局常時サーバの所に行って、
+	<userinput>chgrp -R users *</userinput>と<userinput>chown -R nobody *</userinput>
+	を実行し、他のユーザに対してファイルに対して変更が出来るようにしなければならない。
 	</quote>
 	</para>
 
 	<para>
-	Here is one way the problem can be solved:
+	この問題を解決できる1つの方法がある:
 	</para>
 
 	<procedure>
 		<step>
 			<para>
-			Go to the top of the directory that is shared.
+			共有されているディレクトリの最上位に移動する。
 			</para>
 		</step>
 
 		<step>
 			<para>
-			Set the ownership to whatever public user and group you want
+			好みのpublicなユーザとグループに所有者を設定する
 <screen>
 &prompt;find `directory_name' -type d -exec chown user:group {}\;
 &prompt;find `directory_name' -type d -exec chmod 2775 {}\;
@@ -1701,22 +1702,23 @@ are examples recently taken from the mailing list.
 			</para>
 
 			<note><para>
-			The above will set the <constant>SGID bit</constant> on all directories. Read your
-			UNIX/Linux man page on what that does. This ensures that all files and directories
-			that are created in the directory tree will be owned by the current user and will
-			be owned by the group that owns the directory in which it is created.
+			上記はすべてのディレクトリに<constant>SGID ビット</constant>を
+			設定する。これが何をするかはUNIX/Linuxのマニュアルページを読む
+			こと。これにより、ディレクトリ中に作成されるすべてのファイルと
+			ディレクトリツリーは現在のユーザと、ディレクトリ作成時に所有する
+			グループによって所有される。
 			</para></note>
 		</step>
 		<step>
 			<para>
-			Directory is <replaceable>/foodbar</replaceable>:
+			ディレクトリが<replaceable>/foodbar</replaceable>だとする:
 <screen>
 &prompt;<userinput>chown jack:engr /foodbar</userinput>
 </screen>
 			</para>
 
 			<note>
-			<para>This is the same as doing:</para>
+			<para>これは以下と同じである:</para>
 <screen>
 &prompt;<userinput>chown jack /foodbar</userinput>
 &prompt;<userinput>chgrp engr /foodbar</userinput>
@@ -1724,7 +1726,7 @@ are examples recently taken from the mailing list.
 			</note>
 		</step>
 		<step>
-			<para>Now type: 
+			<para>以下のようにタイプする: 
 
 <screen>
 &prompt;<userinput>chmod 2775 /foodbar</userinput>
@@ -1732,7 +1734,7 @@ are examples recently taken from the mailing list.
 </screen>
 			</para>
 		
-			<para>You should see:
+			<para>以下が表示される:
 <screen>
 drwxrwsr-x  2 jack  engr    48 2003-02-04 09:55 foodbar
 </screen>
@@ -1740,7 +1742,7 @@ drwxrwsr-x  2 jack  engr    48 2003-02-04 09:55 foodbar
 		</step>
 		<step>
 
-		<para>Now type:
+		<para>以下のようにタイプする:
 <screen>
 &prompt;<userinput>su - jill</userinput>
 &prompt;<userinput>cd /foodbar</userinput>
