@@ -1789,23 +1789,30 @@ drwxrwsr-x  2 jack  engr    48 2003-02-04 09:55 foodbar
 		<title>SambaでMicrosoft Wordを使うとファイルの所有者が変更される</title>
 
 		<para>
-		<emphasis>Question:</emphasis> <quote>When user B saves a word document that is owned by user A,
-		the updated file is now owned by user B.  Why is Samba doing this? How do I fix this?</quote>
+		<emphasis>質問:</emphasis><quote>Aが所有者のword文書をBがセーブする。
+		更新したファイルは所有者がBになる。なぜSambaはこのようにするのか?
+		どうやったら修復できる?</quote>
 		</para>
 
 		<para>
-		<emphasis>Answer:</emphasis> Word does the following when you modify/change a Word document: MS Word creates a new document with
-		a temporary name. Word then closes the old document and deletes it, then renames the new document to the original document name.
-		There is no mechanism by which Samba can in any way know that the new document really should be owned by the owners
-		of the original file. Samba has no way of knowing that the file will be renamed by MS Word. As far as Samba is able
-		to tell, the file that gets created is a new file, not one that the application (Word) is updating.
+		<emphasis>答え:</emphasis>Wordは、Wordの文書を修正/変更した時に以下の
+		作業を行う:Microsoft Wordは一時的な名前で新しい文書を作成する。Wordは
+		次に古い文書をクローズしてそれを削除し、新しい文書をオリジナルの文書
+		の名前に改名する。Sambaが、新しい文書がオリジナルの文書の所有者によって
+		所有すべきであるということを知るための機構はない。SambaはMicrosoft Word
+		によってファイルが改名されたことを知るすべはない。Sambaが告げることが
+		出来る限りのことは、作成されるファイルは新しいファイルであり、
+		アプリケーション(Word)が更新しているものではない、ということである。
 		</para>
 
 		<para>
-		There is a workaround to solve the permissions problem. It involves understanding how you can manage file
-		system behavior from within the &smb.conf; file, as well as understanding how UNIX file systems work. Set on the directory
-		in which you are changing Word documents: <command>chmod g+s `directory_name'.</command> This ensures that all files will
-		be created with the group that owns the directory. In &smb.conf; share declaration section set:
+		パーミッション問題を解決するための回避方法がある。これは、&smb.conf;
+		ファイル中からファイルシステムの動作を管理できる方法についての理解と、
+		同様に、UNIXファイルシステムの動作について理解することを深める。
+		Word文書を変更するディレクトリに<command>chmod g+s `directory_name'</command>
+		を設定する。これは、生成されるすべてのファイルはディレクトリを所有している
+		グループになるようにする。 &smb.conf;中の共有定義セクションを以下のように
+		設定する。
 		</para>
 
 		<para>
@@ -1816,8 +1823,9 @@ drwxrwsr-x  2 jack  engr    48 2003-02-04 09:55 foodbar
 		</para>
 
 		<para>
-		These two settings will ensure that all directories and files that get created in the share will be readable/writable by the
-		owner and group set on the directory itself.
+		これらの2つの設定は、共有中で作成される、すべてのディレクトリとファイルが
+		ディレクトリそれ自身上に設定された所有者とグループによって読み書きができる
+		ようにする。
 		</para>
 		
 	</sect2>
