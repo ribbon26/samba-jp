@@ -76,44 +76,43 @@ SMBサーバによって実行されることが必要な2つのタイプのロ�
 <indexterm><primary>ロッキング</primary></indexterm>
 <indexterm><primary>バイト幅</primary></indexterm>
 <indexterm><primary>UNIXのロッキング</primary></indexterm>
-Record locking semantics under UNIX are very different from record locking under
-Windows. Versions of Samba before 2.2 have tried to use the native fcntl() UNIX
-system call to implement proper record locking between different Samba clients.
-This cannot be fully correct for several reasons. The simplest is
-that a Windows client is allowed to lock a byte range up to 2^32 or 2^64,
-depending on the client OS. The UNIX locking only supports byte ranges up to 2^31.
-So it is not possible to correctly satisfy a lock request above 2^31. There are
-many more differences, too many to be listed here.
+UNIX配下のレコードロッキングのセマンティックスは、Windows配下のレコードロッキングと大幅に
+異なる。Samba2.2より前のSambaは、異なったSambaクライアントとの間で、適切なレコード
+ロッキングを実装するために、ネイティブなfcntl()UNIXシステムコールを使うことを試みた。
+これはいくつかの理由で完全に正しいものにはならなかった。最も簡単なものは、Windows
+クライアントはロックするバイトレンジとして、クライアントのOSに依存するが、2の32乗か2の
+64乗の範囲を指定できた。UNIXロッキングはレンジの幅として2の31乗までしかサポートして
+いなかった。そのため、2の31乗以上のロック要求を正確に満足させることは出来なかった。
+そのほかにもここに記述するのには余りにも多すぎる数多くの違いがあった。
 </para>
 
 <para>
-<indexterm><primary>record locking</primary></indexterm>
-<indexterm><primary>byte-range lock</primary></indexterm>
-Samba 2.2 and above implement record locking completely independently of the
-underlying UNIX system. If a byte-range lock that the client requests happens
-to fall into the range of 0 to 2^31, Samba hands this request down to the UNIX system.
-No other locks can be seen by UNIX, anyway.
+<indexterm><primary>レコードロッキング</primary></indexterm>
+<indexterm><primary>バイト幅ロック</primary></indexterm>
+Samba2.2以降では、UNIXシステムに依存しない、独立したレコードロッキングを完璧に実装した。
+もしもクライアントが0から2の31乗までの間でバイト幅ロックを要求した場合、SambaはUNIX
+システムにこの要求を落として扱う。他のどのようなロックもUNIXでは扱わない。
 </para>
 
 <para>
-<indexterm><primary>check for locks</primary></indexterm>
+<indexterm><primary>ロックのチェック</primary></indexterm>
 <indexterm><primary>rpc.lockd</primary></indexterm>
-Strictly speaking, an SMB server should check for locks before every read and write call on
-a file. Unfortunately, with the way fcntl() works, this can be slow and may overstress
-the <command>rpc.lockd</command>. This is almost always unnecessary because clients are 
-independently supposed to make locking calls before reads and writes if locking is
-important to them. By default, Samba only makes locking calls when explicitly asked
-to by a client, but if you set <smbconfoption name="strict locking">yes</smbconfoption>, it
-will make lock checking calls on <emphasis>every</emphasis> read and write call.
+厳密に言うと、Sambaサーバはファイル上への各読み/書きの呼び出し前にロックのチェックを
+すべきである。不幸にも、fcntl()が機能する方法で、これは遅延を引き起こし、
+<command>rpc.lockd</command>に負荷を掛けることになる。これは、それに対してロッキングが
+重要なとき、読み書きの前にロッキングを呼び出すことをクライアントは独立して行うはずという
+理由で、ほとんど常時不必要である。既定値では、Sambaはクライアントによって明示的に
+問い合わせがあったときにのみロッキングコールを行うが、もしも
+<smbconfoption name="strict locking">yes</smbconfoption>を設定した場合、
+読み/書きの呼び出し<emphasis>毎に</emphasis>ロックチェックの呼び出しを行う。
 </para>
 
 <para>
-<indexterm><primary>byte-range locking</primary></indexterm>
-You can also disable byte-range locking completely by using
-<smbconfoption name="locking">no</smbconfoption>.
-This is useful for those shares that do not support locking or do not need it
-(such as CD-ROMs). In this case, Samba fakes the return codes of locking calls to
-tell clients that everything is okay.
+<indexterm><primary>バイト幅のロッキング</primary></indexterm>
+<smbconfoption name="locking">no</smbconfoption>を使うことによってバイト幅ロッキングを
+完全に停止することも出来る。これは、ロッキングをサポートしない共有か、必要がないとき
+(たとえばCD-ROMなど)に便利である。この場合、Sambaは毎回OKであると、ロッキング呼び出しの
+戻り値をクライアントに返すようにごまかす。
 </para>
 
 <para>
@@ -124,26 +123,27 @@ tell clients that everything is okay.
 <indexterm><primary>DENY_ALL</primary></indexterm>
 <indexterm><primary>DENY_FCB</primary></indexterm>
 <indexterm><primary>DENY_DOS</primary></indexterm>
-The second class of locking is the <emphasis>deny modes</emphasis>. These 
-are set by an application when it opens a file to determine what types of
-access should be allowed simultaneously with its open. A client may ask for
-<constant>DENY_NONE</constant>, <constant>DENY_READ</constant>, 
-<constant>DENY_WRITE</constant>, or <constant>DENY_ALL</constant>. There are also special compatibility
-modes called <constant>DENY_FCB</constant> and <constant>DENY_DOS</constant>.
+2番目のクラスのロッキングは、<emphasis>deny modes</emphasis>である。これらは、その
+オープンに対して同時に許されるべきアクセスのタイプを決めるため、ファイルをオープン
+したときにアプリケーションによって設定される。クライアントは、
+<constant>DENY_NONE</constant>, <constant>DENY_READ</constant>,
+<constant>DENY_WRITE</constant>, か <constant>DENY_ALL</constant>を問い合わせできる。
+<constant>DENY_FCB</constant> と <constant>DENY_DOS</constant>と呼ばれる特別な互換
+モードもある。
 </para>
 
 <sect2>
-<title>Opportunistic Locking Overview</title>
+<title>Opportunistic Lockingの概要</title>
 
 <para>
 <indexterm><primary>opportunistic locking</primary></indexterm>
 <indexterm><primary>oplocks</primary></indexterm>
 <indexterm><primary>caching</primary></indexterm>
-Opportunistic locking (oplocks) is invoked by the Windows file system
-(as opposed to an API) via registry entries (on the server and the client)
-for the purpose of enhancing network performance when accessing a file
-residing on a server. Performance is enhanced by caching the file
-locally on the client that allows the following:
+Opportunistic locking (oplocks)はサーバ上に存在するファイルにアクセスする時に、
+ネットワークの効率を増大させる目的で、レジストリエントリ(サーバとクライアント上)
+経由でWindowsファイルシステム(APIと対照した場合)によって起動される。効率は、
+以下を許容することでクライアント上にローカルにファイルをキャッシュすることにより
+増大させる:
 </para>
 
 <variablelist>
