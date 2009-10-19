@@ -190,31 +190,30 @@ Windowsがモニタするために、deny-noneでオープンされていたと�
 <indexterm><primary>リダイレクタ</primary></indexterm>
 <indexterm><primary>同時アクセス</primary></indexterm>
 <indexterm><primary>キャッシュされたローカルファイル</primary></indexterm>
-			The redirector sees that the file was opened with deny
-			none (allowing concurrent access), verifies that no
-			other process is accessing the file, checks that
-			oplocks are enabled, then grants deny-all/read-write/exclusive
-			access to the file. The client now performs
-			operations on the cached local file.
+			リダイレクタは、ファイルがdeny none(同時アクセスを許可)で
+			オープンしていることを確認し、ファイルに他のプロセスからの
+			アクセスが無いことを検査し、oplocksが有効になっていることを
+			確認し、次に、ファイルに対するdeny-all/read-write/exclusive
+			アクセスを許可する。その後、クライアントはキャッシュされたローカル
+			ファイルに対して操作を実行する。
 			</para>
 
 			<para>
 <indexterm><primary>oplock break</primary></indexterm>
-<indexterm><primary>flush local locks</primary></indexterm>
-<indexterm><primary>deferred open</primary></indexterm>
-<indexterm><primary>byte-range locking</primary></indexterm>
-			If a second process attempts to open the file, the open
-			is deferred while the redirector "breaks" the original
-			oplock. The oplock break signals the caching client to
-			write the local file back to the server, flush the
-			local locks, and discard read-ahead data. The break is
-			then complete, the deferred open is granted, and the
-			multiple processes can enjoy concurrent file access as
-			dictated by mandatory or byte-range locking options.
-			However, if the original opening process opened the
-			file with a share mode other than deny-none, then the
-			second process is granted limited or no access, despite
-			the oplock break.
+<indexterm><primary>ローカルロックのフラッシュ</primary></indexterm>
+<indexterm><primary>遅延オープン</primary></indexterm>
+<indexterm><primary>バイト幅ロッキング</primary></indexterm>
+			もしも2番目のプロセスがファイルをオープンしようとすると、
+			オリジナルのoplockをリダイレクタが"ブレーク"するまで
+			オープンは待たされる。oplockブレークは、キャッシュしている
+			クライアントに、サーバにローカルファイルを書き戻し、ローカルの
+			ロックをフラッシュし、先読みしたデータを廃棄するように通知する。
+			ブレークが完了し、遅延したオープンが許可され、多重プロセスが、
+			強制的かバイト幅ロッキングオプションによって指示されたように、
+			同時ファイルアクセスが出来るようになる。しかし、もしもオリジナルの
+			ファイルがdeny-mode以外の共有モードの場合、次に、2番目の
+			プロセスは、oplockがブレークしても、アクセスが制限されるか
+			アクセスが拒否される。
 			</para></listitem>
         </varlistentry>
 
@@ -222,7 +221,7 @@ Windowsがモニタするために、deny-noneでオープンされていたと�
                 <listitem><para>
 <indexterm><primary>Level2 Oplock</primary></indexterm>
 <indexterm><primary>Level1 oplock</primary></indexterm>
-<indexterm><primary>caching</primary></indexterm>
+<indexterm><primary>キャッシング</primary></indexterm>
 				Performs like a Level1 oplock, except caching is only
                 operative for reads. All other operations are performed
                 on the server disk copy of the file.
