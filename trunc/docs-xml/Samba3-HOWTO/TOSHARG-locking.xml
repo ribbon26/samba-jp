@@ -150,44 +150,46 @@ Opportunistic locking (oplocks)はサーバ上に存在するファイルにア�
 	<varlistentry><term>Read-ahead:</term>
 		<listitem><para>
 <indexterm><primary>Read-ahead</primary></indexterm>
-		The client reads the local copy of the file, eliminating network latency.
+		クライアントはファイルのローカルコピーから読み、ネットワークの待ち時間を
+		なくす。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term>Write caching:</term>
 		<listitem><para>
 <indexterm><primary>Write caching</primary></indexterm>
-		The client writes to the local copy of the file, eliminating network latency.
+		クライアントはファイルのローカルコピーに書き込み、ネットワークの待ち
+		間をなくす。
 		</para></listitem>
 	</varlistentry>
 
         <varlistentry><term>Lock caching:</term>
         <listitem><para>
 <indexterm><primary>Lock caching</primary></indexterm>
-		The client caches application locks locally, eliminating network latency.
+		クライアントはアプリケーションをローカルにロックし、ネットワークの待ち
+		間をなくす。
 		</para></listitem>
         </varlistentry>
 </variablelist>
 
 <para>
-<indexterm><primary>performance enhancement</primary></indexterm>
+<indexterm><primary>効率の増大</primary></indexterm>
 <indexterm><primary>oplocks</primary></indexterm>
 <indexterm><primary>deny-none</primary></indexterm>
-The performance enhancement of oplocks is due to the opportunity of
-exclusive access to the file &smbmdash; even if it is opened with deny-none &smbmdash;
-because Windows monitors the file's status for concurrent access from
-other processes.
+oplocksによる効率の増大は、他のプロセスからの同時アクセスのためのファイルのステータスを
+Windowsがモニタするために、deny-noneでオープンされていたとしても、ファイルに対する
+排他的なアクセスを行うことによる。
 </para>
 
 <variablelist>
-<title>Windows Defines Four Kinds of Oplocks:</title>
+<title>Windowsは4つの種類のOplocksを定義する:</title>
 
 		<varlistentry><term>Level1 Oplock</term>
 			<listitem><para>
 <indexterm><primary>Level1 Oplock</primary></indexterm>
-<indexterm><primary>redirector</primary></indexterm>
-<indexterm><primary>concurrent access</primary></indexterm>
-<indexterm><primary>cached local file</primary></indexterm>
+<indexterm><primary>リダイレクタ</primary></indexterm>
+<indexterm><primary>同時アクセス</primary></indexterm>
+<indexterm><primary>キャッシュされたローカルファイル</primary></indexterm>
 			The redirector sees that the file was opened with deny
 			none (allowing concurrent access), verifies that no
 			other process is accessing the file, checks that
