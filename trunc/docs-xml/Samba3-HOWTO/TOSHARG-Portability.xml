@@ -253,14 +253,15 @@ AIX 5.2 とそれ以降の jfs2 ファイルシステム: <userinput>ioo -o j2_m
 <sect2>
 <title>Locking Improvements</title>
 
-<para>Some people have been experiencing problems with F_SETLKW64/fcntl 
-when running Samba on Solaris. The built-in file-locking mechanism was
-not scalable. Performance would degrade to the point where processes would
-get into loops of trying to lock a file. It would try a lock, then fail,
-then try again. The lock attempt was failing before the grant was
-occurring. The visible manifestation of this was a handful of
-processes stealing all of the CPU, and when they were trussed, they would
-be stuck in F_SETLKW64 loops.
+<para>
+Samba を Solaris 上で稼働している F_SETLKW64/fcntl にまつわる問題を経験
+している人たちがいる。
+ビルトインのファイルロック機構はスケーラブルではなかった。
+プロセスがファイルのロックを試行するループへ入り込むまでパフォーマンスが
+低下するだろう。ロックを試行する、そして失敗する、そして再び試行する。
+ロックする試みは許可が与えられる前に失敗する。
+これの目に見える兆候は CPU を一握りのプロセスが占有することである。
+プロセスは縛られ F_SETLKW64 のループから抜け出せなくなるだろう。
 </para>
 
 <para>
