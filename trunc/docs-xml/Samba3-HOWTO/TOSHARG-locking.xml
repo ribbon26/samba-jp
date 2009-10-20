@@ -222,35 +222,33 @@ Windowsがモニタするために、deny-noneでオープンされていたと�
 <indexterm><primary>Level2 Oplock</primary></indexterm>
 <indexterm><primary>Level1 oplock</primary></indexterm>
 <indexterm><primary>キャッシング</primary></indexterm>
-				Performs like a Level1 oplock, except caching is only
-                operative for reads. All other operations are performed
-                on the server disk copy of the file.
+		キャッシングを除いて、Level1 oplockのような機能は、すべての読み出しに
+		対してのみ重要である。すべてのその他の操作は、サーバ上でファイルの
+		ディスクへのコピーを実行する。
                 </para></listitem>
         </varlistentry>
 
         <varlistentry><term>Filter Oplock</term>
                 <listitem><para>
 <indexterm><primary>Filter Oplock</primary></indexterm>
-				Does not allow write or delete file access.
+				ファイルへの書き込み又は削除アクセスを許可しない。
                 </para></listitem>
         </varlistentry>
 
         <varlistentry><term>Batch Oplock</term>
                 <listitem><para>
 <indexterm><primary>Batch Oplock</primary></indexterm>
-				Manipulates file openings and closings and allows caching
-                of file attributes.
+				ファイルのオープンとクローズを操作し、ファイル属性のキャッシュを行う。
                 </para></listitem>
         </varlistentry>
 </variablelist>
 
 <para>
 <indexterm><primary>oplocks</primary></indexterm>
-An important detail is that oplocks are invoked by the file system, not
-an application API. Therefore, an application can close an oplocked
-file, but the file system does not relinquish the oplock. When the
-oplock break is issued, the file system then simply closes the file in
-preparation for the subsequent open by the second process.
+oplocksはファイルシステムによって起動され、アプリケーションAPIではないということは重要な
+詳細事項である。そのため、あるアプリケーションはoplockされたファイルをクローズできるが、
+ファイルシステムはoplocksを放棄しない。oplockのブレークが発生したとき、ファイルシステムは
+次に、2番目のプロセスによる、次のファイルオープンの準備中で、単純にファイルをクローズする。
 </para>
 
 <para>
@@ -258,70 +256,60 @@ preparation for the subsequent open by the second process.
 <indexterm><primary>client-side data caching</primary></indexterm>
 <indexterm><primary>data caching</primary></indexterm>
 <indexterm><primary>oplock break</primary></indexterm>
-<emphasis>Opportunistic locking</emphasis> is actually an improper name for this feature.
-The true benefit of this feature is client-side data caching, and
-oplocks is merely a notification mechanism for writing data back to the
-networked storage disk. The limitation of oplocks is the
-reliability of the mechanism to process an oplock break (notification)
-between the server and the caching client. If this exchange is faulty
-(usually due to timing out for any number of reasons), then the
-client-side caching benefit is negated.
+<emphasis>Opportunistic locking</emphasis>は、この機能に対して、実際には妥当ではない名前
+である。この機能の真の利点は、クライアントサイドのデータキャッシングであり、oplocksは
+ネットワーク上のディスクストレージにデータを書き戻すための、単なる通知メカニズムである。
+oplocksの制限は、サーバとキャッシュしているクライアント間でのoplocksブレーク(通知)を
+処理するためのメカニズムの信頼性である。もしもこの交換に失敗すると(通常、数多くの理由で
+タイムアウトするという場合)、クライアントサイドキャッシングの優位性は否定される。
 </para>
 
 <para>
-<indexterm><primary>client-side caching</primary></indexterm>
-The actual decision that a user or administrator should consider is
-whether it is sensible to share among multiple users data that will
-be cached locally on a client. In many cases the answer is no.
-Deciding when to cache or not cache data is the real question, and thus
-oplocks should be treated as a toggle for client-side
-caching. Turn it <quote>on</quote> when client-side caching is desirable and
-reliable. Turn it <quote>off</quote> when client-side caching is redundant,
-unreliable, or counterproductive.
+<indexterm><primary>クライアントサイドのキャッシング</primary></indexterm>
+ユーザか管理者が考慮すべき、実際の決断点は、ローカルにクライアント上にキャッシュされる
+複数のユーザのデータ間で共有するのは賢明であるかどうかと言うことである。多くの場合、
+答えは「否」である。データをキャッシュするかしないかの決断は真の質問であり、そのため、
+oplocksはクライアントサイドのキャッシングのトグルとして取り扱うべきである。クライアント
+サイドのキャッシングが望ましく、信頼性がある場合、それを<quote>on</quote>にする。
+クライアントサイドのキャッシングが不必要で、信頼性に欠け、あるいは反生産的な場合、
+<quote>off</quote>にする。
 </para>
 
 <para>
 <indexterm><primary>oplocks</primary></indexterm>
-Oplocks is by default set to <quote>on</quote> by Samba on all
-configured shares, so careful attention should be given to each case to
-determine if the potential benefit is worth the potential for delays.
-The following recommendations will help to characterize the environment
-where oplocks may be effectively configured.
+Oplocksは既定値ではすべての設定された共有上にSambaによって<quote>on</quote>に設定されて
+いるので、もしも潜在的な利便性が、遅延の可能性より小さい場合、それぞれのケースで決定
+するときには注意深く行うべきである。以下の推奨項目は、oplocksが効果的になる環境を特徴
+づけるのに役に立つだろう。
 </para>
 
 <para>
 <indexterm><primary>oplocks</primary></indexterm>
 <indexterm><primary>high-availability</primary></indexterm>
-Windows oplocks is a lightweight performance-enhancing
-feature. It is not a robust and reliable protocol. Every
-implementation of oplocks should be evaluated as a
-trade-off between perceived performance and reliability. Reliability
-decreases as each successive rule above is not enforced. Consider a
-share with oplocks enabled, over a wide-area network, to a client on a
-South Pacific atoll, on a high-availability server, serving a
-mission-critical multiuser corporate database during a tropical
-storm. This configuration will likely encounter problems with oplocks.
+Windowsのoplocksは簡易な効率向上機能である。これは堅牢でも信頼できるプロトコルではない。
+oplocksのすべての実装は、考え得る性能と信頼性との間でのトレードオフとして評価される
+べきである。信頼性は、上記での継続したルールが適用されないように減少する。oplockが
+有効で、WAN上をまたいで、南太平洋の環礁の、高信頼性のサーバ上で、ミッション
+クリティカルな、多人数で使う会社のデータベースが台風にさらされている状況を考えてみよう。
+この設定はoplockの問題に遭遇するだろう。
 </para>
 
 <para>
-<indexterm><primary>mission-critical</primary></indexterm>
-Oplocks can be beneficial to perceived client performance when treated
-as a configuration toggle for client-side data caching. If the data
-caching is likely to be interrupted, then oplock usage should be
-reviewed. Samba enables oplocks by default on all
-shares. Careful attention should be given to the client usage of
-shared data on the server, the server network reliability, and the
-oplocks configuration of each share.
-In mission-critical, high-availability environments, data integrity is
-often a priority. Complex and expensive configurations are implemented
-to ensure that if a client loses connectivity with a file server, a
-failover replacement will be available immediately to provide
-continuous data availability.
+<indexterm><primary>ミッションクリティカル</primary></indexterm>
+Oplocksは、クライアントサイドでのデータキャッシングのための構成要素のトグルとして
+扱われる時、クライアントの性能を理解するために有益であり得る。もしもデータのキャッシングが
+さえぎられそうな場合、oplocksの使用は評価されるべきである。Sambaはすべての共有に対して
+oplocksを既定値で有効にする。サーバ上の共有データ、サーバネットワークの信頼性と各共有の
+oplocksの設定の使用法をクライアントに提供すべきであることに注意深く注意を払う。
+ミッションクリティカルな領域、高信頼性環境では、データの整合性はしばしば優先度が高く
+なる。複雑で高価な構成は、もしもクライアントがファイルサーバへの接続が切れた時、
+継続したデータの可用性を提供するために、フェイルオーバによるサーバ切り替えがすぐに出来る
+ことが出来るように、実装される。
 </para>
 
 <para>
-<indexterm><primary>Windows client failover</primary></indexterm>
-<indexterm><primary>transport connection loss</primary></indexterm>
+<indexterm><primary>Windowsクライアントのフェイルオーバ</primary></indexterm>
+<indexterm><primary>トランスポート層の接続断</primary></indexterm>
 Windows client failover behavior is more at risk of application
 interruption than other platforms because it is dependent upon an
 established TCP transport connection. If the connection is interrupted
