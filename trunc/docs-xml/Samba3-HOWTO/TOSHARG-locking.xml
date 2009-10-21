@@ -310,105 +310,97 @@ oplocksの設定の使用法をクライアントに提供すべきであるこ�
 <para>
 <indexterm><primary>Windowsクライアントのフェイルオーバ</primary></indexterm>
 <indexterm><primary>トランスポート層の接続断</primary></indexterm>
-Windows client failover behavior is more at risk of application
-interruption than other platforms because it is dependent upon an
-established TCP transport connection. If the connection is interrupted
-&smbmdash; as in a file server failover &smbmdash; a new session must be established.
-It is rare for Windows client applications to be coded to recover
-correctly from a transport connection loss; therefore, most applications
-will experience some sort of interruption &smbmdash; at worst, abort and
-require restarting.
+Windowsクライアントのフェイルオーバの動作は、確立しているTCP/IPトランスポートコネクション
+に依存するという理由で、他のプラットフォームよりもアプリケーションの中断のリスクがより
+大きい。もしも、ファイルサーバのフェールオーバとして接続が中断されたならば、新しい
+セッションは再度確立せねばならない。トランスポート層が切断された時から正しく復帰するために
+プログラミングされているWindowsクライアントはまれである。そのため、ほとんどの
+アプリケーションは、ある種の中断を経験することになる。最悪の場合、アボートして再起動が
+必要となる。
 </para>
 
 <para>
 <indexterm><primary>caching writes</primary></indexterm>
 <indexterm><primary>caching reads</primary></indexterm>
 <indexterm><primary>oplock break</primary></indexterm>
-If a client session has been caching writes and reads locally due to
-oplocks, it is likely that the data will be lost when the
-application restarts or recovers from the TCP interrupt. When the TCP
-connection drops, the client state is lost. When the file server
-recovers, an oplock break is not sent to the client. In this case, the
-work from the prior session is lost. Observing this scenario with
-oplocks disabled and with the client writing data to the file server
-real-time,  the failover will provide the data on disk as it
-existed at the time of the disconnect.
+もしもクライアントセッションが、oplocksのために、ローカルに書き込みと読み取りを
+キャッシングしているなら、TCPの中断からアプリケーションの再起動または復帰のときに
+データが喪失するだろう。ファイルサーバが復旧すると、oplocksのブレークはクライアント
+には送信されない。この場合、先のセッションからの作業は失われる。oplocksが無効に
+なっていて、リアルタイムにファイルサーバにクライアントがデータを書き込むという
+シナリオを観察することで、フェイルオーバは、切断時に存在するディスク上のデータを
+提供する。
 </para>
 
 <para>
-In mission-critical, high-availability environments, careful attention
-should be given to oplocks. Ideally, comprehensive
-testing should be done with all affected applications with oplocks
-enabled and disabled.
+ミッションクリティカルな、高可用性環境では、oplocksに対して厳重な注意をはらうべきである。
+理想的には、広範囲なテストは、oplocksが有効かつ無効な状態で、すべての影響される
+アプリケーションで行うべきである。
 </para>
 
 <sect3>
-<title>Exclusively Accessed Shares</title>
+<title>共有の排他的なアクセス</title>
 
 <para>
-Oplocks is most effective when it is confined to shares
-that are exclusively accessed by a single user, or by only one user at
-a time. Because the true value of oplocks is the local
-client caching of data, any operation that interrupts the caching
-mechanism will cause a delay.
+oplocksは、単一のユーザか、同時に1人のみのユーザで、排他的にアクセスされる共有に限定
+される時に最も有効である。oplocksの本当の姿は、ローカルにクライアントでキャッシング
+されているデータという理由により、キャッシングを中断する何らかの操作は遅延を引き起こす。
 </para>
 
 <para>
-Home directories are the most obvious examples of where the performance
-benefit of oplocks can be safely realized.
+ホームディレクトリは、oplocksが問題ないと理解され、効率を得られる、最も明らかな例である。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Multiple-Accessed Shares or Files</title>
+<title>共有またはファイルに対する多重アクセス</title>
 
 <para>
-As each additional user accesses a file in a share with oplocks
-enabled, the potential for delays and resulting perceived poor
-performance increases. When multiple users are accessing a file on a
-share that has oplocks enabled, the management impact of sending and
-receiving oplock breaks and the resulting latency while other clients
-wait for the caching client to flush data offset the performance gains
-of the caching user.
+共有中のファイルへ各追加ユーザがoplocksを有効にしてアクセスすると、遅延の可能性と、
+結果として生じる性能の低下が増大する。複数のユーザが、oplocksを有効にした共有上の
+ファイルにアクセスする時、oplocksブレークの送受信と、の管理と、データのオフセットを
+フラッシュするためにクライアントのキャッシングを他のクライアントが待つ間に結果として
+生じる遅延の管理の影響は、キャッシュしているユーザの効率向上を相殺する。
 </para>
 
 <para>
-As each additional client attempts to access a file with oplocks set,
-the potential performance improvement is negated and eventually results
-in a performance bottleneck.
+oplocksを設定して各追加のクライアントがファイルにアクセスする時、潜在的な効率の
+向上は否定され、最終的には効率のボトルネックとなる。
 </para>
 
 </sect3>
 
 <sect3>
-<title>UNIX or NFS Client-Accessed Files</title>
+<title>UNIXまたはNFSクライアントがアクセスしたファイル</title>
 
 <para>
-<indexterm><primary>NFS clients</primary></indexterm>
-<indexterm><primary>data corruption</primary></indexterm>
-Local UNIX and NFS clients access files without a mandatory
-file-locking mechanism. Thus, these client platforms are incapable of
-initiating an oplock break request from the server to a Windows client
-that has a file cached. Local UNIX or NFS file access can therefore
-write to a file that has been cached by a Windows client, which
-exposes the file to likely data corruption.
+<indexterm><primary>NFSクライアント</primary></indexterm>
+<indexterm><primary>データの破壊</primary></indexterm>
+ローカルのUNIXとNFSクライアントは強制的なファイルロックメカニズムなしでファイルにアクセス
+する。そのため、それらクライアントプラットフォームは、ファイルをキャッシュしている
+Windowsクライアントにサーバからのoplocksブレークを初期化できない。ローカルのUNIXか
+NFSファイルアクセスはこのため、データが壊れるようなファイルを公開している、Windows
+クライアントによってキャッシュされたファイルに書き込める。
 </para>
 
 <para>
-If files are shared between Windows clients and either local UNIX 
-or NFS users, turn oplocks off.
+もしも、ファイルがWindows間とローカルUNIXかNFSユーザによって共有されているならば、
+oplocksはoffにする。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Slow and/or Unreliable Networks</title>
+<title>遅くて信頼できないネットワーク</title>
 
 <para>
-<indexterm><primary>performance improvement</primary></indexterm>
+<indexterm><primary>性能の向上</primary></indexterm>
 <indexterm><primary>WAN</primary></indexterm>
 <indexterm><primary>latency</primary></indexterm>
+クライアントサイドの読み取りと書き込みのキャッシングが、回線上でそれらの読み書きを送る
+上での大部分の差分を送る時に、oplocksが遭遇する性能向上の最も大きな可能性がある。
+
 The biggest potential performance improvement for oplocks
 occurs when the client-side caching of reads and writes delivers the
 most differential over sending those reads and writes over the wire.
