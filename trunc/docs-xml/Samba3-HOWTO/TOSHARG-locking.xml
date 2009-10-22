@@ -400,34 +400,28 @@ oplocksはoffにする。
 <indexterm><primary>latency</primary></indexterm>
 クライアントサイドの読み取りと書き込みのキャッシングが、回線上でそれらの読み書きを送る
 上での大部分の差分を送る時に、oplocksが遭遇する性能向上の最も大きな可能性がある。
-
-The biggest potential performance improvement for oplocks
-occurs when the client-side caching of reads and writes delivers the
-most differential over sending those reads and writes over the wire.
-This is most likely to occur when the network is extremely slow,
-congested, or distributed (as in a WAN). However, network latency also
-has a high impact on the reliability of the oplock break
-mechanism, and thus increases the likelihood of encountering oplock
-problems that more than offset the potential perceived performance
-gain. Of course, if an oplock break never has to be sent, then this is
-the most advantageous scenario in which to utilize oplocks.
+これは、ネットワークがとても遅く、詰まっているか分散している(WAN中の場合)には、頻繁に起きる。
+しかし、ネットワークの遅延がoplocksメカニズムの信頼性に関して大きな影響があり、そのため、
+潜在的に知覚できる効率の向上を十二分に相殺するoplocks問題を発生する見込みを増大する。
+もちろん、もしもoplocksブレークが、決して送られる必要がなければ、これは、oplocksを利用
+する最も効率的なシナリオである。
 </para>
 
 <para>
-If the network is slow, unreliable, or a WAN, then do not configure
-oplocks if there is any chance of multiple users
-regularly opening the same file.
+もしもネットワークが遅いか、信頼性がないばあいか、WANの場合、もしも複数のユーザが
+同じファイルを定期的に開く事がある場合、決してoplocksを設定しないこと。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Multiuser Databases</title>
+<title>マルチユーザデータベース</title>
 
 <para>
-<indexterm><primary>Multiuser databases</primary></indexterm>
+<indexterm><primary>マルチユーザデータベース</primary></indexterm>
 <indexterm><primary>management bottleneck</primary></indexterm>
 <indexterm><primary>oplocks disabled</primary></indexterm>
+マルチユーザデータベースは、その本質的な性質から、明らかに危険である。
 Multiuser databases clearly pose a risk due to their very nature &smbmdash; they are typically heavily
 accessed by numerous users at random intervals. Placing a multiuser database on a share with oplocks enabled
 will likely result in a locking management bottleneck on the Samba server. Whether the database application is
