@@ -457,48 +457,47 @@ oplocksを無効にすることによって取り除くことは適切である�
 
 <para>
 <indexterm><primary>oplock break</primary></indexterm>
-Samba includes an &smb.conf; parameter called <smbconfoption name="force user"/> that changes the user
-accessing a share from the incoming user to whatever user is defined by the &smb.conf; variable. If oplocks is
-enabled on a share, the change in user access causes an oplock break to be sent to the client, even if the
-user has not explicitly loaded a file. In cases where the network is slow or unreliable, an oplock break can
-become lost without the user even accessing a file. This can cause apparent performance degradation as the
-client continually reconnects to overcome the lost oplock break.
+Sambaには、&smb.conf;の変数によって定義されるどんなユーザにも、接続してきたユーザが
+共有にアクセスする時に、ユーザを変更する<smbconfoption name="force user"/>という
+パラメータを&smb.conf;中に含むことが出来る。もしもoplocksが共有上で有効になっている場合、
+ユーザアクセス中の変更は、ユーザが明示的にファイルをロードしなくとも、クライアントに送信
+するoplocksブレークを発生させる。ネットワークが遅いか信頼性がない場合、ファイルにアクセス
+しているユーザなしでoplocksブレークが失われることがある。これは、oplocksブレークの喪失を
+補うために、絶えず再接続するクライアントとして見た目の効率低下を引き起こす。
 </para>
 
 <para>
-Avoid the combination of the following: 
+以下を組み合わせることを防ぐ:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	<smbconfoption name="force user"/> in the &smb.conf; share configuration.
+	&smb.conf;中の共有定義中の<smbconfoption name="force user"/> 。
 	</para></listitem>
 
 	<listitem><para>
-	Slow or unreliable networks.
+	遅いか信頼性のないネットワーク。
 	</para></listitem>
 
 	<listitem><para>
-	Oplocks enabled.
+	Oplocksが有効。
 	</para></listitem>
 </itemizedlist>
 
 </sect3>
 
 <sect3>
-<title>Advanced Samba Oplocks Parameters</title>
+<title>高度なSamba Oplocksパラメータ</title>
 
 <para>
-<indexterm><primary>oplock parameters</primary></indexterm>
-<indexterm><primary>oplock mechanism</primary></indexterm>
-<indexterm><primary>implementing oplocks</primary></indexterm>
-Samba provides oplock parameters that allow the
-administrator to adjust various properties of the oplock mechanism to
-account for timing and usage levels. These parameters provide good
-versatility for implementing oplocks in environments where they would
-likely cause problems. The parameters are 
-<smbconfoption name="oplock break wait time"/>, and
-<smbconfoption name="oplock contention limit"/>.
+<indexterm><primary>oplockパラメータ</primary></indexterm>
+<indexterm><primary>oplockのメカニズム</primary></indexterm>
+<indexterm><primary>oplocksの実装</primary></indexterm>
+Sambaはタイミングと使用レベルの計測のためにoplocksメカニズムの、種々のプロパティを
+管理者が調整できるoplocksパラメータを提供する。これらのパラメータは、問題を引き起こす
+ような環境中でoplocksを実装するために、すぐれた融通性を提供する。パラメータは、
+<smbconfoption name="oplock break wait time"/>と
+<smbconfoption name="oplock contention limit"/>である。
 </para>
 
 <para>
