@@ -421,11 +421,11 @@ oplocksはoffにする。
 <indexterm><primary>マルチユーザデータベース</primary></indexterm>
 <indexterm><primary>management bottleneck</primary></indexterm>
 <indexterm><primary>oplocks disabled</primary></indexterm>
-マルチユーザデータベースは、その本質的な性質から、明らかに危険である。
-Multiuser databases clearly pose a risk due to their very nature &smbmdash; they are typically heavily
-accessed by numerous users at random intervals. Placing a multiuser database on a share with oplocks enabled
-will likely result in a locking management bottleneck on the Samba server. Whether the database application is
-developed in-house or a commercially available product, ensure that the share has oplocks disabled.
+マルチユーザデータベースは、その本質的な性質から、明らかに危険である。それらは通常不定
+間隔でたくさんのユーザによって激しくアクセスされる。oplocksが有効になっている共有上で
+マルチユーザデータベースを配置すると、Sambaサーバ上でのロッキング管理のボトルネックに
+なるだろう。手作りあるいは所用製品のデータベースアプリケーションのどちらにせよ、
+共有のoplocksは無効にすること。
 </para>
 
 </sect3>
@@ -436,22 +436,24 @@ developed in-house or a commercially available product, ensure that the share ha
 <para>
 <indexterm><primary>PDM</primary></indexterm>
 <indexterm><primary>Process data management</primary></indexterm>
-<indexterm><primary>client-side data caching</primary></indexterm>
-<indexterm><primary>oplocks management</primary></indexterm>
-<indexterm><primary>disabling oplocks</primary></indexterm>
-Process data management (PDM) applications such as IMAN, Enovia, and Clearcase are increasing in usage with
-Windows client platforms and therefore with SMB datastores. PDM applications manage multiuser environments for
-critical data security and access. The typical PDM environment is usually associated with sophisticated client
-design applications that will load data locally as demanded. In addition, the PDM application will usually
-monitor the data state of each client.  In this case, client-side data caching is best left to the local
-application and PDM server to negotiate and maintain. It is appropriate to eliminate the client OS from any
-caching tasks, and the server from any oplocks management, by disabling oplocks on the share.
+<indexterm><primary>クライアントサイドのデータキャッシング</primary></indexterm>
+<indexterm><primary>oplocksの管理</primary></indexterm>
+<indexterm><primary>oplocksの無効化</primary></indexterm>
+IMAN、EnoviaやCleacaseのようなProcess data management (PDM)アプリケーションはWindows
+クライアントプラットフォームでの使用が増え、そのため、SMBによるデータ格納も増えている。
+PDMアプリケーションは、重要なデータのセキュリティとアクセスのために、複数ユーザ環境を
+管理する。一般的なPDM環境では、必要に応じてローカルにロードするデータは、洗練された
+クライアントデザインのアプリケーションに関連づけられる。更に追加で、PDMアプリケーションは
+通常各クライアントのデータ状態をモニタする。この場合、クライアントサイドのデータ
+キャッシングは、ローカルのアプリケーションとPDMサーバで協調して保守するために、最も
+残される。任意のキャッシング作業からクライアントOSを、任意のoplocks管理から、共有上で
+oplocksを無効にすることによって取り除くことは適切である。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Beware of Force User</title>
+<title>Force Userに対する注意</title>
 
 <para>
 <indexterm><primary>oplock break</primary></indexterm>
