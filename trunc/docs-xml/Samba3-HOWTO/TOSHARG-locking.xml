@@ -502,50 +502,45 @@ Sambaはタイミングと使用レベルの計測のためにoplocksメカニ�
 
 <para>
 <indexterm><primary>turn oplocks off</primary></indexterm>
-For most users, administrators, and environments, if these parameters
-are required, then the better option is simply to turn oplocks off.
-The Samba SWAT help text for both parameters reads: <quote>Do not change
-this parameter unless you have read and understood the Samba oplock code.</quote>
-This is good advice.
+ほとんどのユーザ、管理者と環境にとって、もしも、これらのパラメータが必要ならば、より良い
+選択肢は、単にoplocksをoffにすることである。Samba SWATでは、両パラメータについて、
+<quote>Samba oplocksコードを読解しない限り、このパラメータを変更しないこと。</quote>
+という説明がある。これは良い助言である。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Mission-Critical, High-Availability</title>
+<title>ミッションクリティカル、高信頼性</title>
 
 <para>
-In mission-critical, high-availability environments, data integrity is
-often a priority. Complex and expensive configurations are implemented
-to ensure that if a client loses connectivity with a file server, a
-failover replacement will be available immediately to provide
-continuous data availability.
+ミッションクリティカル、高信頼性を必要とする環境では、データの整合性がしばしば
+優先される。複雑で高価な構成は、もしもクライアントとファイルサーバへの接続が切れた時、
+フェイルオーバによる切り替えが、継続したデータの有効性を提供するためにすぐに行われる
+ように実装される。
 </para>
 
 <para>
-Windows client failover behavior is more at risk of application
-interruption than other platforms because it is dependent upon an
-established TCP transport connection. If the connection is interrupted
-&smbmdash; as in a file server failover &smbmdash; a new session must be established.
-It is rare for Windows client applications to be coded to recover
-correctly from a transport connection loss; therefore, most applications
-will experience some sort of interruption &smbmdash; at worst, abort and
-require restarting.
+Windowsクライアントのフェイルオーバの動作は、確立したTCPトランスポート層の接続に
+依存しているために、他のプラットフォームよりアプリケーションの中断というリスクとなる。
+もしも、ファイルサーバのフェイルオーバで接続が中断されたならば、新しいセッションは
+確立されねばならない。トランスポート層の切断から正しく復帰するためにコードが書かれている
+Windowsアプリケーションはまれである。そのため、ほとんどのアプリケーションは、ある種の
+中断が生じることになる。最悪の場合、アボートして再起動が必要となる。
 </para>
 
 <para>
-If a client session has been caching writes and reads locally due to
-oplocks, it is likely that the data will be lost when the
-application restarts or recovers from the TCP interrupt. When the TCP
-connection drops, the client state is lost. When the file server
-recovers, an oplock break is not sent to the client. In this case, the
-work from the prior session is lost. Observing this scenario with
-oplocks disabled, if the client was writing data to the file server
-real-time, then the failover will provide the data on disk as it
-existed at the time of the disconnect.
+もしもクライアントセッションが、oplocksにより、ローカルに読み書きをキャッシュしている
+ならば、TCPの中断からアプリケーションが再起動か復帰する時、データが失われるかもしれない。
+TCPの接続が失われた時、oplocksブレークはクライアントには送られない。この場合、以前の
+セッションからの作業は失われる。oplocksを無効にしてこのシナリオを観察すると、
+もしもクライアントがリアルタイムにファイルサーバにデータを書き込んでいたら、
+フェイルオーバはディスコネクト時に存在したディスク上のデータを提供するだろう。
 </para>
 
 <para>
+ミッションクリティカル、高価陽性な環境では、oplocksの使用については厳重に注意を払う
+必要がある。
 In mission-critical, high-availability environments, careful attention
 should be given to oplocks. Ideally, comprehensive
 testing should be done with all affected applications with oplocks
