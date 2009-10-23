@@ -539,12 +539,9 @@ TCPの接続が失われた時、oplocksブレークはクライアントには�
 </para>
 
 <para>
-ミッションクリティカル、高価陽性な環境では、oplocksの使用については厳重に注意を払う
-必要がある。
-In mission-critical, high-availability environments, careful attention
-should be given to oplocks. Ideally, comprehensive
-testing should be done with all affected applications with oplocks
-enabled and disabled.
+ミッションクリティカル、高可用性を要求する環境では、oplocksの使用については厳重に注意を
+払う必要がある。理想的には、oplocksを有効/無効にした、すべての影響があるアプリケーション
+について、広範囲なテストを行うべきである。
 </para>
 
 </sect3>
@@ -552,19 +549,22 @@ enabled and disabled.
 </sect1>
 
 <sect1>
-<title>Samba Oplocks Control</title>
+<title>SambaのOplocks制御</title>
 
 <para>
-Oplocks is a unique Windows file locking feature. It is
-not really file locking, but is included in most discussions of Windows
-file locking, so is considered a de facto locking feature.
-Oplocks is actually part of the Windows client file
-caching mechanism. It is not a particularly robust or reliable feature
-when implemented on the variety of customized networks that exist in
-enterprise computing.
+oplocsは、ユニークなWindowsファイルロッキング機能である。これは真のファイルロッキング機能
+ではないが、Windowsのファイルロッキングの多くの議論中に含まれ、そのため、事実上の
+ロッキング機能として考えられる。oplocksは、実際の所、Windowsクライアントファイル
+キャッシング機能の一部である。これは、エンタープライズコンピューティング領域中に存在
+する、種々のカスタマイズされたネットワーク上で実装される時には、とりわけ丈夫か信頼性が
+ある機能ではない。
 </para>
 
 <para>
+Windowsのように、Sambaはクライアントキャッシング機能のサーバサイドの要素として、oplocksを
+実装している。Windowsの機能デザインの軽い性質のため、oplocksの効果的な構成は、その制限の
+十分な理解を必要とし、個々のカスタマイズしたネットワークのへのデータアクセスと
+とクライアントの使用状態を構成する時に理解して適用する事を要求する。
 Like Windows, Samba implements oplocks as a server-side
 component of the client caching mechanism. Because of the lightweight
 nature of the Windows feature design, effective configuration of
