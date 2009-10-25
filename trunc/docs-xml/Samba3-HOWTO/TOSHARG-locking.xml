@@ -600,41 +600,43 @@ Kernel OplocksはLinux kernelに、Microsoft Windowsネットワークファイ�
 </para>
 
 <para>
-Unless your system supports kernel oplocks, you should disable oplocks if you are
-accessing the same files from both UNIX/Linux and SMB clients. Regardless, oplocks should
-always be disabled if you are sharing a database file (e.g., Microsoft Access) between
-multiple clients, because any break the first client receives will affect synchronization of
-the entire file (not just the single record), which will result in a noticeable performance
-impairment and, more likely, problems accessing the database in the first place. Notably,
-Microsoft Outlook's personal folders (*.pst) react quite badly to oplocks. If in doubt,
-disable oplocks and tune your system from that point.
+使用しているシステムがkernel oplocksをサポートしている限り、UNIX/LinuxとSMBクライアントの
+両方から同じファイルをアクセスする時、oplocksを無効にすべきである。もしも、複数の
+クライアントからデータベースファイルを共有している時(たとえば、Microsoft Access)、
+顕著なパフォーマンスダウンと、さらに、最初の場所におけるデータベースのアクセス問題が
+発生する、ファイル全体(1つのレコードではなく)の同期に影響する、最初のクライアントが
+受け取る任意のブレークという理由で、oplocksは気にせず常時無効にすべきである。
+特に、Microsoft Outlookのパーソナルフォルダ(*.pst)はoplocksに対してとてもひどく反応する。
+疑っているのならば、oplocksを無効にして、その辞典からシステムを調整してみると良いだろう。
 </para>
 
 <para>
-If client-side caching is desirable and reliable on your network, you will benefit from
-turning on oplocks. If your network is slow and/or unreliable, or you are sharing your
-files among other file sharing mechanisms (e.g., NFS) or across a WAN, or multiple people
-will be accessing the same files frequently, you probably will not benefit from the overhead
-of your client sending oplock breaks and will instead want to disable oplocks for the share.
+もしもクライアントサイドのキャッシングが無効で、ネットワークの信頼性があるのであれば、
+oplocksをonにすることで利点が得られる。もしも、使用しているネットワークが遅くて、信頼性が
+ないか､他のファイル共有方式(たとえばNFS)との間でファイルを共有しているか、WAN経由の
+場合か、頻繁に同一ファイルを複数の人がアクセスする場合、クライアントがoplocksブレークを
+送るオーバヘッドからの利益を得られず、そのかわりに共有に対してoplocksを無効にしたいと
+思うだろう。
 </para>
 
 <para>
-Another factor to consider is the perceived performance of file access. If oplocks provide no
-measurable speed benefit on your network, it might not be worth the hassle of dealing with them.
+考慮すべき他の要素は、ファイルアクセスの認識されたパフォーマンスである。もしもoplocks
+が使用するネットワーク上で、わかるほどのスピード向上を提供しない場合、それを取り扱う
+難しさ分の価値がないかもしれない。
 </para>
 
 <sect2>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
-In the following section we examine two distinct aspects of Samba locking controls.
+以下の節では、Sambaロッキングの制御に関する2つの異なった側面について評価する。
 </para>
 
 <sect3>
-<title>Disabling Oplocks</title>
+<title>oplocksを無効にする</title>
 
 <para>
-You can disable oplocks on a per-share basis with the following:
+以下のようにして、共有単位でoplocksを無効にすることが出来る:
 </para>
 
 <para>
@@ -646,12 +648,12 @@ You can disable oplocks on a per-share basis with the following:
 </para>
 
 <para>
-The default oplock type is Level1. Level2 oplocks are enabled on a per-share basis
-in the &smb.conf; file.
+既定値のoplocksタイプはLevel1である。Level2 oplocksは&smb.conf;ファイル中で、共有単位に
+有効に出来る。
 </para>
 
 <para>
-Alternately, you could disable oplocks on a per-file basis within the share:
+代わりに、以下のようにして、共有内でファイル単位にoplocksを無効に出来る:
 </para>
 
 <para>
@@ -661,53 +663,49 @@ Alternately, you could disable oplocks on a per-file basis within the share:
 </para>
 
 <para>
-If you are experiencing problems with oplocks, as apparent from Samba's log entries,
-you may want to play it safe and disable oplocks and Level2 oplocks.
+もしも、Sambaのログエントリから確認出来る、oplocksの問題に遭遇した場合、
+安全を期すために、oplocksとLevel2 oplocksを無効にしても良い。
 </para>
 
 </sect3>
 
 <sect3>
-<title>Disabling Kernel Oplocks</title>
+<title>Kernel oplocksを無効にする</title>
 
 <para>
-Kernel oplocks is an &smb.conf; parameter that notifies Samba (if
-the UNIX kernel has the capability to send a Windows client an oplock
-break) when a UNIX process is attempting to open the file that is
-cached. This parameter addresses sharing files between UNIX and
-Windows with oplocks enabled on the Samba server: the UNIX process
-can open the file that is Oplocked (cached) by the Windows client and
-the smbd process will not send an oplock break, which exposes the file
-to the risk of data corruption. If the UNIX kernel has the ability to
-send an oplock break, then the kernel oplocks parameter enables Samba
-to send the oplock break. Kernel oplocks are enabled on a per-server
-basis in the &smb.conf; file.
+Kernel oplocks は、キャッシュされているファイルをUNIXプロセスがオープンしようとする
+時に、(もしもUNIX kernelがWindowsクライアントに対してoplocksを送信する機能がある時)
+Sambaに対して通知する&smb.conf;パラメータである。このパラメータはUNIXと、Sambaサーバ
+上でoplocksが有効になっているWindows間で共有するファイルをアドレスする。UNIXプロセスは
+Windowsクライアントによってoplockedされた(キャッシュされた)ファイルを開くことが出来、
+ファイルがデータ破壊のリスクがあるという事を伝える、oplocksブレークをsmbdプロセスは
+送らない。もしもUNIX kernelがoplockブレークを送る機能があるならば、kenel oplocks
+パラメータは、Sambaにoplockブレークを送ることを有効にする。kernel oplocksは、
+&smb.conf;ファイル中でサーバ単位に有効に出来る。
 </para>
 
 <para>
 <smbconfblock>
 <smbconfoption name="kernel oplocks">yes</smbconfoption>
 </smbconfblock>
-The default is no.
+既定値はnoである。
 </para>
 
 <para>
-<emphasis>Veto oplocks</emphasis> is an &smb.conf; parameter that identifies specific files for
-which oplocks are disabled. When a Windows client opens a file that
-has been configured for veto oplocks, the client will not be granted
-the oplock, and all operations will be executed on the original file on
-disk instead of a client-cached file copy. By explicitly identifying
-files that are shared with UNIX processes and disabling oplocks for
-those files, the server-wide oplock configuration can be enabled to
-allow Windows clients to utilize the performance benefit of file
-caching without the risk of data corruption. Veto oplocks can be
-enabled on a per-share basis, or globally for the entire server, in the
-&smb.conf; file as shown in <link linkend="far1"/>.
+<emphasis>Veto oplocks</emphasis>は、oplocksが無効になる特定のファイルを識別するための、
+&smb.conf;パラメータである。veto oplocksに設定されているファイルをWindowsクライアントが
+オープンする時、クライアントはoplocksが許可されず、すべての操作はクライアント上に
+キャッシュされたファイルのコピーの代わりにディスク上のオリジナルのファイル上で実行
+される。UNIXプロセスとoplocksを無効にしたそれらファイルとの間で共有されるファイルを
+明示的に識別することで、サーバ全体でのoplocks設定が、データ破壊のリスクがない、ファイルの
+キャッシングという効率の向上を、Windowsクライアントが利用できることを有効にできる。
+veto oplocksは、以下の<link linkend="far1"/>で示されるような、&smb.conf;中で、
+共有単位か、サーバ全体で有効に出来る。
 </para>
 
 <para>
 <example id="far1">
-<title>Share with Some Files Oplocked</title>
+<title>いくつかのファイルがoplocksされた共有</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="veto oplock files">/filename.htm/*.txt/</smbconfoption>
