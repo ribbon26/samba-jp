@@ -24,23 +24,13 @@ Samba は広い範囲のプラットフォームで機能する。しかし、�
 <para>
 <indexterm><primary>/etc/logingroup</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
-<<<<<<< .mine
 (歴史的な理由により)HPでは、補助グループの実装が非標準である。
 グループファイルには<filename>/etc/group</filename> と 
 <filename>/etc/logingroup</filename>の2つがある。
-システムは、前者のファイルを使用してUIDを割り当てるが、initgroups()は後者を
-参照する。
+システムは、UIDから番号(訳者注:GIDのことか)を前者のファイルを使用して割り当てるが、
+initgroups()は後者を参照する。
 コツを知っている大抵のシステム管理者は、シンボリックリンク
-=======
-(歴史的な理由により)ヒューレットパッカードの補助グループの実装が非標準である。
-２つのグループファイル <filename>/etc/group</filename> と 
-<filename>/etc/logingroup</filename> がある。
-システムは UID から番号 (訳者注:GIDのことか) を前者のファイルを使用して割り当
-てるが、 initgroups() は後者を参照する。
-コツを知っている大抵のシステム管理者は、シンボリックリンク
->>>>>>> .r952
 <filename>/etc/group</filename> を <filename>/etc/logingroup</filename> へ張る
-<<<<<<< .mine
 (ここに記述することができない愚鈍な理由でハードリンクでは機能しない)。
 initgroups()は、<filename>/etc/logingroup</filename>中に、所属しているグループ
 のうちに不正なIDがある場合にエラーを出す。
@@ -49,44 +39,22 @@ initgroups()は、<filename>/etc/logingroup</filename>中に、所属してい�
 (訳注:HPのページで見る限り、現在は2147483647)
 この範囲は、-2 と 65534 を除外している。これは通常 <constant>nobody</constant>の
 GIDである。
-=======
-(ここに記述することができない愚鈍な理由でハードリンクでは機能しない) 。
-initgroups() は、 <filename>/etc/logingroup</filename> にて所属しているグループ
-のうちに不正な ID がある場合にエラーを出す。
-ここで言う不正な ID とは <constant>[0..UID_MAX]</constant> の範囲を超えた場合
-であり、 HP-UX の <constant>UID_MAX</constant> は現在のところ 60000 である。
-この範囲は、 -2 と 65534 を除外している。これは通常 <constant>nobody</constant>
-GID である。
->>>>>>> .r952
 </para>
 
 <para>
-<<<<<<< .mine
 もしこの問題に遭遇した場合、initgroups()に失敗するプログラムを実行している
-=======
-もしこの問題に遭遇した場合、 initgroups() に失敗するプログラムを実行している
->>>>>>> .r952
 ユーザが、許可された範囲外の GID のグループユーザでないことを確認すること。
 </para>
 
 <para>
-<<<<<<< .mine
 このことは、HPのマニュアルページ setgroup(2)とpasswd(4)に記述されている。
-=======
-このことは、 HP マニュアルページ setgroup(2) と passwd(4) に記述されている。
->>>>>>> .r952
 </para>
 
 <para>
 <indexterm><primary>gcc</primary></indexterm>
 <indexterm><primary>ANSI コンパイラ</primary></indexterm>
-<<<<<<< .mine
 HP-UXでは、gccまたはHP ANSIコンパイラを利用しなければならない。
 HP-UXに付属する無償のコンパイラは ANSI に準拠していないためSambaをコンパイ
-=======
-HP-UX では、 gcc または HP ANSI コンパイラを利用しなければならない。
-HP-UX に付属する無償のコンパイラは ANSI に準拠していないため Samba をコンパイ
->>>>>>> .r952
 ルできない。
 </para>
 
@@ -96,15 +64,9 @@ HP-UX に付属する無償のコンパイラは ANSI に準拠していない�
 <title>SCO UNIX</title>
 
 <para>
-<<<<<<< .mine
 もし古いバージョンのSCO UNIXを稼働させているのなら、Sambaを正常に
 機能させるためには、TCP/IPの重要なパッチを入手する必要があるだろう。
 そのパッチがないと、Sambaを利用している際に転送データが破損する。
-=======
-もし古いバージョンの SCO UNIX を稼働させているのなら、 Samba を正常に
-機能させるために TCP/IP の重要なパッチを入手する必要があるだろう。
-そのパッチなしには、 Samba を利用している際に転送データの破損に遭遇するだろう。
->>>>>>> .r952
 </para>
 
 <para>
@@ -114,7 +76,6 @@ SCO<ulink noescape="1" url="ftp://ftp.sco.com/">ftp.sco.com</ulink> から
 </para>
 
 <para>
-<<<<<<< .mine
 ここで提供される情報は、SCO UNIXの古いバージョンを参照している。
 もしより新しいSCO UNIX のバイナリが必要ならば、インストール可能なパッケージを
 入手するためSCOに連絡すること。
@@ -122,15 +83,6 @@ SCO<ulink noescape="1" url="ftp://ftp.sco.com/">ftp.sco.com</ulink> から
 しなければならない。
 これは、インストール作業にてデータ破損を避けるために重要なことである。
 SCO UNIX製品用にSambaをビルドする場合、 Samba のソースに大幅なパッチが
-=======
-ここで提供される情報は、 SCO UNIX の古いバージョンを参照している。
-もしより新しい SCO UNIX のバイナリを求めるならば、インストールの準備ができて
-いるパッケージを入手するため SCO にコンタクトすること。
-インストールするバイナリのためプラットフォームが最新であることも SCO で確認し
-なければならない。
-これはインストール作業にてデータ破損を避けるために重要なことだ。
-SCO UNIX 製品のために Samba をビルドする場合、 Samba のソースに大幅なパッチが
->>>>>>> .r952
 必要となるかもしれない。
 SCO から直接バイナリパッケージを入手する方がとても容易である。
 </para>
@@ -202,13 +154,8 @@ _seteuid:
 </screen>
 
 <para>
-<<<<<<< .mine
 その結果、<filename>seteuid.o</filename> と　<filename>setegid.o</filename>
 が作成される。
-=======
-そして <filename>seteuid.o</filename> と <filename>setegid.o</filename>
-を生成するだろう。
->>>>>>> .r952
 </para>
 
 <para>
@@ -260,15 +207,9 @@ Red Hat Linuxのいくつかのバージョンでは、既定値を指定して�
 <title>AIX: シーケンシャル先読み</title>
 <!-- William Jojo <jojowil@hvcc.edu> からのメールより -->
 <para>
-<<<<<<< .mine
 シーケンシャル先読みを無効にすると、相対的に高度なマルチプログラミング
 (多数の smbd プロセスや他の負荷との混合)、充分でない物理メモリ、またはより遅い
 ディスク技術がある場合に、Sambaの効率を著しく改善できる。
-=======
-シーケンシャル先読みを無効にすると次の状況にて Samba のパフォーマンスを著しく
-改善できる。相対的に高度なマルチプログラミング (多数の smbd プロセスや他の負荷と
-の混合) 、 充分でない物理メモリ、またはより遅いディスク技術。
->>>>>>> .r952
 これらは AIX に高いウエイト値の原因となる。
 シーケンシャル先読みを無効にすることは、またシステム上の他の負荷に対して反作用
 を及ぼすことがあるため、他のアプリケーションへのインパクトを評価する必要がある。
@@ -293,13 +234,8 @@ AIX 5.2 とそれ以降の jfs2 ファイルシステム: <userinput>ioo -o j2_m
 </para>
 
 <para>
-<<<<<<< .mine
 もし、jfsとjfs2ファイルシステムが同一ホスト上に混合する場合、単純に
 双方のiooコマンドを利用する。
-=======
-もし、 jfs と jfs2 ファイルシステムが同一ホスト上に混合する場合、単純に
-双方の ioo コマンドを利用する。
->>>>>>> .r952
 </para>
 </sect1>
 
@@ -310,13 +246,8 @@ AIX 5.2 とそれ以降の jfs2 ファイルシステム: <userinput>ioo -o j2_m
 <title>ロックの改善</title>
 
 <para>
-<<<<<<< .mine
 Solaris上でSambaを稼働させて、F_SETLKW64/fcntlにまつわる問題を経験
 している人たちがいる。
-=======
-Solaris 上で Samba を稼働させている中で F_SETLKW64/fcntl にまつわる問題
-を経験している人たちがいる。
->>>>>>> .r952
 ビルトインのファイルロック機構はスケーラブルではなかった。
 プロセスがファイルのロックを試行するループへ入り込むまで、効率が低下するだろう。
 それは、ロックを試行し、失敗し、そして再び試行する。
@@ -340,18 +271,11 @@ Solaris 9 向けは 112233-04 である。
 <sect2 id="winbind-solaris9">
 <title>Solaris9上の Winbind</title>
 <para>
-<<<<<<< .mine
 Solaris 9 のnsswitchは、Winbind NSS モジュールの利用を拒絶する。
 この振る舞いは、
 <ulink 
 url="http://sunsolve.sun.com/search/advsearch.do?collection=PATCH&amp;type=collections&amp;max=50&amp;language=en&amp;queryKey5=112960;rev=14&amp;toDocument=yes">112960-14</ulink>
 というSUNによるパッチにて修正されている。
-=======
-Solaris 9 の Nsswitch は Winbind NSS モジュールの利用を拒絶する。
-この振る舞いは Sun によるパッチ<ulink
-url="http://sunsolve.sun.com/search/advsearch.do?collection=PATCH&amp;type=collections&amp;max=50&amp;language=en&amp;queryKey5=112960;rev=14&amp;toDocument=yes">112960-14</ulink>
-にて修正されている。
->>>>>>> .r952
 </para>
 </sect2>
 </sect1>
