@@ -756,37 +756,36 @@ veto oplocksは、以下の<link linkend="far1"/>で示されるような、&smb
 <title>Microsoft Windowsのoplocksとキャッシュ制御</title>
 
 <para>
-There is a known issue when running applications (like Norton Antivirus) on a Windows 2000/ XP
-workstation computer that can affect any application attempting to access shared database files
-across a network. This is a result of a default setting configured in the Windows 2000/XP
-operating system. When a workstation
-attempts to access shared data files located on another Windows 2000/XP computer,
-the Windows 2000/XP operating system will attempt to increase performance by locking the
-files and caching information locally. When this occurs, the application is unable to
-properly function, which results in an <quote>Access Denied</quote>
- error message being displayed during network operations.
+ネットワーク経由で共有データベースにアクセスする任意のアプリケーションに影響しうる
+Windows 2000/XPワークステーション上でアプリケーション(Norton Antivirusのような)を
+動かす時によく知られている問題がある。これは、Windows 2000/XP OSの既定値の設定の結果に
+よるものである。他の 2000/XPコンピュータ上の共有データベースファイルに、
+ワークステーションがアクセスする時、Windows 2000/XP OSは、ファイルをロックし、情報を
+ローカルにキャッシュすることで効率を向上することを試みる。これが起きると、
+アプリケーションは、ネットワーク操作中、<quote>アクセスが拒否されました</quote>という
+エラーが表示されて適切に動作しなくなる。
 </para>
 
 <para>
-All Windows operating systems in the NT family that act as database servers for data files
-(meaning that data files are stored there and accessed by other Windows PCs) may need to
-have oplocks disabled in order to minimize the risk of data file corruption.
-This includes Windows 9x/Me, Windows NT, Windows 200x, and Windows XP.
-<footnote><para>Microsoft has documented this in Knowledge Base article 300216.</para></footnote>
+データファイル(データファイルがそこに格納されて、他のWindows PCによってアクセスされる
+という意味で)のためのデータベースサーバとして振る舞う、NTファミリの、すべての
+Windows OSは、データファイルの破損を防ぐリスクを最小限にするために、oplocksを無効にする
+必要があるかもしれない。これには、Windows 9x/Me、Windows NT、Windows 200xと
+Windows XPが含まれる。
+<footnote><para>Microsoftはこの件について KB 300216で解説している。</para></footnote>
 </para>
 
 <para>
-If you are using a Windows NT family workstation in place of a server, you must also
-disable oplocks on that workstation. For example, if you use a
-PC with the Windows NT Workstation operating system instead of Windows NT Server, and you
-have data files located on it that are accessed from other Windows PCs, you may need to
-disable oplocks on that system.
+もしも、サーバの代わりにWindows NTファミリのワークステーションを使っているならば、
+そのワークステーション上でoplocksを無効にしなければならない。例えば、もしも、
+Windows NT サーバの代わりにWindows NT ワークステーションをPC上で使っていて、
+その上に、他のWindows PCからアクセスされるデータファイルがあるならば、そのシステム上で
+oplocksを無効にしなければならないかもしれない。
 </para>
 
 <para>
-The major difference is the location in the Windows registry where the values for disabling
-oplocks are entered. Instead of the LanManServer location, the LanManWorkstation location
-may be used.
+大きな違いは、oplocksを無効にするための値を入れるWindowsレジストリの位置である。
+LanManServerの位置の代わりにLanManWorkstationの位置が使われる。
 </para>
 
 <para>
