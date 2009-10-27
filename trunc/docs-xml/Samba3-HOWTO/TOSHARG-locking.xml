@@ -853,34 +853,40 @@ Level2 oplocksの動作概要は以下の通り:
 
 <itemizedlist>
 	<listitem><para>
-	Station 1 opens the file requesting oplock.
+	ステーション1がoplockを要求してファイルを開く。
 	</para></listitem>
 	<listitem><para>
-	Since no other station has the file open, the server grants station 1 exclusive oplock.
+	他のどのステーションもファイルを開かない間、サーバはステーション1に排他的oplockを許可する。
 	</para></listitem>
 	<listitem><para>
-	Station 2 opens the file requesting oplock.
+	ステーション2がoplockを要求してファイルを開く。
 	</para></listitem>
 	<listitem><para>
-	Since station 1 has not yet written to the file, the server asks station 1 to break
-	to Level2 oplock.
+	ステーション1がまだファイルを書き込んでいないなら、サーバはステーション1にレベル2の
+	oplockのブレーク通知を行う。
 	</para></listitem>
 	<listitem><para>
-	Station 1 complies by flushing locally buffered lock information to the server.
+	ステーション1はローカルにバッファした情報をサーバに書き戻す。
 	</para></listitem>
 	<listitem><para>
-	Station 1 informs the server that it has broken to level2 Oplock (alternately,
-	station 1 could have closed the file).
+	ステーション1はレベル2のoplockを素unしたサーバに情報を送る(代わりにステーション1は
+	ファイルをクローズすることが出来たはずである)。
 	</para></listitem>
 	<listitem><para>
-	The server responds to station 2's open request, granting it Level2 oplock.
-	Other stations can likewise open the file and obtain Level2 oplock.
+	サーバはステーション2のオープン要求に対応し、レベル2のoplockを許可する。
+	その他のステーションは同じくファイルを開くことが出来、同様にレベル2のoplockが
+	許可される。
 	</para></listitem>
 	<listitem><para>
-	Station 2 (or any station that has the file open) sends a write request SMB.
-	The server returns the write response.
+	ステーション2(か、ファイルをオープンしている他のステーション)はSMB書き込み要求を
+	送る。サーバは書き込み応答を返す。
 	</para></listitem>
 	<listitem><para>
+	サーバは、ファイルをオープンしているすべてのステーションに、なにも対象としない
+	ようにブレークを送る。これは、どのステーションもファイル上に何らかのoplocksを
+	持たないことを意味する。この時点でワークステーションはキャッシュされた書き込みも、
+	ロックも持たないので、break-to-noneという勧告に反応する必要はない。この動作を
+	必要とするすべては、ローカルにキャッシュされた先読みデータを無効にすることである。
 	The server asks all stations that have the file open to break to none, meaning no
 	station holds any oplock on the file. Because the workstations can have no cached
 	writes or locks at this point, they need not respond to the break-to-none advisory;
@@ -889,7 +895,7 @@ Level2 oplocksの動作概要は以下の通り:
 </itemizedlist>
 
 <sect2>
-<title>Workstation Service Entries</title>
+<title>ワークステーションサービスのエントリ</title>
 
 <para><programlisting>
 	\HKEY_LOCAL_MACHINE\System\
