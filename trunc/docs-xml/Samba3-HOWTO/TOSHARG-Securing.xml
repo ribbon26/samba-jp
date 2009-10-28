@@ -92,36 +92,35 @@ Sambaをセキュアに出来る他の方法は、共有それ自身に、アク
 </sect1>
 
 <sect1>
-<title>Technical Discussion of Protective Measures and Issues</title>
+<title>保護対応と問題に関する技術的な議論</title>
 
 <para>
-The key challenge of security is that protective measures suffice at best
-only to close the door on known exploits and breach techniques. Never assume that
-because you have followed these few measures, the Samba server is now an impenetrable
-fortress! Given the history of information systems so far, it is only a matter of time
-before someone will find yet another vulnerability.
+既知のセキュリティ上の弱点と侵害技術に対して保護するために、せいぜいドアを閉めることで
+十分であることが、セキュリティの鍵となる難問である。これらの少ない処置を行ったので、
+Sambaサーバが入り込めない要塞になると仮定してはいけない。これまでの情報システムの歴史を
+見れば、誰かが他の脆弱性を見つけ出すのは時間の問題である。
 </para>
 
 	<sect2>
-	<title>Using Host-Based Protection</title>
+	<title>ホストベースの保護の使用</title>
 
 	<para>
 <indexterm><primary>outside threat</primary></indexterm>
-<indexterm><primary>insecure</primary></indexterm>
-<indexterm><primary>Internet</primary></indexterm>
-	In many installations of Samba, the greatest threat comes from outside
-	your immediate network. By default, Samba accepts connections from
-	any host, which means that if you run an insecure version of Samba on
-	a host that is directly connected to the Internet, you can be
-	especially vulnerable.
+<indexterm><primary>セキュアでない</primary></indexterm>
+<indexterm><primary>インターネット</primary></indexterm>
+	数多くのインストール済みSambaにおいて、最も大きな脅威は、隣接したネットワークの
+	外部から来る。既定値で、Sambaは任意のホストからの接続を受け、それはすなわち、
+	もしも、インターネットに直接接続されているホスト上でセキュアでないバージョンの
+	Sambaを動かしていた場合、特に脆弱になるということである。
 	</para>
 
 	<para>
-<indexterm><primary>allow access</primary></indexterm>
-<indexterm><primary>range of hosts</primary></indexterm>
-	One of the simplest fixes in this case is to use the <smbconfoption name="hosts allow"/> and
-	<smbconfoption name="hosts deny"/> options in the Samba &smb.conf; configuration file to
-	allow access to your server only from a specific range of hosts. An example might be:
+<indexterm><primary>アクセスの許可</primary></indexterm>
+<indexterm><primary>ホストの範囲</primary></indexterm>
+	この場合の最も簡単な修正の1つは、<smbconfoption name="hosts allow"/>と
+	<smbconfoption name="hosts deny"/>をSambaの&smb.conf;設定ファイル中で、
+	特定の範囲のホストから飲みサーバにアクセスを許可するように使うことである。
+	設定例は以下の通り:
 	<smbconfblock>
 	<smbconfoption name="hosts allow">127.0.0.1 192.168.2.0/24 192.168.3.0/24</smbconfoption>
 	<smbconfoption name="hosts deny">0.0.0.0/0</smbconfoption>
