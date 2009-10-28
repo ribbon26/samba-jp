@@ -882,15 +882,12 @@ Level2 oplocksの動作概要は以下の通り:
 	送る。サーバは書き込み応答を返す。
 	</para></listitem>
 	<listitem><para>
-	サーバは、ファイルをオープンしているすべてのステーションに、なにも対象としない
-	ようにブレークを送る。これは、どのステーションもファイル上に何らかのoplocksを
-	持たないことを意味する。この時点でワークステーションはキャッシュされた書き込みも、
-	ロックも持たないので、break-to-noneという勧告に反応する必要はない。この動作を
-	必要とするすべては、ローカルにキャッシュされた先読みデータを無効にすることである。
-	The server asks all stations that have the file open to break to none, meaning no
-	station holds any oplock on the file. Because the workstations can have no cached
-	writes or locks at this point, they need not respond to the break-to-none advisory;
-	all they need do is invalidate locally cashed read-ahead data.
+	サーバは、ファイルをオープンしているすべてのステーションに対して、ロックを
+	壊さないこと、すなわちファイルに対して oplock を保持しているステーションが
+	ないことを確認する。この時点で、ワークステーションはキャッシュされた
+	書き込みもロックも保持していないため、break-to-none 勧告に対して応答する
+	必要がないからである。それぞれのワークステーションは、単にローカルで
+	キャッシュしている先読みデータを無効にするだけでよい。
 	</para></listitem>
 </itemizedlist>
 
