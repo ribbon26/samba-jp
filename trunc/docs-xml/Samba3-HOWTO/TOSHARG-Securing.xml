@@ -144,8 +144,9 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 	<title>ユーザベースの保護</title>
 
 	<para>
-	If you want to restrict access to your server to valid users only, then the following
-	method may be of use. In the &smb.conf; <smbconfsection name="[global]"/> section put:
+	もしも、サーバへのアクセスを有効なユーザのみに制限したいならば、以下の方法を
+	使うことが出来る。&smb.conf;中の<smbconfsection name="[global]"/>セクションに
+	以下を記述する:
 	<smbconfblock>
 	<smbconfoption name="valid users">@smbusers, jacko</smbconfoption>
 	</smbconfblock>
@@ -153,28 +154,28 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 
 	<para>
 <indexterm><primary>smbusers</primary></indexterm>
-	This restricts all server access either to the user <emphasis>jacko</emphasis>
-	or to members of the system group <emphasis>smbusers</emphasis>.
+	これは、ユーザ<emphasis>jacko</emphasis>かシステムグループ<emphasis>smbusers</emphasis>
+	のメンバのみに、すべてのサーバアクセスを制限する。
 	</para>
 
 	</sect2>
 
 	<sect2>
 
-	<title>Using Interface Protection</title>
+	<title>インタフェース保護の使用</title>
 
 	<para>
-<indexterm><primary>network interface</primary></indexterm>
-<indexterm><primary>accept connections</primary></indexterm>
-<indexterm><primary>Internet</primary></indexterm>
-	By default, Samba accepts connections on any network interface that
-	it finds on your system. That means if you have an ISDN line or a PPP
-	connection to the Internet then Samba will accept connections on those
-	links. This may not be what you want.
+<indexterm><primary>ネットワークインタフェース</primary></indexterm>
+<indexterm><primary>接続許可</primary></indexterm>
+<indexterm><primary>インターネット</primary></indexterm>
+	既定値では、Sambaはシステム上にある任意のネットワークインタフェースからの
+	接続を受け付ける。これは、もしもISDNかPPPでインターネットに接続している
+	場合、Sambaはそれらからの接続を受け付けるということである。これはおそらく
+	希望していることではないだろう。
 	</para>
 
 	<para>
-	You can change this behavior using options like this:
+	この動作は、以下のようなオプションで変更できる:
 	<smbconfblock>
 	<smbconfoption name="interfaces">eth* lo</smbconfoption>
 	<smbconfoption name="bind interfaces only">yes</smbconfoption>
