@@ -183,14 +183,15 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 	</para>
 
 	<para>
-<indexterm><primary>interfaces</primary></indexterm>
-<indexterm><primary>loopback interface</primary></indexterm>
-<indexterm><primary>Ethernet adapters</primary></indexterm>
+<indexterm><primary>インタフェース</primary></indexterm>
+<indexterm><primary>ループバックインタフェース</primary></indexterm>
+<indexterm><primary>イーサネットアダプタ</primary></indexterm>
 <indexterm><primary>listen for connections</primary></indexterm>
-	This tells Samba to listen for connections only on interfaces with a name starting with
-	<constant>eth</constant> such as <constant>eth0</constant> or <constant>eth1</constant>, plus on the loopback interface called
-	<constant>lo</constant>. The name you will need to use depends on what OS you are using. In the above, I used
-	the common name for Ethernet adapters on Linux.
+	これは、たとえば<constant>eth0</constant> や <constant>eth1</constant>のような
+	<constant>eth</constant>で始まる名前のインタフェースと、<constant>lo</のみ>
+	という名前のループバックインタフェースからの接続のみを受け付ける事を指示する。
+	必要とする名前はどのOSを使っているかに依存する。上記ではLinux上での共通的な
+	イーサネットアダプタの名前を使っている。
 	</para>
 
 	<para>
@@ -198,35 +199,36 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 <indexterm><primary>SMB</primary></indexterm>
 <indexterm><primary>cracker</primary></indexterm>
 <indexterm><primary>confirm address</primary></indexterm>
-	If you use the above and someone tries to make an SMB connection to your host over a PPP interface called
-	<constant>ppp0</constant>, then [s]he will get a TCP connection refused reply. In that case, no Samba code
-	is run at all, because the operating system has been told not to pass connections from that interface to any
-	Samba process. However, the refusal helps a would-be cracker by confirming that the IP address provides
-	valid active services.
+	もしも、上記を使い、誰かが<constant>ppp0</constant>という名前のPPPインタフェース
+	上でホストに対してSMB接続を行おうとした時には、TCPの接続が拒否されたという応答が
+	帰る。この場合、OSが、任意のSambaプロセスに対して、そのインタフェースからの接続を
+	渡さないと通知するため、Sambaは全く動作しない。しかし、接続拒否という応答は、
+	クラッカーに対して、そのIPアドレスが有効なサービスを提供しているという確認をさせて
+	しまうということにもなる。
 	</para>
 
 	<para>
-<indexterm><primary>ignore connection</primary></indexterm>
-<indexterm><primary>refusing connection</primary></indexterm>
+<indexterm><primary>接続を無視</primary></indexterm>
+<indexterm><primary>接続を拒否</primary></indexterm>
 <indexterm><primary>exploitation</primary></indexterm>
-<indexterm><primary>denial of service</primary></indexterm>
-<indexterm><primary>firewall</primary></indexterm>
-	A better response would be to ignore the connection (from, for example, ppp0) altogether. The
-	advantage of ignoring the connection attempt, as compared with refusing it, is that it foils those who
-	probe an interface with the sole intention of finding valid IP addresses for later use in exploitation
-	or denial of service attacks. This method of dealing with potential malicious activity demands the
-	use of appropriate firewall mechanisms.
+<indexterm><primary>サービス不能</primary></indexterm>
+<indexterm><primary>ファイアウォール</primary></indexterm>
+	もっと良い対応は、接続を全く無視することである(たとえばppp0から)。接続を拒否する
+	ことと比較して接続を無視する試みの利点は、脆弱性攻撃かサービス不能(DoS)攻撃時に
+	後で使うための有効なIPアドレスを見つけるためが唯一の意図の探索を失敗させることで
+	ある。潜在的な悪意がある行動を取り扱うこの方法は、適切なファイアウォール機構
+	を使うことが必要である。
 	</para>
 
 	</sect2>
 
 	<sect2 id="firewallports">
-	<title>Using a Firewall</title>
+	<title>ファイアウォールの使用</title>
 
 	<para>
 <indexterm><primary>deny access</primary></indexterm>
 <indexterm><primary>exposed</primary></indexterm>
-<indexterm><primary>firewall active</primary></indexterm>
+<indexterm><primary>ファイアウォールが有効</primary></indexterm>
 	Many people use a firewall to deny access to services they do not want exposed outside their network. This can
 	be a good idea, although I recommend using it in conjunction with the above methods so you are protected even
 	if your firewall is not active for some reason.
