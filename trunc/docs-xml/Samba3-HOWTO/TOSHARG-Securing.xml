@@ -229,14 +229,15 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 <indexterm><primary>deny access</primary></indexterm>
 <indexterm><primary>exposed</primary></indexterm>
 <indexterm><primary>ファイアウォールが有効</primary></indexterm>
-	Many people use a firewall to deny access to services they do not want exposed outside their network. This can
-	be a good idea, although I recommend using it in conjunction with the above methods so you are protected even
-	if your firewall is not active for some reason.
+	多くの人が、使用しているネットワーク外に公開したくないサービスへのアクセスを拒否
+	するためにファイアウォールを使っている。これはよいアイデアではあるが、上記の
+	と関連して使用することを勧める。そうすると、何らかの理由でファイアウォールが
+	無効になったとしても保護が出来る。
 	</para>
 
 	<para>
-	If you are setting up a firewall, you need to know what TCP and UDP ports to allow and block. Samba uses
-	the following:
+	もしもファイアウォールを設定するとき、どのTCPとUDPポートを許可し、ブロック
+	るかを知っておく必要がある。Sambaは以下のポートを使う:
 <indexterm><primary>Port 135/TCP</primary></indexterm>
 <indexterm><primary>Port 137/UDP</primary></indexterm>
 <indexterm><primary>Port 138/UDP</primary></indexterm>
@@ -253,36 +254,36 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 	</simplelist>
 
 	<para>
-<indexterm><primary>firewall setups</primary></indexterm>
-	The last one is important because many older firewall setups may not be aware of it, given that this port
-	was only added to the protocol in recent years.
+<indexterm><primary>ファイアウォールの設定</primary></indexterm>
+	最後のものは、多くの古いファイアウォールの設定がそれを知らないかもしれない
+	という理由で重要である。このポートは最近付け加えられた。
 	</para>
 
 	<para>
-<indexterm><primary>configuring a firewall</primary></indexterm>
+<indexterm><primary>ファイアウォールの設定</primary></indexterm>
 <indexterm><primary>high order ports</primary></indexterm>
-<indexterm><primary>block incoming packets</primary></indexterm>
-	When configuring a firewall, the high order ports (1024-65535) are often used for outgoing connections and
-	therefore should be permitted through the firewall. It is prudent to block incoming packets on the high order
-	ports except for established connections.
+<indexterm><primary>入力パケットのブロック</primary></indexterm>
+	ファイアウォールを設定するとき、ハイオーダポート(1024-65535)は外向きの接続に
+	使われ、そのため、ファイアウォールを通るようにする必要がある。確立した接続を
+	除いて、ハイオーダポート上の入力パケットをブロックすることは賢明である。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Using IPC$ Share-Based Denials </title>
+	<title>IPC$ 共有ベースの拒否の使用</title>
 
 	<para>
 <indexterm><primary>IPC$</primary></indexterm>
 <indexterm><primary>deny</primary></indexterm>
 <indexterm><primary>security hole</primary></indexterm>
-	If the above methods are not suitable, then you could also place a more specific deny on the IPC$ share that
-	is used in the recently discovered security hole. This allows you to offer access to other shares while
-	denying access to IPC$ from potentially untrustworthy hosts.
+	もしも、上記の方法が適していないのであれば、最近セキュリティホールで使われた
+	IPC$共有に拒否の設定をすることが出来る。これは、潜在的に信頼できないホスト
+	からのIPC$へのアクセスを拒否する間、他の共有へのアクセスを提供する。
 	</para>
 
 	<para>
-	To do this you could use:
+	これを行うには以下のようにする:
 	<smbconfblock>
 	<smbconfsection name="[IPC$]"/>
 	<smbconfoption name="hosts allow">192.168.115.0/24 127.0.0.1</smbconfoption>
@@ -292,32 +293,33 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 
 	<para>
 <indexterm><primary>IPC$</primary></indexterm>
-<indexterm><primary>protection against attackers</primary></indexterm>
-<indexterm><primary>valid username/password</primary></indexterm>
-	This instructs Samba that IPC$ connections are not allowed from anywhere except the two listed network
-	addresses (localhost and the 192.168.115 subnet). Connections to other shares are still allowed. Because the
-	IPC$ share is the only share that is always accessible anonymously, this provides some level of protection
-	against attackers who do not know a valid username/password for your host.
+<indexterm><primary>攻撃者からの保護</primary></indexterm>
+<indexterm><primary>有効なユーザ名/パスワード</primary></indexterm>
+	これは、2つの指定されたネットワークアドレス(ローカルホストと 192.168.115の
+	サブネット)以外のどこからもIPC$共有への接続を許可しないようにSambaに指示する。
+	IPC$共有のみが常時匿名でアクセスできる共有であるという理由で、これは、
+	そのホストで有効なユーザ名/パスワードを知らない攻撃者に対してあるレベルの
+	保護を提供する。
 	</para>
 
 	<para>
-<indexterm><primary>access denied</primary></indexterm>
+<indexterm><primary>アクセス拒否</primary></indexterm>
 <indexterm><primary>IPC$</primary></indexterm>
-<indexterm><primary>browse shares</primary></indexterm>
-	If you use this method, then clients will be given an <literal>`access denied'</literal> reply when they try
-	to access the IPC$ share. Those clients will not be able to browse shares and may also be unable to access
-	some other resources.  This is not recommended unless for some reason you cannot use one of the other methods
-	just discussed.
+<indexterm><primary>共有のブラウズ</primary></indexterm>
+	もしもこの方法を使うのであれば、クライアントがIPC$共有にアクセスした時に、
+	<literal>`access denied'</literal>となる。それらクライアントは共有をブラウズ
+	出来ず、その他のリソースの一部にもアクセスできないだろう。この方法は、ここで説明
+	してきた方法のどれかが、何らかの理由で使えない場合を除いて推奨しない。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>NTLMv2 Security</title>
+	<title>NTLMv2のセキュリティ</title>
 
 	<para>
 <indexterm><primary>NTLMv2</primary></indexterm>
-	To configure NTLMv2 authentication, the following registry keys are worth knowing about:
+	NTLMv2認証を設定するためには、以下のレジストリキーは知っておく価値がある:
 	</para>
 
 	<para>
@@ -328,9 +330,9 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 	</para>
 
 	<para>
-	The value 0x00000003 means to send NTLMv2 response only. Clients will use NTLMv2 authentication;
-	use NTLMv2 session security if the server supports it. Domain controllers accept LM,
-	NTLM, and NTLMv2 authentication.
+	0x00000003という値はNTLMv2レスポンスのみを送ることを意味する。クライアントは
+	NTLMv2認証を使う。もしもサーバがサポートしているなら、NTLMv2セッション
+	セキュリティを使うこと。ドメインコントローラはLM、NTLMとNTLMv2認証を受け取る。
 	</para>
 
 	<para>
@@ -341,15 +343,15 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 	</para>
 
 	<para>
-	The value 0x00080000 means permit only NTLMv2 session security. If either NtlmMinClientSec or
-	NtlmMinServerSec is set to 0x00080000, the connection will fail if NTLMv2
-	session security is negotiated.
+	0x00080000という値はNTLMv2セッションセキュリティのみを許可することを意味する。
+	もしも、NtlmMinClientSecかNtlmMinServerSecが0x00080000に設定されるならば、
+	もしもNTLMv2セッションセキュリティがネゴシエートされたときに接続は失敗する。
 	</para>
 	</sect2>
 </sect1>
 
 <sect1>
-<title>Upgrading Samba</title>
+<title>Sambaのアップグレード</title>
 
 <para>
 <indexterm><primary>updates</primary></indexterm>
