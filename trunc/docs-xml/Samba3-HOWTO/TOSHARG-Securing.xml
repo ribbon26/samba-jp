@@ -405,56 +405,65 @@ problem request are totally convinced that the problem is with Samba.
 	<quote>
 <indexterm><primary>ホームディレクトリのマッピング</primary></indexterm>
 <indexterm><primary>固有のホームディレクトリ</primary></indexterm>
-	We are unable to keep individual users from mapping to any other user's home directory once they have
-	supplied a valid password! They only need to enter their own password. I have not found any method to
-	configure Samba so that users may map only their own home directory.
+	一度有効なパスワードが供給されると、他のユーザのホームディレクトリへ個別のユーザが
+	マッピングすることを阻止できない。ユーザが自分自身のホームディレクトリのみを
+	マッピング出来るように、Sambaを設定する方法を見つけられない。
 	</quote>
 	</para>
 
 	<para><quote>
-	User xyzzy can map his home directory. Once mapped, user xyzzy can also map anyone else's home directory.
+	ユーザxyzzyは自分自身のホームディレクトリをマップ出来る。一度マップすると、ユーザ
+	xyzzyは他の誰のホームディレクトリでもマップ出来る。
 	</quote></para>
 
 	<para>
-<indexterm><primary>security flaw</primary></indexterm>
-<indexterm><primary>defined shares</primary></indexterm>
-	This is not a security flaw, it is by design. Samba allows users to have exactly the same access to the UNIX
-	file system as when they were logged on to the UNIX box, except that it only allows such views onto the file
-	system as are allowed by the defined shares.
+<indexterm><primary>セキュリティの欠陥</primary></indexterm>
+<indexterm><primary>定義済みの共有</primary></indexterm>
+	これはセキュリティの欠陥ではない。これはデザインによるものである。Sambaは、
+	定義された共有に許されるように、ファイルシステム上のそのような表示のみを
+	認める事を除いて、UNIXマシンにログオンしていた時と正確に同じような、
+	UNIX ファイルシステムへのアクセスをユーザに認める。
 	</para>
 
 	<para>
-<indexterm><primary>UNIX home directories</primary></indexterm>
+<indexterm><primary>UNIXのホームディレクトリ</primary></indexterm>
 <indexterm><primary>permissions</primary></indexterm>
-	If your UNIX home directories are set up so that one user can happily <command>cd</command>
-	into another user's directory and execute <command>ls</command>, the UNIX security solution is to change file
-	permissions on the user's home directories so that the <command>cd</command> and <command>ls</command> are denied.
+	もしも、使用しているUNIXのホームディレクトリが設定されていてあるユーザが、
+	他のユーザのディスク中に、何の問題もなく<command>cd</command>でき、
+	<command>ls</command>を実行出来るならば、UNIXのセキュリティの解は、
+	ユーザのホームディレクトリ上のファイルのパーミッションを変更して、
+	そのために、 <command>cd</command> と <command>ls</command>は拒否される。
 	</para>
 
 	<para>
-<indexterm><primary>security policies</primary></indexterm>
-<indexterm><primary>permissions</primary></indexterm>
+<indexterm><primary>セキュリティポリシー</primary></indexterm>
+<indexterm><primary>パーミッション</primary></indexterm>
+	SambaはUNIX管理者のセキュリティポリシーを二番目に推測しないようにとても努力
+	し、要求されたポリシーとパーミッションを設定するためにUNIX管理者を信用する。
 	Samba tries very hard not to second guess the UNIX administrator's security policies and
 	trusts the UNIX admin to set the policies and permissions he or she desires.
 	</para>
 
 	<para>
+	Sambaは要求した動作を許可する。<smbconfsection name="[homes]"/>共有定義中に
+	 <smbconfoption name="only user">%S</smbconfoption>オプションを単におくこと。
 	Samba allows the behavior you require. Simply put the <smbconfoption name="only user">%S</smbconfoption>
 	option in the <smbconfsection name="[homes]"/> share definition.
 	</para>
 
 	<para>
-	The <smbconfoption name="only user"></smbconfoption> works in conjunction with the <smbconfoption name="users">list</smbconfoption>,
-	so to get the behavior you require, add the line:
+	<smbconfoption name="only user"></smbconfoption>パラメータは
+	<smbconfoption name="users">list</smbconfoption>パラメータと一緒に動作するので、
+	要求する動作を得るためには以下の行を追加する:
 	<smbconfblock>
 	<smbconfoption name="users">%S</smbconfoption>
 	</smbconfblock>
-	This is equivalent to adding
+	これは下記を追加するのと同じである。
 	<smbconfblock>
 	<smbconfoption name="valid users">%S</smbconfoption>
 	</smbconfblock>
-	to the definition of the <smbconfsection name="[homes]"/> share, as recommended in
-	the &smb.conf; man page.
+	<smbconfsection name="[homes]"/>共有の定義のためには、&smb.conf;
+	マニュアルページでの推奨のようにする。
 	</para>
 	</sect2>
 
