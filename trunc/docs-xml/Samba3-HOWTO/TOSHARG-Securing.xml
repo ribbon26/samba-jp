@@ -357,18 +357,24 @@ Sambaサーバが入り込めない要塞になると仮定してはいけない
 <indexterm><primary>updates</primary></indexterm>
 <indexterm><primary>important announcements</primary></indexterm>
 <indexterm><primary>security vulnerability</primary></indexterm>
-Please check regularly on <ulink noescape="1" url="http://www.samba.org/">http://www.samba.org/</ulink> for
-updates and important announcements. Occasionally security releases are made, and it is highly recommended to
-upgrade Samba promptly when a security vulnerability is discovered. Check with your OS vendor for OS-specific
-upgrades.
+アップデートと重要な通知があるかどうかを、
+<ulink noescape="1" url="http://www.samba.org/">http://www.samba.org/</ulink>
+で定期的に確認してほしい。時折セキュリティリリースが作成され、セキュリティ上の脆弱性が
+発見されたときには直ちにSambaをアップグレードすることを強く推奨する。また、OS固有の
+アップグレードはOSベンダに確認すること。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
+もしも、すべてのSambaとホストプラットフォームの設定が、本当に、それを行うのを好む
+かもしれない事と同じくらい直感的だったならば、この章は不必要である。セキュリティの
+問題は、問題の複雑性の理由からではなく、セキュリティ問題の要求と判明することを
+投稿するほとんどの管理者が、全くSambaの問題であると確信しているという理由で、
+サポート担当の人にとってしばしばやっかいである。
 If all Samba and host platform configurations were really as intuitive as one might like them to be, this
 chapter would not be necessary. Security issues are often vexing for a support person to resolve, not because
 of the complexity of the problem, but because most administrators who post what turns out to be a security
@@ -376,29 +382,29 @@ problem request are totally convinced that the problem is with Samba.
 </para>
 
 	<sect2>
-	<title>Smbclient Works on Localhost, but the Network Is Dead</title>
+	<title>smbclientはローカルホストで動くが、ネットワークは死んでいる</title>
 
 	<para>
-	This is a common problem. Linux vendors tend to install a default firewall.
-	With the default firewall in place, only traffic on the loopback adapter (IP address 127.0.0.1)
-	is allowed through the firewall.
+	これはよくある問題である。Linuxベンダは既定値のファイアウォールをインストールする
+	傾向がある。既定値のファイアウォールの状態ではループバックアダプタ
+	(IPアドレスが 127.0.0.1)のみの通信が、ファイアウォール経由で許可される。
 	</para>
 
 	<para>
-	The solution is either to remove the firewall (stop it) or modify the firewall script to
-	allow SMB networking traffic through. See <link linkend="firewallports">the Using a 
-	Firewall</link> section.
+	解決方法は、ファイアウォールを取り除く(停止する)か、SMBネットワークトラフィックが
+	通過できるようにファイアウォールスクリプトを修正することである。
+	<link linkend="firewallports">ファイアウォールの使用</link>の節を参照のこと。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Why Can Users Access Other Users' Home Directories?</title>
+	<title>なぜユーザが他のユーザのホームディレクトリをアクセスできるのか?</title>
 
 	<para>
 	<quote>
-<indexterm><primary>mapping home directory</primary></indexterm>
-<indexterm><primary>own home directory</primary></indexterm>
+<indexterm><primary>ホームディレクトリのマッピング</primary></indexterm>
+<indexterm><primary>固有のホームディレクトリ</primary></indexterm>
 	We are unable to keep individual users from mapping to any other user's home directory once they have
 	supplied a valid password! They only need to enter their own password. I have not found any method to
 	configure Samba so that users may map only their own home directory.
