@@ -102,31 +102,36 @@ Sambaの印刷機能の基礎を概観する。この章中の情報の大多数
 <indexterm><primary>印刷サポート</primary></indexterm>
 <indexterm><primary>印刷サブシステム</primary></indexterm>
 <indexterm><primary>印刷システム</primary></indexterm>
-Samba's printing support always relies on the installed print subsystem of the UNIX OS it runs on. Samba is a
-<literal>middleman.</literal> It takes print files from Windows (or other SMB) clients and passes them to the real
-printing system for further processing; therefore, it needs to communicate with both sides: the Windows print
-clients and the UNIX printing system. Hence, we must differentiate between the various client OS types, each
-of which behave differently, as well as the various UNIX print subsystems, which themselves have different
-features and are accessed differently.
+Sambaの印刷サポートは常時それが動作しているUNIX OS上の、インストールされている印刷
+サブシステム上に依存している。Sambaは<literal>仲介者</literal>である。Windows(か
+他のSMB)クライアントから印刷ファイルを受け取り、それをさらなる処理のために実際の印刷
+システムに渡す。そのため、両方に接続する必要がある。すなわち、Windows印刷クライアントと
+UNIX印刷システムである。それゆえ、異なった機能と異なった形でアクセスされる、種々の
+UNIX印刷サブシステムと同様、おのおのが異なって振る舞う種々のクライアントOSの間での違いを
+認める必要がある。
 </para>
 
 <para>
-<indexterm><primary>UNIX printing</primary></indexterm>
+<indexterm><primary>UNIXでの印刷</primary></indexterm>
 <indexterm><primary>CUPS</primary></indexterm>
-This chapter deals with the traditional way of UNIX printing. The next chapter covers in great detail the more
-modern CUPS.
+この章では伝統的なUNIX印刷方式について取り扱う。次の章では、より最新のCUPSについて、
+とても多く説明する。
 </para>
 
 <important><para>
 <indexterm><primary>CUPS</primary></indexterm>
-CUPS users, be warned: do not just jump on to the next chapter. You might miss important information only found here!
+CUPSユーザに注意:次の章まで飛ばないこと。個々でのみ説明がある重要な情報を読み飛ばすことになる!
 </para></important>
 
 <para>
-<indexterm><primary>print configuration</primary></indexterm>
+<indexterm><primary>印刷設定</primary></indexterm>
 <indexterm><primary>problematic print</primary></indexterm>
-<indexterm><primary>print processing</primary></indexterm>
-<indexterm><primary>print filtering</primary></indexterm>
+<indexterm><primary>印刷処理</primary></indexterm>
+<indexterm><primary>印刷フィルタリング</primary></indexterm>
+現在、Samba管理の側面において、最も問題があることの一つは印刷の設定であることは、Samba
+メーリングリスト上で投稿されたことでも明らかである。多くの新しいSamba管理者は、Sambaが
+ある種の印刷処理を実行しているというような印象持っている。休憩を保証するが、Sambaは
+何らの印刷処理をも実行しない。何らの印刷フィルタリングも行わない。
 It is apparent from postings on the Samba mailing list that print configuration is one of the most problematic
 aspects of Samba administration today. Many new Samba administrators have the impression that Samba performs
 some sort of print processing. Rest assured, Samba does not perform any type of print processing. It does not
@@ -134,73 +139,71 @@ do any form of print filtering.
 </para>
 
 <para>
-<indexterm><primary>data stream</primary></indexterm>
-<indexterm><primary>local spool area</primary></indexterm>
-<indexterm><primary>spooled file</primary></indexterm>
-<indexterm><primary>local system printing</primary></indexterm>
-Samba obtains from its clients a data stream (print job) that it spools to a local spool area. When the entire
-print job has been received, Samba invokes a local UNIX/Linux print command and passes the spooled file to it.
-It is up to the local system printing subsystems to correctly process the print job and to submit it to the
-printer.
+<indexterm><primary>データストリーム</primary></indexterm>
+<indexterm><primary>ローカルスプール領域</primary></indexterm>
+<indexterm><primary>スプールされたファイル</primary></indexterm>
+<indexterm><primary>ローカルシステムの印刷</primary></indexterm>
+Sambaは、ローカルスプール領域にスプールされる、クライアントからデータストリーム
+(印刷ジョブ)を受け取る。印刷ジョブ全部を受け取ると、SambaはローカルのUNIX/Linux印刷
+コマンドを起動し、それに対してスプールされたファイルを渡す。それはローカルの印刷
+サブシステムを起動し、正しく印刷ジョブを処理し、プリンタに対してデータを渡す。
 </para>
 
 <sect2>
-<title>Client to Samba Print Job Processing</title>
+<title>クライアントからSambaへの印刷ジョブの処理</title>
 
 <para>
-Successful printing from a Windows client via a Samba print server to a UNIX
-printer involves six (potentially seven) stages:
+Sambaサーバ経由でWindowsクライアントからUNIXプリンタへの印刷がうまくいくためには、
+6つ(潜在的には7つ)のステージがある:
 </para>
 
 <orderedlist>
-	<listitem><para>Windows opens a connection to the printer share.</para></listitem>
+	<listitem><para>プリンタ共有に対してWindowsがコネクションをオープンする。</para></listitem>
 
-	<listitem><para>Samba must authenticate the user.</para></listitem>
+	<listitem><para>Sambaはユーザを認証しなければならない。</para></listitem>
 
-	<listitem><para>Windows sends a copy of the print file over the network
-	into Samba's spooling area.</para></listitem>
+	<listitem><para>Windowsがネットワーク経由でSambaのスプール領域に印刷ファイルの
+	コピーを送る。</para></listitem>
 
-	<listitem><para>Windows closes the connection.</para></listitem>
+	<listitem><para>Windowsはコネクションをクローズする。</para></listitem>
 
-	<listitem><para>Samba invokes the print command to hand the file over
-	to the UNIX print subsystem's spooling area.</para></listitem>
+	<listitem><para>Sambaは、UNIX印刷サブシステムの印刷領域経由でファイルを扱う
+	ために印刷コマンドを起動する。</para></listitem>
 
-	<listitem><para>The UNIX print subsystem processes the print job.</para></listitem>
+	<listitem><para>UNIX印刷サブシステムが印刷ジョブを処理する。</para></listitem>
 
-	<listitem><para>The print file may need to be explicitly deleted
-	from the Samba spooling area. This item depends on your print spooler
-	configuration settings.</para></listitem>
+	<listitem><para>印刷ファイルはSambaスプール領域から明示的に削除される必要がある。
+	これの要素は使用しているマシンのプリントスプーラの構成の設定に依存する。
+	</para></listitem>
 </orderedlist>
 </sect2>
 
 <sect2>
-<title>Printing-Related Configuration Parameters</title>
+<title>印刷に関連する設定パラメータ</title>
 
 <para>
-<indexterm><primary>global-level</primary></indexterm>
-<indexterm><primary>service-level</primary></indexterm>
-<indexterm><primary>printing behavior</primary></indexterm>
-There are a number of configuration parameters to control Samba's printing behavior. Please refer to the man
-page for &smb.conf; for an overview of these. As with other parameters, there are global-level (tagged with a
-<emphasis>G</emphasis> in the listings) and service-level (<emphasis>S</emphasis>) parameters.
+<indexterm><primary>グローバルレベル</primary></indexterm>
+<indexterm><primary>サービスレベル</primary></indexterm>
+<indexterm><primary>印刷の動作</primary></indexterm>
+Sambaの印刷動作を制御するための競ってパラメータは多数ある。それらの概要については
+&smb.conf;のマニュアルページを参照してほしい。他のパラメータと同様、グローバルレベル
+(一覧上で<emphasis>G</emphasis>とタグが付いているもの)とサービスレベル
+(<emphasis>S</emphasis>)パラメータがある。
 </para>
 
 <variablelist>
-	<varlistentry><term>Global Parameters</term>
-		<listitem><para> These <emphasis>may not</emphasis> go into
-		individual share definitions. If they go in by error,
-		the <command>testparm</command> utility can discover this
-		(if you run it) and tell you so.
+	<varlistentry><term>グローバルパラメータ</term>
+		<listitem><para>これらは明示的に共有定義に<emphasis>記述しなくても良い</emphasis>。
+		もしもエラーになったならば、(もしも動作させたならば)<command>testparm</command>
+		ユーティリティでそれを見つけることが出来、そのことを表示する。
 		</para></listitem>
 	</varlistentry>
 
-	<varlistentry><term>Service-Level Parameters</term>
-		<listitem><para> These may be specified in the
-		<smbconfsection name="[global]"/> section of &smb.conf;.
-		In this case they define the default behavior of all individual
-		or service-level shares (provided they do not have a different
-		setting defined for the same parameter, thus overriding the
-		global default).
+	<varlistentry><term>サービスレベルパラメータ</term>
+		<listitem><para>これらは&smb.conf;中の<smbconfsection name="[global]"/>
+		セクションで指定しても良い。この場合、個人毎すべてかサービスレベルの
+		共有の既定値の動作を定義する(同じパラメータに対して異なった設定の定義を
+		を持たない形で提供されるので、グローバルの既定値を上書きする)。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
@@ -209,7 +212,7 @@ page for &smb.conf; for an overview of these. As with other parameters, there ar
 </sect1>
 
 <sect1>
-<title>Simple Print Configuration</title>
+<title>簡単な印刷設定</title>
 
 <para>
 <indexterm><primary>BSD Printing</primary></indexterm>
