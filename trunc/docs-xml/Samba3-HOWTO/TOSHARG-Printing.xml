@@ -215,19 +215,19 @@ Sambaの印刷動作を制御するための競ってパラメータは多数あ
 <title>簡単な印刷設定</title>
 
 <para>
-<indexterm><primary>BSD Printing</primary></indexterm>
-<indexterm><primary>simple printing</primary></indexterm>
-<indexterm><primary>enables clients to print</primary></indexterm>
-<indexterm><primary>print environment</primary></indexterm>
-<link linkend="simpleprc">Simple Configuration with BSD Printing</link> shows a simple printing configuration.
-If you compare this with your own, you may find additional parameters that have been preconfigured by your OS
-vendor. Following is a discussion and explanation of the parameters. This example does not use many
-parameters.  However, in many environments these are enough to provide a valid &smb.conf; file that enables
-all clients to print.
+<indexterm><primary>BSD形式の印刷方式</primary></indexterm>
+<indexterm><primary>簡単な印刷方式</primary></indexterm>
+<indexterm><primary>クライアントに対して印刷を有効にする</primary></indexterm>
+<indexterm><primary>印刷環境</primary></indexterm>
+<link linkend="simpleprc">BSD印刷環境での簡単な設定</link>は、簡単な印刷の設定を示して
+いる。もしも現在使っている環境と比較して、OSベンダによってあらかじめ設定されている追加の
+パラメータを見つけるかもしれない。以下は、パラメータについての議論と説明である。この例は
+多くのパラメータを使っていない。しかし、多くの環境において、すべてのクライアントに対して
+印刷を有効にする有効な&smb.conf;ファイルを提供するためには、これは十分である。
 </para>
 
 <example id="simpleprc">
-<title>Simple Configuration with BSD Printing</title>
+<title>BSD印刷環境での簡単な設定</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="printing">bsd</smbconfoption>
@@ -243,32 +243,33 @@ all clients to print.
 
 <para>
 <indexterm><primary>testparm</primary></indexterm>
-<indexterm><primary>misconfigured settings</primary></indexterm>
-<indexterm><primary>pager program</primary></indexterm>
-This is only an example configuration. Samba assigns default values to all configuration parameters. The
-defaults are conservative and sensible. When a parameter is specified in the &smb.conf; file, this overwrites
-the default value. The <command>testparm</command> utility when run as root is capable of reporting all
-settings, both default as well as &smb.conf; file settings. <command>Testparm</command> gives warnings for all
-misconfigured settings. The complete output is easily 360 lines and more, so you may want to pipe it through a
-pager program.
+<indexterm><primary>間違った設定</primary></indexterm>
+<indexterm><primary>ページャプログラム</primary></indexterm>
+これは単に例としての設定である。Sambaはすべての設定パラメータに対して既定値を割り当てて
+いる。既定値は保守的でかつ賢明な値となっている。パラメータが&smb.conf;ファイル中で指定
+されたならば、それは既定値を上書きする。rootで<command>testparm</command>ユーティリティ
+を実行すると、&smb.conf;ファイルの設定のように両方の既定値とすべての設定を報告する
+機能がある。<command>Testparm</command>は間違った設定のすべてに対して警告を表示する。
+完全な出力は360行を軽く超えるので、その結果をページャプログラムに渡しても良いだろう。
 </para>
 
 <para>  
-<indexterm><primary>configuration syntax</primary></indexterm>
-<indexterm><primary>syntax tolerates spelling errors</primary></indexterm>
-<indexterm><primary>case-insensitive</primary></indexterm>
-The syntax for the configuration file is easy to grasp. You should know that  is not very picky about its
-syntax. As has been explained elsewhere in this book, Samba tolerates some spelling errors (such as
-<smbconfoption name="browseable"/> instead of <smbconfoption name="browsable"/>), and spelling is
-case-insensitive. It is permissible to use <parameter>Yes/No</parameter> or <parameter>True/False</parameter>
-for Boolean settings. Lists of names may be separated by commas, spaces, or tabs.
+<indexterm><primary>設定の文法</primary></indexterm>
+<indexterm><primary>綴りミスに対する寛容さ</primary></indexterm>
+<indexterm><primary>大文字小文字を区別しない</primary></indexterm>
+設定ファイルの文法は理解するのが簡単である。その文法について細かいことを知らなくても
+よい。この文書のどこかで説明されているが、Sambaはある種の綴りミスには寛容であり
+(たとえば、<smbconfoption name="browsable"/>の代わりに<smbconfoption name="browseable"/>
+など)、綴りは大文字小文字を無視する。論理値に対して、<parameter>Yes/No</parameter>か
+<parameter>True/False</parameter>を使うことも出来る。名前のリストは、カンマ、空白か
+タブで分離できる。
 </para>
 
 <sect2>
-<title>Verifying Configuration with <command>testparm</command></title>
+<title><command>testparm</command>による設定の検査</title>
 
 <para>
-<indexterm><primary>printing-related settings</primary></indexterm>
+<indexterm><primary>印刷関連の設定</primary></indexterm>
 <indexterm><primary>lp</primary></indexterm>
 <indexterm><primary>print</primary></indexterm>
 <indexterm><primary>spool</primary></indexterm>
@@ -276,16 +277,18 @@ for Boolean settings. Lists of names may be separated by commas, spaces, or tabs
 <indexterm><primary>ports</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
-<indexterm><primary>print configuration</primary></indexterm>
-<indexterm><primary>printer shares </primary></indexterm>
-<indexterm><primary>spooling path</primary></indexterm>
-To see all (or at least most) printing-related settings in Samba, including the implicitly used ones, try the
-command outlined below. This command greps for all occurrences of <constant>lp</constant>,
-<constant>print</constant>, <constant>spool</constant>, <constant>driver</constant>,
-<constant>ports</constant>, and <constant>[</constant> in <command>testparm</command>'s output. This provides
-a convenient overview of the running <command>smbd</command> print configuration. This command does not show
-individually created printer shares or the spooling paths they may use. Here is the output of my Samba setup,
-with settings shown in <link linkend="simpleprc">the example above</link>:
+<indexterm><primary>印刷の設定</primary></indexterm>
+<indexterm><primary>プリンタの設定</primary></indexterm>
+<indexterm><primary>スプールのパス</primary></indexterm>
+暗黙で使えるものを含む、Samba中で印刷に関連したすべての(あるいはほとんど全部)を見る
+ためには、以下で概要を説明しているコマンドを使う。このコマンドは
+<command>testparm</command>の出力中に現れるすべての
+<constant>lp</constant>、<constant>print</constant>、<constant>spool</constant>、<constant>driver</constant>,
+<constant>ports</constant>と<constant>[</constant>を検出する。これは、動作している
+<command>smbd</command>の印刷設定の簡便な概要を提供する。このコマンドは個別に作成された
+プリンタ共有かそれが使えるスプールパスを表示しない。
+<link linkend="simpleprc">上記の例</link>で示される設定で設定したSambaの出力は以下の
+ようになる:
 <screen>
 &rootprompt;<userinput>testparm -s -v | egrep "(lp|print|spool|driver|ports|\[)"</userinput>
  Load smb config files from /etc/samba/smb.conf
@@ -325,30 +328,31 @@ with settings shown in <link linkend="simpleprc">the example above</link>:
 </para>
 
 <para>
-You can easily verify which settings were implicitly added by Samba's default behavior. <emphasis>Remember: it
-may be important in your future dealings with Samba.</emphasis>
+Sambaの既定値の動作によって暗黙で追加される設定を検査するのは簡単である。
+<emphasis>確認:Sambaの将来の関係で重要かもしれない。</emphasis>
 </para>
 
 <note><para>
-The <command>testparm</command> in Samba-3 behaves differently from that in 2.2.x: used without the
-<quote>-v</quote> switch, it only shows you the settings actually written into! To see the complete
-configuration used, add the <quote>-v</quote> parameter to testparm.
+Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異なる。<quote>-v</quote>
+スイッチなしで使うと、実際に書かれた設定のみを表示する。使用している完全な設定を見る
+ためにはtestparmに<quote>-v</quote>オプションを追加する。
 </para></note>
 
 </sect2>
 
 <sect2>
-<title>Rapid Configuration Validation</title>
+<title>手っ取り早い設定の検証</title>
 
 <para> 
-<indexterm><primary>troubleshoot</primary></indexterm>
+<indexterm><primary>トラブルシュート</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
-<indexterm><primary>parameters</primary></indexterm>
-<indexterm><primary>verify</primary></indexterm>
-Should you need to troubleshoot at any stage, please always come back to this point first and verify if
-<command>testparm</command> shows the parameters you expect. To give you a warning from personal experience,
-try to just comment out the <smbconfoption name="load printers"/> parameter. If your 2.2.x system behaves like
-mine, you'll see this:
+<indexterm><primary>パラメータ</primary></indexterm>
+<indexterm><primary>検査</primary></indexterm>
+どのようなステージでもトラブルシュートをする必要があるので、常時、最初にこの点に戻り、
+<command>testparm</command>が期待しているパラメータを表示するかを検査する。
+個人的な経験から忠告すると、<smbconfoption name="load printers"/>パラメータを
+コメントアウトすることを試すこと。もしも2.2.xシステムの動作が、私の環境のようで
+あれば、以下のような表示が出る:
 </para>
 
 <para><screen>
@@ -361,8 +365,8 @@ mine, you'll see this:
 </screen></para>
 
 <para>
-<indexterm><primary>commenting out setting</primary></indexterm>
-<indexterm><primary>publishing printers</primary></indexterm>
+<indexterm><primary>設定のコメントアウト</primary></indexterm>
+<indexterm><primary>プリンタの公開</primary></indexterm>
 I assumed that commenting out of this setting should prevent Samba from
 publishing my printers, but it still did. It took some time to figure out
 the reason. But I am no longer fooled ... at least not by this.
