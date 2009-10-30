@@ -367,9 +367,9 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <para>
 <indexterm><primary>設定のコメントアウト</primary></indexterm>
 <indexterm><primary>プリンタの公開</primary></indexterm>
-I assumed that commenting out of this setting should prevent Samba from
-publishing my printers, but it still did. It took some time to figure out
-the reason. But I am no longer fooled ... at least not by this.
+この設定をコメントアウトするとSambaが自分のプリンタを公開させなくすると仮定したが、
+実際には引き続き公開している。理由を理解するのには時間がかかった。少なくともこれに
+よってもはや馬鹿にされることはない。
 <screen>
 &rootprompt;<userinput>grep -A1 "load printers" /etc/samba/smb.conf</userinput>
         load printers = No
@@ -382,23 +382,23 @@ the reason. But I am no longer fooled ... at least not by this.
 </screen></para>
 
 <para>
-<indexterm><primary>explicitly set</primary></indexterm>
-Only when the parameter is explicitly set to <smbconfoption name="load printers">No</smbconfoption> would
-Samba conform with my intentions. So, my strong advice is:
+<indexterm><primary>明示的な設定</primary></indexterm>
+パラメータを明示的に<smbconfoption name="load printers">No</smbconfoption>に設定する時
+にのみ、Sambaは意向にかなう。そのため、以下を強く推奨する:
 </para>
 
 <itemizedlist>
-	<listitem><para>Never rely on commented-out parameters.</para></listitem>
+	<listitem><para>コメントアウトしたパラメータには決して頼らない。</para></listitem>
 
-	<listitem><para>Always set parameters explicitly as you intend them to
-	behave.</para></listitem>
+	<listitem><para>常時、そう動作させたいと意図するものについては、明示的に
+	パラメータを設定する。</para></listitem>
 
-	<listitem><para>Use <command>testparm</command> to uncover hidden
-	settings that might not reflect your intentions.</para></listitem>
+	<listitem><para>意向を反映しないかもしれない隠れた設定を、見える化するために
+	<command>testparm</command>を使う。</para></listitem>
 </itemizedlist>
 
 <para>
-The following is the most minimal configuration file:
+以下は最も最小の設定ファイルである:
 <screen>
 &rootprompt;<userinput>cat /etc/samba/smb.conf-minimal</userinput>
         [printers]
