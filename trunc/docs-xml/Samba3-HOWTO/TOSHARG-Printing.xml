@@ -683,50 +683,46 @@ Configuration</link> <link linkend="extbsdpr">Extended BSD Printing Configuratio
 		(<link linkend="cups-msrpc">Samba-2.2からの印刷環境開発</link>を参照)
 		によってい提供されるリモート管理インタフェース経由でプリンタのすべてを操作出来る。
 		より大きなシステムでは、<smbconfoption name="printer admin"/>パラメータは
-		通常共有ベースのパラメータ
-		
-		Members of the ntadmin group should be able to add drivers and set printer properties
-		(<constant>ntadmin</constant> is only an example name; it needs to be a valid UNIX group name); root is
-		implicitly always a <smbconfoption name="printer admin"/>. The <literal>@</literal> sign precedes group names
-		in the <filename>/etc/group</filename>. A printer admin can do anything to printers via the remote
-		administration interfaces offered by MS-RPC (see <link linkend="cups-msrpc">Printing Developments Since
-		Samba-2.2</link>).  In larger installations, the <smbconfoption name="printer admin"/> parameter is normally a
-		per-share parameter. This permits different groups to administer each printer share.
+		通常共有単位に存在するパラメータである。こうすると、各プリンタ共有の管理者に
+		異なったグループを割り当てる事ができる。
 	</para></listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="lpq cache time">20 </smbconfoption></term>
 		<listitem><para>
 <indexterm><primary>lpq command</primary></indexterm>
 <indexterm><primary>lpq cache time</primary></indexterm>
-		Controls the cache time for the results of the lpq command. It prevents the lpq command being called too often
-		and reduces the load on a heavily used print server.
+		lpqコマンドの結果のキャッシュ時間を制御する。これは、過度にlpqコマンドが
+		呼ばれる事を防ぎ、高負荷のプリントサーバの負荷を減少させる。
 	</para></listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="use client driver">no </smbconfoption></term>
 		<listitem><para>
 <indexterm><primary>Windows NT/200x/XP</primary></indexterm>
-		If set to <constant>yes</constant>, only takes effect for Windows NT/200x/XP clients (and not for Win
-		95/98/ME). Its default value is <constant>No</constant> (or <constant>False</constant>).  It must
-		<emphasis>not</emphasis> be enabled on print shares (with a <constant>yes</constant> or
-		<constant>true</constant> setting) that have valid drivers installed on the Samba server. For more detailed
-		explanations, see the &smb.conf; man page.
+		もしも<constant>yes</constant>に設定されると、Windows NT/200x/XPクライアント
+		のみに(Windows 95/98/MEには関係ない)影響する。このパラメータの既定値は
+		<constant>No</constant>で(あるいは<constant>False</constant>)である。
+		これは、Sambaサーバ上で有効なドライバがインストールされているプリント共有
+		では(<constant>yes</constant>か<constant>true</constant>を設定して)
+		<emphasis>決して有効にしてはならない</emphasis>。より詳細な説明は、
+		&smb.conf;マニュアルページを参照のこと。
 	</para></listitem></varlistentry>
 </variablelist>
 
 </sect3>
 
 <sect3 id="ptrsect">
-<title>The [printers] Section</title>
+<title>[printers]セクション</title>
 
 <para>
-<indexterm><primary>printers section</primary></indexterm>
+<indexterm><primary>printersセクション</primary></indexterm>
 <indexterm><primary>printcap</primary></indexterm>
-The printers section is the second special section. If a section with this name appears in the &smb.conf;,
-users are able to connect to any printer specified in the Samba host's printcap file, because Samba on startup
-then creates a printer share for every printer name it finds in the printcap file. You could regard this
-section as a convenient shortcut to share all printers with minimal configuration. It is also a container for
-settings that should apply as default to all printers. (For more details, see the &smb.conf; man page.)
-Settings inside this container must be share-level parameters.
+printersセクションは2つめの特別なセクションである。もしもこの名前のセクションが&smb.conf;
+中に現れると、Samba起動時に、printcapファイル中で見つかるすべてのプリンタ名に対してプリンタ
+共有を作成するので、ユーザはSambaホスト上のprintcapファイル中で定義されている任意の
+プリンタに接続できる。このセクションを最低の設定ですべてのプリンタを共有するための、
+便利なショートカットとして見なすことができる。これはまた、すべてのプリンタに対する
+既定値として適用すべき設定のためのコンテナでもある(より詳細は、&smb.conf;マニュアル
+ページを参照)。この内側にあるコンテナの設定は共有レベルパラメータでなければならない。
 </para>
 
 <variablelist>
