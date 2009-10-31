@@ -407,13 +407,14 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <para>
 <indexterm><primary>testparm</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
-This example should show that you can use <command>testparm</command> to test any Samba configuration file.
-Actually, we encourage you <emphasis>not</emphasis> to change your working system (unless you know exactly
-what you are doing). Don't rely on the assumption that changes will only take effect after you restart smbd!
-This is not the case. Samba rereads it every 60 seconds and on each new client connection. You might have to
-face changes for your production clients that you didn't intend to apply. You will now note a few more
-interesting things; <command>testparm</command> is useful to identify what the Samba print configuration would
-be if you used this minimalistic configuration. Here is what you can expect to find:
+この例は、任意のSamba構成ファイルをテストするために、<command>testparm</command>を
+使って表示すべきである。実際、現在動いているシステム(正確に何をやっているか知っている
+限り)を<emphasis>変更しない</emphasis>ことを勧める。smbd再起動後にのみ変更の影響が
+反映されるという仮定に頼ってはいけない!これは本当ではない。Sambaは60秒ごととクライアント
+からの接続時に再読込を行う。適用する事を意図しない製品のクライアントのために､変更に
+直面しなければならないかもしれない。そのほか、いくつかの興味深いことに注意するとよい。
+<command>testparm</command>は、この最低限の構成を使う時にSambaの印刷設定がどうあるかを
+識別するために便利である。以下では、見つけようと思っているものがある:
 <screen>
 &rootprompt;<userinput>testparm -v smb.conf-minimal | egrep "(print|lpq|spool|driver|ports|[)"</userinput>
  Processing section "[printers]"
@@ -444,12 +445,12 @@ be if you used this minimalistic configuration. Here is what you can expect to f
 </screen></para>
 
 <para>
-<command>testparm</command> issued two warnings:
+<command>testparm</command>は2つの警告を表示する:
 </para>
 
 <itemizedlist>
-	<listitem><para>We did not specify the <smbconfsection name="[printers]"/> section as printable.</para></listitem>
-	<listitem><para>We did not tell Samba which spool directory to use.</para></listitem>
+	<listitem><para><smbconfsection name="[printers]"/>セクションが印刷可能と指定していない。</para></listitem>
+	<listitem><para>どのスプールディレクトリを使うかをSambaに指定していない。</para></listitem>
 </itemizedlist>
 
 <para>
@@ -457,23 +458,25 @@ be if you used this minimalistic configuration. Here is what you can expect to f
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
-However, this was not fatal, and Samba will default to values that will work. Please, do not rely on this and
-do not use this example. This was included to encourage you to be careful to design and specify your setup to
-do precisely what you require. The outcome on your system may vary for some parameters given, since Samba may
-have been built with  different compile-time options. <emphasis>Warning:</emphasis> do not put a comment sign
-<emphasis>at the end</emphasis> of a valid line. It will cause the parameter to be ignored (just as if you had
-put the comment sign at the front). At first I regarded this as a bug in my Samba versions. But the man page
-clearly says: <literal>Internal whitespace in a parameter value is retained verbatim.</literal> This means
-that a line consisting of, for example,
+しかし、これは致命的ではなく、Sambaは動作するように既定値を設定する。が、この例を
+頼らず、使わないでほしい。これは、自分が何を要求しているかを正確にわかっている設定と
+注意深い設計を手助けするために用意された。使用しているシステムからの結果は、異なった
+コンパイル時オプションによって構築されたSambaで、いくつかのパラメータによっていろいろと
+変わる。<emphasis>警告:</emphasis>有効な行の<emphasis>行末に</emphasis>コメントサイン
+をを置いてはいけない。この場合、パラメータは無視される(行頭にコメントサインを置いたのと
+同じになる)。最初にこれは使用しているSambaのバージョンのバグではないかと思った。しかし、
+マニュアルページには明確に
+<literal>パラメータ値の内部の空白は、正確にその通りに保持される</literal>と書いてある。
+これは、たとえば以下のような行があると
 <smbconfblock>
-<smbconfcomment>This defines LPRng as the printing system</smbconfcomment>
+<smbconfcomment>これはLPRngを印刷システムとして定義する。</smbconfcomment>
 <smbconfoption name="printing"> lprng</smbconfoption>
 </smbconfblock>
 </para>
 
 <para>
-will regard the whole of the string after the <literal>=</literal> sign as the value you want to define. This
-is an invalid value that will be ignored, and a default value will be used in its place.
+定義したい値として<literal>=</literal>記号の後の文字列すべてを尊重する。これは、不正な
+値なので無視され、この場所では既定値が使われる。
 </para>
 
 </sect2>
@@ -481,24 +484,25 @@ is an invalid value that will be ignored, and a default value will be used in it
 </sect1>
 
 <sect1>
-<title>Extended Printing Configuration</title>
+<title>拡張印刷設定</title>
 
 <para>
-<indexterm><primary>Extended BSD Printing</primary></indexterm>
-<indexterm><primary>BSD-style printing</primary></indexterm>
+<indexterm><primary>拡張BSD印刷環境</primary></indexterm>
+<indexterm><primary>BSD形式の印刷</primary></indexterm>
 <indexterm><primary>CUPS</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
-<link linkend="extbsdpr">Extended BSD Printing Configuration</link> shows a more verbose configuration for
-print-related settings in a BSD-style printing environment. What follows is a discussion and explanation of
-the various parameters. We chose to use BSD-style printing here because it is still the most commonly used
-system on legacy UNIX/Linux installations. New installations predominantly use CUPS, which is discussed in a
-separate chapter. The example explicitly names many parameters that do not need to be specified because they
-are set by default. You could use a much leaner &smb.conf; file, or you can use <command>testparm</command> or
-<command>SWAT</command> to optimize the &smb.conf; file to remove all parameters that are set at default.
+<link linkend="extbsdpr">拡張BSD印刷環境の設定</link>は、BSD形式の印刷設定中の印刷に
+関連した設定のためのより詳細な設定を表示する。下記は、いろいろなパラメータの議論と
+説明である。昔からのUNIX/Linuxマシン上で最も一般的に使われているので、BSD形式の
+印刷環境を使う事をした。主に新しいシステムでは、別の章で議論されているCUPSを使う
+だろう。例は、既定値で設定されていないという理由で、指定するのが不要なたくさんの
+パラメータを明示的にリストアップする。よりスリムな&smb.conf;を使うことも、
+<command>testparm</command>を使う事も、既定値に設定されているすべてのパラメータを
+&smb.conf;から削除して最適化するために、<command>SWAT</command>を使う事もできる。
 </para>
 
 <example id="extbsdpr">
-<title>Extended BSD Printing Configuration</title>
+<title>拡張BSD印刷環境設定</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="printing">bsd</smbconfoption>
@@ -536,41 +540,44 @@ are set by default. You could use a much leaner &smb.conf; file, or you can use 
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
 <indexterm><primary></primary></indexterm>
-This is an example configuration. You may not find all the settings that are in the configuration file that
-was provided by the OS vendor. Samba configuration parameters, if not explicitly set, default to a sensible
-value.  To see all settings, as <constant>root</constant> use the <command>testparm</command> utility.
-<command>testparm</command> gives warnings for misconfigured settings.
+これは設定の例である。OSベンダによって提供されている設定ファイル中でのすべての設定は
+ここにはない。明示的に設定されていないSamba設定パラメータは、既定値で賢明な値に設定
+されている。すべての設定を見るには、<constant>root</constant>になり、
+<command>testparm</command>ユーティリティを使う。<command>testparm</command>は
+設定の間違いを指摘する。
 </para>
 
 <sect2>
-<title>Detailed Explanation Settings</title>
+<title>設定の説明詳細</title>
 
 <para>
+以下は<link linkend="extbsdpr">拡張BSD印刷環境の設定</link>である。
 The following is a discussion of the settings from <link linkend="extbsdpr">Extended BSD Printing
 Configuration</link> <link linkend="extbsdpr">Extended BSD Printing Configuration</link>.
 </para>
 
 <sect3>
-<title>The [global] Section</title>
+<title>[global]セクション</title>
 
 <para>
-<indexterm><primary>global section</primary></indexterm>
-<indexterm><primary>special sections</primary></indexterm>
-<indexterm><primary>individual section</primary></indexterm>
-<indexterm><primary>share</primary></indexterm>
-The <smbconfsection name="[global]"/> section is one of four special sections (along with <smbconfsection
-name="[homes]"/>, <smbconfsection name="[printers]"/>, and <smbconfsection name="[print$]"/>). The
-<smbconfsection name="[global]"/> contains all parameters that apply to the server as a whole. It is the place
-for parameters that have only a global meaning. It may also contain service-level parameters that define
-default settings for all other sections and shares. This way you can simplify the configuration and avoid
-setting the same value repeatedly. (Within each individual section or share, you may, however, override these
-globally set share settings and specify other values).
+<indexterm><primary>グローバルセクション</primary></indexterm>
+<indexterm><primary>特別セクション</primary></indexterm>
+<indexterm><primary>個別のセクション</primary></indexterm>
+<indexterm><primary>共有</primary></indexterm>
+<smbconfsection name="[global]"/>セクションは4つの特別なセクションの1つであり
+(残りは<smbconfsection name="[homes]"/>, <smbconfsection name="[printers]"/>と
+ <smbconfsection name="[print$]"/>)、これらはサーバ全体に適用されるすべてのパラメータを
+含んでいる。ここにはグローバルな意味を持つパラメータのみが配置される。すべての他の
+セクションと共有に対しての既定値の設定を定義する、サービスレベルのパラメータを含む
+こともできる。この方法は設定を簡単化し、同じ値を繰り返し設定することを防ぐ(設定
+できる個別のセクションか共有内で行えるが、グローバルに設定した共有の設定と他の値の
+指定を上書きする)。
 </para>
 
 <variablelist>
 	<varlistentry><term><smbconfoption name="printing">bsd </smbconfoption></term>
 		<listitem><para>
-<indexterm><primary>default print commands</primary></indexterm>
+<indexterm><primary>既定値の印刷コマンド</primary></indexterm>
 <indexterm><primary>RFC 1179</primary></indexterm>
 <indexterm><primary>printing</primary></indexterm>
 <indexterm><primary>CUPS</primary></indexterm>
@@ -582,79 +589,102 @@ globally set share settings and specify other values).
 <indexterm><primary>QNX</primary></indexterm>
 <indexterm><primary>PLP</primary></indexterm>
 <indexterm><primary>queue control</primary></indexterm>
-		Causes Samba to use default print commands applicable for the BSD (also known as RFC 1179 style or LPR/LPD)
-		printing system. In general, the <parameter>printing</parameter> parameter informs Samba about the print
-		subsystem it should expect. Samba supports CUPS, LPD, LPRNG, SYSV, HPUX, AIX, QNX, and PLP. Each of these
-		systems defaults to a different <smbconfoption name="print command"/> (and other queue control commands).
+		BSD(RFC 1179形式かLPR/LPD)として知られてもいる)BSDのために適用出来る
+		Sambaが使う既定値の印刷コマンドを指定する。一般的に、
+		<parameter>printing</parameter>パラメータは、仮定している印刷サブシステム
+		をSambaに告げる。SambaはCUPS, LPD, LPRNG, SYSV, HPUX, AIX, QNXと PLPを
+		サポートしている。各システムは異なった<smbconfoption name="print command"/>
+		(と他のキュー制御コマンド)を既定値としている。
 		</para>
 
 		<caution><para>
-<indexterm><primary>service-level</primary></indexterm>
-<indexterm><primary>SOFTQ printing system</primary></indexterm>
-		The <smbconfoption name="printing"/> parameter is normally a service-level parameter. Since it is included
-		here in the <smbconfsection name="[global]"/> section, it will take effect for all printer shares that are not
-		defined differently. Samba-3 no longer supports the SOFTQ printing system.
+<indexterm><primary>サービスレベル</primary></indexterm>
+<indexterm><primary>SOFTQ 印刷システム</primary></indexterm>
+		<smbconfoption name="printing"/>パラメータは通常サービスレベルの
+		パラメータである。<smbconfsection name="[global]"/>セクション中のここに
+		含まれた後、異なった設定をしていないすべてのプリンタ共有に効果が及ぶ。
+		Samba-3はもはやSOFTQ印刷サービスをサポートしない。
 		</para></caution>
 	</listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="load printers">yes </smbconfoption></term>
 		<listitem><para>
-<indexterm><primary>printer shares</primary></indexterm>
+<indexterm><primary>プリンタ共有</primary></indexterm>
 <indexterm><primary>printcap</primary></indexterm>
-<indexterm><primary>separate shares</primary></indexterm>
-<indexterm><primary>UNIX printer</primary></indexterm>
-		Tells Samba to create automatically all available printer shares. Available printer shares are discovered by
-		scanning the printcap file. All created printer shares are also loaded for browsing. If you use this
-		parameter, you do not need to specify separate shares for each printer. Each automatically created printer
-		share will clone the configuration options found in the <smbconfsection name="[printers]"/> section. (The
-		<parameter>load printers = no</parameter> setting will allow you to specify each UNIX printer you want to
-		share separately, leaving out some you do not want to be publicly visible and available).
+<indexterm><primary>共有の分割</primary></indexterm>
+<indexterm><primary>UNIXのプリンタ</primary></indexterm>
+		Sambaにすべての有効なプリンタ共有を自動的に作成させる。有効なプリンタ
+		共有はprintcapファイルをスキャンすることで調べる。作成されたすべての
+		プリンタ共有はブラウジングでも表示される。もしもこのパラメータを使う
+		場合、各プリンタ毎に分割する必要はない。自動的に作成されたプリンタ
+		共有のおのおのは、<smbconfsection name="[printers]"/>セクション中に
+		ある設定オプションの設定の複製である
+		(<parameter>load printers = no</parameter>の設定は、
+		誰でも見えて使えるようにしたくないいくつかのものをする(leaving out)、
+		各UNIXプリンタを指定できるようにする)。
 		</para>
 	</listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="show add printer wizard">yes </smbconfoption></term>
 		<listitem><para>
-<indexterm><primary>Add Printer Wizard</primary></indexterm>
+<indexterm><primary>プリンタ追加ウィザード</primary></indexterm>
 <indexterm><primary>Printers</primary></indexterm>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
+<indexterm><primary>ネットワークコンピュータ</primary></indexterm>
 <indexterm><primary>net view</primary></indexterm>
-<indexterm><primary>uploaded driver</primary></indexterm>
-		Setting is normally enabled by default (even if the parameter is not specified in &smb.conf;).  It causes the
-		<guiicon>Add Printer Wizard</guiicon> icon to appear in the <guiicon>Printers</guiicon> folder of the Samba
-		host's share listing (as shown in <guiicon>Network Neighborhood</guiicon> or by the <command>net
-		view</command> command). To disable it, you need to explicitly set it to <constant>no</constant> (commenting
-		it out will not suffice). The <parameter>Add Printer Wizard</parameter> lets you upload a printer driver to
-		the <smbconfsection name="[print$]"/> share and associate it with a printer (if the respective queue exists
-		before the action), or exchange a printer's driver for any other previously uploaded driver.
+<indexterm><primary>アップロードされたドライバ</primary></indexterm>
+		設定は通常既定値によって有効になっている(たとえパラメータが&smb.conf;
+		中で指定されていなくても)。これは、Sambaホストの共有リストの中での
+		<guiicon>プリンタ</guiicon>フォルダ中に
+		<guiicon>プリンタ追加ウィザード</guiicon>が出る原因である(
+		<guiicon>ネットワークコンピュータ</guiicon>か
+		<command>net view</command>コマンドで見られる)。これを無効にするには、
+		明示的に<constant>no</constant>と設定する必要がある(コメントアウトは
+		十分ではない)。<parameter>プリンタ追加ウィザード</parameter>は
+		<smbconfsection name="[print$]"/>共有にプリンタドライバをアップロード
+		させ、それをプリンタに関連づけるか(もしもそれぞれのキューが動作の前に
+		存在するならば)、以前にアップロードされたドライバとプリンタドライバを
+		交換する)。
 		</para>
 	</listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="max print jobs">100 </smbconfoption></term>
 		<listitem><para>
 <indexterm><primary>print jobs</primary></indexterm>
-		Sets the upper limit to 100 print jobs being active on the Samba server at any one time. Should a client
-		submit a job that exceeds this number, a "no more space available on server" type of error message will be
-		returned by Samba to the client. A setting of zero (the default) means there is <emphasis>no</emphasis> limit
-		at all.
+		ある時間にSambaサーバ上で有効な印刷ジョブを最大100までに設定する。この数よりも
+		大きなジョブをクライアントが投稿すると、"サーバ上に容量がありません"という
+		エラーメッセージがSambaサーバからクライアントに返す。ゼロという設定(既定値)
+		は全く<emphasis>制限がない</emphasis>事を意味する。
 		</para>
 	</listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="printcap name">/etc/printcap </smbconfoption></term>
 		<listitem><para>
 <indexterm><primary>CUPS</primary></indexterm>
-<indexterm><primary>available printerd</primary></indexterm>
+<indexterm><primary>有効なプリンタ</primary></indexterm>
 <indexterm><primary>printcap</primary></indexterm>
-		Tells Samba where to look for a list of available printer names. Where CUPS is used, make sure that a printcap
-		file is written. This is controlled by the <constant>Printcap</constant> directive in the
-		<filename>cupsd.conf</filename> file.
+		Sambaに有効なプリンタ名ののリストがどこにあるかを告げる。CUPSを使って
+		いる場合、printcapファイルが書かれているかを確認巣r。これは
+		<filename>cupsd.conf</filename>ファイル中の<constant>Printcap</constant>
+		ディレクティブによって制御される。
 	</para></listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="printer admin">@ntadmin </smbconfoption></term>
 		<listitem><para>
-<indexterm><primary>add drivers</primary></indexterm>
+<indexterm><primary>ドライバの追加</primary></indexterm>
 <indexterm><primary>/etc/group</primary></indexterm>
-<indexterm><primary>printer share</primary></indexterm>
-<indexterm><primary>set printer properties</primary></indexterm>
+<indexterm><primary>プリンタ共有</primary></indexterm>
+<indexterm><primary>プリンタプロパティの設定</primary></indexterm>
+		ntadminグループメンバはドライバを追加するためとプリンタプロパティを設定することが
+		出来るようにすべきである(<constant>ntadmin</constant>は単なる例としての名前で
+		ある。有効なUNIXグループ名が必要である)。rootは暗黙的にいつでも
+		<smbconfoption name="printer admin"/>である。グループ名の前に付く
+		<literal>@</literal>記号は<filename>/etc/group</filename>中の名前である。
+		printer adminは、MS-RPC
+		(<link linkend="cups-msrpc">Samba-2.2からの印刷環境開発</link>を参照)
+		によってい提供されるリモート管理インタフェース経由でプリンタのすべてを操作出来る。
+		より大きなシステムでは、<smbconfoption name="printer admin"/>パラメータは
+		通常共有ベースのパラメータ
+		
 		Members of the ntadmin group should be able to add drivers and set printer properties
 		(<constant>ntadmin</constant> is only an example name; it needs to be a valid UNIX group name); root is
 		implicitly always a <smbconfoption name="printer admin"/>. The <literal>@</literal> sign precedes group names
