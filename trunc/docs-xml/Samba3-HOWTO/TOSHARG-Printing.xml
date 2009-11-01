@@ -728,52 +728,56 @@ printersセクションは2つめの特別なセクションである。もし�
 <variablelist>
 	<varlistentry><term><smbconfoption name="comment">All printers </smbconfoption></term>
 		<listitem><para>
-		The <smbconfoption name="comment"/> is shown next to the share if
-		a client queries the server, either via <guiicon>Network Neighborhood</guiicon> or with
-		the <command>net view</command> command, to list available shares.
+		<smbconfoption name="comment"/>は、クライアントが
+		<guiicon>ネットワークコンピュータ</guiicon>か<command>net view</command>
+		コマンド経由でサーバに問い合わせた時、有効な共有一覧を表示する時に、
+		共有のそばに表示される。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="printable">yes </smbconfoption></term>
 		<listitem><para>
-		The <smbconfsection name="[printers]"/> service <emphasis>must</emphasis>
-		be declared as printable. If you specify otherwise, smbd will refuse to load  at
-		startup. This parameter allows connected clients to open, write to, and submit spool files
-		into the directory specified with the <smbconfoption name="path"/>
-		parameter for this service. It is used by Samba to differentiate printer shares from
-		file shares. 
+		<smbconfsection name="[printers]"/>サービスはprintableとして
+		<emphasis>定義されねばならない</emphasis>。もしもそれ以外を指定すると、
+		smbdは起動時にロードを停止する。このパラメータは、このサービスに対して
+		<smbconfoption name="path"/>パラメータで指定したディレクトリ中に、
+		オープン、書き込みとスプールファイルの投稿を、接続したクライアントに
+		許可する。これは、ファイル共有とプリンタ共有とを区別するために、
+		Sambaによって使われる。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="path">/var/spool/samba </smbconfoption></term>
 		<listitem><para>
-		Must point to a directory used by Samba to spool incoming print files. <emphasis>It
-		must not be the same as the spool directory specified in the configuration of your UNIX
-		print subsystem!</emphasis> The path typically points to a directory that is world
-		writable, with the <emphasis>sticky</emphasis> bit set to it.
+		入力された印刷ファイルをSambaによってスプールするためのディレクトリを
+		指定しなければならない。<emphasis>UNIX印刷サブシステムの設定中で指定された
+		スプールディレクトリと同じに設定してはならない!</emphasis>パスは通常
+		<emphasis>sticky</emphasis>ビットを設定した、その他に書き込み可能な
+		ディレクトリを指定する。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="browseable">no </smbconfoption></term>
 		<listitem><para>
-		Is always set to <constant>no</constant> if
-		<smbconfoption name="printable">yes</smbconfoption>. It makes
-		the <smbconfsection name="[printer]"/> share itself invisible in the list of
-		available shares in a <command>net view</command> command or in the Explorer browse
-		list. (You will of course see the individual printers.)
+		<smbconfoption name="printable">yes</smbconfoption>のときは常時
+		<constant>no</constant>に設定する。これは、共有それ自身が、
+		<command>net view</command>コマンドか、エクスプローラのブラウズリスト
+		中で有効な共有の一覧中で不可視にする(もちろん個々のプリンタを見る
+		ことは出来る)。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="guest ok">yes </smbconfoption></term>
 		<listitem><para>
-		If this parameter is set to <constant>yes</constant>, no password is required to
-		connect to the printer's service. Access will be granted with the privileges of the
-		<smbconfoption name="guest account"/>. On many systems the guest
-		account will map to a user named "nobody." This user will usually be found
-		in the UNIX passwd file with an empty password, but with no valid UNIX login. On some
-		systems the guest account might not have the privilege to be able to print. Test this
-		by logging in as your guest user using <command>su - guest</command> and run a system
-		print command like:
+		もしも、このプリンタが<constant>yes</constant>に設定されているならば、
+		印刷サービスに接続する時にパスワードを必要としない。アクセスは、
+		<smbconfoption name="guest account"/>の権限で許可される。多くのシステム
+		では、ゲストアカウントは"nobody"という名前にマップされる。このユーザは
+		通常空白のパスワード尾持つUNIXのpasswdファイルにあるが、UNIXログインは
+		無効である。いくつかのシステムでは、ゲストアカウントユーザは印刷権限を
+		持たないかもしれない。<command>su - guest</command>を使い、以下の
+		システムの印刷コマンドを動かし、使用するシステムのguestユーザ中で
+		ロギングすることでこれをテストする:
 		</para>
 	
 		<para>
@@ -783,14 +787,16 @@ printersセクションは2つめの特別なセクションである。もし�
 
 	<varlistentry><term><smbconfoption name="public">yes </smbconfoption></term>
 		<listitem><para>
-		Is a synonym for <smbconfoption name="guest ok">yes</smbconfoption>.
-		Since we have <smbconfoption name="guest ok">yes</smbconfoption>, it
-		really does not need to be here. (This leads to the interesting question, <quote>What if I
-		by accident have two contradictory settings for the same share?</quote> The answer is that the
-		last one encountered by Samba wins. <command>testparm</command> does not complain about different settings
-		of the same parameter for the same share. You can test this by setting up multiple
-		lines for the <parameter>guest account</parameter> parameter with different usernames,
-		and then run testparm to see which one is actually used by Samba.)
+		<smbconfoption name="guest ok">yes</smbconfoption>の同義語である。
+		<smbconfoption name="guest ok">yes</smbconfoption>を設定すると、
+		これは本当にここにある必要はない(これは
+		<quote>同じ共有に対して2つの矛盾している設定が偶然あるときはどうなるか?</quote>
+		という興味深い質問を導く。答えはSambaが最後に見つけたものが使われる。
+		<command>testparm</command>は同じ共有に対して同じパラメータに対する
+		異なった設定に対しては注意を喚起しない。異なったユーザ名で
+		<parameter>guest account</parameter>パラメータに対して複数の行を
+		設定することでこれをテストでき、次にtestparmを動作させて、どの行が
+		Sambaによって本当に使われるかを見る事ができる)。
 		</para></listitem>
 	</varlistentry>
 
