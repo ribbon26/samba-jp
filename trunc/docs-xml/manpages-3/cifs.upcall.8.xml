@@ -19,8 +19,8 @@
 <refsynopsisdiv>
         <cmdsynopsis>
                 <command>cifs.upcall</command>
-                <arg choice="opt">-c</arg>
-                <arg choice="opt">-v</arg>
+                <arg choice="opt">--trust-dns|-t</arg>
+                <arg choice="opt">--version|-v</arg>
                 <arg choice="req">keyid</arg>
         </cmdsynopsis>
 </refsynopsisdiv>
@@ -42,11 +42,16 @@
 	<variablelist>
 		<varlistentry>
 		<term>-c</term>
-		<listitem><para>kerberos upcallの処理時は"cifs/"で始まるサービスプリンシパルを使う。デフォルトでは"host/"サービスプリンシパルを使うようになっている。</para></listitem>
+		<listitem><para>このオプションは廃止予定で、現在は無視される。</para></listitem>
 		</varlistentry>
-
 		<varlistentry>
-		<term>-v</term>
+		<term>--trust-dns|-t</term>
+		<listitem><para>krb5 upcallと一緒に、サービスプリンシパルのホスト部として使われる名前は、UNCのホスト名の部分が初期値となる。このオプションは、ホスト名を得るためにサーバのネットワークアドレスを逆引きすることをupcallプログラムに許可する。</para>
+		これは、信頼しているDNSよりもセキュアでない。このオプションを使うとき、アタッカがDNSを乗っ取り、まったく異なったサーバにクライアントがマウントするような偽装をすることが可能になる。代わりにすべての考えうるホスト名に対してサーバプリンシパルをKDCに追加する事が望ましいが、このオプションはそれが不可能な時のために存在している。既定値はこの形式でのホスト名の逆引きを信頼しない。
+ 		</para></listitem>
+		</varlistentry>
+		<varlistentry>
+		<term>--version|-v</term>
 		<listitem><para>バージョン番号を表示して終了する。</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -71,8 +76,8 @@
 	<para>CIFSがこのプログラムを便利に使えるように、request-key.conf<manvolnum>5</manvolnum>中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:</para>
 <programlisting>
 #OPERATION  TYPE           D C PROGRAM ARG1 ARG2...
-#=========  =============  = = ==========================================
-create	    cifs.spnego    * * /usr/local/sbin/cifs.upcall -c %k
+#=========  =============  = = ================================
+create      cifs.spnego    * * /usr/local/sbin/cifs.upcall %k
 create      dns_resolver   * * /usr/local/sbin/cifs.upcall %k
 </programlisting>
 <para>
