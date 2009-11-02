@@ -1,11 +1,11 @@
 .\"     Title: net
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/31/2009
+.\"      Date: 11/02/2009
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
 .\"
-.TH "NET" "8" "07/31/2009" "Samba 3\.4" "システム管理ツール"
+.TH "NET" "8" "11/02/2009" "Samba 3\.4" "システム管理ツール"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -19,12 +19,12 @@ net {<ads|rap|rpc>} [\-h] [\-w\ workgroup] [\-W\ myworkgroup] [\-U\ user] [\-I\ 
 .PP
 このツールは、\fBsamba\fR(7)システムの一部である。
 .PP
-Samba の net ユーティリティは Windows や DOS に存在する NET コマンドと同様の位置づけのものである。 先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。 ADS は Active Directory が、RAP は従来の (Windows 9x / Windows NT 3\.x) クライアントが、 RPC は Windows NT 4\.0 および Windows 2000 によって使用されている。 この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。 すべてのコマンドがすべてのプロトコル上で使用できるわけではない。
+Samba の net ユーティリティは Windows や DOS に存在する NET コマンドと同様の位置づけのものである。 先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。 ADS は Active Directory によって、RAP は従来の (Windows 9x / Windows NT 3\.x) クライアントによって、 RPC は Windows NT 4\.0 および Windows 2000 によって使用されている。 この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。 すべてのコマンドがすべてのプロトコル上で使用できるわけではない。
 .SH "オプション"
 .PP
 \-h|\-\-help
 .RS 4
-コマンドラインオプションの要約を表示する。
+Print a summary of command line options\.
 .RE
 .PP
 \-w target\-workgroup
@@ -54,18 +54,19 @@ Samba の net ユーティリティは Windows や DOS に存在する NET コ�
 .PP
 \-n <primary NetBIOS name>
 .RS 4
-Samba 自身の NetBIOS 名を指定する。このオプションは、
-\fIsmb\.conf\fR中の、\fI\%smb.conf.5.html#\fR
-パラメータの設定に相当する。コマンドラインの指定は、
+This option allows you to override the NetBIOS name that Samba uses for itself\. This is identical to setting the
+\fInetbios name\fR
+parameter in the
 \fIsmb\.conf\fR
-内の設定よりも優先される。
+file\. However, a command line setting will take precedence over settings in
+\fIsmb\.conf\fR\.
 .RE
 .PP
 \-s <configuration file>
 .RS 4
-サーバーが必要とする詳細な設定を含む設定ファイルを 指定する。このファイルには、サーバーが提供するサービスに関する記述や、 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+The file specified contains the configuration details required by the server\. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\. See
 \fIsmb\.conf\fR
-を参照のこと。設定ファイルの名前の既定値は、コンパイル時 に決定される。
+for more information\. The default configuration file name is determined at compile time\.
 .RE
 .PP
 \-S server
@@ -91,20 +92,22 @@ Samba 自身の NetBIOS 名を指定する。このオプションは、
 \-d|\-\-debuglevel=level
 .RS 4
 \fIlevel\fR
-は0から10までの整数値である。 既定値の値は、パラメータが設定されていなければ0である。
+is an integer from 0 to 10\. The default value if this parameter is not specified is 0\.
 .sp
-この値を大きくするほど、サーバの動作に関するより詳細な情報が ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告 のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況 に関する情報を生成する。
+The higher this value, the more detail will be logged to the log files about the activities of the server\. At level 0, only critical errors and serious warnings will be logged\. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\.
 .sp
-1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容 となっている
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\.
 .sp
-このパラメータの指定は、\fIsmb\.conf\fRファイル中の、
-\fI\%smb.conf.5.html#\fR
-パラメータの 指定よりも優先する。
+Note that specifying this parameter here will override the
+\fIlog level\fR
+parameter in the
+\fIsmb\.conf\fR
+file\.
 .RE
 .SH "コマンド"
 .SS "CHANGESECRETPW"
 .PP
-このコマンドにより、Samba のコンピュータアカウントのパスワードを外部のアプリケーションから Active Directory に格納済のものに設定させることが可能となる。 何が行なわれるかを理解しない限り、このコマンドを用いないこと。 このコマンドを用いるには、強制フラグ (\-f) を併せて設定する必要がある。 コマンドプロンプトのインタフェースは存在しない。 情報は全て、コマンドラインなどを経由して標準入力経由で引き渡され、コンピュータアカウントのパスワードとして格納される。 警告無しに以前のコンピュータアカウントのパスワードが上書きされてしまうため、このコマンドは注意して用いること。
+このコマンドにより、Samba のコンピュータアカウントのパスワードを外部アプリケーションが Active Directory に格納済のものに（手動で）設定することが可能となる。 何が行なわれるかを理解しない限り、このコマンドを用いないこと。 このコマンドを用いるには、強制フラグ (\-f) を併せて設定する必要がある。 コマンドプロンプトのインタフェースは存在しない。 情報は全て、コマンドラインなどを経由して標準入力経由で引き渡され、コンピュータアカウントのパスワードとして格納される。 警告無しに以前のコンピュータアカウントのパスワードが上書きされてしまうため、このコマンドは注意して用いること。
 .SS "TIME"
 .PP
 NET TIME
@@ -229,7 +232,7 @@ net rap file userはSambaサーバに対して動作しない事に注意。
 .br
 Note
 .PP
-現在まだ未実装
+Currently NOT implemented\.
 .SS "RAP GROUPMEMBER"
 .SS "RAP GROUPMEMBER LIST GROUP"
 .PP
@@ -252,7 +255,7 @@ Note
 .br
 Note
 .PP
-現在まだ未実装
+Currently NOT implemented\.
 .SS "RAP SERVICE"
 .SS "RAP SERVICE START NAME [arguments...]"
 .PP
@@ -264,7 +267,7 @@ Note
 .br
 Note
 .PP
-現在まだ未実装
+Currently NOT implemented\.
 
 .SS "RAP SERVICE STOP"
 .PP
@@ -276,7 +279,7 @@ Note
 .br
 Note
 .PP
-現在まだ未実装
+Currently NOT implemented\.
 .SS "RAP PASSWORD \fIUSER\fR \fIOLDPASS\fR \fINEWPASS\fR"
 .PP
 
@@ -811,37 +814,39 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 .SS "DOM"
 .SS "EVENTLOG"
 .PP
-バージョン3\.4\.0から、netはネイティブなwin32イベントログファイル (通常 *\.evt)を読み、ダンプ、インポート、エクスポート出来る。 evtファイル はネイティブなWindowsイベントビューワツールによって使われる。
+Samba 3\.4\.3 から、net コマンドはネイティブな WIN32 イベントログファイル (通常 *\.evt) の読み取り、ダンプ、インポート、エクスポートが可能となった。 evt ファイルはネイティブな Windows のイベントビューワツールによって使われる。
 .PP
 evtファイルのインポートとエクスポートは、\fIsmb\.conf\fR
 ファイル中で\fIeventlog list\fRが定義されている時のみ 行える。詳細は
 \fBsmb.conf\fR(5)
 マニュアルページを参照のこと。
 .PP
-eventlogコマンドは以下の通り:
+eventlog のサブコマンドは以下の通り:
 .IP "" 4
-net eventlog dump \- 画面上にイベントログ *\.evtファイルをダンプする。
+net eventlog dump \- イベントログファイル *\.evt の内容を画面上にダンプする。
 .IP "" 4
-net eventlog import \- *\.evtイベントログファイルを、イベントログを保持するSamba内部のtdbファイルにインポートする。
+net eventlog import \- イベントログファイル *\.evt を、イベントログを保持する Samba 内部の tdb ファイルにインポートする。
 .IP "" 4
-net eventlog export \- Samba内部のtdb形式によるイベントログを*\.evtイベントログファイルにエクスポートする。
+net eventlog export \- Samba内部の tdb 形式によるイベントログをイベントログファイル *\.evt にエクスポートする。
 
 .SS "EVENTLOG DUMP filename"
 .PP
-標準出力に*\.evtイベントログファイルを出力する。
+標準出力にイベントログファイル *\.evt を出力する。
 .SS "EVENTLOG IMPORT filename eventlog"
 .PP
 
-\fIfilename\fRによって定義された*\.evtイベントログファイル を、\fIeventlog\fRで定義したSamba内部のtdb形式によるイベン トログファイルにインポートする。
-\fIeventlog\fRはsmb\.conf中で定義されている
-\fIeventlog list\fRの一部を必要とする。詳細は、
+\fIfilename\fRによって定義されたイベントログファイル *\.evt を、\fIeventlog\fRで定義した Samba 内部の tdb 形式によるイベン トログファイルにインポートする。
+\fIeventlog\fR
+には smb\.conf 中で定義されている
+\fIeventlog list\fR
+が一部必要となる。詳細は、
 \fBsmb.conf\fR(5)
 マニュアルページを参照のこと。
 .SS "EVENTLOG EXPORT filename eventlog"
 .PP
 
 \fIeventlog\fRで定義されている、Samba内部のtdb形式によるイベントログを
-\fIfilename\fRで定義されている*\.evtイベントログファイルに エクスポートする。
+\fIfilename\fRで定義されているイベントログファイル *\.evt にエクスポートする。
 \fIeventlog\fRはsmb\.conf中で定義されている
 \fIeventlog list\fRの一部を必要とする。詳細は、
 \fBsmb.conf\fR(5)
@@ -1038,7 +1043,7 @@ net dom renamecomputer \- ドメインに参加しているリモートコンピ
 net マニュアルページは Jelmer Vernoij によって執筆された。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.4\.0 対応のものである。
+このマニュアルページは Samba 3\.4\.0\-3\.4\.3 対応のものである。
 .PP
 このドキュメントの Samba 3\.0\.0 対応の翻訳は
 .sp
@@ -1068,4 +1073,4 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .PP
 Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.4\.0 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\.2\.4\-3\.4\.3 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。

@@ -1,11 +1,11 @@
 .\"     Title: smb.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/31/2009
+.\"      Date: 11/02/2009
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.4
 .\"
-.TH "SMB\.CONF" "5" "07/31/2009" "Samba 3\.4" "ファイルフォーマットと変換"
+.TH "SMB\.CONF" "5" "11/02/2009" "Samba 3\.4" "ファイルフォーマットと変換"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -622,7 +622,7 @@ access based share enum (S)
 .RS 4
 あるサービスに対してこのパラメータが
 \fByes\fR
-であれば、 そのサービスで提供される共有は、その共有を一覧表示する際 （たとえば net view \e\esambaserver）、その共有に対して読み込みもしくは 書き込み権のあるユーザにだけ見えるようになる。これはアクセスベースの 一覧表示と同等である。主な違いとしては、共有パーミッションだけが 評価されること、またその共有に含まれるファイルのセキュリティ識別子は、 一覧表示の際のアクセス権のチェックには使用されないことである。
+であれば、 そのサービスで提供される共有は、 （net view \e\esambaserver などで）共有の一覧表示が行われる際に、 共有に対して読み取りもしくは書き込みアクセス許可のあるユーザ以外から参照されなくなる。 これは Access\-based Enumeration　（訳注：Windows Server 2003 SP1 以降に導入された、アクセス許可のないフォルダを非表示にする機能）と同等の機能である。 主な違いは、共有に対するアクセス許可のみが評価され、共有内のファイルのセキュリティ識別子は、一覧表示の際の参照可否の確認には使用されないことである。
 .sp
 既定値:
 \fI\fIaccess based share enum\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -3783,9 +3783,9 @@ keepalive (G)
 kerberos method (G)
 .PP
 .RS 4
-ケルベロスのチケットをどのように検査するのかを制御する。
+Kerberos チケットをどのように検査するかを制御する。
 .sp
-有効なオプションは以下の通り：
+有効な値は以下の通り：
 .sp
 .RS 4
 .ie n \{\
@@ -3806,7 +3806,7 @@ secrets only \- チケットの検査に secrets\.tdb のみを使用する（�
 .sp -1
 .IP \(bu 2.3
 .\}
-system keytab \- チケットの検査に system keytab のみを使用する
+system keytab \- チケットの検査にシステムの keytab ファイルのみを使用する
 .RE
 .sp
 .RS 4
@@ -3817,7 +3817,7 @@ system keytab \- チケットの検査に system keytab のみを使用する
 .sp -1
 .IP \(bu 2.3
 .\}
-dedicated keytab \- チケットの検査に dedicated（専用） keytab を使用する
+dedicated keytab \- チケットの検査に Samba 専用の keytab ファイルを使用する
 .RE
 .sp
 .RS 4
@@ -3828,14 +3828,14 @@ dedicated keytab \- チケットの検査に dedicated（専用） keytab を使
 .sp -1
 .IP \(bu 2.3
 .\}
-secrets and keytab \- まず secrets\.tdb 、その後system keytab を使用する
+secrets and keytab \- 最初に secrets\.tdb 、その後システムの keytab ファイルを使用する
 .sp
 .RE
-"system keytab" と "dedicated keytab" の主な違いとしては、 正しい keytab のエントリを見つけるのに、前者が期待するプリンシパルに 基づくフィルタリングを行うのに対し、後者はケルベロスに依存する ところである。
+「system keytab」と「dedicated keytab」の主な違いは、 適切な keytab エントリを見つける際に、前者は期待するプリンシパルに 基づくフィルタリングを行うのに対し、後者は Kerberos に依存するところである。
 .sp
-ケルベロスのメソッドが "dedicated keytab" モードの場合、
+このパラメータの値が「dedicated keytab」の場合、 keytab ファイルのパスを指定するため
 \fIdedicated keytab file\fR
-は keytab ファイルの位置を指定していなければならない。
+パラメータを必ず設定しなければならない。
 .sp
 既定値:
 \fI\fIkerberos method\fR\fR\fI = \fR\fIsecrets only\fR\fI \fR
@@ -5416,13 +5416,13 @@ map to guest (G)
 map untrusted to domain (G)
 .PP
 .RS 4
-クライアントが smbd に接続する際に BOGUS\euser のような信頼されない ドメイン名を使っている場合、smbd は BOGUS ドメインをその SAM 名に 置き換えてからそのユーザを認証する。smbd がドメインメンバーサーバ もしくはスタンドアロンサーバとして動作している場合、この名前は WORKSTATION\euser となる。
+クライアントが smbd に接続する際に BOGUS\euser のような信頼されない ドメイン名を使っている場合、smbd は BOGUS ドメインを自身の SAM 名に 置き換えてからそのユーザを認証する。 smbd が PDC として動作している場合、置き換えられた名前は DOMAIN\euser となる。 smbd がドメインのメンバサーバもしくはスタンドアロンサーバとして動作している場合、置き換えられた名前は WORKSTATION\euser となる。
 .sp
-バージョン 3\.4 以前の Samba では、smbd がドメインメンバーサーバとして 動作している場合、BOGUS ドメイン名はその smbd がメンバーとして所属 しているプライマリドメイン名に置き換えていた。このケースでは、認証処理は DOMAIN\euser の認証情報を使って DC に委譲される。
+Samba 3\.4\.0 より前のバージョンでは、smbd がドメインのメンバサーバとして 動作している場合、BOGUS の部分は smbd がメンバとして所属 しているプライマリドメイン名に置き換えられていた。この場合、 認証処理は DOMAIN\euser の認証情報を使って DC に委譲される。
 .sp
 このパラメータが
 \fByes\fR
-にセットされている場合、 smbd は信頼されないドメイン名をプライマリドメインにマッピングするという 従来の動作を行う。smbd がドメインのメンバーサーバとして動作していない 場合は、このパラメータは意味を持たない。
+にセットされている場合、 smbd は信頼されないドメイン名をプライマリドメイン名にマッピングするという 従来の動作を行う。smbd がドメインのメンバサーバとして動作していない場合、 このパラメータは意味を持たない。
 .sp
 既定値:
 \fI\fImap untrusted to domain\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -7930,6 +7930,16 @@ set quota command
 \fI\fIset quota command\fR\fR\fI = \fR\fI/usr/local/sbin/set_quota\fR\fI \fR
 .RE
 
+share:fake_fscaps (G)
+.PP
+.RS 4
+これはある種の、SPARSE_FILESビット(0x40)を設定しているかどうかを調べるために QFSINFOコールを行う、特別なアプリケーションをサポートするために必要である。 もしもこのビットが設定されていない場合、特定のアプリケーションはSambaに 対して動作できなくなる。
+\fIshare:fake_fscaps = 64\fRを使うと SPARSE_FILESファイルシステムケーパビリティフラグがセットされる。 ビットマスクを指定する他の10進値はごまかす(fake)ために必要である。
+.sp
+既定値:
+\fI\fIshare:fake_fscaps\fR\fR\fI = \fR\fI0\fR\fI \fR
+.RE
+
 share modes (S)
 .PP
 .RS 4
@@ -9522,11 +9532,11 @@ wtmp directory (G)
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.4\.0対応のものである。
+このマニュアルページは Samba 3\.4\.0 \- 3\.4\.3対応のものである。
 .PP
 Samba 3\.0\.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.4\.0 対応の翻訳は、
+Samba 3\.2\.4\-3\.4\.3 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP
