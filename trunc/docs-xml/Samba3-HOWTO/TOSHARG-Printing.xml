@@ -917,88 +917,89 @@ printersセクションは2つめの特別なセクションである。もし�
 <indexterm><primary>既定値の印刷コマンド</primary></indexterm>
 設定ファイル中で明示的に設定されていない場合、Sambaがほとんどの場合、多くのパラメータ
 について、内蔵の値を使うということは、以前の説明で理解されているかと思う。
-You learned earlier that Samba, in most cases, uses its built-in settings for many parameters if it cannot
-find an explicitly stated one in its configuration file. The same is true for the <smbconfoption name="print
-command"/>. The default print command varies depending on the <smbconfoption name="printing"/> parameter
-setting. In the commands listed in <link linkend="printOptions">Default Printing Settings</link> , you will
-notice some parameters of the form <emphasis>%X</emphasis> where <emphasis>X</emphasis> is <emphasis>p, s,
-J</emphasis>, and so on. These letters stand for printer name, spool file, and job ID, respectively.  They are
-explained in more detail in <link linkend="printOptions">Default Printing Settings</link> presents an overview
-of key printing options but excludes the special case of CUPS, is discussed in <link
-linkend="CUPS-printing">CUPS Printing Support</link>.
+<smbconfoption name="print command"/>でも同じである。既定値の印刷コマンドは
+<smbconfoption name="printing"/>パラメータの設定に依存して変わる。
+<link linkend="printOptions">既定値の印刷設定</link>に一覧があるコマンド中で、
+<emphasis>X</emphasis>が<emphasis>p,s,J</emphasis>のようなものである、
+<emphasis>%X</emphasis>形式を持ついくつかのパラメータに気がつくだろう。
+これらの文字は、それぞれプリンタの名前、スプールファイルとジョブIDを表す。これらは、
+キーとなる印刷オプションの概要を提供する
+<link linkend="printOptions">既定値の印刷設定</link>中に詳細が説明されているが、
+CUPSの場合は特別で、<link linkend="CUPS-printing">CUPS印刷サポート</link>で
+説明があるので、ここに記述はない。
 </para>
 
 <table frame='all' id="printOptions">
-	<title>Default Printing Settings</title>
+	<title>既定値の印刷設定</title>
 	<tgroup cols='2' align='left' colsep='1' rowsep='1'>
 		<colspec align="left"/>
 		<colspec align="left"/>
 	<thead>
 		<row>
-		<entry>Setting</entry>
-		<entry>Default Printing Commands</entry>
+		<entry>設定</entry>
+		<entry>既定値の印刷コマンド</entry>
 		</row>
 	</thead>
 	<tbody>
 		<row>
 		<entry><smbconfoption name="printing">bsd|aix|lprng|plp</smbconfoption></entry>
-		<entry>print command is <command>lpr -r -P%p %s</command></entry>
+		<entry>印刷コマンドは<command>lpr -r -P%p %s</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">sysv|hpux</smbconfoption></entry>
-		<entry>print command is <command>lp -c -P%p %s; rm %s</command></entry>
+		<entry>印刷コマンドは<command>lp -c -P%p %s; rm %s</command></entry>
 		</row>
 		<row>
 		<entry> <smbconfoption name="printing">qnx</smbconfoption></entry>
-		<entry>print command is <command>lp -r -P%p -s %s</command></entry>
+		<entry>印刷コマンドは<command>lp -r -P%p -s %s</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">bsd|aix|lprng|plp</smbconfoption></entry>
-		<entry>lpq command is <command>lpq -P%p</command></entry>
+		<entry>lpq コマンドは<command>lpq -P%p</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">sysv|hpux</smbconfoption></entry>
-		<entry>lpq command is <command>lpstat -o%p</command></entry>
+		<entry>lpq コマンドは<command>lpstat -o%p</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">qnx</smbconfoption></entry>
-		<entry>lpq command is <command>lpq -P%p</command></entry>
+		<entry>lpq コマンドは<command>lpq -P%p</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">bsd|aix|lprng|plp</smbconfoption></entry>
-		<entry>lprm command is <command>lprm -P%p %j</command></entry>
+		<entry>lprm コマンドは<command>lprm -P%p %j</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">sysv|hpux</smbconfoption></entry>
-		<entry>lprm command is <command>cancel %p-%j</command></entry>
+		<entry>lprm コマンドは<command>cancel %p-%j</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">qnx</smbconfoption></entry>
-		<entry>lprm command is <command>cancel %p-%j</command></entry>
+		<entry>lprm コマンドは<command>cancel %p-%j</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">bsd|aix|lprng|plp</smbconfoption></entry>
-		<entry>lppause command is <command>lp -i %p-%j -H hold</command></entry>
+		<entry>lppause コマンドは<command>lp -i %p-%j -H hold</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">sysv|hpux</smbconfoption></entry>
-		<entry>lppause command   (...is empty)</entry>
+		<entry>lppause コマンド(...は存在しない)</entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">qnx</smbconfoption></entry>
-		<entry>lppause command   (...is empty)</entry>
+		<entry>lppause コマンド(...は存在しない)</entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">bsd|aix|lprng|plp</smbconfoption></entry>
-		<entry>lpresume command is <command>lp -i %p-%j -H resume</command></entry>
+		<entry>lpresume コマンドは<command>lp -i %p-%j -H resume</command></entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">sysv|hpux</smbconfoption></entry>
-		<entry>lpresume command   (...is empty)</entry>
+		<entry>lpresume コマンド(...は存在しない)</entry>
 		</row>
 		<row>
 		<entry><smbconfoption name="printing">qnx</smbconfoption></entry>
-		<entry>lpresume command   (...is empty)</entry>
+		<entry>lpresume コマンド(...は存在しない)</entry>
 		</row>
 	</tbody>
 	</tgroup>
@@ -1007,36 +1008,40 @@ linkend="CUPS-printing">CUPS Printing Support</link>.
 <para>
 <indexterm><primary>CUPS API</primary></indexterm>
 <indexterm><primary>cupsd.conf</primary></indexterm>
-<indexterm><primary>autogenerated printcap</primary></indexterm>
+<indexterm><primary>自動生成されたprintcap</primary></indexterm>
 <indexterm><primary>libcups</primary></indexterm>
-For <parameter>printing = CUPS</parameter>, if Samba is compiled against libcups, it uses the CUPS API to
-submit jobs. (It is a good idea also to set <smbconfoption name="printcap">cups</smbconfoption> in case your
-<filename>cupsd.conf</filename> is set to write its autogenerated printcap file to an unusual place).
-Otherwise, Samba maps to the System V printing commands with the -oraw option for printing; that is, it uses
-<command>lp -c -d%p -oraw; rm %s</command>. With <parameter>printing = cups</parameter>, and if Samba is
-compiled against libcups, any manually set print command will be ignored!
+<parameter>printing = CUPS</parameter>用に、もしもSambaがlibcupsを使うようにコンパイル
+されたならば、ジョブの投稿にCUPS APIを使用する(通常使わない位置に自動生成された
+printcap ファイルに書き込むために、使用しているシステム中の<filename>cupsd.conf</filename>
+ファイルが設定されている場合、<smbconfoption name="printcap">cups</smbconfoption>を
+設定するのはよい方法である)。ほかの場合は、Sambaは印刷処理のために、-orawオプションを
+付けて、System Vの印刷コマンドにマップする。これはすなわち、
+<command>lp -c -d%p -oraw; rm %s</command>を使うことである。
+<parameter>printing = cups</parameter>の場合と、もしもSambaがlibcupsを使うように
+コンパイルされた場合、手動で設定したprint commandは何であっても無視される!
 </para>
 
 </sect3>
 
 <sect3>
-<title>Custom Print Commands</title>
+<title>カスタム印刷コマンド</title>
 
 <para>
-<indexterm><primary>print job</primary></indexterm>
-<indexterm><primary>spooling</primary></indexterm>
-After a print job has finished spooling to a service, the <smbconfoption name="print command"/> will be used
-by Samba via a system() call to process the spool file. Usually the command specified will submit the spool
-file to the host's printing subsystem. But there is no requirement at all that this must be the case. The
-print subsystem may not remove the spool file on its own, so whatever command you specify, you should ensure
-that the spool file is deleted after it has been processed.
+<indexterm><primary>印刷ジョブ</primary></indexterm>
+<indexterm><primary>スプーリング</primary></indexterm>
+サービスに対して印刷ジョブのスプーリングが終了後、<smbconfoption name="print command"/>
+はスプールファイルを処理するためにsystem()呼び出し経由でSambaによって使われる。
+通常指定されたコマンドはホストの印刷サブシステムにスプールファイルを投稿する。
+しかし、これが本当にそうであるというべき要求は全くない。印刷サブシステムは
+それ固有のスプールファイルを削除しないかもしれないので、指定したコマンドは何であっても、
+それが処理された後にスプールファイルは消去されるようにすべきである。
 </para>
 
 <para>
-<indexterm><primary>traditional printing</primary></indexterm>
-<indexterm><primary>customized print commands</primary></indexterm>
-<indexterm><primary>built-in commands</primary></indexterm>
-<indexterm><primary>macros</primary></indexterm>
+<indexterm><primary>伝統的な印刷処理</primary></indexterm>
+<indexterm><primary>カスタマイズした印刷コマンド</primary></indexterm>
+<indexterm><primary>内蔵コマンド</primary></indexterm>
+<indexterm><primary>マクロ</primary></indexterm>
 There is no difficulty with using your own customized print commands with the traditional printing systems.
 However, if you do not wish to roll your own, you should be well informed about the default built-in commands
 that Samba uses for each printing subsystem (see <link linkend="printOptions">Default Printing
