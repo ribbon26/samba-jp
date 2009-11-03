@@ -802,127 +802,137 @@ printersセクションは2つめの特別なセクションである。もし�
 
 	<varlistentry><term><smbconfoption name="read only">yes </smbconfoption></term>
 		<listitem><para>
-		Normally (for other types of shares) prevents users from creating or modifying files
-		in the service's directory. However, in a <emphasis>printable</emphasis> service, it is
-		<emphasis>always</emphasis> allowed to write to the directory (if user privileges allow the
-		connection), but only via print spooling operations. Normal write operations are not permitted.
+		通常(共有の他のタイプのために)サービスのディレクトリ中で、ユーザによる
+		ファイルの作成と変更を防止する。しかし、<emphasis>printable</emphasis>
+		サービス中では、<emphasis>常時</emphasis>ディレクトリへの書き込みが許可
+		されるが(もしもユーザの権限として接続が許可されているならば)、
+		それは印刷スプール操作経由でのみである。通常の書き込み操作は許可
+		されない。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="writable">no </smbconfoption></term>
 		<listitem><para>
-		Is a synonym for <smbconfoption name="read only">yes</smbconfoption>.
+		これは<smbconfoption name="read only">yes</smbconfoption>の同義語である。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
 </sect3>
 
 <sect3>
-<title>Any [my_printer_name] Section</title>
+<title>任意の[my_printer_name]セクション</title>
 
 <para>
-<indexterm><primary>loading printer drivers</primary></indexterm>
-<indexterm><primary>name conflict</primary></indexterm>
-If a <parameter>[my_printer_name]</parameter> section appears in the &smb.conf; file, which includes the
-parameter <smbconfoption name="printable">yes</smbconfoption> Samba will configure it as a printer share.
-Windows 9x/Me clients may have problems with connecting or loading printer drivers if the share name has more
-than eight characters. Do not name a printer share with a name that may conflict with an existing user or file
-share name. On client connection requests, Samba always tries to find file shares with that name first. If it
-finds one, it will connect to this and will not connect to a printer with the same name!
+<indexterm><primary>プリンタドライバのロード</primary></indexterm>
+<indexterm><primary>名前の衝突</primary></indexterm>
+もしも、<parameter>[my_printer_name]</parameter>セクションが、
+<smbconfoption name="printable">yes</smbconfoption>を含んで&smb.conf;ファイル中にある
+場合、Sambaはこれをプリンタ共有と見なして設定する。Windows 9x/Meクライアントは、
+共有名が8文字以上の場合、接続かプリンタドライバのロードで問題が発生するかもしれない。
+存在するユーザかファイル共有の名前と競合する、プリンタ共有名を付けてはならない。
+クライアントからの接続時に、Sambaは常時その名前を最初に持つものを見つけようとする。
+もしもそれが見つかると、これに対して接続を行い、同じ名前を持つプリンタ共有には接続
+できない!
 </para>
 
 <?latex \newpage ?>
 <variablelist>
 	<varlistentry><term><smbconfoption name="comment">Printer with Restricted Access </smbconfoption></term>
 		<listitem><para>
-		The comment says it all.
+		上記で書いたとおりのコメントである。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="path">/var/spool/samba_my_printer </smbconfoption></term>
 		<listitem><para>
-		Sets the spooling area for this printer to a directory other than the default. It is not
-		necessary to set it differently, but the option is available.
+		このプリンタに対するスプール領域のディレクトリを既定値の代わりに設定する。
+		これは異なって設定する必要はないが、オプションは有効である。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="printer admin">kurt </smbconfoption></term>
 		<listitem><para>
-		The printer admin definition is different for this explicitly defined printer share from the general
-		<smbconfsection name="[printers]"/> share. It is not a requirement; we did it to show that it is possible.
+		printer admin定義は、この一般的な<smbconfsection name="[printers]"/>共有から
+		明示的に定義されたプリンタ共有と違う。もし要求がなければ、可能であればそれを
+		表示しない。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="browseable">yes </smbconfoption></term>
 		<listitem><para>
-		This makes the printer browseable so the clients may conveniently find it when browsing the
-		<guiicon>Network Neighborhood</guiicon>.
+		これは、クライアントが、guiicon>ネットワークコンピュータ</guiicon>で
+		ブラウズするのが便利なように、プリンタをブラウズ可能にする。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="printable">yes </smbconfoption></term>
 		<listitem><para>
-		See <link linkend="ptrsect">Section 20.4.1.2</link>.
+		<link linkend="ptrsect">20.4.1.2節</link>を参照。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="writable">no </smbconfoption></term>
 		<listitem><para>
-		See <link linkend="ptrsect">Section 20.4.1.2</link>.
+		<link linkend="ptrsect">20.4.1.2節</link>を参照。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="hosts allow">10.160.50.,10.160.51. </smbconfoption></term>
 		<listitem><para>
-		Here we exercise a certain degree of access control by using the <smbconfoption name="hosts allow"/>
-		and <smbconfoption name="hosts deny"/> parameters. This is not by any means a safe bet. It is not a
-		way to secure your printers. This line accepts all clients from a certain subnet in a first evaluation of
-		access control.
+		<smbconfoption name="hosts allow"/>と<smbconfoption name="hosts deny"/>
+		パラメータを使って特定の数値でのアクセス制御を試す。これは、決して安全な
+		賭けではない。これは使用しているプリンタをセキュアにする方法ではない。この
+		行は、最初に評価されるアクセス制御中での特定のサブネットからの、すべての
+		クライアントを許可する。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="hosts deny">turbo_xp,10.160.50.23,10.160.51.60 </smbconfoption></term>
 		<listitem><para>
-		All listed hosts are not allowed here (even if they belong to the allowed subnets). As
-		you can see, you could name IP addresses as well as NetBIOS hostnames here.
+		すべての一覧表示されたホストはここでは許可されない(たとえ許可された
+		サブネットにあったとしても)。見ての通り、NetBIOSホスト名をここに書くのと
+		同様にIPアドレス名前を付けることが出来る。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="guest ok">no </smbconfoption></term>
 		<listitem><para>
-		This printer is not open for the guest account.
+		このプリンタはゲストアカウントには公開していない。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
 </sect3>
 
 <sect3>
-<title>Print Commands</title>
+<title>印刷コマンド</title>
 
 <para>
-<indexterm><primary>print command</primary></indexterm>
-<indexterm><primary>print subsystem</primary></indexterm>
+<indexterm><primary>印刷コマンド</primary></indexterm>
+<indexterm><primary>印刷サブシステム</primary></indexterm>
 <indexterm><primary>temporary location</primary></indexterm>
-<indexterm><primary>shell scripts</primary></indexterm>
-In each section defining a printer (or in the <smbconfsection name="[printers]"/> section),
-a <parameter>print command</parameter> parameter may be defined. It sets a command to process the files
-that have been placed into the Samba print spool directory for that printer. (That spool directory was,
-if you remember, set up with the <smbconfoption name="path"/> parameter). Typically,
-this command will submit the spool file to the Samba host's print subsystem, using the suitable system
-print command. But there is no requirement that this needs to be the case. For debugging or
-some other reason, you may want to do something completely different than print the file. An example is a
-command that just copies the print file to a temporary location for further investigation when you need
-to debug printing. If you craft your own print commands (or even develop print command shell scripts),
-make sure you pay attention to the need to remove the files from the Samba spool directory. Otherwise,
-your hard disk may soon suffer from shortage of free space.
+<indexterm><primary>シェルスクリプト</primary></indexterm>
+おのおののセクション(か<smbconfsection name="[printers]"/>セクション中で)はプリンタを
+定義し、<parameter>print command</parameter>は定義されるかもしれない。これは、その
+プリンタに対するSambaの印刷スプールディレクトリ中に位置するファイルを処理するコマンドを
+設定する。(もしも覚えているならば、このスプールディレクトリは<smbconfoption name="path"/>
+パラメータで設定される)。通常、このコマンドはSambaが動いているホストの印刷サブ
+システムに、適切なシステムの印刷コマンドを使ってスプールファイルを渡す。しかし、もしも
+この必要性に要求がなければ、たぶんそうだろう。デバッグかその他の理由で、ファイルの印刷
+より何かが完全に異なることを行う事を望んでも良い。例は、プリンティングをデバッグする
+ために必要とする時、さらなる調査のために一時的な場所に印刷ファイルをコピーするだけの
+コマンドである。もしも、固有の印刷コマンドを作る場合(か印刷コマンドシェルスクリプトの
+開発)、Sambaスプールディレクトリからファイルを削除する必要があることに注意をはらうこと。
+そうしないと、すぐにディスクがいっぱいになってしまうだろう。
 </para>
 </sect3>
 
 <sect3>
-<title>Default UNIX System Printing Commands</title>
+<title>既定値のUNIXシステム印刷コマンド</title>
 
 <para>
-<indexterm><primary>default print command</primary></indexterm>
+<indexterm><primary>既定値の印刷コマンド</primary></indexterm>
+設定ファイル中で明示的に設定されていない場合、Sambaがほとんどの場合、多くのパラメータ
+について、内蔵の値を使うということは、以前の説明で理解されているかと思う。
 You learned earlier that Samba, in most cases, uses its built-in settings for many parameters if it cannot
 find an explicitly stated one in its configuration file. The same is true for the <smbconfoption name="print
 command"/>. The default print command varies depending on the <smbconfoption name="printing"/> parameter
