@@ -1092,13 +1092,13 @@ printcap ファイルに書き込むために、使用しているシステム�
 <indexterm><primary>環境変数</primary></indexterm>
 <indexterm><primary>印刷コマンド</primary></indexterm>
 <indexterm><primary>印刷ジョブ</primary></indexterm>
-You can form quite complex print commands. You need to realize that print commands are just
-passed to a UNIX shell. The shell is able to expand the included environment variables as
-usual. (The syntax to include a UNIX environment variable <parameter>$variable</parameter>
-in the Samba print command is <parameter>%$variable</parameter>.) To give you a working
-<smbconfoption name="print command"/> example, the following will log a print job
-to <filename>/tmp/print.log</filename>, print the file, then remove it. The semicolon (<quote>;</quote>
-is the usual separator for commands in shell scripts:
+非常に複雑な印刷コマンドを構成することも出来る。印刷コマンドはUNIXシェルに渡される
+ようにする必要がある。シェルは通常のように指定されている環境変数を展開できる(UNIXの
+環境変数<parameter>$variable</parameter>を、Sambaの印刷コマンドの中で指定するための
+形式は<parameter>%$variable</parameter>である)。下記の動作する
+<smbconfoption name="print command"/>の例では、以下は印刷ジョブのログを
+<filename>/tmp/print.log</filename>に取り、ファイルを印刷し、次にそれを削除する。
+セミコロン(<quote>;</quote>)は通常通り、シェルスクリプト中でのコマンドの分離符号である:
 </para>
 
 <para><smbconfblock>
@@ -1106,10 +1106,10 @@ is the usual separator for commands in shell scripts:
 </smbconfblock></para>
 
 <para>
-You may have to vary your own command considerably from this example depending on how you normally print
-files on your system. The default for the <smbconfoption name="print command"/>
-parameter varies depending on the setting of the <smbconfoption name="printing"/>
-parameter. Another example is:
+動作させるシステム上で、通常どのようにファイルを印刷するかに例が依存することを考慮して、
+固有のコマンドを変更しなければならないかもしれない。既定値の
+<smbconfoption name="print command"/>パラメータは、<smbconfoption name="printing"/>
+の設定状態に依存して代わる。他の例は下記の通り:
 </para>
 
 <para><smbconfblock>
@@ -1120,72 +1120,77 @@ parameter. Another example is:
 </sect1>
 
 <sect1 id="cups-msrpc">
-<title>Printing Developments Since Samba-2.2</title>
+<title>Samba-2.2からの印刷環境</title>
 
 <para>
 <indexterm><primary>LanMan</primary></indexterm>
 <indexterm><primary>MS-RPC</primary></indexterm>
 <indexterm><primary>SPOOLSS</primary></indexterm>
-Prior to Samba-2.2.x, print server support for Windows clients was limited to <emphasis>LanMan</emphasis>
-printing calls. This is the same protocol level as Windows 9x/Me PCs offer when they share printers.
-Beginning with the 2.2.0 release, Samba started to support the native Windows NT printing mechanisms. These
-are implemented via <emphasis>MS-RPC</emphasis> (Remote Procedure Calls).
-MS-RPCs use the <emphasis>SPOOLSS</emphasis> named pipe for all printing.
+Samba-2.2.xより前は、Windowsクライアントへの印刷サーバサポートは、
+<emphasis>LanMan</emphasis>印刷機能に限定されていた。これは、Windows 9x/Me PCがプリンタを
+共有するときのものと同じプロトコルレベルである。2.2.0リリースの最初から、Sambaは
+ネイティブなWindows NTの印刷方式のサポートを開始した。これらは
+<emphasis>MS-RPC</emphasis> (Remote Procedure Call)経由で実装されている。MS-RPCは
+すべての印刷のために、<emphasis>SPOOLSS</emphasis>という名前付きパイプを使用する。
 </para>
 
 <para>
-The additional functionality provided by the new SPOOLSS support includes:
+新しいSPOOLSSサポートによって提供される追加の機能は以下を含む:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-<indexterm><primary>Point'n'Print</primary></indexterm>
-	Support for downloading printer driver files to Windows 95/98/NT/2000 clients upon
-	demand (<emphasis>Point'n'Print</emphasis>).
+<indexterm><primary>ポイントアンドプリント</primary></indexterm>
+	オンデマンドでWindows 95/98/NT/2000クライアントにプリンタドライバのダウンロードを
+	サポートする(<emphasis>Point'n'Print</emphasis>)。
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>Add Printer Wizard</primary></indexterm>
-	Uploading of printer drivers via the Windows NT <emphasis>Add Printer Wizard</emphasis> (APW)
-	or the <ulink url="http://imprints.sourceforge.net/">Imprints</ulink> tool set.
+<indexterm><primary>プリンタウィザードの追加</primary></indexterm>
+	Windows NTの<emphasis>Add Printer Wizard</emphasis> (APW)か
+	<ulink url="http://imprints.sourceforge.net/">Imprints</ulink>ツールセット経由で
+	プリンタドライバをアップロードする。
 	</para></listitem>
 
 	<listitem><para>	
 <indexterm><primary>MS-RPC</primary></indexterm>
-<indexterm><primary>printing calls</primary></indexterm>
+<indexterm><primary>印刷呼び出し</primary></indexterm>
 <indexterm><primary>StartDocPrinter</primary></indexterm>
 <indexterm><primary>EnumJobs()</primary></indexterm>
-<indexterm><primary>Win32 printing API</primary></indexterm>
-	Support for the native MS-RPC printing calls such as StartDocPrinter, EnumJobs(), and so on. (See the
-	<ulink url="http://msdn.microsoft.com/">MSDN documentation</ulink> for more information on the
-	Win32 printing API).
+<indexterm><primary>Win32 印刷API</primary></indexterm>
+	StartDocPrinter, EnumJobs()のような、ネイティブなMS-RPC印刷呼び出しをサポートする
+	(Win32印刷APIについてのより詳細な情報は
+	<ulink url="http://msdn.microsoft.com/">MSDN documentation</ulink>を参照のこと)。
 	</para></listitem>
 
 	<listitem><para>
 <indexterm><primary>ACL</primary></indexterm>
-<indexterm><primary>printer objects</primary></indexterm>
-	Support for NT Access Control Lists (ACL) on printer objects.
+<indexterm><primary>プリンタオブジェクト</primary></indexterm>
+	プリンタオブジェクト上のNTアクセス制御(ACL)のサポート。
 	</para></listitem>
 
 	<listitem><para>
 <indexterm><primary>printer queue</primary></indexterm>
-	Improved support for printer queue manipulation through the use of internal databases for spooled
-	job information (implemented by various <filename>*.tdb</filename> files).
+	スプールされたジョブ情報のための、内部データベースを使用することによる、プリンタ
+	キュー操作のサポートの改善(種々の<filename>*.tdb</filename>ファイルによって
+	実装された)。
 	</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-A benefit of updating is that Samba-3 is able to publish its printers to Active Directory (or LDAP).
+Samba-3へのアップデートによって便利になることは、そのプリンタをActive Directory(かLDAP)
+に公開できることである。
 </para>
 
 <para>
-<indexterm><primary>publish printers</primary></indexterm>
-A fundamental difference exists between MS Windows NT print servers and Samba operation. Windows NT
-permits the installation of local printers that are not shared. This is an artifact of the fact that
-any Windows NT machine (server or client) may be used by a user as a workstation. Samba will publish all
-printers that are made available, either by default or by specific declaration via printer-specific shares.
+<indexterm><primary>プリンタの公開</primary></indexterm>
+Microsoft Windows NTサーバとSambaでの操作の間には基本的な違いが存在する。Windows NTは
+共有しないローカルプリンタのインストールを許可する。これは任意のWindows NTマシン(サーバか
+クライアント)はユーザがワークステーションとして使えるという不自然な結果となる。Sambaは、
+既定値か、プリンタ固有の共有経由での特定の定義のどちらかで、有効にしたすべてのプリンタを
+公開する。
 </para>
 
 <para>
