@@ -1042,53 +1042,56 @@ printcap ファイルに書き込むために、使用しているシステム�
 <indexterm><primary>カスタマイズした印刷コマンド</primary></indexterm>
 <indexterm><primary>内蔵コマンド</primary></indexterm>
 <indexterm><primary>マクロ</primary></indexterm>
-There is no difficulty with using your own customized print commands with the traditional printing systems.
-However, if you do not wish to roll your own, you should be well informed about the default built-in commands
-that Samba uses for each printing subsystem (see <link linkend="printOptions">Default Printing
-Settings</link>). In all the commands listed in the last paragraphs, you see parameters of the form
-<emphasis>%X</emphasis>. These are <emphasis>macros</emphasis>, or shortcuts, used as placeholders for the
-names of real objects. At the time of running a command with such a placeholder, Samba will insert the
-appropriate value automatically. Print commands can handle all Samba macro substitutions. In regard to
-printing, the following ones do have special relevance:
+伝統的な印刷システムに対して作成した固有の印刷コマンドを使うことについては何ら違いは
+ない。しかし、固有のものを動かしたくないのであれば(訳注:to roll your own)、各印刷
+サブシステムに対してSambaが使う既定値の内蔵コマンドについて熟知すべきである
+(<link linkend="printOptions">既定値の印刷設定</link>を参照)。最後のパラグラフに
+一覧表示されているすべてのコマンドには<emphasis>%X</emphasis>という形式のパラメータが
+ある。これらは<emphasis>マクロ</emphasis>かショートカットで、真のオブジェクトの
+名前のためのプレースフォルダとして使われる。このようなプレースフォルダを使って、
+コマンドを動かしたとき、Sambaは自動的に適切な値に置き換える。印刷コマンドは
+すべてのSambaマクロ置換を扱える。印刷に関しては、以下の以下のものは特別に扱われる:
 </para>
 
 <itemizedlist>
-	<listitem><para><parameter>%s, %f</parameter> &smbmdash; the path to the spool file name.</para></listitem>
-	<listitem><para><parameter>%p</parameter> &smbmdash; the appropriate printer name.</para></listitem>
-	<listitem><para><parameter>%J</parameter> &smbmdash; the job name as transmitted by the client.</para></listitem>
-	<listitem><para><parameter>%c</parameter> &smbmdash; the number of printed pages of the spooled job (if known).</para></listitem>
-	<listitem><para><parameter>%z</parameter> &smbmdash; the size of the spooled print job (in bytes).</para></listitem>
+	<listitem><para><parameter>%s, %f</parameter> &smbmdash; スプールファイル名へのパス。</para></listitem>
+	<listitem><para><parameter>%p</parameter> &smbmdash; 適切なプリンタ名。</para></listitem>
+	<listitem><para><parameter>%J</parameter> &smbmdash; クライアントから送られたジョブ名。</para></listitem>
+	<listitem><para><parameter>%c</parameter> &smbmdash; (もしも分かるならば)スプールされたジョブのページ数。</para></listitem>
+	<listitem><para><parameter>%z</parameter> &smbmdash; スプールされた印刷ジョブのサイズ(バイト単位)。</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>default printer</primary></indexterm>
-The print command must contain at least one occurrence of <parameter>%s</parameter> or
-<parameter>%f</parameter>. The <parameter>%p</parameter> is optional. If no printer name is supplied,
-the <parameter>%p</parameter> will be silently removed from the print command. In this case, the job is
-sent to the default printer.
+<indexterm><primary>既定値のプリンタ</primary></indexterm>
+印刷コマンドは少なくとも<parameter>%s</parameter>か<parameter>%f</parameter>のどちらか
+1つを使っている必要がある。<parameter>%p</parameter>の使用は任意である。もしも
+プリンタ名が指定されないと、<parameter>%p</parameter>は印刷コマンドから何のメッセージも
+なしに取り去られる。この場合、ジョブは既定値のプリンタに送られる。
 </para>
 
 <para>
-<indexterm><primary>global print command</primary></indexterm>
-<indexterm><primary>spool files</primary></indexterm>
-If specified in the <smbconfsection name="[global]"/> section, the print command given will be
-used for any printable service that does not have its own print command specified. If there is neither a
-specified print command for a printable service nor a global print command, spool files will be created
-but not processed! Most importantly, print files will not be removed, so they will consume disk space.
+<indexterm><primary>グローバルのprint command</primary></indexterm>
+<indexterm><primary>スプールファイル</primary></indexterm>
+<smbconfsection name="[global]"/>セクション中で指定されると、指定されたprint commandは
+固有のprint commandを持たない任意の印刷サービスに対して使われる。もしも、印刷サービスの
+ためのprint commandも、グローバルのprint commandも指定されない場合、スプールファイルは
+作成されるが処理されない!最も重要なことは、印刷ファイルは削除されず、そのため、ディスク
+スペースを消費してしまうと言うことである。
 </para>
 
 <para>
-<indexterm><primary>nobody account</primary></indexterm>
-<indexterm><primary>guest account</primary></indexterm>
-Printing may fail on some UNIX systems when using the <emphasis>nobody</emphasis> account. If this happens, create an
-alternative guest account and give it the privilege to print. Set up this guest account in the
-<smbconfsection name="[global]"/> section with the <parameter>guest account</parameter> parameter.
+<indexterm><primary>nobodyアカウント</primary></indexterm>
+<indexterm><primary>ゲストアカウント</primary></indexterm>
+印刷は、<emphasis>nobody</emphasis>アカウントを使うとき、ある種のUNIXでは失敗するかも
+しれない。もしもそのような事態に遭遇したら、代替のゲストアカウントを作成し、印刷権限を
+付与する。このゲストアカウントを、<smbconfsection name="[global]"/>セクション中に、
+<parameter>guest account</parameter>パラメータを使って設定する。
 </para>
 
 <para>
-<indexterm><primary>environment variables</primary></indexterm>
-<indexterm><primary>print commands</primary></indexterm>
-<indexterm><primary>print job</primary></indexterm>
+<indexterm><primary>環境変数</primary></indexterm>
+<indexterm><primary>印刷コマンド</primary></indexterm>
+<indexterm><primary>印刷ジョブ</primary></indexterm>
 You can form quite complex print commands. You need to realize that print commands are just
 passed to a UNIX shell. The shell is able to expand the included environment variables as
 usual. (The syntax to include a UNIX environment variable <parameter>$variable</parameter>
