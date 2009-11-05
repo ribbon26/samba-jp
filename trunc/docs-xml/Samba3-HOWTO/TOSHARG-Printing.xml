@@ -1311,26 +1311,28 @@ Sambaはスプールされたファイルに対してどのような方法でも
 <title>[print$]共有の作成/title>
 
 <para>
-<indexterm><primary>printer driver</primary></indexterm>
-In order to support the uploading and downloading of printer driver files, you must first configure a
-file share named <smbconfsection name="[print$]"/>. The public name of this share is hard coded
-in the MS Windows clients. It cannot be renamed, since Windows clients are programmed to search for a
-service of exactly this name if they want to retrieve printer driver files.
+<indexterm><primary>プリンタドライバ</primary></indexterm>
+プリンタドライバファイルのアップロード/ダウンロードをサポートするために、まずはじめに
+<smbconfsection name="[print$]"/>という名前のファイル共有を作成しなければならない。
+この共有の公開される名前は、Microsoft Windowsクライアント中で埋め込まれている。
+これは、プリンタドライバファイルを検索しようとした時に、正確にこの前のサービスを
+探すように、Windowsクライアントがプログラムされているため、改名することは出来ない。
 </para>
 
 <para>
-You should modify the server's file to add the global parameters and create the
-<smbconfsection name="[print$]"/> file share (of course, some of the parameter values, such
-as <smbconfoption name="path"/>, are arbitrary and should be replaced with appropriate values for your
-site). See <link linkend="prtdollar">[print\$] Example</link>.
+グローバルパラメータを追加するためにサーバのファイルを変更し、
+<smbconfsection name="[print$]"/>ファイル共有を作成すべきである(もちろん、
+たとえば<smbconfoption name="path"/>のようないくつかのパラメータの値は、サイトに
+よって適切な値に置き換えるべきである)。<link linkend="prtdollar">[print\$] の例</link>
+を参照。
 </para>
 
 <example id="prtdollar">
-<title>[print$] Example</title>
+<title>[print$] の例</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
-<smbconfcomment>members of the ntadmin group should be able to add drivers and set</smbconfcomment>
-<smbconfcomment>printer properties. root is implicitly always a 'printer admin'.</smbconfcomment>
+<smbconfcomment>ドライバの追加と設定を可能にすべき、ntdomainグループのメンバ</smbconfcomment>
+<smbconfcomment>プリンタのプロパティ。rootは常時'printer admin'と仮定される。</smbconfcomment>
 <smbconfoption name="printer admin">@ntadmin</smbconfoption>
 <smbconfcomment>...</smbconfcomment>
 
@@ -1338,7 +1340,7 @@ site). See <link linkend="prtdollar">[print\$] Example</link>.
 <smbconfcomment>...</smbconfcomment>
 
 <smbconfsection name="[print$]"/>
-<smbconfoption name="comment">Printer Driver Download Area</smbconfoption>
+<smbconfoption name="comment">プリンタドライバのダウンロード領域</smbconfoption>
 <smbconfoption name="path">/etc/samba/drivers</smbconfoption>
 <smbconfoption name="browseable">yes</smbconfoption>
 <smbconfoption name="guest ok">yes</smbconfoption>
@@ -1348,70 +1350,77 @@ site). See <link linkend="prtdollar">[print\$] Example</link>.
 </example>
 
 <para>
-Of course, you also need to ensure that the directory named by the
-<smbconfoption name="path"/> parameter exists on the UNIX file system.
+もちろん、<smbconfoption name="path"/>パラメータによって名付けられたディレクトリが、
+UNIXファイルシステム上に存在するようにしておく必要もある。
 </para>
 
 </sect2>
 
 <sect2>
-<title>[print$] Stanza Parameters</title>
+<title>[print$]セクションのパラメータ</title>
 
 <para>
-<indexterm><primary>special section</primary></indexterm>
-<indexterm><primary>special stanza</primary></indexterm>
+<indexterm><primary>特別なセクション</primary></indexterm>
+<indexterm><primary>特別な節</primary></indexterm>
 <indexterm><primary>potential printer</primary></indexterm>
-<indexterm><primary>driver download</primary></indexterm>
-<indexterm><primary>local print driver</primary></indexterm>
-The <smbconfsection name="[print$]"/> is a special section in &smb.conf;. It contains settings relevant to
-potential printer driver download and is used by Windows clients for local print driver installation.
-The following parameters are frequently needed in this share section:
+<indexterm><primary>ドライバのダウンロード</primary></indexterm>
+<indexterm><primary>ローカルプリントドライバ</primary></indexterm>
+<smbconfsection name="[print$]"/>は&smb.conf;中で特別なセクションである。これは、
+潜在的なプリンタドライバダウンロードに関連する設定を含み、ローカルプリンタドライバの
+インストールのためにWindowsクライアントによって使われる。以下のパラメータはこの共有
+セクションでしばしば必要とされるものである:
 </para>
 
 <variablelist>
-	<varlistentry><term><smbconfoption name="comment">Printer Driver Download Area </smbconfoption></term>
+	<varlistentry><term><smbconfoption name="comment">プリンタドライバダウンロード領域</smbconfoption></term>
 		<listitem><para>
-		The comment appears next to the share name if it is listed in a share list (usually Windows
-		clients will not see it, but it will also appear up in a <command>smbclient -L sambaserver
-		</command> output).
+		共有リスト中に一覧表示された時に、共有のそばにあるコメント(通常Windows
+		クライアントはそれを見る事ができないが、
+		<command>smbclient -L sambaserver</command>の出力中にも表示される)。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="path">/etc/samba/printers </smbconfoption></term>
 		<listitem><para>
-		The path to the location of the Windows driver file deposit from the UNIX point of view.
+		UNIXの観点からのWindowsドライバファイルの保存場所の位置のパス。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="browseable">no </smbconfoption></term>
 		<listitem><para>
-		Makes the <smbconfsection name="[print$]"/> share invisible to clients from the
-		<guimenu>Network Neighborhood</guimenu>. By excuting from a <command>cmd</command> shell:
+		<guimenu>ネットワークコンピュータ</guimenu>でクライアントに
+		<smbconfsection name="[print$]"/>共有を見せないようにさせる。
+		<command>cmd</command>シェルで以下を実行すると:
 <screen>
 &dosprompt; <command>net use g:\\sambaserver\print$</command>
 </screen>
-		 you can still mount it from any client. This can also be done from the
-		<guimenu>Connect network drive menu></guimenu> from Windows Explorer.
-		</para></listitem>
+		任意のクライアントから引き続き見る事ができる。これは、Windows
+		エクスプローラから<guimenu>Connect network drive menu</guimenu>
+		からでも行う事が出来る。
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="guest ok">yes </smbconfoption></term>
 		<listitem><para>
-		Gives read-only access to this share for all guest users. Access may be granted to
-		download and install printer drivers on clients. The requirement for <parameter>guest ok
-		= yes</parameter> depends on how your site is configured. If users will be guaranteed
-		to have an account on the Samba host, then this is a non-issue.
+		すべてのゲストユーザにこの共有をリードオンリにする。クライアント上への
+		ダウンロードとプリンタのドライバのインストールを行うためのアクセスは
+		許可される。<parameter>guest ok = yes</parameter>が必要かどうかは、
+		どのようにサイトが設定されているかに依存する。もしもユーザがSamba
+		ホスト上のアカウントを持つことを許可されているならば、これは何の
+		問題もない。
 		</para>
 
 		<note><para> 
-		If all your Windows NT users are guaranteed to be authenticated by the Samba server
-		(for example, if Samba authenticates via an NT domain server and the user has already been
-		validated by the domain controller in order to log on to the Windows NT session), then guest
-		access is not necessary. Of course, in a workgroup environment where you just want
-		to print without worrying about silly accounts and security, then configure the share for
-		guest access. You should consider adding <smbconfoption name="map to guest">Bad	User</smbconfoption>
-		in the <smbconfsection name="[global]"/> section as well. Make sure you understand what this
-		parameter does before using it.
+		もし、Sambaサーバによって認証されることを、すべてのWindows NTユーザが
+		保証されているならば(たとえb、もしも、NTドメインサーバ経由でSambaが
+		辛勝し、ユーザはすでにWindows NTセッションのためにログオンするために
+		ドメインコントローラによって認証されていた場合)、ゲストアクセスは
+		不要である。もちろん、ばかげたアカウントとセキュリティについて
+		心配せずに、ワークグループ環境で印刷を行いたいのであれば、ゲストアクセス
+		のための共有を設定する。同じように、<smbconfsection name="[global]"/>
+		セクション中で、
+		<smbconfoption name="map to guest">Bad User</smbconfoption>
+		を追加することを考えるべきである。これを使う前に、このパラメータが
+		行う事を理解しておくこと。
 		</para></note>
 		</listitem>
 	</varlistentry>
