@@ -1221,54 +1221,59 @@ Windows NT/200x/XP Professionalクライアントは標準SMBプリンタ共有�
 <para>
 <indexterm><primary>ドライバのインストール</primary></indexterm>
 <indexterm><primary>プリントキュー</primary></indexterm>
-Windows NT/2000 clients can, of course, also run their APW to install drivers <emphasis>locally</emphasis>
-(which then connect to a Samba-served print queue). This is the same method used by Windows 9x/Me
-clients. (However, a bug existed in Samba 2.2.0 that made Windows NT/2000 clients
-require that the Samba server possess a valid driver for the printer. This was fixed in Samba 2.2.1).
+もちろん、Windows NT/2000クライアントではドライバを<emphasis>ローカルに</emphasis>
+(次にSambaベースの印刷キューに繋ぎ)インストールするためにそれらのAPWも動かすことも
+できる。これはWindows 9x/Meクライアントによって使われるのと同じ手法である(しかし、
+Samba 2.2.0では、プリンタに対する有効なドライバをSambaサーバが処理することを
+Windows NT/2000クライアントが要求させる、というバグがある。これはSamba 2.2.1で
+修正されている)。
 </para>
 
 <para>
-<indexterm><primary>printer drivers</primary></indexterm>
-<indexterm><primary>uploading</primary></indexterm>
-But it is a new capability to install the printer drivers into the <smbconfsection name="[print$]"/>
-share of the Samba server, and a big convenience, too. Then <emphasis>all</emphasis> clients
-(including 95/98/ME) get the driver installed when they first connect to this printer share. The
-<emphasis>uploading</emphasis> or <emphasis>depositing</emphasis> of the driver into this
-<smbconfsection name="[print$]"/> share and the following binding of this driver to an existing
-Samba printer share can be achieved by different means:
+<indexterm><primary>プリンタドライバ</primary></indexterm>
+<indexterm><primary>アップロード</primary></indexterm>
+しかし、これはSambaサーバの<smbconfsection name="[print$]"/>共有中にプリンタドライバを
+インストールする新しい機能であり、これはとても便利である。次に、
+<emphasis>すべての</emphasis>クライアント(95/98/MEを含む)はこのプリンタ共有に最初に
+接続した時にインストールされているドライバを入手する。この
+<smbconfsection name="[print$]"/>中へのドライバの<emphasis>アップロード</emphasis>
+または<emphasis>供託</emphasis>と、以下の存在するSambaプリンタ共有へ、このドライバを
+結びつけることは異なった手段で達成できる:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	Running the <emphasis>APW</emphasis> on an NT/200x/XP Professional client (this does not work from 95/98/ME clients).
+	NT/200x/XP Professionalクライアント上で<emphasis>APW</emphasis>を動かす(これは95/98/MEクライアントでは動かない)。
 	</para></listitem>
 
 	<listitem><para>
-	Using the <emphasis>Imprints</emphasis> toolset.
+	<emphasis>Imprints</emphasis>ツールセットを使う。
 	</para></listitem>
 
 	<listitem><para>
-	Using the <emphasis>smbclient</emphasis> and <emphasis>rpcclient</emphasis> command-line tools.
+	<emphasis>smbclient</emphasis>と<emphasis>rpcclient</emphasis>コマンド行ツールを使う。
 	</para></listitem>
 
 	<listitem><para>
-	Using <emphasis>cupsaddsmb</emphasis> (only works for the CUPS printing system, not for LPR/LPD, LPRng, and so on).
+	<emphasis>cupsaddsmb</emphasis>を使う(CUPS印刷システムのみ動作し、LPR/LPD、LPRngなどでは動かない)。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-<indexterm><primary>uploaded drivers</primary></indexterm>
-<indexterm><primary>Point'n'Print</primary></indexterm>
-Samba does not use these uploaded drivers in any way to process spooled files. These drivers are utilized
-entirely by the clients who download and install them via the <quote>Point'n'Print</quote> mechanism
-supported by Samba. The clients use these drivers to generate print files in the format the printer
-(or the UNIX print system) requires. Print files received by Samba are handed over to the UNIX printing
-system, which is responsible for all further processing, as needed.
+<indexterm><primary>ドライバのアップロード</primary></indexterm>
+<indexterm><primary>ポイントアンドプリント</primary></indexterm>
+Sambaはスプールされたファイルに対してどのような方法でも、これらのアップロードされた
+ドライバを使わない。これらのドライバは、Sambaによってサポートされている
+<quote>ポイントアンドプリント</quote>メカニズム経由でダウンロード、インストールする
+クライアントによって完全に使われる。クライアントは、プリンタ(かUNIX印刷システム)が
+要求する形式に印刷ファイルを生成するためにこれらドライバを使う。Sambaが受け取る
+印刷ファイルは、必要に応じてすべてのさらなる処理のために責任のある、UNIX印刷システムに
+渡される。
 </para>
 </sect2>
 
 <sect2>
-<title>The Obsoleted [printer$] Section</title>
+<title>無効になった [printer$]セクション</title>
 
 	<para>
 <indexterm><primary>printer$ share</primary></indexterm>
