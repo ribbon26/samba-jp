@@ -1428,22 +1428,23 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 
 	<varlistentry><term><smbconfoption name="read only">yes </smbconfoption></term>
 		<listitem><para>
-		Because we do not want everybody to upload driver files (or even change driver settings),
-		we tagged this share as not writable.
+		誰でもがドライバファイルをアップロード(あるいはドライバの設定の変更)する
+		ことは望まないので、この共有を書き込み付加にする。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry><term><smbconfoption name="write list">@ntadmin, root </smbconfoption></term>
 		<listitem><para>
-		The <smbconfsection name="[print$]"/> was made read-only by the previous
-		setting so we should create a <parameter>write list</parameter> entry also. UNIX
-		groups are denoted with a leading <quote>@</quote> character. Users listed here are allowed
-		write-access (as an exception to the general public's read-only access), which they need to
-		update files on the share. Normally, you will want to name only administrative-level user
-		account in this setting. Check the file system permissions to make sure these accounts
-		can copy files to the share. If this is a non-root account, then the account should also
-		be mentioned in the global <smbconfoption name="printer admin"/>
-		parameter. See the &smb.conf; man page for more information on configuring file shares.
+		<smbconfsection name="[print$]"/>は以前の設定によってリードオンリになって
+		いるので、<parameter>write list</parameter>も一緒に作成すべきである。UNIX
+		グループは先頭に<quote>@</quote>が付いたものである。共有上にファイルの
+		アップデートを必要とするこの一覧にあるユーザは、(一般的にパブリックな
+		リードオンリアクセスの例外として)書き込みが許可される。
+		通常この設定中で管理者レベルのユーザのみ指名したいであろう。もしもこれが
+		非rootアカウントである場合、アカウントはグローバルの
+		<smbconfoption name="printer admin"/>パラメータ中で言及されるべきである。
+		ファイル共有上の設定についてのより詳細な情報は、&smb.conf;マニュアル
+		ページを参照のこと。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
@@ -1451,22 +1452,22 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 </sect2>
 
 <sect2>
-<title>The [print$] Share Directory</title>
+<title>[print$]共有ディレクトリ</title>
 
 <para>
-In order for a Windows NT print server to support the downloading of driver files by multiple client
-architectures, you must create several subdirectories within the <smbconfsection name="[print$]"/>
-service (i.e., the UNIX directory named by the <smbconfoption name="path"/>
-parameter). These correspond to each of the supported client architectures. Samba follows this model as
-well. Just like the name of the <smbconfsection name="[print$]"/> share itself, the subdirectories
-must be exactly the names listed below (you may leave out the subdirectories of architectures you do
-not need to support).
+Windows NT印刷サーバが、複数のクライアントアーキテクチャによってドライバのダウンロードが
+出来るようにするために、<smbconfsection name="[print$]"/>サービス内にいくつかのサブ
+ディレクトリを作成しなければならない(すなわち、<smbconfoption name="path"/>パラメータに
+よって指定されたUNIXのディレクトリ)。これらはサポートされる各クライアントアーキテクチャ
+に一致する。Sambaは同様にこのモデルに追従する。<smbconfsection name="[print$]"/>共有
+それ自身の名前と同じように、サブディレクトリは下記に一覧表示された名前と正確に一致
+しなければならない(サポートする必要のないアーキテクチャのサブディレクトリはなくても
+よい)。
 </para>
 
 <para>
-Therefore, create a directory tree below the
-<smbconfsection name="[print$]"/> share for each architecture you wish
-to support like this:
+すなわち、下記のように、<smbconfsection name="[print$]"/>共有配下に、サポートしたい
+各アーキテクチャのためのディレクトリを作成する。
 <programlisting>
 [print$]--+
           |--W32X86           # serves drivers to Windows NT x86
@@ -1477,39 +1478,41 @@ to support like this:
 </programlisting>
 </para>
 
-<important><title>Required Permissions</title>
+<important><title>必要とされるパーミッション</title>
 	<para>
-	In order to add a new driver to your Samba host, one of two conditions must hold true:
+	Sambaホスト上に新しいドライバを追加するためには、2つの条件のうちの1つを真にしておかねばならない:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		The account used to connect to the Samba host must have a UID of 0 (i.e., a root account).
+		Sambaホストに接続する時に使われるアカウントはUIDが0でなければならない(すなわちrootアカウント)。
 		</para></listitem>
 
 		<listitem><para>
-		The account used to connect to the Samba host must be named in the <emphasis>printer admin</emphasis> list.
+		Sambaホストに接続する時に使われるアカウントは<emphasis>printer admin</emphasis>リスト中に列挙されねばならない。
 		</para></listitem>
 	</itemizedlist>
 
 	<para>
-	Of course, the connected account must still have write access to add files to the subdirectories beneath
-	<smbconfsection name="[print$]"/>. Remember that all file shares are set to <quote>read-only</quote> by default.
+	もちろん、接続されたアカウントは<smbconfsection name="[print$]"/>下のサブ
+	ディレクトリファイルを追加するための書き込み許可が必要である。すべてのファイル
+	共有は既定値で<quote>リードオンリ</quote>に設定されていることを覚えておくこと。
 	</para>
 </important>
 
 <para>
-Once you have created the required <smbconfsection name="[print$]"/> service and
-associated subdirectories, go to a Windows NT 4.0/200x/XP client workstation. Open <guiicon>Network
-Neighborhood</guiicon> or <guiicon>My Network Places</guiicon> and browse for the Samba host. Once you
-have located the server, navigate to its <guiicon>Printers and Faxes</guiicon> folder. You should see
-an initial listing of printers that matches the printer shares defined on your Samba host.
+要求された<smbconfsection name="[print$]"/>サービスと関連したサブディレクトリを作成した
+後、Windows NT 4.0/200x/XPクライアントワークステーションの所に行く。
+<guiicon>ネットワークコンピュータ</guiicon>か<guiicon>マイネットワーク</guiicon>を
+開き、Sambaホストをブラウズする。所定のサーバを選択後、その
+<guiicon>プリンタとFAX</guiicon>フォルダに移動する。そうすると、Sambaホスト上で
+定義されたプリンタ共有にい位置するプリンタの一覧の初期値を見る事ができる。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Installing Drivers into [print$]</title>
+<title>[print$]へのドライバのインストール</title>
 
 <para>
 Have you successfully created the <smbconfsection name="[print$]"/> share in &smb.conf;, and have you forced
