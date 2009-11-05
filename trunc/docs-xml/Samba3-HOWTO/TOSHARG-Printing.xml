@@ -1278,34 +1278,37 @@ Sambaはスプールされたファイルに対してどのような方法でも
 	<para>
 <indexterm><primary>printer$ share</primary></indexterm>
 <indexterm><primary>printer driver</primary></indexterm>
-	Versions of Samba prior to 2.2 made it possible to use a share named <parameter>[printer$]</parameter>. This
-	name was taken from the same named service created by Windows 9x/Me clients when a printer was shared by them.
-	Windows 9x/Me printer servers always have a <smbconfsection name="[printer$]"/> service that provides
-	read-only access (with no password required) to support printer driver downloads. However, Samba's initial
-	implementation allowed for a parameter named <parameter>printer driver location</parameter> to be used on a
-	per-share basis. This specified the location of the driver files associated with that printer. Another
-	parameter named <parameter>printer driver</parameter> provided a means of defining the printer driver name to
-	be sent to the client.
+	2.2よりまえのSambaのバージョンでは<parameter>[printer$]</parameter>という名前の
+	共有を使う事が出来た。この名前はWindows 9x/Meクライアントがそれによって共有される
+	プリンタによって作成された、同じ、名前付きのサービスから取られている。
+	Windows 9x/Meプリンタサーバは、プリンタドライバのダウンロードをサポートするために、
+	ードオンリのアクセス(かつパスワードなし)のサービスを常時用意している。しかし、
+	Sambaの最初の実装では、<parameter>printer driver location</parameter>という名前の、
+	共有単位で使われるパラメータが使えた。これはそのプリンタに関連するドライバ
+	ファイルの位置を指定した。<parameter>printer driver</parameter>という名前の他の
+	ラメータは、クライアントに送られるプリンタドライバ名を定義する手段を提供した。
 	</para>
 
 	<para>
-<indexterm><primary>printer driver file</primary></indexterm>
-<indexterm><primary>read-write access</primary></indexterm>
+<indexterm><primary>プリンタドライバファイル</primary></indexterm>
+<indexterm><primary>読み書きアクセス</primary></indexterm>
 <indexterm><primary>ACLs</primary></indexterm>
-	These parameters, including the <parameter>printer driver file</parameter> parameter,
-	are now removed and cannot be used in installations of Samba-3. The share name
-	<smbconfsection name="[print$]"/> is now used for the location of downloadable printer
-	drivers. It is taken from the <smbconfsection name="[print$]"/> service created
-	by Windows NT PCs when a printer is shared by them. Windows NT print servers always have a
-	<smbconfsection name="[print$]"/> service that provides read-write access (in the context
-	of its ACLs) to support printer driver downloads and uploads. This does not mean Windows
-	9x/Me clients are now thrown aside. They can use Samba's <smbconfsection name="[print$]"/>
-	share support just fine.
+	<parameter>printer driver file</parameter>を含むこれらのパラメータは、Samba-3
+	では取り除かれ、使う事は出来ない。共有名<smbconfsection name="[print$]"/>は
+	ダウンロード可能なプリンタドライバの位置のために使われる。これは、Windows NT
+	が動いているPCが、それによって共有されるプリンタによって作成された、
+	<smbconfsection name="[print$]"/>という共有名から取られている。Windows NTの
+	印刷サーバは、プリンタドライバのダウンロードとアップロードをサポートするために、
+	読み書きアクセス(そのACLのコンテキスト中で)を提供する、
+	<smbconfsection name="[print$]"/>というサービスを常時提供している。これは
+	Windows 9x/Meクライアントがこの時点で捨てられるという事を意味するわけではない。
+	それらにはSambaの<smbconfsection name="[print$]"/>共有がきちんとサポートする
+	ものを使える。
 	</para>
 </sect2>
 
 <sect2>
-<title>Creating the [print$] Share</title>
+<title>[print$]共有の作成/title>
 
 <para>
 <indexterm><primary>printer driver</primary></indexterm>
