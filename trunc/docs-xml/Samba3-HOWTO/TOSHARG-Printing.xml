@@ -1599,94 +1599,102 @@ Sambaの<guiicon>プリンタ</guiicon>フォルダを開き、プリンタア�
 </para>
 
 <para>
-Assuming you have connected with an administrative (or root) account (as named by the
-<smbconfoption name="printer admin"/> parameter), you will also be able to modify
-other printer properties such as ACLs and default device settings using this dialog. For the default
-device settings, please consider the advice given further in <link linkend="inst-rpc">Installing
-Print Drivers Using <command>rpcclient</command></link>.
+管理者(root)アカウント(<smbconfoption name="printer admin"/>パラメータで指定されたもの)
+で接続していると仮定すると、さらに、このダイアログを使ってACLと既定値のデバイスの設定
+のようなプリンタのプロパティをも修正できる。既定値のデバイス設定のためには、
+<link linkend="inst-rpc"><command>rpcclient</command>を使った印刷ドライバのインストール</link>
+に助言が書いてあることを考慮してほしい。
 </para>
 </sect2>
 
 <sect2 id="inst-rpc">
-<title>Installing Print Drivers Using <command>rpcclient</command></title>
+<title><command>rpcclient</command>を使った印刷ドライバのインストール</title>
 
 <para>
-The second way to install printer drivers into <smbconfsection name="[print$]"/> and set them
-up in a valid way is to do it from the UNIX command line. This involves four distinct steps:
+<smbconfsection name="[print$]"/>にプリンタドライバをインストールし、有効な方法で
+それを設定するための2番目の方法は、UNIXコマンドラインから行う方法である。これは、
+4つの異なったステップを必要とする。
 </para>
 
 <orderedlist>
 	<listitem><para>
-	Gather information about required driver files and collect the files.
+	要求されたドライバファイルについての情報を集め、ファイルを収集する。
 	</para></listitem>
 
 	<listitem><para>
-	Deposit the driver files into the <smbconfsection name="[print$]"/> share's correct subdirectories
-	(possibly by using <command>smbclient</command>).
+	<smbconfsection name="[print$]"/>共有の正しいサブディレクトリ中にドライバ
+	ファイルを置く(おそらく<command>smbclient</command>を使うだろう)。
 	</para></listitem>
 
 	<listitem><para>
-	Run the <command>rpcclient</command> command-line utility once with the <command>adddriver</command>
-	subcommand.
+	<command>rpcclient</command>コマンドラインユーティリティを起動し、その
+	<command>adddriver</command>サブコマンドを使う。
 	</para></listitem>
 
 	<listitem><para>
-	Run <command>rpcclient</command> a second time with the <command>setdriver</command> subcommand.
+	<command>rpcclient</command>をもう一度起動し、<command>setdriver</command>
+	サブコマンドを使う。
 	</para></listitem>
 </orderedlist>
 
 <para>
-We provide detailed hints for each of these steps in the paragraphs that follow.
+以下の節で、これらのステップのおのおのについて詳細な説明を行う。
 </para>
 
 <sect3>
-<title>Identifying Driver Files</title>
+<title>ドライバファイルの識別</title>
 
 <para>
-<indexterm><primary>driver files</primary></indexterm>
-<indexterm><primary>driver CDROM</primary></indexterm>
-<indexterm><primary>inf file</primary></indexterm>
-To find out about the driver files, you have two options. You can check the contents of the driver
-CDROM that came with your printer. Study the <filename>*.inf</filename> files located on the CD-ROM. This
-may not be possible, since the <filename>*.inf</filename> file might be missing. Unfortunately, vendors have now started
-to use their own installation programs. These installations packages are often in some Windows platform
-archive format. Additionally, the files may be re-named during the installation process. This makes it
-extremely difficult to identify the driver files required.
+<indexterm><primary>ドライバファイル</primary></indexterm>
+<indexterm><primary>ドライバ CDROM</primary></indexterm>
+<indexterm><primary>inf ファイル</primary></indexterm>
+ドライバファイルを見つけるためには2つのオプションがある。プリンタに付属のドライバ
+CD-ROMの内容を検査することが出来る。CD-ROM上にある<filename>*.inf</filename>ファイルの
+位置を覚えておく。これは<filename>*.inf</filename>ファイルが無いかもしれないので、
+出来ない場合もある。残念なことに、最近ではベンダ固有のインストールプログラムを使う
+傾向がある。これらのインストールパッケージはしばしば何らかのWindows上での書庫形式
+を使っている。更に追加で、インストール処理中にファイル名が改名されるかもしれない。
+これは、必要とされるドライバファイルの識別がとても難しくなることを意味する。
 </para>
 
 <para>
 <indexterm><primary>W32X86</primary></indexterm>
-Then you have the second option. Install the driver locally on a Windows client and
-investigate which filenames and paths it uses after they are installed. (You need to repeat
-this procedure for every client platform you want to support. We show it here for the
-<application>W32X86</application> platform only, a name used by Microsoft for all Windows NT/200x/XP
-clients.)
+次に、2番目のオプションがある。ドライバをWindowsクライアント上にローカルに
+インストールし、インストール後にそれが使うファイル名とパスを調査する
+(サポートしたい各クライアントプラットフォーム毎にこの手続きを繰り返さなければ
+ならない。ここでは、すべてのWindows NT/200x/XPクライアントのためにMicrosoftによって
+使われる名前である、<application>W32X86</application>プラットフォームのみを
+表示する)。
 </para>
 
 <para>
-<indexterm><primary>driver files</primary></indexterm>
-A good method to recognize the driver files is to print the test page from the driver's
-<guilabel>Properties</guilabel> dialog (<guilabel>General</guilabel> tab). Then look at the list of
-driver files named on the printout. You'll need to recognize what Windows (and Samba) are calling the
-<guilabel>Driver File</guilabel>, <guilabel>Data File</guilabel>, <guilabel>Config File</guilabel>,
-<guilabel>Help File</guilabel>, and (optionally) <guilabel>Dependent Driver Files</guilabel>
-(this may vary slightly for Windows NT). You need to note all filenames for the next steps.
+<indexterm><primary>ドライバファイル</primary></indexterm>
+ドライバファイルを認識する良い方法は、ドライバの<guilabel>プロパティ</guilabel>
+ダイアログでテストページを印刷してみることである(<guilabel>全般</guilabel>タブ)。
+次に、印刷されたドライバファイルのリストを見てみる。Windows(とSamba)が
+<guilabel>ドライバファイル</guilabel>、<guilabel>データファイル</guilabel>、
+<guilabel>設定ファイル</guilabel>と(オプションの)
+<guilabel>依存するドライバファイル</guilabel>(これはWindows NTでは若干変わる)の
+何を呼び出しているかを認識する必要がある。次のステップのためにすべてのファイル名を
+記録する必要がある。
 </para>
 
 <para>
 <indexterm><primary>rpcclient</primary></indexterm>
 <indexterm><primary>enumdrivers</primary></indexterm>
 <indexterm><primary>getdriver</primary></indexterm>
-Another method to quickly test the driver filenames and related paths is provided by the
-<command>rpcclient</command> utility. Run it with <command>enumdrivers</command> or with the
-<command>getdriver</command> subcommand, each at the <filename>3</filename> info level. In the following example,
-<emphasis>TURBO_XP</emphasis> is the name of the Windows PC (in this case it was a Windows XP Professional
-laptop). I installed the driver locally to TURBO_XP from a Samba server called <constant>KDE-BITSHOP</constant>.
-We could run an interactive <command>rpcclient</command> session; then we would get an
-<command>rpcclient /></command> prompt and would type the subcommands at this prompt. This is left as
-a good exercise for you. For now, we use <command>rpcclient</command> with the <option>-c</option>
-parameter to execute a single subcommand line and exit again. This is the method you use if you
-want to create scripts to automate the procedure for a large number of printers and drivers. Note the
+ドライバファイル名と関連するパスを迅速にテストする別の方法は、<command>rpcclient</command>
+ユーティリティによって提供される。<command>enumdrivers</command>か
+<command>getdriver</command>サブコマンドを指定し、infoレベルを<filename>3</filename>に
+してこれを動かす。以下の例では、<emphasis>TURBO_XP</emphasis>がWindows PCの名前である
+(この場合、これはWindows XP Professionalラップトップ)。<constant>KDE-BITSHOP</constant>
+という名前のSambaサーバからTURBO_XPにローカルにドライバをインストールしたとする。
+次に対話的な<command>rpcclient</command>を動かす。そうすると、
+<command>rpcclient /></command>が表示され、このプロンプトの状態でサブコマンドが入力
+出来るようになる。これは練習として残しておこう。次に、1つのサブコマンド行を実行し、
+すぐに終了するような<option>-c</option>オプションをつけて<command>rpcclient</command>
+を起動する。これは大量のプリンタとドライバのために自動作業を行うスクリプトを作成する
+時に使う手法である。異なる引用符は単語間の異なった空白解決する点に注意:
 different quotation marks used to overcome the different spaces between words:
 </para>
 
@@ -1721,41 +1729,47 @@ Printer Driver Info 3:
 </screen></para>
 
 <para>
-<indexterm><primary>Driver File</primary></indexterm>
-<indexterm><primary>Driver Path</primary></indexterm>
+<indexterm><primary>ドライバファイル</primary></indexterm>
+<indexterm><primary>ドライバパス</primary></indexterm>
 <indexterm><primary>WIN40</primary></indexterm>
 <indexterm><primary>W32X86</primary></indexterm>
-You may notice that this driver has quite a large number of <guilabel>Dependent files</guilabel>
-(there are worse cases, however). Also, strangely, the
-<guilabel>Driver File</guilabel> is tagged here
-<guilabel>Driver Path</guilabel>. We do not yet have support for the so-called
-<application>WIN40</application> architecture installed. This name is used by Microsoft for the Windows
-9x/Me platforms. If we want to support these, we need to install the Windows 9x/Me driver files in
-addition to those for <application>W32X86</application> (i.e., the Windows NT 2000/XP clients) onto a
-Windows PC. This PC can also host the Windows 9x/Me drivers, even if it runs on Windows NT, 2000, or XP.
+このドライバは大量の<guilabel>依存ファイル</guilabel>(しかしながらこれは
+悪い場合である)を持つことに気がついても良いだろう。また、不思議なことに、
+<guilabel>ドライバファイル</guilabel>はここで<guilabel>ドライバファイル</guilabel>
+にタグ付けされている。インストールされた、いわゆる<application>WIN40</application>
+アーキテクチャに対してまだサポートをしていない。この名前は、Microsoftによって
+Windows 9x/Meプラットフォームに使われる。もしもこれらをサポートしたいならば、
+<application>W32X86</application>(すなわち、Windows NT/2000クライアント)
+Windows PC上に、それらのために追加でWindows 9x/Meドライバをインストールしなければ
+ならない。このPCは、Windows NT,2000あるいはXPで動いたとしても、Windows 9x/Me
+への機能提供も出来る。
 </para>
 
 <para>
 <indexterm><primary>UNC notation</primary></indexterm>
-<indexterm><primary>Windows Explorer</primary></indexterm>
+<indexterm><primary>Windowsエクスプローラ</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-Since the <smbconfsection name="[print$]"/> share is usually accessible through the <guiicon>Network
-Neighborhood</guiicon>, you can also use the UNC notation from Windows Explorer to poke at it. The Windows
-9x/Me driver files will end up in subdirectory <filename>0</filename> of the <filename>WIN40</filename>
-directory. The full path to access them is <filename>\\WINDOWSHOST\print$\WIN40\0\</filename>.
+<smbconfsection name="[print$]"/>共有が通常
+<guiicon>ネットワークコンピュータ</guiicon>経由でアクセス出来るので、そこにアクセス
+するためにWindowsエクスプローラからUNC記述を使う事が出来る。Windows 9x/Meドライバ
+ファイルは<filename>WIN40</filename>ディレクトリの<filename>0</filename>という
+サブディレクトリで終わる。これらに対するフルパスアクセスは
+<filename>\\WINDOWSHOST\print$\WIN40\0\</filename>である。
 </para>
 
 <note><para>
-More recent drivers on Windows 2000 and Windows XP are installed into the <quote>3</quote> subdirectory
-instead of the <quote>2</quote>. The version 2 of drivers, as used in Windows NT, were running in kernel
-mode. Windows 2000 changed this. While it still can use the kernel mode drivers (if this is enabled by
-the Admin), its native mode for printer drivers is user mode execution. This requires drivers designed
-for this purpose. These types of drivers install into the <quote>3</quote> subdirectory.
+Windows 2000とWindowsXP上のより最新のドライバは、<quote>2</quote>の代わりに
+<quote>3</quote>というサブディレクトリ中にインストールされる。Windows NT中で使われる
+バージョン2のドライバはカーネルモードで動作する。Windows2000ではこれを変更した。
+それは引き続きカーネルモードのドライバを使えるが(もしAdminによって有効にされれば)、
+そのネイティブモードのプリンタドライバはユーザモードで動作する。これは、この目的の
+ために設計されたドライバを要求する。これらのタイプのドライバは<quote>3</quote>
+サブディレクトリにインストールされる。
 </para></note>
 </sect3>
 
 <sect3>
-<title>Obtaining Driver Files from Windows Client [print$] Shares</title>
+<title>Windowsクライアントの[print$]共有からのドライバファイルの取得</title>
 
 <para>
 Now we need to collect all the driver files we identified in our previous step. Where do we get them
