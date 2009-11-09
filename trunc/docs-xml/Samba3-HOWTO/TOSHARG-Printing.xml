@@ -1815,32 +1815,33 @@ getting file \W32X86\2\Hddm91c1_de.DLL of size 876544 as Hddm91c1_de.DLL
 <title>[print$]へのドライバファイルインストール</title>
 
 <para>
-We are now going to locate the driver files into the <smbconfsection name="[print$]"/> share. Remember, the
-UNIX path to this share has been defined previously in your &smb.conf; file. You also have created
-subdirectories for the different Windows client types you want to support. If, for example, your
-<smbconfsection name="[print$]"/> share maps to the UNIX path <filename>/etc/samba/drivers/</filename>, your
-driver files should now go here:
+次は、<smbconfsection name="[print$]"/>共有にドライバファイルを配置する作業である。この
+共有へのUNIXパスは&smb.conf;ファイル中で以前に定義した事を忘れないこと。また、サポート
+したい異なったWindowsクライアントタイプのためには、サブディレクトリを作成する。たとえば
+もしも、<smbconfsection name="[print$]"/>が<filename>/etc/samba/drivers/</filename>
+というUNIXパスにマップされているならば、ドライバファイルは以下のように配置すべきである:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	For all Windows NT, 2000, and XP clients, <filename>/etc/samba/drivers/W32X86/</filename> but
-	not (yet) into the <filename>2</filename> subdirectory.
+	すべてのWindows NT, 2000,と XPクライアント用は <filename>/etc/samba/drivers/W32X86/</filename>
+	だが、<filename>2</filename>サブディレクトリ中ではない。
 	</para></listitem>
 
 	<listitem><para>
-	For all Windows 95, 98, and Me clients, <filename>/etc/samba/drivers/WIN40/</filename> but not
-	(yet) into the <filename>0</filename> subdirectory.
+	すべてのWindows 95, 98,とMeクライアント用は <filename>/etc/samba/drivers/WIN40/</filename>
+	だが、<filename>0</filename>サブディレクトリ中ではない。
 	</para></listitem>
 </itemizedlist>
 
 <para>
 <indexterm><primary>smbclient</primary></indexterm>
 <indexterm><primary>getdriver</primary></indexterm>
-We again use smbclient to transfer the driver files across the network. We specify the same files
-and paths as were leaked to us by running <command>getdriver</command> against the original
-<emphasis>Windows</emphasis> install. However, now we are going to store the files into a
-<emphasis>Samba/UNIX</emphasis> print server's <smbconfsection name="[print$]"/> share.
+再度、ネットワーク経由で、ドライバファイルを転送するためにsmbclientを使う。オリジナルの
+<emphasis>Windows</emphasis>インストールに対して<command>getdriver</command>を走らせた
+事により情報を得た同じファイルとパスを指定する。しかし、ここでは、
+<emphasis>Samba/UNIX</emphasis>印刷サーバの<smbconfsection name="[print$]"/>共有中に
+ファイルを格納する。
 <screen>
 &rootprompt;<userinput>smbclient //SAMBA-CUPS/print\$ -U'root%xxxx' -c \
   'cd W32X86; put HDNIS01_de.DLL; \
@@ -1874,8 +1875,10 @@ putting file HDNIS01Aux.dll as \W32X86\HDNIS01Aux.dll
 putting file HDNIS01_de.NTF as \W32X86\HDNIS01_de.NTF
 </screen>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>PostScript driver</primary></indexterm>
+<indexterm><primary>PostScriptドライバ</primary></indexterm>
 <indexterm><primary>adddriver</primary></indexterm>
+ヒュー;これはとても大量なタイプ量である!ほとんどのドライバはより小さい。多くはたった
+3つの汎用Postscriptドライバファイルと1つnPPDのみを持つ。
 Whew &smbmdash; that was a lot of typing! Most drivers are a lot smaller &smbmdash; many have only three generic
 PostScript driver files plus one PPD. While we did retrieve the files from the <filename>2</filename>
 subdirectory of the <filename>W32X86</filename> directory from the Windows box, we do not put them
