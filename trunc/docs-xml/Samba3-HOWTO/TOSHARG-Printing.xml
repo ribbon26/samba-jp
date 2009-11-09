@@ -1878,25 +1878,24 @@ putting file HDNIS01_de.NTF as \W32X86\HDNIS01_de.NTF
 <indexterm><primary>PostScriptドライバ</primary></indexterm>
 <indexterm><primary>adddriver</primary></indexterm>
 ヒュー;これはとても大量なタイプ量である!ほとんどのドライバはより小さい。多くはたった
-3つの汎用Postscriptドライバファイルと1つnPPDのみを持つ。
-Whew &smbmdash; that was a lot of typing! Most drivers are a lot smaller &smbmdash; many have only three generic
-PostScript driver files plus one PPD. While we did retrieve the files from the <filename>2</filename>
-subdirectory of the <filename>W32X86</filename> directory from the Windows box, we do not put them
-(for now) in this same subdirectory of the Samba box. This relocation will automatically be done by the
-<command>adddriver</command> command, which we will run shortly (and do not forget to also put the files
-for the Windows 9x/Me architecture into the <filename>WIN40/</filename> subdirectory should you need them).
+3つの汎用Postscriptドライバファイルと1つのPPDのみを持つ。Windowsマシンからの
+<filename>W32X86</filename>の<filename>2</filename>サブディレクトリからファイルを検索した
+時、Sambaサーバの同じサブディレクトリ中に(今は)それらを置かない。この再配置は、
+間もなく動く(そして、それらを必要とすべき場合、<filename>WIN40/</filename>サブ
+ディレクトリ中に、Windows 9x/Meアーキテクチャのためのファイルを置くことを忘れない)、
+<command>adddriver</command>によって自動的に行われる。
 </para>
 
 </sect3>
 
 <sect3>
-<title><command>smbclient</command> to Confirm Driver Installation</title>
+<title><command>smbclient</command>によるドライバインストールの確認</title>
 
 <para>
 <indexterm><primary>smbclient</primary></indexterm>
 <indexterm><primary>SSH</primary></indexterm>
-For now we verify that our files are there. This can be done with <command>smbclient</command>, too
-(but, of course, you can log in via SSH also and do this through a standard UNIX shell access):
+次は、所定の場所にファイルがあるかどうかを確認する。これは、<command>smbclient</command>
+で行える(が、もちろん、SSH経由でログインし、標準のUNIXシェルアクセスを通して行える)。
 </para>
 
 <para><screen>
@@ -1939,26 +1938,28 @@ PDFcreator2.PPD                     A    15746  Sun Apr 20 22:24:07 2003
 </screen></para>
 
 <para>
-<indexterm><primary>Point'n'Print</primary></indexterm>
-<indexterm><primary>printer driver files</primary></indexterm>
-<indexterm><primary>print queue</primary></indexterm>
-Notice that there are already driver files present in the <filename>2</filename> subdirectory (probably from a
-previous installation). Once the files for the new driver are there too, you are still a few steps away from
-being able to use them on the clients. The only thing you could do now is retrieve them from a client just
-like you retrieve ordinary files from a file share, by opening print$ in Windows Explorer. But that wouldn't
-install them per Point'n'Print. The reason is that Samba does not yet know that these files are something
-special, namely <emphasis>printer driver files</emphasis>, and it does not know to which print queue(s) these
-driver files belong.
+<indexterm><primary>ポイントアンドプリント</primary></indexterm>
+<indexterm><primary>プリンタドライバファイル</primary></indexterm>
+<indexterm><primary>印刷キュー</primary></indexterm>
+<filename>2</filename>サブディレクトリ(おそらく以前のインストールで)中に、すでに
+ドライバファイルが存在することに注意。いったん新しいドライバのためのファイルがそこに
+あると、クライアント上からそれらを使うことが出来るようにするためからは違ういくつかの
+ステップを処理することになる。この時点で行うべき唯一のことは、Windowsエクスプローラから
+print$共有を開いて、ファイル共有から普通のファイルを検索するのと同じように、クライアント
+から、それらを検索することである。しかし、それはポイントアンドプリント単位でそれらを
+インストールしない。その理由は、Sambaはまだそれらのファイルが特別か、すなわち、
+<emphasis>プリンタドライバファイル</emphasis>かどうかを知らないのと、それらのドライバ
+ファイルが属する印刷キューがどれかを知らないということによる。
 </para>
 </sect3>
 
 <sect3>
-<title>Running <command>rpcclient</command> with <command>adddriver</command></title>
+<title><command>adddriver</command>を付けた<emphasis>printer driver files</emphasis>の実行</title>
 
 <para>
 <indexterm><primary>adddriver</primary></indexterm>
-<indexterm><primary>register driver files</primary></indexterm>
-<indexterm><primary>TDB database</primary></indexterm>
+<indexterm><primary>ドライバファイルの登録</primary></indexterm>
+<indexterm><primary>TDBデータベース</primary></indexterm>
 Next, you must tell Samba about the special category of the files you just uploaded into the
 <smbconfsection name="[print$]"/> share. This is done by the <command>adddriver</command>
 command. It will prompt Samba to register the driver files into its internal TDB database files. The
