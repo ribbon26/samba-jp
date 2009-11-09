@@ -2067,27 +2067,33 @@ Printer Driver dm9110 successfully installed.
 <indexterm><primary>プリンタアイコン</primary></indexterm>
 <indexterm><primary>Windows95/98/ME</primary></indexterm>
 <indexterm><primary>Windows NT/2000/XP</primary></indexterm>
-	From any Windows client browse Network Neighborhood, find the Samba host, and open the Samba
-	<guiicon>Printers and Faxes</guiicon> folder. Select any printer icon, right-click and select
-	the printer <guimenuitem>Properties</guimenuitem>. Click the <guilabel>Advanced</guilabel>
-	tab. Here is a field indicating the driver for that printer. A drop-down menu allows you to
-	change that driver (be careful not to do this unwittingly). You can use this list to view
-	all drivers known to Samba. Your new one should be among them. (Each type of client will
-	see only its own architecture's list. If you do not have every driver installed for each platform,
-	the list will differ if you look at it from Windows95/98/ME or Windows NT/2000/XP.)
+	任意のWindowsクライアントの、ネットワークコンピュータによるブラウズから、Samba
+	ホストを検索し、Sambaの<guiicon>プリンタとFAX</guiicon>フォルダを開く。任意の
+	プリンタアイコンを選択し、右クリックしてプリンタの
+	<guimenuitem>プロパティ</guimenuitem>を選択する。<guilabel>詳細</guilabel>タブを
+	クリックする。そのプリンタに対するドライバを示すフィールドがここにある。ドロップ
+	ダウンメニューでそのドライバを変更できる(知らずにこれをしないように気をつける
+	こと)。Sambaが理解しているすべてのドライバの一覧を、これを使うことで見ることが
+	できる。新しいものがその中にあるべきである(クライアントの各タイプはこの固有の
+	アーキテクチャリストの中にのみ見ることができる。もしも各プラットフォーム用に
+	インストールされた各ドライバが無いならば、Windows95/98/MEかWindows NT/2000/XP
+	を見たときとは、このリストは違っている)。
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
-	From a Windows 200x/XP client (not Windows NT) browse <guiicon>Network Neighborhood</guiicon>,
-	search for the Samba server, open the server's <guiicon>Printers</guiicon> folder,
-	and right-click on the white background (with no printer highlighted). Select <guimenuitem>Server
-	Properties</guimenuitem>. On the <guilabel>Drivers</guilabel> tab you will see the new driver
-	listed. This view enables you to also inspect the list of files belonging to that driver
-	(this does not work on Windows NT, but only on Windows 2000 and Windows XP; Windows NT does not
-	provide the <guimenuitem>Drivers</guimenuitem> tab). An alternative and much quicker method for
-	Windows 2000/XP to start this dialog is by typing into a DOS box (you must of course adapt the
-	name to your Samba server instead of <replaceable>SAMBA-CUPS</replaceable>):
+<indexterm><primary>ネットワークコンピュータ</primary></indexterm>
+	Windows 200x/XPクライアント(Windows NTではなく)の
+	<guiicon>ネットワークコンピュータ</guiicon>によるブラウズから、Sambaサーバを
+	探し、サーバの<guiicon>プリンタ</guiicon>フォルダを開き、空白の部分(プリンタが
+	ハイライトされていないようにして)を右クリックする。
+	<guimenuitem>サーバのプロパティ</guimenuitem>を選択する。
+	<guilabel>ドライバ</guilabel>タブ上で、新しいドライバが一覧表示されていることが
+	確認できる。この表示は、そのドライバに属するファイルの一覧を調べるのにも使える
+	(これはWindows NTでは動作せず、Windows 2000とWindows XPでのみ動作する。
+	Windows NTは<guimenuitem>ドライバ</guimenuitem>タブを提供しない)。この
+	ダイアログをより簡単に起動するための代替の方法は、DOSプロンプトで入力する方法
+	である(もちろん、<replaceable>SAMBA-CUPS</replaceable>の代わりに使用している
+	Sambaサーバの名前を使わなければならない)。
 	<screen>
 	<userinput>rundll32 printui.dll,PrintUIEntry /s /t2 /n\\<replaceable>SAMBA-CUPS</replaceable></userinput>
 	</screen>
@@ -2095,29 +2101,30 @@ Printer Driver dm9110 successfully installed.
 	</listitem>
 
 	<listitem><para>
-	From a UNIX prompt, run this command (or a variant thereof), where
-	<replaceable>SAMBA-CUPS</replaceable> is the name of the Samba host and xxxx represents the
-	actual Samba password assigned to root:
+	UNIXプロンプトから、<replaceable>SAMBA-CUPS</replaceable>になっている場所を
+	使用しているSambaホストの名前にして、xxxxは、rootに割り当てられている実際の
+	Sambaのパスワードにして以下のコマンド(かあるいはその変形)を動かす:
 	<screen>
 	<userinput>rpcclient -U'root%xxxx' -c 'enumdrivers' <replaceable>SAMBA-CUPS</replaceable></userinput>
 	</screen>
 	</para>
 
 	<para>
-	You will see a listing of all drivers Samba knows about. Your new one should be among
-	them. But it is only listed under the <parameter>[Windows NT x86]</parameter> heading, not under
-	<smbconfsection name="[Windows 4.0]"/>, since you didn't install that part. Or did you?
-	In our example it is named <constant>dm9110</constant>. Note that the third column shows the other
-	installed drivers twice, one time for each supported architecture. Our new driver only shows up
-	for <application>Windows NT 4.0 or 2000</application>. To have it present for <application>Windows
-	95, 98, and Me</application>, you'll have to repeat the whole procedure with the WIN40 architecture
-	and subdirectory.
+	これで、Sambaが知っているすべてのドライバが表示される。新しいものはこの中に
+	あるべきである。しかし、<parameter>[Windows NT x86]</parameter>ヘッデイング
+	配下のもののみが一覧表示され、その部分をインストールしていないため、
+	<smbconfsection name="[Windows 4.0]"/>配下はない。3番目のカラムは、他に
+	インストールされたドライバを、各サポートしたアーキテクチャ用に、一度に
+	2度表示する。新しいドライバは<application>Windows NT 4.0 or 2000</application>
+	のみに表示される。<application>Windows 95, 98, と Me</application>に存在
+	しているようにするためには、WIN40アーキテクチャとサブディレクトリに対する
+	完全な手続きを繰り返さなければならない。
 	</para></listitem>
 </itemizedlist>
 </sect3>
 
 <sect3>
-<title>Specific Driver Name Flexibility</title>
+<title>指定したドライバ名の自由度</title>
 
 <para>
 <indexterm><primary>adddriver</primary></indexterm>
