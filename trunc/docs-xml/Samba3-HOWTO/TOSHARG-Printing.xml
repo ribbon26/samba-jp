@@ -1772,11 +1772,12 @@ Windows 2000とWindowsXP上のより最新のドライバは、<quote>2</quote>�
 <title>Windowsクライアントの[print$]共有からのドライバファイルの取得</title>
 
 <para>
-Now we need to collect all the driver files we identified in our previous step. Where do we get them
-from? Well, why not retrieve them from the very PC and the same <smbconfsection name="[print$]"/>
-share that we investigated in our last step to identify the files? We can use <command>smbclient</command>
-to do this. We will use the paths and names that were leaked to us by <command>getdriver</command>. The
-listing is edited to include line breaks for readability:
+ここで、以前のステップで認識したすべてのドライバファイルを収集する必要がある。さて、
+どこからそれを得ればよいだろうか?最後のファイルを識別する手段中で調査した、同じ
+<smbconfsection name="[print$]"/>共有とそのPCからそれを検索しないのだろうか?これを
+行うのに<command>smbclient</command>が使える。<command>getdriver</command>によって
+分かったパスと名前を使える。下記のコマンドライン業は、可読性向上のために、継続行文字を
+入れて編集できる:
 <screen>
 &rootprompt;<userinput>smbclient //TURBO_XP/print\$ -U'Danka%xxxx' \ 
    -c 'cd W32X86/2;mget HD*_de.* hd*ppd Hd*_de.* Hddm*dll HDN*Aux.DLL'</userinput>
@@ -1793,23 +1794,25 @@ getting file \W32X86\2\Hddm91c1_de.DLL of size 876544 as Hddm91c1_de.DLL
 </screen></para>
 
 <para>
-After this command is complete, the files are in our current local directory. You probably have noticed
-that this time we passed several commands to the <option>-c</option> parameter, separated by semicolons.
-This ensures that all commands are executed in sequence on the remote Windows server before
-<command>smbclient</command> exits again.
+このコマンドが完了すると、カレントローカルディレクトリにファイルが置かれる。この時点で、
+セミコロンで分離した、<option>-c</option>パラメータのためにいくつかのコマンドが渡される
+ことにおそらく気がつくだろう。これは、<command>smbclient</command>コマンドが再度終了
+する前にリモートのWindowsサーバ上で順番にすべてのコマンドを実行するようにさせる。
 </para>
 
 <para>
 <indexterm><primary>WIN40</primary></indexterm>
-Remember to repeat the procedure for the <application>WIN40</application> architecture should you need to
-support Windows 9x/Me/XP clients. Remember too, the files for these architectures are in the
-<filename>WIN40/0/</filename> subdirectory. Once this is complete, we can run <command>smbclient. .
-.put</command> to store the collected files on the Samba server's <smbconfsection name="[print$]"/> share.
+<application>WIN40</application>アーキテクチャが、Windows 9x/Me/XPクライアントをサポート
+しなければならないために、手続きを繰り返すことを忘れないこと。さらに、それらの
+アーキテクチャは<filename>WIN40/0/</filename>サブディレクトリにあることを忘れないこと。
+これがいったん終わると、Sambaサーバの<smbconfsection name="[print$]"/>共有にある、
+収集されたファイルを格納するために<command>smbclient. ..put</command>を動作させる
+ことができる。
 </para>
 </sect3>
 
 <sect3>
-<title>Installing Driver Files into [print$]</title>
+<title>[print$]へのドライバファイルインストール</title>
 
 <para>
 We are now going to locate the driver files into the <smbconfsection name="[print$]"/> share. Remember, the
