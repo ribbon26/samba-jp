@@ -1960,10 +1960,10 @@ print$共有を開いて、ファイル共有から普通のファイルを検�
 <indexterm><primary>adddriver</primary></indexterm>
 <indexterm><primary>ドライバファイルの登録</primary></indexterm>
 <indexterm><primary>TDBデータベース</primary></indexterm>
-Next, you must tell Samba about the special category of the files you just uploaded into the
-<smbconfsection name="[print$]"/> share. This is done by the <command>adddriver</command>
-command. It will prompt Samba to register the driver files into its internal TDB database files. The
-following command and its output has been edited for readability:
+次に、<smbconfsection name="[print$]"/>共有中に今アップロードしたファイルの特別な
+カテゴリについてSambaに通知する必要がある。これは、<command>adddriver</command>で
+行える。これは、Samba内部のTDBデータベースファイルにドライバを登録するように表示
+してくる。以下のコマンドと出力は、可読性向上のために編集してある:
 <screen>
 &rootprompt;<userinput>rpcclient -Uroot%xxxx -c 'adddriver "Windows NT x86" \
   "dm9110:HDNIS01_de.DLL: \
@@ -1986,25 +1986,25 @@ Printer Driver dm9110 successfully installed.
 
 <para>
 <indexterm><primary>NT_STATUS_UNSUCCESSFUL</primary></indexterm>
-<indexterm><primary>error message</primary></indexterm>
+<indexterm><primary>エラーメッセージ</primary></indexterm>
 <indexterm><primary>adddriver</primary></indexterm>
-After this step, the driver should be recognized by Samba on the print server. You need to be very
-careful when typing the command. Don't exchange the order of the fields. Some changes would lead to
-an <computeroutput>NT_STATUS_UNSUCCESSFUL</computeroutput> error message. These become obvious. Other
-changes might install the driver files successfully but render the driver unworkable. So take care!
-Hints about the syntax of the adddriver command are in the man page. 
-provides a more detailed description, should you need it.
+このステップの後、ドライバはプリントサーバ上のSambaによって認識される。このコマンドを
+入力するときには特別に注意を払う必要がある。フィールドの順番を交換しないこと。それは
+明白である。他の変更は、ドライバファイルのインストールが成功するかもしれないが、
+ドライバの実行が不可能になる。そのため、注意を払うこと!adddriverコマンドの文法に関する
+ヒントはマニュアルページにあり、必要ならばより詳細な記述を見ておくこと。
 </para>
 </sect3>
 
 <sect3>
-<title>Checking <command>adddriver</command> Completion</title>
+<title><command>adddriver</command>処理完了の確認</title>
 
 <para>
-One indication for Samba's recognition of the files as driver files is the <computeroutput>successfully
-installed</computeroutput> message. Another one is the fact that our files have been moved by the
-<command>adddriver</command> command into the <filename>2</filename> subdirectory. You can check this
-again with <command>smbclient</command>:
+ファイルをドライバファイルとしてSambaが認識したことを示す表示の1つは、
+<computeroutput>successfully installed</computeroutput>というメッセージである。
+他のものは、<command>adddriver</command>コマンドによってファイルが
+<filename>2</filename>サブディレクトリ中に動かされた、という事実である。これは再度
+<command>smbclient</command>コマンドで確認できる:
 <screen>
 &rootprompt;<userinput>smbclient //SAMBA-CUPS/print\$ -Uroot%xx \
 	-c 'cd W32X86;dir;pwd;cd 2;dir;pwd'</userinput>
@@ -2045,26 +2045,26 @@ again with <command>smbclient</command>:
 </screen></para>
 
 <para>
-Another verification is that the timestamp of the printing TDB files is now updated
-(and possibly their file size has increased).
+他の検査方法は、印刷関連のTDBファイルのタイムスタンプが更新されたという事
+(と、もしも条件がそろえば、そのファイルサイズが増えたこと)である。
 </para>
 </sect3>
 
 <sect3>
-<title>Check Samba for Driver Recognition</title>
+<title>Sambaがドライバを認識したかの確認</title>
 
 <para>
 <indexterm><primary>registered</primary></indexterm>
-Now the driver should be registered with Samba. We can easily verify this and will do so in a
-moment. However, this driver is not yet associated with a particular printer. We may check the driver
-status of the files by at least three methods:
+この時点で、ドライバはSambaによって登録された。ほんの少しの時間でこのことを確認できる。
+しかし、このドライバはまだ特定のプリンタに対して関連づけられていない。少なくとも3つの
+方法で、ドライバファイルのステータスを確認できる:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-<indexterm><primary>Network Neighborhood</primary></indexterm>
-<indexterm><primary>Printers and Faxes</primary></indexterm>
-<indexterm><primary>printer icon</primary></indexterm>
+<indexterm><primary>ネットワークコンピュータ</primary></indexterm>
+<indexterm><primary>プリンタとFAX</primary></indexterm>
+<indexterm><primary>プリンタアイコン</primary></indexterm>
 <indexterm><primary>Windows95/98/ME</primary></indexterm>
 <indexterm><primary>Windows NT/2000/XP</primary></indexterm>
 	From any Windows client browse Network Neighborhood, find the Samba host, and open the Samba
