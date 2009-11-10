@@ -2128,8 +2128,9 @@ Printer Driver dm9110 successfully installed.
 
 <para>
 <indexterm><primary>adddriver</primary></indexterm>
-You can name the driver as you like. If you repeat the <command>adddriver</command> step with the same
-files as before but with a different driver name, it will work the same:
+ドライバに好みの名前を付けることが出来る。前と同じファイルではあるが、異なったドライバ
+名を付けて<command>adddriver</command>ステップを繰り返したいのならば、以下のように
+行う:
 <screen>
 &rootprompt;<userinput>rpcclient -Uroot%xxxx         \
   -c 'adddriver "Windows NT x86"                     \
@@ -2152,27 +2153,28 @@ Printer Driver mydrivername successfully installed.
 </screen></para>
 
 <para>
-<indexterm><primary>print queue</primary></indexterm>
+<indexterm><primary>プリントキュー</primary></indexterm>
 <indexterm><primary>rpcclient</primary></indexterm>
 <indexterm><primary>adddriver</primary></indexterm>
-You will be able to bind that driver to any print queue (however, you are responsible that
-you associate drivers to queues that make sense with respect to target printers). You cannot run the
-<command>rpcclient</command> <command>adddriver</command> command repeatedly. Each run consumes the
-files you had put into the <smbconfsection name="[print$]"/> share by moving them into the
-respective subdirectories, so you must execute an <command>smbclient ... put</command> command before
-each <command>rpcclient ... adddriver</command> command.
+任意のプリントキューにそのドライバをバインドすることが出来る(しかし、ターゲットの
+プリンタに関して意味をなすキューへのドライバを連携させる事については、責任を
+追わねばならない)。繰り返し<command>rpcclient</command> <command>adddriver</command>
+コマンドを実行することは出来ない。おのおのの実行は、それぞれのサブディレクトリ中に
+それらを移動することで、<smbconfsection name="[print$]"/>共有中にファイルを配置して
+しまったので、各<command>rpcclient ... adddriver</command>コマンドの前に
+<command>smbclient ... put</command>を1回実行させなければならない。
 </para>
 </sect3>
 
 <sect3>
-<title>Running <command>rpcclient</command> with <command>setdriver</command></title>
+<title><command>setdriver</command>を付けた<command>rpcclient</command>の実行</command></title>
 
 <para> 
-<indexterm><primary>mapping printer driver</primary></indexterm>
+<indexterm><primary>プリンタドライバのマッピング</primary></indexterm>
 <indexterm><primary>TDB</primary></indexterm>
-Samba needs to know which printer owns which driver. Create a mapping of the driver to a printer, and
-store this information in Samba's memory, the TDB files. The <command>rpcclient setdriver</command> command
-achieves exactly this:
+Sambaはどのプリンタがどのドライバに対応しているかを知る必要がある。ドライバからプリンタ
+へのマッピングを作成し、この情報をSambaのTDBファイルに格納する。
+<command>rpcclient setdriver</command>はこれを正しく処理する:
 <screen>
 &rootprompt;<userinput>rpcclient -U'root%xxxx' -c 'setdriver dm9110 mydrivername' <replaceable>SAMBA-CUPS</replaceable></userinput>
  cmd = setdriver dm9110 mydrivername
