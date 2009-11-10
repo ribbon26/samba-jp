@@ -2183,7 +2183,7 @@ Successfully set dm9110 to driver mydrivername.
 </screen></para>
 
 <para>
-Ah, no, I did not want to do that. Repeat, this time with the name I intended: 
+これはまずい、こういう事は期待していない。この時点では、指定する名前を繰り返す:
 <screen>
 &rootprompt;<userinput>rpcclient -U'root%xxxx' -c 'setdriver dm9110 dm9110' <replaceable>SAMBA-CUPS</replaceable></userinput>
  cmd = setdriver dm9110 dm9110
@@ -2191,114 +2191,119 @@ Successfully set dm9110 to driver dm9110.
 </screen></para>
 
 <para>
-The syntax of the command is:
+コマンドの文法は下記の通り:
 <screen>
 <userinput>rpcclient -U'root%<replaceable>sambapassword</replaceable>' -c 'setdriver <replaceable>printername</replaceable> \
  <replaceable>drivername</replaceable>' <replaceable>SAMBA-Hostname</replaceable></userinput>. 
 </screen>
-Now we have done most of the work, but not all of it.
+これで、ほとんどの仕事が完了したが、まだ全部ではない。
 </para>
 
 <note><para>
-The <command>setdriver</command> command will only succeed if the printer is already known to Samba. A
-bug in 2.2.x prevented Samba from recognizing freshly installed printers. You had to restart Samba,
-or at least send an HUP signal to all running smbd processes to work around this: <userinput>kill -HUP
-`pidof smbd`</userinput>.
+<command>setdriver</command>コマンドは、Sambaがそのプリンタをすでに知っているときにのみ
+成功する。2.2.x中にあるバグは、新しくインストールされたプリンタの認識を妨害する。Samba
+を再起動するか、少なくともこれに対応するために、動作中のすべてのsmbdに対してHUPシグナルを
+<userinput>kill -HUP `pidof smbd`</userinput>のように送信する必要がある。
 </para></note>
 </sect3>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Client Driver Installation Procedure</title>
+<title>クライアントドライバのインストール方法</title>
 
 <para>
-As Don Quixote said, <quote>The proof of the pudding is in the eating.</quote> The proof
-for our setup lies in the printing. So let's install the printer driver onto the client PCs. This is
-not as straightforward as it may seem. Read on.
+Don Quixote曰く、<quote>論より証拠</quote>。印刷することでセットアップした内容の証明が
+できる。そのため、クライアントPC上にプリンタドライバをインストールしてみよう。が、
+これは思ったよりも簡単ではない。以下で説明する。
 </para>
 
 <sect2>
-<title>First Client Driver Installation</title>
+<title>最初のクライアントドライバインストール</title>
 
 <para>
-Especially important is the installation onto the first client PC (for each architectural platform
-separately). Once this is done correctly, all further clients are easy to set up and shouldn't need further
-attention. What follows is a description for the recommended first procedure. You now work from a client
-workstation. You should check that your connection is not unwittingly mapped to <emphasis>bad
-user</emphasis> nobody. In a DOS box type:
+特に重要なことは、最初のクライアントPCへのインストール(各アーキテクチャプラットフォーム
+ごとに)である。一度これが正常に終われと、その後他のクライアントへは、簡単にセットアップ
+でき、さらなる注意事項は必要ない。以下でフォローすることは、推奨する最初の手順の説明で
+ある。ここから先はクライアントワークステーションで作業する。そのクライアントからの接続が
+書き込みできない<emphasis>bad user</emphasis> nobodyにマップされていないことを確認する。
+DOSプロンプトで以下を入力する:
 </para>
 
 <para><userinput>net use \\<replaceable>SAMBA-SERVER</replaceable>\print$ /user:root</userinput></para>
 
 <para>
-Replace root, if needed, by another valid <smbconfoption name="printer admin"/> user as given in
-the definition. Should you already be connected as a different user, you will get an error message. There
-is no easy way to get rid of that connection, because Windows does not seem to know a concept of logging
-off from a share connection (do not confuse this with logging off from the local workstation; that is
-a different matter).  On Windows NT/200x, you can force a logoff from all smb/cifs connections by restarting the 
-<emphasis>workstation</emphasis> service. You can try to close all Windows file explorers and Internet Explorer for 
-Windows. As a last resort, you may have to reboot. Make sure there is no automatic reconnection set up. It may be
-easier to go to a different workstation and try from there. After you have made sure you are connected
-as a printer admin user (you can check this with the <command>smbstatus</command> command on Samba),
-do this from the Windows workstation:
+必要であれば、<smbconfoption name="printer admin"/>で定義している他の有効なユーザに
+rootを置き換える。異なったユーザですでに接続しているならば、エラーメッセージが表示
+される。Windowsは共有の接続からログオフする概念が内容に見えるので、その接続のridを
+取得するのに簡単な方法はない(ローカルワークステーションからのログオフと混同しない
+ように。それは別の事柄である)。Windows NT/200x上では、<emphasis>workstation</emphasis>
+サービスを再起動することで、すべての smb/cifs接続から強制的にログオフすることが
+できる。Windows ファイルエクスプローラとWindows用のMSIEのすべてを閉じることを試みる
+ことができる。苦肉の策として、再起動しても良い。自動的な再接続の設定が無いことを
+理解すること。別のワークステーションに行ってそこからつなぐ方が簡単かもしれない。
+printer adminユーザとして接続出来た後(Samba上の<command>smbstatus</command>コマンドで
+これを確認できる)、Windowsワークステーションから以下を実行する:
 </para>
 
 <procedure>
 	<step><para>
-	Open <guiicon>Network Neighborhood</guiicon>.
+	<guiicon>ネットワークコンピュータ</guiicon>を開く。
 	</para></step>
 
 	<step><para>
-	Browse to Samba server.
+	Sambaサーバをブラウズする。
 	</para></step>
 
 	<step><para>
-	Open its <guiicon>Printers and Faxes</guiicon> folder.
+	その<guiicon>プリンタとFAX</guiicon>フォルダを開く。
 	</para></step>
 
 	<step><para>
-	Highlight and right-click on the printer.
+	プリンタを選択して右クリックする。
 	</para></step>
 
 	<step><para>
-	Select <guimenuitem>Connect</guimenuitem> (for Windows NT4/200x
-	it is possibly <guimenuitem>Install</guimenuitem>).
+	<guimenuitem>接続</guimenuitem>を選択(Windows NT4/200xでは
+	おそらくそれは<guimenuitem>インストール</guimenuitem>であろう)。
 	</para></step>
 </procedure>
 
 <para>
-A new printer (named <replaceable>printername</replaceable> on Samba server) should now have
-appeared in your <emphasis>local</emphasis> Printer folder (check <guimenu>Start</guimenu> ->
-<guimenuitem>Settings</guimenuitem> -> <guimenuitem>Control Panel</guimenuitem> -> <guiicon>Printers
-and Faxes</guiicon>).
+新しいプリンタ(Sambaサーバ上で<replaceable>printername</replaceable>という名前の)が
+<emphasis>ローカル</emphasis>のプリンタフォルダ中に現れるはずである
+(<guimenu>スタート</guimenu> -> <guimenuitem>設定</guimenuitem> -> 
+<guimenuitem>コントロールパネル</guimenuitem> -> <guiicon>プリンタとFAX</guiicon>
+で確認)。
 </para>
 
 <para>
-<indexterm><primary>print test page</primary></indexterm>
-Most likely you are tempted to try to print a test page. After all, you now can open the printer
-properties, and on the <guimenu>General</guimenu> tab there is a button offering to do just that. But
-chances are that you get an error message saying "<literal>Unable to print Test Page</literal>." The
-reason might be that there is not yet a valid device mode set for the driver or that the <quote>printer
-driver data</quote> set is still incomplete.
+<indexterm><primary>印刷テストページ</primary></indexterm>
+おそらくは、印刷テストページを出力しようとしているだろう。全部終わった後、プリンタの
+プロパティを開き、<guimenu>全般</guimenu>タブ上に、これを行うためのボタンがある。
+しかし、やってみると"<literal>印刷テストページを印刷できませんでした</literal>"という
+エラーメッセージが表示される。これは、そのドライバに対して有効なデバイスモードセット
+がないか、<quote>プリンタドライバデータ</quote>セットが引き続き不完全状態という理由
+による。
 </para>
 
 <para>
-You must make sure that a valid <parameter>device mode</parameter> is set for the
-driver. We now explain what that means.
+有効な<parameter>デバイスモード</parameter>を、ドライバのために設定する必要がある。
+それがどういう意味かはこれから説明する。
 </para>
 </sect2>
 
 <sect2 id="prt-modeset">
-<title>Setting Device Modes on New Printers</title>
+<title>新しいプリンタに対するデバイスモードの設定</title>
 
 <para>
-For a printer to be truly usable by a Windows NT/200x/XP client, it must possess:
+Windows NT/200x/XPクライアントからプリンタが完璧に使えるようにするには、以下の作業が
+必要である:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-<indexterm><primary>device mode</primary></indexterm>
+<indexterm><primary>デバイスモード</primary></indexterm>
 	A valid <emphasis>device mode</emphasis> generated by the driver for the printer (defining things
 	like paper size, orientation and duplex settings).
 	</para></listitem>
