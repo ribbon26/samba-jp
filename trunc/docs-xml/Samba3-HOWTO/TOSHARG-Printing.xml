@@ -2305,7 +2305,7 @@ Windows NT/200x/XPクライアントからプリンタが完璧に使えるよ�
 	<listitem><para>
 <indexterm><primary>デバイスモード</primary></indexterm>
 	有効な<emphasis>デバイスモード</emphasis>は、プリンタ用のドライバによって生成
-	される(紙のサイズ、方向と二重の設定などを定義)。
+	される(紙のサイズ、方向と両面印刷の設定などを定義)。
 	</para></listitem>
 
 	<listitem><para>
@@ -2477,15 +2477,16 @@ Sambaサーバ上にドライバをインストール後(その<smbconfsection n
 </itemizedlist>
 
 <para>
-Do this by changing the orientation to landscape, click on <guiicon>Apply</guiicon>, and then change it
-back again. Next, modify the other settings (for example, you do not want the default media size set to
-<guiicon>Letter</guiicon> when you are all using <guiicon>A4</guiicon>, right? You may want to set the
-printer for <guiicon>duplex</guiicon> as the default, and so on).
+上の方向を横に変更し、<guiicon>適用</guiicon>をクリックし、再度戻すことでこれを行う。
+次に、他の設定を変更する(たとえば、常時 <guiicon>A4</guiicon>を使っているときに、
+紙のサイズを<guiicon>レター</guiicon>に既定値を変更したくないであろう?既定値として
+<guiicon>両面印刷</guiicon>にプリンタを設定したいかもしれないなど)。
 </para>
 
 <para>
 <indexterm><primary>runas</primary></indexterm>
-To connect as root to a Samba printer, try this command from a Windows 200x/XP DOS box command prompt:
+Sambaプリンタにrootとして接続するためには、以下のコマンドをWindows 200x/XPのDOS
+プロンプトから実行する:
 <screen>
 &dosprompt;<userinput>runas /netonly /user:root "rundll32 printui.dll,PrintUIEntry /p /t3 /n 
 	\\<replaceable>SAMBA-SERVER</replaceable>\<replaceable>printername</replaceable>"</userinput>
@@ -2493,55 +2494,59 @@ To connect as root to a Samba printer, try this command from a Windows 200x/XP D
 </para>
 
 <para>
-You will be prompted for <constant>root</constant>'s Samba password; type it, wait a few seconds, click on
-<guibutton>Printing Defaults</guibutton>, and proceed to set the job options that should be used as defaults
-by all clients. Alternatively, instead of root you can name one other member of the <smbconfoption
-name="printer admin"/> from the setting.
+<constant>root</constant>のSambaパスワードを入力し、しばらく待ち、
+<guibutton>印刷の既定値</guibutton>をクリックし、すべてのクライアントで使われる既定値と
+すべきジョブオプションを設定する。代替として、<smbconfoption name="printer admin"/>の
+設定中のメンバの中の名前をrootの代わりとして使うことが出来る。
 </para>
 
 <para>
-Now all the other users downloading and installing the driver the same way (using
-<literal>Point'n'Print</literal>) will have the same defaults set for them. If you miss this step, you'll get a
-lot of help desk calls from your users, but maybe you like to talk to people.
+これで、他のすべてのユーザは同じ方法でドライバのダウンロードとインストールが
+(<literal>ポイントアンドプリント</literal>を使って)出来るようになり、既定値も
+同じように設定される。もしも、このステップに失敗したら、ユーザからたくさんの
+問い合わせが来ることになるが、たくさんおしゃべりが出来て楽しいことになるだろう。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Other Gotchas</title>
+<title>その他のテクニック</title>
 
 <para>
-Your driver is installed. It is now ready for Point'n'Print installation by the clients. You may have tried to
-download and use it on your first client machine, but wait. Let's make sure you are acquainted first with a
-few tips and tricks you may find useful. For example, suppose you did not set the defaults on the printer, as
-advised in the preceding paragraphs. Your users complain about various issues (such as, <quote>We need to set
-the paper size for each job from Letter to A4 and it will not store it</quote>).
+ドライバはインストールされた。クライアントによるポイントアンドプリントインストールは
+準備ができた。最初のクライアントマシンでダウンロードして使ってみてもよいが、ちょっと
+待ってほしい。その前に、有用だと思われる、ちょっとした助言とこつをここで伝授する。
+たとえば、前の節で助言したような、プリンタに既定値を設定しなかったとする。利用者は
+多くの問題に不満を言うだろう(たとえば、<quote>各ジョブにレターからA4への紙のサイズの
+変更を必要とし、それが格納できない</quote>など)。
 </para>
 
 <sect2>
-<title>Setting Default Print Options for Client Drivers</title>
+<title>クライアントドライバのための既定値の印刷操作の設定</title>
 
 <para>
-The last sentence might be viewed with mixed feelings by some users and Admins. They have struggled for hours
-and could not arrive at a point where their settings seemed to be saved. It is not their fault. The confusing
-thing is that in the multitabbed dialog that pops up when you right-click on the printer name and select
-<guimenuitem>Properties</guimenuitem>, you can arrive at two dialogs that appear identical, each claiming that
-they help you to set printer options in three different ways. Here is the definitive answer to the Samba
-default driver setting FAQ:
+最後の文は、若干のユーザと管理者には複雑な気持ちになるかもしれない。何時間もかけて
+苦労したのに、設定をセーブできると思ったらそれが出来なかった。それはやった人の
+問題ではない。混乱する点は、プリンタ名上で右クリックをした時にポップアップされる複数の
+タブを持つダイアログ中で<guimenuitem>プロパティ</guimenuitem>を選択したとき、同一である
+ように見える2つのダイアログが現れ、それぞれは3つの異なった方法でプリンタのオプション
+設定を手助けすると言ってくるということである。これの完璧な答えは、Sambaの既定値の
+ドライバ設定FAQにある:
 </para>
 
-<formalpara><title><quote>I can not set and save default print options
-for all users on Windows 200x/XP. Why not?</quote></title>
+<formalpara><title><quote>Windows 200x/XP上ですべてのユーザで既定値のプリンタオプションを
+設定しセーブできない。なぜ?</quote></title>
 
 <para>
-How are you doing it? I bet the wrong way. (It is not easy to find out, though.) There are three different
-ways to bring you to a dialog that seems to set everything. All three dialogs look the same, but only one of
-them does what you intend. You need to be Administrator or Print Administrator to do this for all users. Here
-is how I reproduce it in an XP Professional:
+どのようにそれを行っている?操作を間違っているのではないか(確かにそれを見つけるのは簡単
+ではないが)。すべてを設定するダイアログを起動するのに3つのやり方がある。すべての3つの
+ダイアログは同じように見えるが、そのうちの1つが意図したものである。すべてのユーザのために
+AdministratorかPrint Administratorでこれを行う必要がある。XP Professionalでどのように
+これを再現したかは以下の通り:
 </para>
 
 <orderedlist numeration="upperalpha">
-	<listitem><para>The first <quote>wrong</quote> way:
+	<listitem><para>最初の<quote>間違った</quote>方法:
 	<orderedlist numeration="arabic">
 		<listitem><para>Open the <guiicon>Printers</guiicon> folder.</para></listitem>
 
