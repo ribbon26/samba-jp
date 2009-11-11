@@ -2402,40 +2402,46 @@ Windows NT/200x/XPクライアントからプリンタが完璧に使えるよ�
 </procedure>
 
 <para>
-This procedure executes the printer driver program on the client platform and feeds back the correct
-device mode to Samba, which now stores it in its TDB files. Once the driver is installed on the client,
-you can follow the analogous steps by accessing the <emphasis>local</emphasis> <guiicon>Printers</guiicon>
-folder, too, if you are a Samba printer admin user. From now on, printing should work as expected.
+この手続きは、クライアントプラットフォーム上でプリンタドライバプログラムを動かし、
+正しいデバイスモードをSambaにフィードバックし、そして、それをTDBファイルに格納する。
+一度ドライバがクライアント上にインストールされると、もしもSambaのprinter admin
+ユーザであれば、<emphasis>local</emphasis>の<guiicon>プリンタ</guiicon>フォルダに
+アクセスすることによって、類似したステップを行うことも出来る。ここから、印刷作業は
+期待した通りに動作する。
 </para>
 
 <para>
-<indexterm><primary>default devmode</primary></indexterm>
-Samba includes a service-level parameter name <parameter>default devmode</parameter> for generating a default
-device mode for a printer. Some drivers function well with Samba's default set of properties. Others
-may crash the client's spooler service. So use this parameter with caution. It is always better to have
-the client generate a valid device mode for the printer and store it on the server for you.
+<indexterm><primary>既定値のdevmode</primary></indexterm>
+Sambaには、プリンタのための既定値のデバイスモードを生成するための、サービスレベルの
+<parameter>default devmode</parameter>という名前のパラメータがある。ある種のドライバ
+機能は既定値のプロパティの値でうまく機能する。その他はクライアントのスプーラサービス
+をクラッシュするかもしれない。そのたえm、このパラメータの使用には注意が必要である。
+プリンタに対する有効なデバイスモードをクライアントに作成させることと、使用している
+サーバにそれを格納することは、常時よりよい方法である。
 </para>
 </sect2>
 
 <sect2>
-<title>Additional Client Driver Installation</title>
+<title>追加のクライアントドライバインストール</title>
 
 <para>
-<indexterm><primary>additional driver</primary></indexterm>
-Every additional driver may be installed in the same way as just described.  Browse <command>Network
-Neighborhood</command>, open the <guiicon>Printers</guiicon> folder on Samba server, right-click on
-<guiicon>Printer</guiicon>, and choose <guimenuitem>Connect...</guimenuitem>. Once this completes (should be
-not more than a few seconds, but could also take a minute, depending on network conditions), you should find
-the new printer in your client workstation local <guiicon>Printers and Faxes</guiicon> folder.
+<indexterm><primary>追加のドライバ</primary></indexterm>
+各追加ドライバは、今説明してきたことと同じ方法でインストールできる。
+<command>ネットワークコンピュータ</command>をブラウズし、Sambaサーバ上の
+<guiicon>プリンタ</guiicon>アイコンを開き、<guiicon>プリンタ</guiicon>を右クリックし、
+<guimenuitem>接続</guimenuitem>を選択する。一度これが完了すると(数秒以上はかからない
+が、ネットワークに依存するので、分単位でかかるときもある)、クライアント
+ワークステーションの、ローカルの<guiicon>プリンタとFAX</guiicon>フォルダ
+中に新しいプリンタが現れる。
 </para>
 
 <para>
-You can also open your local <guiicon>Printers and Faxes</guiicon> folder by
-using this command on Windows 200x/XP Professional workstations:
+Windows 200x/XP Professionalワークステーション上で以下のコマンドを使うことによって、
+ローカルの<guiicon>プリンタとFAX</guiicon>フォルダを開くことが出来る。
 <screen>
 <userinput>rundll32 shell32.dll,SHHelpShortcuts_RunDLL PrintersFolder</userinput>
 </screen>
-or this command on Windows NT 4.0 workstations:
+一方Windows NT 4.0ワークステーションでは以下のように行う:
 <indexterm><primary>rundll32</primary></indexterm>
 <screen>
 <userinput>rundll32 shell32.dll,Control_RunDLL MAIN.CPL @2</userinput>
@@ -2443,29 +2449,30 @@ or this command on Windows NT 4.0 workstations:
 </para>
 
 <para>
-You can enter the commands either inside a <guilabel>DOS box</guilabel> window or in the <guimenuitem>Run
-command...</guimenuitem> field from the <guimenu>Start</guimenu> menu.
+<guilabel>DOS プロンプト</guilabel>ウィンドウ内か、<guimenu>スタート</guimenu>メニュー
+中の<guimenuitem>コマンドを指定して実行</guimenuitem>のどちらかで入力できる。
 </para>
 </sect2>
 
 <sect2>
-<title>Always Make First Client Connection as root or <quote>printer admin</quote></title>
+<title>常時最初のクライアントからの接続はrootか<quote>printer admin</quote>で行う</title>
 
 <para>
-After you installed the driver on the Samba server (in its <smbconfsection name="[print$]"/> share), you
-should always make sure that your first client installation completes correctly. Make it a habit for yourself
-to build the very first connection from a client as <smbconfoption name="printer admin"/>. This is to make
-sure that:
+Sambaサーバ上にドライバをインストール後(その<smbconfsection name="[print$]"/>共有中に)、
+常時最初のクライアントインストールを正しく完了させねばならない。クライアントから
+<smbconfoption name="printer admin"/>として、まさしくその最初の接続を確立することを
+習慣づけるようにすること。これは、以下のように行う:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	A first valid <emphasis>device mode</emphasis> is really initialized (see above <link
-	linkend="prt-modeset">Setting Device Modes on New Printers</link>) for more explanation details).
+	最初の有効な<emphasis>デバイスモード</emphasis>が実際に初期化される(詳細な説明は
+	<link linkend="prt-modeset">新しいプリンタ上のデバイスモードの設定</link>を参照)。
 	</para></listitem>
 
 	<listitem><para>	
-	The default print settings of your printer for all further client installations are as you want them.
+	今後のすべてのクライアントインストールのための、使用しているプリンタの既定値の
+	プリンタ設定は期待するようになる。
 	</para></listitem>
 </itemizedlist>
 
