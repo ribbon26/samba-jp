@@ -2645,6 +2645,9 @@ rundll32 printui.dll,PrintUIEntry /p /t0 /n\\<replaceable>SAMBA-SERVER</replacea
 <title>大量のプリンタのサポート</title>
 
 <para>
+最近Samba開発段階において発生した1つの問題は、大量のプリンタからのドライバダウンロードを
+サポートする必要性である。この作業のためにWindows NT APWを使うことは、(控えめに言っても)
+幾分具合が悪い。もしも
 One issue that has arisen during the recent development phase of Samba is the need to support driver
 downloads for hundreds of printers. Using Windows NT APW for this task is somewhat awkward (to say the least). If
 you do not want to acquire RSS pains from the printer installation clicking orgy alone, you need
@@ -2652,12 +2655,13 @@ to think about a non-interactive script.
 </para>
 
 <para>
-If more than one printer is using the same driver, the <command>rpcclient setdriver</command>
-command can be used to set the driver associated with an installed queue. If the driver is uploaded to
-<smbconfsection name="[print$]"/> once and registered with the printing TDBs, it can be used by
-multiple print queues. In this case, you just need to repeat the <command>setprinter</command> subcommand of
-<command>rpcclient</command> for every queue (without the need to conduct the <command>adddriver</command>
-repeatedly). The following is an example of how this can be accomplished:
+複数のプリンタが同じドライバを使う場合、<command>rpcclient setdriver</command>コマンドは
+インストールされたキューに結合されたドライバを設定するために使える。もしもドライバが
+<smbconfsection name="[print$]"/>で一度更新され、印刷用TDBファイルに登録されると、
+複数の印刷キューによって使うことができる。この場合、すべてのキューに対して
+(<command>adddriver</command>を繰り返し実行する必要なしに)
+<command>rpcclient</command>の<command>setprinter</command>サブコマンドを繰り返す必要が
+ある。以下はどのようにこれを達成するかの例である:
 </para>
 
 <para><screen>
@@ -2729,15 +2733,15 @@ repeatedly). The following is an example of how this can be accomplished:
 </screen></para>
 
 <para>
-It may not be easy to recognize that the first call to <command>enumprinters</command> showed the
-<quote>dm9110</quote> printer with an empty string where the driver should have been listed (between
-the two commas in the description field). After the <command>setdriver</command> command
-succeeds, all is well.
+(説明フィールドの2つのカンマの間に)ドライバが一覧表示される、空の文字列がある
+<quote>dm9110</quote>プリンタが表示される最初の<command>enumprinters</command>
+呼び出しを認識するのは簡単ではないかもしれない。<command>setdriver</command>
+コマンドの成功後、すべてはうまくいく。
 </para>
 </sect2>
 
 <sect2>
-<title>Adding New Printers with the Windows NT APW</title>
+<title>Windows NT APWによる新しいプリンタの追加</title>
 
 <para>
 By default, Samba exhibits all printer shares defined in &smb.conf; in the <guiicon>Printers</guiicon>
