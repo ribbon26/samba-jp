@@ -2857,37 +2857,39 @@ APWではいろいろなことが出来る:
 </para>
 
 <para>
-The easiest way to forcefully terminate all connections from your client to a server is by executing:
+クライアントからサーバへのすべての接続を強制的に終了する最も簡単な方法は以下を実行する:
 <screen>
 &dosprompt; net use * /delete
 </screen>
-This will also disconnect all mapped drives and will allow you create fresh connection as required.
+これは、マップされたドライバすべても切断し、要求に応じて新しい接続が出来るようにする。
 </para>
 </sect2>
 
 <sect2>
-<title>Take Care When Assembling Driver Files</title>
+<title>ドライバファイルを集めるときに気をつけること</title>
 
 <para>
-You need to be extremely careful when you take notes about the files belonging to a particular
-driver. Don't confuse the files for driver version <quote>0</quote> (for Windows 9x/Me, going into
-<filename>[print$]/WIN/0/</filename>), driver version <filename>2</filename> (kernel mode driver for Windows NT,
-going into <filename>[print$]/W32X86/2/</filename>; may be used on Windows 200x/XP also), and
-driver version <quote>3</quote> (non-kernel mode driver going into <filename>[print$]/W32X86/3/</filename>;
-cannot be used on Windows NT). Quite often these different driver versions contain
-files that have the same name but actually are very different. If you look at them from
-the Windows Explorer (they reside in <filename>%WINDOWS%\system32\spool\drivers\W32X86\</filename>),
-you will probably see names in capital letters, while an <command>enumdrivers</command> command from Samba
-would show mixed or lowercase letters, so it is easy to confuse them. If you install them manually using
-<command>rpcclient</command> and subcommands, you may even succeed without an error message. Only later,
-when you try install on a client, you will encounter error messages like <computeroutput>This server
-has no appropriate driver for the printer</computeroutput>.
+特定のドライバに帰属するファイルについて注意するときにはきわめて注意深くする必要がある。
+ドライババージョン<quote>0</quote>(Windows 9x/Me用で<filename>[print$]/WIN/0/</filename>
+に入るもの)とドライババージョン<filename>2</filename>(Windows NTのカーネルモード
+ドライバで、<filename>[print$]/W32X86/2/</filename>に入るもので、Windows 200x/XPでも
+使われる)と、ドライババージョン<quote>3</quote>(非カーネルモードドライバで、
+<filename>[print$]/W32X86/3/</filename>に入るもので、Windows NTでは使われない)のための
+ファイルを混同してはならない。これら異なったドライバのバージョンは同じ名前のファイルを
+含んでいるが実際には全く異なることがとても多い。Sambaから<command>enumdrivers</command>
+コマンドで、大小文字が混じったか、小文字のみで表示されている間、もしもそれらをWindows
+エクスプローラ(<filename>%WINDOWS%\system32\spool\drivers\W32X86\</filename>内にある)で
+見る時、大文字で名前を見ることになるので、とてもこれらを混同しやすくなる。もしも、
+<command>rpcclient</command>とサブコマンドを使い、手動でそれらをインストールした場合、
+何のエラーメッセージもなしに成功する。その後、クライアント上にインストールしようと
+したとき、<computeroutput>このサーバはプリンタに対する適切なドライバを持っていない</computeroutput>
+というエラーメッセージを受け取ることになる。
 </para>
 
 <para>
-Here is an example. You are invited to look closely at the various files, compare their names and
-their spelling, and discover the differences in the composition of the version 2 and 3 sets. Note: the
-version 0 set contained 40 <parameter>Dependentfiles</parameter>, so I left it out for space reasons:
+以下は例である。しっかりと数多くのファイルに対して、その名前と綴りを確認し、バージョン2と
+3の構成において、その違いを見いだすことが求められる。注意:バージョン0には40の
+<parameter>依存するファイル</parameter>があるので、紙面節約のためにそれらは削除してある:
 </para>
 
 <para><screen>
@@ -2951,9 +2953,8 @@ version 0 set contained 40 <parameter>Dependentfiles</parameter>, so I left it o
 </screen></para>
 
 <para>
-If we write the <quote>version 2</quote> files and the <quote>version 3</quote> files
-into different text files and compare the result, we see this
-picture:
+もしも<quote>バージョン 2</quote>ファイルと<quote>バージョン 3</quote>ファイルを異なった
+テキストファイルに書き込み、その結果を比較すると以下のようになる:
 </para>
 
 <para><screen>
@@ -2986,9 +2987,8 @@ picture:
 ]]>
 </screen>
 
-Do not be fooled! Driver files for each version with identical
-names may be different in their content, as you can see from this size
-comparison:
+だまされてはいけない!各バージョン用の、同一の名前のドライバファイルは、サイズを
+比較して分かるように、その内容が異なっているかもしれない:
 </para>
 
 <para><screen>
@@ -3008,20 +3008,20 @@ comparison:
 </screen></para>
 
 <para>
-In my example were even more differences than shown here. Conclusion: you must be careful to select the
-correct driver files for each driver version. Don't rely on the names alone, and don't interchange files
-belonging to different driver versions.
+多くの例では、上記の例よりももっと違っている。結論:各ドライババージョン用の正しいドライバ
+ファイルを注意深く選択しなければならない。名前だけに頼っても、異なったドライバ
+バージョンに属するファイルを交換してもいけない。
 </para>
 </sect2>
 
 <sect2>
-<title>Samba and Printer Ports</title>
+<title>Sambaとプリンタポート</title>
 
 <para>
 <indexterm><primary>LPT1:</primary></indexterm>
 <indexterm><primary>COM1:</primary></indexterm>
 <indexterm><primary>FILE:</primary></indexterm>
-<indexterm><primary>available port</primary></indexterm>
+<indexterm><primary>有効なポート</primary></indexterm>
 Windows NT/2000 print servers associate a port with each printer. These normally take the form of
 <filename>LPT1:</filename>, <filename>COM1:</filename>, <filename>FILE:</filename>, and so on. Samba must also
 support the concept of ports associated with a printer. By default, only one printer port, named <quote>Samba
