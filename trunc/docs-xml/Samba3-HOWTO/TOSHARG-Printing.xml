@@ -2779,76 +2779,81 @@ APWではいろいろなことが出来る:
 	</para></listitem>
 
 	<listitem><para>
-	Associate an uploaded driver with an existing (but still driverless) print queue.
+	存在している印刷キューに(ただしまだドライバがない)アップロードされたドライバを関連づける。
 	</para></listitem>
 
 	<listitem><para>
-	Exchange the currently used driver for an existing print queue with one that has been uploaded before.
+	存在する印刷キューに対して、以前にアップロードされたものと、現在使っているドライバを、交換する。
 	</para></listitem>
 
 	<listitem><para>
-	Add an entirely new printer to the Samba host (only in conjunction with a working
-	<smbconfoption name="add printer command"/>. A corresponding
-	<smbconfoption name="delete printer command"/> for removing entries from the
-	<guiicon>Printers</guiicon> folder may also be provided).
+	Sambaホストに、完全な形で新しいプリンタを追加する(動作する
+	<smbconfoption name="add printer command"/>と組み合わせる場合のみ。
+	<guiicon>プリンタ</guiicon>フォルダからエントリを削除するための
+	<smbconfoption name="delete printer command"/>も提供してもよい)。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-The last one (add a new printer) requires more effort than the previous ones. To use the APW to successfully
-add a printer to a Samba server, the <smbconfoption name="add printer command"/> must have a defined value.
-The program hook must successfully add the printer to the UNIX print system (i.e., to
-<filename>/etc/printcap</filename>, <filename>/etc/cups/printers.conf</filename> or other appropriate files)
-and to &smb.conf; if necessary.
+最後のもの(プリンタの追加)はその前のものよりもより多くの努力を必要とする。Sambaサーバに
+正しくプリンタを追加するのにAPWを使うためには、<smbconfoption name="add printer command"/>
+に値が定義されている必要がある。プログラムホックは、正しくUNIX印刷システム(すなわち
+<filename>/etc/printcap</filename>、<filename>/etc/cups/printers.conf</filename>か
+他の適切なファイル)と、必要であれば&smb.conf;にプリンタを追加しなければならない。
 </para>
 
 <para>
-When using the APW from a client, if the named printer share does not exist, smbd will execute the
-<smbconfoption name="add printer command"/> and reparse to attempt to locate the new printer share. If the
-share is still not defined, an error of "<errorname>Access Denied"</errorname> is returned to the client. The
-<smbconfoption name="add printer command"/> is executed under the context of the connected user, not
-necessarily a root account. A <smbconfoption name="map to guest">bad user</smbconfoption> may have connected
-you unwittingly under the wrong privilege. You should check it by using the <command>smbstatus</command>
-command.
+クライアントからAPWを使うとき、名前が付いたプリンタ共有が存在しない場合、smbdは
+<smbconfoption name="add printer command"/>を実行し、新しいプリンタ共有を配置する
+ために、再度検索する。もしも共有がやはり定義されていないのであれば、クライアントに
+<errorname>"アクセスが拒否されました"</errorname>が返る。ユーザが接続している
+状態においての<smbconfoption name="add printer command"/>の実行は、rootアカウント
+の必要はない。<smbconfoption name="map to guest">bad user</smbconfoption>は
+間違った権限で書き込みが出来なくなる接続をしてしまうだろう。
+<command>smbstatus</command>コマンドを使ってこのことを検査すべきである。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Error Message: <quote>Cannot connect under a different Name</quote></title>
+<title>エラーメッセージ: <quote>異なった名前で接続できない</quote></title>
 
 <para>
-Once you are connected with the wrong credentials, there is no means to reverse the situation other than
-to close all Explorer windows, and perhaps reboot.
+間違った認証情報で接続してしまった場合、すべてのエクスプローラ画面を閉じ、リブート
+する以外に、この状況を解決する方法はない。
 </para>
 
 <itemizedlist>
 	<listitem><para>
 <indexterm><primary>net use</primary></indexterm>
-	The <command>net use \\SAMBA-SERVER\sharename /user:root</command> gives you an error message:
-	<quote>Multiple connections to a server or a shared resource by the same user utilizing
-	several user names are not allowed. Disconnect all previous connections to the server,
-	esp. the shared resource, and try again.</quote>
+	<command>net use \\SAMBA-SERVER\sharename /user:root</command>を使うと以下の
+	エラーメッセージが表示される:
+	<quote>サーバか共有リソースへの、複数の接続か、同じユーザによっていくつかの
+	ユーザ名を使う事は許可されない。特にサーバ、共有リソースへのすべての接続を
+	切断し再度試してみる。</quote>
 	</para></listitem>
 
 	<listitem><para>
-	Every attempt to <quote>connect a network drive</quote> to <filename>\\SAMBASERVER\\print$</filename>
-	to <constant>z:</constant> is countered by the pertinacious message: <quote>This
-	network folder is currently connected under different credentials (username and password).
-	Disconnect first any existing connection to this network share in order to connect again under
-	a different username and password</quote>.
+	<quote>ネットワークドライブへの割り当て</quote>->
+	<filename>\\SAMBASERVER\\print$</filename>-><constant>z:</constant>へのすべての
+	試みは、以下のようなメッセージがしつこく表示される:
+	<quote>このネットワークフォルダは現在異なった認証情報(ユーザ名とパスワード)の元で
+	接続されている。異なったユーザ名とパスワードで再度接続するために、この
+	ネットワーク共有への接続まず初めに切断する。</quote>
 	</para></listitem>
 </itemizedlist>
 
 <para>
-So you close all connections. You try again. You get the same message. You check from the Samba side, using
-<command>smbstatus</command>. Yes, there are more connections. You kill them all. The client still gives you
-the same error message. You watch the smbd.log file on a high debug level and try reconnect. Same error
-message, but not a single line in the log. You start to wonder if there was a connection attempt at all. You
-run ethereal and tcpdump while you try to connect. Result: not a single byte goes on the wire. Windows still
-gives the error message. You close all Explorer windows and start it again. You try to connect &smbmdash; and
-this times it works!  Windows seems to cache connection information somewhere and does not keep it up to date
-(if you are unlucky, you might need to reboot to get rid of the error message).
+そのためすべての接続をクローズする。そして再実行する。そうすると同じメッセージが出る。
+<command>smbstatus</command>を使ってSamba側でチェックを行う。するといくつか接続
+されているのが分かる。それらをkillする。そうしてもクライアントは同じメッセージを出す。
+デバッグレベルを上げて、再接続してsmbd.logをチェックする。ログ中に1行ではない、
+いくつかのエラーメッセージがある事が分かる。何らかの接続があったかどうかを考えて見始める。
+接続するときの状況を見るため、wiresharkかtcpdumpを走らせてみる。結果はこうなる:
+たくさんのデータがネットワーク上に出ている。Windowsは引き続きエラーメッセージを表示して
+いる。エクスプローラのウィンドウをクローズして、再度起動する。再度接続すると今回は
+うまくいった!Windowsは接続情報をどこかにキャッシュしているように見え、それは最新状態に
+していない(不幸な場合、エラーメッセージを除去するためにリブートの必要があるかもしれない)。
 </para>
 
 <para>
