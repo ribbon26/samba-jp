@@ -3022,99 +3022,107 @@ APWではいろいろなことが出来る:
 <indexterm><primary>COM1:</primary></indexterm>
 <indexterm><primary>FILE:</primary></indexterm>
 <indexterm><primary>有効なポート</primary></indexterm>
-Windows NT/2000 print servers associate a port with each printer. These normally take the form of
-<filename>LPT1:</filename>, <filename>COM1:</filename>, <filename>FILE:</filename>, and so on. Samba must also
-support the concept of ports associated with a printer. By default, only one printer port, named <quote>Samba
-Printer Port</quote>, exists on a system. Samba does not really need such a <quote>port</quote> in order to
-print; rather it is a requirement of Windows clients. They insist on being told about an available port when
-they request this information; otherwise, they throw an error message at you. So Samba fakes the port
-information to keep the Windows clients happy.
+Windows NT/2000印刷サーバは各プリンタに対してポートを結びつける。これらは通常、
+<filename>LPT1:</filename>、<filename>COM1:</filename>、<filename>FILE:</filename>
+のような形式である。Sambaもプリンタに結びついたポートという概念をサポートせねば
+ならない。既定値では、システム上<quote>Sambaプリンタポート</quote>という名前の1つの
+プリンタポートのみが存在する。Sambaは印刷するために、<quote>ポート</quote>のようなものは
+実際に必要はしていない。むしろ、これはWindowsクライアントの要求である。この情報を要求する
+時、有効なポートについて告知されることを強く要求する。それ以外だとエラーメッセージを表示
+する。そのため、SambaはWindowsクライアントに支障がないよう、ポート情報を偽装する。
 </para>
 
 <para>
-<indexterm><primary>Printer Pooling</primary></indexterm>
-Samba does not support the concept of <constant>Printer Pooling</constant> internally either. Printer
+<indexterm><primary>プリンタプーリング</primary></indexterm>
+Sambaは内部的に同等の<constant>プリンタプーリング</constant>という概念をサポートして
+いない。プリンタプーリングは論理プリンタを複数のポートに、ロードバランシングか
+フェイルオーバのように割り当てるものである。
+Samba does not support the concept of <constant>プリンタプーリング</constant> internally either. Printer
 pooling assigns a logical printer to multiple ports as a form of load balancing or failover.
 </para>
 
 <para>
-If you require multiple ports to be defined for some reason or another (my users and my boss should not know
-that they are working with Samba), configure the <smbconfoption name="enumports command"/>,
-which can be used to define an external program that generates a listing of ports on a system.
+もしも何らかの理由か、他の理由で(Sambaでそういうことが出来るか、ユーザと管理者は知る
+べきではないが)複数のポートを定義する要望がある場合、システム上のポートの一覧を生成する
+外部プログラムを定義するために使える<smbconfoption name="enumports command"/>を設定する。
 </para>
 </sect2>
 
 <sect2>
-<title>Avoiding Common Client Driver Misconfiguration</title>
+<title>共通クライアントドライバの間違った設定の防止</title>
 
 <para>
-So now the printing works, but there are still problems. Most jobs print well, some do not print at
-all. Some jobs have problems with fonts, which do not look good. Some jobs print fast and some
-are dead-slow. We cannot cover it all, but we want to encourage you to read the brief paragraph about
-<quote>Avoiding the Wrong PostScript Driver Settings</quote> in <link linkend="CUPS-printing">CUPS Printing
-Chapter</link>, <link linkend="cups-avoidps1">Avoiding Critical PostScript Driver Settings on the
-Client</link>.
+印刷はうまくいっているが、まだ問題がある。ほとんどのジョブの印刷はうまくいくが、
+いくつかは全く印刷できない。いくつかのジョブはうまくいっていないように見えるフォントの
+問題を抱えている。いくつかのジョブは速やかに印刷するが、いくつかはとても遅い。それら
+全部について触れることは出来ないが、
+<link linkend="CUPS-printing">CUPSによる印刷</link>の章の
+<quote>間違ったPostscriptドライバ設定の防止</quote>、
+<link linkend="cups-avoidps1">クライアント上の危険なPostscriptドライバ設定の防止</link>
+の短い節を読むことを推奨する。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>The Imprints Toolset</title>
+<title>Imprintsツールセット</title>
 
 <para>
 <indexterm><primary>Imprints</primary></indexterm>
-The Imprints tool set provides a UNIX equivalent of the Windows NT APW.  For complete information, please
-refer to the <ulink url="http://imprints.sourceforge.net/">Imprints</ulink> Web site as well as the
-documentation included with the Imprints source distribution. This section provides only a brief introduction
-to the features of Imprints.
+ImprintsツールセットはWindows NT APWの同等品をUNIXで提供する。完全な情報は、Imprints
+のソースディストリビューションを含むドキュメントがある、
+<ulink url="http://imprints.sourceforge.net/">Imprints</ulink>のWebサイトを参照して
+ほしい。この節は、Imprintsの機能について簡単な紹介を提供するのみ行う。
 </para>
 
 <para>
-Unfortunately, the Imprints toolset is no longer maintained. As of December 2000, the project is in
-need of a new maintainer. The most important skill to have is Perl coding and an interest in MS-RPC-based
-printing used in Samba. If you wish to volunteer, please coordinate your efforts on the Samba technical
-mailing list. The toolset is still in usable form, but only for a series of older printer models where
-there are prepared packages to use. Packages for more up-to-date print devices are needed if Imprints
-should have a future. Information regarding the Imprints toolset can be obtained from the <ulink
-url="http://imprints.sourceforge.net/">Imprints</ulink> home page.
+不幸にも、Imprintsツールセットはもはやメンテナンスされていない。2000年12月から
+プロジェクトは新しいメンテナを必要としている。持つべきスキルのうち最も重要なものは
+PerlのコーディングとSambaで使うMS-RPCベースの印刷についての興味である。もしも
+ボランティアを希望するならば、Sambaテクニカルメーリングリストで希望を調整してほしい。
+ツールセットはいまだに便利であるが、使うために準備されているパッケージは古いプリンタ
+モジュールに対してのもののみである。Imprintsが持つべきであるならば、より更新された
+プリンタドライバのパッケージが必要である。Imprintsにツールセットに関する情報は
+<ulink url="http://imprints.sourceforge.net/">Imprints</ulink>ホームページから
+得ることが出来る。
 </para>
 
 <sect2>
-<title>What Is Imprints?</title>
+<title>Imprintsとは何か?</title>
 
 <para>
-Imprints is a collection of tools for supporting these goals:
+Imprintsは以下をサポートするためのツールの集合体である:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	Providing a central repository of information regarding Windows NT and 95/98 printer driver packages.
+	Windows NTと 95/98プリンタドライバパッケージに関連する集中した情報のリポジトリを提供する。
 	</para></listitem>
 
 	<listitem><para>
-	Providing the tools necessary for creating the Imprints printer driver packages.
+	Imprintsプリンタドライバパッケージを作成するためのツールを提供する。
 	</para></listitem>
 
 	<listitem><para>
-	Providing an installation client that will obtain printer drivers from a central Internet (or intranet) Imprints Server
-	repository and install them on remote Samba and Windows NT4 print servers.
+	中央のインターネット(又はイントラネット)Imprintsサーバリポジトリからプリンタドライバを
+	得、リモートのSambaとWindows NT印刷サーバ上にそれをインストールする事を提供する。
 	</para></listitem>
 </itemizedlist>
 </sect2>
 
 <sect2>
-<title>Creating Printer Driver Packages</title>
+<title>プリンタドライバパッケージの作成</title>
 
 <para>
-The process of creating printer driver packages is beyond the scope of this document (refer to Imprints.txt,
-included with the Samba distribution for more information). In short, an Imprints driver package
-is a gzipped tarball containing the driver files, related INF files, and a control file needed by the
-installation client.
+プリンタドライバパッケージの作成手順はこのドキュメントの範囲外である(より詳細は、Sambaの
+ディストリビューションに含まれているImprints.txtを参照)。簡単に言うと、Imprintsドライバ
+パッケージは、ドライバファイル、関連するINFファイルとクライアントがインストールするのに
+必要な制御ファイルを含む、gzipされたtar形式ファイルである。
 </para>
 </sect2>
 
 <sect2>
-<title>The Imprints Server</title>
+<title>Imprintsサーバ</title>
 
 <para>
 The Imprints server is really a database server that may be queried via standard HTTP mechanisms. Each
