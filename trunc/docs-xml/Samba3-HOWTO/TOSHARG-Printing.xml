@@ -3125,62 +3125,65 @@ Imprintsは以下をサポートするためのツールの集合体である:
 <title>Imprintsサーバ</title>
 
 <para>
-The Imprints server is really a database server that may be queried via standard HTTP mechanisms. Each
-printer entry in the database has an associated URL for the actual downloading of the package. Each
-package is digitally signed via GnuPG, which can be used to verify that
-the package downloaded is actually
-the one referred in the Imprints database. It is strongly recommended that this security check
-not be disabled.
+Imprintsサーバは、実際には、標準HTTPメカニズム経由で問い合わせを受けることが出来る
+データベースサーバである。データベース中の各プリンタエントリは、実際にダウンロード
+するパッケージを示すURLに関連づけられている。各パッケージは、実際にダウンロードした
+ものが、Imprintsデータベース中で参照されるものかどうかを検査できるよう、GnuPGを使って
+デジタル署名されている。このセキュリティ検査を無効にしないことを強く推奨する。
 </para>
 </sect2>
 
 <sect2>
-<title>The Installation Client</title>
+<title>クライアントのインストール</title>
 
 <para>
-More information regarding the Imprints installation client is available from the documentation file
-<filename>Imprints-Client-HOWTO.ps</filename> that is included with the Imprints source package. The Imprints
-installation client comes in two forms:
+Imprintsクライアントに関連するさらなる情報は、Imprintsソースパッケージ中にある、
+<filename>Imprints-Client-HOWTO.ps</filename>という文書ファイルに書いてある。
+Imprintsクライアントインストールは以下の2つの形式がある:
 </para>
 
 <itemizedlist>
-	<listitem><para>A set of command-line Perl scripts.</para></listitem>
-	<listitem><para>A GTK+-based graphical interface to the command-line Perl scripts.</para></listitem>
+	<listitem><para>コマンドラインPerlスクリプト一式。</para></listitem>
+	<listitem><para>コマンドラインPerlスクリプトへのGTK+ベースのグラフィカルインタフェース</para></listitem>
 </itemizedlist>
 
 <para>
-The installation client (in both forms) provides a means of querying the Imprints database server for
-a matching list of known printer model names as well as a means to download and install the drivers on
-remote Samba and Windows NT print servers.
+(両方の形式による)クライアントのインストールは、リモートSambaとWindows NTプリントサーバ
+上へのダウンロードとドライバのインストールという意味と同じような、既存のプリンタモデル名
+の一致リストのための、Imprintsデータベースサーバに問い合わせる手段を提供する。
 </para>
 
 <para>
-The basic installation process is in four steps, and Perl code is wrapped around smbclient and rpcclient.
+基本的なインストール手順は4つのステップがあり、Perlコードはsmbclientとrpcclientを包み
+こんでいる。
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	For each supported architecture for a given driver:
+	与えられたドライバがサポートする各アーキテクチャに対して:
 	<orderedlist>
-		<listitem><para>rpcclient: Get the appropriate upload directory on the remote server.</para></listitem>
-		<listitem><para>smbclient: Upload the driver files.</para></listitem>
-		<listitem><para>rpcclient: Issues an AddPrinterDriver() MS-RPC.</para></listitem>
+		<listitem><para>rpcclient: リモートサーバ上の適切なアップロードディレクトリを取得する。</para></listitem>
+		<listitem><para>smbclient: ドライバファイルをアップロードする。</para></listitem>
+		<listitem><para>rpcclient: AddPrinterDriver() MS-RPCを発行する。</para></listitem>
 	</orderedlist>
 	</para></listitem>
 
-	<listitem><para>rpcclient: Issues an AddPrinterEx() MS-RPC to actually create the printer.</para></listitem>
+	<listitem><para>rpcclient: 実際にプリンタの作成を行うためにAddPrinterEx() MS-RPCを発行する。</para></listitem>
 </itemizedlist>
 
 <para>
-One of the problems encountered when implementing the Imprints tool set was the namespace issues between
-various supported client architectures. For example, Windows NT includes a driver named <quote>Apple LaserWriter
-II NTX v51.8</quote>, and Windows 95 calls its version of this driver <quote>Apple LaserWriter II NTX</quote>.
+Imprintsツールセットを実装するときに発生した問題の1つは、数多くサポートされている
+クライアントアーキテクチャ間での名前空間の問題であった。例えば、Windows NTには
+<quote>Apple LaserWriter II NTX v51.8</quote>という名前のドライバを含んでいるが、
+Windows 95はこのドライバの対応するバージョン<quote>Apple LaserWriter II NTX</quote>
+を呼び出す。
 </para>
 
 <para>
-The problem is how to know what client drivers have been uploaded for a printer. An astute reader will
-remember that the Windows NT Printer Properties dialog only includes space for one printer driver name. A
-quick look in the Windows NT 4.0 system registry at:
+問題は、プリンタに対してどんなクライアントドライバをアップロードするかということを
+どのようにして知るかと言うことである。抜け目がない読者は、Windows NTのプリンタ
+プロパティのダイアログのみが、そのプリンタドライバ名に空白を含んでいることを覚えて
+いるだろう。下記のWindows NT 4.0システムレジストリを簡単に見てみると、
 </para>
 
 <para><filename>
@@ -3188,39 +3191,45 @@ quick look in the Windows NT 4.0 system registry at:
 </filename></para>
 
 <para>
-will reveal that Windows NT always uses the NT driver name. This is okay because Windows NT always requires
-that at least the Windows NT version of the printer driver is present. Samba does not have the
-requirement internally; therefore, <quote>How can you use the NT driver name if it has not already been installed?</quote>
+これは、Windows NTが常時 NTドライバ名を使うことを明白にしている。これは、Windows NTが
+少なくともWindows NTバージョンのプリンタドライバが存在することを常時要求しているので
+問題はない。Sambaは内部的にはそれを要求しない。そのため、
+<quote>すでにインストールされていないのに、なぜNTドライバ名を使うことが出来るのか?</quote>
+という疑問が生じるだろう。
 </para>
 
 <para>
-The way of sidestepping this limitation is to require that all Imprints printer driver packages include both the Intel Windows NT and
-95/98 printer drivers and that the NT driver is installed first.
+この限界を回避する方法は、すべてのImprintsドライバパッケージがIntel Windows NTと95/98
+プリンタドライバを含み、そのNTドライバが最初にインストールされることを要求することである。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Adding Network Printers without User Interaction</title>
+<title>ユーザによるインストールなしにネットワークプリンタを追加する</title>
 
 <para>
-The following MS Knowledge Base article may be of some help if you need to handle Windows 2000 clients:
-<emphasis>How to Add Printers with No User Interaction in Windows 2000,</emphasis> (<ulink
-url="http://support.microsoft.com/default.aspx?scid=kb;en-us;189105">Microsoft KB 189105</ulink>).  It also
-applies to Windows XP Professional clients.  The ideas sketched out in this section are inspired by this
-article, which describes a command-line method that can be applied to install network and local printers and
-their drivers. This is most useful if integrated in Logon Scripts. You can see what options are available by
-typing in the command prompt (<command>DOS box</command>):
+以下のMS Knowledgeベースの記事は、Windows 2000クライアントを扱う必要がある場合に何らかの
+手助けになるかもしれない。
+<emphasis>ユーザーによる操作なしで Windows にプリンタを追加する方法</emphasis>
+(<ulink url="http://support.microsoft.com/kb/189105/ja">Microsoft KB 189105(日本語)</ulink>)。
+これは又Windows XP Professionalクライアントにも適用できる。この節で示すアイデアの概要は、
+ネットワークとローカルプリンタとそのドライバをインストールするために適用できるコマンド
+ライン手法を説明するこの記事によって触発されたものである。これは、ログオンスクリプトと
+統合すると最も便利である。コマンドプロンプト(<command>DOSプロンプト</command>)で
+以下のようにタイプすることにより、どのようなオプションが有効かを見ることができる:
 </para>
 
 <para><userinput>rundll32 printui.dll,PrintUIEntry /?</userinput></para>
 
 <para>
-A window pops up that shows you all of the command-line switches available. An extensive list of examples
-is also provided. This is only for Windows 200x/XP; it does not work on Windows NT. Windows NT probably has
-some other tools in the respective Resource Kit. Here is a suggestion about what a client logon script
-might contain, with a short explanation of what the lines actually do (it works if 200x/XP Windows
-clients access printers via Samba, and works for Windows-based print servers too):
+すべての有効なコマンドラインスイッチを表示するウィンドウがポップアップする。 大規模な
+例題リストも提供される。これは、Windows 200x/XPのみである。Windows NT上では動作
+しない。Windows NTはそれぞれねリソースキット内である種の他のツールをおそらく
+持っている。各行が実際に何をするかについての簡単な説明がある、クライアントログオン
+スクリプトが含んでも良いかもしれないものについての助言は以下の通り(これはSamba
+経由で200x/XP Windowsクライアントがプリンタにアクセスする場合に動作し、さらに、
+Windowsベースのプリンタでも同様である)。
 </para>
 
 <para><screen>
@@ -3230,7 +3239,7 @@ clients access printers via Samba, and works for Windows-based print servers too
 </screen></para>
 
 <para>
-Here is a list of the used command-line parameters: 
+コマンドラインパラメータで使われるパラメータの一覧である:
 </para>
 
 <variablelist>
