@@ -3244,65 +3244,67 @@ Windowsベースのプリンタでも同様である)。
 
 <variablelist>
 	<varlistentry><term>/dn</term>
-		<listitem><para>deletes a network printer.</para></listitem>
+		<listitem><para>ネットワークプリンタを削除する。</para></listitem>
 	</varlistentry>
 	<varlistentry><term>/q</term>
-		<listitem><para>quiet modus.</para></listitem>
+		<listitem><para>表示を抑制する。</para></listitem>
 	</varlistentry>
 	<varlistentry><term>/n</term>
-		<listitem><para>names a printer.</para></listitem>
+		<listitem><para>プリンタに名前を付ける。</para></listitem>
 	</varlistentry>
 	<varlistentry><term>/in</term>
-		<listitem><para>adds a network printer connection.</para></listitem>
+		<listitem><para>ネットワークプリンタ接続を追加する。</para></listitem>
 	</varlistentry>
 	<varlistentry><term>/y</term>
-		<listitem><para>sets printer as default printer.</para></listitem>
+		<listitem><para>プリンタを既定値のプリンタにする。</para></listitem>
 	</varlistentry>
 </variablelist>
 
 <itemizedlist>
 	<listitem><para>
-	Line 1 deletes a possibly existing previous network printer <emphasis>infotec2105-IPDS</emphasis>
-	(which had used native Windows drivers with LPRng that were removed from the server that was
-	converted to CUPS). The <command>/q</command> at the end prevents confirm
-	or error dialog boxes from popping up. They should not be presented to the user logging on.
+	1行目では<emphasis>infotec2105-IPDS</emphasis>という以前に存在していた可能性の
+	あるネットワークプリンタを削除する(CUPSに変換された、サーバから削除されたLPRngの
+	ネイティブなWindowsドライバで使われていた)。終わりにある<command>/q</command>
+	は、ポップアップする確認あるいはエラーダイアログボックスを抑制する。これらは
+	ユーザログオンについては提供されない。
 	</para></listitem>
 
 	<listitem><para>	
-	Line 2 adds the new printer
-	<emphasis>infotec2105-PS</emphasis> (which actually is the same
-	physical device but is now run by the new CUPS printing system and associated with the
-	CUPS/Adobe PS drivers). The printer and its driver must have been added to Samba prior to
-	the user logging in (e.g., by a procedure as discussed earlier in this chapter or by running
-	<command>cupsaddsmb</command>). The driver is now autodownloaded to the client PC where the
-	user is about to log in.
+	2行目では、新しいプリンタ<emphasis>infotec2105-PS</emphasis>(実際には同じ物理
+	デバイスであるが、新しいCUPS印刷システムによって動作し、CUPS/Adobe PSドライバ
+	と関連づけられる)を追加する。プリンタとそのドライバはユーザのログインに先立って
+	追加されねばならない(すなわち、この章の前の方で説明した手順か、
+	<command>cupsaddsmb</command>を動かすことによって)。ドライバはユーザがログイン
+	しようとしているときに、クライアントPCに自動的にダウンロードされる。
 	</para></listitem>
 
 	<listitem><para>
-	Line 3 sets the default printer to this new network printer (there might be several other
-	printers installed with this same method, and some may be local as well, so we decide for a
-	default printer). The default printer selection may, of course, be different for different users.
+	3行目では、この新しいネットワークプリンタを既定値のプリンタに設定する(この方法を
+	使っていくつかのプリンタが存在するかもしれなく、また、そのうちのいくつかは同じ
+	ようにローカルであってもよいので、既定値のプリンタを決める事が必要となる)。
+	既定値のプリンタの選択は、もちろん、異なったユーザでは異なっても良い。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-The second line only works if the printer <emphasis>infotec2105-PS</emphasis> has an already working
-print queue on the <constant>cupsserver</constant> and if the
-printer drivers have been successfully uploaded
-(via the <command>APW</command>, <command>smbclient/rpcclient</command>, or <command>cupsaddsmb</command>)
-into the <smbconfsection name="[print$]"/> driver repository of Samba. Some Samba versions
-prior to version 3.0 required a restart of smbd after the printer install and the driver upload;
-otherwise the script (or any other client driver download) would fail.
+2番目の行は、もしもプリンタ<emphasis>infotec2105-PS</emphasis>がすでに
+<constant>cupsserver</constant>上のプリントキューで動作していて、もしも
+プリンタドライバがSambaのドライバリポジトリである<smbconfsection name="[print$]"/>
+中に、すでにきちんとアップロード(<command>APW</command>, 
+<command>smbclient/rpcclient</command>か<command>cupsaddsmb</command>経由で)
+されている場合にのみ動作する。バージョン3.0より前のある種のSambaのバージョンでは、
+プリンタインストール後とドライバアップロード後にsmbdの再起動を要求する。そうでないと、
+スクリプト(かその他のルライアンとドライバダウンロード)は失敗する。
 </para>
 
 <para>
-Since there is no easy way to test for the existence of an installed network printer from the logon script,
-do not bother checking. Just allow the de-installation/re-installation to occur every time a user logs in;
-it's really quick anyway (1 to 2 seconds).
+ログオンスクリプトからの、インストールされたネットワークプリンタの存在をテストする簡単な
+方法は無いので、わざわざ調べる必要はない。ユーザログイン時に毎回インストールの削除/
+再インストールが出来るようにしておくこと。それはとても短時間である(1から2秒くらい)。
 </para>
 
 <para>
-The additional benefits for this are:
+ほかにこの件に関する有用な情報は以下の通り:
 </para>
 
 <itemizedlist>
