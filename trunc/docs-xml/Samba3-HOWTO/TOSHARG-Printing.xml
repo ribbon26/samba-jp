@@ -3309,38 +3309,40 @@ Windowsベースのプリンタでも同様である)。
 
 <itemizedlist>
 	<listitem><para>
-	It puts in place any printer default setup changes automatically at every user logon.
+	全部のユーザログイン時に自動的に、任意のプリンタ既定値の設定変更を適切に設定する。
 	</para></listitem>
 
 	<listitem><para>
-	It allows for <quote>roaming</quote> users' login to the domain from different workstations.
+	異なったワークステーションからドメインにユーザが<quote>ローミング</quote>でログイン出来るようにする。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-Since network printers are installed per user, this much simplifies the process of keeping the installation
-up to date. The few extra seconds at logon time will not really be noticeable. Printers can be centrally
-added, changed, and deleted at will on the server with no user intervention required from the clients
-(you just need to keep the logon scripts up to date).
+各ユーザ毎にネットワークプリンタがインストールされるので、これにより、インストールの
+最新性を保持する作業をより単純化する。ログイン時に数秒余計にかけることはほとんど
+目立たないだろう。プリンタは、クライアントからユーザが介入する必要性なしにサーバ上で
+集中して追加、変更と削除ができる(ログインスクリプトは最新性を保持する必要はある)。
 </para>
 </sect1>
 
 <sect1>
-<title>The <command>addprinter</command> Command</title>
+<title><command>addprinter</command>コマンド</title>
 
 <para>
-The <command>addprinter</command> command can be configured to be a shell script or program executed by
-Samba. It is triggered by running the APW from a client against the Samba print server. The APW asks
-the user to fill in several fields (such as printer name, driver to be used, comment, port monitor,
-and so on). These parameters are passed on to Samba by the APW. If the addprinter command is designed in a
-way that it can create a new printer (through writing correct printcap entries on legacy systems or
-by executing the <command>lpadmin</command> command on more modern systems) and create the associated share,
-then the APW will in effect really create a new printer on Samba and the UNIX print subsystem!
+<command>addprinter</command>コマンドはSambaによって実行されるシェルスクリプトか
+プログラムとして設定できる。これはSambaプリントサーバに対してクライアントからAPWを
+走らせることによって起動される。APWはユーザにいくつかのフィールドを埋めることを
+要求する(それはたとえばプリンタ名、使用するドライバ、コメント、ポートモニタなど)。
+これらのパラメータはAPWによってSamba上に渡される。もしも、addprinterコマンドが
+新しいプリンタを作成できるように(旧式のシステム上で、適切なprintcapエントリを書くか、
+より新しいシステム上で<command>lpadmin</command>コマンドを実行することによって)と、
+それに関連する共有を作成するように設計されていた場合、APWはSamba上とUNIX印刷
+システム上に、結果として新しいプリンタを作る!
 </para>
 </sect1>
 
 <sect1>
-<title>Migration of Classical Printing to Samba</title>
+<title>旧式の印刷システムの、Sambaへの移行</title>
 
 <para>
 The basic NT-style printer driver management has not changed considerably in 3.0 over the 2.2.x releases
