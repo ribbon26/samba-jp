@@ -3345,73 +3345,80 @@ Windowsベースのプリンタでも同様である)。
 <title>旧式の印刷システムの、Sambaへの移行</title>
 
 <para>
-The basic NT-style printer driver management has not changed considerably in 3.0 over the 2.2.x releases
-(apart from many small improvements). Here migration should be quite easy, especially if you followed
-previous advice to stop using deprecated parameters in your setup. For migrations from an existing 2.0.x
-setup, or if you continued Windows 9x/Me-style printing in your Samba 2.2 installations, it is more of
-an effort. Please read the appropriate release notes and the HOWTO Collection for Samba-2.2.x. You can
-follow several paths. Here are possible scenarios for migration:
+基本的なNT形式のプリンタドライバ管理は2.2.xリリースから3.0ではほとんど変更はなかった
+(小さな改善はたくさん適用されたが)。特に、設定中で廃止されるパラメータを使うのをやめる、
+前述の助言に従うならば、移行はとても簡単である。既存の2.0.x設定か、Samba 2.2で
+Windows 9x/Me形式の印刷形式を継続したいのであれば、それはもっと努力が必要となる。
+適切なリリースノートとSamba-2.2.xのHOWTO文書を読んでほしい。以下のいくつかの方法に
+沿うことが出来る。移行のための可能なシナリオは以下の通り:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	You need to study and apply the new Windows NT printer and driver support. Previously used
-	parameters <parameter>printer driver file</parameter>, <parameter>printer driver</parameter>,
-	and <parameter>printer driver location</parameter> are no longer supported.
+	新しい Windows NTプリンタとドライバサポートについて学習し、使う必要がある。以前
+	使っていたパラメータ<parameter>printer driver file</parameter>,
+	<parameter>printer driver</parameter>と<parameter>printer driver location</parameter>
+	はもはやサポートされない。
 	</para></listitem>
 
 	<listitem><para>
-	If you want to take advantage of Windows NT printer driver support, you also need to migrate the
-	Windows 9x/Me drivers to the new setup.
+	もしもWindows NTプリンタドライバサポートを利用したいのであれば、新しい設定の
+	ために、Windows 9x/Meドライバを新しいものへ移行する必要がある。
 	</para></listitem>
 
 	<listitem><para>
-	An existing <filename>printers.def</filename> file (the one specified in the now removed parameter
-	<parameter>printer driver file</parameter>) will no longer work with Samba-3. In 3.0, smbd attempts
-	to locate Windows 9x/Me driver files for the printer in <smbconfsection name="[print$]"/>
-	and additional settings in the TDB and only there; if it fails, it will <emphasis>not</emphasis>
-	(as 2.2.x used to do) drop down to using a <filename>printers.def</filename> (and all associated
-	parameters). The make_printerdef tool is removed and there is no backward compatibility for this.
+	存在する<filename>printers.def</filename>ファイル(削除されたパラメータ
+	<parameter>printer driver file</parameter>中で指定されているもの)はもはやSamba-3
+	では動作しないので、smbdは<smbconfsection name="[print$]"/>中とTDBファイル中の
+	追加の設定だけで、プリンタのためのWindows 9x/Meドライバファイルを捜そうとする。
+	もしもそれが失敗すると、(2.2.xが使うように)<filename>printers.def</filename>
+	(とすべての関連するパラメータ)を使うようには<emphasis>ならない</emphasis>。
+	make_printerdefツールは削除され、これに関する下位互換性はない。
 	</para></listitem>
 
-	<listitem><para>You need to install a Windows 9x/Me driver into the
-	<smbconfsection name="[print$]"/> share for a printer on your Samba
-	host. The driver files will be stored in the <quote>WIN40/0</quote> subdirectory of
-	<smbconfsection name="[print$]"/>, and some other settings and information go
-	into the printing-related TDBs.</para></listitem>
+	<listitem><para>使用しているSambaホスト上のプリンタ用の
+	<smbconfsection name="[print$]"/>共有中にWindows 9x/Meドライバをインストールする
+	必要がある。ドライバファイルは<smbconfsection name="[print$]"/>の
+	<quote>WIN40/0</quote>サブディレクトリ中に格納され、その他の設定と情報は印刷
+	関連のTDBファイル中に格納される。</para></listitem>
 
 	<listitem><para>
-	If you want to migrate an existing <filename>printers.def</filename> file into the new setup, the only current
-	solution is to use the Windows NT APW to install the NT drivers and the 9x/Me drivers. This can be scripted
-	using smbclient and rpcclient. See the Imprints installation client on the <ulink noescape="1"
-	url="http://imprints.sourceforge.net/">Imprints</ulink> web site for example. See also the discussion of
-	rpcclient usage in <link linkend="CUPS-printing">CUPS Printing</link>.
+	もしも、存在する<filename>printers.def</filename>ファイルを新しい設定中に移行
+	したいならば、現在唯一の解は、NTドライバと9x/Meドライバをインストールするために、
+	Windows NT APWを使うことである。これはsmbclientとrpcclientを使うスクリプトで
+	行える。その例は、
+	<ulink noescape="1" url="http://imprints.sourceforge.net/">Imprints</ulink>
+	のWebサイト上にあるImprintsクライアントインストールを参照。また、
+	<link linkend="CUPS-printing">CUPS 印刷環境</link>中のrpcclientの使用法についての
+	議論も参照のこと。
 	</para></listitem>
 </itemizedlist>
 </sect1>
 
 <sect1>
-<title>Publishing Printer Information in Active Directory or LDAP</title>
+<title>Active DirectoryかLDAPへのプリンタ情報の公開</title>
 
 <para>
-This topic has also been addressed in <link linkend="NetCommand">Remote and Local Management &smbmdash; The
-Net Command</link>. If you wish to volunteer your services to help document this further, please contact 
-<ulink url="mail://jht@samba.org">John H. Terpstra</ulink>.
+この件に関しては、
+<link linkend="NetCommand">リモートとローカル管理&smbmdash;Netコマンド</link>でも
+触れられている。もしもこの機能に関しての文書の更新をボランティアとして手助けしてくれる
+のであれば、<ulink url="mail://jht@samba.org">John H. Terpstra</ulink>に連絡を
+してほしい。
 </para>
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <sect2>
-<title>I Give My Root Password but I Do Not Get Access</title>
+<title>rootパスワードを指定したが、アクセスできない</title>
 
 <para>
-Do not confuse the root password, which is valid for the UNIX system (and in most cases stored in the
-form of a one-way hash in a file named <filename>/etc/shadow</filename>), with the password used to
-authenticate against Samba. Samba does not know the UNIX password. Root access to Samba resources
-requires that a Samba account for root must first be created. This is done with the <command>smbpasswd</command>
-command as follows:
+UNIXシステムで有効な(とほとんどの場合、<filename>/etc/shadow</filename>というファイルに
+1方向ハッシュ形式として格納される)rootパスワードと、Samba認証時に使うパスワードと混同
+しないこと。SambaはUNIXパスワードを知らない。Sambaリソースへのrootアクセスは最初に作成
+されなければならないSamba用のrootアカウントを必要とする。これは以下のように、
+<command>smbpasswd</command>を使って行える:
 <screen>
 &rootprompt; smbpasswd -a root
 New SMB password: secret
@@ -3422,22 +3429,25 @@ Retype new SMB password: secret
 </sect2>
 
 <sect2>
-<title>My Print Jobs Get Spooled into the Spooling Directory, but Then Get Lost</title>
+<title>印刷ジョブはスプールディレクトリに入ったが、その後なくなった</title>
 
 <para>
-Do not use the existing UNIX print system spool directory for the Samba spool directory. It may seem
-convenient and a savings of space, but it only leads to problems. The two must be separate. The UNIX/Linux
-system print spool directory (e.g., <filename>/var/spool/cups</filename>) is typically owned by a
-non-privileged user such as <literal>cups</literal> or <literal>lp</literal>. Additionally. the permissions on
-the spool directory are typically restrictive to the owner and/or group. On the other hand, the Samba
-spool directory must be world writable, and should have the 't' bit set to ensure that only a temporary
-spool file owner can change or delete the file.
+存在するUNIX印刷システムスプールディレクトリをSambaスプールディレクトリに使っては
+ならない。それは、簡単で場所を節約できるように見えるが、これは問題を引き起こす。
+2つは分離せねばならない。UNIX/Linuxシステムプリントスプールディレクトリ(すなわち
+<filename>/var/spool/cups</filename>)は通常<literal>cups</literal>や
+<literal>lp</literal>のような非特権ユーザによって所有される。さらに追加で、
+スプールディレクトリのパーミッションは、通常所有者とグループに対して制約されて
+いる。別の言い方をすると、Sambaスプールディレクトリは全員に対して書き込み可能で、
+一時スプールファイルの所有者のみがファイルを変更したり削除できるようにする、
+'t'ビットを設定すべきである。
 </para>
 
 <para>
-Depending on the type of print spooling system in use on the UNIX/Linux host, files that the spool
-management application finds and that are not currently part of job queue that it is managing can be deleted.
-This may explain the observation that jobs are spooled (by Samba) into this directory and just disappear.
+UNIX/Linuxホスト上で使う印刷スプールシステムのタイプに依存するので、スプール管理
+アプリが見つける、管理されているジョブキューの一部でないファイルは削除される。
+これは、ジョブが(Sambaによって)このディレクトリ中にスプールされて消えてしまう現象の
+説明になるだろう。
 </para>
 
 </sect2>
