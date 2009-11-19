@@ -67,7 +67,7 @@ Windows NTまたはWindows2000印刷サーバと完全に対等で、置き換�
 Sambaの印刷機能の基礎を概観する。この章中の情報の大多数はCUPSにも適用出来る。
 もしもCUPSを使っているならば、次の章に飛んでも良いが、すべきことのうち少なくとも
 いくつかはきっと取りこぼすだろう。さらなる情報は、
-<link linkend="CUPS-printing">CUPS 印刷サポート</link>を参照のこと。
+<link linkend="CUPS-printing">CUPS 印刷環境</link>を参照のこと。
 </para>
 
 <note>
@@ -90,7 +90,7 @@ Sambaの印刷機能の基礎を概観する。この章中の情報の大多数
 <indexterm><primary>印刷サポート</primary></indexterm>
 <indexterm><primary>印刷サブシステム</primary></indexterm>
 <indexterm><primary>印刷システム</primary></indexterm>
-Sambaの印刷サポートは常時それが動作しているUNIX OS上の、インストールされている印刷
+Sambaの印刷サポートは、常時それが動作しているUNIX OS上の、インストールされている印刷
 サブシステム上に依存している。Sambaは<literal>仲介者</literal>である。Windows(か
 他のSMB)クライアントから印刷ファイルを受け取り、それをさらなる処理のために実際の印刷
 システムに渡す。そのため、両方に接続する必要がある。すなわち、Windows印刷クライアントと
@@ -103,12 +103,12 @@ UNIX印刷サブシステムと同様、おのおのが異なって振る舞う�
 <indexterm><primary>UNIXでの印刷</primary></indexterm>
 <indexterm><primary>CUPS</primary></indexterm>
 この章では伝統的なUNIX印刷方式について取り扱う。次の章では、より最新のCUPSについて、
-とても多く説明する。
+より詳しく説明する。
 </para>
 
 <important><para>
 <indexterm><primary>CUPS</primary></indexterm>
-CUPSユーザに注意:次の章まで飛ばないこと。個々でのみ説明がある重要な情報を読み飛ばすことになる!
+CUPSユーザに注意:次の章まで飛ばないこと。ここのみで説明がある重要な情報を読み飛ばすことになる!
 </para></important>
 
 <para>
@@ -118,7 +118,7 @@ CUPSユーザに注意:次の章まで飛ばないこと。個々でのみ説明
 <indexterm><primary>印刷フィルタリング</primary></indexterm>
 現在、Samba管理の側面において、最も問題があることの一つは印刷の設定であることは、Samba
 メーリングリスト上で投稿されたことでも明らかである。多くの新しいSamba管理者は、Sambaが
-ある種の印刷処理を実行しているというような印象持っている。保証するが、Sambaは
+ある種の印刷処理を実行しているというような印象を持っている。保証するが、Sambaは
 何らの印刷処理をも実行しない。何らの印刷フィルタリングも行わない。
 </para>
 
@@ -169,7 +169,7 @@ Sambaサーバ経由でWindowsクライアントからUNIXプリンタへの印�
 <indexterm><primary>グローバルレベル</primary></indexterm>
 <indexterm><primary>サービスレベル</primary></indexterm>
 <indexterm><primary>印刷の動作</primary></indexterm>
-Sambaの印刷動作を制御するための競ってパラメータは多数ある。それらの概要については
+Sambaの印刷動作を制御するための設定パラメータは多数ある。それらの概要については
 &smb.conf;のマニュアルページを参照してほしい。他のパラメータと同様、グローバルレベル
 (一覧上で<emphasis>G</emphasis>とタグが付いているもの)とサービスレベル
 (<emphasis>S</emphasis>)パラメータがある。
@@ -353,7 +353,7 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <indexterm><primary>プリンタの公開</primary></indexterm>
 この設定をコメントアウトするとSambaが自分のプリンタを公開させなくすると仮定したが、
 実際には引き続き公開している。理由を理解するのには時間がかかった。少なくともこれに
-よってもはや馬鹿にされることはない。
+よって、もはや馬鹿にされることはない。
 <screen>
 &rootprompt;<userinput>grep -A1 "load printers" /etc/samba/smb.conf</userinput>
         load printers = No
@@ -382,7 +382,7 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 </itemizedlist>
 
 <para>
-以下は最も最小の設定ファイルである:
+以下は最小の設定ファイルである:
 <screen>
 &rootprompt;<userinput>cat /etc/samba/smb.conf-minimal</userinput>
         [printers]
@@ -447,7 +447,7 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 注意深い設計を手助けするために用意された。使用しているシステムからの結果は、異なった
 コンパイル時オプションによって構築されたSambaで、いくつかのパラメータによっていろいろと
 変わる。<emphasis>警告:</emphasis>有効な行の<emphasis>行末に</emphasis>コメントサイン
-をを置いてはいけない。この場合、パラメータは無視される(行頭にコメントサインを置いたのと
+を置いてはいけない。この場合、パラメータは無視される(行頭にコメントサインを置いたのと
 同じになる)。最初にこれは使用しているSambaのバージョンのバグではないかと思った。しかし、
 マニュアルページには明確に
 <literal>パラメータ値の内部の空白は、正確にその通りに保持される</literal>と書いてある。
@@ -535,9 +535,7 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <title>設定の説明詳細</title>
 
 <para>
-以下は<link linkend="extbsdpr">拡張BSD印刷環境の設定</link>である。
-The following is a discussion of the settings from <link linkend="extbsdpr">Extended BSD Printing
-Configuration</link> <link linkend="extbsdpr">Extended BSD Printing Configuration</link>.
+以下は<link linkend="extbsdpr">拡張BSD印刷環境の設定</link>についての議論である。
 </para>
 
 <sect3>
@@ -647,7 +645,7 @@ Configuration</link> <link linkend="extbsdpr">Extended BSD Printing Configuratio
 <indexterm><primary>有効なプリンタ</primary></indexterm>
 <indexterm><primary>printcap</primary></indexterm>
 		Sambaに有効なプリンタ名ののリストがどこにあるかを告げる。CUPSを使って
-		いる場合、printcapファイルが書かれているかを確認巣r。これは
+		いる場合、printcapファイルが書かれているかを確認する。これは
 		<filename>cupsd.conf</filename>ファイル中の<constant>Printcap</constant>
 		ディレクティブによって制御される。
 	</para></listitem></varlistentry>
@@ -665,7 +663,7 @@ Configuration</link> <link linkend="extbsdpr">Extended BSD Printing Configuratio
 		<literal>@</literal>記号は<filename>/etc/group</filename>中の名前である。
 		printer adminは、MS-RPC
 		(<link linkend="cups-msrpc">Samba-2.2からの印刷環境開発</link>を参照)
-		によってい提供されるリモート管理インタフェース経由でプリンタのすべてを操作出来る。
+		によって提供されるリモート管理インタフェース経由でプリンタのすべてを操作出来る。
 		より大きなシステムでは、<smbconfoption name="printer admin"/>パラメータは
 		通常共有単位に存在するパラメータである。こうすると、各プリンタ共有の管理者に
 		異なったグループを割り当てる事ができる。
@@ -895,7 +893,7 @@ printersセクションは2つめの特別なセクションである。もし�
 <indexterm><primary>印刷サブシステム</primary></indexterm>
 <indexterm><primary>temporary location</primary></indexterm>
 <indexterm><primary>シェルスクリプト</primary></indexterm>
-おのおののセクション(か<smbconfsection name="[printers]"/>セクション中で)はプリンタを
+各セクション(か<smbconfsection name="[printers]"/>セクション中で)はプリンタを
 定義し、<parameter>print command</parameter>は定義されるかもしれない。これは、その
 プリンタに対するSambaの印刷スプールディレクトリ中に位置するファイルを処理するコマンドを
 設定する。(もしも覚えているならば、このスプールディレクトリは<smbconfoption name="path"/>
@@ -1278,7 +1276,7 @@ Sambaはスプールされたファイルに対してどのような方法でも
 	<para>
 <indexterm><primary>printer$ share</primary></indexterm>
 <indexterm><primary>printer driver</primary></indexterm>
-	2.2よりまえのSambaのバージョンでは<parameter>[printer$]</parameter>という名前の
+	2.2より前のSambaのバージョンでは<parameter>[printer$]</parameter>という名前の
 	共有を使う事が出来た。この名前はWindows 9x/Meクライアントがそれによって共有される
 	プリンタによって作成された、同じ、名前付きのサービスから取られている。
 	Windows 9x/Meプリンタサーバは、プリンタドライバのダウンロードをサポートするために、
@@ -1395,7 +1393,7 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 &dosprompt; <command>net use g:\\sambaserver\print$</command>
 </screen>
 		任意のクライアントから引き続き見る事ができる。これは、Windows
-		エクスプローラから<guimenu>Connect network drive menu</guimenu>
+		エクスプローラから<guimenu>ネットワークドライブの割り当て</guimenu>
 		からでも行う事が出来る。
 		</para></listitem>
 	</varlistentry>
@@ -1412,8 +1410,8 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 
 		<note><para> 
 		もし、Sambaサーバによって認証されることを、すべてのWindows NTユーザが
-		保証されているならば(たとえb、もしも、NTドメインサーバ経由でSambaが
-		辛勝し、ユーザはすでにWindows NTセッションのためにログオンするために
+		保証されているならば(たとえば、もしも、NTドメインサーバ経由でSambaが
+		認証するとき、ユーザはすでにWindows NTセッションのためにログオンするために
 		ドメインコントローラによって認証されていた場合)、ゲストアクセスは
 		不要である。もちろん、ばかげたアカウントとセキュリティについて
 		心配せずに、ワークグループ環境で印刷を行いたいのであれば、ゲストアクセス
@@ -1429,7 +1427,7 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 	<varlistentry><term><smbconfoption name="read only">yes </smbconfoption></term>
 		<listitem><para>
 		誰でもがドライバファイルをアップロード(あるいはドライバの設定の変更)する
-		ことは望まないので、この共有を書き込み付加にする。
+		ことは望まないので、この共有を書き込み不可にする。
 		</para></listitem>
 	</varlistentry>
 
@@ -1543,7 +1541,7 @@ Microsoft Windowsクライアントから要求された正しいドライバを
 </itemizedlist>
 
 <para>
-後者のオプションはおそらくより易しいであろう(たとえプロセスが最初多少奇妙に振る舞うとしても)。
+後者のオプションが、おそらくより易しいであろう(たとえプロセスが最初多少奇妙に振る舞うとしても)。
 </para>
 
 <sect2>
@@ -2223,7 +2221,7 @@ Don Quixote曰く、<quote>論より証拠</quote>。印刷することでセッ
 
 <para>
 特に重要なことは、最初のクライアントPCへのインストール(各アーキテクチャプラットフォーム
-ごとに)である。一度これが正常に終われと、その後他のクライアントへは、簡単にセットアップ
+ごとに)である。一度これが正常に終わると、その後他のクライアントへは、簡単にセットアップ
 でき、さらなる注意事項は必要ない。以下でフォローすることは、推奨する最初の手順の説明で
 ある。ここから先はクライアントワークステーションで作業する。そのクライアントからの接続が
 書き込みできない<emphasis>bad user</emphasis> nobodyにマップされていないことを確認する。
@@ -3037,8 +3035,6 @@ Windows NT/2000印刷サーバは各プリンタに対してポートを結び�
 Sambaは内部的に同等の<constant>プリンタプーリング</constant>という概念をサポートして
 いない。プリンタプーリングは論理プリンタを複数のポートに、ロードバランシングか
 フェイルオーバのように割り当てるものである。
-Samba does not support the concept of <constant>プリンタプーリング</constant> internally either. Printer
-pooling assigns a logical printer to multiple ports as a form of load balancing or failover.
 </para>
 
 <para>
