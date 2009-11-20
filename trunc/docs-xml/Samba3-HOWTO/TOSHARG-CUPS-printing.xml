@@ -103,40 +103,44 @@
 <indexterm><primary>/etc/printcap</primary></indexterm>
 <indexterm><primary>Printcap</primary></indexterm>
 <indexterm><primary>PrintcapFormat</primary></indexterm>
-Printing with CUPS in the most basic &smb.conf; setup in Samba-3.0 (as was true for 2.2.x) requires just two
-parameters: <smbconfoption name="printing">cups</smbconfoption> and <smbconfoption
-name="printcap">cups</smbconfoption>. CUPS does not need a printcap file.  However, the
-<filename>cupsd.conf</filename> configuration file knows of two related directives that control how such a
-file will be automatically created and maintained by CUPS for the convenience of third-party applications
-(example: <parameter>Printcap /etc/printcap</parameter> and <parameter>PrintcapFormat BSD</parameter>).
-Legacy programs often require the existence of a printcap file containing printer names or they will refuse to
-print. Make sure CUPS is set to generate and maintain a printcap file. For details, see <command>man
-cupsd.conf</command> and other CUPS-related documentation, like the wealth of documents regarding the CUPS
-server itself available from the <ulink noescape="1"
-url="http://localhost:631/documentation.html">CUPS</ulink> web site.
+Samba-3.0(2.2.xから使える)でのCUPSを使った印刷環境の、最も基本的な&smb.conf;のセットアップは
+<smbconfoption name="printing">cups</smbconfoption>と
+<smbconfoption name="printcap">cups</smbconfoption>という2つのパラメータを必要とする。
+CUPSはprintcapファイルを必要としない。しかし、<filename>cupsd.conf</filename>設定ファイルは、
+サードパーティアプリケーション(例えば<parameter>Printcap /etc/printcap</parameter>と
+<parameter>PrintcapFormat BSD</parameter>)に便利なように、どのように、CUPSによって
+自動的に作成され、管理されるファイルを制御する2つの関連するディレクトリを知っている。
+旧式のプログラムはしばしばprintcapファイルに含まれているプリンタ名が存在することを
+要求するので、そうでないと印刷を拒否してしまう。CUPSがprintcapファイルを作成して管理する
+ようにしておくこと。詳細は、<command>man cupsd.conf</command>と、
+<ulink noescape="1" url="http://localhost:631/documentation.html">CUPS</ulink>
+Webサイトにある、CUPSサーバそれ自身が提供する、関連する貴重な文書のようなCUPS関連の
+文書を参照のこと。
 	</para>
 
 	<sect2>
-	<title>Linking smbd with libcups.so</title>
+	<title>libcups.soを使ったsmbdとのリンク</title>
 
 	<para>
 <indexterm><primary>libcups.so</primary></indexterm>
-	Samba has a special relationship to CUPS. Samba can be compiled with CUPS library support.
-	Most recent installations have this support enabled. By default, CUPS linking is compiled
-	into smbd and other Samba binaries. Of course, you can use CUPS even
-	if Samba is not linked against <filename>libcups.so</filename> &smbmdash; but
-	there are some differences in required or supported configuration.
+	SambaはCUPSと特別な関係がある。SambaはCUPSライブラリサポート機能を有効にして
+	コンパイルできる。最も最新のバージョンでは、このサポートを有効にしている。
+	既定値では、CUPSはsmbdとその他のSambaバイナリにリンクされる。もちろん、
+	<filename>libcups.so</filename>をSambaにリンクしなくてもCUPSを使う事が
+	できるが、要求されるあるいはサポートされる設定にいくつかの違いがある。
 	</para>
 
 	<para>
 <indexterm><primary>libcups</primary></indexterm>
 <indexterm><primary>ldd</primary></indexterm>
-	When Samba is compiled and linked with <filename>libcups</filename>, <smbconfoption name="printcap">cups</smbconfoption>
-	uses the CUPS API to list printers, submit jobs, query queues, and so on. Otherwise it maps to the System V
-	commands with an additional <command>-oraw</command> option for printing. On a Linux
-	system, you can use the <command>ldd</command> utility to find out if smbd has been linked with the
-	libcups library (<command>ldd</command> may not be present on other OS platforms, or its function may be embodied
-	by a different command):
+	Sambaが<filename>libcups</filename>とリンクされ、コンパイルされた時、
+	<smbconfoption name="printcap">cups</smbconfoption>は、プリンタ一覧の表示、
+	ジョブの投稿、キューの問い合わせなどにCUPS APIを使う。それ以外は、印刷のために、
+	これらの操作を、<command>-oraw</command>オプションを付加して、System Vの
+	コマンドにマップする。Linuxシステムでは、smbdが、libcupsライブラリにリンク
+	されているかを、<command>ldd</command>ユーティリティを使う事で知ることが出来る
+	(<command>ldd</command>は他のOSプラットフォーム上には無いかもしれないか、
+	その機能は別のコマンドによって行われるかもしれない):
 <screen>
 &rootprompt;<userinput>ldd `which smbd`</userinput>
 libssl.so.0.9.6 =&gt; /usr/lib/libssl.so.0.9.6 (0x4002d000)
@@ -148,16 +152,22 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 
 	<para>
 <indexterm><primary>libcups.so.2</primary></indexterm>
-	The line <computeroutput>libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)</computeroutput> shows
-	there is CUPS support compiled into this version of Samba. If this is the case, and printing = cups
-	is set, then <emphasis>any otherwise manually set print command in &smb.conf; is ignored</emphasis>.
-	This is an important point to remember!
+	<computeroutput>libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)</computeroutput>
+	行は、このバージョンのSambaがCUPSサポートするようにコンパイルされていることを
+	示している。もしもこの場合で、printing = cupsが設定されている場合、
+	<emphasis>他の&smb.conf;中にある、手動で設定した印刷関係のコマンドは無視される</emphasis>。
+	これは重要な点なので覚えておくこと!
 	</para>
 
-	<tip><para> Should it be necessary, for any reason, to set your own print commands, you can do this by setting
+	<tip><para>何らかの理由で、固有の印刷コマンドを設定するために、
+	<smbconfoption name="printing">sysv</smbconfoption>を設定することにより、これを行える
+	ようにする事が必要である。しかし、CUPSとSambaを密に統合する利便性のすべてを
+	失うことになる。これを行う場合、以下のように、印刷システムコマンドを手動で設定しなければ
+	ならない
+ Should it be necessary, for any reason, to set your own print commands, you can do this by setting
 	<smbconfoption name="printing">sysv</smbconfoption>. However, you will lose all the benefits
 	of tight CUPS-Samba integration. When you do this, you must manually configure the printing system commands
-	(most important: 
+	(最も重要: 
 	<smbconfoption name="print command"/>; other commands are
 	<smbconfoption name="lppause command"/>,
 	<smbconfoption name="lpresume command"/>,
@@ -170,16 +180,16 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	</sect2>
 
 	<sect2>
-	<title>Simple &smb.conf; Settings for CUPS</title>
+	<title>CUPSを使う簡単な&smb.conf;の設定</title>
 
 	<para>
-	To summarize, <link linkend="cups-exam-simple">the Simplest Printing-Related 
-	&smb.conf; file</link> shows the simplest printing-related setup for &smb.conf; to 
-	enable basic CUPS support:
+	<link linkend="cups-exam-simple">最も簡単な印刷関連の&smb.conf;ファイル</link>
+	に、基本的なCUPSサポートを有効にする、最も簡単な印刷関連の&smb.conf;設定を
+	要約する:
 	</para>
 
 	<example id="cups-exam-simple">
-	<title>Simplest Printing-Related smb.conf</title>
+	<title>最も簡単な印刷関連のsmb.confファイル</title>
 	<smbconfblock>
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="load printers">yes</smbconfoption>
