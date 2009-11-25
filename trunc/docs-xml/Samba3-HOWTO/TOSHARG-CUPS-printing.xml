@@ -286,68 +286,70 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<title>高度な設定</title>
 
 	<para>
-	Before we delve into all the configuration options, let us clarify a few points. <emphasis>Network printing
-	needs to be organized and set up correctly</emphasis>. This frequently doesn't happen. Legacy systems or small
-	business LAN environments often lack design and good housekeeping.
+	すべての設定オプションを確認する前に、いくつかの点について明確にする。
+	<emphasis>ネットワーク印刷は、きちんと計画されて、正しくセットアップされている
+	必要がある</emphasis>。このことは頻繁には発生しない。旧来のシステムや
+	小さな業務用LAN環境では、しばしばデザインと良い保守が存在していない。
 	</para>
 
 
 	<sect2>
-	<title>Central Spooling vs. <quote>Peer-to-Peer</quote> Printing</title>
+	<title>集中スプール対<quote>ピアツーピア</quote>印刷</title>
 
 
 	<para>
-<indexterm><primary>spooling</primary></indexterm>
-	<indexterm><primary>spooling</primary><secondary>central</secondary></indexterm>
-	<indexterm><primary>spooling</primary><secondary>peer-to-peer</secondary></indexterm>
-	Many small office or home networks, as well as badly organized larger environments, allow each client a direct
-	access to available network printers. This is generally a bad idea. It often blocks one client's access to the
-	printer when another client's job is printing. It might freeze the first client's application while it is
-	waiting to get rid of the job. Also, there are frequent complaints about various jobs being printed with their
-	pages mixed with each other. A better concept is the use of a print server: it routes all jobs through one
-	central system, which responds immediately, takes jobs from multiple concurrent clients, and transfers them to
-	the printer(s) in the correct order.
+<indexterm><primary>スプーリング</primary></indexterm>
+	<indexterm><primary>スプーリング</primary><secondary>集中</secondary></indexterm>
+	<indexterm><primary>スプーリング</primary><secondary>ピアツーピア</secondary></indexterm>
+	多くの小規模オフィスや家庭用ネットワークでは、計画がひどい、より大きな環境と
+	同じように、各クライアントがネットワークプリンタへ直接アクセス出来るように
+	なっている。これは一般的には悪いアイデアである。他のクライアントのジョブが
+	印刷しているときに、あるクライアントのアクセスを頻繁にブロックしてしまう。
+	ジョブが終了するのを待っている間、最初のクライアントのアプリケーションは
+	フリーズしてしまうかもしれない。同様に、数多くのジョブが印刷しているとき、
+	それぞれが異なったページをまぜこぜにしてしまうという苦情もしばしば聞く。
+	よりよいコンセプトは、プリントサーバを使うことである。これは、すべてのジョブを
+	集中したシステムに一本化し、即時に反応し、複数の並列したクライアントから
+	ジョブを受け取り、正しい順序でプリンタに転送する。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Raw Print Serving: Vendor Drivers on Windows Clients</title>
+	<title>直接印刷機能:Windowsクライアント上のベンダドライバ</title>
 
 	<para>
-	<indexterm><primary>spooling-only</primary></indexterm>
-	<indexterm><primary>raw printing</primary></indexterm>
-	Most traditionally configured UNIX print servers acting on behalf of
-	Samba's Windows clients represented a really simple setup. Their only
-	task was to manage the <quote>raw</quote> spooling of all jobs handed to them by
-	Samba. This approach meant that the Windows clients were expected to
-	prepare the print job file that is ready to be sent to the printing
-	device. In this case, a native (vendor-supplied) Windows printer driver needs to
-	be installed on each and every client for the target device.
+	<indexterm><primary>スプールのみ</primary></indexterm>
+	<indexterm><primary>直接印刷</primary></indexterm>
+	ほとんどの現代的に設定されたUNIX印刷サーバは、本当に単純なセットアップを意味する、
+	SambaのWindowsクライアントのために振る舞う。それらの唯一の業務は、Sambaによって
+	すべてのジョブが扱われる<quote>直接</quote>スプーリングを管理することである。
+	この試みは、Windowsクライアントが、印刷デバイスに送られる準備が出来た印刷ジョブ
+	ファイルを準備することが期待されるということである。この場合、ネイティブな
+	(ベンダが供給した)Windowsプリンタドライバは、各、およびすべてのクライアントで、
+	対象デバイスのものをインストールする必要がある。
 	</para>
 
 	<para>
 <indexterm><primary>render</primary></indexterm>
-<indexterm><primary>vendor-provided drivers</primary></indexterm>
-	It is possible to configure CUPS, Samba, and your Windows clients in the
-	same traditional and simple way. When CUPS printers are configured
-	for raw print-through mode operation, it is the responsibility of the
-	Samba client to fully render the print job (file). The file must be
-	sent in a format that is suitable for direct delivery to the
-	printer. Clients need to run the vendor-provided drivers to do
-	this. In this case, CUPS will not do any print file format conversion
-	work.
+<indexterm><primary>ベンダが提供したドライバ</primary></indexterm>
+	同様に現代的な、簡単な方法で、CUPS、SambaとWindowsクライアントを設定することは
+	可能である。CUPSプリンタが直接印刷モード状態で設定されているならば、完全に
+	印刷ジョブ(ファイル)を描画することは、Sambaクライアントの責任である。ファイルは
+	プリンタに直接配信するのに適した形式で送られる必要がある。クライアントはこれを
+	行うために、ベンダが提供したドライバを動作させる必要がある。この場合、CUPSは
+	何ら印刷ファイル形式変換を行わない。
 	</para>
 
 	<para>
-	The easiest printing configuration possible is raw print-through.
-	This is achieved by installation of the printer as if it were physically
-	attached to the Windows client. You then redirect output to a raw network
-	print queue. This procedure may be followed to achieve this:
+	可能な、最も簡単な印刷設定は、直接印刷(raw print-through)である。これは、
+	Windowsクライアントに物理的に結合されているようにプリンタをインストールする
+	事によって行える。次に、それをrawネットワーク印刷キューにリダイレクトする。
+	この手続きは、以下の手順によって行えるだろう:
 	</para>
 
 	<procedure>
-	<title>Configuration Steps for Raw CUPS Printing Support</title>
+	<title>直接CUPS印刷サポートのための設定手順</title>
 
 		<step><para>
 <indexterm><primary>/etc/cups/mime.types</primary></indexterm>
