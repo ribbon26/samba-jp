@@ -215,31 +215,27 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	ローカルのプリンタドライバを持つ傾向があり、GUIアプリケーションの印刷ボタンは、
 	プリンタドライバを開始する。ユーザは滅多にコマンド行からファイルを送らない。
 	UNIXクライアントとは違い、グラフィック、テキストあるいはPDFファイルを直接
-	スプーラに送らない。
-	This is all you need for basic printing setup for CUPS. It will print all graphic, text, PDF, and PostScript
-	files submitted from Windows clients. However, most of your Windows users would not know how to send these
-	kinds of files to print without opening a GUI application. Windows clients tend to have local printer drivers
-	installed, and the GUI application's print buttons start a printer driver. Your users also rarely send files
-	from the command line. Unlike UNIX clients, they rarely submit graphic, text, or PDF formatted files directly
-	to the spooler. They nearly exclusively print from GUI applications with a <quote>printer driver</quote>
-	hooked between the application's native format and the print data stream. If the backend printer is not a
-	PostScript device, the print data stream is <quote>binary,</quote> sensible only for the target printer. Read
-	on to learn what problem this may cause and how to avoid it.
+	スプーラに送らない。通常、アプリケーションのネイティブな形式と印刷データ
+	ストリームの間でホックされた<quote>printer driver</quote>を使うGUI
+	アプリケーションから排他的に印刷を行う。もしもバックエンドプリンタが
+	Postscriptデバイスでない場合、印刷データストリームは<quote>バイナリ</quote>で、
+	対象のプリンタのみが対象である。この問題が引き起こすこととそれを防ぐことを
+	学ぶために、この先を読み続けること。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>More Complex CUPS &smb.conf; Settings</title>
+	<title>より複雑なCUPS &smb.conf;設定</title>
 
 	<para>
-	<link linkend="overridesettings">The Overriding Global CUPS Settings for One Printer example</link> 
-	is a slightly more complex printing-related setup for &smb.conf;. It enables general CUPS printing
-	support for all printers, but defines one printer share, which is set up differently. 
+	<link linkend="overridesettings">1台のプリンタ用にグローバルなCUPS設定を上書きする例</link> 
+	は、&smb.conf;用の、やや複雑な印刷関連設定である。これはすべてのプリンタに対して
+	一般的なCUPS印刷サポートを有効にするが、1台だけ設定が異なるプリンタ共有を定義する。
 	</para>
 
 	<example id="overridesettings">
-	<title>Overriding Global CUPS Settings for One Printer</title>
+	<title>1台のプリンタ用にグローバルなCUPS設定を上書きする</title>
 	<smbconfblock>
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="printing">cups</smbconfoption>
@@ -270,12 +266,16 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	</example>
 
 	<para>
-	This special share is only for testing purposes. It does not write the print job to a file. It just logs the job parameters
-	known to Samba into the <filename>/tmp/smbprn.log</filename> file and deletes the job-file. Moreover, the
-	<smbconfoption name="printer admin"/> of this share is <quote>kurt</quote> (not the <quote>@ntadmins</quote> group),
-	guest access is not allowed, the share isn't published to the Network Neighborhood (so you need to know it is there), and it
-	allows access from only three hosts. To prevent CUPS from kicking in and taking over the print jobs for that share, we need to set
-	<smbconfoption name="printing">sysv</smbconfoption> and <smbconfoption name="printcap">lpstat</smbconfoption>.
+	この特別な共有は、テスト目的専用である。これは印刷ジョブをファイルに書かない。
+	これは、ジョブパラメータをSambaが認識する<filename>/tmp/smbprn.log</filename>
+	ファイルに記録し、ジョブファイルを削除する。さらに、この共有の
+	<smbconfoption name="printer admin"/>は<quote>kurt</quote>で
+	(<quote>@ntadmins</quote>グループではなくて)、ゲストアクセスは許可されず、共有は
+	ネットワークコンピュータに公開されず(そのため、これが共有であることを知っておく
+	必要がある)、3つのホストのみからアクセスできる。その共有に対して、CUPSが起動し、
+	印刷ジョブ上で通信をすることを防ぐために、
+	<smbconfoption name="printing">sysv</smbconfoption>と
+	<smbconfoption name="printcap">lpstat</smbconfoption>を設定する必要がある。
 	</para>
 
 	</sect2>
@@ -283,7 +283,7 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 </sect1>
 
 <sect1>
-	<title>Advanced Configuration</title>
+	<title>高度な設定</title>
 
 	<para>
 	Before we delve into all the configuration options, let us clarify a few points. <emphasis>Network printing
