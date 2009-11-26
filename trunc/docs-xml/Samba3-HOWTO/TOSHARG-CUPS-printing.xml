@@ -369,80 +369,76 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 		Webインタフェースを使ってrawプリンタを追加する。ブラウザで
 		<constant>http://localhost:631</constant>をクリックする。
 		Administrationに入り、プロンプトに従ってプリンタを追加する。
-Add a raw printer using the Web interface. Point your browser at
-		<constant>http://localhost:631</constant>. Enter Administration, and add
-		the printer following the prompts. Do not install any drivers for it.
-		Choose Raw. Choose queue name <constant>Raw Queue</constant>.
+		ドライバをこれにインストールしてはならない。Rawを選択する。
+		<constant>Raw Queue</constant>というキュー名を選択する。
 		</para></step>
 
 		<step><para>
-		In the &smb.conf; file <constant>[printers]</constant> section add
-		<smbconfoption name="use client driver">Yes</smbconfoption>,
-		and in the <constant>[global]</constant> section add
-		<smbconfoption name="printing">CUPS</smbconfoption>, plus
-		<smbconfoption name="printcap">CUPS</smbconfoption>.
+		&smb.conf;ファイル中の<constant>[printers]</constant>セクションに
+		<smbconfoption name="use client driver">Yes</smbconfoption>を追加し、
+		<constant>[global]</constant>セクション中に、
+		<smbconfoption name="printing">CUPS</smbconfoption>と
+		<smbconfoption name="printcap">CUPS</smbconfoption>を追加する。
 		</para></step>
 
 		<step><para>
-		Install the printer as if it is a local printer, that is, Printing to <constant>LPT1:</constant>.
+		ローカルプリンタのようにプリンタをインストールし、結果、印刷先が
+		<constant>LPT1:</constant>となる。
 		</para></step>
 
 		<step><para>
-		Edit the configuration under the <guimenu>Detail</guimenu> tab and create a
-		<constant>local port</constant> that points to the raw printer queue that
-		you have configured above. Example: <constant>\\server\raw_q</constant>.
-		Here, the name <constant>raw_q</constant> is the name you gave the print
-		queue in the CUPS environment.
+		<guimenu>Detail</guimenu>タブ下の設定を編集し、上記で設定したrawプリンタ
+		キューを指し示す<constant>local port</constant>を作成する。例:
+		<constant>\\server\raw_q</constant>。ここで、<constant>raw_q</constant>
+		という名前はCUPS環境中で印刷キューに割り当てた名前である。
 		</para></step>
 	</procedure>
 
 	</sect2>
 
 	<sect2>
-	<title>Installation of Windows Client Drivers</title>
+	<title>Windowsクライアントドライバのインストール</title>
 
 	<para>
-	The printer drivers on the Windows clients may be installed
-	in two functionally different ways:
+	Windowsクライアント上のプリンタドライバは2つの機能的に異なった方法でインストール
+	できる:
 	</para>
 
 	<itemizedlist>
-	<listitem><para>Manually install the drivers locally on each client,
-	one by one; this yields the old LanMan style
-	printing and uses a <filename>\\sambaserver\printershare</filename>
-	type of connection.</para></listitem>
+	<listitem><para>手動で各クライアント上にドライバを1つずつインストールする。
+	これは旧式のLanMan形式印刷環境を必要とし、
+	<filename>\\sambaserver\printershare</filename>タイプの接続を使う。
+	</para></listitem>
 
 
 	<listitem><para>
-	<indexterm><primary>point 'n' print</primary></indexterm>
-			Deposit and prepare the drivers (for later download) on
-			the print server (Samba); this enables the clients to use
-	<quote>Point'n'Print</quote> to get drivers semi-automatically installed the
-	first time they access the printer; with this method NT/200x/XP
-	clients use the <emphasis>SPOOLSS/MS-RPC</emphasis>
-	type printing calls.</para></listitem>
+	<indexterm><primary>ポイントアンドプリント</primary></indexterm>
+	プリントサーバ(Samba)上でドライバ(後でダウンロードするための)の準備と配信を
+	行う。これは、プリンタに最初にアクセスするとき、半自動的にドライバを入手して
+	インストールする<quote>ポイントアンドプリント</quote>をクライアントが使う
+	ことが出来るようになる。この方法を使うと、NT/200x/XPクライアントは、
+	<emphasis>SPOOLSS/MS-RPC</emphasis>タイプの印刷呼び出しを使う。
+	</para></listitem>
 	</itemizedlist>
 
 	<para>
-	The second method is recommended for use over the first as it reduces the
-	administrative efforts and prevents that different versions of the drivers
-	are used accidentally.
+	二番目の方法は、管理コストの削減と、偶然異なったバージョンのドライバが使われる
+	ことを防ぐのに、最初のものを使うよりも推奨される。
 	</para>
 	</sect2>
 
 	<sect2 id="cups-raw">
-	<title>Explicitly Enable <quote>raw</quote> Printing for <emphasis>application/octet-stream</emphasis></title>
+	<title><emphasis>application/octet-stream</emphasis>のための<quote>raw</quote>印刷を明示的に有効にする</title>
 
 
 	<para>
 	<indexterm><primary>application/octet-stream</primary></indexterm>
-	<indexterm><primary>raw printing</primary></indexterm>
+	<indexterm><primary>raw印刷</primary></indexterm>
 	<indexterm><primary>MIME</primary><secondary>raw</secondary></indexterm>
-	If you use the first option (drivers are installed on the client
-	side), there is one setting to take care of: CUPS needs to be told
-	that it should allow <quote>raw</quote> printing of deliberate (binary) file
-	formats. The CUPS files that need to be correctly set for raw mode
-	printers to work are:
+	もしも最初のオプション(ドライバはクライアント採土場でインストールされる)を使う
+	場合、注意すべき設定が1つある:CUPSに対して、手の込んだ(バイナリ)ファイル形式
+	である<quote>raw</quote>印刷を許可するように設定する。rawモード印刷を動かす
+	ための、正しい設定する必要があるCUPSファイルは以下の通り:
 	</para>
 
 	<itemizedlist>
