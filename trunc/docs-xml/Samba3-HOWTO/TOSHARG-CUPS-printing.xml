@@ -435,7 +435,7 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 	<indexterm><primary>raw印刷</primary></indexterm>
 	<indexterm><primary>MIME</primary><secondary>raw</secondary></indexterm>
-	もしも最初のオプション(ドライバはクライアント採土場でインストールされる)を使う
+	もしも最初のオプション(ドライバはクライアントサイド上でインストールされる)を使う
 	場合、注意すべき設定が1つある:CUPSに対して、手の込んだ(バイナリ)ファイル形式
 	である<quote>raw</quote>印刷を許可するように設定する。rawモード印刷を動かす
 	ための、正しい設定する必要があるCUPSファイルは以下の通り:
@@ -447,59 +447,64 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	</itemizedlist>
 
 	<para>
-	Both contain entries (at the end of the respective files) that must be uncommented to allow RAW mode
-	operation.  In <filename>/etc/cups/mime.types</filename>, make sure this line is present:
+	両者はRAMモード操作を許可するためにコメントアウトしなければならないエントリ
+	(それぞれのファイルの最後の部分)を含む。<filename>/etc/cups/mime.types</filename>
+	中では下記の行が存在するようにする:
 <programlisting>
 application/octet-stream
 </programlisting>
 	<indexterm><primary>/etc/cups/mime.convs</primary></indexterm>
 	<indexterm><primary>/etc/cups/mime.types</primary></indexterm>
-	In <filename>/etc/cups/mime.convs</filename>, have this line:
+	<filename>/etc/cups/mime.convs</filename>では、この行が存在するようにする:
 	<indexterm><primary>application/vnd.cups-raw</primary></indexterm>
 <programlisting>
 application/octet-stream   application/vnd.cups-raw   0   - 
 </programlisting>
-	If these two files are not set up correctly for raw Windows client
-	printing, you may encounter the dreaded <computeroutput>Unable to
-	convert file 0</computeroutput> in your CUPS <filename>error_log</filename> file. 
+	もしも、2つのファイルが、Windowsクライアントからの印刷に対して正しく設定されて
+	いない場合、恐ろしい<computeroutput>Unable to convert file 0</computeroutput>
+	というメッセージが、が、CUPSの<filename>error_log</filename>ファイル中に現れる
+	だろう。
 	</para>
 
 	<note><para>
-	Editing the <filename>mime.convs</filename> and the <filename>mime.types</filename> file does
-	not <emphasis>enforce</emphasis> <quote>raw</quote> printing, it only <emphasis>allows</emphasis> it.
+	<filename>mime.convs</filename>と<filename>mime.types</filename>ファイルを
+	<quote>raw</quote>印刷を<emphasis>行う</emphasis>ことだけを
+	<emphasis>許可する</emphasis>ように編集する。
 	</para></note>
 
-	<formalpara><title>Background</title>
+	<formalpara><title>背景</title>
 
 	<para>
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 <indexterm><primary>MIME type</primary></indexterm>
-	That CUPS is a more security-aware printing system than traditional ones does not by default allow a user to
-	send deliberate (possibly binary) data to printing devices. This could be easily abused to launch a
-	<quote>Denial of Service</quote> attack on your printer(s), causing at least the loss of a lot of paper and
-	ink. <quote>Unknown</quote> data are tagged by CUPS as <parameter>MIME type: application/octet-stream</parameter>
-	and not allowed to go to the printer. By default, you can only send other (known) MIME types <quote>raw.</quote>
-	Sending data <quote>raw</quote> means that CUPS does not try to convert them and passes them to the printer
-	untouched.
+	CUPSは、伝統的な印刷システムが既定値では印刷デバイスに手の込んだ(おそらく
+	バイナリ)のデータを、ユーザに送ることを認めていないと比べて、より
+	セキュリティに気づいている印刷システムである。これは、プリンタに対して、
+	少なくとも大量の紙とインクを無駄にすることとなる、
+	<quote>サービス不能</quote>攻撃を引き起こす不正な使い方を簡単に行える。
+	<quote>不明な</quote>データはCUPSによって、
+	<parameter>MIME type: application/octet-stream</parameter>とタグ付けられ、
+	プリンタに送ることを許可されない。既定値では、他の(既知の)MIMEタイプである
+	<quote>raw</quote>のみを送ることが出来る。<quote>raw</quote>を送ることは、
+	CUPSがそれらを変換せず、何もさわらないでプリンタに渡すことを意味する。
 	</para>
 	</formalpara>
 
 	<para>
-	This is all you need to know to get the CUPS/Samba combo printing
-	<quote>raw</quote> files prepared by Windows clients, which have vendor drivers
-	locally installed. If you are not interested in background information about
-	more advanced CUPS/Samba printing, simply skip the remaining sections
-	of this chapter.
+	これが、ベンダドライバをローカルにインストールしたWindowsクライアントによって
+	準備された<quote>raw</quote>ファイルをCUPS/Sambaの協調印刷で行うときに知っておく
+	必要があることのすべてである。もしもより詳細なCUPS/Samba印刷についての背景
+	情報について興味がないならば、この章の残りの部分を読み飛ばせばよいだろう。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Driver Upload Methods</title>
+	<title>ドライバアップロード手法</title>
 
 	<para>
-	This section describes three familiar methods, plus one new one, by which
-	printer drivers may be uploaded.
+	この節では、プリンタドライバをアップロードする、3つのなじみやすい方法に、
+	さらに新しいもの1つについて説明する。
 	</para>
 
 	<para>
