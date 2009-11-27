@@ -595,20 +595,20 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</para>
 
 	<para>
-	What follows is the comparison of some fundamental concepts for
-	Windows and UNIX printing, then a description of the
-	CUPS filtering system, how it works, and how you can tweak it.
+	以下では、WindowsとUNIX印刷環境における、いくつかの基本的なコンセプトの
+	比較をまず行い、次に、CUPSフィルタリングシステムについて、どのように動作するか、
+	どのように微調整できるかの説明を行う。
 	</para>
 
 	<sect2 id="gdipost">
-	<title>GDI on Windows, PostScript on UNIX</title>
+	<title>Windows上でのGDI、UNIX上でのPostScript</title>
 
 	<para>
 	<indexterm><primary>GDI</primary></indexterm>
 	<indexterm><primary>PostScript</primary></indexterm>
-	Network printing is one of the most complicated and error-prone
-	day-to-day tasks any user or administrator may encounter. This is
-	true for all OS platforms, and there are reasons it is so.
+	ネットワーク印刷は最も複雑でエラーが発生しがちであり、ユーザや管理者が
+	遭遇しがちである日々の作業の1つである。これはすべてのOSプラットフォーム上で
+	真実であり、そうなる理由がある。
 	</para>
 
 
@@ -617,83 +617,92 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<indexterm><primary>PDL</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>Adobe</primary></indexterm>
-<indexterm><primary>page description languages</primary><see>PDL</see></indexterm>
-	You can't expect to throw just any file format at a printer and have it get printed. A file format conversion
-	must take place. The problem is that there is no common standard for print file formats across all
-	manufacturers and printer types. While PostScript (trademark held by Adobe) and, to an extent, PCL (trademark
-	held by Hewlett-Packard) have developed into semi-official <quote>standards</quote> by being the most widely
-	used page description languages (PDLs), there are still many manufacturers who <quote>roll their own</quote>
-	(their reasons may be unacceptable license fees for using printer-embedded PostScript interpreters, and so on).
+<indexterm><primary>ページ記述言語</primary><see>PDL</see></indexterm>
+	プリンタに任意のファイルフォーマットを送り込み、それが印刷されることを期待する
+	ことはできない。ファイルフォーマット変換を行う必要がある。問題は、すべての
+	メーカとプリンタタイプに共通の、共通標準印刷ファイルフォーマットがないという
+	ことである。Postscript(Adobeの商標)とその拡張であるPCL(HPの商標)はページ記述言語
+	(PDL)として使われていることにより、ほぼ公式な<quote>標準</quote>として開発されて
+	いる。しかし、多くのメーカは引き続き<quote>固有のものを使っている</quote>
+	(それらの理由は、プリンタ内蔵のPostscriptインタプリタの、受け入れられないような
+	ライセンス費用などである)。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Windows Drivers, GDI, and EMF</title>
+	<title>Windowsドライバ、GDIとEMF</title>
 
 	<para>
 	<indexterm><primary>GDI</primary></indexterm>
 	<indexterm><primary>EMF</primary></indexterm>
 	<indexterm><primary>WYSIWYG</primary></indexterm>
-<indexterm><primary>Enhanced MetaFile</primary><see>EMF</see></indexterm>
-	In Windows OS, the format conversion job is done by the printer drivers. On MS Windows OS platforms all
-	application programmers have at their disposal a built-in API, the graphical device interface (GDI), as part
-	and parcel of the OS itself to base themselves on. This GDI core is used as one common unified ground for all
-	Windows programs to draw pictures, fonts, and documents <emphasis>on screen</emphasis> as well as <emphasis>on
-	paper</emphasis> (print). Therefore, printer driver developers can standardize on a well-defined GDI output
-	for their own driver input. Achieving WYSIWYG (What You See Is What You Get) is relatively easy, because the
-	on-screen graphic primitives, as well as the on-paper drawn objects, come from one common source. This source,
-	the GDI, often produces a file format called Enhanced MetaFile (EMF). The EMF is processed by the printer
-	driver and converted to the printer-specific file format.
+<indexterm><primary>拡張MetaFile</primary><see>EMF</see></indexterm>
+	WindowsOSでは、フォーマット変換ジョブはプリンタドライバによって行われる。
+	Microsoft Windows OSプラットフォーム上ではすべてのアプリケーションプログラマは、
+	それらの基盤となるOSそれ自身の一部分、あるいは一区画として、自由に使える
+	組み込みのAPI、グラフィカルデバイスインタフェース(GDI)を使える。このGDIコアは
+	絵、フォントと文書を<emphasis>画面上に</emphasis>描画するのと同様に
+	<emphasis>紙の上に</emphasis>(印刷)する、すべてのWindowsプログラムにある1つの
+	共通基盤として使える。そのため、プリンタドライバ開発者はよく定義されたGDI出力を
+	固有のドライバ入力として標準化できる。WYSIWYG(What You See Is What You Get)の
+	実現は、スクリーン上のグラフィックプリミティブが紙上の描画オブジェクトと同じ
+	ようで、同じソースから来るために、相対的に容易である。このソース、すなわちGDIは、
+	しばしば拡張メタファイル(EMF)と呼ばれるファイルフォーマットを生成する。EMFは
+	プリンタドライバによって処理され、プリンタ固有のファイルフォーマットに変換される。
 	</para>
 
 	<note><para>
 	<indexterm><primary>PDF</primary></indexterm>
 <indexterm><primary>Xprint</primary></indexterm>
 <indexterm><primary>core graphic engine</primary></indexterm>
-	To the GDI foundation in MS Windows, Apple has chosen to put paper and screen output on a common foundation
-	for its (BSD-UNIX-based, did you know?) Mac OS X and Darwin operating <indexterm><primary>X Window
-	System</primary></indexterm> <indexterm><primary>PostScript</primary></indexterm>
-	<indexterm><primary>PCL</primary></indexterm> <indexterm><primary>Xprint</primary></indexterm> systems.
-	Apple's <emphasis>core graphic engine</emphasis> uses a <emphasis>PDF</emphasis> derivative for all display work.
+	Microsoft Windows中のGDI基盤に対して、Appleは紙と画面出力を、その(BSDUNIXベース
+	なのだがご存じだろうか?)Mac OS XとDarwinオペレーティングシステムという
+	<indexterm><primary>X Window System</primary></indexterm>
+	<indexterm><primary>PostScript</primary></indexterm>
+        <indexterm><primary>PCL</primary></indexterm>
+	<indexterm><primary>Xprint</primary></indexterm>
+	同じ基盤上に置くことを選んだ。Appleの<emphasis>コアグラフィックエンジン</emphasis>
+	は、すべての表示作業に<emphasis>PDF</emphasis>派生のものを使う。
 	</para></note>
 
 	<para>
-	The example in <link linkend="1small">Windows Printing to a Local Printer</link> illustrates local Windows
-	printing.
+	<link linkend="1small">ローカルプリンタに対するWindowsの印刷</link>中の例は、
+	ローカルWindows印刷を図示している。
 	</para>
 
 	<figure id="1small">
-		<title>Windows Printing to a Local Printer.</title>
+		<title>ローカルプリンタに対するWindowsの印刷</title>
 		<imagefile>1small</imagefile>
 	</figure>
 
 	</sect2>
 
 	<sect2>
-	<title>UNIX Printfile Conversion and GUI Basics</title>
+	<title>UNIX印刷ファイル変換とGUIの基礎</title>
 
 	<para>
 	<indexterm><primary>X Window System</primary></indexterm>
 	<indexterm><primary>PostScript</primary></indexterm>
 	<indexterm><primary>PCL</primary></indexterm>
 	<indexterm><primary>Xprint</primary></indexterm>
-	In UNIX and Linux, there is no comparable layer built into the OS kernel(s) or the X (screen display) server.
-	Every application is responsible for itself to create its print output. Fortunately, most use PostScript and
-	that at least gives some common ground. Unfortunately, there are many different levels of quality for this
-	PostScript. And worse, there is a huge difference (and no common root) in the way the same document is
-	displayed on screen and how it is presented on paper. WYSIWYG is more difficult to achieve. This goes back to
-	the time, decades ago, when the predecessors of X.org, designing the UNIX foundations and protocols for
-	graphical user interfaces, refused to take responsibility for <quote>paper output</quote>, as some had
-	demanded at the time, and restricted itself to <quote>on-screen only.</quote> (For some years now, the
-	<quote>Xprint</quote> project has been under development, attempting to build printing support into the X
-	framework, including a PostScript and a PCL driver, but it is not yet ready for prime time.) You can see this
-	unfavorable inheritance up to the present day by looking into the various <quote>font</quote> directories on
-	your system; there are separate ones for fonts used for X display and fonts to be used on paper.
+	UNIXとLinuxでは、OSカーネルかX(画面表示)サーバ中に、構築された、類似のレイヤは
+	ない。すべてのアプリケーションはそれ自身でその印刷出力を作成することに責任が
+	ある。幸い、大部分がPostscriptを使い、それを何らかの共通基盤としている。
+	また、悪いことに、同じ文書を画面上に表示することとどのようにそれを紙に
+	印刷するかを行う、非常にたくさんの(そして何ら共通項がない)方法がある。
+	これは、数10年前にさかのぼってみると、グラフィカルユーザインタフェースのための
+	UNIX 基盤とプロトコルを設計したX.orgの前身は、幾人かがその時点で要求したように、
+	<quote>紙出力</quote>についての責任を取るのを拒否し、それ自身を
+	<quote>画面表示のみ</quote>に制限した(何年か後、<quote>Xprint</quote>
+	プロジェクトが開発中で、Xのフレームワーク中に、PostscriptとPCLドライバを含む
+	印刷サポートを構築することを試みたが、まだ完成していない)。この、余り好ましくない
+	遺産は、使用しているシステムの、種々の<quote>font</quote>ディレクトリ中で、今も
+	見ることができる。X表示用と印刷用に使うフォントが分かれている。
 	</para>
 
 	<formalpara>
-	<title>Background</title>
+	<title>背景</title>
 
 	<para>
 	<indexterm><primary>PostScript</primary></indexterm>
