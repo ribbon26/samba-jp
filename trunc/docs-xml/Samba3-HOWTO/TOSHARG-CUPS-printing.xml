@@ -772,28 +772,33 @@ application/octet-stream   application/vnd.cups-raw   0   -
 
 	<para>
 	<indexterm><primary>PDL</primary></indexterm>
-	However, there are other types of printers out there. These do not know how to print PostScript. They use
-	their own PDL, often proprietary. To print to them is much more demanding. Since your UNIX applications mostly
-	produce PostScript, and since these devices do not understand PostScript, you need to convert the print files
-	to a format suitable for your printer on the host before you can send it away.
+	しかしながら、それ以外のタイプのプリンタもある。それらはどのようにPostscriptを
+	印刷するかが分からない。それらは、しばしばメーカ固有のPDLを使う。それらに対して
+	印刷を行う事の注文はもっと多い。利用しているUNIXアプリケーションはほとんどの
+	場合、Postscriptを生成し、それらのデバイスはPostscriptを理解しないので、
+	それに対してデータを送る前に、ホスト上で使用しているプリンタに合わせた印刷
+	ファイルのフォーマット変換を行う必要がある。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Ghostscript: The Software RIP for Non-PostScript Printers</title>
+	<title>Ghostscript: 非Postscriptプリンタに対するソフトウェアRIP</title>
 
 	<para>
 	<indexterm><primary>GhostScript</primary></indexterm>
-	Here is where Ghostscript kicks in. Ghostscript is the traditional (and quite powerful) PostScript interpreter
-	used on UNIX platforms. It is a RIP in software, capable of doing a <emphasis>lot</emphasis> of file format
-	conversions for a very broad spectrum of hardware devices as well as software file formats.  Ghostscript
-	technology and drivers are what enable PostScript printing to non-PostScript hardware. This is shown in
-	<link linkend="3small">Ghostscript as a RIP for Non-PostScript Printers</link>.
+	ここからGhostscriptの説明を始める。Ghostscriptは、UNIXプラットフォームで
+	使われている、伝統的な(そしてとても強力な)Postscriptインタプリタである。
+	これはソフトウェアによるRIPであり、ソフトウェアファイルフォーマットと同様、
+	非常に広範囲のハードウェアデバイスへの、たくさんのファイル変換を行う能力がある。
+	Ghostscript技術とドライバは非PostscriptハードウェアでPostscript印刷を実行
+	できるようにするものである。これについては
+	<link linkend="3small">非Postscriptプリンタに対するRIPとしてのGhostscript</link>
+	に説明がある。
 	</para>
 
 	<figure id="3small">
-		<title>Ghostscript as a RIP for Non-PostScript Printers.</title>
+		<title>非Postscriptプリンタに対するRIPとしてのGhostscript</title>
 		<imagefile>3small</imagefile>
 	</figure>
 
@@ -801,24 +806,28 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>PNG</primary></indexterm>
 <indexterm><primary>AFPL</primary></indexterm>
 <indexterm><primary>ESP</primary></indexterm>
-	Use the <quote>gs -h</quote> command to check for all built-in <quote>devices</quote> on your Ghostscript
-	version. If you specify a parameter of <parameter>-sDEVICE=png256</parameter> on your Ghostscript command
-	line, you are asking Ghostscript to convert the input into a PNG file. Naming a <quote>device</quote> on the
-	command line is the most important single parameter to tell Ghostscript exactly how it should render the
-	input. New Ghostscript versions are released at fairly regular intervals, now by artofcode LLC. They are
-	initially put under the <quote>AFPL</quote> license, but re-released under the GNU GPL as soon as the next
-	AFPL version appears. GNU Ghostscript is probably the version installed on most Samba systems. But it has some
-	deficiencies.  <indexterm><primary>Ghostscript</primary><secondary>ESP</secondary><see>ESP
-	GhostScript</see></indexterm> Therefore, ESP Ghostscript was developed as an enhancement over GNU Ghostscript,
-	with lots of bug-fixes, additional devices, and improvements. It is jointly maintained by developers from
-	CUPS, Gutenprint, MandrakeSoft, SuSE, Red Hat, and Debian. It includes the <quote>cups</quote> device
-	(essential to print to non-PS printers from CUPS).
+	使用しているGhostscriptバージョンの内蔵<quote>デバイス</quote>すべてを確認する
+	ために、<quote>gs -h</quote>コマンドを使う。もしも、使用しているGhostscriptの
+	コマンド行に<parameter>-sDEVICE=png256</parameter>というパラメータを指定した
+	ならば、入力をPNGファイルに変換するように、Ghostscriptに指定する。コマンド行上の
+	<quote>device</quote>の名前指定は、入力をどのように描画するかを正確に
+	Ghostscriptに指示するのに最も重要な単一パラメータである。新しいGhostscriptの
+	バージョンは、現在artofcode LCCにおいて、通常かなり間隔を空けてリリースされる。
+	通常最初は<quote>AFPL</quote>ライセンスで提供されるが、次のAFPLバージョンが
+	リリースされると、すぐにGNU GPLライセンスで再リリースされる。GNU Ghostscript
+	はおそらくほとんどのSambaシステム上にインストールされているバージョンである。
+	しかし、いくつかの違いがある。
+	<indexterm><primary>Ghostscript</primary><secondary>ESP</secondary><see>ESP GhostScript</see></indexterm>
+	そのため、ESP Ghostscriptは、たくさんのバグ修正、追加のデバイスと改善がある、
+	GNU Ghostscriptの拡張として開発されている。これは、CUPS, Gutenprint, MandrakeSoft,
+	SuSE, Red Hatと Debianからの開発者によって一緒に保守されている。それには
+	<quote>cups</quote>デバイス(CUPSから非PSプリンタに印刷する基本部分)を含む。
 	</para></tip>
 
 	</sect2>
 
 	<sect2>
-	<title>PostScript Printer Description (PPD) Specification</title>
+	<title>PostScriptプリンタ定義(PPD)の仕様</title>
 
 	<para>
 	<indexterm><primary>PPD</primary></indexterm>
