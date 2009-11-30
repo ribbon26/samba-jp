@@ -833,57 +833,64 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>PDL</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-	While PostScript in essence is a PDL to represent the page layout in a device-independent way, real-world
-	print jobs are always ending up being output on hardware with device-specific features. To take care of all
-	the differences in hardware and to allow for innovations, Adobe has specified a syntax and file format for
-	PostScript Printer Description (PPD) files. Every PostScript printer ships with one of these files.
+	Postscriptの本質がデバイス非依存の方式でページレイアウトを表現するための
+	PDLである間は、実世界での印刷上部は常時デバイス固有の機能を持ったハードウェア
+	上で最終的に出力される。ハードウェアの違いに気を遣うことと、機能改善を図るため、
+	Adobeは文法とPostscriptプリンタ定義(PPD)ファイルのファイルフォーマットを定義
+	してきた。すべてのPostscriptプリンタはそれらのファイルの1つを同梱して出荷されて
+	いる。
 	</para>
 
 	<para>
-	PPDs contain all the information about general and special features of the
-	given printer model: Which different resolutions can it handle? Does
-	it have a duplexing unit? How many paper trays are there? What media
-	types and sizes does it take? For each item, it also names the special
-	command string to be sent to the printer (mostly inside the PostScript
-	file) in order to enable it.
+	PPDは、そのプリンタに割り当てられた一般的および特別な機能についてのすべての情報を
+	含んでいる。扱える異なった解像度は何か?両面印刷ユニットがあるか?ペーパートレイは
+	いくつあるか?メディアのタイプとサイズは何が使えるか?それぞれの要素について、
+	プリンタに送られる特別なコマンド文字列を、それを有効にするために指定する事が
+	出来る(ほとんどの場合、Postscriptファイル中に)。
 	</para>
 
 	<para>
-	Information from these PPDs is meant to be taken into account by the
-	printer drivers. Therefore, installed as part of the Windows
-	PostScript driver for a given printer is the printer's PPD. Where it
-	makes sense, the PPD features are presented in the drivers' UI dialogs
-	to display to the user a choice of print options. In the end, the
-	user selections are somehow written (in the form of special
-	PostScript, PJL, JCL, or vendor-dependent commands) into the PostScript
-	file created by the driver.
+	PPDからの情報はプリンタドライバによって考慮されることを意味する。そのため、
+	与えられたプリンタのための、Windows PostScriptドライバの一部としてインストール
+	されるものはプリンタのPPDである。それが意味をなす場合、PPD機能は、印刷
+	オプションをユーザに選択されるために表示される、ドライバのユーザインタフェース
+	ダイアログ中で提供される。最後に、ユーザの選択は、ドライバによって作成された
+	PostScriptファイル中に(特別なPostScript、PJL、JCLあるいはベンダ固有のコマンド
+	形式として)何らかの形で書かれる。
 	</para>
 
 	<warning><para>
 	<indexterm><primary>PDF</primary></indexterm>
-<indexterm><primary>PDF distilling</primary></indexterm>
-	A PostScript file that was created to contain device-specific commands
-	for achieving a certain print job output (e.g., duplexed, stapled, and
-	punched) on a specific target machine may not print as expected, or
-	may not be printable at all on other models; it also may not be fit
-	for further processing by software (e.g., by a PDF distilling program).
+<indexterm><primary>PDF抽出</primary></indexterm>
+	特定の印刷ジョブ出力を行うために、デバイス固有のコマンドを含んで作成された
+	特定のマシン上のPostScriptファイルは期待通りには印刷出来ないかもしれなく、
+	すべてのモデル上で印刷可能ではないかもしれない。それはソフトウェアによる
+	追加処理に適さないかもしれない(すなわち、PDF抽出プログラムによって)。
 	</para></warning>
 	</sect2>
 
 	<sect2>
-	<title>Using Windows-Formatted Vendor PPDs</title>
+	<title>Windows形式のベンダPPDの使用</title>
 
 	<para>
 <indexterm><primary>CUPS</primary></indexterm>
 <indexterm><primary>PPDs</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-	CUPS can handle all spec-compliant PPDs as supplied by the manufacturers for their PostScript models. Even if
-	a vendor does not mention our favorite OS in his or her manuals and brochures, you can safely trust this:
-	<emphasis>If you get the Windows NT version of the PPD, you can use it unchanged in CUPS</emphasis> and thus
-	access the full power of your printer just like a Windows NT user could!
+	CUPSはそのPostScriptモデルのための、開発元によって供給された、すべての仕様に
+	従っているPPDを扱うことが出来る。もしもベンダがマニュアルとパンフレットに
+	使用しているOSについての言及がなかったとしても、それらを安全に信用できる:
+	<emphasis>もしも、Windows NTバージョンのPPDを入手したならば、CUPS中で変更なしに利用でき</emphasis>、
+	その結果、Windows NTユーザが出来るように使用するプリンタのすべての能力に
+	アクセスできる。
 	</para>
 
 	<tip><para>
+	オンラインでどのようなPPDの仕様遵守状態を確認するためには、
+	<ulink noescape="1" url="http://www.cups.org/testppd.php">http://www.cups.org/testppd.php</ulink>
+	に行き、PPDをアップロードする。すぐにその結果を見ることができる。バージョン
+	1.1.19以降のすべてのバージョンのCUPSは、よりずっと厳しい内蔵PPD解析と検査
+	コードが有効になっている。この場合における印刷の問題は、このオンライン
+	リソースがピットストップの1つになるべきである。
 	To check the spec compliance of any PPD online, go to <ulink noescape="1"
 	url="http://www.cups.org/testppd.php">http://www.cups.org/testppd.php</ulink> and upload your PPD. You will
 	see the results displayed immediately. CUPS in all versions after 1.1.19 has a much stricter internal PPD
@@ -894,31 +901,37 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<warning><para>
 	<indexterm><primary>foomatic</primary></indexterm>
 	<indexterm><primary>cupsomatic</primary></indexterm>
-	For real PostScript printers, <emphasis>do not</emphasis> use the <emphasis>Foomatic</emphasis> or
-	<emphasis>cupsomatic</emphasis> PPDs from Linuxprinting.org. With these devices, the original vendor-provided
-	PPDs are always the first choice.
+	実際のPostScriptプリンタのためには、Linuxprinting.orgからの
+	<emphasis>Foomatic</emphasis>か<emphasis>cupsomatic</emphasis>PPDを
+	<emphasis>使ってはならない</emphasis>。それらのデバイスには、オリジナルの
+	ベンダが提供したPPDが常時最初の選択肢となる。
 	</para></warning>
 
 	<tip><para>
 <indexterm><primary>W32X86/2</primary></indexterm>
-	If you are looking for an original vendor-provided PPD of a specific device, and you know that an NT4 box (or
-	any other Windows box) on your LAN has the PostScript driver installed, just use <command>smbclient
-	//NT4-box/print\$ -U username</command> to access the Windows directory where all printer driver files are
-	stored. First look in the <filename>W32X86/2</filename> subdirectory for the PPD you are seeking.
+	もしも、特定のデバイスに対するオリジナルのベンダ提供PPDを捜していて、LAN上の
+	NT4マシン(あるいは他の任意のWindowsマシン)がインストールされているPostScript
+	プリンタを持っている場合、すべてのプリンタドライバが格納されているWindows
+	ディレクトリにアクセスするために、
+	<command>smbclient //NT4-box/print\$ -U username</command>を使用する。
+	最初に、捜しているPPDのために、<filename>W32X86/2</filename>サブディレクトリを
+	捜してみる。
 	</para></tip>
 	</sect2>
 
 	<sect2>
-	<title>CUPS Also Uses PPDs for Non-PostScript Printers</title>
+	<title>非PostScriptプリンタのためにCUPSはPPDを使う</title>
 
 	<para>
-<indexterm><primary>non-PostScript</primary></indexterm>
+<indexterm><primary>非PostScript</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>CUPS filtering</primary></indexterm>
-	CUPS also uses specially crafted PPDs to handle non-PostScript printers. These PPDs are usually not available
-	from the vendors (and no, you can't just take the PPD of a PostScript printer with the same model name and
-	hope it works for the non-PostScript version too). To understand how these PPDs work for non-PS printers, we
-	first need to dive deeply into the CUPS filtering and file format conversion architecture. Stay tuned.
+<indexterm><primary>CUPSフィルタリング</primary></indexterm>
+	CUPSは非PostScriptプリンタを扱うために、特別に作成されたPPDをも使う。それらの
+	PPDは通常ベンダから供給されない(そして、同じモデル名のPostScriptプリンタ用の
+	PPDファイルを使うことが出来ず、非PostScriptバージョンが動くことを期待することも
+	同じである)。非PostScriptプリンタに対してPPDがどのように適用されるかを知るため
+	には、最初にCUPSフィルタリングとファイルフォーマット変換アーキテクチャについて
+	深く言及する必要がある。引き続き読み続けること。
 	</para>
 
 	</sect2>
@@ -926,14 +939,23 @@ application/octet-stream   application/vnd.cups-raw   0   -
 </sect1>
 
 <sect1>
-<title>The CUPS Filtering Architecture</title>
+<title>CUPSフィルタリングアーキテクチャ</title>
 
 <para>
-<indexterm><primary>CUPS filtering</primary></indexterm>
+<indexterm><primary>CUPSフィルタリング</primary></indexterm>
 <indexterm><primary>Ghostscript</primary></indexterm>
-<indexterm><primary>MIME type</primary></indexterm>
-<indexterm><primary>MIME recognition</primary></indexterm>
-<indexterm><primary>MIME conversion rules</primary></indexterm>
+<indexterm><primary>MIME タイプ</primary></indexterm>
+<indexterm><primary>MIME 認識</primary></indexterm>
+<indexterm><primary>MIME 変換規則</primary></indexterm>
+CUPSフィルタリングシステムの中核は、Ghostscriptによっている。Ghostscriptを追加する事で、
+CUPSはそれ自身固有のフィルタ以外のいくつかを使う。あなた自身(あるいはベンダ)はさらに
+フィルタを追加しても良い。CUPSはすべてのデータファイルフォーマットを種々のMIMEタイプの
+ラベル配下で取り扱う。入力されたすべてのファイルは、初期自動タイピング?として受付られる。
+auttypingはその与えられたMIMEタイプを決定する。与えられたMIMEタイプは、選択された対象
+プリンタに、0またはそれ以上の、適切な、適用可能なフィルタリングチェーンを暗示する。
+この節では、どのようにMIMEタイプ認識と変換ルールが相互に作用するかについて説明する。
+それらは、与えられた入力データフォーマットに対する、動作させるフィルタリングチェーンを
+自動的に設定するために、CUPSによって使われる。
 The core of the CUPS filtering system is based on Ghostscript. In addition to Ghostscript, CUPS uses some
 other filters of its own. You (or your OS vendor) may have plugged in even more filters. CUPS handles all data
 file formats under the label of various MIME types. Every incoming print file is subjected to an initial
@@ -944,22 +966,23 @@ given input data format.
 </para>
 
 <para>
-If CUPS rasterizes a PostScript file natively to a bitmap, this is done in two stages:
+もしもCUPSがネイティブにビットマップにPostScriptファイルをラスタライズするならば、
+それは以下の2つのステージで行われる:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-<indexterm><primary>generic raster format</primary></indexterm>
+<indexterm><primary>一般的なラスタ形式</primary></indexterm>
 <indexterm><primary>CUPS raster</primary></indexterm>
-	The first stage uses a Ghostscript device named <quote>cups</quote>
-	(this is since version 1.1.15) and produces a generic raster format
-	called <quote>CUPS raster</quote>.
+	最初のステージでは、<quote>cups</quote>という名前のGhostscriptデバイスを使い
+	(これは、バージョン1.15以降)、<quote>CUPS raster</quote>と呼ばれる一般的な
+	ラスタ形式を生成する。
 	</para></listitem>
 
 	<listitem><para>
 <indexterm><primary>raster driver</primary></indexterm>
-	The second stage uses a <quote>raster driver</quote> that converts
-	the generic CUPS raster to a device-specific raster.
+	第二のステージでは、標準的なCUPSラスタをデバイス固有のラスタに変換する、
+	<quote>ラスタドライバ</quote>を使う。
 	</para></listitem>
 </itemizedlist>
 
