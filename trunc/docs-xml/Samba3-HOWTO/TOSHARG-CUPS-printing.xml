@@ -1176,63 +1176,67 @@ text/plain              application/postscript   33    texttops
 
 	<para>
 	<indexterm><primary>MIME</primary></indexterm>
-	There are many more combinations named in <filename>mime.convs</filename>. However, you are not limited to use
-	the ones predefined there. You can plug in any filter you like to the CUPS framework. It must meet, or must be
-	made to meet, some minimal requirements. If you find (or write) a cool conversion filter of some kind, make
-	sure it complies with what CUPS needs and put in the right lines in <filename>mime.types</filename> and
-	<filename>mime.convs</filename>; then it will work seamlessly inside CUPS.
+	<filename>mime.convs</filename>という名前の、よりたくさんの組み合わせがある。
+	しかし、あらかじめ定義してあるもの以外を使うことに制限はない。好みの、CUPS
+	フレームワークに対する任意のフィルタを追加できる。それは最小限の要求に適合
+	するか、させねばならない。もしも、ある種の効果的なフィルタを見つける(か書くか)
+	場合、CUPSの要求が要求するものに従い、適切な行を<filename>mime.types</filename>と
+	<filename>mime.convs</filename>に書く。そうするとCUPS内部でシームレスに動作する。
 	</para>
 
 	<sect3>
-	<title>Filter Requirements</title>
+	<title>フィルタの要求</title>
 
 	<para>
-	The <quote>CUPS requirements</quote> for filters are simple. Take filenames or <filename>stdin</filename> as
-	input and write to <filename>stdout</filename>. They should take these arguments:
+	フィルタに対する<quote>CUPSの要求</quote>は単純である。入力としてファイル名か
+	<filename>標準入力</filename>を取り、<filename>標準出力</filename>に出力する。
+	これはまた下記の引数を持つ:
 	</para>
 
 	<variablelist>
 		<varlistentry><term>printer</term>
 			<listitem><para>
-			The name of the printer queue (normally this is the name of the filter being run).
+			プリンタキューの名前(通常これは動かすフィルタの名前である)。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>job</term>
 			<listitem><para>
-			The numeric job ID for the job being printed.
+			印刷するジョブのジョブID値(数字)。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>user</term>
 			<listitem><para>
-			The string from the originating-user-name attribute.
+			オリジナルのユーザ名属性からの文字列。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>title</term>
 			<listitem><para>
-			The string from the job-name attribute.
+			ジョブ名属性からの文字列。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>copies</term>
 			<listitem><para>
-			The numeric value from the number-copies attribute.
+			コピー数属性からの数値。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>options</term>
 			<listitem><para>
-			The job options.
+			ジョブのオプション。
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>filename</term>
 			<listitem><para>
-			(optionally) The print request file (if missing, filters expect data
-			fed through <filename>stdin</filename>). In most cases, it is easy to
-			write a simple wrapper script around existing filters to make them work with CUPS.
+			(オプション)印刷を要求するファイル(もしも指定されなければ、
+			フィルタは<filename>標準入力</filename>からのデータ供給を
+			仮定する)。ほとんどの場合、CUPSで動作するようにさせるための
+			存在するフィルタを囲む単純なラッパプログラムを書くことは
+			簡単である。
 			</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -1246,37 +1250,40 @@ text/plain              application/postscript   33    texttops
 
 	<para>
 	<indexterm><primary>PostScript</primary></indexterm>
-<indexterm><primary>non-PostScript printers</primary></indexterm>
+<indexterm><primary>非PostScriptプリンタ</primary></indexterm>
 <indexterm><primary>raster</primary></indexterm>
-	As previously stated, PostScript is the central file format to any UNIX-based
-	printing system. From PostScript, CUPS generates raster data to feed
-	non-PostScript printers.
+	以前に説明したように、PostScriptは、任意のUNIXベースの印刷システムにおいて
+	中核となるファイル形式である。PostScriptから、非PostScriptプリンタに送る
+	ためのラスタデータを、CUPSは生成する。
 	</para>
 
 	<para>
 <indexterm><primary>prefilters</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-<indexterm><primary>ASCII text</primary></indexterm>
+<indexterm><primary>ASCIIテキスト</primary></indexterm>
 <indexterm><primary>PDF</primary></indexterm>
 <indexterm><primary>DVI</primary></indexterm>
 <indexterm><primary>HP-GL.</primary></indexterm>
-<indexterm><primary>MIME type</primary></indexterm>
+<indexterm><primary>MIMEタイプ</primary></indexterm>
 <indexterm><primary>application/postscript</primary></indexterm>
 <indexterm><primary>pstops</primary></indexterm>
 <indexterm><primary>application/vnd.cups-postscript</primary></indexterm>
-	But what happens if you send one of the supported non-PS formats to print? Then CUPS runs
-	<quote>prefilters</quote> on these input formats to generate PostScript first. There are prefilters to create
-	PostScript from ASCII text, PDF, DVI, or HP-GL. The outcome of these filters is always of MIME type
-	<parameter>application/postscript</parameter> (meaning that any device-specific print options are not yet
-	embedded into the PostScript by CUPS and that the next filter to be called is pstops). Another prefilter is
-	running on all supported image formats, the <parameter>imagetops</parameter> filter. Its outcome is always of
-	MIME type <parameter>application/vnd.cups-postscript</parameter> (not application/postscript), meaning it has
-	the print options already embedded into the file. This is shown in <link linkend="4small">Prefiltering in
-	CUPS to Form PostScript</link>.
+	しかし、印刷するためにサポートされた非PSフォーマットのどれかを送る時に何が起きる
+	のだろうか?次にCUPSはPostScriptを最初に生成するために、それらの入力上で
+	<quote>prefilters</quote>を動かす。これは、ASCIIテキスト,PDF, DVI,かHP-GLから
+	PostScriptを生成するためのprefilterである。それらのフィルタからの出力は常時
+	<parameter>application/postscript</parameter>というMIMEタイプである
+	(これは任意のデバイス固有のオプションはCUPSによってまだPostScriptに埋め込まれて
+	おらず、呼ばれる次のフィルタはpstopsであることを意味する)。その出力は常時
+	<parameter>application/vnd.cups-postscript</parameter>というMIMEタイプである
+	(application/postscriptではない)場合、プリントオプションはすでにファイルに
+	埋め込まれている事を意味する。これは、
+	<link linkend="4small">PostScriptを整形するためのCUPS内のprefiltering</link>
+	で説明されている。
 	</para>
 
 	<figure id="4small">
-		<title>Prefiltering in CUPS to Form PostScript.</title>
+		<title>PostScriptを整形するためのCUPS内のprefiltering</title>
 		<imagefile scale="25">4small</imagefile>
 	</figure>
 
