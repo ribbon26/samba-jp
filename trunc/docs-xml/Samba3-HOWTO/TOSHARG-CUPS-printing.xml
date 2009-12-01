@@ -1113,16 +1113,15 @@ application/postscript  ai eps ps string(0,%!) string(0,&lt;04&gt;%!)
 <indexterm><primary>SGI-RGB</primary></indexterm>
 <indexterm><primary>MIME</primary></indexterm>
 <indexterm><primary>filters</primary></indexterm>
-	CUPS can handle ASCII text, HP-GL, PDF, PostScript, DVI, and
-	many image formats (GIF, PNG, TIFF, JPEG, Photo-CD, SUN-Raster,
-	PNM, PBM, SGI-RGB, and more) and their associated MIME types
-	with its filters.
+	CUPSはASCIIテキスト,HP-GL, PDF, PostScript, DVIと多くの画像イメージ形式
+	(GIF, PNG, TIFF, JPEG, Photo-CD, SUN-Raster,PNM, PBM, SGI-RGBやその他)と
+	それらに関連したMIMEタイプとそのフィルタを扱うことが出来る。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>MIME Type Conversion Rules</title>
+	<title>MIMEタイプ変換ルール</title>
 
 
 	<para>
@@ -1131,34 +1130,31 @@ application/postscript  ai eps ps string(0,%!) string(0,&lt;04&gt;%!)
 <indexterm><primary>/etc/cups/mime.convs</primary></indexterm>
 <indexterm><primary>application/pdf</primary></indexterm>
 <indexterm><primary>application/postscript</primary></indexterm>
-	CUPS reads the file <filename>/etc/cups/mime.convs</filename>
-	(and all other files named with a <filename>*.convs</filename>
-	suffix in the same directory) upon startup. These files contain
-	lines naming an input MIME type, an output MIME type, a format
-	conversion filter that can produce the output from the input type,
-	and virtual costs associated with this conversion. One example line
-	reads like this:
+	CUPSは<filename>/etc/cups/mime.convs</filename>(と、同じディレクトリ中にある、
+	その他の<filename>*.convs</filename>というファイルも)を起動時に読み込む。
+	それらのファイルには入力MIMEタイプ、出力MIMEタイプ、入力タイプから出力を生成
+	できるフォーマット変換フィルタとその変換に関連する仮想のコストを意味する行を
+	含む。その1つの例は以下のようになる:
 <programlisting>
 application/pdf         application/postscript   33   pdftops
 </programlisting>
 <indexterm><primary>pdftops</primary></indexterm>
-	This means that the <parameter>pdftops</parameter> filter will take
-	<parameter>application/pdf</parameter> as input and produce
-	<parameter>application/postscript</parameter> as output; the virtual
-	cost of this operation is 33 CUPS-$. The next filter is more
-	expensive, costing 66 CUPS-$:
+	これは、<parameter>pdftops</parameter>フィルタが入力として
+	<parameter>application/pdf</parameter>を取り、出力として
+	<parameter>application/postscript</parameter>を生成する。この操作の仮想コストは
+	33 CUPS-$である。次のフィルタはより高価で、66 CUPS-$かかる:
 	<indexterm><primary>pdf</primary></indexterm>
 <programlisting>
 application/vnd.hp-HPGL application/postscript   66   hpgltops
 </programlisting>
 <indexterm><primary>hpgltops</primary></indexterm>
-	This is the <parameter>hpgltops</parameter>, which processes HP-GL
-	plotter files to PostScript.
+	これは、HP-GLプロッタファイルをPostScriptへ変換処理する
+	<parameter>hpgltops</parameter>である。
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 <programlisting>
 application/octet-stream
 </programlisting>
-	Here are two more examples: 
+	さらに2つの例である:
 	<indexterm><primary>text/plain</primary></indexterm>
 <indexterm><primary>application/x-shell</primary></indexterm>
 <indexterm><primary>text/plain</primary></indexterm>
@@ -1168,14 +1164,15 @@ application/x-shell     application/postscript   33    texttops
 text/plain              application/postscript   33    texttops
 </programlisting>
 <indexterm><primary>application/x-shell</primary></indexterm>
-	The last two examples name the <parameter>texttops</parameter> filter to work on
-	<parameter>text/plain</parameter> as well as on <parameter>application/x-shell</parameter>. (Hint: This
-	differentiation is needed for the syntax highlighting feature of <parameter>texttops</parameter>).
+	最後の2つの例は<parameter>application/x-shell</parameter>上と同じように
+	<parameter>text/plain</parameter>で動作する<parameter>texttops</parameter>
+	フィルタを意味する(ヒント:この違いは、<parameter>texttops</parameter>の
+	特筆すべき機能の文法のために必要とされる)。
 	</para>
 	</sect2>
 
 	<sect2>
-	<title>Filtering  Overview</title>
+	<title>フィルタリングの概要</title>
 
 	<para>
 	<indexterm><primary>MIME</primary></indexterm>
