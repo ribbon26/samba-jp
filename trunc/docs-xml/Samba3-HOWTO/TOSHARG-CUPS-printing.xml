@@ -1010,6 +1010,15 @@ Linuxprinting.orgによって現在は推奨されている。
 <indexterm><primary>foomatic</primary></indexterm>
 <indexterm><primary>foomatic-rip</primary></indexterm>
 <indexterm><primary>ESP Ghostscript</primary></indexterm>
+CUPSプリンタは外部レンダリングパスを使うように設定しても良い。最も共通的なものは、
+<ulink url="http://www.linuxprinting.org/">Linuxprinting.org</ulink>からの
+Foomatic/cupsomaticコンセプトによって提供されるものである。これは古いGhostscript
+で使われ、すべてを1ステップで処理する。これは<quote>cups</quote>デバイスを使わないが、
+その他の多くを使う。しかし、Foomatic/cupsomaticの使用にもかかわらず、最も良い解と
+<indexterm><primary>ESP</primary><secondary>Ghostscript</secondary></indexterm>
+広範囲のプリンタモデルのサポートはESC Ghostscriptによって提供される
+(Foomatic/cupsomaticについての詳細、現在<emphasis>foomatic-rip</emphasis>と
+呼ばれている、特に新しいバージョンについては、以下を参照)。
 CUPS printers may be set up to use external rendering paths. One of the most common is provided by the
 Foomatic/cupsomatic concept from <ulink url="http://www.linuxprinting.org/">Linuxprinting.org</ulink>. This
 uses the classical Ghostscript approach, doing everything in one step.  It does not use the
@@ -1020,7 +1029,7 @@ called now <emphasis>foomatic-rip</emphasis>, follows).
 </para>
 
 	<sect2>
-	<title>MIME Types and CUPS Filters</title>
+	<title>MIMEタイプとCUPSフィルタ</title>
 
 
 	<para>
@@ -1029,20 +1038,22 @@ called now <emphasis>foomatic-rip</emphasis>, follows).
 <indexterm><primary>mime.types</primary></indexterm>
 <indexterm><primary>application/pdf</primary></indexterm>
 <indexterm><primary>autotyping</primary></indexterm>
-	CUPS reads the file <filename>/etc/cups/mime.types</filename> (and all other files carrying a
-	<filename>*.types</filename> suffix in the same directory) upon startup. These files contain the MIME type
-	recognition rules that are applied when CUPS runs its autotyping routines. The rule syntax is explained in the
-	man page for <filename>mime.types</filename> and in the comments section of the
-	<filename>mime.types</filename> file itself. A simple rule reads like this:
+	CUPSは<filename>/etc/cups/mime.types</filename>(と、同じディレクトリ中にある、
+	すべての<filename>*.types</filename>ファイル)を起動時に読み込む。これらの
+	ファイルはCUPSがそのautotyping機能を動かしているときに適用されるMIMEタイプ
+	認識ルールを含む。ルールの文法は<filename>mime.types</filename>のマニュアル
+	ページと<filename>mime.types</filename>ファイルそれ自身のコメントセクションに
+	記述されている。簡単なルールは以下の通りである:
 	<indexterm><primary>application/pdf</primary></indexterm>
 <programlisting>
 application/pdf         pdf string(0,%PDF)
 </programlisting>
 <indexterm><primary>%PDF</primary></indexterm>
 <indexterm><primary>.pdf</primary></indexterm>
-	This means if a filename has a <filename>.pdf</filename> suffix or if the magic string
-	<emphasis>%PDF</emphasis> is right at the beginning of the file itself (offset 0 from the start), then it is a
-	PDF file (<parameter>application/pdf</parameter>).  Another rule is this:
+	これは、もしファイル名に<filename>.pdf</filename>という拡張子が付いているか、
+	あるいは、マジック文字列<emphasis>%PDF</emphasis>がファイルそれ自身の先頭の
+	正しいところ(開始時点からオフセット0)にある場合、それはPDFファイルである
+	(<parameter>application/pdf</parameter>)。その他のルールは以下の通り:
 <programlisting>
 application/postscript  ai eps ps string(0,%!) string(0,&lt;04&gt;%!)
 </programlisting>
@@ -1050,18 +1061,19 @@ application/postscript  ai eps ps string(0,%!) string(0,&lt;04&gt;%!)
 <indexterm><primary>.ai</primary></indexterm>
 <indexterm><primary>.eps</primary></indexterm>
 <indexterm><primary>.ps</primary></indexterm>
-<indexterm><primary>generic PostScript</primary></indexterm>
+<indexterm><primary>一般的な PostScript</primary></indexterm>
 <indexterm><primary>application/postscript</primary></indexterm>
-	If the filename has one of the suffixes <filename>.ai</filename>, <filename>.eps</filename>,
-	<filename>.ps</filename>, or if the file itself starts with one of the strings <emphasis>%!</emphasis> or
-	<emphasis><![CDATA[<04>%!]]></emphasis>, it is a generic PostScript file
-	(<parameter>application/postscript</parameter>).
+	もしも、ファイル名が<filename>.ai</filename>, <filename>.eps</filename>,
+	<filename>.ps</filename>という拡張子のどれかを持つか、ファイルそれ自身が
+	<emphasis>%!</emphasis>か<emphasis><![CDATA[<04>%!]]></emphasis>という文字列の
+	どれかで始まるならば、それは一般的なPostScriptファイルである
+	(<parameter>application/postscript</parameter>)。
 	</para>
 
 	<warning><para>
 <indexterm><primary>/etc/cups/</primary></indexterm>
-	Don't confuse the other mime.types files your system might be using
-	with the one in the <filename>/etc/cups/</filename> directory.
+	使用するシステムが、<filename>/etc/cups/</filename>ディレクトリ中のどれかを
+	使うかもしれない、他のmime.typesファイルと混同しないこと。
 	</para></warning>
 
 	<note><para>
@@ -1069,16 +1081,19 @@ application/postscript  ai eps ps string(0,%!) string(0,&lt;04&gt;%!)
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>filter</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>transformation</primary></indexterm>
-	There is an important difference between two similar MIME types in CUPS: one is
-	<parameter>application/postscript</parameter>, the other is
-	<parameter>application/vnd.cups-postscript</parameter>. While <parameter>application/postscript</parameter> is
-	meant to be device-independent, job options for the file are still outside the PS file content, embedded in
-	command line or environment variables by CUPS, <parameter>application/vnd.cups-postscript</parameter> may have
-	the job options inserted into the PostScript data itself (where applicable). The transformation of the generic
-	PostScript (<parameter>application/postscript</parameter>) to the device-specific version
-	(<parameter>application/vnd.cups-postscript</parameter>) is the responsibility of the CUPS
-	<parameter>pstops</parameter> filter. pstops uses information contained in the PPD to do the transformation.
+<indexterm><primary>変換</primary></indexterm>
+	CUPS中の2つの似たようなMIMEタイプとの間で、重要な違いがある。1つは
+	<parameter>application/postscript</parameter>で、もう一つは
+	<parameter>application/vnd.cups-postscript</parameter>である。
+	<parameter>application/postscript</parameter>がデバイス非依存を意味するので、
+	ファイルのジョブオプションは引き続きPSファイルの内容の外側にあり、CUPSによって
+	コマンドラインか環境変数中に埋め込まれ、
+	<parameter>application/vnd.cups-postscript</parameter>は、PostScriptそれ自身
+	中に埋め込まれるジョブオプションがあるかもしれない(適用可能ならば)。一般的な
+	PostScript(<parameter>application/postscript</parameter>)の、デバイス固有の
+	バージョン(<parameter>application/vnd.cups-postscript</parameter>)への変換は、
+	CUPSの<parameter>pstops</parameter>フィルタの責任である。pstopsは変換を行う
+	ためにPPD中に含まれる情報を使う。
 	</para></note>
 
 	<para>
