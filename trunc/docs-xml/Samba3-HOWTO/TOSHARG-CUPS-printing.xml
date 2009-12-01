@@ -1296,40 +1296,40 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>pstops</primary></indexterm>
 <indexterm><primary>application/postscript</primary></indexterm>
 <indexterm><primary>application/vnd.cups-postscript</primary></indexterm>
-<indexterm><primary>output duplexing</primary></indexterm>
+<indexterm><primary>両面印刷</primary></indexterm>
 <indexterm><primary>stapling</primary></indexterm>
-<indexterm><primary>punching</primary></indexterm>
+<indexterm><primary>穴空け</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-	<emphasis>pstops</emphasis> is a filter that is used to convert <parameter>application/postscript</parameter> to
-	<parameter>application/vnd.cups-postscript</parameter>. As stated earlier, this filter inserts all
-	device-specific print options (commands to the printer to ask for the duplexing of output, or stapling and
-	punching it, and so on) into the PostScript file. An example is illustrated in <link
-	linkend="5small">Adding Device-Specific Print Options</link>.
+	<emphasis>pstops</emphasis>は、<parameter>application/postscript</parameter>を
+	<parameter>application/vnd.cups-postscript</parameter>に変換するために使われる
+	フィルタである。以前に説明したように、このフィルタはすべてのデバイス固有の印刷
+	オプション(両面印刷やstanpingと穴あけなどをプリンタに指示するコマンド)を、
+	PostScriptファイル中に挿入する。その例は、
+	<link linkend="5small">デバイス固有印刷オプションの追加</link>に例示されている。
 	</para>
 
 	<figure id="5small">
-		<title>Adding Device-Specific Print Options.</title>
+		<title>デバイス固有印刷オプションの追加</title>
 		<imagefile scale="25">5small</imagefile>
 	</figure>
 
 	<para>
-	This is not all. Other tasks performed by it are:
+	これがすべてではない。これにより行われるその他の処理は以下の通り:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		Selecting the range of pages to be printed (e.g., you can choose to
-		print only pages <quote>3, 6, 8-11, 16, and 19-21</quote>, or only odd-numbered
-		pages).
+		印刷ページ範囲を指定する(すなわち、<quote>3, 6, 8-11, 16と19-21</quote>
+		か、偶数ページのみ印刷することを選べる)。
 		</para></listitem>
 
 		<listitem><para>
-		Putting two or more logical pages on one sheet of paper (the
-		so-called <quote>number-up</quote> function).
+		1枚に2枚あるいはそれ以上のページを配置する(<quote>数値-up</quote>
+		機能と呼ばれる)。
 		</para></listitem>
 
-		<listitem><para>Counting the pages of the job to insert the accounting
-		information into the <filename>/var/log/cups/page_log</filename>.
+		<listitem><para><filename>/var/log/cups/page_log</filename>に、
+		課金情報を記録するための、ジョブのページ数をカウントする。
 		</para></listitem>
 	</itemizedlist>
 	</sect2>
@@ -1339,26 +1339,29 @@ text/plain              application/postscript   33    texttops
 
 	<para>
 <indexterm><primary>pstoraster</primary></indexterm>
-<indexterm><primary>rasterization</primary></indexterm>
-<indexterm><primary>raster drivers</primary></indexterm>
-	<parameter>pstoraster</parameter> is at the core of the CUPS filtering system. It is responsible for the first
-	stage of the rasterization process. Its input is of MIME type application/vnd.cups-postscript; its output is
-	application/vnd.cups-raster. This output format is not yet meant to be printable. Its aim is to serve as a
-	general-purpose input format for more specialized <emphasis>raster drivers</emphasis> that are able to
-	generate device-specific printer data. This is shown in <link linkend="cups-raster">the PostScript to
-	Intermediate Raster Format diagram</link>.
+<indexterm><primary>ラスタライズ</primary></indexterm>
+<indexterm><primary>ラスタデバイス</primary></indexterm>
+	<parameter>pstoraster</parameter>はCUPSフィルタリングシステムの中核である。
+	これは、ラスタライズ処理の最初のステージに対して責任がある。その入力は
+	application/vnd.cups-postscriptというMIMEタイプである。その出力は、
+	application/vnd.cups-rasterである。この出力形式はまだ印刷可能にはなっていない。
+	その目的は、デバイス固有印刷データの生成を有効にする、より特殊化した
+	<emphasis>ラスタデバイス</emphasis>のための汎用入力形式として提供することである。
+	これについては、
+	<link linkend="cups-raster">PostScriptから中間ラスタ形式への変換ダイアグラム</link>
+	を参照のこと。
 	</para>
 
 	<figure id="cups-raster">
-		<title>PostScript to Intermediate Raster Format.</title>
+		<title>PostScriptから中間ラスタ形式への変換ダイアグラム</title>
 		<imagefile scale="25">6small</imagefile>
 	</figure>
 
 	<para>
-<indexterm><primary>CUPS raster</primary></indexterm>
-<indexterm><primary>generic raster</primary></indexterm>
+<indexterm><primary>CUPS ラスタ</primary></indexterm>
+<indexterm><primary>汎用ラスタ</primary></indexterm>
 <indexterm><primary>IANA</primary></indexterm>
-<indexterm><primary>raster drivers</primary></indexterm>
+<indexterm><primary>ラスタドライバ</primary></indexterm>
 	CUPS raster is a generic raster format with powerful features. It is able to include per-page information,
 	color profiles, and more, to be used by the downstream raster drivers. Its MIME type is registered with IANA
 	and its specification is, of course, completely open. It is designed to make it quite easy and inexpensive for
