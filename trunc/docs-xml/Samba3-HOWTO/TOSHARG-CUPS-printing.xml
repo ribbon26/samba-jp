@@ -1583,15 +1583,14 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>PPDs</primary></indexterm>
 <indexterm><primary>Foomaticプリンタ</primary></indexterm>
 <indexterm><primary>Linuxprinting.org</primary></indexterm>
-	<parameter>cupsomatic</parameter> filters may be the most widely used on CUPS
-	installations. You must be clear that these were not
-	developed by the CUPS people. They are a third-party add-on to
-	CUPS. They utilize the traditional Ghostscript devices to render jobs
-	for CUPS. When troubleshooting, you should know about the
-	difference. Here the whole rendering process is done in one stage,
-	inside Ghostscript, using an appropriate device for the target
-	printer. <parameter>cupsomatic</parameter> uses PPDs that are generated from the Foomatic
-	Printer &amp; Driver Database at Linuxprinting.org.
+	<parameter>cupsomatic</parameter>フィルタはCUPSをインストールするときに最も広く
+	使われているだろう。これらはCUPS開発者によって開発されたものではないということを
+	明確にする必要がある。これらはCUPSに対するサードパーティアドオンである。これらは
+	CUPSのためにジョブをレンダリングする従来のGhostscriptデバイスを使う。
+	問題が発生したときの調査時にはその違いを知っておく必要がある。ここでは1ステージで
+	すべてのレンダリングプロセスがGhostscript内部で、対象のプリンタに適したデバイスを
+	使って行われる。<parameter>cupsomatic</parameter>は、Linuxprinting.orgにある
+	Foomaticプリンタドライバデータベースから生成されたPPDを使う。
 	</para>
 
 	<para>
@@ -1600,58 +1599,55 @@ text/plain              application/postscript   33    texttops
 <programlisting>
 *cupsFilter: "application/vnd.cups-postscript  0  cupsomatic"
 </programlisting>
-	You may find this line among the first 40 or so lines of the PPD
-	file. If you have such a PPD installed, the printer shows up in the
-	CUPS Web interface with a <parameter>foomatic</parameter> namepart for
-	the driver description. <parameter>cupsomatic</parameter> is a Perl script that runs
-	Ghostscript with all the complicated command line options
-	autoconstructed from the selected PPD and command line options given to
-	the print job.
+	PPDファイルの最初の40かそのあたりで、この行を見つけるかもしれない。
+	もしも、そのような、インストールされたPPDがあるならば、プリンタは
+	<parameter>foomatic</parameter>の名前部分に<parameter>foomatic</parameter>が
+	表示されたCUPS Webインタフェース中で表示される。
+	<parameter>cupsomatic</parameter>は、選択されたPPDとプリントジョブに与えられた
+	コマンドラインオプションから自動的に構成された、すべての複雑なコマンドライン
+	オプションを付けたGhostscriptを実行させるPerlスクリプトである。
 	</para>
 
 	<para>
-	<indexterm><primary>point'n'print</primary></indexterm>
+	<indexterm><primary>ポイントアンドプリント</primary></indexterm>
 <indexterm><primary>foomatic-rip</primary></indexterm>
-<indexterm><primary>Adobe specifications</primary></indexterm>
-<indexterm><primary>hi-res photo</primary></indexterm>
+<indexterm><primary>Adobeの仕様</primary></indexterm>
+<indexterm><primary>高解像度の写真</primary></indexterm>
 <indexterm><primary>normal color</primary></indexterm>
 <indexterm><primary>grayscale</primary></indexterm>
 <indexterm><primary>draft</primary></indexterm>
-<indexterm><primary>media type</primary></indexterm>
-<indexterm><primary>resolution</primary></indexterm>
+<indexterm><primary>メディアタイプ</primary></indexterm>
+<indexterm><primary>解像度</primary></indexterm>
 <indexterm><primary>inktype</primary></indexterm>
 <indexterm><primary>dithering algorithm</primary></indexterm>
-	However, <parameter>cupsomatic</parameter> is now deprecated. Its PPDs (especially the first
-	generation of them, still in heavy use out there) are not meeting the
-	Adobe specifications. You might also suffer difficulties when you try
-	to download them with <quote>Point'n'Print</quote> to Windows clients. A better
-	and more powerful successor is now available: it is called <parameter>foomatic-rip</parameter>. To use
-	<parameter>foomatic-rip</parameter> as a filter with CUPS, you need the new type of PPDs, which
-	have a similar but different line:
+	しかし、<parameter>cupsomatic</parameter>は現在廃止されている。そのPPD(特に
+	最初に生成したものは、そこで引き続き頻繁に使用される)は、Adobeの仕様に適合して
+	いない。Windowsクライアントに<quote>ポイントアンドプリント</quote>でそれらを
+	ダウンロード仕様とするときに困難に遭遇するかもしれない。よりよい、かつ
+	強力な解決方法は現在提供されている。それは、<parameter>foomatic-rip</parameter>
+	と呼ばれる。CUPSでフィルタとして<parameter>foomatic-rip</parameter>を使うために、
+	似たようだが異なった行を持つ、新しいタイプのPPDが必要である:
 <programlisting>
 *cupsFilter: "application/vnd.cups-postscript  0  foomatic-rip"
 </programlisting>
-	The PPD-generating engine at Linuxprinting.org has been revamped.
-	The new PPDs comply with the Adobe spec. They also provide a
-	new way to specify different quality levels (hi-res photo, normal
-	color, grayscale, and draft) with a single click, whereas before you
-	could have required five or more different selections (media type,
-	resolution, inktype, and dithering algorithm). There is support for
-	custom-size media built in. There is support to switch
-	print options from page to page in the middle of a job. And the
-	best thing is that the new <constant>foomatic-rip</constant> works seamlessly with all
-	legacy spoolers too (like LPRng, BSD-LPD, PDQ, PPR, and so on), providing
-	for them access to use PPDs for their printing.
+	Linuxprinting.orgにあるPPD生成エンジンは修正された。新しいPPDはAdobeの仕様に
+	従っている。これらは異なった品質レベル(高解像度の写真、通常の色、グレースケールと
+	ドラフトモード)をシングルクリックで、5つまたはそれ以上の異なった選択(メディア
+	タイプ、解像度、インク種別とディザリングアルゴリズム)を要求できる新しい方法を
+	提供する。ビルトインされた固有のサイズのメディアサポートもある。ジョブの中間で、
+	ページ毎に印刷オプションを切り替えることのサポートもある。さらに、最もすばらしい
+	ことは、新しい<constant>foomatic-rip</constant>は、印刷時にPPDを使うための
+	アクセスに対するサポートを、すべての旧式なスプーラ(LPRng,BSD-LPD, PDQ, PPRなど)
+	に対してもシームレスに動作するということである。
 	</para>
 	</sect2>
 
 	<sect2>
-	<title>The Complete Picture</title>
+	<title>完全な図解</title>
 
 	<para>
-	If you want to see an overview of all the filters and how they
-	relate to each other, the complete picture of the puzzle is at the end
-	of this chapter.
+	すべてのフィルタの概要とどのようにそれらが関連するかを知りたい場合、
+	パズルの完全な図解はこの章の最後にある。
 	</para>
 	</sect2>
 
