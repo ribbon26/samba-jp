@@ -1446,86 +1446,85 @@ text/plain              application/postscript   33    texttops
 	<para>
 <indexterm><primary>CUPSフィルタリングチェーン</primary></indexterm>
 <indexterm><primary>印刷キュー</primary></indexterm>
-	The last part of any CUPS filtering chain is a backend. Backends
-	are special programs that send the print-ready file to the final
-	device. There is a separate backend program for any transfer
-	protocol for sending print jobs over the network, and one for every local
-	interface. Every CUPS print queue needs to have a CUPS <quote>device-URI</quote>
-	associated with it. The device URI is the way to encode the backend
-	used to send the job to its destination. Network device-URIs use
-	two slashes in their syntax, local device URIs only one, as you can
-	see from the following list. Keep in mind that local interface names
-	may vary greatly from my examples, if your OS is not Linux:
+	CUPSフィルタリングチェーンについての最後の部分はバックエンドである。
+	バックエンドは、最終的なデバイスに印刷可能なファイルを送るための、特別な
+	プログラムである。ネットワーク経由でと、すべてのローカルなインタフェースに
+	印刷ジョブを送るための、任意の異なった分離されたバックエンドプログラムが
+	ある。すべてのCUPS印刷キューは、それに関連づけられているCUPS
+	<quote>device-URI</quote>を持つ必要がある。device URIは、その送付先にジョブを
+	送るときに使われる、バックエンドをエンコードする方法である。以下で一覧表示
+	されているもので分かるように、ネットワークdevice URLは記述の中に2つの
+	スラッシュ(斜線)を使い、ローカルdevice URLは1つのみを使う。ローカル
+	インタフェース名は、OSがLinux以外の場合、筆者の例では非常に自由度があっても
+	よいことを心にとめておくこと:
 	</para>
 
 	<variablelist>
 		<varlistentry><term>usb</term>
 		<listitem><para>
-		This backend sends print files to USB-connected printers. An
-		example for the CUPS device-URI to use is
-		<filename>usb:/dev/usb/lp0</filename>.
+		このバックエンドはUSB接続のプリンタに印刷ファイルを送る。使用する
+		CUPS device URIの例は以下の通り。
+		<filename>usb:/dev/usb/lp0</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>serial</term>
 		<listitem><para>
-		This backend sends print files to serially connected printers.
-		An example for the CUPS device-URI to use is
-		<filename>serial:/dev/ttyS0?baud=11500</filename>.
+		このバックエンドはシリアル接続したプリンタに印刷ファイルを送る。使用する
+                CUPS device URIの例は以下の通り。
+		<filename>serial:/dev/ttyS0?baud=11500</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>parallel</term>
 		<listitem><para>
-		This backend sends print files to printers connected to the
-		parallel port. An example for the CUPS device-URI to use is
-		<filename>parallel:/dev/lp0</filename>.
+		このバックエンドはパラレルポートに接続したプリンタに印刷ファイルを送る。使用する
+                CUPS device URIの例は以下の通り。
+		<filename>parallel:/dev/lp0</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>SCSI</term>
 		<listitem><para>
-		This backend sends print files to printers attached to the
-		SCSI interface. An example for the CUPS device-URI to use is
-		<filename>scsi:/dev/sr1</filename>.
+		このバックエンドはSCSIインタフェースに接続されたプリンタに印刷ファイルを送る。使用する
+                CUPS device URIの例は以下の通り。
+		<filename>scsi:/dev/sr1</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>lpd</term>
 		<listitem><para>
-		This backend sends print files to LPR/LPD-connected network
-		printers. An example for the CUPS device-URI to use is
-		<filename>lpd://remote_host_name/remote_queue_name</filename>.
+		このバックエンドはLPR/LPDで接続されたネットワークプリンタに印刷ファイルを送る。使用する
+                CUPS device URIの例は以下の通り。
+		<filename>lpd://remote_host_name/remote_queue_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>AppSocket/HP JetDirect</term>
 		<listitem><para>
-		This backend sends print files to AppSocket (a.k.a., HP
-		JetDirect) connected network printers. An example for the CUPS
-		device-URI to use is
-		<filename>socket://10.11.12.13:9100</filename>.
+		このバックエンドはAppSocket(別名JetDirect)で接続されたネットワークプリンタに
+		印刷ファイルを送る。使用するCUPS device URIの例は以下の通り。
+		<filename>socket://10.11.12.13:9100</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>ipp</term>
 		<listitem><para>
-		This backend sends print files to IPP-connected network
-		printers (or to other CUPS servers). Examples for CUPS device-URIs
-		to use are
+		このバックエンドはIPPで接続されたネットワークプリンタ(か他のCUPSサーバ)に
+		印刷ファイルを送る。使用するCUPS device URIの例は以下の通り。
 		<filename>ipp:://192.193.194.195/ipp</filename>
-		(for many HP printers) and
-		<filename>ipp://remote_cups_server/printers/remote_printer_name</filename>.
+		(多くのHPプリンタ用)と
+		<filename>ipp://remote_cups_server/printers/remote_printer_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>http</term>
 		<listitem><para>
-		This backend sends print files to HTTP-connected printers.
-		(The http:// CUPS backend is only a symlink to the ipp:// backend.)
-		Examples for the CUPS device-URIs to use are
+		このバックエンドはHTTPで接続されたプリンタにファイルを送る
+		(http:// CUPSバックエンドはipp://バックエンドの単なるシンボリックリンクである)。
+		CUPS device URIの例は以下の通り。
 		<filename>http:://192.193.194.195:631/ipp</filename>
-		(for many HP printers) and
-		<filename>http://remote_cups_server:631/printers/remote_printer_name</filename>.
+		(多くのHPプリンタ用)と
+		<filename>http://remote_cups_server:631/printers/remote_printer_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>smb</term>
 		<listitem><para>
-		This backend sends print files to printers shared by a Windows
-		host. Examples of CUPS device-URIs that may be used includes:
+		このバックエンドはWindowsホストによって共有されているプリンタに印刷ファイルを送る。
+                CUPS device URIの例は以下の通り。
 		</para>
 
 		<para>
@@ -1538,11 +1537,12 @@ text/plain              application/postscript   33    texttops
 		</para>
 
 		<para>
-		The smb:// backend is a symlink to the Samba utility
-		<parameter>smbspool</parameter> (does not ship with CUPS). If the
-		symlink is not present in your CUPS backend directory, have your
-		root user create it: <command>ln -s `which smbspool'
-		/usr/lib/cups/backend/smb</command>.
+		The smb:// backendはSambaユーティリティ<parameter>smbspool</parameter>
+		(CUPSによって提供されていない)へのシンボリックリンクである。もしも
+		CUPSバックエンドディレクトリ中にシンボリックリンクがない場合、root
+		ユーザになって、
+		<command>ln -s `which smbspool' /usr/lib/cups/backend/smb</command>
+		を実行してこれを作ること。
 		</para></listitem></varlistentry>
 	</variablelist>
 
