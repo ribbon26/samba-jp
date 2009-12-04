@@ -1804,29 +1804,37 @@ application/octet-stream   application/vnd.cups-raw   0   -
 
 	<para>
 	<indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>non-PostScript</primary></indexterm>
+<indexterm><primary>非PostScript</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>RIP</primary></indexterm>
 <indexterm><primary>Ghostscript</primary></indexterm>
-<indexterm><primary>device-specific commands</primary></indexterm>
-	Originally PPDs were meant to be used for PostScript printers
-	only. Here, they help to send device-specific commands and settings
-	to the RIP, which processes the job file. CUPS has extended this
-	scope for PPDs to cover non-PostScript printers too. This was not
-	difficult, because it is a standardized file format. In a way
-	it was logical too: CUPS handles PostScript and uses a PostScript
-	RIP (Ghostscript) to process the job files. The only difference is that
-	a PostScript printer has the RIP built-in, for other types of
-	printers the Ghostscript RIP runs on the host computer.
+<indexterm><primary>デバイス固有のコマンド</primary></indexterm>
+	オリジナルのPPDはPostScriptプリンタのみに使われることを意図していた。それらは
+	ジョブファイルを処理する、RIPのためのデバイス固有のコマンドと設定を送るための
+	手助けとなる。CUPSはPPDに対するこのスコープを拡張し、非PostScriptプリンタにも
+	カバーするようにした。これが標準化されたファイル形式のために、これを行うのは
+	難しくない。その方法は論理的でもある:CUPSはPostScriptを取り扱い、ジョブファイルを
+	処理するためにPostScript RIP(Ghostscript)を使う。唯一の違いはPostScriptプリンタは
+	RIPを内蔵していて、その他のタイプのプリンタはホストコンピュータ上でGhostscript
+	のRIPを動かすと言うことである。
 	</para>
 
 	<para>
-	PPDs for a non-PostScript printer have a few lines that are unique to
-	CUPS. The most important one looks similar to this:
+	非PostScriptプリンタに対するPPDはCUPS固有のいくつかの行を持っている。最も
+	重要なものは下記と似たようなものである:
 	<indexterm><primary>application/vnd.cups-raster</primary></indexterm>
 <programlisting>
 *cupsFilter: application/vnd.cups-raster  66   rastertoprinter
 </programlisting>
+	これがCUPSフィルタリングパズルの最後のかけらである。この行はCUPSデーモンに、
+	<parameter>rastertoprinter</parameter>を最後のフィルタとして使うように指示する。
+	このフィルタは入力として<parameter>application/vnd.cups-raster</parameter>MIME
+	タイプファイルがサポートされるべきである。それ故、最後のものが指定された
+	MIMEタイプを出力するように、CUPSはフィルタリングチェーンを自動生成すべきである。
+	次にこれは指定された<parameter>rastertoprinter</parameter>フィルタのための入力と
+	する。最後のフィルタが処理を終えた後(<parameter>rastertoprinter</parameter>は
+	Gutenprintフィルタである)、ファイルは、出力デバイスに送信を行うバックエンドに
+	送られるべきである。
 	It is the last piece in the CUPS filtering puzzle. This line tells the
 	CUPS daemon to use as a last filter <parameter>rastertoprinter</parameter>. This filter
 	should be served as input an <parameter>application/vnd.cups-raster</parameter> MIME type
@@ -1839,42 +1847,41 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</para>
 
 	<para>
-	CUPS by default ships only a few generic PPDs, but they are good for
-	several hundred printer models. You may not be able to control
-	different paper trays, or you may get larger margins than your
-	specific model supports. See Table 21.1<link linkend="cups-ppds"></link> for summary information.
+	CUPSが提供しているPPDは数少ないが、プリンタモデルは数多くある。異なった紙の
+	トレイや指定されたモデルがサポートしているよりもより大きなマージンを取ることが
+	出来ないかもしれない。要約は表21.1<link linkend="cups-ppds"></link>を参照。
 	</para>
 
 	<table frame="all" id="cups-ppds">
-		<title>PPDs Shipped with CUPS</title>
+		<title>CUPSに同梱されているPPD</title>
 		<tgroup cols="2" align="left">
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
-			<thead><row><entry>PPD file</entry><entry>Printer type</entry></row></thead>
+			<thead><row><entry>PPDファイル</entry><entry>プリンタタイプ</entry></row></thead>
 			<tbody>
-			<row><entry>deskjet.ppd</entry><entry>older HP inkjet printers and compatible</entry></row>
+			<row><entry>deskjet.ppd</entry><entry>古いHP inkjetプリンタとその互換</entry></row>
 
-			<row><entry>deskjet2.ppd</entry> <entry>newer HP inkjet printers and compatible </entry> </row>
+			<row><entry>deskjet2.ppd</entry> <entry>新しいHP inkjetプリンタとその互換</entry> </row>
 
-			<row><entry>dymo.ppd</entry> <entry>label printers </entry> </row>
+			<row><entry>dymo.ppd</entry> <entry>labelプリンタ</entry> </row>
 
-			<row><entry>epson9.ppd</entry> <entry>Epson 24-pin impact printers and compatible </entry> </row>
+			<row><entry>epson9.ppd</entry> <entry>エプソン9-ピンインパクトプリンタとその互換</entry> </row>
 
-			<row><entry>epson24.ppd</entry> <entry>Epson 24-pin impact printers and compatible </entry> </row>
+			<row><entry>epson24.ppd</entry> <entry>エプソン 24-ピンインパクトプリンタとその互換</entry> </row>
 
-			<row><entry>okidata9.ppd</entry> <entry>Okidata 9-pin impact printers and compatible </entry> </row>
+			<row><entry>okidata9.ppd</entry> <entry>Okidata 9-ピンインパクトプリンタとその互換</entry> </row>
 
-			<row><entry>okidat24.ppd</entry> <entry>Okidata 24-pin impact printers and compatible </entry> </row>
+			<row><entry>okidat24.ppd</entry> <entry>Okidata 24-ピンインパクトプリンタとその互換</entry> </row>
 
-			<row><entry>stcolor.ppd</entry> <entry>older Epson Stylus Color printers </entry> </row>
+			<row><entry>stcolor.ppd</entry> <entry>古いエプソン Stylusカラープリンタ</entry> </row>
 
-			<row><entry>stcolor2.ppd</entry> <entry>newer Epson Stylus Color printers </entry> </row>
+			<row><entry>stcolor2.ppd</entry> <entry>新しいエプソン Stylusカラープリンタ</entry> </row>
 
-			<row><entry>stphoto.ppd</entry> <entry>older Epson Stylus Photo printers </entry> </row>
+			<row><entry>stphoto.ppd</entry> <entry>古いエプソン Stylus Photoプリンタ</entry> </row>
 
-			<row><entry>stphoto2.ppd</entry> <entry>newer Epson Stylus Photo printers </entry> </row>
+			<row><entry>stphoto2.ppd</entry> <entry>新しいエプソン Stylus Photoプリンタ</entry> </row>
 
-			<row><entry>laserjet.ppd</entry> <entry>all PCL printers </entry> </row>
+			<row><entry>laserjet.ppd</entry> <entry>すべての PCL プリンタ</entry> </row>
 
 			</tbody>
 		</tgroup>
@@ -1883,7 +1890,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title><emphasis>cupsomatic/foomatic-rip</emphasis> Versus <emphasis>Native CUPS</emphasis> Printing</title>
+	<title><emphasis>cupsomatic/foomatic-rip</emphasis> 対 <emphasis>ネイティブなCUPS</emphasis>印刷</title>
 
 	<para>
 	<indexterm><primary>cupsomatic</primary></indexterm>
