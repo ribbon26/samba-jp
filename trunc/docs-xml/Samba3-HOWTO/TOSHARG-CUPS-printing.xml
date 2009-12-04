@@ -1747,6 +1747,7 @@ text/plain              application/postscript   33    texttops
 <programlisting>
 application/octet-stream
 </programlisting>
+	この行(自動タイプルールセットが指定されていない)は
 	This line (with no specific autotyping rule set) makes all files
 	not otherwise auto-typed a member of <parameter>application/octet-stream</parameter>. In
 	<filename>/etc/cups/mime.convs</filename>, have this
@@ -1755,6 +1756,11 @@ application/octet-stream
 application/octet-stream   application/vnd.cups-raw   0   -
 </programlisting>
 	<indexterm><primary>MIME</primary></indexterm>
+	この行はCUPSに、<parameter>application/octet-stream</parameter>上で
+	(<quote>-</quote>で示される、何もしない)<emphasis>Null Filter</emphasis>
+	を使うことを指示し、<parameter>application/vnd.cups-raw</parameter>として
+	結果をタグづける。この最後のものは、バックエンドでプリンタに接続するためと、
+	それにファイルを送信するために扱うために、CUPSスケジューラに対して常時緑信号となる。
 	This line tells CUPS to use the <emphasis>Null Filter</emphasis>
 	(denoted as <quote>-</quote>, doing nothing at all) on
 	<parameter>application/octet-stream</parameter>, and tag the result as
@@ -1764,8 +1770,9 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</para>
 
 	<note><para>
-	Editing the <filename>mime.convs</filename> and the <filename>mime.types</filename> file does not
-	<emphasis>enforce</emphasis> <quote>raw</quote> printing, it only <emphasis>allows</emphasis> it.
+	<filename>mime.convs</filename>と<filename>mime.types</filename>ファイルの編集は
+	<quote>raw</quote>印刷を<emphasis>強制せず</emphasis>、それを
+	<emphasis>許可する</emphasis>のみである。
 	</para></note>
 
 	<formalpara>
@@ -1776,23 +1783,24 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>MIME type</primary></indexterm>
 <indexterm><primary>/etc/cups/mime.types</primary></indexterm>
 <indexterm><primary>/etc/cups/mime.convs</primary></indexterm>
-	That CUPS is a more security-aware printing system than traditional ones
-	does not by default allow one to send deliberate (possibly binary)
-	data to printing devices. (This could be easily abused to launch a
-	Denial of Service attack on your printer(s), causing at least the loss
-	of a lot of paper and ink.) <quote>Unknown</quote> data are regarded by CUPS
-	as <emphasis>MIME type</emphasis> <emphasis>application/octet-stream</emphasis>. While you
-	<emphasis>can</emphasis> send data <quote>raw</quote>, the MIME type for these must
-	be one that is known to CUPS and allowed by it. The file
-	<filename>/etc/cups/mime.types</filename> defines the <quote>rules</quote> of how CUPS
-	recognizes MIME types. The file <filename>/etc/cups/mime.convs</filename> decides which file
-	conversion filter(s) may be applied to which MIME types.
+	そのCUPSは従来のものよりセキュリティに気を払っている印刷システムで、既定値では、
+	印刷デバイスに対して手の込んだ(おそらくバイナリ)データを送ることを誰にも許可して
+	いない(これは、使用しているプリンタに対してサービス不能攻撃をかける不正使用が
+	簡単にでき、少なくとも大量の紙とインクが無駄になることが発生する)。
+	<quote>不明な</quote>データはCUPSによって、<emphasis>MIMEタイプ</emphasis>
+	<emphasis>application/octet-stream</emphasis>と見なされる。
+	<quote>raw</quote>形式でデータを送ることが<emphasis>できる</emphasis>場合、
+	それらのMIMEタイプは、CUPSとそれによって許可された、既知のもののどれかでなければ
+	ならない。<filename>/etc/cups/mime.types</filename>というファイルはCUPSが
+	どのようにMIMEタイプを認識するかの<quote>規則</quote>を定義する。
+	<filename>/etc/cups/mime.convs</filename>というファイルはどのファイル変換
+	フィルタがそのMIMEタイプに適用されるかを定義する。
 	</para>
 	</formalpara>
 	</sect2>
 
 	<sect2>
-	<title>PostScript Printer Descriptions for Non-PostScript Printers</title>
+	<title>非PostScriptプリンタのためのPostScriptプリンタ記述</title>
 
 	<para>
 	<indexterm><primary>PPD</primary></indexterm>
