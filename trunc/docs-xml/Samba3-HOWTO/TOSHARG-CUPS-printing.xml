@@ -1684,40 +1684,42 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>lpadmin</primary></indexterm>
 <indexterm><primary>rawprinter</primary></indexterm>
-	You can tell CUPS to print (nearly) any file <quote>raw</quote>. <quote>Raw</quote> means it will not be
-	filtered. CUPS will send the file to the printer <quote>as is</quote> without bothering if the printer is able
-	to digest it. Users need to take care themselves that they send sensible data formats only. Raw printing can
-	happen on any queue if the <quote><parameter>-o raw</parameter></quote> option is specified on the command
-	line. You can also set up raw-only queues by simply not associating any PPD with it. This command:
+	CUPSに対して任意の<quote>raw</quote>ファイルを印刷(ほとんど)させることが出来る。
+	<quote>raw</quote>はフィルタされないことを意味する。CUPSは、プリンタがそれを理解
+	できる時に、思い悩まずに<quote>そのまま</quote>プリンタに対してファイルを送る。
+	ユーザは賢明なデータ形式のみをそれらに送る事について注意を払う必要がある。raw
+	形式の印刷は、もしも<quote><parameter>-o raw</parameter></quote>オプションが
+	コマンド行上で指定されたときにどのキューにおいても発生する。任意のPPDを単に関連
+	づけない事によってrawのみのキューを設定することも出来る。以下のように行う:
 <screen>
 &prompt;<userinput>lpadmin -P rawprinter -v socket://11.12.13.14:9100 -E</userinput>
 </screen>
-	sets up a queue named <quote>rawprinter</quote>, connected via the <quote>socket</quote> protocol (a.k.a.
-	<quote>HP JetDirect</quote>) to the device at IP address 11.12.1.3.14, using port 9100. (If you had added a
-	PPD with <command>-P /path/to/PPD</command> to this command line, you would have installed a
-	<quote>normal</quote> print queue.)
+	これは、<quote>rawprinter</quote>という<quote>socket</quote>プロトコル
+	(別名<quote>HP JetDirect</quote>)経由で接続してポート9100のIPアドレス
+	11.12.1.3.14のデバイスに接続するように設定する(もしもこのコマンド行に
+	<command>-P /path/to/PPD</command>を付けたPPDを追加したならば、
+	<quote>通常の</quote>印刷キューとしてインストールされる。
 	</para>
 
 	<para>
-	CUPS will automatically treat each job sent to a queue as a <quote>raw</quote> one
-	if it can't find a PPD associated with the queue. However, CUPS will
-	only send known MIME types (as defined in its own mime.types file) and
-	refuse others.
+	CUPSは、もしもキューに関連づけられるPPDを見いだせない場合、自動的に各ジョブを
+	<quote>raw</quote>と見なしてキューに送るように扱う。しかし、CUPSは既知の
+	MIMEタイプ(CUPSが持つmime.typesファイルで定義されている)のみを送り、それ以外は
+	拒否する。
 	</para>
 	</sect2>
 
 	<sect2>
-	<title>application/octet-stream Printing</title>
+	<title>application/octet-stream 印刷</title>
 
 	<para>
 <indexterm><primary>/etc/cups/mime.types</primary></indexterm>
 <indexterm><primary>application/octet-stream</primary></indexterm>
-	Any MIME type with no rule in the <filename>/etc/cups/mime.types</filename> file is regarded as unknown
-	or <parameter>application/octet-stream</parameter> and will not be
-	sent. Because CUPS refuses to print unknown MIME types by default,
-	you will probably have experienced that print jobs originating
-	from Windows clients were not printed. You may have found an error
-	message in your CUPS logs like:
+	<filename>/etc/cups/mime.types</filename>ファイル中にルールがない任意のMIME
+	タイプは、unknownか<parameter>application/octet-stream</parameter>と
+	見なされ、送信されない。既定値で不明なMIMEタイプの印刷をCUPSが拒否するので、
+	Windowsクライアント由来の印刷ジョブが印刷されないということを経験するかも
+	しれない。以下のようなエラーメッセージがCUPSログファイル中に見つかるかもしれない:
 	</para>
 
 	<para><computeroutput>
@@ -1725,8 +1727,8 @@ text/plain              application/postscript   33    texttops
 	</computeroutput></para>
 
 	<para>
-	To enable the printing of <parameter>application/octet-stream</parameter> files, edit
-	these two files:
+	<parameter>application/octet-stream</parameter>の印刷を有効にするためには、以下の
+	2つのファイルを編集する:
 	</para>
 
 	<itemizedlist>
@@ -1737,9 +1739,10 @@ text/plain              application/postscript   33    texttops
 
 	<para>
 <indexterm><primary>raw mode</primary></indexterm>
-	Both contain entries (at the end of the respective files) that must be uncommented to allow raw mode
-	operation for <parameter>application/octet-stream</parameter>. In <filename>/etc/cups/mime.types</filename>
-	make sure this line is present:
+	両方とも<parameter>application/octet-stream</parameter>のためのrawモード操作を
+	有効にするためにコメントアウトしなければならないエントリ(それぞれのファイルの
+	最後の所)を含む。下記の行が<filename>/etc/cups/mime.types</filename>に存在する
+	ようにすること:
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 <programlisting>
 application/octet-stream
