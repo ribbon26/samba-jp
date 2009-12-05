@@ -1747,11 +1747,10 @@ text/plain              application/postscript   33    texttops
 <programlisting>
 application/octet-stream
 </programlisting>
-	この行(自動タイプルールセットが指定されていない)は
-	This line (with no specific autotyping rule set) makes all files
-	not otherwise auto-typed a member of <parameter>application/octet-stream</parameter>. In
-	<filename>/etc/cups/mime.convs</filename>, have this
-	line: 
+	自動タイプルールセットが指定されていないこの行は、他の行で
+	<parameter>application/octet-stream</parameter>のメンバが自動タイプされていない
+	限り、全てのファイルを作成する。<filename>/etc/cups/mime.convs</filename>中では
+	以下のような行になる:
 <programlisting>
 application/octet-stream   application/vnd.cups-raw   0   -
 </programlisting>
@@ -1759,14 +1758,9 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	この行はCUPSに、<parameter>application/octet-stream</parameter>上で
 	(<quote>-</quote>で示される、何もしない)<emphasis>Null Filter</emphasis>
 	を使うことを指示し、<parameter>application/vnd.cups-raw</parameter>として
-	結果をタグづける。この最後のものは、バックエンドでプリンタに接続するためと、
-	それにファイルを送信するために扱うために、CUPSスケジューラに対して常時緑信号となる。
-	This line tells CUPS to use the <emphasis>Null Filter</emphasis>
-	(denoted as <quote>-</quote>, doing nothing at all) on
-	<parameter>application/octet-stream</parameter>, and tag the result as
-	<parameter>application/vnd.cups-raw</parameter>. This last one is
-	always a green light to the CUPS scheduler to now hand the file over
-	to the backend connecting to the printer and sending it over.
+	結果をタグづける。この最後の部分は、プリンタに接続しファイルを送信するための
+	バックエンドに向けてCUPSスケジューラがいつでも今あるファイルを引き渡せるように
+	している。
 	</para>
 
 	<note><para>
