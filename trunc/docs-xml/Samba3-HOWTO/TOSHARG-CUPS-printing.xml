@@ -1951,50 +1951,53 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>Foomatic/cupsomatic</primary></indexterm>
 <indexterm><primary>レンダリング</primary></indexterm>
 	<parameter>cupsomatic</parameter>は印刷ファイルを
-	<parameter>application/vnd.cups-postscript</parameter>ステージ後に
-	横取り、システム全体でインストールされたGhostscriptである、CUPS-externalを通してそれを横にそらせ、
-	<parameter>cupsomatic</parameter> kidnaps the print file after the
-	<parameter>application/vnd.cups-postscript</parameter> stage and deviates it through the CUPS-external,
-	systemwide Ghostscript installation. Therefore, the print file bypasses the <parameter>pstoraster</parameter>
-	filter (and also bypasses the CUPS raster drivers <parameter>rastertosomething</parameter>). After Ghostscript
-	finished its rasterization, <parameter>cupsomatic</parameter> hands the rendered file directly to the CUPS
-	backend. <link linkend="cupsomatic-dia">cupsomatic/foomatic Processing Versus Native
-	CUPS</link>, illustrates the difference between native CUPS rendering and the
-	<parameter>Foomatic/cupsomatic</parameter> method.
+	<parameter>application/vnd.cups-postscript</parameter>ステージ後に捕まえ、
+	システム全体でインストールされたGhostscriptである、CUPS-externalを通してそれを
+	横取りする。その結果、印刷ファイルは<parameter>pstoraster</parameter>フィルタ
+	をバイパスする(さらにCUPSラスタドライバ<parameter>rastertosomething</parameter>も
+	バイパスする)。Gostscriptがラスタライズ処理を終えた後、
+	<parameter>cupsomatic</parameter>はレンダリングされたファイルディレクトリをCUPS
+	バックエンドに渡す。
+	<link linkend="cupsomatic-dia">cupsomatic/foomaticの処理対ネイティブなCUPS</link>
+	にはネイティブなCUPSレンダリングと<parameter>Foomatic/cupsomatic</parameter>手法の
+	違いについて図解している。
 	</para>
 	</sect2>
 
 	<sect2>
-	<title>Examples for Filtering Chains</title>
+	<title>フィルタリングチェインの例</title>
 
 	<para>
-	Here are a few examples of commonly occurring filtering chains to
-	illustrate the workings of CUPS.
+	以下は、CUPSの動作を図解するための、よくあるフィルタリングチェインの例である。
 	</para>
 
 	<para>
 <indexterm><primary>HP JetDirect</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-<indexterm><primary>two-up</primary></indexterm>
-<indexterm><primary>duplex</primary></indexterm>
-	Assume you want to print a PDF file to an HP JetDirect-connected
-	PostScript printer, but you want to print pages 3-5, 7, and 11-13
-	only, and you want to print them <quote>two-up</quote> and <quote>duplex</quote>:
+<indexterm><primary>2アップ</primary></indexterm>
+<indexterm><primary>両面印刷</primary></indexterm>
+	HP JetDirect接続のPostScriptプリンタにPDFファイルを印刷しようとしていることを
+	仮定するが、ページ3-5,7と11-13のみを印刷したく、更にそれを<quote>2アップ</quote>
+	と<quote>両面印刷</quote>にしたいとする:
 	</para>
 
 	<itemizedlist>
-	<listitem><para>Your print options (page selection as required, two-up,
-	duplex) are passed to CUPS on the command line.</para></listitem>
+	<listitem><para>使用する印刷オプション(要求されたページの選択、2アップ、両面印刷)
+	は、コマンドライン上でCUPSに渡される。</para></listitem>
 
-	<listitem><para>The (complete) PDF file is sent to CUPS and autotyped as
-	<parameter>application/pdf</parameter>.</para></listitem>
+	<listitem><para>(完全な)PDFファイルがCUPSに送られ、
+	<parameter>application/pdf</parameter>として自動タイプされる。</para></listitem>
 
-	<listitem><para>The file therefore must first pass the
-	<parameter>pdftops</parameter> prefilter, which produces PostScript
-	MIME type <parameter>application/postscript</parameter> (a preview here
-	would still show all pages of the original PDF).</para></listitem>
+	<listitem><para>その結果ファイルはPostScript MIMEタイプである
+	<parameter>application/postscript</parameter>(ここでのプレビューは引き続き
+	オリジナルのPDFファイルのすべてのページを表示する)を生成する
+	<parameter>pdftops</parameter>prefilterに、最初に渡さねばならない。</para></listitem>
 
-	<listitem><para>The file then passes the <parameter>pstops</parameter>
+	<listitem><para>ファイルは次にコマンドラインオプションを適用する
+	<parameter>pstops</parameter>フィルタに渡される:これはページ2-5,7と11-13を
+	選択し、<quote>1枚のページ上に2つのページ</quote>という合成されたレイアウトを
+	作成し、
+The file then passes the <parameter>pstops</parameter>
 	filter that applies the command line options: it selects pages
 	2-5, 7, and 11-13, creates the imposed layout <quote>two pages on one sheet</quote>, and
 	inserts the correct <quote>duplex</quote> command (as defined in the printer's
