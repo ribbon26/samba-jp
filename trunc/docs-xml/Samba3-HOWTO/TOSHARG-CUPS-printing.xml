@@ -1996,27 +1996,22 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<listitem><para>ファイルは次にコマンドラインオプションを適用する
 	<parameter>pstops</parameter>フィルタに渡される:これはページ2-5,7と11-13を
 	選択し、<quote>1枚のページ上に2つのページ</quote>という合成されたレイアウトを
-	作成し、
-The file then passes the <parameter>pstops</parameter>
-	filter that applies the command line options: it selects pages
-	2-5, 7, and 11-13, creates the imposed layout <quote>two pages on one sheet</quote>, and
-	inserts the correct <quote>duplex</quote> command (as defined in the printer's
-	PPD) into the new PostScript file; the file is now of PostScript MIME
-	type
-	<parameter>application/vnd.cups-postscript</parameter>.</para></listitem>
+	作成し、正しい<quote>両面印刷</quote>コマンド(プリンタのPPD中で定義されている)
+	を、新しいPostScriptファイルに挿入する。ファイルはこの時点でPostScript MIME
+	タイプ<parameter>application/vnd.cups-postscript</parameter>となる。</para></listitem>
 
-	<listitem><para>The file goes to the <parameter>socket</parameter>
-	backend, which transfers the job to the printers.</para></listitem>
+	<listitem><para>ファイルは、プリンタにジョブを転送する
+	<parameter>ソケット</parameter>バックエンドに送られる。</para></listitem>
 	</itemizedlist>
 
 	<para>
-	The resulting filter chain, therefore, is as shown in <link linkend="pdftosocket">the PDF to socket chain
-	illustration</link>.
+	フィルタリングチェーンの結果は以下の
+	<link linkend="pdftosocket">PDFからソケットへのチェーンの模式図</link>のようになる。
 	</para>
 
 <indexterm><primary>pdftosocket</primary></indexterm>
 	<figure id="pdftosocket">
-		<title>PDF to Socket Chain.</title>
+		<title>PDFからソケットへのチェーン</title>
 		<imagefile>pdftosocket</imagefile>
 	</figure>
 
@@ -2024,27 +2019,29 @@ The file then passes the <parameter>pstops</parameter>
 <indexterm><primary>USB</primary></indexterm>
 <indexterm><primary>Epson Stylus</primary></indexterm>
 <indexterm><primary>stphoto2.ppd</primary></indexterm>
-	Assume you want to print the same filter to an USB-connected Epson Stylus Photo Printer installed with the CUPS
-	<filename>stphoto2.ppd</filename>. The first few filtering stages are nearly the same:
+	CUPS<filename>stphoto2.ppd</filename>をインストールした、USB接続の
+	Epson Stylus Photo Printerに同じフィルタで印刷したいと仮定しよう。最初の
+	いくつかのフィルタリングステージはおおよそ同じである:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		Your print options (page selection as required, two-up,
-		duplex) are passed to CUPS on the command line.
+		印刷オプション(要求されたページの選択、2アップ、両面印刷)は、
+		コマンドラインでCUPSに渡される。
 		</para></listitem>
 
 		<listitem><para>
-		The (complete) PDF file is sent to CUPS and autotyped as
-		<parameter>application/pdf</parameter>.
+		(完全な)PDFファイルはCUPSに送られて、
+		<parameter>application/pdf</parameter>と自動タイプされる。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>pdftops</primary></indexterm>
 <indexterm><primary>PDF</primary></indexterm>
-		The file must first pass the <parameter>pdftops</parameter> prefilter, which produces PostScript
-		MIME type <parameter>application/postscript</parameter> (a preview here would still show all
-		pages of the original PDF).
+		ファイルは、最初に、
+		PostScript MIMEタイプ<parameter>application/postscript</parameter>を
+		生成する<parameter>pdftops</parameter>prefilterに渡されなければならない
+		(ここでのプレビューは引き続きオリジナルのPDFのすべてのページを表示する)。
 		</para></listitem>
 
 		<listitem><para>
