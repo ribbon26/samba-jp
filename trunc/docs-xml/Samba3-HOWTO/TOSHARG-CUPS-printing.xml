@@ -2108,131 +2108,136 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		</para></listitem>
 
 		<listitem><para>
-		The <ulink url="http://gimp-print.sourceforge.net/">Gutenprint Project</ulink>
-		(GPL, free software) provides around 140 PPDs (supporting nearly 400 printers, many driven
-		to photo quality output), to be used alongside the Gutenprint CUPS filters.
+		<ulink url="http://gimp-print.sourceforge.net/">Gutenprint Project</ulink>
+		(GPL、フリーソフトウェア)は140ほどのPPDを提供し(おおよそ400のプリンタを
+		サポートしていて、多くは写真品質出力を提供する)、Gutenprint CUPS
+		ドライバと共に使われる。
 		</para></listitem>
 
 		<listitem><para>
-		<ulink url="http://www.turboprint.de/english.html/">TurboPrint </ulink> (shareware, non-free) supports
-		roughly the same number of printers in excellent quality.
+		<ulink url="http://www.turboprint.de/english.html/">TurboPrint </ulink>
+		(シェアウェア、自由ではない)は、とても良い品質で、おおよそ、プリンタの数と
+		同じくらいのサポートがある。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://www-124.ibm.com/developerworks/oss/linux/projects/omni/">OMNI </ulink>
-		(LPGL, free) is a package made by IBM, now containing support for more
-		than 400 printers, stemming from the inheritance of IBM OS/2 know-how
-		ported over to Linux (CUPS support is in a beta stage at present).
+		(LGPL、自由)は、IBMによって作られたパッケージで、現在400以上のプリンタ
+		サポートを含み、IBM OS/2のノウハウの遺産をLinux上に移植している
+		(CUPSサポートは現在β状態である)。
 		</para></listitem>
 
 		<listitem><para>
-		<ulink url="http://hpinkjet.sourceforge.net/">HPIJS </ulink> (BSD-style licenses, free)
-		supports approximately 150 of HP's own printers and also provides
-		excellent print quality now (currently available only via the Foomatic path).
+		<ulink url="http://hpinkjet.sourceforge.net/">HPIJS </ulink> (BSD系のライセンス、自由)
+		は、おおよそ150のHP製プリンタをサポートし、優れた印刷品質をも提供する
+		(現在Foomaticパス経由でのみ有効)。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://www.linuxprinting.org/">Foomatic/cupsomatic </ulink>
-		(LPGL, free) from Linuxprinting.org provide PPDs for practically every Ghostscript
-		filter known to the world (including Omni, Gutenprint, and HPIJS).
+		(LGPL、自由)は、Linuxprinting.orgからのもので、(Omni、GunenprintとHPIJS
+		を含む)世界中に知られているほとんどすべての各Ghostscriptフィルタ用の
+		PPDを提供する。
 		</para></listitem>
 	</itemizedlist>
 
 	</sect2>
 
 	<sect2>
-	<title>Printing with Interface Scripts</title>
+	<title>インタフェーススクリプトを伴う印刷</title>
 
 	<para>
 <indexterm><primary>PCL</primary></indexterm>
 <indexterm><primary>lpadmin</primary></indexterm>
-	CUPS also supports the use of <quote>interface scripts</quote> as known from
-	System V AT&amp;T printing systems. These are often used for PCL
-	printers, from applications that generate PCL print jobs. Interface
-	scripts are specific to printer models. They have a role similar to
-	PPDs for PostScript printers. Interface scripts may inject the Escape
-	sequences as required into the print data stream if the user, for example, selects
-	a certain paper tray, or changes paper orientation, or uses A3
-	paper. Interface scripts are practically unknown in the Linux
-	realm. On HP-UX platforms they are more often used. You can use any
-	working interface script on CUPS too. Just install the printer with
-	the <command>-i</command> option:
+	CUPSはまたSystemV AT&amp;T印刷システムからとして知られている
+	<quote>interface scripts</quote>の使用もサポートしている。それらはしばしば
+	PCL印刷ジョブを生成するアプリケーションから、PCLプリンタにおいて使われる。
+	interface scriptsはプリンタモデルに特化している。これらはPostScriptプリンタの
+	ためのPPDと同様の役割を持っている。interface scriptsは、たとえば、もしも
+	ユーザが特定のペーパートレイを選択したか、紙の方向を変更したかA3用紙を
+	しようするような場合、印刷データストリーム中に要求されたESCシーケンスを
+	追加してもよい。interface scriptsはLinux領域ではほとんど知られていない。
+	HP-UXプラットフォームでは、もう少し使われている。動作する任意の
+	interface scriptsをCUPS上で一緒に使うことも可能である。以下のように、
+	<command>-i</command>を使ってインストールする:
 <screen>
 &rootprompt;<userinput>lpadmin -p pclprinter -v socket://11.12.13.14:9100 \
           -i /path/to/interface-script</userinput>
 </screen></para>
 
 	<para>
-	Interface scripts might be the <quote>unknown animal</quote> to many. However,
-	with CUPS they provide the easiest way to plug in your own custom-written filtering
-	script or program into one specific print queue (some information about the traditional
-	use of interface scripts is found at
+	interface scriptsは多くの人にとって<quote>未知の動物</quote>かもしれない。
+	しかし、これは、CUPSと共に使うことで、ある特定の印刷キューに対する、固有の、
+	専用として記述した、フィルタリングスクリプトやプログラムを組み込む最も簡単な
+	方法を提供する(現代的なinterface scriptsの使い方に関するいくつかの情報は、
 	<ulink noescape="1" url="http://playground.sun.com/printing/documentation/interface.html">
-	http://playground.sun.com/printing/documentation/interface.html</ulink>).
+        http://playground.sun.com/printing/documentation/interface.html</ulink>にある)。
 	</para>
 	</sect2>
 </sect1>
 
 <sect1>
-<title>Network Printing (Purely Windows)</title>
+<title>ネットワーク印刷(Windowsのみ)</title>
 
 <para>
-Network printing covers a lot of ground. To understand what exactly
-goes on with Samba when it is printing on behalf of its Windows
-clients, let's first look at a <quote>purely Windows</quote> setup: Windows clients
-with a Windows NT print server.
+ネットワーク印刷は多くの分野をカバーしている。Windowsクライアントのために印刷するとき
+Samba上で何が起こるかを正確に理解するために、まず初めに、Windows NTサーバと共に使う
+Windowsクライアントという、<quote>Windowsのみ</quote>の設定を見てみよう。
 </para>
 
 <sect2>
-<title>From Windows Clients to an NT Print Server</title>
+<title>WindowsクライアントからNT印刷サーバへ</title>
 
 <para>
-Windows clients printing to an NT-based print server have two
-options. They may:
+WindowsクライアントからNTベースの印刷サーバへの印刷は、2つのオプションがある。
+それらは以下の2つである:
 <indexterm><primary>GDI</primary></indexterm>
 <indexterm><primary>EMF</primary></indexterm>
 </para>
 
 
 <itemizedlist>
-	<listitem><para>Execute the driver locally and render the GDI output
-			(EMF) into the printer-specific format on their own.
+	<listitem><para>ドライバをローカルに実行し、GDI出力(EMF)を、使用している
+	    プリンタに対するプリンタ固有の形式に描画する。
 	</para></listitem>
 
-	<listitem><para>Send the GDI output (EMF) to the server, where the
-	driver is executed to render the printer-specific output.
+	<listitem><para>プリンタ固有の出力に描画するためにドライバが実行されたときに、
+	    GDI出力(EMF)をサーバに送る。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-Both print paths are shown in the flowcharts in <link linkend="small11">
-Print Driver Execution on the Client</link>, and
-<link linkend="small12">Print Driver Execution on the Server</link>.
+両方の印刷パスは
+<link linkend="small11">クライアント上での印刷ドライバの実行</link>と
+<link linkend="small12">サーバ上での印刷ドライバの実行</link>という
+フローチャートで図示されている。
 </para>
 </sect2>
 
 <sect2>
-<title>Driver Execution on the Client</title>
+<title>クライアント上でのドライバの実行</title>
 
 <para>
-In the first case, the print server must spool the file as raw, meaning it shouldn't touch the job file and try
-to convert it in any way. This is what a traditional UNIX-based print server can do too, and at a better
-performance and more reliably than an NT print server. This is what most Samba administrators probably are
-familiar with. One advantage of this setup is that this <quote>spooling-only</quote> print server may be used
-even if no driver(s) for UNIX is available. It is sufficient to have the Windows client drivers available and
-installed on the clients. This is illustrated in <link linkend="small11">the Print Driver Execution on the
-Client diagram</link>.
+最初の場合、印刷サーバはraw形式でファイルをスプールせねばならない。これはジョブファイルに
+さわらず、何らの方法での変換もしないことを意味する。これは、現代的なUNIXベースの印刷
+サーバが同じように行えることでもあり、NT印刷サーバよりもよりよいパフォーマンスとより
+信頼性がある。これは、おそらくほとんどのSamba管理者が慣れ親しんでいるものである。この
+設定の1つの利点は、この<quote>スプールのみ</quote>の印刷サーバが、UNIX用のドライバがない
+場合にも使えるかもしれないと言うことである。これは、有効なWindowsクライアントドライバが
+あり、クライアントにインストールされていれば十分である。これは
+<link linkend="small11">クライアント上での印刷ドライバの実行ダイアグラム</link>
+で図示されている。
 </para>
 
 <figure id="small11">
-	<title>Print Driver Execution on the Client.</title>
+	<title>クライアント上での印刷ドライバの実行</title>
 	<imagefile>11small</imagefile>
 </figure>
 
 </sect2>
 
 <sect2>
-<title>Driver Execution on the Server</title>
+<title>サーバ上でのドライバの実行</title>
 
 
 <para>
