@@ -2246,11 +2246,12 @@ WindowsクライアントからNTベースの印刷サーバへの印刷は、2�
 <indexterm><primary>ESC/P</primary></indexterm>
 <indexterm><primary>EMF</primary></indexterm>
 <indexterm><primary>GDI</primary></indexterm>
-The other path executes the printer driver on the server. The client transfers print files in EMF format to
-the server. The server uses the PostScript, PCL, ESC/P, or other driver to convert the EMF file into the
-printer-specific language. It is not possible for UNIX to do the same. Currently, there is no program or
-method to convert a Windows client's GDI output on a UNIX server into something a printer could understand.
-This is illustrated in <link linkend="small12">the Print Driver Execution on the Server diagram</link>.
+他のパスはサーバ上でプリンタドライバを実行する。クライアントはサーバにEMF形式で印刷
+ファイルを送る。サーバはPostScript, PCL, ESC/Pか他のドライバを、EMFファイルをプリンタ
+固有の言語に変換するために使う。同じ事はUNIX上ではできない。現在、プリンタが理解できる
+ものに、UNIXサーバ上でWindowsクライアントのGDI出力を変換するプログラムか手法はない。
+これは<link linkend="small12">サーバ上での印刷ドライバの実行ダイアグラム</link>で
+図示されている。
 </para>
 
 	<figure id="small12">
@@ -2259,48 +2260,44 @@ This is illustrated in <link linkend="small12">the Print Driver Execution on the
 	</figure>
 
 <para>
-However, something similar is possible with CUPS, so read on.
+しかし、似たようなものはCUPSで可能なので、引き続き読むこと。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Network Printing (Windows Clients and UNIX/Samba Print
-Servers)</title>
+<title>ネットワーク印刷(WindowsクライアントとUNIX/Samba印刷サーバ)</title>
 
 <para>
-Since UNIX print servers <emphasis>cannot</emphasis> execute the Win32
-program code on their platform, the picture is somewhat
-different. However, this does not limit your options all that
-much. On the contrary, you may have a way here to implement printing
-features that are not possible otherwise.
+UNIX印刷サーバがそのプラットフォーム上でWin32プログラムコードを
+<emphasis>実行できない</emphasis>ので、絵は若干異なる。しかしながら、
+これは、それほど選択権を制限するものではない。それどころか、他では不可能な
+印刷機能を実装することができるかもしれない。
 </para>
 
 <sect2>
-<title>From Windows Clients to a CUPS/Samba Print Server</title>
+<title>WindowsクライアントからCUPS/Samba印刷サーバへ</title>
 
 <para>
-Here is a simple recipe showing how you can take advantage of CUPS's
-powerful features for the benefit of your Windows network printing
-clients:
+Windowsネットワーク印刷クライアントに対する、CUPSの強力な機能の利点をどのように
+利用するかを示す簡単なレシピである:
 </para>
 
 <itemizedlist>
-	<listitem><para>Let the Windows clients send PostScript to the CUPS
-	server.</para></listitem>
+	<listitem><para>WindowsクライアントにPostScriptをCUPSサーバに送らせる。
+	</para></listitem>
 
-	<listitem><para>Let the CUPS server render the PostScript into device-specific raster format.</para></listitem>
+	<listitem><para>CUPSサーバにPostScriptをドライバ固有のラスタフォーマットに変換させる。</para></listitem>
 </itemizedlist>
 
 <para>
-This requires the clients to use a PostScript driver (even if the
-printer is a non-PostScript model. It also requires that you have a
-driver on the CUPS server.
+これは、クライアントにPostScriptドライバ(プリンタが非PostScriptモデルであっても。CUPS
+サーバ上でのドライバがあることも要求する)を使うことを要求する。
 </para>
 
 <para>
-First, to enable CUPS-based printing through Samba, the following options should be set in your &smb.conf;
-file <parameter>[global]</parameter> section:
+最初に、Samba経由でのCUPSベースの印刷を有効にするため、以下のオプションを&smb.conf;
+ファイルの<parameter>[global]</parameter>セクションに設定すべきである:
 </para>
 
 <smbconfblock>
@@ -2309,27 +2306,38 @@ file <parameter>[global]</parameter> section:
 </smbconfblock>
 
 <para>
-When these parameters are specified, all manually set print directives (like <smbconfoption name="print
-command"/> or <smbconfoption name="lppause command"/>) in &smb.conf; (as well as in Samba itself) will be
-ignored. Instead, Samba will directly interface with CUPS through its application program interface (API), as
-long as Samba has been compiled with CUPS library (libcups) support. If Samba has not been compiled with CUPS
-support, and if no other print commands are set up, then printing will use the <emphasis>System V</emphasis>
-AT&amp;T command set, with the -oraw option automatically passing through (if you want your own defined print
-commands to work with a Samba server that has CUPS support compiled in, simply use <smbconfoption
-name="classicalprinting">sysv</smbconfoption>). This is illustrated in <link linkend="13small">the Printing via
-CUPS/Samba Server diagram</link>.
+これらのパラメータが指定されると、&smb.conf;中の(Sambaそれ自身と同様)、すべての手動設定
+した印刷ディレクティブ(たとえば<smbconfoption name="print command"/>か
+<smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、SambaがCUPS
+ライブラリ(libcups)をサポートするようにコンパイルされているとき、CUPS APIを通してCUPSと
+直接やりとりする。他の印刷コマンドが設定されていない場合、印刷は、-orawオプションを
+自動的に付けてパススルーする、<emphasis>System V</emphasis>AT&amp;Tコマンドセットを
+使う(もし、コンパイル時にCUPSサポートをするようしたSambaサーバで動作するよう、個別に
+定義した印刷コマンドを使いたい場合、単に
+<smbconfoption name="classicalprinting">sysv</smbconfoption>を使う)。これは
+<link linkend="13small">CUPS/Sambaサーバ経由での印刷ダイアグラム</link>で図示されている。
 </para>
 
 	<figure id="13small">
-		<title>Printing via CUPS/Samba Server.</title>
+		<title>CUPS/Sambaサーバ経由での印刷</title>
 		<imagefile>13small</imagefile>
 	</figure>
 </sect2>
 
 <sect2>
-<title>Samba Receiving Job-Files and Passing Them to CUPS</title>
+<title>Sambaによるジョブファイルの受け取りとCUPSへの引き渡し</title>
 
 <para>
+Sambaはそれ固有のスプールディレクトリ
+(<smbconfoption name="path">/var/spool/samba</smbconfoption>に類似したもので設定される)
+を、&smb.conf;の<smbconfsection name="[printers]"/>か<smbconfsection name="[printername]"/>
+セクション中で<emphasis>使わなければならない</emphasis>。
+Sambaは固有スプール空間にジョブを受け取り、CUPSのスプールディレクトリ(CUPSのスプール
+ディレクトリは、既定値が<parameter>RequestRoot /var/spool/cups</parameter>である、
+<parameter>RequestRoot</parameter>ディレクティブ行で設定される)中に渡す。
+CUPSはそのスプールディレクトリのアクセス権限を検査し.......。
+SambaとCUPSで共通のスプール空間を使う例は滅多に見たことがなく、何週間もこの
+<quote>問題</quote>と苦闘してきた。
 Samba <emphasis>must</emphasis> use its own spool directory (it is set by a line similar to <smbconfoption
 name="path">/var/spool/samba</smbconfoption>, in the <smbconfsection name="[printers]"/> or <smbconfsection
 name="[printername]"/> section of &smb.conf;). Samba receives the job in its own spool space and passes it
