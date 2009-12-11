@@ -2335,17 +2335,10 @@ Sambaはそれ固有のスプールディレクトリ
 Sambaは固有スプール空間にジョブを受け取り、CUPSのスプールディレクトリ(CUPSのスプール
 ディレクトリは、既定値が<parameter>RequestRoot /var/spool/cups</parameter>である、
 <parameter>RequestRoot</parameter>ディレクティブ行で設定される)中に渡す。
-CUPSはそのスプールディレクトリのアクセス権限を検査し.......。
+CUPSはそのスプールディレクトリのアクセス権限を検査し、毎回の再起動に備えて適切な値に
+それをリセットする。
 SambaとCUPSで共通のスプール空間を使う例は滅多に見たことがなく、何週間もこの
 <quote>問題</quote>と苦闘してきた。
-Samba <emphasis>must</emphasis> use its own spool directory (it is set by a line similar to <smbconfoption
-name="path">/var/spool/samba</smbconfoption>, in the <smbconfsection name="[printers]"/> or <smbconfsection
-name="[printername]"/> section of &smb.conf;). Samba receives the job in its own spool space and passes it
-into the spool directory of CUPS (the CUPS spool directory is set by the <parameter>RequestRoot</parameter>
-directive in a line that defaults to <parameter>RequestRoot /var/spool/cups</parameter>). CUPS checks the
-access rights of its spool directory and resets it to healthy values with every restart. We have seen quite a
-few people who used a common spooling space for Samba and CUPS, and struggled for weeks with this
-<quote>problem.</quote>
 </para>
 
 <para>
