@@ -2380,7 +2380,7 @@ CUPSは、何らの変換なしに、任意のWindows(NTが推奨される)PostS
 を選択し、そこにある<guibutton>Configure Printer</guibutton>ボタンをクリック)か、
 コマンドラインインタフェース(<command>man lpoptions</command>か、システム上にあるならば、
 <command>lphelp</command>を参照)がある。これらはユーザへのPPDオプションを提供出来る
-Linux/UNIX上のGUIフロントエンドとは若干異なる。PPDオプションは通常、真のPostScript
+Linux/UNIX上のGUIフロントエンドとは若干異なる。PPDオプションは通常、実際ののPostScript
 プリンタ上のPostScript RIPによって評価される事を意味する。
 </para>
 
@@ -2390,27 +2390,33 @@ Linux/UNIX上のGUIフロントエンドとは若干異なる。PPDオプショ�
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
-CUPS does not limit itself to <quote>real</quote> PostScript printers in its use of PPDs. The CUPS developers
-have extended the scope of the PPD concept to also describe available device and driver options for
-non-PostScript printers through CUPS-PPDs.
+CUPSはそのPPDの使用にあたっては<quote>実際の</quote>PostScriptプリンタだけにに制限
+されない。CUPS開発者は非PostScriptプリンタに対してもCUPS-PPDを使って有効なデバイスと
+ドライバオプションを記述するPPDコンセプトの範囲を拡張した。
 </para>
 
 <para>
-This is logical, because CUPS includes a fully featured PostScript interpreter (RIP). This RIP is based on
-Ghostscript. It can process all received PostScript (and additionally many other file formats) from clients.
-All CUPS-PPDs geared to non-PostScript printers contain an additional line, starting with the keyword
-<parameter>*cupsFilter</parameter>. This line tells the CUPS print system which printer-specific filter to use
-for the interpretation of the supplied PostScript. Thus CUPS lets all its printers appear as PostScript
-devices to its clients, because it can act as a PostScript RIP for those printers, processing the received
-PostScript code into a proper raster print format.
+CUPSは完全なPostScriptインタプリタ(RIP)を含んでいるため、これは合理的である。RIPは
+GhostScriptをベースにしている。これはクライアントからすべてのPostScript(と更に追加で、
+その他のファイル形式)を受け取り処理できる。すべてのCUPS-PPDは、キーワード
+<parameter>*cupsFilter</parameter>で始まる追加の行を含んでいると非PostScriptプリンタに
+ギアを切り替える。この行はCUPS印刷システムに、受け取ったPostScriptを解釈するための
+プリンタ固有のフィルタを使うように告げる。そのため、そのプリンタに対してPostScript RIP
+として振る舞うことが出来るため、そのクライアントに対してPostScriptデバイスとしてその
+すべてのプリンタを見せるようにし、受け取ったPostScriptコードを適切なラスタ印刷形式に
+処理する。
 </para>
 </sect2>
 
 <sect2>
-<title>PPDs for Non-PS Printers on Windows</title>
+<title>Windows上の非PostScriptプリンタのためのPPD</title>
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
+CUPS-PPDは、<quote>core</quote>PostScriptドライバの一番上として、Windowsクライアント
+上でも使用できる(現在推奨はWindows NT/200x/XP用のCUPS PostScriptドライバで、
+制限付きだがAdobeのものも使う事が出来る)。この機能は他のスプーラが出来ないいくつかの
+トリックを行う事が出来る:
 CUPS-PPDs can also be used on Windows clients, on top of a <quote>core</quote> PostScript driver (now
 recommended is the CUPS PostScript Driver for Windows NT/200x/XP; you can also use the Adobe one, with
 limitations). This feature enables CUPS to do a few tricks no other spooler can do:
@@ -2418,13 +2424,15 @@ limitations). This feature enables CUPS to do a few tricks no other spooler can 
 
 <itemizedlist>
 	<listitem><para>
-	Act as a networked PostScript RIP handling print files from all client platforms in a uniform way.
+	統一した方法で、すべてのクライアントプラットフォームから、ネットワーク対応の
+	印刷ファイルを扱うPostScript RIPとして振る舞う。
 	</para></listitem>
 
 	<listitem><para>
-	Act as a central accounting and billing server, since all files are passed through the pstops filter and are therefore
-	logged in the CUPS <filename>page_log</filename> file.  <emphasis>Note:</emphasis> this cannot happen with
-	<quote>raw</quote> print jobs, which always remain unfiltered per definition.
+	すべてのファイルがpstopフィルタを通し、その結果<filename>page_log</filename>に
+	記録されるため、CUPSの集中アカウント件請求サーバとして振る舞う。
+	<emphasis>注意:</emphasis>これは、常時定義毎にフィルタなしが存在するため、
+	<quote>raw</quote>印刷ジョブでは該当しない。
 	</para></listitem>
 
 	<listitem><para>
