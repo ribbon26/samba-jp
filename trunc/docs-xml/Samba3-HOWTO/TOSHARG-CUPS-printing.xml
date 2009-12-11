@@ -2342,20 +2342,20 @@ SambaとCUPSで共通のスプール空間を使う例は滅多に見たこと�
 </para>
 
 <para>
-A Windows user authenticates only to Samba (by whatever means is
-configured). If Samba runs on the same host as CUPS, you only need to
-allow <quote>localhost</quote> to print. If it runs on different machines, you
-need to make sure the Samba host gets access to printing on CUPS.
+WindowsユーザはSambaでのみ認証する(構成されるどんな手段でも)。もしもSambaがCUPSと同じ
+ホストで動作しているならば、印刷においては<quote>localhost</quote>のみ許可しなければ
+ならない。もしも異なったマシンで動作しているならば、CUPSで印刷できるように、Samba
+ホストがアクセス権を得られるようにしておかねばならない。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Network PostScript RIP</title>
+<title>ネットワーク PostScript RIP</title>
 
 <para>
-This section discusses the use of CUPS filters on the server &smbmdash; configuration where
-clients make use of a PostScript driver with CUPS-PPDs.
+この節では、クライアントがCUPS-PPDと一緒にPostScriptドライバを使うようにさせる、サーバの
+&smbmdash;設定上でのCUPSフィルタの使い方について議論する。
 </para>
 
 
@@ -2363,25 +2363,29 @@ clients make use of a PostScript driver with CUPS-PPDs.
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>PCL</primary></indexterm>
 <indexterm><primary>PJL</primary></indexterm>
-PPDs can control all print device options. They are usually provided by the manufacturer &smbmdash; if you own
-a PostScript printer, that is. PPD files are always a component of PostScript printer drivers on MS Windows or
-Apple Mac OS systems. They are ASCII files containing user-selectable print options, mapped to appropriate
-PostScript, PCL, or PJL commands for the target printer. Printer driver GUI dialogs translate these options
-<quote>on the fly</quote> into buttons and drop-down lists for the user to select.
+PPDはすべての印刷デバイスオプションを制御できる。もしも、固有のPostScriptプリンタを
+持っているならば、&smbmdash;すなわちこれらは通常開発元によって提供される。PPDファイルは
+、つねに、Microsoft WindowsまたはApple Mac OSシステム上でのPostScriptプリンタドライバの
+コンポーネントである。それらはユーザが選択できる印刷オプション、適切なPostScriptへの
+マッピング、対象プリンタ用のPCLあるいはPJLコマンドを含むASCIIファイルである。プリンタ
+ドライバGUIダイアログはこれらのオプションを<quote>その場で</quote>ユーザが選択できる、
+ボタンとドロップダウンリストに変換する。
 </para>
 
 <para>
-CUPS can load, without any conversions, the PPD file from any Windows (NT is recommended) PostScript driver
-and handle the options. There is a Web browser interface to the print options (select <ulink noescape="1"
-url="http://localhost:631/printers/">http://localhost:631/printers/</ulink> and click on one
-<guibutton>Configure Printer</guibutton> button to see it) or a command line interface (see <command>man
-lpoptions</command> or see if you have <command>lphelp</command> on your system). There are also some
-different GUI front-ends on Linux/UNIX, which can present PPD options to users. PPD options are normally meant
-to be evaluated by the PostScript RIP on the real PostScript printer.
+CUPSは、何らの変換なしに、任意のWindows(NTが推奨される)PostScriptドライバからのPPD
+ファイルロードでき、それらのオプションを扱える。印刷オプションのためのWebブラウザ
+インタフェース
+(<ulink noescape="1" url="http://localhost:631/printers/">http://localhost:631/printers/</ulink>
+を選択し、そこにある<guibutton>Configure Printer</guibutton>ボタンをクリック)か、
+コマンドラインインタフェース(<command>man lpoptions</command>か、システム上にあるならば、
+<command>lphelp</command>を参照)がある。これらはユーザへのPPDオプションを提供出来る
+Linux/UNIX上のGUIフロントエンドとは若干異なる。PPDオプションは通常、真のPostScript
+プリンタ上のPostScript RIPによって評価される事を意味する。
 </para>
 
 <sect2>
-<title>PPDs for Non-PS Printers on UNIX</title>
+<title>UNIX上の、非PSプリンタのためのPPD</title>
 
 
 <para>
