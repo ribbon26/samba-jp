@@ -2624,15 +2624,16 @@ Windows95、98とMEクライアントのサポートが必要ならば、Adobe D
 </sect2>
 
 <sect2>
-<title>CUPS <quote>PostScript Driver for Windows NT/200x/XP</quote></title>
+<title>Windows NT/200x/XP用のCUPS<quote>PostScript Driver</quote></title>
 
 <para>
 <indexterm><primary>PostScript</primary></indexterm>
-CUPS users may get the exact same package from <ulink noescape="1"
-url="http://www.cups.org/software.html">http://www.cups.org/software.html</ulink>.  It is a separate package
-from the CUPS-based software files, tagged as CUPS 1.1.x Windows NT/200x/XP Printer Driver for Samba (tar.gz,
-192k). The filename to download is <filename>cups-samba-1.1.x.tar.gz</filename>. Upon untar and unzipping, it
-will reveal these files:
+CUPSユーザは
+<ulink noescape="1" url="http://www.cups.org/software.html">http://www.cups.org/software.html</ulink>
+から正確に同じパッケージを入手できる。これは、CUPSベースのソフトウェアファイルから
+分離されたパッケージで、CUPS 1.1.x Windows NT/200x/XP Printer Driver for Samba (tar.gz,192k)
+とタグづけられている。ダウンロードするファイル名は<filename>cups-samba-1.1.x.tar.gz</filename>
+である。tar.gzファイルを解凍後、以下のファイルが展開される:
 <screen>
 &rootprompt;<userinput>tar xvzf cups-samba-1.1.19.tar.gz</userinput>
 cups-samba.install
@@ -2645,11 +2646,12 @@ cups-samba.ss
 <para>
 <indexterm><primary>ESP</primary><secondary>meta packager</secondary></indexterm>
 <indexterm><primary>EPM</primary><see>ESP meta packager</see></indexterm>
-These have been packaged with the ESP meta-packager software EPM. The <filename>*.install</filename> and
-<filename>*.remove</filename> files are simple shell scripts, which untar the <filename>*.ss</filename> (the
-<filename>*.ss</filename> is nothing else but a tar archive, which can be untarred by <quote>tar</quote> too).
-Then it puts the content into <filename>/usr/share/cups/drivers/</filename>. This content includes three
-files:
+これらはESPメタパッケージャソフトウェアEPMでパッケージ化されている。
+<filename>*.install</filename>と<filename>*.remove</filename>ファイルは簡単なシェル
+スクリプトで、<filename>*.ss</filename>のtarファイルを展開したものである
+(<filename>*.ss</filename>は、<quote>tar</quote>によって回答できる、tarアーカイブ
+以外の何者でもない)。次に、これは内容物を<filename>/usr/share/cups/drivers/</filename>に
+置く。この内容物は以下のファイルを含む:
 <screen>
 &rootprompt;<userinput>tar tv cups-samba.ss</userinput>
 cupsdrvr.dll
@@ -2658,8 +2660,7 @@ cups.hlp
 </screen></para>
 
 <para>
-The <parameter>cups-samba.install</parameter> shell scripts are easy to
-handle:
+parameter>cups-samba.install</parameter>シェルスクリプトは簡単に扱える:
 <screen>
 &rootprompt;<userinput>./cups-samba.install</userinput>
 [....]
@@ -2670,37 +2671,39 @@ Installation is complete.
 </screen></para>
 
 <para>
-The script should automatically put the driver files into the
-<filename>/usr/share/cups/drivers/</filename> directory:
+スクリプトは<filename>/usr/share/cups/drivers/</filename>ディレクトリ中に
+ドライバファイルを自動的に置く:
 <screen>
 &rootprompt;<userinput>cp /usr/share/drivers/cups.hlp /usr/share/cups/drivers/</userinput>
 </screen></para>
 
 <warning><para>
-Due to a bug, one recent CUPS release puts the <filename>cups.hlp</filename> driver file
-into<filename>/usr/share/drivers/</filename> instead of <filename>/usr/share/cups/drivers/</filename>. To work
-around this, copy/move the file (after running the <command>./cups-samba.install</command> script) manually to
-the correct place.
+バグのために、ある最近のCUPSリリースでは、<filename>cups.hlp</filename>ドライバファイルを
+<filename>/usr/share/cups/drivers/</filename>の代わりに
+<filename>/usr/share/drivers/</filename>中に置いてしまう。これを直すためには、
+手動で正しい場所にファイルをコピー/移動する(<command>./cups-samba.install</command>
+スクリプト実行後)。
 </para></warning>
 
 <para>
 <indexterm><primary>DDK</primary></indexterm>
-This new CUPS PostScript driver is currently binary only, but free of charge. No complete source code is
-provided (yet). The reason is that it has been developed with the help of the Microsoft DDK and compiled with
-Microsoft Visual Studio 6. Driver developers are not allowed to distribute the whole of the source code as
-free software. However, CUPS developers released the <quote>diff</quote> in source code under the GPL, so
-anybody with a license for Visual Studio and a DDK will be able to compile for himself or herself.
+この新しいCUPS PostScriptドライバは現在バイナリのみである。しかし、無料で使える。
+(まだ)完全なソースコードは提供されていない。その理由は、Microsoft DDKの手助けを得て
+Microsoft Visual Studio 6でコンパイルしつつ、開発されているからである。ドライバ開発者は
+フリーソフトウェアとしてソースコード全体を配布する許可を得ていない。しかし、CUPS開発者は
+GPL配下でソースコードの<quote>差分</quote>をリリースしているので、Visual StudioとDDK
+のライセンスを持つ人は誰でも自分自身でコンパイルすることが出来る。
 </para>
 </sect2>
 
 <sect2>
-<title>Recognizing Different Driver Files</title>
+<title>異なったドライバファイルの認識</title>
 
 <para>
-The CUPS drivers do not support the older Windows 95/98/Me, but only the Windows NT/2000/XP client.
+CUPSドライバは古いWindows 95/98/Meをサポートせず、Windows NT/2000/XPクライアントのみサポートする。
 </para>
 
-<para>Windows NT, 2000, and XP are supported by:</para>
+<para>Windows NT, 2000と XPは以下でサポートされる:</para>
 
 <itemizedlist>
 	<listitem><para>cups.hlp</para></listitem>
@@ -2709,12 +2712,12 @@ The CUPS drivers do not support the older Windows 95/98/Me, but only the Windows
 </itemizedlist>
 
 <para>
-Adobe drivers are available for the older Windows 95/98/Me as well as
-for Windows NT/2000/XP clients. The set of files is different from the
-different platforms.
+古いWindows 95/98/MeのためのAdobeドライバはWindows NT/2000/XPクライアントと
+同じように提供されている。ファイルの組み合わせは異なったプラットフォームでは
+異なる。
 </para>
 
-<para>Windows 95, 98, and ME are supported by:</para>
+<para>Windows 95, 98と MEは以下でサポートされる:</para>
 
 <itemizedlist>
 	<listitem><para>ADFONTS.MFM</para></listitem>
@@ -2725,7 +2728,7 @@ different platforms.
 	<listitem><para>PSMON.DLL</para></listitem>
 </itemizedlist>
 
-<para>Windows NT, 2000, and XP are supported by:</para>
+<para>Windows NT, 2000, と XPは以下でサポートされる:</para>
 
 <itemizedlist>
 	<listitem><para>ADOBEPS5.DLL</para></listitem>
