@@ -2539,59 +2539,64 @@ Microsoftのドライバのソースコードが含まれ、Visual Studioのラ�
 <title>ドライバダウンロードを行うためのCUPSの設定</title>
 
 <para>
-As we have said before, all previously known methods to prepare client printer drivers on the Samba server for
-download and Point'n'Print convenience of Windows workstations are working with CUPS, too. These methods were
-described in <link linkend="classicalprinting">Classical Printing</link>. In reality, this is a pure Samba
-business and relates only to the Samba-Windows client relationship.
+前に説明したように、ダウンロードのためにSambaサーバ上でクライアントプリンタドライバを
+準備するためと、Windowsワークステーションの利便性のためのポイントアンドプリントのための、
+すべての以前に知られている方法も、CUPS上で動作する。これらの方法は
+<link linkend="classicalprinting">旧式の印刷サポート</link>で説明されている。実際は、
+これは真のSambaビジネスで、Samba-Windowsクライアントの連携にのみ関連している。
 </para>
 
 <sect2>
-<title><emphasis>cupsaddsmb</emphasis>: The Unknown Utility</title>
+<title><emphasis>cupsaddsmb</emphasis>: 不明なユーティリティ</title>
 
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-The <parameter>cupsaddsmb</parameter> utility (shipped with all current CUPS versions) is an alternative
-method to transfer printer drivers into the Samba <smbconfsection name="[print$]"/> share. Remember, this
-share is where clients expect drivers deposited and set up for download and installation. It makes the sharing
-of any (or all) installed CUPS printers quite easy. <command>cupsaddsmb</command> can use the Adobe PostScript
-driver as well as the newly developed CUPS PostScript driver for Windows NT/200x/XP.
-<parameter>cupsaddsmb</parameter> does <emphasis>not</emphasis> work with arbitrary vendor printer drivers,
-but only with the <emphasis>exact</emphasis> driver files that are named in its man page.
+<parameter>cupsaddsmb</parameter>ユーティリティ(現在すべてのCUPSバージョンに同梱)は、
+Sambaの<smbconfsection name="[print$]"/>共有中に、プリンタドライバを転送する別の解で
+ある。思い出してほしいのは、この共有は、クライアントが、ドライバが配布されると期待
+し、ダウンロードとインストールのためにセットアップする場所であるということである。
+これは、とても簡単に、任意の(か全部の)インストールされたCUPSプリンタの共有が出来るように
+なる。<command>cupsaddsmb</command>は、Adobe PostScriptドライバを、最近開発された
+Windows NT/200x/XP用のCUPS PostScriptドライバと同様に使うことが出来る。
+<parameter>cupsaddsmb</parameter>は、ベンダプリンタドライバと一緒に
+<emphasis>動作することはできず</emphasis>、そのマニュアルページ中に名前がある
+ドライバと<emphasis>同じもののみ</emphasis>動作する。
 </para>
 
 <para>
-The CUPS printer driver is available from the CUPS download site. Its package name is
-<filename>cups-samba-[version].tar.gz</filename>. It is preferred over the Adobe drivers because it has a
-number of advantages:
+CUPSプリンタドライバはCUPSダウンロードサイトにある。そのパッケージ名は
+<filename>cups-samba-[version].tar.gz</filename>である。これには以下のような数多くの
+利点があるので、Adobeドライバよりも好まれる:
 </para>
 
 <itemizedlist>
-	<listitem><para>It supports a much more accurate page accounting.</para></listitem>
+	<listitem><para>より正確なページ印刷情報をサポートする。</para></listitem>
 
-	<listitem><para>It supports banner pages and page labels on all printers.</para></listitem>
+	<listitem><para>すべてのプリンタで、バナーページとページラベルをサポートする。</para></listitem>
 
-	<listitem><para>It supports the setting of a number of job IPP attributes
-	(such as job priority, page label, and job billing).</para></listitem>
+	<listitem><para>数多くのジョブのIPP属性の設定をサポートする
+	    (たとえば、ジョブの優先度、ページラベルとジョブの費用請求など)</para></listitem>
 </itemizedlist>
 
 <para>
-However, currently only Windows NT, 2000, and XP are supported by the
-CUPS drivers. You will also need to get the respective part of the Adobe driver
-if you need to support Windows 95, 98, and Me clients.
+しかし、現在Windows NT,2000とXPのみがCUPSドライバによってサポートされている。もしも、
+Windows95、98とMEクライアントのサポートが必要ならば、Adobe Driverのそれぞれの部分を
+入手する事も必要である。
 </para>
 </sect2>
 
 <sect2>
-<title>Prepare Your &smb.conf; for <command>cupsaddsmb</command></title>
+<title><command>cupsaddsmb</command>用の&smb.conf;の準備</title>
 
 <para>
-Prior to running <command>cupsaddsmb</command>, you need the settings in
-&smb.conf; as shown in <link linkend="cupsadd-ex">the &smb.conf; for cupsaddsmb Usage</link>.
+<command>cupsaddsmb</command>を走らせる前に、
+<link linkend="cupsadd-ex">cupsaddsmb使用のための&smb.conf;</link>で示されるように、
+&smb.conf;を設定する必要がある。
 </para>
 
 <example id="cupsadd-ex">
-<title>smb.conf for cupsaddsmb Usage</title>
+<title>cupsaddsmb使用のためのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="load printers">yes</smbconfoption>
