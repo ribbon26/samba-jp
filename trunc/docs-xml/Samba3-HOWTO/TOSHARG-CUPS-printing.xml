@@ -2660,7 +2660,7 @@ cups.hlp
 </screen></para>
 
 <para>
-parameter>cups-samba.install</parameter>シェルスクリプトは簡単に扱える:
+<parameter>cups-samba.install</parameter>シェルスクリプトは簡単に扱える:
 <screen>
 &rootprompt;<userinput>./cups-samba.install</userinput>
 [....]
@@ -2737,46 +2737,53 @@ CUPSドライバは古いWindows 95/98/Meをサポートせず、Windows NT/2000
 </itemizedlist>
 
 <note><para>
-<indexterm><primary>Adobe driver files</primary></indexterm>
-If both the Adobe driver files and the CUPS driver files for the support of Windows NT/200x/XP are presently
-installed on the server, the Adobe files will be ignored and the CUPS files will be used. If you prefer
-&smbmdash; for whatever reason &smbmdash; to use Adobe-only drivers, move away the three CUPS driver files.
-The Windows 9x/Me clients use the Adobe drivers in any case.
+<indexterm><primary>Adobeドライバファイル</primary></indexterm>
+もしも、Windows NT/2000/XPサポート用の、AdobeドライバファイルとCUPSドライバファイルの
+両方がサーバ上に現在インストールされているならば、Adobeファイルは無視されCUPSファイルが
+使われる。もしも理由がなんであれ、Adobeのみのドライバを使いたいと思うのであれば、3つの
+CUPSドライバをどこかに移動すること。Windows 9x/Meクライアントはどんな場合にもAdobeの
+ドライバを使う。
 </para></note>
 </sect2>
 
 <sect2>
-<title>Acquiring the Adobe Driver Files</title>
+<title>ドライバファイルの入手</title>
 
 <para>
-Acquiring the Adobe driver files seems to be unexpectedly difficult for many users. They are not available on
-the Adobe Web site as single files, and the self-extracting and/or self-installing Windows-.exe is not easy to
-locate either. You probably need to use the included native installer and run the installation process on one
-client once. This will install the drivers (and one generic PostScript printer) locally on the client. When
-they are installed, share the generic PostScript printer. After this, the client's <smbconfsection
-name="[print$]"/> share holds the Adobe files, which you can get with smbclient from the CUPS host.
+Adobeドライバファイルの入手は、多くのユーザにとって予想外に難しいように見える。それらは
+Adobe Webサイトに1つのファイルとして見えているわけではなく、自己解凍か自動インストールを
+行うWindows-.exeファイルを見つけるのも難しい。おそらく内蔵されたネイティブな
+インストーラを使用しなければならず、クライアント上で一回はインストールプロセスを動かす
+ことが必要である。これは、クライアント上ローカルにドライバ(と1つの汎用PostScriptプリンタ)
+をインストールする。それらがインストールされた後、汎用PostScriptプリンタを共有する。
+この作業後、クライアントの<smbconfsection name="[print$]"/>共有は、CUPSホストから
+smbclientで入手可能なAdobeファイルを保持する。
 </para>
 </sect2>
 
 <sect2>
-<title>ESP Print Pro PostScript Driver for Windows NT/200x/XP</title>
+<title>Windows NT/200x/XP用のESP Print Pro PostScriptドライバ</title>
 
 <para>
 <indexterm><primary>ESP</primary><secondary>Print Pro</secondary></indexterm>
-Users of the ESP Print Pro software are able to install the ESP print drivers package as an alternative to the
-Adobe PostScript drivers.  To do so, retrieve the driver files from the normal download area of the ESP Print
-Pro software at <ulink noescape="1" url="http://www.easysw.com/software.html">Easy Software</ulink> web site.
-You need to locate the link labeled <quote>SAMBA</quote> among the <guilabel>Download Printer Drivers for ESP
-Print Pro 4.x</guilabel> area and download the package. Once installed, you can prepare any driver by simply
-highlighting the printer in the Printer Manager GUI and selecting <guilabel>Export Driver...</guilabel> from
-the menu. Of course, you need to have prepared Samba beforehand to handle the driver files; that is, set up
-the <smbconfsection name="[print$]"/> share, and so on. The ESP Print Pro package includes the CUPS driver
-files as well as a (licensed) set of Adobe drivers for the Windows 95/98/Me client family.
+ESP Print ProソフトウェアのユーザはAdobe PostScriptドライバの代替として、ESCプリント
+ドライバパッケージをインストールすることが出来る。これを行うために、
+<ulink noescape="1" url="http://www.easysw.com/software.html">Easy Software</ulink>
+Webサイトで、ESC Print Proソフトウェアの通常のダウンロード領域からドライバファイルを
+検索できる。<guilabel>Download Printer Drivers for ESP Print Pro 4.x</guilabel>
+領域の間で<quote>SAMBA</quote>と名前が付いたリンクを探し、パッケージをダウンロード
+する。一度インストールすると、Printer Manager GUI中の中のメニューの、
+<guilabel>Export Driver...</guilabel>を選択して、プリンタを単にハイライトさせる
+ことによって任意のドライバを準備できる。もちろん、ドライバファイルを扱うために、
+あらかじめ準備されたSambaが必要である。すなわち、<smbconfsection name="[print$]"/>
+共有を設定することなどである。ESP Print ProパッケージにはWindows 95/98/Me
+クライアントファミリ用の(ライセンスされた)Adobeドライバ一式と同様にCUPSドライバ
+ファイルが含まれている。
 </para>
 </sect2>
 
 <sect2>
-<title>Caveats to Be Considered</title>
+<title>考慮すべき警告</title>
 
 
 <para>
@@ -2784,41 +2791,44 @@ files as well as a (licensed) set of Adobe drivers for the Windows 95/98/Me clie
 <indexterm><primary>cups.hlp</primary></indexterm>
 <indexterm><primary>WIN40</primary></indexterm>
 <indexterm><primary>W32X86</primary></indexterm>
-Once you have run the install script (and possibly manually moved the <filename>cups.hlp</filename> file to
-<filename>/usr/share/cups/drivers/</filename>), the driver is ready to be put into Samba's <smbconfsection
-name="[print$]"/> share (which often maps to <filename>/etc/samba/drivers/</filename> and contains a
-subdirectory tree with <emphasis>WIN40</emphasis> and <emphasis>W32X86</emphasis> branches). You do this by
-running <command>cupsaddsmb</command> (see also <command>man cupsaddsmb</command> for CUPS since release
-1.1.16).
+一度インストールスクリプト(と、<filename>/usr/share/cups/drivers/</filename>への
+<filename>cups.hlp</filename>ファイルの手動での移動)を実行すると、ドライバはSambaの
+<smbconfsection name="[print$]"/>共有(これはしばしば
+<filename>/etc/samba/drivers/</filename>にマップされ、<emphasis>WIN40</emphasis>と
+<emphasis>W32X86</emphasis>という枝を持つサブディレクトリを含む)中に、ドライバが
+配置できるようになる。これは、<command>cupsaddsmb</command>を動かすことによって
+行える(CUPSリリース1.1.16以降では<command>man cupsaddsmb</command>も参照)。
 </para>
 
 <tip><para>
-<indexterm><primary>Single Sign-On</primary></indexterm>
-<indexterm><primary>Domain Controller</primary></indexterm>
-You may need to put root into the smbpasswd file by running <command>smbpasswd</command>; this is especially
-important if you should run this whole procedure for the first time and are not working in an environment
-where everything is configured for <emphasis>single sign-on</emphasis> to a Windows Domain Controller.
+<indexterm><primary>シングルサインオン</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<command>smbpasswd</command>を動かしてrootをsmbpasswdファイル中に格納する必要が
+あるかもしれない。もしも、全体の手順を最初に動かすときに、これは、特に重要であり、
+Windowsドメインコンピュータでの<emphasis>シングルサインオン</emphasis>用にすべてが
+設定されている環境中では動かない。
 </para></tip>
 
 <para>
-Once the driver files are in the <smbconfsection name="[print$]"/> share and are initialized, they are ready
-to be downloaded and installed by the Windows NT/200x/XP clients.
+いったんドライバファイルが<smbconfsection name="[print$]"/>共有に置かれ、初期化
+されると、それらはダウンロード可能になり、Windows NT/200x/XPクライアントによって
+インストールされる。
 </para>
 
 <note><para>
-Win 9x/Me clients will not work with the CUPS PostScript driver. For these you still need to use the
-<filename>ADOBE*.*</filename> drivers, as previously stated.
+Windows 9x/MeクライアントはCUPS PostScriptドライバでは動かない。それらには
+前述の通り、<filename>ADOBE*.*</filename>ドライバを使うことが引き続き必要である。
 </para></note>
 
 <note>
 <para>
-It is not harmful if you still have the <filename>ADOBE*.*</filename> driver files from previous installations
-in the <filename>/usr/share/cups/drivers/</filename> directory. The new <command>cupsaddsmb</command> (from
-1.1.16) will automatically prefer its own drivers if it finds both.
+もしも、<filename>/usr/share/cups/drivers/</filename>ディレクトリ中に以前の
+インストールによる<filename>ADOBE*.*</filename>ドライバファイルが引き続きあるならば、
+それは無害である。
 </para></note>
 
 <note><para>
-<indexterm><primary>"Printers" folder</primary></indexterm>
+<indexterm><primary>"Printers" フォルダ</primary></indexterm>
 <indexterm><primary>Adobe PostScript</primary></indexterm>
 Should your Windows clients have had the old <filename>ADOBE*.*</filename> files for the Adobe PostScript
 driver installed, the download and installation of the new CUPS PostScript driver for Windows NT/200x/XP will
