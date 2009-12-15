@@ -3044,47 +3044,52 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 </para></warning>
 
 <para>
-If you look closely, you'll discover your root password was transferred unencrypted over the wire, so beware!
-Also, if you look further, you may discover error messages like NT_STATUS_OBJECT_NAME_COLLISION in the output.
-This will occur when the directories WIN40 and W32X86 already existed in the <smbconfsection name="[print$]"/>
-driver download share (from a previous driver installation). These are harmless warning messages.
+もし、しっかり見た場合、ネットワーク上で暗号化されていないrootパスワードが転送されて
+いることを発見するはずなので、注意するように。また、もしもさらによく見てみると、
+出力中にNT_STATUS_OBJECT_NAME_COLLISIONというようなエラーメッセージを見つけるだろう。
+これは、WIN40とW32X36というディレクトリが(以前のドライバインストールにより)
+すでに<smbconfsection name="[print$]"/>というドライバダウンロード共有中に存在
+している時に発生する。これらは問題のないエラーメッセージである。
 </para>
 </sect2>
 
 <sect2>
-<title>Understanding cupsaddsmb</title>
+<title>cupsaddsmbについて理解する</title>
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-What has happened? What did <command>cupsaddsmb</command> do? There are five stages of the procedure:
+何が起きたのか?<command>cupsaddsmb</command>は何をしたのか?手順には5つのステージがある:
 </para>
 
 <orderedlist>
 	<listitem><para>
 	<indexterm><primary>IPP</primary></indexterm>
-	Call the CUPS server via IPP and request the driver files and the PPD file for the named printer.</para></listitem>
+	IPP経由でCUPSサーバを呼び出し、その名前のプリンタ用のドライバファイルとPPDファイルを要求する。</para></listitem>
 
-	<listitem><para>Store the files temporarily in the local TEMPDIR (as defined in <filename>cupsd.conf</filename>).</para></listitem>
+	<listitem><para>ローカルのTEMPDIR中(<filename>cupsd.conf</filename>で定義されている)に、
+	ファイルを一時的に格納する。</para></listitem>
 
-	<listitem><para>Connect via smbclient to the Samba server's <smbconfsection name="[print$]"/> share and put the files into the
-	 share's WIN40 (for Windows 9x/Me) and W32X86 (for Windows NT/200x/XP) subdirectories.</para></listitem>
+	<listitem><para>smbclient経由でSambaサーバの<smbconfsection name="[print$]"/>共有に
+	接続し、共有のWIN40(Windows 9x/Me用)とW32X86(Windows NT/200x/XP用)サブディレクトリ
+	中にファイルを書き込む。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
-	Connect via rpcclient to the Samba server and execute the <command>adddriver</command> command with the correct parameters.
+	rpcclient経由でSambaサーバに接続し、正しいパラメータで<command>adddriver</command>
+	コマンドを実行する。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
-	Connect via rpcclient to the Samba server a second time and execute the <command>setdriver</command> command.</para></listitem>
+	rpcclient経由でSambaサーバにもう一度接続し、<command>setdriver</command>コマンドを実行する。</para></listitem>
 </orderedlist>
 
 <note>
 <para>
-You can run the <command>cupsaddsmb</command> utility with parameters to specify one remote host as Samba host
-and a second remote host as CUPS host. Especially if you want to get a deeper understanding, it is a good idea
-to try it and see more clearly what is going on (though in real life most people will have their CUPS and
-Samba servers run on the same host):
+1番目のリモートホストとしてSambaホストを、2番目のリモートホストとしてCUPSホストを指定する
+ためのパラメータを付けて<command>cupsaddsmb</command>ユーティリティを実行できる。
+特に、もしもより深く理解したい場合、何が起きたかをより明快にするためにテストしてみるのは
+良いことである(実際には、ほとんどの人はCUPSとSambaサーバを同じホストで動作させている):
 <screen>
 &rootprompt;<userinput>cupsaddsmb -H sambaserver -h cupsserver -v printer</userinput>
 </screen>
@@ -3093,12 +3098,12 @@ Samba servers run on the same host):
 </sect2>
 
 <sect2>
-<title>How to Recognize If cupsaddsmb Completed Successfully</title>
+<title>もしもcupsaddsmbが正しく終了した場合、どのように認識するか</title>
 
 <para>
-You <emphasis>must</emphasis> always check if the utility completed
-successfully in all fields. You need at minimum these three messages
-among the output:
+もしもユーティリティがすべてのフィールドで正しく終わった場合、常時検査を
+<emphasis>しなければならない</emphasis>。少なくとも出力中の、以下の3つの
+メッセージをチェックする必要がある:
 </para>
 
 <orderedlist>
