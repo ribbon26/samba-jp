@@ -2518,8 +2518,8 @@ PostScript RIPとして振る舞い、<quote>raw スプール</quote>デバイ�
 <indexterm><primary>Visual Studio</primary></indexterm>
 <indexterm><primary>Microsoft driver</primary></indexterm>
 <indexterm><primary>Adobe</primary></indexterm>
-最近のW200xとXPプリンタドライバでは、もはやカーネルモードでは動かない(Windows NTと
-違い)。しかし、両OSは引き続き、カーネルモードで動作するドライバを使える
+最近のW200xとXPプリンタドライバでは、Windows NTと違い、もはやカーネルモードでは動かない。
+しかし、両OSは引き続き、カーネルモードで動作するドライバを使える
 (サブディレクトリ<quote>W32X86</quote>中の<quote>2</quote>にあるドライバは
 <quote>古い</quote>ものか...........)
 以前に説明したように、AdobeはMicrosoft PostScriptドライバのように安定している。CUPS
@@ -2830,58 +2830,66 @@ Windows 9x/MeクライアントはCUPS PostScriptドライバでは動かない�
 <note><para>
 <indexterm><primary>"Printers" フォルダ</primary></indexterm>
 <indexterm><primary>Adobe PostScript</primary></indexterm>
-Should your Windows clients have had the old <filename>ADOBE*.*</filename> files for the Adobe PostScript
-driver installed, the download and installation of the new CUPS PostScript driver for Windows NT/200x/XP will
-fail at first. You need to wipe the old driver from the clients first. It is not enough to
-<quote>delete</quote> the printer, because the driver files will still be kept by the clients and re-used if
-you try to re-install the printer. To really get rid of the Adobe driver files on the clients, open the
-<guilabel>Printers</guilabel> folder (possibly via <guilabel>Start -> Settings -> Control Panel ->
-Printers</guilabel>), right-click on the folder background, and select <guimenuitem>Server
-Properties</guimenuitem>. When the new dialog opens, select the <guilabel>Drivers</guilabel> tab. On the list
-select the driver you want to delete and click the <guilabel>Delete</guilabel> button. This will only work if
-there is not one single printer left that uses that particular driver. You need to <quote>delete</quote> all
-printers using this driver in the <guilabel>Printers</guilabel> folder first. You will need Administrator
-privileges to do this.
+使用しているWindowsクライアントが、Adobe PostScriptドライバ用の古い
+<filename>ADOBE*.*</filename>ファイルがインストールされていると、新しい
+Windows NT/200x/XP用のCUPS PostScriptドライバのダウンロードとインストールは最初に失敗する。
+最初にクライアントから古いドライバを消し去る必要がある。もしも、プリンタを再インストール
+しようとしたときのために、ドライバファイルはクライアントによって引き続き保存され、
+再利用されることによりプリンタを<quote>削除</quote>するだけでは十分ではない。
+クライアント上のAdobeドライバファイルを完全に取り除くためには、まず
+<guilabel>プリンタフォルダ</guilabel>を開き(おそらく
+<guilabel>スタート -> 設定 -> コントロールパネル ->プリンタ</guilabel>)、
+フォルダの背景を右クリックし、<guilabel>ドライバ</guilabel>タブを選択する。
+一覧表示上で削除したいドライバを選択し、<guilabel>削除</guilabel>ボタンをクリックする。
+これは1つも特定のドライバを使うプリンタが残っていないときに動作する。まず初めに
+<guilabel>プリンタ</guilabel>フォルダ中でこのドライバを使うすべてのプリンタを
+<quote>削除</quote>する必要がある。これを行うには管理者権限が必要である。
 </para></note>
 
 <note><para>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 <indexterm><primary>CUPS PostScript</primary></indexterm>
-Once you have successfully downloaded the CUPS PostScript driver to a client, you can easily switch all
-printers to this one by proceeding as described in <link linkend="classicalprinting">Classical Printing
-Support</link>. Either change a driver for an existing printer by running the <guilabel>Printer
-Properties</guilabel> dialog, or use <command>rpcclient</command> with the <command>setdriver</command>
-subcommand.
+一度クライアントにCUPS PostScriptドライバをダウンロードすると、
+<link linkend="classicalprinting">旧式の印刷サポート</link>で説明したような手続きで、
+すべてのプリンタを簡単に切り替えることが出来る。
+<guilabel>プリンタのプロパティ</guilabel>ダイアログを動かすことか、
+<command>setdriver</command>サブコマンドを指定した<command>rpcclient</command>
+を使うことのどちらかで、存在するプリンタのドライバを切り替えられる。
 </para></note>
 </sect2>
 
 <sect2>
-<title>Windows CUPS PostScript Driver Versus Adobe Driver</title>
+<title>WindowsのCUPS PostScriptドライバ対Adobeドライバ</title>
 
 <para>
+CUPSとAdobe PostScriptドライバの比較に興味があるだろうか?我々の目的のために、
 Are you interested in a comparison between the CUPS and the Adobe PostScript drivers? For our purposes, these
 are the most important items that weigh in favor of CUPS:
 </para>
 
 <itemizedlist>
-	<listitem><para>No hassle with the Adobe EULA.</para></listitem>
+	<listitem><para>Adobe EULAに縛られない。</para></listitem>
 
-	<listitem><para>No hassle with the question, <quote>Where do I
-	get the ADOBE*.* driver files?</quote></para></listitem>
+	<listitem><para><quote>ADOBE*.*ドライバファイルをダウンロードできる所はどこか?</quote>
+        という質問に縛られない。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>PJL</primary></indexterm>
-	The Adobe drivers (on request of the printer PPD associated with them) often put a PJL header in front of the
-	main PostScript part of the print file. Thus, the print file starts with <parameter>&lt;1B
-	&gt;%-12345X</parameter> or <parameter>&lt;escape&gt;%-12345X</parameter> instead of
-	<parameter>%!PS</parameter>. This leads to the CUPS daemon autotyping the incoming file as a print-ready file,
-	not initiating a pass through the <parameter>pstops</parameter> filter (to speak more technically, it is not
-	regarded as the generic MIME-type <indexterm><primary>application/postscript</primary></indexterm>
-	<parameter>application/postscript</parameter>, but as the more special MIME type
+	Adobe ドライバ(sれに関連するプリンタのPPD要求において)はしばしば印刷ファイルの
+	メイン部分の先頭にPJLヘッダを置く。そのため、印刷ファイルは
+	<parameter>%!PS</parameter>の代わりに<parameter>&lt;1B&gt;%-12345X</parameter>か
+	<parameter>&lt;escape&gt;%-12345X</parameter>で始まる。これはCUPSデーモンが入力
+	ファイルを印刷可能なファイルと自動タイプすることをさせるようにし、
+	<parameter>pstops</parameter>フィルタ経由で初期化しない(もう少し技術的に言うと、
+	これは一般的なMIMEタイプ
+	<indexterm><primary>application/postscript</primary></indexterm>
+	<parameter>application/postscript</parameter>と見なされないが、より特別な
+	MIMEタイプである
 	<indexterm><primary>application/cups.vnd-postscript</primary></indexterm>
-	<parameter>application/cups.vnd-postscript</parameter>), which therefore also leads to the page accounting in
-	<parameter>/var/log/cups/page_log</parameter> not receiving the exact number of pages; instead the dummy page
-	number of <quote>1</quote> is logged in a standard setup).
+        <parameter>application/cups.vnd-postscript</parameter>とみなす)ので、
+	<parameter>/var/log/cups/page_log</parameter>中におけるページの計数は正確な
+	ページ数を受け取れない。その代わりに標準的な設定では、ダミーのページ数
+	<quote>1</quote>が記録される。
 	</para></listitem>
 
 	<listitem><para>The Adobe driver has more options to misconfigure the
