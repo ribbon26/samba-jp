@@ -2917,37 +2917,38 @@ are the most important items that weigh in favor of CUPS:
 	IPPジョブ属性をサポートするオプションで)印刷予定時間を設定する。
 	</para></listitem>
 
-	<listitem><para>The CUPS PostScript driver supports the inclusion of
-	the new <parameter>*cupsJobTicket</parameter> comments at the
-	beginning of the PostScript file (which could be used in the future
-	for all sorts of beneficial extensions on the CUPS side, but which will
-	not disturb any other applications because they will regard it as a comment
-	and simply ignore it).</para></listitem>
+	<listitem><para>CUPS PostScriptドライバは、PostScriptファイルの先頭に、新しい
+	<parameter>*cupsJobTicket</parameter>コメントの挿入をサポートする
+	(これは、将来、すべての種類のCUPS上での便利な拡張のために使われるが、
+	これがコメントとして扱われ、単に無視されるため、任意の他の
+	アプリケーションのじゃまをしない)。</para></listitem>
 
-	<listitem><para>The CUPS PostScript driver will be the heart of the
-	fully fledged CUPS IPP client for Windows NT/200x/XP to be released soon
-	(probably alongside the first beta release for CUPS 1.2).</para></listitem>
+	<listitem><para>CUPS PostScriptドライバは、近々リリースされる、
+	Windows NT/200x/XP用の完全なCUPS IPPクライアントの心臓部である
+	(おそらく最初のCUPS 1.2のβリリースと一緒に)。</para></listitem>
 </itemizedlist>
 
 </sect2>
 
 <sect2>
-<title>Run cupsaddsmb (Quiet Mode)</title>
+<title>cupsaddsmbの実行(Quiet Mode)</title>
 
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-<indexterm><primary>point 'n' print</primary></indexterm>
-The <command>cupsaddsmb</command> command copies the needed files into your <smbconfsection name="[print$]"/>
-share. Additionally, the PPD associated with this printer is copied from <filename>/etc/cups/ppd/</filename>
-to <smbconfsection name="[print$]"/>. There the files wait for convenient Windows client installations via
-Point'n'Print. Before we can run the command successfully, we need to be sure that we can authenticate toward
-Samba. If you have a small network, you are probably using user-level security (<smbconfoption
-name="security">user</smbconfoption>).
+<indexterm><primary>ポイントアンドプリント</primary></indexterm>
+<command>cupsaddsmb</command>コマンドは、必要とされるファイルを
+<smbconfsection name="[print$]"/>共有にコピーする。さらに追加で、このプリンタに関連
+づけられているPPDは、<filename>/etc/cups/ppd/</filename>から
+<smbconfsection name="[print$]"/>にコピーされる。これらファイルはポイントアンドプリント
+経由でWindowsクライアントのインストールの都合のために待機している。コマンドを
+正しく実行できる前に、Sambaに対して認証を行っておく必要がある。小さなネットワーク
+環境では、おそらくユーザレベルのセキュリティ
+(<smbconfoption name="security">user</smbconfoption>)を使っているだろう。
 </para>
 
 <para>
-Here is an example of a successfully run <command>cupsaddsmb</command> command: 
+以下は、正しく動く<command>cupsaddsmb</command>コマンドの例である:
 <indexterm><primary>banner pages</primary></indexterm>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <screen>
@@ -2957,24 +2958,22 @@ Password for root required to access localhost via Samba: <userinput>['secret']<
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-To share <emphasis>all</emphasis> printers and drivers, use the
-<option>-a</option> parameter instead of a printer name. Since
-<command>cupsaddsmb</command> <quote>exports</quote> the printer drivers to Samba, it should be
-obvious that it only works for queues with a CUPS driver associated.
+<emphasis>すべての</emphasis>プリンタとドライバを共有するために、プリンタ名の代わりに
+<option>-a</option>パラメータを使う。<command>cupsaddsmb</command>がプリンタドライバを
+Sambaに<quote>エクスポート</quote>してから、CUPSドライバに関連づけられているキュー
+のみ動作することは明白になるべきである。
 </para>
 </sect2>
 
 <sect2>
-<title>Run cupsaddsmb with Verbose Output</title>
+<title>詳細な結果を表示するcupsaddsmbの実行</title>
 
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-Probably you want to see what's going on. Use the
-<option>-v</option> parameter to get a more verbose output. The
-output below was edited for better readability: all <quote>\</quote> at the end of
-a line indicate that I inserted an artificial line break plus some
-indentation here:
+おそらく何が起きているかを見たいのだと思う。より詳細な出力は、<option>-v</option>
+パラメータを使う。可読性向上のために下記の出力には手を入れてある。
+すべての行末の<quote>\</quote>は手動で入れてあり、そのほかにインデントもしている:
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 <screen>
@@ -3041,7 +3040,7 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 </screen></para>
 
 <warning><para>
-You will see the root password for the Samba account printed on screen. 
+出力結果上ではSambaアカウントのためのrootパスワードが表示されている。
 </para></warning>
 
 <para>
