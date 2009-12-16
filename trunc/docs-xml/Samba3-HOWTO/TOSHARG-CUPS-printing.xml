@@ -3362,34 +3362,41 @@ Comma Separated list of Files
 </para>
 
 <para>
-Samba does not need to support the concept of print monitors, since these only apply to local printers whose
-drivers can use a bidirectional link for communication. This field should be <quote>NULL</quote>.  On a remote
-NT print server, the print monitor for a driver must already be installed before adding the driver or else the
-RPC will fail.
+Sambaはプリントモニタというコンセプトをサポートする必要がないので、通信のために双方向
+リンクを使うことが出来るドライバがあるローカルプリンタのためにのみそれらは適用される。
+このフィールドは<quote>NULL</quote>にすべきである。リモートNT印刷サーバ上で、ドライバに
+対する印刷モニタはドライバを追加する前にすでにインストールされていなければならない。
+そうしないと、RPCは失敗する。
 </para>
 
 <para>
 <indexterm><primary>setdriver</primary></indexterm>
 <indexterm><primary>SetPrinter()</primary></indexterm>
-<command>setdriver &lt;printername&gt; &lt;drivername&gt;</command> Execute a <command>SetPrinter()</command>
-command to update the printer driver associated with an installed printer. The printer driver must already be
-correctly installed on the print server.
+<command>setdriver &lt;printername&gt; &lt;drivername&gt;</command>は、インストール
+されたプリンタに関連するプリンタドライバをアップロードするために、
+<command>SetPrinter()</command>コマンドを実行する。プリンタドライバはプリンタサーバ
+上にあらかじめ正しくインストールされている必要がある。
 </para>
 
 <para>
 <indexterm><primary>enumprinters</primary></indexterm>
 <indexterm><primary>enumdrivers</primary></indexterm>
-See also the <command>enumprinters</command> and <command>enumdrivers</command> commands to
-obtain a list of installed printers and drivers.
+インストールされたプリンタとドライバの一覧を得るための、
+<command>enumprinters</command>と<command>enumdrivers</command>コマンドも
+参照のこと。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Understanding the rpcclient man Page</title>
+<title>rpcclientマニュアルページの理解</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
+<emphasis>正確な</emphasis>フォーマットはマニュアルページによって明快にはならないので、
+空白を含むパラメータを扱う必要がある。以下は、それに対するもう少しわかりやすい説明で
+ある。ここではコマンドを改行し、改行は<quote>\</quote>で示している。通常、改行なしに
+1行でコマンドを記述するだろう:
 The <emphasis>exact</emphasis> format isn't made too clear by the man page, since you have to deal with some
 parameters containing spaces. Here is a better description for it. We have line-broken the command and
 indicated the breaks with <quote>\</quote>. Usually you would type the command in one line without the line
@@ -3401,6 +3408,13 @@ adddriver "Architecture" \
 </screen></para>
 
 <para>
+マニュアルページが示すものは、実際に存在する3つのコロンで分離されたフィールド中の、
+単純な<parameter>&lt;config&gt;</parameter>キーワードである。最後のフィールドは、
+複数の(あまり尋常でない場合では、異なった20のもの)ファイルである。これは、最初は
+混乱するように見えるかもしれない。<quote>LongPrinterName</quote>とマニュアルページが
+呼んでいるものは、実際では<quote>ドライバ名</quote>と呼ばれるべきである。これは
+自由に名前を付けられ、後で<command>rpcclient ... setdriver</command>コマンド中で
+この名前を使える。実用的な理由で、多くはプリンタと同じ名前をドライバに付ける。
 What the man pages denote as a simple <parameter>&lt;config&gt;</parameter> keyword in reality consists of
 eight colon-separated fields. The last field may take multiple (in some very insane cases, even 20 different
 additional) files. This might sound confusing at first.  What the man pages call the
@@ -3410,6 +3424,16 @@ command. For practical reasons, many name the driver the same as the printer.
 </para>
 
 <para>
+これは全く単純ではない。<quote>どのファイルがドライバファイルをどうやったら分かるか</quote>、
+各<quote>データファイル</quote>, <quote>構成ファイル</quote>, <quote>ヘルプファイル</quote>
+と<quote>Language Monitorファイルの場合は?</quote>という質問があるだろう。答えのために、
+共有プリンタを持つWindows NTがそれらのファイルをどのように提供しているかを見てみるのも
+よいかもしれない。覚えておいてほしいが、この全体の手続きはネットワーク上でWindows
+コンピュータが発生させたトラフィックをモニタすることによってSambaチームにより開発
+されねばならなかったと言うことである。Windowsマシンに切り替えて、UNIX
+ワークステーションからうまくアクセスしても良い。それが何を送っているかを見るために、
+<command>rpcclient</command>で問い合わせてもよく、より明快にするために、マニュアル
+ページの理解を試みても良い。
 It isn't simple at all. I hear you asking: <quote>How do I know which files are Driver File</quote>,
 <quote>Data File</quote>, <quote>Config File</quote>, <quote>Help File</quote> and <quote>Language Monitor
 File in each case?</quote> For an answer, you may want to have a look at how a Windows NT box with a shared
@@ -3434,7 +3458,7 @@ workstation with the Samba utilities installed, then type the following command:
 </screen></para>
 
 <para>
-From the result it should become clear which is which. Here is an example from my installation:
+結果から、どれがどれであるか明快になるべきである。以下はインストールの例である:
 <indexterm><primary>rpcclient</primary><secondary>getdriver</secondary></indexterm>
 <screen>
 &rootprompt;<userinput>rpcclient -U'Danka%xxxx' W200xSERVER \
@@ -3464,6 +3488,11 @@ From the result it should become clear which is which. Here is an example from m
 </screen></para>
 
 <para>
+いくつかのプリンタドライバは<parameter>Dependentfiles</parameter>というラベルで、
+追加のファイルを一覧表示し、それらは最後のフィールドである
+<parameter>ListOfFiles,Comma-separated</parameter>中に押し込まれる。CUPS PostScript
+ドライバ用には、それらは不要で(Adobe PostScriptドライバも)、それゆえ、フィールドには
+<quote>NULL</quote>が入るだろう。
 Some printer drivers list additional files under the label <parameter>Dependentfiles</parameter>, and these
 would go into the last field <parameter>ListOfFiles,Comma-separated</parameter>. For the CUPS PostScript
 drivers, we do not need any (nor would we for the Adobe PostScript driver); therefore, the field will get a
@@ -3472,7 +3501,7 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 </sect2>
 
 <sect2>
-<title>Requirements for adddriver and setdriver to Succeed</title>
+<title>adddriverとsetdriverを完了させるための要求事項</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
