@@ -3120,41 +3120,42 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 </orderedlist>
 
 <para>
-These messages are probably not easily recognized in the general
-output. If you run <command>cupsaddsmb</command> with the <option>-a</option>
-parameter (which tries to prepare <emphasis>all</emphasis> active CUPS
-printer drivers for download), you might miss if individual printer
-drivers had problems installing properly. A redirection of the
-output will help you analyze the results in retrospective.
+これらのメッセージはおそらく一般的な出力中では簡単に認識できない。もしも
+(ダウンロードのための、<emphasis>すべての</emphasis>有効なプリンタドライバを
+準備しようとする)<option>-a</option>オプションを付けて<command>cupsaddsmb</command>を
+動かした場合、もしも個々のプリンタドライバに、正しくにインストールすることに関して
+問題がある場合、失敗するかもしれない。出力のリダイレクトは、結果を解析することを
+手助けする。
 </para>
 
 <para>
-If you get:
+もしも下記のメッセージが出た場合:
 <screen>
 SetPrinter call failed!
 result was WERR_ACCESS_DENIED
 </screen>
-it means that you might have set <smbconfoption name="use client driver">yes</smbconfoption> for this printer. 
-Setting it to <quote>no</quote> will solve the problem. Refer to the &smb.conf; man page for explanation of 
-the <parameter>use client driver</parameter>.
+これは、このプリンタに対して<smbconfoption name="use client driver">yes</smbconfoption>
+という設定がされているかもしれないということを意味する。この設定を<quote>no</quote>に
+すると、この問題が解決する。&smb.conf;マニュアルページ中の、
+<parameter>use client driver</parameter>についての説明を参照のこと。
 </para>
 
 <note><para>
-It is impossible to see any diagnostic output if you do not run <command>cupsaddsmb</command> in verbose mode.
-Therefore, we strongly recommend against use of the default quiet mode. It will hide any problems from you that
-might occur.
+もしも、verboseモードで<command>cupsaddsmb</command>を動かしていないと、何らかの診断
+出力を得るのは不可能である。そのため、既定値であるquietモードを使わないことを強く
+推奨する。quietモードを使うと、発生するかもしれない何らかの問題を隠してしまうだろう。
 </para></note>
 </sect2>
 
 <sect2>
-<title>cupsaddsmb with a Samba PDC</title>
+<title>Samba PDCににおけるcupsaddsmb</title>
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
-Can't get the standard <command>cupsaddsmb</command> command to run on a Samba PDC?  Are you asked for the
-password credential again and again, and the command just will not take off at all? Try one of these
-variations:
+Samba PDC上で動かすために、標準の<command>cupsaddsmb</command>コマンドは動かないのか?
+認証のためにパスワードを繰り返し聞かれ、コマンドは全く起動しないのか?以下にある応用の
+どれかを試してみてほしい:
 </para>
 
 <para><screen>
@@ -3164,28 +3165,28 @@ variations:
 </screen></para>
 
 <para>
-(Note the two backslashes: the first one is required to <quote>escape</quote> the second one).
+(2つのバックスラッシュに注意:最初のものは二番目のものに対する<quote>escape</quote>である)。
 </para>
 </sect2>
 
 <sect2>
-<title>cupsaddsmb Flowchart</title>
+<title>cupsaddsmbフローチャート</title>
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-<indexterm><primary>raw print</primary></indexterm>
-<link linkend="small14">The cupsaddsmb Flowchart</link> shows a chart about the procedures, command flows, and
-data flows of the <command>cupaddsmb</command> command. Note again: cupsaddsmb is
-not intended to, and does not work with, raw print queues!
+<indexterm><primary>raw印刷</primary></indexterm>
+<link linkend="small14">cupsaddsmbフローチャート</link>は、<command>cupaddsmb</command>の
+処理手順、コマンドフローとデータフローを示すチャートである。再度注意:cupsaddsmbは
+raw印刷キューと一緒に動かないし、そういうことを意図してもいない!
 </para>
 
 	<figure id="small14">
-		<title>cupsaddsmb Flowchart.</title>
+		<title>cupsaddsmbのフローチャート</title>
 		<imagefile>14small</imagefile></figure>
 </sect2>
 
 <sect2>
-<title>Installing the PostScript Driver on a Client</title>
+<title>クライアント上でのPostScriptドライバのインストール</title>
 
 <para>
 <indexterm><primary>point'n'print</primary></indexterm>
