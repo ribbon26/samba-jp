@@ -3507,19 +3507,30 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <indexterm><primary>setdriver</primary></indexterm>
-From the man page (and from the quoted output of <command>cupsaddsmb</command> above) it becomes clear that
-you need to have certain conditions in order to make the manual uploading and initializing of the driver files
-succeed. The two <command>rpcclient</command> subcommands (<command>adddriver</command> and
-<command>setdriver</command>) need to encounter the following preconditions to complete successfully:
+マニュアルページから(と上記の<command>cupsaddsmb</command>の引用された出力から)、
+手動でのアップロードとドライバファイルの初期化を成功させるために、一定の状態を用意
+する必要があることが明確になる。2つの<command>rpcclient</command>サブコマンド
+(<command>adddriver</command>と<command>setdriver</command>)は、成功させるために、
+以下の前提条件を準備する必要がある:
 </para>
 
 <itemizedlist>
-	<listitem><para>You are connected as <smbconfoption name="printer admin"/> or root (this is
-	<emphasis>not</emphasis> the <quote>Printer Operators</quote> group in NT, but the <emphasis>printer
-	admin</emphasis> group as defined in the <smbconfsection name="[global]"/> section of &smb.conf;).
+	<listitem><para><smbconfoption name="printer admin"/>かroot(これはNTの
+	<quote>Printer Operators</quote>グループ<emphasis>ではないが</emphasis>、
+	&smb.conf;の<smbconfsection name="[global]"/>セクションで定義されている
+	<emphasis>printer admin</emphasis>グループ)で接続する。
 	</para></listitem>
 
-	<listitem><para>Copy all required driver files to <filename>\\SAMBA\print$\w32x86</filename> and
+	<listitem><para>要求されたドライバを<filename>\\SAMBA\print$\w32x86</filename>
+	と<filename>\\SAMBA\print$\win40</filename>に、適切にすべてコピーする。
+	これらは、その後最終的に<quote>0</quote>と<quote>2</quote>という
+	サブディレクトリで終わる。現時点では、それらをそこに
+	<emphasis>置いてはならない</emphasis>。それらは自動的に
+	<command>adddriver</command>サブコマンドによって使われる(もしも共有中にドライバ
+	ファイルを置くために、<command>smbclient</command>コマンドを使うならば、
+	<quote>$</quote>をエスケープする必要があることに注意。たとえば、
+	<command>smbclient //sambaserver/print\$ -U root.</command>)。
+	Copy all required driver files to <filename>\\SAMBA\print$\w32x86</filename> and
 	<filename>\\SAMBA\print$\win40</filename> as appropriate. They will end up in the <quote>0</quote> respective
 	<quote>2</quote> subdirectories later. For now, <emphasis>do not</emphasis> put them there; they'll be
 	automatically used by the <command>adddriver</command> subcommand. (If you use <command>smbclient</command> to
