@@ -3317,30 +3317,35 @@ Ghostscriptインストールを取り扱ているはずである。以下のよ
 <indexterm><primary>rpcclient</primary><secondary>enumdrivers</secondary></indexterm>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
-We are going to do this now. First, read the man page on <parameter>rpcclient</parameter> to get a first idea.
-Look at all the printing-related subcommands: <command>enumprinters</command>, <command>enumdrivers</command>,
-<command>enumports</command>, <command>adddriver</command>, and <command>setdriver</command> are among the
-most interesting ones. <parameter>rpcclient</parameter> implements an important part of the MS-RPC protocol.
-You can use it to query (and command) a Windows NT (or 200x/XP) PC, too. MS-RPC is used by Windows clients,
-among other things, to benefit from the Point'n'Print features. Samba can now mimic this as well.
+今これを行おうとしよう。最初に、最初の案を得るために、<parameter>rpcclient</parameter>の
+マニュアルを読む。印刷に関連するすべてのサブコマンドを見る:
+<command>enumprinters</command>,<command>enumdrivers</command>,
+<command>enumports</command>, <command>adddriver</command>と
+<command>setdriver</command>は最も興味があるものである。
+<parameter>rpcclient</parameter>はMS-RPCプロトコルの重要な一部を実装している。
+これをWindows NT(か200x/XP)に問い合わせ(とコマンド)を行うのにも使える。MS-RPCは
+Windowsクライアントによって使われ、とりわけ、ポイントアンドプリント機能に適合する
+ために使われる。Sambaは今、同様にこれをまねることが出来る。
 </para>
 
 <sect2>
-<title>A Check of the rpcclient man Page</title>
+<title>rpcclientマニュアルページのチェック</title>
 
 <para>
-First let's check the <parameter>rpcclient</parameter> man page. Here are two relevant passages:
+最初に、<parameter>rpcclient</parameter>マニュアルページをチェックしよう。
+個々には2つの読むべきな文節がある:
 </para>
 
 <para>
 <indexterm><primary>adddriver</primary></indexterm>
 <indexterm><primary>AddPrinterDriver()</primary></indexterm>
 <indexterm><primary>getdriverdir</primary></indexterm>
-<command>adddriver &lt;arch&gt; &lt;config&gt;</command> Execute an <command>AddPrinterDriver()</command> RPC
-to install the printer driver information on the server. The driver files should already exist in the
-directory returned by <command>getdriverdir</command>. Possible values for <parameter>arch</parameter> are the
-same as those for the <command>getdriverdir</command> command. The <parameter>config</parameter> parameter is
-defined as follows:
+<command>adddriver &lt;arch&gt; &lt;config&gt;</command>は、サーバ上でプリンタドライバ
+情報をインストールするために、<command>AddPrinterDriver()</command>RPCを実行する。
+ドライバファイルは<command>getdriverdir</command>によって返されるディレクトリ中に
+すでに存在すべきである。<parameter>arch</parameter>が取れる値は
+<command>getdriverdir</command>コマンドのものと同じである。<parameter>config</parameter>
+パラメータは以下のように定義される:
 <screen>
 Long Printer Name:\
 Driver File Name:\
@@ -3353,7 +3358,7 @@ Comma Separated list of Files
 </screen></para>
 
 <para>
-Any empty fields should be entered as the string <quote>NULL</quote>. 
+任意の空白のフィールドは<quote>NULL</quote>という文字列を入力すべきである。
 </para>
 
 <para>
