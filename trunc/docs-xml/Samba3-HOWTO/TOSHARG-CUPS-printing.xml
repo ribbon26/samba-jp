@@ -3191,37 +3191,43 @@ raw印刷キューと一緒に動かないし、そういうことを意図し�
 <para>
 <indexterm><primary>point'n'print</primary></indexterm>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-After <command>cupsaddsmb</command> is completed, your driver is prepared for the clients to use. Here are the
-steps you must perform to download and install it via Point'n'Print. From a Windows client, browse to the
-CUPS/Samba server:
+<command>cupsaddsmb</command>の完了後、ドライバは、クライアントから使えるようになる。
+以下は、ポイントアンドプリント経由でダウンロードしインストールするために行わなければ
+ならない手順である。Windowsクライアントから、CUPS/Sambaサーバをブラウズする:
 </para>
 
 <itemizedlist>
 
 	<listitem><para>
-	<indexterm><primary>"Printers" folder</primary></indexterm>
-	Open the <guilabel>Printers</guilabel> share of Samba in Network Neighborhood.</para></listitem>
+	<indexterm><primary>"プリンタ"フォルダ</primary></indexterm>
+	ネットワークコンピュータ中のSambaの<guilabel>プリンタ</guilabel>共有を開く</para></listitem>
 
-	<listitem><para>Right-click on the printer in question.</para></listitem>
+	<listitem><para>問い合わせ(question)中のプリンタを右クリックする</para></listitem>
 
-	<listitem><para>From the opening context menu select
-	<guimenuitem>Install...</guimenuitem> or 
-	<guimenuitem>Connect...</guimenuitem> (depending on the Windows version you use).</para></listitem>
+	<listitem><para>開いたコンテキストメニューから下記を選択する
+	<guimenuitem>インストール...</guimenuitem> あるいは 
+	<guimenuitem>接続...</guimenuitem> (使用しているWindowsのバージョンに依存する)</para></listitem>
 </itemizedlist>
 
 <para>
-After a few seconds, there should be a new printer in your client's <emphasis>local</emphasis>
-<guilabel>Printers</guilabel> folder. On Windows XP it will follow a naming convention of
-<emphasis>PrinterName on SambaServer</emphasis>. (In my current case it is infotec_2105 on kde-bitshop). If
-you want to test it and send your first job from an application like Microsoft Word,
-the new printer appears in a
-<filename>\\SambaServer\PrinterName</filename> entry in the drop-down list of available printers.
+数秒後、クライアントの<emphasis>ローカル</emphasis><guilabel>プリンタ</guilabel>
+フォルダ中に新しいプリンタが現れる。Windows XP上では、
+<emphasis>Sambaサーバ上のプリンタ名</emphasis>という名前が付けられている
+(現在多くの場合kde-bitshop上のinfotec_2105のようになる)。もしもMicrosoft Wordのような
+アプリケーションから、テストと最初のジョブを送りたい場合、有効なプリンタ一覧の
+ドロップダウンリスト中に、<filename>\\SambaServer\PrinterName</filename>という
+エントリで新しいプリンタが現れる。
 </para>
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>Adobe PostScript driver</primary></indexterm>
+<indexterm><primary>Adobe PostScript ドライバ</primary></indexterm>
 <indexterm><primary>net use lpt1:</primary></indexterm>
+<command>cupsaddsmb</command>はCUPSバージョン1.1.15以上とSamba バージョン2.2.4以降でのみ
+確実に動作する。もしも動かない場合か、クライアントへの自動プリンタダウンロードが成功
+しないばあい、クライアント上でAdobe PostScriptドライバのtop ofのCUPSプリンタPPDを手動で
+インストールトーすすることができる。次に、UNCタイプの接続のために、クライアントの
+プリンタキューをSambaプリンタ共有に指定する:
 <command>cupsaddsmb</command> will only reliably work with CUPS version 1.1.15 or higher and with Samba
 version 2.2.4, or later. If it does not work, or if the automatic printer driver download to the clients does
 not succeed, you can still manually install the CUPS printer PPD on top of the Adobe PostScript driver on
@@ -3229,21 +3235,24 @@ clients. Then point the client's printer queue to the Samba printer share for a 
 <screen>
 &dosprompt;<userinput>net use lpt1: \\sambaserver\printershare /user:ntadmin</userinput>
 </screen>
-should you desire to use the CUPS networked PostScript RIP functions. (Note that user <quote>ntadmin</quote>
-needs to be a valid Samba user with the required privileges to access the printershare.) This sets up the
-printer connection in the traditional LanMan way (not using MS-RPC).
+これは、CUPSでネットワークされたPostScript RIP機能を使用することが出来るようになる
+(ユーザ<quote>ntadmin</quote>はプリンタ共有にアクセスするための必要な権限を持つ
+有効なSambaユーザである必要がある)。これは、従来からのLanManによる方法(MS-RPCを使わない)
+でプリンタの接続を設定する。
 </para>
 </sect2>
 
 <sect2 id="cups-avoidps1">
-<title>Avoiding Critical PostScript Driver Settings on the Client</title>
+<title>クライアント上での危険なPostScriptドライバ設定を防止する</title>
 
 <para>
-Printing works, but there are still problems. Most jobs print well, some do not print at all. Some jobs have
-problems with fonts, which do not look very good. Some jobs print fast and some are dead-slow. Many of these
-problems can be greatly reduced or even completely eliminated if you follow a few guidelines. Remember, if
-your print device is not PostScript-enabled, you are treating your Ghostscript installation on your CUPS host
-with the output your client driver settings produce. Treat it well:
+印刷が動作するが、まだ問題があるとする。ほとんどのジョブは正しく印刷するが、いくつかは
+全く印刷できない。いくつかのジョブは、とても良いとは見えないフォントの問題を抱えている。
+いくつかのジョブは速やかに処理されるが、いくつかはとても遅い。これらの問題の多くは、
+いくつかのガイドラインに従うことで、劇的に軽減できるか、完全になくなる。思い出して
+ほしいが、もしも使用している印刷デバイスがPostScriptが有効でない場合、
+使用しているクライアントドライバの設定が生成する出力を使って、CUPSホスト上での
+Ghostscriptインストールを取り扱ているはずである。以下のようにうまく処理するようにする:
 </para>
 
 <itemizedlist>
