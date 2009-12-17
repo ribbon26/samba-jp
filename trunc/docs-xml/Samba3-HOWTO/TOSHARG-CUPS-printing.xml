@@ -3537,29 +3537,33 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 	put the driver files into the share, note that you need to escape the <quote>$</quote>: <command>smbclient
 	//sambaserver/print\$ -U root.</command>)</para></listitem>
 
-	<listitem><para>The user you're connecting as must be able to write to
-	the <smbconfsection name="[print$]"/> share and create
-	subdirectories.</para></listitem>
+	<listitem><para>接続しているユーザは<smbconfsection name="[print$]"/>共有に
+	書き込みとサブディレクトリの作成が出来ねばならない。</para></listitem>
 
-	<listitem><para>The printer you are going to set up for the Windows
-	clients needs to be installed in CUPS already.</para></listitem>
+	<listitem><para>Windowsクライアント用に設定しようとしているプリンタは、
+	CUPSによってすでにインストールされている必要がある。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 	<indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
-	The CUPS printer must be known to Samba; otherwise the <command>setdriver</command> subcommand fails with an
-	NT_STATUS_UNSUCCESSFUL error. To check if the printer is known by Samba, you may use the
-	<command>enumprinters</command> subcommand to <command>rpcclient</command>. A long-standing bug prevented a
-	proper update of the printer list until every smbd process had received a SIGHUP or was restarted. Remember
-	this in case you've created the CUPS printer just recently and encounter problems: try restarting Samba.
+	CUPSプリンタはSambaによって認識されねばならない:さもないと、
+	<command>setdriver</command>サブコマンドは、NT_STATUS_UNSUCCESSFULというエラーで
+	失敗する。Sambaによってプリンタが認識されているかを調べるには、
+	 <command>rpcclient</command>で<command>enumprinters</command>サブコマンドを
+	 使うことが出来る。長く存在しているバグが、各smbdプロセスがSIGHUPを受け取るか、
+	 再起動するまで、プリンタ一覧の適切な更新を阻害している。ごく最近CUPSプリンタを
+	 作成して問題が発生した場合、Sambaを再起動することを覚えておいてほしい。
 	</para></listitem>
 </itemizedlist>
 </sect2>
 
 <sect2>
-<title>Manual Driver Installation in 15 Steps</title>
+<title>15ステップでの手動ドライバインストール</title>
 
 <para>
+すべての要求されたコマンドを実行して、手動で、プリンタドライバをインストールしてみる。
+最初、これは複雑なプロセスなように見えるという理由で、手順を1つずつ、やらなければ
+ならない、単一のアクションアイテム毎に説明する。
 We are going to install a printer driver now by manually executing all
 required commands. Because this may seem a rather complicated process at
 first, we go through the procedure step by step, explaining every
@@ -3567,10 +3571,10 @@ single action item as it comes up.
 </para>
 
 <procedure>
-<title>Manual Driver Installation</title>
+<title>手動でのドライバインストール</title>
 
 	<step>
-	<title>Install the printer on CUPS.</title>
+	<title>CUPS上でのプリンタのインストール</title>
 
 	<para><screen>
 	&rootprompt;<userinput>lpadmin -p mysmbtstprn -v socket://10.160.51.131:9100 -E \
@@ -3578,15 +3582,14 @@ single action item as it comes up.
 	</screen></para>
 
 	<para>
-	This installs a printer with the name <parameter>mysmbtstprn</parameter>
-	to the CUPS system. The printer is accessed via a socket
-	(a.k.a. JetDirect or Direct TCP/IP) connection. You need to be root
-	for this step.
+	これは、CUPSシステムに<parameter>mysmbtstprn</parameter>という名前のプリンタを
+	インストールする。プリンタはソケット(JetDirectかDirect TCP/IPとして知られる)
+	接続経由で接続される。このステップはrootで行う必要がある。
 	</para>
 	</step>
 
 	<step>
-	<title>(Optional.) Check if the printer is recognized by Samba.</title>
+	<title>(オプション)Sambaによってプリンタが認識されているかを調べる。</title>
 
 	<para>
 	<indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
@@ -3601,20 +3604,23 @@ comment:[mysmbtstprn]
 	</para>
 
 	<para>
-	This should show the printer in the list. If not, stop and restart the Samba daemon (smbd) or send a HUP signal: 
+	これは、一覧中にプリンタを表示する。層でなければ、Sambaデーモン(smbd)をいったん
+	止めて再起動するか、HUPシグナルを送る:
 <screen>
 &rootprompt;<userinput>kill -HUP `pidof smbd`</userinput>
 </screen>
-	Check again. Troubleshoot and repeat until successful. Note the <quote>empty</quote> field between the two
-	commas in the <quote>description</quote> line. The driver name would appear here if there was one already. You
-	need to know root's Samba password (as set by the <command>smbpasswd</command> command) for this step and most
-	of the following steps. Alternatively, you can authenticate as one of the users from the <quote>write
-	list</quote> as defined in &smb.conf; for <smbconfsection name="[print$]"/>.
+	再度チェックする。成功するまでトラブルシュートを繰り返し行う。
+	<quote>description</quote>行中に、2つのカンマの間に<quote>空白</quote>の
+	フィールドがあることに注意。すでに1つ存在していれば、ドライバ名はここに現れる。
+	このステップと、この後のステップのほとんどのために、rootのSambaでのパスワード
+	(<command>smbpasswd</command>コマンドによって設定される)を知っておく必要がある。
+	代わりに、<smbconfsection name="[print$]"/>に対して&smb.conf;中で
+	<quote>write list</quote>として定義されているユーザからの1つで認証する事が出来る。
 	</para>
 	</step>
 
 	<step>
-	<title>(Optional.) Check if Samba knows a driver for the printer.</title>
+	<title>(オプション)プリンタに対するドライバをSambaが認識しているかを調べる。</title>
 
 	<para>
 	<indexterm><primary>rpcclient</primary><secondary>getprinter</secondary></indexterm>
