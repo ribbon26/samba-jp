@@ -3878,25 +3878,26 @@ Printer Driver Info 3:
 </screen></para>
 
 <para>
-Change any printer setting once (like changing <emphasis><guilabel>portrait</guilabel> to
-<guilabel>landscape</guilabel></emphasis>), click on <guibutton>Apply</guibutton>, and change the setting back.
+任意のプリンタの設定を一回変更し、
+(<emphasis><guilabel>縦方向</guilabel>を<guilabel>横方向</guilabel></emphasis>になど)
+<guibutton>適用</guibutton>をクリックし、設定を元に戻す。
 </para>
 </step>
 
 <step>
-<title>Install the printer on a client (Point'n'Print).</title>
+<title>クライアント上でプリンタをインストールする(ポイントアンドプリント)。</title>
 
 <para>
-<indexterm significance="preferred"><primary>point 'n' print</primary></indexterm>
+<indexterm significance="preferred"><primary>ポイントアンドプリント</primary></indexterm>
 <screen>
 &dosprompt;<userinput>rundll32 printui.dll,PrintUIEntry /in /n &quot;\\sambaserver\mysmbtstprn&quot;</userinput>
 </screen>
-If it does not work, it could be a permissions problem with the <smbconfsection name="[print$]"/> share.
+もしもこれが動かない場合、<smbconfsection name="[print$]"/>共有のアクセス許可問題かもしれない。
 </para>
 </step>
 
 <step>
-<title>(Optional) Print a test page.</title>
+<title>(オプション)テストページを印刷する。</title>
 
 <indexterm><primary>rundll32</primary></indexterm>
 <para><screen>
@@ -3904,14 +3905,18 @@ If it does not work, it could be a permissions problem with the <smbconfsection 
 </screen></para>
 
 <para>
-Then hit [TAB] five times, [ENTER] twice, [TAB] once, and [ENTER] again, and march to the printer.
+次に5回[タブ]を入力し、[ENTER]を二回入力し、[TAB]を1回、そして再度[ENTER]を入力し
+プリンタの所に行く。
 </para>
 </step>
 
 <step>
-<title>(Recommended.) Study the test page.</title>
+<title>(推奨)テストページを調査する。</title>
 
 <para>
+今は、プリンタのインストールについてすべてを知っていて、そこに書いてあることを読む必要は
+ない。額縁にこれを入れて、"初めてRPCCLIENTでインストールしたプリンタ"というタイトルを
+付けて壁に貼ろう。でも、やはり捨てるよね。
 Hmmm. Just kidding! By now you know everything about printer installations and you do not need to read a word.
 Just put it in a frame and bolt it to the wall with the heading "MY FIRST RPCCLIENT-INSTALLED PRINTER"
 &smbmdash; why not just throw it away!
@@ -3919,7 +3924,7 @@ Just put it in a frame and bolt it to the wall with the heading "MY FIRST RPCCLI
 </step>
 
 <step>
-<title>(Obligatory.) Enjoy. Jump. Celebrate your success.</title>
+<title>(義務)飛び上がって成功を喜ぼう。</title>
 
 <para><screen>
 &rootprompt;<userinput>echo "Cheeeeerioooooo! Success..." &gt;&gt; /var/log/samba/log.smbd</userinput>
@@ -3929,17 +3934,17 @@ Just put it in a frame and bolt it to the wall with the heading "MY FIRST RPCCLI
 </sect2>
 
 <sect2>
-<title>Troubleshooting Revisited</title>
+<title>トラブルシューティング再考</title>
 
 <para>
 <indexterm><primary>adddriver</primary></indexterm>
-The setdriver command will fail if in Samba's mind the queue is not
-already there. A successful installation displys the promising message that the:
+もしもSambaが、キューがそこにないと考えた場合、setdriverコマンドは失敗する。
+インストールが成功すると以下の頼もしいメッセージが表示される:
 <screen>
 Printer Driver ABC successfully installed.
 </screen>
-following the <command>adddriver</command> parts of the procedure.  But you may also see
-a disappointing message like this one:
+この後、<command>adddriver</command>部分の手続きが続く。しかし、以下のような
+期待はずれのメッセージが出るかもしれない:
 <computeroutput>
 result was NT_STATUS_UNSUCCESSFUL
 </computeroutput></para>
@@ -3947,11 +3952,12 @@ result was NT_STATUS_UNSUCCESSFUL
 <para>
 <indexterm><primary>lpstat</primary></indexterm>
 <indexterm><primary>rpcclient</primary></indexterm>
-It is not good enough that you can see the queue in CUPS, using the <command>lpstat -p ir85wm</command>
-command. A bug in most recent versions of Samba prevents the proper update of the queue list. The recognition
-of newly installed CUPS printers fails unless you restart Samba or send a HUP to all smbd processes. To verify
-if this is the reason why Samba does not execute the <command>setdriver</command> command successfully, check
-if Samba <quote>sees</quote> the printer:
+CUPS中のキューを見ることができるだけでは十分ではないので、
+<command>lpstat -p ir85wm</command>コマンドを使う。最も最近のSambaのバージョンでは、
+適切なキュー一覧の更新を妨害するというバグがある。Sambaを再起動するか、すべてのsmbd
+プロセスにHUPを送るまで、新しくインストールしたCUPSプリンタの認識に失敗する。なぜSambaが
+<command>setdriver</command>コマンドを正しく実行しないかという理由がこれかと言うことを
+検証するために、Sambaがプリンタを<quote>認識している</quote>かを調べる:
 <indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
 <screen>
 &rootprompt;<userinput>rpcclient transmeta -N -U'root%xxxx' -c 'enumprinters 0'|grep ir85wm</userinput>
@@ -3959,7 +3965,7 @@ if Samba <quote>sees</quote> the printer:
 </screen></para>
 
 <para>
-An alternate command could be this: 
+別のコマンドでのやり方もある:
 <indexterm><primary>rpcclient</primary><secondary>getprinter</secondary></indexterm>
 <screen>
 &rootprompt;<userinput>rpcclient transmeta -N -U'root%secret' -c 'getprinter ir85wm' </userinput>
@@ -3971,13 +3977,14 @@ An alternate command could be this:
 </screen></para>
 
 <para>
-By the way, you can use these commands, plus a few more, of course, to install drivers on remote Windows NT print servers too!
+所で、上記のコマンドに、さらにいくつかを使うことが出来、もちろん、
+リモートのWindows NT印刷サーバにもインストールできる!
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>The Printing <filename>*.tdb</filename> Files</title>
+<title>印刷関連の<filename>*.tdb</filename>ファイル</title>
 
 <para>
 <indexterm><primary>TDB</primary></indexterm>
@@ -3993,12 +4000,13 @@ By the way, you can use these commands, plus a few more, of course, to install d
 <indexterm><primary>ntprinters.tdb</primary><seealso>TDB</seealso></indexterm>
 <indexterm><primary>sessionid.tdb</primary><seealso>TDB</seealso></indexterm>
 <indexterm><primary>secrets.tdb</primary><seealso>TDB</seealso></indexterm>
-Some mystery is associated with the series of files with a tdb suffix appearing in every Samba installation.
-They are <filename>connections.tdb</filename>, <filename>printing.tdb</filename>,
+すべてのSambaをインストールした環境にある、tdbという拡張子を持った、一連のファイル
+は謎であろう。それらは、
+<filename>connections.tdb</filename>, <filename>printing.tdb</filename>,
 <filename>share_info.tdb</filename>, <filename>ntdrivers.tdb</filename>, <filename>unexpected.tdb</filename>,
 <filename>brlock.tdb</filename>, <filename>locking.tdb</filename>, <filename>ntforms.tdb</filename>,
 <filename>messages.tdb</filename> , <filename>ntprinters.tdb</filename>, <filename>sessionid.tdb</filename>,
-and <filename>secrets.tdb</filename>. What is their purpose?
+と<filename>secrets.tdb</filename>である。これらの目的はなんであるか?
 </para>
 
 <sect2>
