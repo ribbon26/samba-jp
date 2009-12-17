@@ -4014,53 +4014,61 @@ CUPS中のキューを見ることができるだけでは十分ではないの�
 
 <para>
 <indexterm><primary>TDB</primary></indexterm>
-A Windows NT (print) server keeps track of all information needed to serve its duty toward its clients by
-storing entries in the Windows registry. Client queries are answered by reading from the registry,
-Administrator or user configuration settings that are saved by writing into the registry. Samba and UNIX
-obviously do not have such a Registry. Samba instead keeps track of all client-related information in a series
-of <filename>*.tdb</filename> files. (TDB stands for trivial data base). These are often located in
-<filename>/var/lib/samba/</filename> or <filename>/var/lock/samba/</filename>. The printing-related files are
-<filename>ntprinters.tdb</filename>, <filename>printing.tdb</filename>,<filename>ntforms.tdb</filename>, and
-<filename>ntdrivers.tdb</filename>.
+Windows NT(印刷)サーバは、Windowsレジストリ中にエントリを格納することによって、その
+クライアントに対して、その作業を提供するのに必要なすべての情報を記録する。クライアントの
+問い合わせはレジストリを読み取ることによって回答が行われ、Administratorかユーザの
+構成設定はレジストリ中に書き込むことで保存される。SambaとUNIXは明らかにこのような
+レジストリを持っていない。Sambaはその代わりに、一連の<filename>*.tdb</filename>ファイルに
+すべてのクライアントに関連する情報を保存する(TDBはtrivial data baseの省略形である)。
+これらはたいてい<filename>/var/lib/samba/</filename>か
+<filename>/var/lock/samba/</filename>にある。印刷関連のファイルは、
+<filename>ntprinters.tdb</filename>, <filename>printing.tdb</filename>,
+<filename>ntforms.tdb</filename>と<filename>ntdrivers.tdb</filename>である。
 </para>
 </sect2>
 
 <sect2>
-<title>Binary Format</title>
+<title>バイナリ形式</title>
 
 <para>
-<filename>*.tdb</filename> files are not human readable. They are written in a binary format. <quote>Why not
-ASCII?</quote>, you may ask. <quote>After all, ASCII configuration files are a good and proven tradition on
-UNIX.</quote> The reason for this design decision by the Samba Team is mainly performance. Samba needs to be
-fast; it runs a separate <command>smbd</command> process for each client connection, in some environments many
-thousands of them. Some of these <command>smbds</command> might need to write-access the same
-<filename>*.tdb</filename> file <emphasis>at the same time</emphasis>. The file format of Samba's
-<filename>*.tdb</filename> files allows for this provision. Many smbd processes may write to the same
-<filename>*.tdb</filename> file at the same time. This wouldn't be possible with pure ASCII files.
+<filename>*.tdb</filename>は人間に可読なファイルではない。それらはバイナリ形式である。
+<quote>なぜASCIIでないのか?</quote>と質問するかもしれない。
+<quote>結局の所、ASCII設定ファイルは、便利でUNIXでの伝統である。</quote>
+Sambaチームによって、デザインがこうなった理由は、主に性能である。Sambaは高速で動作する
+必要がある。ある環境では数千にもなる、各クライアントの接続毎に分離された
+<command>smbd</command>プロセスが動く。これらのいくつかは、
+<emphasis>同じ時間に</emphasis>同じ<filename>*.tdb</filename>ファイルをそれら
+<command>smbd</command>プロセスが書き込みアクセスをする必要があるかもしれない。
+Sambaの<filename>*.tdb</filename>ファイル形式は、これを提供できる。多くのsmbd
+プロセスは同じ時間に同じ<filename>*.tdb</filename>ファイルに書き込みができる。
+これは純粋なASCIIファイルでは不可能である。
 </para>
 </sect2>
 
 <sect2>
-<title>Losing <filename>*.tdb</filename> Files</title>
+<title><filename>*.tdb</filename>ファイルの喪失</title>
 
 <para>
-It is very important that all <filename>*.tdb</filename> files remain consistent over all write and read
-accesses. However, it may happen that these files <emphasis>do</emphasis> get corrupted. (A <command>kill -9
-`pidof smbd'</command> while a write access is in progress could do the damage, as could a power interruption,
-etc.). In cases of trouble, a deletion of the old printing-related <filename>*.tdb</filename> files may be the
-only option. After that, you need to re-create all print-related setups unless you have made a backup of the
-<filename>*.tdb</filename> files in time.
+すべての<filename>*.tdb</filename>ファイルはすべての読み取りと書き込みアクセス間で
+整合性を保持することはとても重要である。しかし、これらのファイルが
+<emphasis>壊れる</emphasis>ことがあるかもしれない(書き込み処理中に、
+<command>kill -9 `pidof smbd'</command>を実行すると、ダメージを与えることになる。
+そのほか、急な電源断など)。このようなトラブルの場合、古い印刷関係の
+<filename>*.tdb</filename>ファイルを削除するのが唯一の解である。その後、その時点で
+<filename>*.tdb</filename>ファイルをバックアップから戻さない限り、すべての印刷関連の
+設定を再作成する必要がある。
 </para>
 </sect2>
 
 <sect2>
-<title>Using <command>tdbbackup</command></title>
+<title><command>tdbbackup</command>の使用</title>
 
 <para>
 <indexterm><primary>TDB</primary><secondary>backing up</secondary><see>tdbbackup</see></indexterm>
 <indexterm><primary>tdbbackup</primary></indexterm>
-Samba ships with a little utility that helps the root user of your system to backup your
-<filename>*.tdb</filename> files. If you run it with no argument, it prints a usage message:
+Sambaは、システム中にある<filename>*.tdb</filename>ファイルをバックアップする、
+rootユーザを手助けする小さなユーティリティを同梱している。もしも引数なしでそれを
+動かすと、以下のメッセージが表示される:
 <screen>
 &rootprompt;<userinput>tdbbackup</userinput>
  Usage: tdbbackup [options] &lt;fname...&gt;
@@ -4072,7 +4080,7 @@ Samba ships with a little utility that helps the root user of your system to bac
 </screen></para>
 
 <para>
-Here is how I backed up my <filename>printing.tdb</filename> file:
+以下は<filename>printing.tdb</filename>ファイルをどのようにバックアップするかの例である:
 </para>
 
 <para><screen>
@@ -4094,7 +4102,7 @@ ntprinters.tdb sessionid.tdb
 </sect1>
 
 <sect1>
-<title>CUPS Print Drivers from Linuxprinting.org</title>
+<title>Linuxprinting.orgからのCUPSプリントドライバ</title>
 
 <para>
 <indexterm><primary>Linuxprinting.org</primary></indexterm>
