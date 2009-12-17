@@ -3649,17 +3649,16 @@ printprocessor:[winprint]
 </screen></para>
 
 <para>
-None of the three commands shown above should show a driver.
-This step was done for the purpose of demonstrating this condition. An
-attempt to connect to the printer at this stage will prompt a
-message along the lines of, <quote>The server does not have the required printer
-driver installed.</quote>
+上記で示されている3つのコマンドのどれもドライバを表示しない。
+このステップはこの条件をデモンストレーションする目的で行われた。このステージにおける
+プリンタへの接続の試みは、
+<quote>The server does not have the required printer driver installed.</quote>
+という行を表示する。
 </para>
 </step>
 
 <step>
-<title>Put all required driver files into Samba's
-[print$].</title>
+<title>すべての要求されたドライバファイルをSambaの[print$]に置く。</title>
 
 <para><screen>
 &rootprompt;<userinput>smbclient //localhost/print\$ -U 'root%xxxx' \
@@ -3671,17 +3670,18 @@ driver installed.</quote>
 </screen></para>
 
 <para>
-(This command should be entered in one long single line. Line breaks and the line ends indicated by
-<quote>\</quote> have been inserted for readability reasons.) This step is <emphasis>required</emphasis> for
-the next one to succeed. It makes the driver files physically present in the <smbconfsection name="[print$]"/>
-share. However, clients would still not be able to install them, because Samba does not yet treat them as
-driver files. A client asking for the driver would still be presented with a <quote>not installed here</quote>
-message.
+(このコマンドは、単一の長い行で入力すべきである<quote>\</quote>によって示される
+改行と行末は可読性向上のために挿入されている)。このステップは、次のものを成功
+させるために<emphasis>必要とされる</emphasis>。これは、ドライバファイルを物理的に
+<smbconfsection name="[print$]"/>共有中に存在させるようにする。しかし、それらを
+Sambaはまだドライバファイルとして扱えないので、クライアントはまだそれらをインストール
+できない。クライアントがドライバについて問い合わせると、引き続き
+<quote>not installed here</quote>というメッセージが表示される。
 </para>
 </step>
 
 <step>
-<title>Verify where the driver files are now.</title>
+<title>現在どこにドライバファイルがあるかを検査する。</title>
 
 <para><screen>
 &rootprompt;<userinput>ls -l /etc/samba/drivers/W32X86/</userinput>
@@ -3695,13 +3695,13 @@ drwxr-sr-x    2 root     ntadmin       670 May 16 03:15 3
 </screen></para>
 
 <para>
-The driver files now are in the W32X86 architecture <quote>root</quote> of
-<smbconfsection name="[print$]"/>.
+ドライバファイルは現在<smbconfsection name="[print$]"/>を<quote>root</quote>とする
+W32X86アーキテクチャにある。
 </para>
 </step>
 
 <step>
-<title>Tell Samba that these are driver files (<command>adddriver</command>).</title>
+<title>Sambaにそれらがドライバファイルであると告げる(<command>adddriver</command>)。</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
@@ -3714,17 +3714,19 @@ Printer Driver mydrivername successfully installed.
 </screen></para>
 
 <para>
-You cannot repeat this step if it fails. It could fail even as a result of a simple typo. It will most likely
-have moved a part of the driver files into the <quote>2</quote> subdirectory. If this step fails, you need to
-go back to the fourth step and repeat it before you can try this one again. In this step, you need to choose a
-name for your driver. It is normally a good idea to use the same name as is used for the printer name;
-however, in big installations you may use this driver for a number of printers that obviously have different
-names, so the name of the driver is not fixed.
+これが失敗してもこのステップを繰り返すことはできない。これは単なるtypoの結果であったと
+しても失敗する。それは、たいていの場合、ドライバファイルの一部を<quote>2</quote>
+サブディレクトリ中に移動してしまっただろう。もしもこのステップが失敗したならば、
+このステップを再度実行する前に、4番目のステップに戻り、繰り返す必要がある。この
+ステップ中で、ドライバの名前を選択する必要がある。プリンタの名前として使うものと同じ
+名前を使うことはよい方法である。しかし、大量にインストールする場合、明確に異なった
+名前の、数多くのプリンタに対するドライバを使っても良い。そのため、ドライバの名前は
+決定されない。
 </para>
 </step>
 
 <step>
-<title>Verify where the driver files are now.</title>
+<title>現在ドライバファイルがどこにあるかを調べる。</title>
 
 <para><screen>
 &rootprompt;<userinput>ls -l /etc/samba/drivers/W32X86/</userinput>
