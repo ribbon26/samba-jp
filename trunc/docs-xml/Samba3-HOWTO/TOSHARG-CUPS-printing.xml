@@ -4925,91 +4925,87 @@ application/vnd.cups-postscript application/vnd.cups-raw 0 \
 	my_PJL_stripping_filter
 </programlisting>
 
-You will need to write a <parameter>my_PJL_stripping_filter</parameter>
-(which could be a shell script) that parses the PostScript and removes the
-unwanted PJL. This needs to conform to CUPS filter design
-(mainly, receive and pass the parameters printername, job-id,
-username, jobtitle, copies, print options, and possibly the
-filename). It is installed as world executable into
-<filename>/usr/lib/cups/filters/</filename> and is called by CUPS
-if it encounters a MIME type <parameter>application/vnd.cups-postscript</parameter>.
+PostScriptを解析する(シェルスクリプトであり得る)
+<parameter>my_PJL_stripping_filter</parameter>を書き、望まないPJLを取り除く
+必要があるかもしれない。これはCUPSフィルタデザインに従う必要がある(主に、printername,
+job-id,username, jobtitle, copies, print optionsと可能ならばファイル名
+パラメータを受け渡す)。これは<filename>/usr/lib/cups/filters/</filename>中に
+誰でも実行できるようにインストールされ、MIMEタイプ
+<parameter>application/vnd.cups-postscript</parameter>が来た場合には、
+CUPSによって呼び出される。
 </para>
 
 <para>
-CUPS can handle <parameter>-o job-hold-until=indefinite</parameter>.
-This keeps the job in the queue on hold. It will only be printed
-upon manual release by the printer operator. This is a requirement in
-many central reproduction departments, where a few operators manage
-the jobs of hundreds of users on some big machine, where no user is
-allowed to have direct access (such as when the operators often need
-to load the proper paper type before running the 10,000 page job
-requested by marketing for the mailing, and so on).
+CUPSは<parameter>-o job-hold-until=indefinite</parameter>を扱える。これは、キュー中に
+ジョブを保存しておく。プリンタ操作者によって手動で解放されるときにのみ印刷される。
+これは、誰も直接アクセスできないいくつかの大きなマシン上で、数百人のユーザのジョブを、
+少数のオペレータが管理する、多くの集中印刷センタからの要求である(これは、ダイレクト
+メール発送のためなどに要求される10000ページのジョブを動かす前に、オペレータが
+適切な紙を設置する必要がしばしばある場合など)。
 </para>
 </sect1>
 
 <sect1>
-<title>Autodeletion or Preservation of CUPS Spool Files</title>
+<title>CUPSスプールフィルタの自動削除または保存</title>
 
 <para>
 <indexterm><primary>/var/spool/samba</primary></indexterm>
 <indexterm><primary>/var/spool/cups/</primary></indexterm>
 <indexterm><primary>cupsd.conf</primary></indexterm>
-Samba print files pass through two spool directories. One is the incoming directory managed by Samba (set in
-the <smbconfoption name="path">/var/spool/samba</smbconfoption> directive in the <smbconfsection
-name="[printers]"/> section of &smb.conf;). The other is the spool directory of your UNIX print subsystem. For
-CUPS it is normally <filename>/var/spool/cups/</filename>, as set by the <filename>cupsd.conf</filename>
-directive <filename>RequestRoot /var/spool/cups</filename>.
+Sambaは2つのスプールディレクトリ経由で印刷ファイルを渡す。1つはSambaによって管理される
+入力ディレクトリである(&smb.conf;中の<smbconfsection name="[printers]"/>セクション中の
+<smbconfoption name="path">/var/spool/samba</smbconfoption>ディレクティブで設定される)。
+もう1つは、UNIX印刷システムのスプールディレクトリである。CUPS用には、通常それは
+<filename>/var/spool/cups/</filename>であり、<filename>cupsd.conf</filename>中の
+ディレクティブ<filename>RequestRoot /var/spool/cups</filename>によって設定される。
 </para>
 
 <sect2>
-<title>CUPS Configuration Settings Explained</title>
+<title>CUPS構成の設定の説明</title>
 
 <para>
-Some important parameter settings in the CUPS configuration file
-<filename>cupsd.conf</filename> are:
+CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、いくつかの
+重要なパラメータは以下の通り:
 </para>
 
 <variablelist>
 
 	<varlistentry><term>PreserveJobHistory Yes</term>
 	<listitem><para>
-	This keeps some details of jobs in cupsd's mind (well, it keeps the
-	c12345, c12346, and so on, files in the CUPS spool directory, which does a
-	similar job as the old-fashioned BSD-LPD control files). This is set
-	to <quote>Yes</quote> as a default.
+	これは、cupsdに、いくつかのジョブの詳細を保存させる(すなわち、c12345,c12346の
+	ように、旧形式であるBSD-LPD制御ファイルのような同等のジョブとして処理し、
+	CUPSスプールディレクトリ中のファイルに)。既定値は<quote>Yes</quote>に
+	設定される。
 	</para></listitem></varlistentry>
 
 	<varlistentry><term>PreserveJobFiles Yes</term>
 	<listitem><para>
-	This keeps the job files themselves in cupsd's mind
-	(it keeps the d12345, d12346, etc., files in the CUPS spool
-	directory). This is set to <quote>No</quote> as the CUPS
-	default.
+	これは、ジョブファイルそれ自身をcupsdが保存するようにさせる(d12345,d12346
+	などで、CUPSスプールディレクトリ中にファイルされる)。CUPSの既定値は
+	<quote>No</quote>である。
 	</para></listitem></varlistentry>
 
 	<varlistentry><term><quote>MaxJobs 500</quote></term>
 	<listitem><para>
-	This directive controls the maximum number of jobs
-	that are kept in memory. Once the number of jobs reaches the limit,
-	the oldest completed job is automatically purged from the system to
-	make room for the new one. If all of the known jobs are still
-	pending or active, then the new job will be rejected. Setting the
-	maximum to 0 disables this functionality. The default setting is
-	0.
+	このディレクティブは、メモリ中に保持されるジョブの最大数を制御する。この
+	制限値にジョブが到達すると、新しいもののために、最も古いものが自動的にシステム
+	からパージされる。もしも既存のすべてのジョブが、引き続きペンディングか
+	アクティブならば、新しいジョブは拒否される。値を0に設定するとこの機能が無効に
+	なる。既定値の設定は0である。
 	</para></listitem></varlistentry>
 </variablelist>
 
 <para>
-(There are also additional settings for <parameter>MaxJobsPerUser</parameter> and
-<parameter>MaxJobsPerPrinter</parameter>.)
+(<parameter>MaxJobsPerUser</parameter>と<parameter>MaxJobsPerPrinter</parameter>という
+追加の設定もある)。
 </para>
 </sect2>
 
 <sect2>
-<title>Preconditions</title>
+<title>準備</title>
 
 <para>
-For everything to work as it should, you need to have three things:
+すべてをきちんと動くようにするために、以下の3つを行う必要がある:
 </para>
 
 <itemizedlist>
