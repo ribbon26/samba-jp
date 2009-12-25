@@ -4704,67 +4704,70 @@ CUPSで正しく計測するために、印刷ファイルはCUPSpstopsフィル
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>pstoraster</primary></indexterm>
 <indexterm><primary>PJL-ヘッダ</primary></indexterm>
-Before CUPS 1.1.16, your only option was to use the Adobe PostScript driver on the Windows clients. The output
-of this driver was not always passed through the <command>pstops</command> filter on the CUPS/Samba side, and
-therefore was not counted correctly (the reason is that it often, depending on the PPD being used, wrote a
-PJL-header in front of the real PostScript, which caused CUPS to skip <command>pstops</command> and go
-directly to the <command>pstoraster</command> stage).
+CUPS 1.1.16より前は、Windowsクライアント上でAdobe PostScriptドライバを使うことが出来る
+のみであった。このドライバの出力は、CUPS/Sambaサイド上の<command>pstops</command>
+フィルタに常時渡されるわけではなく、そのため、正しく計測出来なかった(その理由は、
+それがしばしば使用されるPPDに依存するからであり、CUPSに<command>pstops</command>を
+スキップさせる真のPostScriptの直前にPJL-ヘッダが書かれ、直接<command>pstoraster</command>
+ステージに行くからである)。
 </para>
 
 <para>
-From CUPS 1.1.16 and later releases, you can use the CUPS PostScript driver for Windows NT/200x/XP
-clients (which is tagged in the download area of <filename>http://www.cups.org/</filename> as the
-<filename>cups-samba-1.1.16.tar.gz</filename> package). It does <emphasis>not</emphasis> work for Windows
-9x/Me clients, but it guarantees:
+CUPS 1.1.16とそれ以降のリリースから、Windows NT/200x/XPクライアント用のCUPS PostScript
+ドライバを使うことが出来る(これは<filename>cups-samba-1.1.16.tar.gz</filename>という
+パッケージとして<filename>http://www.cups.org/</filename>のダウンロード領域中に
+タグされている)。これはWindows 9x/Meクライアントでは<emphasis>動かない</emphasis>が
+以下は保証される:
 </para>
 
 <itemizedlist>
-	<listitem><para> <indexterm><primary>PJL</primary></indexterm> To not write a PJL-header.</para></listitem>
+	<listitem><para> <indexterm><primary>PJL</primary></indexterm>PJL-ヘッダを書かない。</para></listitem>
 
-	<listitem><para>To still read and support all PJL-options named in the
-	driver PPD with its own means.</para></listitem>
+	<listitem><para>固有の意味を持つドライバPPD中に名前があるすべての
+	PJL-オプションを、引き続き読み取りサポートする。</para></listitem>
 
-	<listitem><para>That the file will pass through the <command>pstops</command> filter
-	on the CUPS/Samba server.</para></listitem>
+	<listitem><para>CUPS/Sambaサーバ上の<command>pstops</command>フィルタに
+	ファイルが渡される。</para></listitem>
 
-	<listitem><para>To page-count correctly the print file.</para></listitem>
+	<listitem><para>印刷ファイルのページカウントが正しくなる。</para></listitem>
 </itemizedlist>
 
 <para>
-You can read more about the setup of this combination in the man page for <command>cupsaddsmb</command> (which
-is only present with CUPS installed, and only current from CUPS 1.1.16).
+この組み合わせによる設定についてのより詳細は、<command>cupsaddsmb</command>のマニュアル
+ページで読むことが出来る(これはCUPSがインストールされている所でのみに存在し1.1.16
+以降で有効である)。
 </para>
 </sect2>
 
 <sect2>
-<title>The page_log File Syntax</title>
+<title>page_logファイルの形式</title>
 
 <para>
 <indexterm><primary>page_log</primary></indexterm>
-These are the items CUPS logs in the <filename>page_log</filename> for every page of a job:
+ジョブの各ページに対する<filename>page_log</filename>中のCUPSログの項目は以下の通り:
 </para>
 
 <itemizedlist>
-	<listitem><para>Printer name</para></listitem>
+	<listitem><para>プリンタ名(Printer name)</para></listitem>
 
-	<listitem><para>User name</para></listitem>
+	<listitem><para>ユーザ名(User name)</para></listitem>
 
-	<listitem><para>Job ID</para></listitem>
+	<listitem><para>ジョブID(Job ID)</para></listitem>
 
-	<listitem><para>Time of printing</para></listitem>
+	<listitem><para>印刷時間(Time of printing)</para></listitem>
 
-	<listitem><para>Page number</para></listitem>
+	<listitem><para>ページ数(Page number)</para></listitem>
 
-	<listitem><para>Number of copies</para></listitem>
+	<listitem><para>印刷部数(Number of copies)</para></listitem>
 
-	<listitem><para>A billing information string (optional)</para></listitem>
+	<listitem><para>課金情報文字列(A billing information string) (オプション)</para></listitem>
 
-	<listitem><para>The host that sent the job (included since version 1.1.19)</para></listitem>
+	<listitem><para>ジョブを送り出したホスト(The host that sent the job) (バージョン1.1.19以降)</para></listitem>
 </itemizedlist>
 
 <para>
-Here is an extract of my CUPS server's <filename>page_log</filename> file to illustrate the
-format and included items:
+以下は項目を含む形式の図示を行うための、CUPSサーバの<filename>page_log</filename>ファイル
+から抜き出したものである:
 </para>
 
 <para><screen>
