@@ -4605,61 +4605,63 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 </itemizedlist>
 
 <para>
-Once you print to a print queue set up with the Foomatic PPD, CUPS will insert the appropriate commands and
-comments into the resulting PostScript job file. foomatic-rip is able to read and act upon these and uses some
-specially encoded Foomatic comments embedded in the job file. These in turn are used to construct
-(transparently for you, the user) the complicated Ghostscript command line telling the printer driver exactly
-how the resulting raster data should look and which printer commands to embed into the data stream. You need:
+一度Foomatic PPDで設定された印刷キューに印刷すると、CUPSは適切なコマンドを挿入し、
+結果のPostScriptファイル中にコメントを挿入する。foomatic-ripはそれを読み、それらに
+対して処理を行うことが出来、さらに、ジョブファイル中に埋め込まれている、特別にエンコード
+されたFoomaticコメントのいくつかを使う。それらは順に(ユーザにとっては透過的に)
+どのように結果のラスタデータを見えるようにすべきかと、どのプリンタコマンドを、
+データストリーム中に埋め込むかを、正確に、プリンタドライバに指示する、複雑なGhostscript
+コマンドを組み立てるのに使われる。以下が必要である:
 </para>
 
 <itemizedlist>
-	<listitem><para>A <quote>foomatic+something</quote> PPD &smbmdash; but this is not enough
-	to print with CUPS (it is only <emphasis>one</emphasis> important
-	component).</para></listitem>
+	<listitem><para><quote>foomatic+なにか</quote> PPD &smbmdash;しかし、
+	CUPSで印刷するためには、これだけでは不十分である(これは単に
+	<emphasis>1つの</emphasis>重要な要素である)。</para></listitem>
 
-	<listitem><para>The <parameter>foomatic-rip</parameter> filter script (Perl) in
-	<filename>/usr/lib/cups/filters/</filename>.</para></listitem>
+	<listitem><para><filename>/usr/lib/cups/filters/</filename>中の
+	<parameter>foomatic-rip</parameter>フィルタスクリプト(Perl)。</para></listitem>
 
-	<listitem><para>Perl to make foomatic-rip run.</para></listitem>
+	<listitem><para>foomatic-ripを動かすためのPerl</para></listitem>
 
-	<listitem><para>Ghostscript (because it is doing the main work,
-	controlled by the PPD/foomatic-rip combo) to produce the raster data
-	fit for your printer model's consumption.</para></listitem>
+	<listitem><para>使用しているプリンタが受け取れる形に適合したラスタデータを
+	生成するためのGhostscript(これが主要な仕事を行うため、PPD/foomatic-ripの組で
+	制御される)</para></listitem>
 
-	<listitem><para>Ghostscript <emphasis>must</emphasis> (depending on
-	the driver/model) contain support for a certain device representing
-	the selected driver for your model (as shown by <command>gs -h</command>).</para></listitem>
-
-	<listitem><para>foomatic-rip needs a new version of PPDs (PPD versions
-	produced for cupsomatic do not work with foomatic-rip).</para></listitem>
+	<listitem><para>Ghostscriptは(ドライバ/モデルに依存するが)使用しているモデルに
+	対する選択されたドライバを表す特定のデバイスに対するサポートを
+	<emphasis>含んでいなければならない</emphasis>(<command>gs -h</command>によって
+	確認できる)。</para></listitem>
 </itemizedlist>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Page Accounting with CUPS</title>
+<title>CUPSによるページの課金</title>
 
 
 <para>
-<indexterm><primary>CUPS</primary><secondary>Page Accounting</secondary></indexterm>
-Often there are questions regarding print quotas where Samba users (that is, Windows clients) should not be
-able to print beyond a certain number of pages or data volume per day, week, or month. This feature is
-dependent on the real print subsystem you're using.  Samba's part is always to receive the job files from the
-clients (filtered <emphasis>or</emphasis> unfiltered) and hand them over to this printing subsystem.
+<indexterm><primary>CUPS</primary><secondary>ページの課金</secondary></indexterm>
+しばしば、日、週、月単位に、一定のページ数かデータ量を超えて、Sambaユーザ(すなわち
+Windowsクライアント)が、印刷が出来ないようにする、印刷quotaに関連する質問がある。
+この機能は、使用している実際の印刷サブシステムに依存する。Sambaはクライアントから
+常にジョブファイルを受け取り(<emphasis>フィルタされるか否か</emphasis>、この印刷
+サブシステムに渡す。
 </para>
 
 <para>
-Of course one could hack things with one's own scripts. But then there is CUPS. CUPS supports quotas that can
-be based on the size of jobs or on the number of pages or both, and can span any time period you want.
+もちろん、使用している人固有のスクリプトで、これをハックすることは出来る。しかし、
+CUPSがある。CUPSは、ジョブのサイズやページ数やその両方をベースとできるquotaを
+サポートし、それを行いたいときにはいつでも橋渡しをすることが出来る。
 </para>
 
 <sect2>
-<title>Setting Up Quotas</title>
+<title>Quotasの設定</title>
 
 <para>
 <indexterm><primary>CUPS</primary><secondary>quotas</secondary></indexterm>
-This is an example command of how root would set a print quota in CUPS, assuming an existing printer named
-<quote>quotaprinter</quote>:
+CUPSで印刷quotaをrootがどのように設定するかのコマンド例であり、存在するプリンタが
+<quote>quotaprinter</quote>であることを仮定している:
 <indexterm><primary>lpadmin</primary></indexterm>
 <screen>
 &rootprompt;<userinput>lpadmin -p quotaprinter -o job-quota-period=604800 \
@@ -4667,39 +4669,41 @@ This is an example command of how root would set a print quota in CUPS, assuming
 </screen></para>
 
 <para>
-This would limit every single user to print no more than 100 pages or 1024 KB of
-data (whichever comes first) within the last 604,800 seconds ( = 1 week).
+これは個々ののユーザに対して、604800秒(=一週間)で、100ページまたはデータが1024KBでの
+制限を行う(どちらか小さい方)。
 </para>
 </sect2>
 
 <sect2>
-<title>Correct and Incorrect Accounting</title>
+<title>正しいあるいは不正な課金</title>
 
 <para>
-For CUPS to count correctly, the printfile needs to pass the CUPS pstops filter; otherwise it uses a dummy
-count of <quote>one</quote>. Some print files do not pass it (e.g., image files), but then those are mostly
-one-page jobs anyway. This also means that proprietary drivers for the target printer running on the client
-computers and CUPS/Samba, which then spool these files as <quote>raw</quote> (i.e., leaving them untouched,
-not filtering them), will be counted as one-pagers too!
+CUPSで正しく計測するために、印刷ファイルはCUPSpstopsフィルタに送られる必要がある;
+そうでない場合、ダミーのカウント<quote>1</quote>を使う。いくつかの印刷ファイルは
+それに送られないが(例えば画像ファイル)、それらはほとんど1ページのジョブである。
+これはまた、それらのファイルを<quote>raw</quote>(すなわちそれらに何も変更をせず、
+フィルタリングもしない)すぷーすする、クライアントコンピュータとCUPS/Samba上で動いている、
+対象プリンタ用のプロプラエティなドライバは、1ページとして計測するということでもある!
 </para>
 
 <para>
-You need to send PostScript from the clients (i.e., run a PostScript driver there) to have the chance to get
-accounting done. If the printer is a non-PostScript model, you need to let CUPS do the job to convert the file
-to a print-ready format for the target printer. This is currently working for about a thousand different
-printer models.  Linuxprinting.org has a driver <ulink url="http://www.linuxprinting.org/printer_list.cgi">list</ulink>.
+課金を行える機会を得るために、それらのクライアントからPostScriptで送る必要がある
+(すなわち、そこでPostScriptドライバを動かす)。もしも、プリンタが非PostScriptモデル
+ならば、対象のプリンタ用に印刷可能な形式にファイルを変換するためのジョブを、CUPSで
+行わせる必要がある。Linuxprinting.orgにはドライバの
+<ulink url="http://www.linuxprinting.org/printer_list.cgi">リスト</ulink>がある。
 </para>
 </sect2>
 
 <sect2>
-<title>Adobe and CUPS PostScript Drivers for Windows Clients</title>
+<title>Windowsクライアント用のAdobeとCUPS PostScriptドライバ</title>
 
 <para>
 <indexterm><primary>Adobe PostScript</primary></indexterm>
 <indexterm><primary>pstops</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>pstoraster</primary></indexterm>
-<indexterm><primary>PJL-header</primary></indexterm>
+<indexterm><primary>PJL-ヘッダ</primary></indexterm>
 Before CUPS 1.1.16, your only option was to use the Adobe PostScript driver on the Windows clients. The output
 of this driver was not always passed through the <command>pstops</command> filter on the CUPS/Samba side, and
 therefore was not counted correctly (the reason is that it often, depending on the PPD being used, wrote a
