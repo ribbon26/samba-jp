@@ -4871,56 +4871,54 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 </para>
 
 <para>
-cupsomatic/Foomatic are <emphasis>not</emphasis> native CUPS drivers
-and they do not ship with CUPS. They are a third-party add-on
-developed at Linuxprinting.org. As such, they are a brilliant hack to
-make all models (driven by Ghostscript drivers/filters in traditional
-spoolers) also work via CUPS, with the same (good or bad!) quality as
-in these other spoolers. <parameter>cupsomatic</parameter> is only a vehicle to execute a
-Ghostscript command line at that stage in the CUPS filtering chain
-where normally the native CUPS <parameter>pstoraster</parameter> filter would kick
-in. <parameter>cupsomatic</parameter> bypasses <parameter>pstoraster</parameter>, kidnaps the print file from CUPS,
-and redirects it to go through Ghostscript. CUPS accepts this
-because the associated cupsomatic/foomatic-PPD specifies:
+cupsomatic/FoomaticはネイティブなCUPSドライバ<emphasis>ではなく</emphasis>、CUPSには
+同梱されない。これらはLinuxprinting.orgで開発されたサードパーティアドオンである。
+同様に、すべてのモデルで、CUPS経由でも動くようにさせる、優れたハックであり(
+伝統的なスプーラで、Ghostscriptドライバ/フィルタによって動作する)、他のスプーラでの
+品質と(良くも悪くも)同じである。<parameter>cupsomatic</parameter>は、単なる媒体
+である。すなわち、通常ネイティブなCUPS<parameter>pstoraster</parameter>フィルタが
+起動される、CUPSフィルタリングチェーン中のそのステージで、Ghostscriptコマンドラインを
+実行する。<parameter>cupsomatic</parameter>は<parameter>pstoraster</parameter>を
+バイパスし、CUPSからの印刷ファイルを横取りし、Ghostscriptにリダイレクトする。CUPSは、
+関連するcupsomatic/foomatic-PPDが以下のように指定するのでこれを許可する:
 
 <programlisting>
 *cupsFilter:  "application/vnd.cups-postscript 0 cupsomatic"
 </programlisting>
 
-This line persuades CUPS to hand the file to <parameter>cupsomatic</parameter> once it has
-successfully converted it to the MIME type
-<parameter>application/vnd.cups-postscript</parameter>. This conversion will not happen for
-jobs arriving from Windows that are autotyped
-<parameter>application/octet-stream</parameter>, with the according changes in
-<filename>/etc/cups/mime.types</filename> in place.
+この行は、かつてMIMEタイプ
+<parameter>application/vnd.cups-postscript</parameter>にうまく変換した
+<parameter>cupsomatic</parameter>に対してファイルを扱わせることをCUPSに指示する。
+この変換は、その場で、<filename>/etc/cups/mime.types</filename>中の変更に一致する、
+<parameter>application/octet-stream</parameter>に自動タイプされた
+Windowsから来たジョブに対しては起こらない。
 </para>
 
 <para>
-CUPS is widely configurable and flexible, even regarding its filtering
-mechanism. Another workaround in some situations would be to have in
-<filename>/etc/cups/mime.types</filename> entries as follows:
+CUPSは、関連するフィルタリング機能を含め、広範囲に設定が出来、自由度が高い。
+いくつかの状況に置ける他の問題は、<filename>/etc/cups/mime.types</filename>に
+以下のようなエントリがある場合である:
 
 <programlisting>
 application/postscript           application/vnd.cups-raw  0  -
 application/vnd.cups-postscript  application/vnd.cups-raw  0  -
 </programlisting>
 
-This would prevent all PostScript files from being filtered (rather,
-they will through the virtual <emphasis>nullfilter</emphasis>
-denoted with <quote>-</quote>). This could only be useful for PostScript printers. If you
-want to print PostScript code on non-PostScript printers (provided they support ASCII
-text printing), an entry as follows could be useful:
+これは、すべてのPostScriptファイルをフィルタされないようにする(というよりは、
+<quote>-</quote>で指定された仮想の<emphasis>nullfilter</emphasis>に渡す)。これは、
+PostScriptプリンタのみに便利である。もしも、非PostScriptプリンタにPostScriptコードを
+印刷したい場合(ASCCテキスト印刷のサポートを提供している)、以下のエントリは便利である:
 
 <programlisting>
 */*           application/vnd.cups-raw  0  -
 </programlisting>
 
-and would effectively send <emphasis>all</emphasis> files to the
-backend without further processing.
+そして、さらなる処理をせずに<emphasis>すべての</emphasis>ファイルを効率的に
+バックエンドに送るだろう。
 </para>
 
 <para>
-You could have the following entry:
+以下のエントリを使用しても良い:
 
 <programlisting>
 application/vnd.cups-postscript application/vnd.cups-raw 0 \
