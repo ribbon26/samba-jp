@@ -5131,63 +5131,62 @@ PPDは、そのターゲットモデルのために、印刷データを生成�
 </itemizedlist>
 
 <para>
-Note that the device URI will be visible in the process list of the Samba server (e.g., when someone uses the
-<command>ps -aux</command> command on Linux), even if the username and passwords are sanitized before they get
-written into the log files. This is an inherently insecure option; however, it is the only one. Don't use it
-if you want to protect your passwords. Better share the printer in a way that does not require a password!
-Printing will only work if you have a working NetBIOS name resolution up and running. Note that this is a
-feature of CUPS and you do not necessarily need to have smbd running.
+ログファイルに書かれる前に、ユーザ名とパスワードが削除されたとしても、デバイスURLは
+Sambaサーバ上のプロセス一覧で見えてしまうことに注意(すなわち、誰かが、Linux上で
+<command>ps -aux</command>コマンドを使うと)。これは、本質的に脆弱性のあるオプション
+である。しかし、これが唯一の解である。パスワードを保護したい場合、これを使わないこと。
+パスワードを要求しないプリンタの共有の方が優れている!印刷は、NetBIOS名前解決が起動し、
+動作している時にのみ動く。これはCUPSの機能であり、smbdを動かす必要はないことに注意。
 
 </para>
 </sect1>
 
 <sect1>
-<title>More CUPS Filtering Chains</title>
+<title>より詳細なCUPSフィルタリングチェーン</title>
 
 <para>
-The diagrams in <link linkend="cups1">Filtering Chain 1</link> and <link linkend="cups2">Filtering Chain with
-cupsomatic</link> show how CUPS handles print jobs.
+<link linkend="cups1">フィルタリングチェーン1</link>と
+<link linkend="cups2">cupsomaticを使うフィルタリングチェーン</link>中のダイアグラムは、
+どのようにCUPSが印刷ジョブを扱うかを示している。
 </para>
 
 <figure id="cups1">
-	<title>Filtering Chain 1.</title>
+	<title>フィルタリングチェーン1</title>
 	<imagefile>cups1</imagefile>
 </figure>
 
 <!-- JJJ -->
 <figure id="cups2">
-	<title>Filtering Chain with cupsomatic</title>
+	<title>cupsomaticを使うフィルタリングチェーン</title>
 	<imagefile scale="45">cups2</imagefile>
 </figure>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 	<sect2>
-	<title>Windows 9x/Me Client Can't Install Driver</title>
+	<title>Windows 9x/Meクライアントがドライバをインストール出来ない</title>
 
-	<para>For Windows 9x/Me, clients require the printer names to be eight
-	characters (or <quote>8 plus 3 chars suffix</quote>) max; otherwise, the driver files
-	will not get transferred when you want to download them from Samba.</para>
+	<para>Windows 9x/Me用クライアント用には、最大8文字までのプリンタ名を必要とする
+	(あるいは、<quote>8文字に3文字の拡張子</quote>)。そうでないと、
+	Sambaからそれらをダウンロードするときに、ドライバファイルが転送できない。</para>
 
 	</sect2>
 
 	<sect2 id="root-ask-loop">
-	<title><quote>cupsaddsmb</quote> Keeps Asking for Root Password in Never-ending Loop</title>
+	<title><quote>cupsaddsmb</quote>が、無限にrootパスワードを問い合わせてくる</title>
 
-	<para>Have you set <smbconfoption name="security">user</smbconfoption>? Have
-	you used <command>smbpasswd</command> to give root a Samba account?
-	You can do two things: open another terminal and execute
-	<command>smbpasswd -a root</command> to create the account and
-	continue entering the password into the first terminal. Or, break
-	out of the loop by pressing Enter twice (without trying to type a
-	password).</para>
+	<para><smbconfoption name="security">user</smbconfoption>を設定したか?
+	Sambaアカウントのrootとして<command>smbpasswd</command>を使ったか?
+	アカウントを作成するために、<command>smbpasswd -a root</command>を使い、
+	最初の質問にパスワードを入れる。あるいは、Enterを二回入力することで、
+	ループを終了する(パスワードを入力しないで)。</para>
 
 	<para>
-	If the error is <quote>Tree connect failed: NT_STATUS_BAD_NETWORK_NAME</quote>, 
-	you may have forgotten to create the <filename>/etc/samba/drivers</filename> directory.
+	もしも、エラーが<quote>Tree connect failed: NT_STATUS_BAD_NETWORK_NAME</quote>
+	ならば、<filename>/etc/samba/drivers</filename>ディレクトリを作成するのを忘れている。
 	</para>
 	</sect2>
 
