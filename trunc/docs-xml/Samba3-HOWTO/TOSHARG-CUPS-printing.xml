@@ -5191,49 +5191,53 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 	</sect2>
 
 	<sect2>
-	<title><quote>cupsaddsmb</quote> or <quote>rpcclient addriver</quote> Emit Error</title>
+	<title><quote>cupsaddsmb</quote>か<quote>rpcclient addriver</quote>がエラーを出す</title>
 
 	<para>
-	If <command>cupsaddsmb</command>, or <command>rpcclient addriver</command> emit the error message
-	WERR_BAD_PASSWORD, refer to <link linkend="root-ask-loop">the previous common error</link>.
+	もしも<command>cupsaddsmb</command>か<command>rpcclient addriver</command>が、
+	WERR_BAD_PASSWORDというエラーメッセージを出す場合は、
+	<link linkend="root-ask-loop">the previous common error</link>を参照すること。
 	</para>
 	
 	</sect2>
 
 	<sect2>
-	<title><quote>cupsaddsmb</quote> Errors</title>
+	<title><quote>cupsaddsmb</quote>のエラー</title>
 
 	<para>
-	The use of <quote>cupsaddsmb</quote> gives <quote>No PPD file for printer...</quote> 
-	message while PPD file is present.  What might the problem be?
+	<quote>cupsaddsmb</quote>を使うと、PPDが存在する間、
+	<quote>No PPD file for printer...</quote>というメッセージが出る。
+	この問題の理由は?
 	</para>
 
 	<para>
-	Have you enabled printer sharing on CUPS? This means, do you have a <literal>&lt;Location
-	/printers&gt;....&lt;/Location&gt;</literal> section in CUPS server's <filename>cupsd.conf</filename> that
-	does not deny access to the host you run <quote>cupsaddsmb</quote> from?  It <emphasis>could</emphasis> be an
-	issue if you use cupsaddsmb remotely, or if you use it with a <option>-h</option> parameter:
-	<userinput>cupsaddsmb -H sambaserver -h cupsserver -v printername</userinput>.
+	CUPS上でプリンタ共有を有効にしていないだろうか?これは、
+	<quote>cupsaddsmb</quote>が動いているホストからのアクセスを拒否する、
+	CUPSサーバの<filename>cupsd.conf</filename>中に、
+	<literal>&lt;Location /printers&gt;....&lt;/Location&gt;</literal>
+	があるということである。cupsaddsmbをリモートで使っているか、
+	<option>-h</option>パラメータを付けて:
+	<userinput>cupsaddsmb -H sambaserver -h cupsserver -v printername</userinput>
+	として使っている場合、これは<emphasis>問題となりえる</emphasis>。
 	</para>
 
-	<para>Is your <parameter>TempDir</parameter> directive in
-	<filename>cupsd.conf</filename> set to a valid value, and is it writable?
+	<para><filename>cupsd.conf</filename>中の<parameter>TempDir</parameter>
+	ディレクティブが正しい値に設定されているだろうか?またそれは書き込み可能だろうか?
 	</para>
 
 	</sect2>
 
 	<sect2>
-		<title>Client Can't Connect to Samba Printer</title>
+		<title>クライアントがSambaプリンタに接続できない</title>
 
-	<para>Use <command>smbstatus</command> to check which user
-	you are from Samba's point of view. Do you have the privileges to
-	write into the <smbconfsection name="[print$]"/>
-	share?</para>
+	<para>Sambaの観点からどのユーザであるかを、<command>smbstatus</command>を
+	使って調べる。<smbconfsection name="[print$]"/>共有に対して書き込み許可が
+	あるだろうか?</para>
 
 	</sect2>
 
 	<sect2>
-	<title>New Account Reconnection from Windows 200x/XP Troubles</title>
+	<titleWindows 200x/Xpからの新しいアカウント再接続のトラブル</title>
 
 <para>
 Once you are connected as the wrong user (for example, as <constant>nobody</constant>, which often occurs if
