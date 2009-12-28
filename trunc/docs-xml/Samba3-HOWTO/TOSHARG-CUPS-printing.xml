@@ -5009,54 +5009,56 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 </para>
 
 <itemizedlist>
-	<listitem><para>A Samba smbd that is compiled against <filename>libcups</filename> (check
-	on Linux by running <userinput>ldd `which smbd'</userinput>).</para></listitem>
+	<listitem><para><filename>libcups</filename>を指定してSambaのsmbdをコンパイルする
+	(Linuxでは<userinput>ldd `which smbd'</userinput>を動かすことで確認)。</para></listitem>
 
-	<listitem><para>A Samba-&smb.conf; setting of
-			<smbconfoption name="printing">cups</smbconfoption>.</para></listitem>
+	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printing">cups</smbconfoption>
+	を設定する。</para></listitem>
 
-	<listitem><para>Another Samba &smb.conf; setting of
-			<smbconfoption name="printcap">cups</smbconfoption>.</para></listitem>
+	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printcap">cups</smbconfoption>
+	も設定する。</para></listitem>
 </itemizedlist>
 
 <note><para>
-In this case, all other manually set printing-related commands (like
+この場合、他の手動で設定する印刷関係のコマンド(
 <smbconfoption name="print command"/>, 
 <smbconfoption name="lpq command"/>, 
 <smbconfoption name="lprm command"/>, 
-<smbconfoption name="lppause command"/>, and
-<smbconfoption name="lpresume command"/>) are ignored, and they should normally have no
-influence whatsoever on your printing.
+<smbconfoption name="lppause command"/>, と
+<smbconfoption name="lpresume command"/>のようなもの)は無視され、通常印刷に関しては
+なんの影響も与えなくなる。
 </para></note>
 </sect2>
 
 <sect2>
-<title>Manual Configuration</title>
+<title>手動の設定</title>
 
 <para>
-If you want to do things manually, replace the <smbconfoption name="printing">cups</smbconfoption>
-by <smbconfoption name="printing">bsd</smbconfoption>. Then your manually set commands may work
-(I haven't tested this), and a <smbconfoption name="print command">lp -d %P %s; rm %s</smbconfoption>
-may do what you need.
+すべてを手動で行いたいならば、<smbconfoption name="printing">cups</smbconfoption>を
+<smbconfoption name="printing">bsd</smbconfoption>に置き換える。そうすると手動で設定した
+コマンドが動作し(テストはしていないが)、
+<smbconfoption name="print command">lp -d %P %s; rm %s</smbconfoption>が期待通りの
+事を行うだろう。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>Printing from CUPS to Windows-Attached Printers</title>
+<title>Windowsに接続された印刷へのCUPSからの印刷</title>
 
 <para>
 <indexterm><primary>smbspool</primary></indexterm>
 <indexterm><primary>backends</primary></indexterm>
-From time to time the question arises, how can you print <emphasis>to</emphasis> a Windows-attached printer
-<emphasis>from</emphasis> Samba? Normally the local connection from Windows host to printer would be done by
-USB or parallel cable, but this does not matter to Samba. From here only an SMB connection needs to be opened
-to the Windows host. Of course, this printer must be shared first. As you have learned by now, CUPS uses
-<emphasis>backends</emphasis> to talk to printers and other servers. To talk to Windows shared printers, you
-need to use the <filename>smb</filename> (surprise, surprise!) backend. Check if this is in the CUPS backend
-directory. This usually resides in <filename>/usr/lib/cups/backend/</filename>. You need to find an
-<filename>smb</filename> file there. It should be a symlink to <filename>smbspool</filename>, and the file
-must exist and be executable:
+時々、Samba<emphasis>から</emphasis>Windowsに接続されたプリンタ<emphasis>に</emphasis>
+印刷をするにはどうしたらいいか、という質問が来ることがある。通常Windowsホストから
+プリンタへのローカル接続はUSBまたはパラレルケーブルで行われるが、これはSambaにとっては
+重要ではない。ここから、Windowsホストに対してSMB接続でオープンする事のみが必要である。
+もちろん、プリンタはまず共有されねばならない。今まで学習してきたように、CUPSはプリンタや
+他のサービスと通信する<emphasis>バックエンド</emphasis>を使える。Windowsで共有された
+プリンタと通信するには、(驚くべき事だが)<filename>smb</filename>バックエンドを使う必要が
+ある。まず<filename>smb</filename>ファイルをそこで捜す必要がある。それは
+<filename>smbspool</filename>へのシンボリックリンクであり、ファイルは存在して実行可能で
+なければならない:
 <screen>
 &rootprompt;<userinput>ls -l /usr/lib/cups/backend/</userinput>
 total 253
@@ -5080,26 +5082,29 @@ lrwxrwxrwx    1 root   root      17 Apr  2 03:11 smb -&gt; /usr/bin/smbspool
 </screen></para>
 
 <para>
-If this symlink does not exist, create it:
+もしもシンボリックリンクがなければそれを作成する:
 <screen>
 &rootprompt;<userinput>ln -s `which smbspool` /usr/lib/cups/backend/smb</userinput>
 </screen></para>
 
 <para>
 <indexterm><primary>smbspool</primary></indexterm>
-<indexterm><primary>troubleshooting</primary></indexterm>
-<command>smbspool</command> was written by Mike Sweet from the CUPS folks. It is included and ships with
-Samba. It may also be used with print subsystems other than CUPS, to spool jobs to Windows printer shares. To
-set up printer <replaceable>winprinter</replaceable> on CUPS, you need to have a driver for it. Essentially
-this means to convert the print data on the CUPS/Samba host to a format that the printer can digest (the
-Windows host is unable to convert any files you may send). This also means you should be able to print to the
-printer if it were hooked directly at your Samba/CUPS host. For troubleshooting purposes, this is what you
-should do to determine if that part of the process chain is in order. Then proceed to fix the network
-connection/authentication to the Windows host, and so on.
+<indexterm><primary>トラブルシュート</primary></indexterm>
+<command>smbspool</command>は、CUPS関係者のMike Sweetによって書かれた。これは、Sambaに
+同梱されている。これはまた、CUPS以外の印刷サブシステムで使われ、Windowsプリンタ共有の
+ためにジョブをスプールする。CUPS上で<replaceable>winprinter</replaceable>プリンタを
+設定するためには、そのためのドライバが必要である。本質的に、これは、プリンタが理解できる
+(Windowsホストは、送ったファイルを形式変換する能力はない)ファイル形式用に、CUPS/Samba
+ホスト上で、印刷データを変換することを意味する。これはまた、使用しているSamba/CUPS
+ホストに直接繋がっている場合、プリンタに対して印刷出来るべきであると言うことを意味する。
+トラブルシューティングのために、一連の手続きのその部分が順番になっている場合、
+これが、何をすべきかを決定すべきかということである。次に、Windowsホストに対する
+接続/認証を修正することなどを行う。
 </para>
 
 <para>
-To install a printer with the <parameter>smb</parameter> backend on CUPS, use this command:
+バックエンドがCUPSの<parameter>smb</parameter>を使うプリンタをインストールするために、
+以下のコマンドを使う:
 </para>
 
 <para><screen>
@@ -5108,13 +5113,15 @@ To install a printer with the <parameter>smb</parameter> backend on CUPS, use th
 </screen></para>
 
 <para>
-<indexterm><primary>PostScript printers</primary></indexterm>
+<indexterm><primary>PostScriptプリンタ</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>Windows NT PostScript driver</primary></indexterm>
-The PPD must be able to direct CUPS to generate the print data for the target model. For PostScript printers,
-just use the PPD that would be used with the Windows NT PostScript driver. But what can you do if the printer
-is only accessible with a password? Or if the printer's host is part of another workgroup? This is provided
-for: You can include the required parameters as part of the <filename>smb://</filename> device-URI like this:
+<indexterm><primary>Windows NT PostScriptドライバ</primary></indexterm>
+PPDは、そのターゲットモデルのために、印刷データを生成するために、直接CUPSを管理する必要が
+ある。PostScriptプリンタのためには、Windows NT PostScriptドライバを使うPPDを使う。しかし、
+パスワードがないとプリンタにアクセスできない場合、一体何が出来るだろうか?あるいは、もしも
+プリンタのホストが他のワークグループのだった場合は?これには以下の方策がある:
+以下のように、<filename>smb://</filename>デバイスURIの一部として、要求されたパラメータを
+含めることが出来る:
 </para>
 
 <itemizedlist>
