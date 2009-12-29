@@ -5461,27 +5461,32 @@ Microsoft PDドライバとCUPS PSドライバ)。もしもフォントに問題
 </sect2>
 
 <sect2>
-<title><command>cupsaddsmb</command> Does Not Work with Newly Installed Printer</title>
+<title><command>cupsaddsmb</command>が、新しくインストールしたプリンタで動かない</title>
 
 <para>
-Symptom: The last command of <command>cupsaddsmb</command> does not complete successfully. If the <command>cmd
-= setdriver printername printername</command> result was NT_STATUS_UNSUCCESSFUL, then possibly the printer was
-not yet recognized by Samba. Did it show up in Network Neighborhood? Did it show up in <command>rpcclient
-hostname -c `enumprinters'</command>? Restart smbd (or send a <command>kill -HUP</command> to all processes
-listed by <command>smbstatus</command>, and try again.
+以下と同様: <command>cupsaddsmb</command>の最後のコマンドが完全に終わっていない。もしも、
+<command>cmd = setdriver printername printername</command>の結果が
+NT_STATUS_UNSUCCESSFULの場合、おそらくプリンタがまだSambaによって認識されていない。
+ネットワークコンピュータ中に表示されているだろうか?
+ <command>rpcclient hostname -c `enumprinters'</command>で表示されるだろうか?
+smbdを再起動(か、<command>smbstatus</command>で一覧表示されるすべてのプロセスに対して
+<command>kill -HUP</command>を行う)し、再度試してみる。
 </para></sect2>
 
 <sect2>
-<title>Permissions on <filename>/var/spool/samba/</filename> Get Reset After Each Reboot</title>
+<title><filename>/var/spool/samba/</filename>のアクセス許可が、再起動後毎回リセットされる</title>
 
 <para>
-Have you ever by accident set the CUPS spool directory to the same location (<parameter>RequestRoot
-/var/spool/samba/</parameter> in <filename>cupsd.conf</filename> or the other way round:
-<filename>/var/spool/cups/</filename> is set as <smbconfoption name="path"/>> in the <smbconfsection
-name="[printers]"/> section)? These <parameter>must</parameter> be different. Set <parameter>RequestRoot
-/var/spool/cups/</parameter> in <filename>cupsd.conf</filename> and <smbconfoption name="path">
-/var/spool/samba</smbconfoption> in the <smbconfsection name="[printers]"/> section of &smb.conf;. Otherwise,
-cupsd will sanitize permissions to its spool directory with each restart and printing will not work reliably.
+同じ位置へのCUPSスプールディレクトリの設定で、以前に何か問題が起きなかったか?
+(<filename>cupsd.conf</filename>中の<parameter>RequestRoot /var/spool/samba/</parameter>か、
+その逆:<smbconfsection name="[printers]"/>セクション中で、
+<filename>/var/spool/cups/</filename>を<smbconfoption name="path"/>>として設定しているか)?
+これらは<parameter>異なってなければならない</parameter>。<filename>cupsd.conf</filename>
+中の<parameter>RequestRoot /var/spool/cups/</parameter>と&smb.conf;の
+<smbconfsection name="[printers]"/>セクション中の
+<smbconfoption name="path"> /var/spool/samba</smbconfoption>を設定する。それ以外は、
+cupsdは再起動後毎回そのスプールディレクトリのアクセス許可を整理するので、印刷は確実に
+うまくいかない。
 </para>
 
 </sect2>
