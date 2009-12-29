@@ -5237,172 +5237,185 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 	</sect2>
 
 	<sect2>
-	<titleWindows 200x/Xpからの新しいアカウント再接続のトラブル</title>
+	<title>Windows 200x/Xpからの新しいアカウント再接続のトラブル</title>
 
 <para>
-Once you are connected as the wrong user (for example, as <constant>nobody</constant>, which often occurs if
-you have <smbconfoption name="map to guest">bad user</smbconfoption>), Windows Explorer will not accept an
-attempt to connect again as a different user. There will not be any bytes transferred on the wire to Samba,
-but still you'll see a stupid error message that makes you think Samba has denied access. Use
-<command>smbstatus</command> to check for active connections. Kill the PIDs. You still can't re-connect, and
-you get the dreaded <computeroutput>You can't connect with a second account from the same
-machine</computeroutput> message as soon as you try. And you do not see a single byte arriving at Samba (see
-logs; use <quote>ethereal</quote>) indicating a renewed connection attempt. Shut all Explorer Windows.  This
-makes Windows forget what it has cached in its memory as established connections. Then reconnect as the right
-user. The best method is to use a DOS terminal window and <emphasis>first</emphasis> do <userinput>net use z:
-\\&example.server.samba;\print$ /user:root</userinput>. Check with <command>smbstatus</command> that you are
-connected under a different account. Now open the <guilabel>Printers</guilabel> folder (on the Samba server in
-the <guilabel>Network Neighborhood</guilabel>), right-click on the printer in question, and select
-<guibutton>Connect....</guibutton>.
+ひとたび間違ったユーザ(たとえば、<smbconfoption name="map to guest">bad user</smbconfoption>
+を設定した場合、しばしば発生する<constant>nobody</constant>など)で接続すると、Windows
+エクスプローラは異なったユーザで再度接続する試みを受け付けない。Sambaに対しては全くデータ
+転送が出来ないが、Sambaがアクセスを拒否したと考えられる不可解なメッセージが表示され
+続ける。有効な接続の状態を<command>smbstatus</command>で確認すること。そして、当該の
+プロセス(PID)をKillする。まだ再接続は出来なく、接続しようとすると、
+<computeroutput>You can't connect with a second account from the same machine</computeroutput>
+というメッセージがすぐに出る。再説俗を試みても、、まだ1バイトもSambaには届かない
+(ログを見ること。<quote>ethereal</quote>を使う)。Windows上のすべてのエクスプローラを
+閉じる。 これは確立した接続としてメモリ中にキャッシュされたものを、Windowsに
+捨てさせる。次に正しいユーザで接続する。一番良い方法は、DOSターミナルウィンドウを
+使い、<emphasis>最初に</emphasis>
+<userinput>net use z: \\&example.server.samba;\print$ /user:root</userinput>を行う。
+異なったアカウントで接続されたと言うことを、<command>smbstatus</command>で確認する。
+この後、<guilabel>プリンタ</guilabel>フォルダを開き(Sambaサーバ上の
+<guilabel>ネットワークコンピュータ</guilabel>で)、質問中のプリンタ上で右クリックし、
+<guibutton>接続....</guibutton>を選択する。
 </para>
 </sect2>
 
 <sect2>
-<title>Avoid Being Connected to the Samba Server as the Wrong User</title>
+<title>間違ったユーザでSambaサーバに接続されるのを防ぐ</title>
 	
 <para>
 <indexterm><primary>smbstatus</primary></indexterm>
-You see per <command>smbstatus</command> that you are connected as user nobody, but you want to be root or
-printer admin. This is probably due to <smbconfoption name="map to guest">bad user</smbconfoption>, which
-silently connected you under the guest account when you gave (maybe by accident) an incorrect username. Remove
-<smbconfoption name="map to guest"/> if you want to prevent this.
+nobodyとして接続されていることを<command>smbstatus</command> で確認するが、
+本当はrootかprinter adminにしたい。これは、おそらく、正しくないユーザ名(たぶん
+何らかのミス)を指定した時に、黙ってguest accountとする、
+<smbconfoption name="map to guest">bad user</smbconfoption>のせいであろう。
+これを防ぐためには、<smbconfoption name="map to guest"/>を取り除く。
 </para>
 </sect2>
 
 <sect2>
-<title>Upgrading to CUPS Drivers from Adobe Drivers</title>
+<title>AdobeドライバからCUPSドライバにアップグレードする</title>
 
 <para>
-This information came from a mailing list posting regarding problems experienced when
-upgrading from Adobe drivers to CUPS drivers on Microsoft Windows NT/200x/XP clients.
+この情報は、Microsoft Windows NT/200x/XPクライアント上で、AdobeドライバからCUPSドライバに
+アップグレードした時、それに関連した問題の体験を、メーリングリスト上に投稿されたもの
+によっている。
 </para>
 
-<para>First delete all old Adobe-using printers. Then delete all old Adobe drivers. (On Windows 200x/XP, right-click in
-the background of <guilabel>Printers</guilabel> folder, select <guimenuitem>Server Properties...</guimenuitem>, select
-tab <guilabel>Drivers</guilabel>, and delete here).</para>
+<para>最初に、すべての古い、Adobeが使っているプリンタを削除する。次に、すべとの古い
+Adobeドライバを削除する(Windows 200x/XP上では、<guilabel>プリンタ</guilabel>フォルダの
+背景部分で右クリックし、<guimenuitem>Server Properties...</guimenuitem>を選択し、
+<guilabel>ドライバ</guilabel>タブを選択し、ここで削除する)。</para>
 </sect2>
 
 <sect2>
-<title>Can't Use <quote>cupsaddsmb</quote> on Samba Server, Which Is a PDC</title>
+<title>PDCであるSambaサーバ上で<quote>cupsaddsmb</quote>が使えない</title>
 
-<para>Do you use the <quote>naked</quote> root user name? Try to do it
-this way: <userinput>cupsaddsmb -U <replaceable>DOMAINNAME</replaceable>\\root -v
-<replaceable>printername</replaceable></userinput>> (note the two backslashes: the first one is
-required to <quote>escape</quote> the second one).</para>
-
-</sect2>
-
-<sect2>
-<title>Deleted Windows 200x Printer Driver Is Still Shown</title>
-
-<para>Deleting a printer on the client will not delete the
-driver too (to verify, right-click on the white background of the
-<guilabel>Printers</guilabel> folder, select <guimenuitem>Server Properties</guimenuitem> and click on the
-<guilabel>Drivers</guilabel> tab). These same old drivers will be re-used when you try to
-install a printer with the same name. If you want to update to a new
-driver, delete the old ones first. Deletion is only possible if no
-other printer uses the same driver.</para>
-</sect2>
-
-<sect2>
-<title>Windows 200x/XP Local Security Policies</title>
-
-<indexterm><primary>Local security policies</primary></indexterm>
-<indexterm><primary>unsigned drivers</primary></indexterm>
-<para>Local security policies may not allow the installation of unsigned drivers &smbmdash; <quote>local
-security policies</quote> may not allow the installation of printer drivers at all.</para>
+<para><quote>そのままの</quote>rootユーザ名を使っていないか?以下の方法を
+試してみよう:
+<replaceable>DOMAINNAME</replaceable>\\root -v <replaceable>printername</replaceable></userinput>>
+(2つのバックスラッシュ:最初のものは二番目のものを<quote>エスケープ</quote>
+する事に注意)。
 
 </sect2>
 
 <sect2>
-<title>Administrator Cannot Install Printers for All Local Users</title>
+<title>削除されたWindows 200xプリンタドライバが引き続き表示されている</title>
+
+<para>クライアント上のプリンタの削除は、ドライバも一緒に削除はしない
+(それを確かめるために、<guilabel>プリンタ</guilabel>フォルダの白い背景部分で
+右クリックし、<guimenuitem>サーバーのプロパティ</guimenuitem>を選択し、
+<guilabel>ドライバ</guilabel>タブをクリックする)。これら同じ古いドライバは、
+同じ名前でプリンタをインストールする時に再度使われる。もしも、新しいドライバに
+アップデートしたい場合は、古いものを最初に削除する。削除は、同じドライバを使う他の
+プリンタが無い場合にのみ可能である。</para>
+</sect2>
+
+<sect2>
+<title>Windows 200x/XP ローカルセキュリティポリシー</title>
+
+<indexterm><primary>ローカルセキュリティポリシー</primary></indexterm>
+<indexterm><primary>未署名のドライバ</primary></indexterm>
+<para>ローカルセキュリティポリシーは、未署名のドライバのインストールを許可しないようにも
+できる&smbmdash;。<quote>ローカルセキュリティポリシー</quote>は全くプリンタドライバの
+インストールを許可しないようにしてもよい。</para>
+
+</sect2>
+
+<sect2>
+<title>Administratorはすべてのローカルユーザに対してプリンタをインストールできない</title>
 
 <para>
-<indexterm><primary>SMB printers</primary></indexterm>
-<indexterm><primary>IPP client</primary></indexterm>
-Windows XP handles SMB printers on a <quote>per-user</quote> basis.
-This means every user needs to install the printer himself or herself. To have a printer available for
-everybody, you might want to use the built-in IPP client capabilities of Win XP. Add a printer with the print
-path of <parameter>http://cupsserver:631/printers/printername</parameter>.  We're still looking into this one.
-Maybe a logon script could automatically install printers for all users.
+<indexterm><primary>SMBプリンタ</primary></indexterm>
+<indexterm><primary>IPPクライアント</primary></indexterm>
+Windows XPは<quote>ユーザ単位に</quote>SMBプリンタを扱うことが出来る。
+これは、すべてのユーザは自分自身でプリンタをインストールする必要があることを意味する。
+すべてのユーザに対してプリンタを有効にするためには、Windows XPにおける内蔵IPP
+クライアントの機能を使う事になるかもしれない。
+<parameter>http://cupsserver:631/printers/printername</parameter>という印刷パスで
+プリンタを追加する。これについては引き続き調査中である。おそらく、すべてのユーザに対して
+自動的にプリンタのインストールが出来るログオンスクリプトかもしれない。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Print Change, Notify Functions on NT Clients</title>
+<title>NTクライアント上での印刷の変更、機能の通知</title>
 
-<para>For print change, notify functions on NT++ clients.  These need to run the <command>Server</command>
-service first (renamed to <command>File &amp; Print Sharing for MS Networks</command> in XP).</para>
+<para>印刷の変更のために、NT++クライアント上でその機能に通知する。これらは
+最初に<command>サーバ</command>サービスを動かす必要がある(XP中では
+<command>File &amp; Print Sharing for MS Networks</command>に名前が変わっている)。</para>
 
 </sect2>
 
 <sect2>
 <title>Windows XP SP1</title>
 
-<para>Windows XP SP1 introduced a Point and Print Restriction Policy (this restriction does not apply to
-<quote>Administrator</quote> or <quote>Power User</quote> groups of users). In Group Policy Object Editor, go
-to <guimenu>User Configuration -> Administrative Templates -> Control Panel -> Printers</guimenu>. The policy
-is automatically set to <constant>Enabled</constant> and the <constant>Users can only Point and Print to
-machines in their Forest</constant> . You probably need to change it to <constant>Disabled</constant> or
-<constant>Users can only Point and Print to these servers</constant> to make driver downloads from Samba
-possible.
+<para>Windows XP SP1では、ポイントアンドプリントの制限ポリシーが導入された(この制限は、
+<quote>Administrator</quote>か<quote>Power User</quote>グループのユーザには適用されない)。
+グループポリシーオブジェクトエディタ中で、
+<guimenu>ユーザの設定 -> 管理テンプレート -> コントロールパネル -> プリンタ</guimenu>に
+行く。ポリシーは自動的に<constant>有効</constant>に設定され、
+<constant>ユーザはそのフォレスト中のマシンに対してのみポイントアンドプリント</constant>が
+使える。おそらく、<constant>無効</constant>か、ドライバのダウンロードをSambaから出来るように、
+<constant>ユーザはそれらのサーバに対してのみポイントアンドプリントが使える</constant>
+それを変更する必要がある。
 </para>
 </sect2>
 
 <sect2>
-<title>Print Options for All Users Can't Be Set on Windows 200x/XP</title>
+<title>Windows 200x/XP上ですべてのユーザが印刷オプションを設定出来ない</title>
 
-<para>How are you doing it? I bet the wrong way (it is not easy to find out, though). There are three
-different ways to bring you to a dialog that <emphasis>seems</emphasis> to set everything. All three dialogs
-<emphasis>look</emphasis> the same, yet only one of them does what you intend. You need to be Administrator or
-Print Administrator to do this for all users. Here is how I do it on XP:
+<para>何をしているのだろうか?間違っているに違いない(しかし、これを発見するのは容易では
+ない)。すべてを設定する<emphasis>ように見える</emphasis>ダイアログを表示するための、
+3つの異なった方法がある。それら3つのダイアログは、同じように<emphasis>見える</emphasis>
+が、そのうちの1つのみが意図しているものである。これをすべてのユーザに対して行うために、
+AdministratorかPrint Administratorである必要がある。XP上でどのようにやるかは以下の通り:
 </para>
 
 <orderedlist numeration="upperalpha">
 
-	<listitem><para>The first wrong way:
+	<listitem><para>最初の間違った方法:
 
 		<orderedlist>
-		<listitem><para>Open the <guilabel>Printers</guilabel>
-		folder.</para></listitem>
+		<listitem><para><guilabel>Printers</guilabel>フォルダを開く。
+		</para></listitem>
 
-		<listitem><para>Right-click on the printer
-		(<guilabel>remoteprinter on cupshost</guilabel>) and
-		select in context menu <guimenuitem>Printing
-		Preferences...</guimenuitem></para></listitem>.
+		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		を右クリックし、コンテキストメニュー
+		<guimenuitem>印刷のプリファレンス</guimenuitem>を選択する。</para></listitem>.
 
-		<listitem><para>Look at this dialog closely and remember what it looks like.</para></listitem>
+		<listitem><para>細かくこのダイアログを見、なりが見えるかを覚えておく。</para></listitem>
 		</orderedlist>
 	</para></listitem>
 
-	<listitem><para>The second wrong way:
+	<listitem><para>二番目の間違った方法:
 	<orderedlist>
-		<listitem><para>Open the <guilabel>Printers</guilabel> folder.</para></listitem>
+		<listitem><para><guilabel>プリンタ</guilabel>フォルダを開く</para></listitem>
 
-		<listitem><para>Right-click on the printer (<guilabel>remoteprinter on
-		cupshost</guilabel>) and select the context menu
-		<guimenuitem>Properties</guimenuitem>.</para></listitem>
+		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		を右クリックし、コンテキストメニュー<guimenuitem>プロパティ</guimenuitem>
+		を選択する。</para></listitem>
 
-		<listitem><para>Click on the <guilabel>General</guilabel> tab.</para></listitem>
+		<listitem><para><guilabel>全般</guilabel>タブをクリックする。</para></listitem>
 
-		<listitem><para>Click on the button <guibutton>Printing
-		Preferences...</guibutton></para></listitem>.
+		<listitem><para><guibutton>印刷のプリファレンス</guibutton>ボタンを
+		クリックする。</para></listitem>.
 
-		<listitem><para>A new dialog opens. Keep this dialog open and go back
-		to the parent dialog.</para></listitem>
+		<listitem><para>新しいダイアログが開く。このダイアログを開いたままにし、
+		親のダイアログに戻る。</para></listitem>
 	</orderedlist>
 	</para></listitem>
 
-	<listitem><para>The third and correct way: 
+	<listitem><para>三番目の正しい方法: 
 	<orderedlist>
-		<listitem><para>Open the <guilabel>Printers</guilabel> folder.</para></listitem>
+		<listitem><para><guilabel>プリンタ</guilabel>フォルダを開く。</para></listitem>
 
-		<listitem><para>Right-click on the printer (<guilabel>remoteprinter on
-		cupshost</guilabel>) and select the context menu
-		<guimenuitem>Properties</guimenuitem>.</para></listitem>
+		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		を右クリックし、コンテキストメニュー<guimenuitem>プロパティ</guimenuitem>
+                を選択する。</para></listitem>
 
-		<listitem><para>Click on the <guilabel>Advanced</guilabel>
+		<listitem><para><guilabel>詳細</guilabel>タブをクリックする。
 		tab. (If everything is <quote>grayed out,</quote> then you are not logged
 		in as a user with enough privileges).</para></listitem>
 
