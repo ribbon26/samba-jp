@@ -35,6 +35,13 @@ Microsoft Windows NT 3.5が発表された時、ホットな新しい話題は�
 <indexterm><primary>GPOs</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>group policy objects</primary><see>GPOs</see></indexterm>
+Microsoft Windows 2000とアクティブディレクトリがリリースされるようになると、管理者は
+グループポリシーは良いものだ!ということを聞くようになった。これは管理コスト低減を
+手助けし、実際にユーザの利便性を向上させた。しかし、ユーザのための、
+Microsoft Windows 200x アクティブディレクトリとグループポリシーオブジェクト(GPO)と
+マシンの、真の素質の適用は、むしろ遅くなったことに気がついた。
+これは、Sambaメーリングリストの2000と2001年頃の、GPOに関連することと、
+Samba環境でどのようにそれを複製するかという事についてのわずかな投稿から明白である。
 By the time that MS Windows 2000 and Active Directory was released, administrators
 got the message: Group Policies are a good thing! They can help reduce administrative
 costs and actually make happier users. But adoption of the true
@@ -46,6 +53,10 @@ how to replicate them in a Samba environment.
 
 <para>
 <indexterm><primary>exploit opportunities</primary></indexterm>
+2002年の中盤からのトラフィックの領から判断して、GPOは多くのサイトで標準的に使われる
+ようになった。この章では、ユーザデスクトップとネットワーククライアントワークステーション
+上の自動制御のためのexploit opportunitiesとして使えるテクニックと方法についてチェック
+する。
 Judging by the traffic volume since mid 2002, GPOs have become a standard part of
 the deployment in many sites. This chapter reviews techniques and methods that can
 be used to exploit opportunities for automation of control over user desktops and
@@ -55,42 +66,50 @@ network client workstations.
 </sect1>
 
 <sect1>
-<title>Creating and Managing System Policies</title>
+<title>システムポリシーの作成と運用</title>
 
 <para>
 <indexterm><primary>NETLOGON</primary></indexterm>
-<indexterm><primary>domain controller</primary></indexterm>
-<indexterm><primary>registry</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<indexterm><primary>レジストリ</primary></indexterm>
 <indexterm><primary>affect users</primary></indexterm>
-Under MS Windows platforms, particularly those following the release of MS Windows
-NT4 and MS Windows 95, it is possible to create a type of file that would be placed
-in the NETLOGON share of a domain controller. As the client logs onto the network,
-this file is read and the contents initiate changes to the registry of the client
-machine. This file allows changes to be made to those parts of the registry that
-affect users, groups of users, or machines.
+Microsoft Windowsプラットフォーム配下、特にMicrosoft NT4とMicrosoft Windows 95の
+リリースに従ったものは、ドメインコントローラのNETLOGON共有中に配置できるタイプの
+ファイルを作成することが可能である。クライアントがネットワークにログオンすると、
+このファイルは読み取られ、その内容で、クライアントマシンのレジストリの変更を開始する。
+このファイルはユーザ、ユーザのグループかマシンに影響するレジストリを変更させる
+ことを許可する。
 </para>
 
 <para>
 <indexterm><primary>Config.POL</primary></indexterm>
 <indexterm><primary>poledit.exe</primary></indexterm>
-<indexterm><primary>policy editor</primary></indexterm>
-For MS Windows 9x/Me, this file must be called <filename>Config.POL</filename> and may
-be generated using a tool called <filename>poledit.exe</filename>, better known as the
-Policy Editor. The policy editor was provided on the Windows 98 installation CD-ROM, but
-disappeared again with the introduction of MS Windows Me. From
-comments of MS Windows network administrators, it would appear that this tool became
-a part of the MS Windows Me Resource Kit.
+<indexterm><primary>ポリシーエディタ</primary></indexterm>
+Microsoft Windows 9x/Meようには、このファイルは<filename>Config.POL</filename>と
+しなければならず、ポリシーエディタとしてよく知られている
+<filename>poledit.exe</filename>というツールを使って作成できる。ポリシーエディタは
+Windows 98インストール用CD-ROMで提供されているが、Microsoft Windows Meでは提供
+されなくなった。Microsoft Windowsネットワーク管理者からのコメントによると、
+これはMicrosoft Windows Me リソースキットに含まれるようになったとのこと。
 </para>
 
 <para>
-<indexterm><primary>System Policy Editor</primary></indexterm>
-MS Windows NT4 server products include the <emphasis>System Policy Editor</emphasis>
-under <guimenu>Start -> Programs -> Administrative Tools</guimenu>.
-For MS Windows NT4 and later clients, this file must be called <filename>NTConfig.POL</filename>.
+<indexterm><primary>システムポリシーエディタ</primary></indexterm>
+Microsoft Windows NT4サーバ製品には、
+<guimenu>スタート -> プログラム -> 管理ツール</guimenu>配下に
+<emphasis>システムポリシーエディタ</emphasis>が含まれている。
+Microsoft Windows NT4とその後のクライアント用に、このファイルは
+<filename>NTConfig.POL</filename>という名前にしなければならない。
 </para>
 
 <para>
 <indexterm><primary>MMC</primary></indexterm>
+Microsoft Windows 2000からは、Microsoft管理コンソールまたはMMCが新たに導入された。
+このツールはネットワークアクセスとセキュリティの管理のための、絶えず変わるMicrosoft
+手法の展望における新しい流れである。すべての新しいMicrosoft製品または技術は、
+古いルールを無効にし、新しい、より複雑なツールと手法を導入するように見える。
+Microsoftの信用のために、MMCは進歩のように見えるが、改良された機能は大きな代価
+を得る。
 New with the introduction of MS Windows 2000 was the Microsoft Management Console
 or MMC. This tool is the new wave in the ever-changing landscape of Microsoft
 methods for management of network access and security. Every new Microsoft product
@@ -100,10 +119,10 @@ be a step forward, but improved functionality comes at a great price.
 </para>
 
 <para>
-<indexterm><primary>network policies</primary></indexterm>
-<indexterm><primary>system policies</primary></indexterm>
-<indexterm><primary>Profiles</primary></indexterm>
-<indexterm><primary>Policies</primary></indexterm>
+<indexterm><primary>ネットワークポリシー</primary></indexterm>
+<indexterm><primary>システムポリシー</primary></indexterm>
+<indexterm><primary>プロファイル</primary></indexterm>
+<indexterm><primary>ポリシー</primary></indexterm>
 Before embarking on the configuration of network and system policies, it is highly
 advisable to read the documentation available from Microsoft's Web site regarding
 <ulink url="http://www.microsoft.com/ntserver/techresources/management/prof_policies.asp">
