@@ -265,25 +265,27 @@ Implementing Profiles and Policies in Windows NT 4.0</ulink>
 
 	<para>
 	<indexterm><primary>GPOs</primary></indexterm>
-<indexterm><primary>Administrative Templates</primary></indexterm>
-	The older NT4-style registry-based policies are known as <emphasis>Administrative Templates</emphasis>
-	in MS Windows 2000/XP GPOs. The latter includes the ability to set various security
-	configurations, enforce Internet Explorer browser settings, change and redirect aspects of the
-	users desktop (including the location of <filename>My Documents</filename> files, as
-	well as intrinsics of where menu items will appear in the Start menu). An additional new
-	feature is the ability to make available particular software Windows applications to particular
-	users and/or groups.
+<indexterm><primary>管理用テンプレート</primary></indexterm>
+	古いNT4形式のレジストリベースポリシーは、Microsoft Windows 2000/XP GPO中では
+	<emphasis>管理用テンプレート(Administrative Templates)</emphasis>として
+	知られている。前者は種々のセキュリティ設定の設定機能、インターネット
+	エクスプローラの設定の強制、ユーザデスクトップ(スタートメニュー中に現れる
+	メニュー項目に設定されるのと同じような<filename>マイドキュメント</filename>
+	ファイルの配置を含む)の変更と外観の切り替え(redirect)を含む。
+	追加の新しい機能は、特定のWindowsアプリケーションソフトを特定のユーザ/グループに
+	有効化する事を行うことである。
 	</para>
 
 	<para>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
 <indexterm><primary>NETLOGON</primary></indexterm>
 <indexterm><primary>local registry values</primary></indexterm>
-	Remember, NT4 policy files are named <filename>NTConfig.POL</filename> and are stored in the root
-	of the NETLOGON share on the domain controllers. A Windows NT4 user enters a username and password
-	and selects the domain name to which the logon will attempt to take place. During the logon process,
-	the client machine reads the <filename>NTConfig.POL</filename> file from the NETLOGON share on
-	the authenticating server and modifies the local registry values according to the settings in this file.
+	思い出してほしいが、NT4のポリシーファイルは<filename>NTConfig.POL</filename>
+	という名前で、ドメインコントローラ上のNETLOGON共有のルートに格納される。Windows NT4
+	ユーザはユーザ名とパスワードを入力し、ログオンを行うドメイン名を選択する。ログオン
+	プロセス処理の間、クライアントマシンは、認証サーバ上のNETLOGON共有から
+	<filename>NTConfig.POL</filename>を読み、このファイル中にある設定に従い、ローカルの
+	レジストリ値を変更する。
 	</para>
 
 	<para>
@@ -291,31 +293,33 @@ Implementing Profiles and Policies in Windows NT 4.0</ulink>
 <indexterm><primary>NETLOGON</primary></indexterm>
 <indexterm><primary>replicated</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>domain controllers</primary></indexterm>
-<indexterm><primary>Group Policy Container</primary><see>GPC</see></indexterm>
-<indexterm><primary>Group Policy Template</primary><see>GPT</see></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<indexterm><primary>グループポリシーコンテナ</primary><see>GPC</see></indexterm>
+<indexterm><primary>グループポリシーテンプレート</primary><see>GPT</see></indexterm>
 <indexterm><primary>replicated SYSVOL</primary></indexterm>
-	Windows 200x GPOs are feature-rich. They are not stored in the NETLOGON share, but rather part of
-	a Windows 200x policy file is stored in the Active Directory itself and the other part is stored
-	in a shared (and replicated) volume called the SYSVOL folder. This folder is present on all Active
-	Directory domain controllers. The part that is stored in the Active Directory itself is called the
-	Group Policy Container (GPC), and the part that is stored in the replicated share called SYSVOL is
-	known as the Group Policy Template (GPT).
+	Windows 200x GPOは機能がたくさんある。これらは、NETLOGON共有には格納されないが、
+	一部はActive Directoryそれ自身にWindows200x ポリシーファイルとして格納され、
+	残りはSYSVOLフォルダと呼ばれる共有(かつ複製される)ボリューム中に格納される。
+	このフォルダはすべてのActive Directoryドメインコントローラ上に存在する。
+	Active Directoryそれ自身に格納される部分は、グループポリシーコンテナ(GPC)と
+	呼ばれ、SYSVOLと呼ばれる複製された共有中に格納されるものは、グループポリシー
+	テンプレート(GPT)として知られる。
 	</para>
 
 	<para>
 <indexterm><primary>GPOs</primary></indexterm>
-	With NT4 clients, the policy file is read and executed only as each user logs onto the network.
-	MS Windows 200x policies are much more complex &smbmdash; GPOs are processed and applied at client machine
-	startup (machine specific part), and when the user logs onto the network, the user-specific part
-	is applied. In MS Windows 200x-style policy management, each machine and/or user may be subject
-	to any number of concurrently applicable (and applied) policy sets (GPOs). Active Directory allows
-	the administrator to also set filters over the policy settings. No such equivalent capability
-	exists with NT4-style policy files.
+	NT4クライアントでは、ポリシーファイルは読み取られるが、各ユーザがネットワークに
+	ログオンする時のみ実行される。Microsoft Windows 200xポリシーは、もっと
+	複雑である。&smbmdash;GPOはクライアントマシン起動時(マシン固有の部分)で処理、
+	適用され、ユーザがネットワークにログオンする時、ユーザ個別の部分が適用される。
+	Microsoft Windows 200x形式のポリシー管理では、各マシンあるいはユーザは、
+	限りなく多くの、同時に適用可能な(かつ、適用される)ポリシーセット(GPO)の適用を
+	受けるかもしれない。NT4形式のポリシーファイルでは、これと同様の能力をもつものは
+	存在しない。
 	</para>
 
 		<sect3>
-		<title>Administration of Windows 200x/XP Policies</title>
+		<title>Windows 200x/XPポリシーの管理</title>
 
 		<para>
 		<indexterm><primary>GPOs</primary></indexterm>
