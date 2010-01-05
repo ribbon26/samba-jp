@@ -375,35 +375,41 @@ Implementing Profiles and Policies in Windows NT 4.0</ulink>
 <indexterm><primary>gpolmig.exe</primary></indexterm>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
 <indexterm><primary>resource kit</primary></indexterm>
-		The MS Windows 2000 Resource Kit contains a tool called <command>gpolmig.exe</command>. This tool can be used
-		to migrate an NT4 <filename>NTConfig.POL</filename> file into a Windows 200x style GPO. Be VERY careful how you
-		use this powerful tool. Please refer to the resource kit manuals for specific usage information.
+		Microsoft Windows 2000リソースキットには、<command>gpolmig.exe</command>
+		というツールが入っている。このツールはNT4の<filename>NTConfig.POL</filename>
+		ファイルをWindows 200x形式のGPOに変換するのに使える。どのようにこの強力な
+		ツールを使うかについては十分に注意すること。特定の使用に関する情報については、
+		リソースキットのマニュアルを参照してほしい。
 		</para>
 		</note>
 
 		</sect3>
 
 		<sect3>
-		<title>Custom System Policy Templates</title>
+		<title>固有のシステムポリシーテンプレート</title>
 
 		<para>
-		Over the past year, there has been a bit of talk regarding the creation of customized
-		templates for the Windows Sytem Policy Editor. A recent announcement on the Samba mailing
-		list is worthy of mention.
+		過去一年にわたって、Windows システムポリシーのための固有のテンプレートの
+		作成に関するいくつかの議論があった。Sambaメーリングリスト上での最近の
+		通知は言及に値する。
 		</para>
 
 		<para>
-		Mike Petersen has announced the availability of a template file he has created. This custom System Policy
-		Editor Template will allow you to successfully control Microsoft Windows workstations from an SMB server, such
-		as Samba. This template has been tested on a few networks, although if you find any problems with any of these
-		policies, or have any ideas for additional policies, let me know at mailto:mgpeter@pcc-services.com.  This
-		Template includes many policies for Windows XP to allow it to behave better in a professional environment.
+		Mike Petersenは彼が作成したテンプレートファイルの有効性を通知した。この
+		固有のシステムポリシーエディタテンプレートは、SambaのようなSMBサーバから
+		Microsoft Windows ワークステーションを問題なく制御することができる。
+		このテンプレートは、いくつかのネットワーク上でテストされたが、
+		もしも、それらのポリシーについて何らかの問題を見つけたか、追加のポリシーに
+		関する何らかの案があったとしたら、mgpeter@pcc-services.comまでメールを
+		送って教えてほしい。このテンプレートはWindows XP用の数多くのポリシーを
+		含み、業務用の環境ではもっとよく動くようになっている。
 		</para>
 
 		<para>
-		For further information please see the <ulink
-		url="http://www.pcc-services.com/custom_poledit.html">Petersen</ulink> Computer Consulting web site. There is
-		a download link for the template file.
+		さらなる情報については、
+		<ulink url="http://www.pcc-services.com/custom_poledit.html">Petersen</ulink>
+		Computer Consulting Webサイトを参照してほしい。テンプレートファイルへの
+		ダウンロードリンクがある。
 		</para>
 
 		</sect3>
@@ -411,79 +417,87 @@ Implementing Profiles and Policies in Windows NT 4.0</ulink>
 </sect1>
 
 <sect1>
-<title>Managing Account/User Policies</title>
+<title>アカウント/ユーザポリシーの管理</title>
 
 <para>
-<indexterm><primary>Policies</primary></indexterm>
-<indexterm><primary>policy file </primary></indexterm>
-<indexterm><primary>registry settings</primary></indexterm>
-Policies can define a specific user's settings or the settings for a group of users. The resulting
-policy file contains the registry settings for all users, groups, and computers that will be using
-the policy file. Separate policy files for each user, group, or computer are not necessary.
+<indexterm><primary>ポリシー</primary></indexterm>
+<indexterm><primary>ポリシーファイル</primary></indexterm>
+<indexterm><primary>レジストリの設定</primary></indexterm>
+ポリシーは、特定のユーザの設定か、ユーザのグループの設定を定義できる。結果のポリシー
+ファイルには、ポリシーファイルを使う、すべてのユーザ、グループとコンピュータ用の
+レジストリ設定が含まれる。各ユーザ、グループあるいはコンピュータ用にポリシーファイルを
+分けることは不要である。
 </para>
 
 <para>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
-If you create a policy that will be automatically downloaded from validating domain controllers,
-you should name the file <filename>NTConfig.POL</filename>. As system administrator, you have the option of renaming the
-policy file and, by modifying the Windows NT-based workstation, directing the computer to update
-the policy from a manual path. You can do this by either manually changing the registry or by using
-the System Policy Editor. This can even be a local path such that each machine has its own policy file,
-but if a change is necessary to all machines, it must be made individually to each workstation.
+もしも、認証されたドメインコントローラから自動的にダウンロードされるポリシーファイルを
+作成したら、<filename>NTConfig.POL</filename>と名前を付けるべきである。システム管理者には
+ポリシーファイルの改名オプションがあり、Windows NTベースのワークステーションを
+変更することで、マニュアルパス経由でポリシーファイルのするためにコンピュータを制御する。
+手動でレジストリを変更するか、システムポリシーエディタを塚'ってこれを行うことが出来る。
+これは、各マシンがその固有のポリシーファイルを持つようなローカルパスでも問題ないが、
+もしも、すべてのマシンに対して変更が必要であれば、各ワークステーションに対して個別に
+行わなければならない。
 </para>
 
 <para>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
 <indexterm><primary>NETLOGON</primary></indexterm>
-When a Windows NT4/200x/XP machine logs onto the network, the client looks in the NETLOGON share on
-the authenticating domain controller for the presence of the <filename>NTConfig.POL</filename> file. If one exists, it is 
-downloaded, parsed, and then applied to the user's part of the registry.
+Windows NT4/200x/XPマシンがネットワークにログオンするとき、クライアントは、
+<filename>NTConfig.POL</filename>ファイルが存在するかどうかを、認証するドメイン
+コントローラ上のNETLOGON共有中で捜す。もしも存在するならば、それをダウンロードし、
+解析し、レジストリのユーザ部分に適用する。
 </para>
 
 <para>
 <indexterm><primary>GPOs</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
-<indexterm><primary>NT4 style policy updates</primary></indexterm>
-MS Windows 200x/XP clients that log onto an MS Windows Active Directory security domain may additionally
-acquire policy settings through GPOs that are defined and stored in Active Directory
-itself. The key benefit of using AD GPOs is that they impose no registry <emphasis>spoiling</emphasis> effect.
-This has considerable advantage compared with the use of <filename>NTConfig.POL</filename> (NT4) style policy updates.
+<indexterm><primary>NT4形式のポリシー更新</primary></indexterm>
+Microsoft Windows Active DirectoryドメインにログオンするMicrosoft Windows 200x/XP
+クライアントはActive Directoryそれ自身に定義され格納されるGPOを使って、さらに
+ポリシーの設定を要求するかもしれない。ADのGPOを使う最も重要な利点は、
+レジストリを<emphasis>汚染する</emphasis>効果がない言うことである。
+これは<filename>NTConfig.POL</filename>(NT4)形式のポリシー更新の使用と比較して
+考慮すべき利点である。
 </para>
 
 <para>
-<indexterm><primary>account restrictions</primary></indexterm>
-<indexterm><primary>Common restrictions</primary></indexterm>
-In addition to user access controls that may be imposed or applied via system and/or group policies
-in a manner that works in conjunction with user profiles, the user management environment under
-MS Windows NT4/200x/XP allows per-domain as well as per-user account restrictions to be applied.
-Common restrictions that are frequently used include:
+<indexterm><primary>アカウント制限</primary></indexterm>
+<indexterm><primary>共通の制限</primary></indexterm>
+さらに追加で、ユーザプロファイルと結合して動作する方法で、システムあるいは
+グループポリシー経由で、設定あるいは強制されるかもしれないアクセス制御の
+追加においてMicrosoft Windows NT4/200x/XP下のユーザ管理環境は、ユーザ単位の
+アカウント制限が手cきょうされるのと同様に、ドメイン単位でもできる。
+よく使われる共通の制限は以下のものがある:
 </para>
 
 <para>
-<indexterm><primary>Account Controls</primary></indexterm>
+<indexterm><primary>アカウント制御</primary></indexterm>
 <itemizedlist>
-	<listitem><para>Logon hours</para></listitem>
-	<listitem><para>Password aging</para></listitem>
-	<listitem><para>Permitted logon from certain machines only</para></listitem>
-	<listitem><para>Account type (local or global)</para></listitem>
-	<listitem><para>User rights</para></listitem>
+	<listitem><para>ログオン時間</para></listitem>
+	<listitem><para>パスワードのエージング</para></listitem>
+	<listitem><para>特定のマシンからのログオンのみ許可</para></listitem>
+	<listitem><para>アカウントタイプ(ローカルまたはグローバル)</para></listitem>
+	<listitem><para>ユーザの権限</para></listitem>
 </itemizedlist>
 </para>
 
 <para>
-<indexterm><primary>Domain User Manager</primary></indexterm>
+<indexterm><primary>ドメインユーザマネージャ</primary></indexterm>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
-Samba-3.0.20 does not yet implement all account controls that are common to MS Windows NT4/200x/XP.
-While it is possible to set many controls using the Domain User Manager for MS Windows NT4, only password
-expiry is functional today. Most of the remaining controls at this time have only stub routines
-that may eventually be completed to provide actual control. Do not be misled by the fact that a
-parameter can be set using the NT4 Domain User Manager or in the <filename>NTConfig.POL</filename>.
+Samba-3.0.20は、まだMicrosoft Windows NT4/200x/XPで共通なすべてのアカウント制御を実装
+していない。Microsoft Windows NTp用のドメインユーザマネージャを使って多くの制御を
+設定する間、パスワード満了機能のみが現在使える。現時点で残りの制御の大半は、実際の
+制御を提供するように、完了されるかもしれないダミーのルーチンである。NT4ドメイン
+ユーザマネージャを使うか<filename>NTConfig.POL</filename>中でパラメータが
+設定できることから、誤解してはいけない。
 </para>
 
 </sect1>
 <sect1>
-<title>Management Tools</title>
+<title>管理ツール</title>
 
 <para>
 Anyone who wishes to create or manage Group Policies will need to be familiar with a number of tools.
