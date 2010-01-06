@@ -501,26 +501,28 @@ Samba-3.0.20は、まだMicrosoft Windows NT4/200x/XPで共通なすべてのア
 <title>管理ツール</title>
 
 <para>
-Anyone who wishes to create or manage Group Policies will need to be familiar with a number of tools.
-The following sections describe a few key tools that will help you to create a low-maintenance user
-environment.
+グループポリシーを作成するか管理しようと思っている人は誰でも、いくつかのツールについて
+慣れておく必要がある。以下の節では、余りメンテナンスをしないユーザ環境を作成するための
+手助けとなる、主要なツールについて説明する。
 </para>
 
 	<sect2>
-	<title>Samba Editreg Toolset</title>
+	<title>SambaのEditregツールセット</title>
 
 	<para>
 	<indexterm><primary>editreg</primary></indexterm>
 	<indexterm><primary>NTUser.DAT</primary></indexterm>
 	<indexterm><primary>NTConfig.POL</primary></indexterm>
-	A new tool called <command>editreg</command> is under development. This tool can be used
-	to edit registry files (called <filename>NTUser.DAT</filename>) that are stored in user
-	and group profiles. <filename>NTConfig.POL</filename> files have the same structure as the
-	<filename>NTUser.DAT</filename> file and can be edited using this tool. <command>editreg</command>
-	is being built with the intent to enable <filename>NTConfig.POL</filename> files to be saved in text format and to
-	permit the building of new <filename>NTConfig.POL</filename> files with extended capabilities. It is proving difficult
-	to realize this capability, so do not be surprised if this feature does not materialize. Formal
-	capabilities will be announced at the time that this tool is released for production use.
+	<command>editreg</command>と呼ばれる新しいツールが開発中である。このツールは、
+	ユーザとグループプロファイル中に格納される(<filename>NTUser.DAT</filename>と
+	呼ばれる)レジストリファイルを編集するのに使える。<filename>NTConfig.POL</filename>
+	ファイルは<filename>NTUser.DAT</filename>ファイルと同じ構造を持ち、このツールを
+	使って編集できる。<command>editreg</command>は、<filename>NTConfig.POL</filename>
+	ファイルをテキスト形式でセーブすることが出来るように意図し、拡張された機能を含む
+	新しい<filename>NTConfig.POL</filename>ファイルを構築する事を出来るように作成されて
+	いる。この機能を実現するのは困難であることは分かっているので、もしもこの機能が
+	実現しなくとも驚かないでほしい。公に使える機能は、このツールの正式版がリリースされた
+	時に公開される。
 	</para>
 
 	</sect2>
@@ -530,12 +532,13 @@ environment.
 
 	<para>
 <indexterm><primary>regedt32.exe</primary></indexterm>
-<indexterm><primary>Group Policy Editor</primary></indexterm>
+<indexterm><primary>グループポリシーエディタ</primary></indexterm>
 <indexterm><primary>MMC</primary></indexterm>
-	The tools that may be used to configure these types of controls from the MS Windows environment are
-	the NT4 User Manager for Domains, the NT4 System and Group Policy Editor, and the Registry Editor (regedt32.exe).
-	Under MS Windows 200x/XP, this is done using the MMC with appropriate
-	<quote>snap-ins,</quote> the registry editor, and potentially also the NT4 System and Group Policy Editor.
+	Microsoft Windows環境からこれらのタイプの制御を設定するために使えるかもしれない
+	ツールは、NT4ドメインユーザマネージャ、NT4システムおよびグループポリシーエディタ、
+	およびレジストリエディタ(regedit32.exe)である。Microsoft Windows 200x/XP配下では
+	これは、MMCに対して適切な<quote>スナップイン</quote>、レジストリエディタ、および、
+	もしかするとNT4システムとグループポリシーエディタを使って行える。
 	</para>
 	</sect2>
 
@@ -547,54 +550,55 @@ environment.
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>NET</primary></indexterm>
 <indexterm><primary>rpcclient</primary></indexterm>
+	Sambaドメインコントローラでは、ユーザアカウントとポリシー情報の管理のための
+	以下の新しいツールが含まれている:
 	With a Samba domain controller, the new tools for managing user account and policy information include:
-	<command>smbpasswd</command>, <command>pdbedit</command>, <command>net</command>, and <command>rpcclient</command>. 
-	The administrator should read the man pages for these tools and become familiar with their use.
+	<command>smbpasswd</command>, <command>pdbedit</command>, <command>net</command>, と <command>rpcclient</command>。
+	管理者はこれらのツールのマニュアルページを読み、使用法に慣れるべきである。
 	</para>
 
 	</sect2>
 </sect1>
 
 <sect1>
-<title>System Startup and Logon Processing Overview</title>
+<title>システムスタートアップとログオン処理の概要</title>
 
 <para>
-The following attempts to document the order of processing the system and user policies following a system
-reboot and as part of the user logon:
+以下は、システムの処理の順番と、システムの再起動とユーザログオンの一部として処理される、
+処理の順番を説明する試みである:
 </para>
 
 <orderedlist>
 	<listitem><para>
-<indexterm><primary>Remote Procedure Call System Service</primary><see>RPCSS</see></indexterm>
+<indexterm><primary>リモートプロシジャーコールシステムサービス</primary><see>RPCSS</see></indexterm>
 <indexterm><primary>multiple universal naming convention provider</primary><see>MUP</see></indexterm>
-	Network starts, then Remote Procedure Call System Service (RPCSS) and multiple universal naming
-	convention provider (MUP) start.
+	ネットワークが起動し、次にリモートプロシジャーコールシステムサービス(RPCSS)と
+	multiple universal naming convention provider (MUP)が起動する。
 	</para></listitem>
 
 	<listitem><para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>GPOs</primary></indexterm>
-	Where Active Directory is involved, an ordered list of GPOs is downloaded
-	and applied. The list may include GPOs that:
+	Active Directory を使う場合、GPOの整列された一覧がダウンロードされて適用される。
+	リストは以下のGPOを含んでいても余韻
 <itemizedlist>
-	<listitem><para>Apply to the location of machines in a directory.</para></listitem>
-	<listitem><para>Apply only when settings have changed.</para></listitem>
-	<listitem><para>Depend on configuration of the scope of applicability: local,
-	site, domain, organizational unit, and so on.</para></listitem>
+	<listitem><para>ディレクトリ中のマシンの配置を適用(Apply to the location of machines in a directory)。</para></listitem>
+	<listitem><para>設定が変更されたときのみ適用(Apply only when settings have changed)。</para></listitem>
+	<listitem><para>適用範囲の設定に依存:local,site,domain,organizational unitなど。</para></listitem>
 </itemizedlist>
-	No desktop user interface is presented until the above have been processed.
+	どのデスクトップユーザインタフェースも、上記が処理されるまで提供されない。
 	</para></listitem>
 
 	<listitem><para>
-	Execution of startup scripts (hidden and synchronous by default).
+	スタートアップスクリプトの実行(既定値ではhiddenとsynchronous)。
 	</para></listitem>
 
 	<listitem><para>
-	A keyboard action to effect start of logon (Ctrl-Alt-Del).
+	ログオンを行うためのキーボード操作(Ctrl-Alt-Del)。
 	</para></listitem>
 
 	<listitem><para>
-	User credentials are validated, user profile is loaded (depends on policy settings).
+	ユーザの認証情報が検証され、ユーザプロファイルがロードされる(ポリシー設定に依存)。
 	</para></listitem>
 
 	<listitem><para>
