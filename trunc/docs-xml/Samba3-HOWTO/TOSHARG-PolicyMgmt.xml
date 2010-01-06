@@ -602,55 +602,58 @@ Samba-3.0.20は、まだMicrosoft Windows NT4/200x/XPで共通なすべてのア
 	</para></listitem>
 
 	<listitem><para>
-	An ordered list of user GPOs is obtained. The list contents depends on what is configured in respect of:
+	ユーザGPOの整列された一覧を入手する。一覧の内容は、以下の点で何が含まれているかに依存する:
 
 <itemizedlist>
-	<listitem><para>Is the user a domain member, thus subject to particular policies?</para></listitem>
-	<listitem><para>Loopback enablement, and the state of the loopback policy (merge or replace).</para></listitem>
-	<listitem><para>Location of the Active Directory itself.</para></listitem>
-	<listitem><para>Has the list of GPOs changed? No processing is needed if not changed.</para></listitem>
+	<listitem><para>ユーザがドメインのメンバか、結果、特別なポリシーの適用を受けるか?</para></listitem>
+	<listitem><para>Loopback enablement, and the state of the loopback policy (併合または置換)。</para></listitem>
+	<listitem><para>Active Directoryそれ自身の位置</para></listitem>
+	<listitem><para>GPOの一覧が変更されたか?もしも変更されていないならば、処理は不要である。</para></listitem>
 </itemizedlist>
 	</para></listitem>
 
 	<listitem><para>
-	User policies are applied from Active Directory. Note: There are several types.
+	Active Directoryからのユーザポリシーが適用される。注意:いくつか種類がある。
 	</para></listitem>
 
 	<listitem><para>
-	Logon scripts are run. New to Windows 200x and Active Directory, logon scripts may be obtained based on GPOs
-	(hidden and executed synchronously). NT4-style logon scripts are then run in a normal
-	window.
+	ログオンスクリプトが動く。Windows 200xとActive Directoryから新規に、ログオン
+	スクリプトはGPOをベースにして得られるかもしれない(hiddenとsynchronouslyに実行)。
+	NT4形式のログオンスクリプトは通常のウィンドウで動作する。
 	</para></listitem>
 
 	<listitem><para>
-	The user interface as determined from the GPOs is presented. Note: In a Samba domain (like an NT4
-	domain), machine (system) policies are applied at startup; user policies are applied at logon.
+	GPOから決定されたユーザインタフェースが提供される。注意:Sambaドメイン中では
+	(NT4ドメインのように)、マシン(システム)ポリシーは起動時に適用される。
+	ユーザポリシーはログオン時に適用される。
 	</para></listitem>
 </orderedlist>
 
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
-Policy-related problems can be quite difficult to diagnose and even more difficult to rectify. The following
-collection demonstrates only basic issues.
+ポリシーに関連する問題は、診断するのがとても難しく、さらに修正するのがもっと難しい
+可能性がある。以下の項目は、基本的な問題のみを示している。
 </para>
 
 <sect2>
-<title>Policy Does Not Work</title>
+<title>ポリシーが動かない</title>
 
 <para>
-<quote>We have created the <filename>Config.POL</filename> file and put it in the <emphasis>NETLOGON</emphasis> share.
-It has made no difference to our Win XP Pro machines, they just do not see it. It worked fine with Win 98 but does not
-work any longer since we upgraded to Win XP Pro. Any hints?</quote>
+<quote><filename>Config.POL</filename>ファイルを作成し、<emphasis>NETLOGON</emphasis>
+共有に置いた。が、Windows XP Proマシンでは、それが見えていないような感じで、何ら
+違いがなかった。Windows 98では正しく動作したが、Windows XP Proにアップグレードして
+からはもはや動かなくなった。何かヒントはないか?</quote>
 </para>
 
 <para>
-Policy files are not portable between Windows 9x/Me and MS Windows NT4/200x/XP-based platforms. You need to
-use the NT4 Group Policy Editor to create a file called <filename>NTConfig.POL</filename> so it is in the
-correct format for your MS Windows XP Pro clients.
+ポリシーファイルはWindows 9x/MeとMicrosoft Windows NT4/200x/XPベースのプラットフォーム
+の間では互換性がない。<filename>NTConfig.POL</filename>というファイルをNT4の
+グループポリシーエディタで作成する必要があり、そうすると、Microsoft Windows XP Pro
+クライアント用の正しい形式になる。
 </para>
 
 </sect2>
