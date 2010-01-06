@@ -113,7 +113,7 @@ ADSと同時にDHCPを使うことは、クライアントワークステーシ�
 <title><filename>/etc/hosts</filename></title>
 
 <para>
-This file contains a static list of IP addresses and names.
+このファイルは静的なIPアドレスと名前の一覧を含んでいる。
 <programlisting>
 127.0.0.1	localhost localhost.localdomain
 192.168.1.1	bigbox.quenya.org	bigbox	alias4box
@@ -123,59 +123,65 @@ This file contains a static list of IP addresses and names.
 <para>
 <indexterm><primary>/etc/hosts></primary></indexterm>
 <indexterm><primary>name resolution</primary></indexterm>
-The purpose of <filename>/etc/hosts</filename> is to provide a 
-name resolution mechanism so users do not need to remember 
-IP addresses.
+<filename>/etc/hosts</filename>の目的は、名前解決メカニズムを提供することであり、
+ユーザはIPアドレスを覚えなくても済むようになる。
 </para>
 
 <para>
-<indexterm><primary>IP addresses</primary></indexterm>
-<indexterm><primary>MAC address</primary></indexterm>
-<indexterm><primary>physical network transport layer</primary></indexterm>
-Network packets that are sent over the physical network transport 
-layer communicate not via IP addresses but rather using the Media 
-Access Control address, or MAC address. IP addresses are currently 
-32 bits in length and are typically presented as four decimal 
-numbers that are separated by a dot (or period) &smbmdash; for example, 168.192.1.1.
+<indexterm><primary>IPアドレス</primary></indexterm>
+<indexterm><primary>MACアドレス</primary></indexterm>
+<indexterm><primary>物理ネットワーク転送レイヤ</primary></indexterm>
+物理的なネットワーク転送レイヤ上で送られたネットワークパケットは、IPアドレスを
+使うのではなく、メディアアクセスコントロールアドレス、あるいはMACアドレス
+を使って通信を行う。IPアドレスは、現在32ビット長で、通常ドット(あるいは
+ピリオド)で分割された4つの十進数で表現される。&smbmdash;
+たとえば、168.192.1.1である。
 </para>
 
 <para>
-<indexterm><primary>MAC Addresses</primary></indexterm>
-MAC addresses use 48 bits (or 6 bytes) and are typically represented 
-as two-digit hexadecimal numbers separated by colons: 40:8e:0a:12:34:56.
+<indexterm><primary>MACアドレス</primary></indexterm>
+MACアドレスは48ビット(あるいは6バイト)であり、通常2桁の16進数をコロン
+で分離して表現される。たとえば 40:8e:0a:12:34:56.である。
 </para>
 
 <para>
-Every network interface must have a MAC address. Associated with a MAC address may be one or more IP
-addresses. There is no relationship between an IP address and a MAC address; all such assignments are
-arbitrary or discretionary in nature. At the most basic level, all network communications take place using MAC
-addressing. Since MAC addresses must be globally unique and generally remain fixed for any particular
-interface, the assignment of an IP address makes sense from a network management perspective. More than one IP
-address can be assigned per MAC address. One address must be the primary IP address &smbmdash; this is the
-address that will be returned in the Address Resolution Protocol (ARP) reply.
+すべてのネットワークインタフェースはMACアドレスを持たねばならない。MACアドレス
+に対して1つ以上のIPアドレスを割り当てることができる。IPアドレスとMACアドレスの間に
+何らの関係はない。そのようなすべての割り当ては、任意、あるいは自由に行える。
+最も基本的なレベルでは、すべてのネットワーク津心は、MACアドレスを使って行われる。
+MACアドレスがグローバルに一意で、一般的に、特定のインタフェースに固定されている
+ので、IPアドレスの割り当てはネットワーク管理の視点から意味をなす。1つ以上のIP
+アドレスをMACアドレス毎に割り当てられる。1つのアドレスはプライマリIPアドレスで
+ある必要がある。&smbmdash;これは、アドレス解決プロトコル(ARP)の問い合わせで
+帰ってくるアドレスである。
 </para>
 
 <para>
-<indexterm><primary>machine name</primary></indexterm>
-When a user or a process wants to communicate with another machine, 
-the protocol implementation ensures that the <quote>machine name</quote> or <quote>host 
-name</quote> is resolved to an IP address in a manner that is controlled 
-by the TCP/IP configuration control files. The file 
-<filename>/etc/hosts</filename> is one such file.
+<indexterm><primary>マシン名</primary></indexterm>
+ユーザあるいはプロセスが他のマシンと通信したい場合、プロトコルは、
+<quote>マシン名</quote>あるいは<quote>ホスト名</quote>が、TCP/IP設定制御ファイルで
+制御される方法で、IPアドレスに解決されるように実装されている。
+<filename>/etc/hosts</filename>はそのようなファイルの1つである。
 </para>
 
 <para>
 <indexterm><primary>ARP/RARP</primary></indexterm>
-When the IP address of the destination interface has been determined, a protocol called ARP/RARP is used to
-identify the MAC address of the target interface. ARP is a broadcast-oriented method that uses User Datagram
-Protocol (UDP) to send a request to all interfaces on the local network segment using the all 1s MAC address.
-Network interfaces are programmed to respond to two MAC addresses only; their own unique address and the
-address ff:ff:ff:ff:ff:ff. The reply packet from an ARP request will contain the MAC address and the primary
-IP address for each interface.
+送信先のインタフェースのIPアドレスが決まったとき、ARP/RARPと呼ばれるプロトコルが、
+対象インタフェースのMACアドレスを識別するのに使われるARPは、すべて1であるMACアドレスを
+使って、ローカルネットワークセグメント上のすべてのインタフェースに対してUDPを使って
+送信する、ブロードキャストベースの方法である。ネットワークインタフェースは2つのMAC
+アドレスのみに返信する。そのインタフェース固有のアドレスと、ff:ff:ff:ff:ff:ffという
+アドレスである。ARP要求からの返信パケットにはMACアドレスと各インタフェースのプライマリ
+IPアドレスが含まれている。
 </para>
 
 <para>
 <indexterm><primary>/etc/hosts</primary></indexterm>
+<filename>/etc/hosts</filename>ファイルはすべてのUNIX/Linux TCP/IPインストールの
+基本であり、最低限のものとして、localhostとローカルネットワークインタフェースの
+IPアドレスとローカルマシン上で知られているプライマリ名を含んでいる。このファイルは、
+他の名前解決方法が有効になる前に、基本的なレベルの名前解決が存在できるように、
+このファイルは、......
 The <filename>/etc/hosts</filename> file is foundational to all 
 UNIX/Linux TCP/IP installations and as a minimum will contain 
 the localhost and local network interface IP addresses and the 
@@ -192,7 +198,7 @@ becomes available.
 <title><filename>/etc/resolv.conf</filename></title>
 
 <para>
-This file tells the name resolution libraries:
+このファイルで名前解決ライブラリを指定する:
 </para>
 
 <itemizedlist>
