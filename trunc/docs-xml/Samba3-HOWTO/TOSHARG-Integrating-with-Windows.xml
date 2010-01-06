@@ -21,33 +21,32 @@
 <para>
 <indexterm><primary>NetBEUI</primary></indexterm>
 <indexterm><primary>LLC</primary></indexterm>
-NetBIOS over TCP/IP has nothing to do with NetBEUI. NetBEUI is NetBIOS
-over Logical Link Control (LLC). On modern networks it is highly advised
-to not run NetBEUI at all. Note also that there is no such thing as
-NetBEUI over TCP/IP &smbmdash; the existence of such a protocol is a complete
-and utter misapprehension.
+NetBIOS over TCP/IPはNetBEUIとは関係ない。NetBEUIはNetBIOS over Logical Link Control(LLC)
+である。最近のネットワークでは、NetBIOSを動かさないことを強く推奨している。また、
+NetBEUI over TCP/IPというようなものはない。&smbmdash;そのようなプロトコルは、全く完全に
+誤解である。
 </para>
 </note>
 
 <sect1>
-<title>Features and Benefits</title>
+<title>機能と利便性</title>
 
 <para>
-Many MS Windows network administrators have never been exposed to basic TCP/IP
-networking as it is implemented in a UNIX/Linux operating system. Likewise, many UNIX and
-Linux administrators have not been exposed to the intricacies of MS Windows TCP/IP-based
-networking (and may have no desire to be, either).
+多くのMicrosoft Windows ネットワーク管理者は、UNIX/Linux OS中で実装されているような
+基本的なTCP/IPネットワーキングに一度も出会ったことはない。同じく、多くのUNIXとLinux
+管理者は、Microsoft Windows TCP/IPベースのネットワークの複雑さ(とそれに対する願望
+は無いかもしれない)に出会ったことがない。
 </para>
 
 <para>
-This chapter gives a short introduction to the basics of how a name can be resolved to 
-its IP address for each operating system environment.
+この章では、各OS環境において、どのように、名前がIPアドレスに解決されるかについての
+基本について、簡単に紹介する。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Background Information</title>
+<title>背景情報</title>
 
 <para>
 <indexterm><primary>NetBIOS over TCP/IP</primary></indexterm>
@@ -55,18 +54,19 @@ its IP address for each operating system environment.
 <indexterm><primary>TCP port 139</primary></indexterm>
 <indexterm><primary>TCP port 445</primary></indexterm>
 <indexterm><primary>UDP port 137</primary></indexterm>
-Since the introduction of MS Windows 2000, it is possible to run MS Windows networking
-without the use of NetBIOS over TCP/IP. NetBIOS over TCP/IP uses UDP port 137 for NetBIOS
-name resolution and uses TCP port 139 for NetBIOS session services. When NetBIOS over
-TCP/IP is disabled on MS Windows 2000 and later clients, then only the TCP port 445 is
-used, and the UDP port 137 and TCP port 139 are not.
+Microsoft Windows 2000から、Microsoft Windows ネットワークをNetBIOS over TCP/IPなしで
+動かすことが可能になった。NetBIOS over TCP/IPは、NetBIOS名前解決にUDPポート137を、
+NetBIOSセッションサービスにTCPのポート139を使う。NetBIOS over TCP/IPが、Microsoft 
+Windows 2000とそれ以降のクライアントで無効になると、TCPポート445のみが使われ、
+UDPポート137とTCPポート139は使われなくなる。
 </para>
 
 <note>
 <para>
-When using Windows 2000 or later clients, if NetBIOS over TCP/IP is not disabled, then
-the client will use UDP port 137 (NetBIOS Name Service, also known as the Windows Internet
-Name Service, or WINS), TCP port 139, and TCP port 445 (for actual file and print traffic).
+Windows 2000かそれ以降のクライアントを使うとき、もしも NetBIOS over TCP/IPが無効になって
+いない場合、クライアントはUDPポート137(NetBIOSネームサービスであり、Windows Internet 
+Name serviceあるいはWINSとしても知られている)とTCPポート445(実際のファイルと印刷データの
+転送)を使う。
 </para>
 </note>
 
@@ -77,21 +77,24 @@ Name Service, or WINS), TCP port 139, and TCP port 445 (for actual file and prin
 <indexterm><primary>SRV RR</primary></indexterm>
 <indexterm><primary>IXFR</primary></indexterm>
 <indexterm><primary>DHCP</primary></indexterm>
-When NetBIOS over TCP/IP is disabled, the use of DNS is essential. Most installations that disable NetBIOS
-over TCP/IP today use MS Active Directory Service (ADS). ADS requires
-<indexterm><primary>DNS</primary><secondary>Dynamic</secondary></indexterm> dynamic DNS with Service Resource
-Records (SRV RR) and with Incremental Zone Transfers (IXFR).  <indexterm><primary>DHCP</primary></indexterm>
-Use of DHCP with ADS is recommended as a further means of maintaining central control over the client
-workstation network configuration.
+NetBIOS over TCP/IPが無効の場合、DNSの使用が基本である。現在ほとんどの、
+NetBIOS over TCP/IPを無効にした環境では、Microsoft Active Directoryサービス(ADS)を
+使っている。ADSは
+<indexterm><primary>DNS</primary><secondary>Dynamic</secondary></indexterm>
+サービスリソースレコード(SRV RR)と増分ゾーン転送(IXFR)を使う、ダイナミックDNSを要求
+する。
+<indexterm><primary>DHCP</primary></indexterm>
+ADSと同時にDHCPを使うことは、クライアントワークステーションネットワーク設定上で
+集中制御管理を行う手段として推奨される。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Name Resolution in a Pure UNIX/Linux World</title>
+<title>純粋なUNIX/Linux環境中での名前解決</title>
 
 <para>
-The key configuration files covered in this section are:
+この節が対象としている重要な設定ファイルは以下の通り:
 </para>
 
 <indexterm><primary>/etc/hosts</primary></indexterm>
