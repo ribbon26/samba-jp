@@ -280,18 +280,15 @@ services:	nis files
 <indexterm><primary>make</primary></indexterm>
 <indexterm><primary>/etc/nsswitch.conf</primary></indexterm>
 <indexterm><primary>wins</primary></indexterm>
-Starting with version 2.2.0, Samba has Linux support for extensions to 
-the name service switch infrastructure so Linux clients will 
-be able to obtain resolution of MS Windows NetBIOS names to IP 
-addresses. To gain this functionality, Samba needs to be compiled 
-with appropriate arguments to the make command (i.e., <userinput>make 
-nsswitch/libnss_wins.so</userinput>). The resulting library should 
-then be installed in the <filename>/lib</filename> directory, and 
-the <parameter>wins</parameter> parameter needs to be added to the <quote>hosts:</quote> line in 
-the <filename>/etc/nsswitch.conf</filename> file. At this point, it 
-will be possible to ping any MS Windows machine by its NetBIOS 
-machine name, as long as that machine is within the workgroup to 
-which both the Samba machine and the MS Windows machine belong.
+バージョン 2.2.0から、Sambaはname service switch機構用の拡張のために、Linuxをサポート
+するようになり、Linuxクライアントは、Microsoft Windows NetBIOSの名前解決機能を使える
+ようになった。この機能を使うためには、Sambaはmakeコマンドで適切な引数を付けてコンパイル
+する必要がある(すなわち、<userinput>make nsswitch/libnss_wins.so</userinput>)。
+次に名前解決ライブラリを<filename>/lib</filename>ディレクトリにインストールし、
+<parameter>wins</parameter>パラメータを、<filename>/etc/nsswitch.conf</filename>ファイル
+中の<quote>hosts:</quote>行に追加する必要がある。この時点で、
+SambaサーバとMicrosoft Windowsマシンが存在するワークグループ内にいる、
+どこかのMicrosoft Windowsマシンに対してNetBIOSマシン名でping出来る。
 </para>
 
 </sect2>
@@ -299,39 +296,41 @@ which both the Samba machine and the MS Windows machine belong.
 
 
 <sect1>
-<title>Name Resolution as Used within MS Windows Networking</title>
+<title>Microsoft Windowsネットワーク内でのような名前解決</title>
 
 <para>
-<indexterm><primary>computer name</primary></indexterm>
-<indexterm><primary>machine name</primary></indexterm>
-<indexterm><primary>NetBIOS name</primary></indexterm>
-<indexterm><primary>SMB name</primary></indexterm>
-MS Windows networking is predicated on the name each machine is given. This name is known variously (and
-inconsistently) as the <quote>computer name,</quote> <quote>machine name,</quote> <quote>networking
-name,</quote> <quote>NetBIOS name,</quote> or <quote>SMB name.</quote> All terms mean the same thing with the
-exception of <quote>NetBIOS name,</quote> which can also apply to the name of the workgroup or the domain
-name. The terms <quote>workgroup</quote> and <quote>domain</quote> are really just a simple name with which
-the machine is associated. All NetBIOS names are exactly 16 characters in length. The
-16<superscript>th</superscript> character is reserved.  It is used to store a 1-byte value that indicates
-service level information for the NetBIOS name that is registered. A NetBIOS machine name is therefore
-registered for each service type that is provided by the client/server.
+<indexterm><primary>コンピュータ名</primary></indexterm>
+<indexterm><primary>マシン名</primary></indexterm>
+<indexterm><primary>NetBIOS名</primary></indexterm>
+<indexterm><primary>SMB名</primary></indexterm>
+Microsoft Windowsネットワークは、各マシンに割り当てられた名前をベースにしている。
+これは、<quote>コンピュータ名</quote>,<quote>マシン名</quote>,
+<quote>ネットワーキング名</quote>,<quote>NetBIOS名</quote>あるいは<quote>SMB名</quote>
+という、種々の(そして矛盾した)名前で呼ばれている。すべての単語は、ワークグループか
+ドメイン名の名前にも適用できる<quote>NetBIOS名</quote>を除いて同じものを意味する。
+<quote>ワークグループ</quote>と<quote>ドメイン</quote>という単語は、実際、どのマシンが
+関連づけられているかという、単なる名前である。すべてのNetBIOS名はきっかり16文字である。
+16番目の文字は予約されている。登録されたNetBIOS名のサービスレベル情報を指定する
+1バイトとして使われる。そのため、NetBIOSマシン名は、クライアント/サーバによって
+提供される各サービスタイプで登録される。
 </para>
 
 <para>
-<link linkend="uniqnetbiosnames">Unique NetBIOS names</link> and <link linkend="netbiosnamesgrp">group names</link> tables 
-list typical NetBIOS name/service type registrations.
+<link linkend="uniqnetbiosnames">一意なNetBIOS名</link>と
+<link linkend="netbiosnamesgrp">グループ名</link>の表は、典型的なNetBIOS
+名前/サービスタイプ登録一覧である。
 </para>
 
 <table frame="all" id="uniqnetbiosnames">
-<title>Unique NetBIOS Names</title>
+<title>一意なNetBIOS名</title>
 <tgroup cols="2">
 <colspec align="left"/>
 <colspec align="justify"/>
 <tbody>
-<row><entry>MACHINENAME&lt;00&gt;</entry><entry>Server Service is running on MACHINENAME</entry></row>
-<row><entry>MACHINENAME&lt;03&gt;</entry><entry>Generic machine name (NetBIOS name)</entry></row>
-<row><entry>MACHINENAME&lt;20&gt;</entry><entry>LanMan server service is running on MACHINENAME</entry></row>
-<row><entry>WORKGROUP&lt;1b&gt;</entry><entry>Domain master browser</entry></row>
+<row><entry>MACHINENAME&lt;00&gt;</entry><entry>MACHINENAME上でサーバサービスが動いている</entry></row>
+<row><entry>MACHINENAME&lt;03&gt;</entry><entry>一般的なマシン名(NetBIOS名)</entry></row>
+<row><entry>MACHINENAME&lt;20&gt;</entry><entry>LanManサーバサービスがMACHINENAMEで動いている</entry></row>
+<row><entry>WORKGROUP&lt;1b&gt;</entry><entry>ドメインマスタブラウザ</entry></row>
 </tbody>
 </tgroup>
 </table>
@@ -342,10 +341,10 @@ list typical NetBIOS name/service type registrations.
 <colspec align="left"/>
 <colspec align="justify"/>
 <tbody>
-<row><entry>WORKGROUP&lt;03&gt;</entry><entry>Generic name registered by all members of WORKGROUP</entry></row>
-<row><entry>WORKGROUP&lt;1c&gt;</entry><entry>Domain cntrollers/netlogon servers</entry></row>
-<row><entry>WORKGROUP&lt;1d&gt;</entry><entry>Local master browsers</entry></row>
-<row><entry>WORKGROUP&lt;1e&gt;</entry><entry>Browser election service</entry></row>
+<row><entry>WORKGROUP&lt;03&gt;</entry><entry>WORKGROUPのすべてのメンバによって登録された一般的な名前</entry></row>
+<row><entry>WORKGROUP&lt;1c&gt;</entry><entry>ドメインコントローラ/ネットログオンサーバ</entry></row>
+<row><entry>WORKGROUP&lt;1d&gt;</entry><entry>ローカルマスタブラウザ</entry></row>
+<row><entry>WORKGROUP&lt;1e&gt;</entry><entry>ブラウザ選定サービス</entry></row>
 </tbody>
 </tgroup>
 </table>
