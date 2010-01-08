@@ -547,22 +547,29 @@ NetBIOS名前キャッシュの検査を行うMicrosoft Windows ユーティリ�
 <title>HOSTSファイル</title>
 
 <para>
-This file is usually located in MS Windows NT 4.0 or Windows 200x/XP in 
-the directory <filename>%SystemRoot%\SYSTEM32\DRIVERS\ETC</filename> and contains 
-the IP address and the IP hostname in matched pairs. It can be 
-used by the name resolution infrastructure in MS Windows, depending 
-on how the TCP/IP environment is configured. This file is in 
-every way the equivalent of the UNIX/Linux <filename>/etc/hosts</filename> file.
+このファイルは、通常Microsoft Windows NT 4.0あるいはWindows 200x/XPの
+ディレクトリ<filename>%SystemRoot%\SYSTEM32\DRIVERS\ETC</filename>中にあり、
+IPアドレスとIPホスト名が対になったものを含む。これは、名前解決機構として
+使うことが出来るが、どのようにTCP/IP環境が設定されたかに依存する。このファイルは
+UNIX/Linuxでの<filename>/etc/hosts</filename>ファイルと同じ使い方である。
 </para>
 </sect2>
 
 
 <sect2>
-<title>DNS Lookup</title>
+<title>DNSによる検索</title>
 
 
 <para>
 <indexterm><primary>DNS</primary></indexterm>
+この機能は、ネットワーク設定機能中のTCP/IPに関する設定の中で設定できる。
+もしもこれが有効になると、どのようにNetBIOSノードタイプパラメータが設定
+されたかに正確に依存して決まる、選択された名前解決シーケンスが後に続く。
+ノードタイプ0は、NetBIOS名前キャッシュ中で名前検索をしても見つからなかった場合、
+NetBIOSブロードキャスト(UDP上のブロードキャスト)が使われる。もしも、失敗した場合、
+次にDNS、HOSTSとLMHOSTSが使われる。もしもノードタイプが8ならば、DNS,HOSTS,LMHOSTS
+の検索から結果を得る前に、NetBIOSユニキャスト(UDPユニキャストで)がWINSサーバに
+送られるか、ブロードキャスト検索が使われる。
 This capability is configured in the TCP/IP setup area in the network 
 configuration facility. If enabled, an elaborate name resolution sequence 
 is followed, the precise nature of which is dependent on how the NetBIOS 
@@ -578,22 +585,22 @@ lookup is used.
 </sect2>
 
 <sect2>
-<title>WINS Lookup</title>
+<title>WINSによる検索</title>
 
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>Windows Internet Name Server</primary><see>WINS</see></indexterm>
 <indexterm><primary>NetBIOS Name Server</primary><see>NBNS</see></indexterm>
-A WINS (Windows Internet Name Server) service is the equivalent of the 
-rfc1001/1002 specified NBNS (NetBIOS Name Server). A WINS server stores 
-the names and IP addresses that are registered by a Windows client 
-if the TCP/IP setup has been given at least one WINS server IP address.
+WINS(Windows Internet Name Server)サービスはrfc1001/1002で定義されたNBNS
+(NetBIOSネームサーバ)と同等のものである。WINSサーバは、もしもTCP/IP設定で、
+少なくとも1つのWINSサーバのIPアドレスを指定したとき、Windows クライアントによって
+登録される名前とIPアドレスを格納する。
 </para>
 
 <para>
-To configure Samba to be a WINS server, the following parameter needs 
-to be added to the &smb.conf; file:
+SambaをWINSサーバサーバとして設定するには、以下のパラメータを&smb.conf;
+ファイルに追加する必要がある:
 </para>
 
 <para><smbconfblock>
@@ -602,8 +609,8 @@ to be added to the &smb.conf; file:
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
-To configure Samba to use a WINS server, the following parameters are 
-needed in the &smb.conf; file:
+SambaをWINSサーバを使うように設定するためには、以下のパラメータを&smb.conf;
+ファイルに追加する必要がある:
 </para>
 
 <para><smbconfblock>
@@ -612,86 +619,91 @@ needed in the &smb.conf; file:
 </smbconfblock></para>
 
 <para>
-where <replaceable>xxx.xxx.xxx.xxx</replaceable> is the IP address 
-of the WINS server.
+ここで、<replaceable>xxx.xxx.xxx.xxx</replaceable>は、WINSサーバのIPアドレスである。
 </para>
 
-<para>For information about setting up Samba as a WINS server, read 
-<link linkend="NetworkBrowsing">Network Browsing</link>.</para>
+<para>SambaをWINSサーバとして設定するための情報は、
+<link linkend="NetworkBrowsing">ネットワークブラウジング</link>を参照のこと。
+</para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
-TCP/IP network configuration problems find every network administrator sooner or later.
-The cause can be anything from keyboard mishaps to forgetfulness to simple mistakes to
-carelessness. Of course, no one is ever deliberately careless!
+TCP/IPネットワーク設定の問題は、すべてのネットワーク管理者が遅かれ早かれ直面する。
+原因は、キーボード入力の問題から、単純なケアレスミスまで多様である。もちろん、
+誰もが常時不注意であるというわけではない!
 </para>
 
 	<sect2>
-		<title>Pinging Works Only One Way</title>
+		<title>片方向しかpingが届かない</title>
 
 	<para>
-	<quote>I can ping my Samba server from Windows, but I cannot ping my Windows
-	machine from the Samba server.</quote>
+	<quote>WindowsからSambaサーバにpingが出来るが、SambaサーバからWindowsにpingが
+	できない。</quote>
 	</para>
 
 	<para>
-	The Windows machine was at IP address 192.168.1.2 with netmask 255.255.255.0, the
-	Samba server (Linux) was at IP address 192.168.1.130 with netmask 255.255.255.128.
-	The machines were on a local network with no external connections.
+	WindowsマシンはIPアドレスが192.168.1.2で、ネットマスクが255.255.255.0であり、
+	Sambaサーバ(Linux)はIPアドレスが192.168.1.130で、ネットマスクが
+	255.255.255.128である。マシンはローカルネットワーク上にあり、その他の外部
+	接続はない。
 	</para>
 
 	<para>
-	Due to inconsistent netmasks, the Windows machine was on network 192.168.1.0/24, while
-	the Samba server was on network 192.168.1.128/25 &smbmdash; logically a different network.
+	整合していないネットマスクのため、Windowsマシンは、ネットワーク192.168.1.0/24上に
+	いて、Sambaサーバはネットワーク192.168.1.128/25にいる。&smbmdash;
+	これは論理的に異なったネットワークである。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Very Slow Network Connections</title>
+	<title>ネットワーク接続がとても遅い</title>
 
 	<para>
-	A common cause of slow network response includes:
+	遅いネットワークという共通の問題には以下がある:
 	</para>
 
 	<itemizedlist>
-		<listitem><para>Client is configured to use DNS and the DNS server is down.</para></listitem>
-		<listitem><para>Client is configured to use remote DNS server, but the
-		remote connection is down.</para></listitem>
-		<listitem><para>Client is configured to use a WINS server, but there is no WINS server.</para></listitem>
-		<listitem><para>Client is not configured to use a WINS server, but there is a WINS server.</para></listitem>
-		<listitem><para>Firewall is filtering out DNS or WINS traffic.</para></listitem>
+		<listitem><para>クライアントがDNSを使うように設定されていて、DNSサーバがダウンしている。</para></listitem>
+		<listitem><para>クライアントがリモートのDNSサーバサーバを使うように設定されているが、
+		リモート接続がダウンしている。</para></listitem>
+		<listitem><para>クライアントがWINSサーバを使うように設定されているが、
+		WINSサーバがない。</para></listitem>
+		<listitem><para>クライアントがWINSサーバを使うように設定されていないが、
+		WINSサーバがある。</para></listitem>
+		<listitem><para>ファイアウォールがDNSかWINSトラフィックを制限している。</para></listitem>
 	</itemizedlist>
 
 	</sect2>
 
 	<sect2>
-	<title>Samba Server Name-Change Problem</title>
+	<title>Sambaサーバ名前変更の問題</title>
 
 	<para>
-	<quote>The name of the Samba server was changed, Samba was restarted, and now the Samba server cannot be
-	pinged by its new name from an MS Windows NT4 workstation, but it does still respond to pinging using
-	the old name. Why?</quote>
+	<quote>Sambaサーバの名前が変わり、Sambaが再起動した後、Sambaサーバへ、新しい
+	名前で、Microsoft Windows NT4ワークステーションからpingが出来ない。しかし、
+	古い名前でのpingは引き続き出来るなぜ?</quote>
 	</para>
 
 	<para>
-	From this description, three things are obvious:
+	この説明から、以下の3つが明白となる:
 	</para>
 
 	<itemizedlist>
-		<listitem><para>WINS is not in use; only broadcast-based name resolution is used.</para></listitem>
-		<listitem><para>The Samba server was renamed and restarted within the last 10 or 15 minutes.</para></listitem>
-		<listitem><para>The old Samba server name is still in the NetBIOS name cache on the MS Windows NT4 workstation.</para></listitem>
+		<listitem><para>WINSが使われていないブロードキャストベースの名前解決のみ使われている。</para></listitem>
+		<listitem><para>Sambaサーバが改名されて再起動したのが10分か15分前以内である。</para></listitem>
+		<listitem><para>古いSambaサーバ名が、まだMicrosoft Windows NT4 ワークステーション
+		上のNetBIOS名前キャッシュ中にある。</para></listitem>
 	</itemizedlist>
 
 	<para>
-	To find what names are present in the NetBIOS name cache on the MS Windows NT4 machine,
-	open a <command>cmd</command> shell and then:
+	Microsoft Windows NT4マシン上のNetBIOS名前キャッシュ中に、どの名前が存在して
+	いるかを調べるには、<command>cmd</command>シェルを開き、以下を行う:
 	</para>
 
 	<para>
@@ -723,10 +735,13 @@ SARDON           &lt;00&gt;  GROUP       Registered
 	</para>
 
 	<para>
-	In this example, &example.server.samba; is the Samba server and &example.workstation.windows; is the MS Windows NT4 workstation.
-	The first listing shows the contents of the Local Name Table (i.e., identity information on
-	the MS Windows workstation), and the second shows the NetBIOS name in the NetBIOS name cache.
-	The name cache contains the remote machines known to this workstation.
+	この例では、&example.server.samba;がSambaサーバで&example.workstation.windows;
+	が、Microsoft Windows NT4 ワークステーションである。
+	最初の行は、ローカル名前テーブルの内容を示していて(すなわち、Microsoft
+	Windows ワークステーションとして識別される)、2行目はNetBIOS名前キャッシュ中に
+	あるNetBIOS名を示している。
+	名前キャッシュ中にはこのワークステーションの名前として知られているリモートマシン
+	を含んでいる。
 	</para>
 
 	</sect2>
