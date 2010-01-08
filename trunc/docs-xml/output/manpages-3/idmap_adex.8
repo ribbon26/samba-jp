@@ -1,22 +1,30 @@
+'\" t
 .\"     Title: idmap_adex
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/02/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
+.\"  Language: English
 .\"
-.TH "IDMAP_ADEX" "8" "11/02/2009" "Samba 3\.4" "システム管理ツール"
+.TH "IDMAP_ADEX" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-idmap_adex - Samba の Winbind 用 idmap_adex バックエンド
+idmap_adex \- Samba の Winbind 用 idmap_adex バックエンド
 .SH "説明"
 .PP
 idmap_adex プラグインは、RFC2307 スキーマ拡張を使った AD サーバから Winbind が id のマッピング情報を読み込むための手段を提供する。この モジュールでは idmap と nss_info API の両方を実装しており、ドメイン 信頼に加えて双方向のクロスフォレスト信頼をサポートしている。AD の users と groups オブジェクトに POSIX 属性情報を追加することで、 あらかじめ管理者が提供するマッピング情報を要求するリードオンリー プラグインとなっている。これを使う一番の目的は、Windows 2003 R2 以降で "Identity Services for Unix" を使うことにある。
 .PP
-注意：対象フォレストのグローバルカタログサーバの部分属性に、uidNumber, gidNumber, uid 属性を追加しなければならないことに注意してほしい。 この作業を行うには、Active Directory スキーマ管理 MMC プラグイン (schmmgmt\.dll)を使う。
+注意：対象フォレストのグローバルカタログサーバの部分属性に、uidNumber, gidNumber, uid 属性を追加しなければならないことに注意してほしい。 この作業を行うには、Active Directory スキーマ管理 MMC プラグイン (schmmgmt\&.dll)を使う。
 .SH "NSS_INFO"
 .PP
 nss_info プラグインは、user オブジェクトから unixHomeDirectory, gidNumber, loginShell, uidNumber 属性を、group オブジェクトから gidNumber 属性を読み取って、libc の getpwnam() と getgrnam() ファミリー関数が要求する情報を提供する。グループのメンバーシップは、 msSFU30PosixMember 属性ではなく Windows の group メンバーシップ に従って提供される。
@@ -26,7 +34,9 @@ nss_info プラグインは、user オブジェクトから unixHomeDirectory, g
 .PP
 以下の例では、私たちのプリンシパルと信頼された AD ドメインから id のマッピング情報と NSS データを取り出す方法について示している。
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 	[global]
 	idmap backend = adex
@@ -37,13 +47,15 @@ nss_info プラグインは、user オブジェクトから unixHomeDirectory, g
 	winbind normalize names = yes
 	
 .fi
+.if n \{\
 .RE
+.\}
 .SH "著者"
 .PP
 オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell により書かれた。Samba は現在 Samba チームの元で、Linux のカーネルと 同様にオープンソースソフトウェアとして開発されている。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.2\-3\.4\.3 対応のものである。
+このマニュアルページは Samba 3\&.3\&.2\-3\&.4\&.4 対応のものである。
 .PP
 このドキュメントの翻訳は
 .sp
@@ -55,7 +67,7 @@ nss_info プラグインは、user オブジェクトから unixHomeDirectory, g
 .sp -1
 .IP \(bu 2.3
 .\}
-堀田 倫英(hotta@net\-newbie\.com)
+堀田 倫英(hotta@net\-newbie\&.com)
 .sp
 .RE
 によって行なわれた。

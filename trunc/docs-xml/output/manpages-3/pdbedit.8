@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: pdbedit
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/02/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
+.\"  Language: English
 .\"
-.TH "PDBEDIT" "8" "11/02/2009" "Samba 3\.4" "システム管理ツール"
+.TH "PDBEDIT" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-pdbedit - SAM データベース (Samba ユーザのデータベース) を管理する
+pdbedit \- SAM データベース (Samba ユーザのデータベース) を管理する
 .SH "SYNOPSIS"
-.HP 1
+.HP \w'\ 'u
 pdbedit [\-L] [\-v] [\-w] [\-u\ username] [\-f\ fullname] [\-h\ homedir] [\-D\ drive] [\-S\ script] [\-p\ profile] [\-a] [\-t,\ \-\-password\-from\-stdin] [\-m] [\-r] [\-x] [\-i\ passdb\-backend] [\-e\ passdb\-backend] [\-b\ passdb\-backend] [\-g] [\-d\ debuglevel] [\-s\ configfile] [\-P\ account\-policy] [\-C\ value] [\-c\ account\-control] [\-y]
 .SH "説明"
 .PP
@@ -34,13 +42,16 @@ pdbedit の主な利用方法として、 ユーザーアカウントの追加�
 例:
 pdbedit \-L
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 sorce:500:Simo Sorce
 samba:45:Test User
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 \-v
@@ -50,8 +61,9 @@ samba:45:Test User
 例:
 pdbedit \-L \-v
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 username:       sorce
@@ -60,7 +72,7 @@ user RID/GRID:  2000/2001
 Full Name:      Simo Sorce
 Home Directory: \e\eBERSERKER\esorce
 HomeDir Drive:  H:
-Logon Script:   \e\eBERSERKER\enetlogon\esorce\.bat
+Logon Script:   \e\eBERSERKER\enetlogon\esorce\&.bat
 Profile Path:   \e\eBERSERKER\eprofile
 \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 username:       samba
@@ -72,14 +84,16 @@ HomeDir Drive:
 Logon Script:   
 Profile Path:   \e\eBERSERKER\eprofile
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 \-w
 .RS 4
 一覧表示を「smbpasswd」形式にする。 データベース内のユーザを一覧表示する際、
 アカウントの各項目は
-\fIsmbpasswd\fR
+smbpasswd
 ファイル互換の形式 (詳細は
 \fBsmbpasswd\fR(5)
 を参照のこと) で表示される。
@@ -87,7 +101,9 @@ Profile Path:   \e\eBERSERKER\eprofile
 例:
 pdbedit \-L \-w
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 sorce:500:508818B733CE64BEAAD3B435B51404EE:
           D2A2418EFC466A8A0F6B1DBB5C3DB80C:
@@ -96,7 +112,9 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
           BC281CE3F53B6A5146629CD4751D3490:
           [UX         ]:LCT\-3BFA1E8D:
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 \-u username
@@ -133,7 +151,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 ユーザの追加および変更を行なう際に、 ユーザのログオンスクリプトのパスを指定する。
 .sp
 例:
-\-S "\e\e\e\eBERSERKER\e\enetlogon\e\esorce\.bat"
+\-S "\e\e\e\eBERSERKER\e\enetlogon\e\esorce\&.bat"
 .RE
 .PP
 \-p profile
@@ -292,6 +310,14 @@ I: ドメイン信頼アカウント(訳注: 信頼関係するドメインの�
 \-c "[X ]"
 .RE
 .PP
+\-K|\-\-kickoff\-time
+.RS 4
+このオプションは特定のユーザに対してkickoff時間を 変更するために使われる。kickoff時間を無制限にする引数は、 "決して指定してはならない"。
+.sp
+例:
+pdbedit \-K never user
+.RE
+.PP
 \-a
 .RS 4
 ユーザをデータベースに追加する際に指定する。 ユーザ名を
@@ -301,21 +327,31 @@ I: ドメイン信頼アカウント(訳注: 信頼関係するドメインの�
 例:
 pdbedit \-a \-u sorce
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 new password:
 retype new password
 .fi
+.if n \{\
 .RE
+.\}
 .sp
+.if n \{\
 .sp
+.\}
+.RS 4
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-Note
+.ps +1
+\fBNote\fR
+.ps -1
+.br
 
-\fIunix password sync\fR
+\m[blue]\fBunix password sync\fR\m[]
 が設定されていた場合でも、 pdbedit はスクリプトを実行せず、Samba のユーザデータベース内のデータのみを更新する点に注意。
 .sp
 ユーザの追加と同時にパスワード同期を直ちに行ないたい場合は、
@@ -323,6 +359,8 @@ smbpasswd
 の
 \fB\-a\fR
 オプションを使用すること。
+.sp .5v
+.RE
 .RE
 .PP
 \-t, \-\-password\-from\-stdin
@@ -360,12 +398,12 @@ pdbedit \-x \-u bob
 .PP
 \-i passdb\-backend
 .RS 4
-ユーザ情報の取得元となるパスワードデータベースとして、 smb\.conf で指定したものとは別のものを指定する。 これは、ローカルのユーザデータベースにデータを取り込む (インポートする) 際に利用する。
+ユーザ情報の取得元となるパスワードデータベースとして、 smb\&.conf で指定したものとは別のものを指定する。 これは、ローカルのユーザデータベースにデータを取り込む (インポートする) 際に利用する。
 .sp
 このオプションにより、 パスワードデータベースの移行を容易に行うことができる。
 .sp
 例:
-pdbedit \-i smbpasswd:/etc/smbpasswd\.old
+pdbedit \-i smbpasswd:/etc/smbpasswd\&.old
 .RE
 .PP
 \-e passdb\-backend
@@ -375,7 +413,7 @@ pdbedit \-i smbpasswd:/etc/smbpasswd\.old
 このオプションにより、 パスワードデータベースの移行とバックアップを容易に行うことが可能となる。
 .sp
 例:
-pdbedit \-e smbpasswd:/root/samba\-users\.backup
+pdbedit \-e smbpasswd:/root/samba\-users\&.backup
 .RE
 .PP
 \-g
@@ -393,7 +431,7 @@ pdbedit \-e smbpasswd:/root/samba\-users\.backup
 デフォルト以外のパスワードデータベースを指定する。
 .sp
 例:
-pdbedit \-b xml:/root/pdb\-backup\.xml \-l
+pdbedit \-b xml:/root/pdb\-backup\&.xml \-l
 .RE
 .PP
 \-P account\-policy
@@ -405,12 +443,15 @@ pdbedit \-b xml:/root/pdb\-backup\.xml \-l
 例:
 pdbedit \-P "bad lockout attempt"
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 account policy value for bad lockout attempt is 0
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 \-C account\-policy\-value
@@ -421,13 +462,16 @@ account policy value for bad lockout attempt is 0
 例:
 pdbedit \-P "bad lockout attempt" \-C 3
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 account policy value for bad lockout attempt was 0
 account policy value for bad lockout attempt is now 3
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 \-y
@@ -441,47 +485,47 @@ account policy value for bad lockout attempt is now 3
 このオプションにより、 アカウントポリシーをデフォルトの TDB から LDAP ディレクトリサーバなどのパスワードデータベースに移行することが可能となる。
 .sp
 例:
-pdbedit \-y \-i tdbsam: \-e ldapsam:ldap://my\.ldap\.host
+pdbedit \-y \-i tdbsam: \-e ldapsam:ldap://my\&.ldap\&.host
 .RE
 .PP
 \-h|\-\-help
 .RS 4
-Print a summary of command line options\.
+Print a summary of command line options\&.
 .RE
 .PP
 \-d|\-\-debuglevel=level
 .RS 4
 \fIlevel\fR
-is an integer from 0 to 10\. The default value if this parameter is not specified is 0\.
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
 .sp
-The higher this value, the more detail will be logged to the log files about the activities of the server\. At level 0, only critical errors and serious warnings will be logged\. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\.
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
 .sp
-Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\.
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
 .sp
 Note that specifying this parameter here will override the
-\fIlog level\fR
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
 parameter in the
-\fIsmb\.conf\fR
-file\.
+smb\&.conf
+file\&.
 .RE
 .PP
-\-V
+\-V|\-\-version
 .RS 4
-Prints the program version number\.
+Prints the program version number\&.
 .RE
 .PP
-\-s <configuration file>
+\-s|\-\-configfile <configuration file>
 .RS 4
-The file specified contains the configuration details required by the server\. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\. See
-\fIsmb\.conf\fR
-for more information\. The default configuration file name is determined at compile time\.
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
 .RE
 .PP
 \-l|\-\-log\-basename=logdirectory
 .RS 4
-Base directory name for log/debug files\. The extension
-\fB"\.progname"\fR
-will be appended (e\.g\. log\.smbclient, log\.smbd, etc\.\.\.)\. The log file is never removed by the client\.
+Base directory name for log/debug files\&. The extension
+\fB"\&.progname"\fR
+will be appended (e\&.g\&. log\&.smbclient, log\&.smbd, etc\&.\&.\&.)\&. The log file is never removed by the client\&.
 .RE
 .SH "注意"
 .PP
@@ -500,8 +544,8 @@ will be appended (e\.g\. log\.smbclient, log\.smbd, etc\.\.\.)\. The log file is
 pdbedit のマニュアルページは Simo Sorce と Jelmer Vernooij によって作られた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.23 \- Samba 3\.4\.3 対応のものである。
+このマニュアルページは Samba 3\&.4\&.4 対応のものである。
 .PP
-このドキュメントの Samba 3\.0\.24 対応の翻訳は たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+このドキュメントの Samba 3\&.0\&.24 対応の翻訳は たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-このドキュメントの Samba 3\.2\.4\-3\.4\.3 対応の翻訳は 太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+このドキュメントの Samba 3\&.2\&.4\-3\&.4\&.4 対応の翻訳は 太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。

@@ -1,28 +1,36 @@
+'\" t
 .\"     Title: cifs.upcall
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/02/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
+.\"  Language: English
 .\"
-.TH "CIFS\.UPCALL" "8" "11/02/2009" "Samba 3\.4" "システム管理ツール"
+.TH "CIFS\&.UPCALL" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-cifs.upcall - CIFSのためのユーザ空間upcallヘルパ
+cifs.upcall \- CIFSのためのユーザ空間upcallヘルパ
 .SH "SYNOPSIS"
-.HP 1
-cifs\.upcall [\-\-trust\-dns|\-t] [\-\-version|\-v] {keyid}
+.HP \w'\ 'u
+cifs\&.upcall [\-\-trust\-dns|\-t] [\-\-version|\-v] {keyid}
 .SH "説明"
 .PP
 このツールは
 \fBsamba\fR(7)システムの一部である。
 .PP
-cifs\.upcallは、Linux CIFSクライアントファイルシステムのためのユーザ空間ヘルパプログラムである。kernelがそれ自身では簡単にはできないような、さまざまな機能をkernelに代わって行う。このプログラムはkernelから呼び出されてこれらの機能を実行し、その結果を(kernelに)返す。
+cifs\&.upcallは、Linux CIFSクライアントファイルシステムのためのユーザ空間ヘルパプログラムである。kernelがそれ自身では簡単にはできないような、さまざまな機能をkernelに代わって行う。このプログラムはkernelから呼び出されてこれらの機能を実行し、その結果を(kernelに)返す。
 .PP
-cifs\.upcallはほとんどの場合、kernelがrequest\-key(8)で特定のキータイプを呼び出す際に実行されることを想定して作られている。コマンドラインから直接起動できるようにはなっているものの、その方法で呼び出される事は基本的に想定していない。
+cifs\&.upcallはほとんどの場合、kernelがrequest\-key(8)で特定のキータイプを呼び出す際に実行されることを想定して作られている。コマンドラインから直接起動できるようにはなっているものの、その方法で呼び出される事は基本的に想定していない。
 .SH "オプション"
 .PP
 \-c
@@ -43,9 +51,9 @@ krb5 upcallと一緒に、サービスプリンシパルのホスト部として
 .RE
 .SH "KEYCTLのための構成方法"
 .PP
-cifs\.upcallは、request\-key callout プログラム経由でkernelから呼ばれるようにデザインされている。このため、request\-keyに対して、どこから、どのようにこのプログラムを呼び出すかを指示してやらなければならない。現在のcifs\.upcallプログラムは2つのキータイプを扱う:
+cifs\&.upcallは、request\-key callout プログラム経由でkernelから呼ばれるようにデザインされている。このため、request\-keyに対して、どこから、どのようにこのプログラムを呼び出すかを指示してやらなければならない。現在のcifs\&.upcallプログラムは2つのキータイプを扱う:
 .PP
-cifs\.spnego
+cifs\&.spnego
 .RS 4
 このキータイプはkerberosセッションキーを検索する。
 .RE
@@ -55,16 +63,20 @@ dns_resolver
 このキータイプは、ホスト名をIPアドレスに変換(解決)する。
 .RE
 .PP
-CIFSがこのプログラムを便利に使えるように、request\-key\.conf(5)中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:
+CIFSがこのプログラムを便利に使えるように、request\-key\&.conf(5)中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
-#OPERATION  TYPE           D C PROGRAM ARG1 ARG2\.\.\.
+#OPERATION  TYPE           D C PROGRAM ARG1 ARG2\&.\&.\&.
 #=========  =============  = = ================================
-create      cifs\.spnego    * * /usr/local/sbin/cifs\.upcall %k
-create      dns_resolver   * * /usr/local/sbin/cifs\.upcall %k
+create      cifs\&.spnego    * * /usr/local/sbin/cifs\&.upcall %k
+create      dns_resolver   * * /usr/local/sbin/cifs\&.upcall %k
 .fi
+.if n \{\
 .RE
+.\}
 .PP
 それぞれのフィールドについての詳細は\fBrequest-key.conf5\fR()を参照のこと。
 .SH "参照"
@@ -74,7 +86,7 @@ create      dns_resolver   * * /usr/local/sbin/cifs\.upcall %k
 \fBmount.cifs\fR(8)
 .SH "著者"
 .PP
-Igor Mammedovはcifs\.upcallプログラムを書いた。
+Igor Mammedovはcifs\&.upcallプログラムを書いた。
 .PP
 Jeff Laytonはこのマニュアルページを書いた。
 .PP
@@ -83,9 +95,9 @@ Linux CIFS VFSのメンテナはSteve Frenchである。
 Linux CIFSメーリングリストは、これらのプログラムに対して質問をするのにふさわしい場所である。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.4\.3 対応のものである。
+このマニュアルページは Samba 3\&.4\&.3\-3\&.4\&.4 対応のものである。
 .PP
-このドキュメントの Samba 3\.2\.4\-3\.4\.3 対応の翻訳は
+このドキュメントの Samba 3\&.2\&.4\-3\&.4\&.4 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -95,7 +107,7 @@ Linux CIFSメーリングリストは、これらのプログラムに対して�
 .sp -1
 .IP \(bu 2.3
 .\}
-太田俊哉(ribbon@samba\.gr\.jp)
+太田俊哉(ribbon@samba\&.gr\&.jp)
 .RE
 .sp
 .RS 4
@@ -106,7 +118,7 @@ Linux CIFSメーリングリストは、これらのプログラムに対して�
 .sp -1
 .IP \(bu 2.3
 .\}
-堀田 倫英(hotta@net\-newbie\.com)
+堀田 倫英(hotta@net\-newbie\&.com)
 .sp
 .RE
 によって行なわれた。

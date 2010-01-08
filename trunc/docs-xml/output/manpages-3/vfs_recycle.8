@@ -1,38 +1,46 @@
+'\" t
 .\"     Title: vfs_recycle
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 11/02/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
+.\"  Language: English
 .\"
-.TH "VFS_RECYCLE" "8" "11/02/2009" "Samba 3\.4" "システム管理ツール"
+.TH "VFS_RECYCLE" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-vfs_recycle - Samba VFS ごみ箱
+vfs_recycle \- Samba VFS ごみ箱
 .SH "SYNOPSIS"
-.HP 1
+.HP \w'\ 'u
 vfs objects = recycle
 .SH "説明"
 .PP
 このVFSモジュールは
-\fBsamba\fR(7)システムの一部である\.
+\fBsamba\fR(7)システムの一部である\&.
 .PP
 The
 vfs_recycleはファイル削除要求に割り込み、 直接ファイルを削除するのではなく、一時エリアに移動させる。 これによりWindowsのごみ箱と同様の機能を提供する。
 .PP
-ごみ箱(Recycle Bin)はWindowsのエクスプローラーのネットワークファイルシステム や、マップドライブの表示上には現れない。 その代わり、\.recycleディレクトリが初めてファイルを削除したときに自動的に作成される (recycle:repositoryが指定されていない場合) recycle:repositoryが設定されている場合、新たに作成されるディレクトリ名はrecycle:repository で指定されたものになる。 もしrecycle:keeptreeオプションが設定されている場合、パスとともに保存される
+ごみ箱(Recycle Bin)はWindowsのエクスプローラーのネットワークファイルシステム や、マップドライブの表示上には現れない。 その代わり、\&.recycleディレクトリが初めてファイルを削除したときに自動的に作成される (recycle:repositoryが指定されていない場合) recycle:repositoryが設定されている場合、新たに作成されるディレクトリ名はrecycle:repository で指定されたものになる。 もしrecycle:keeptreeオプションが設定されている場合、パスとともに保存される
 .PP
 このモジュールはスタッカブルである
 .SH "オプション"
 .PP
 recycle:repository = PATH
 .RS 4
-削除されたファイルをどこに移動するか指定する\.
+削除されたファイルをどこに移動するか指定する\&.
 .sp
-オプションが指定されていない場合、初期値として \.recycleが用いられる
+オプションが指定されていない場合、初期値として \&.recycleが用いられる
 .RE
 .PP
 recycle:directory_mode = MODE
@@ -56,7 +64,7 @@ recycle:keeptree = BOOL
 .PP
 recycle:versions = BOOL
 .RS 4
-このオプションをtrueと指定すると、同一の名前を持つ2つのファイルが削除された場合 した場合、リポジトリの中に両方のファイルを保存する。 新しく削除したファイルは "Copy #x of filename"\. となる。
+このオプションをtrueと指定すると、同一の名前を持つ2つのファイルが削除された場合 した場合、リポジトリの中に両方のファイルを保存する。 新しく削除したファイルは "Copy #x of filename"\&. となる。
 .RE
 .PP
 recycle:touch = BOOL
@@ -96,29 +104,33 @@ recycle:noversions = LIST
 .SH "設定例"
 .PP
 
-\fIshare\fR上の "削除対象" ファイルを、 削除する代わりに\fI/data/share/\.recycle\fRに移動する。
+\fIshare\fR上の "削除対象" ファイルを、 削除する代わりに\fI/data/share/\&.recycle\fRに移動する。
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
     \fI[share]\fR
-    \fIpath = /data/share\fR
-    \fIvfs objects = recycle\fR
-    \fIrecycle:repository = \.recycle\fR
-    \fIrecycle:keeptree = yes\fR
-    \fIrecycle:versions = yes\fR
+    \m[blue]\fBpath = /data/share\fR\m[]
+    \m[blue]\fBvfs objects = recycle\fR\m[]
+    \m[blue]\fBrecycle:repository = \&.recycle\fR\m[]
+    \m[blue]\fBrecycle:keeptree = yes\fR\m[]
+    \m[blue]\fBrecycle:versions = yes\fR\m[]
 .fi
+.if n \{\
 .RE
+.\}
 .SH "バージョン"
 .PP
-このマニュアルはSambaシステムバージョン3\.0\.25(訳注:3\.3?)に対応している
+このマニュアルはSambaシステムバージョン3\&.0\&.25(訳注:3\&.3?)に対応している
 .SH "著者"
 .PP
 オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
 .SH "日本語訳"
 .PP
-このドキュメントは、Samba 3\.0\.25 および Samba 3\.2\.4\-3\.4\.3対応のものである。
+このドキュメントは、Samba 3\&.0\&.25 \-3\&.4\&.4 対応のものである。
 .PP
-このドキュメントのSamba 3\.3\.6\-3\.4\.3対応の翻訳は
+このドキュメントのSamba 3\&.3\&.6 \- 3\&.4\&.4 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -128,7 +140,7 @@ recycle:noversions = LIST
 .sp -1
 .IP \(bu 2.3
 .\}
-平田祥司 (shouji@microft\.co\.jp)
+平田祥司 (shouji@microft\&.co\&.jp)
 .RE
 .sp
 .RS 4
@@ -139,7 +151,7 @@ recycle:noversions = LIST
 .sp -1
 .IP \(bu 2.3
 .\}
-堀田 倫英(hotta@net\-newbie\.com)
+堀田 倫英(hotta@net\-newbie\&.com)
 .sp
 .RE
 によって行なわれた。
