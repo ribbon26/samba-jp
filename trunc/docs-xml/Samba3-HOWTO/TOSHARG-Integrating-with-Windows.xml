@@ -399,73 +399,66 @@ Microsoft Windows ネットワークのセキュリティアーキテクチャ�
 <indexterm><primary>NetWare</primary></indexterm>
 <indexterm><primary>NetBT</primary></indexterm>
 <indexterm><primary>NBT</primary></indexterm>
-MS Windows networking is thus predetermined to use machine names 
-for all local and remote machine message passing. The protocol used is 
-called Server Message Block (SMB), and this is implemented using 
-the NetBIOS protocol (Network Basic Input/Output System). NetBIOS can 
-be encapsulated using LLC (Logical Link Control) protocol &smbmdash; in which case 
-the resulting protocol is called NetBEUI (Network Basic Extended User 
-Interface). NetBIOS can also be run over IPX (Internetworking Packet 
-Exchange) protocol as used by Novell NetWare, and it can be run 
-over TCP/IP protocols &smbmdash; in which case the resulting protocol is called 
-NBT or NetBT, the NetBIOS over TCP/IP.
+Microsoft Windowsネットワークは、ローカルとリモートマシンすべてでのメッセージ通信用の
+マシン名を使うために、前もって決定される。使われるプロトコルは、
+Server Message Block (SMB)と呼ばれ、これはNetBIOSプロトコル
+(Network Basic Input/Output System)を使って実装される。NetBIOSはLLC
+(Logical Link Control)プロトコルを使ってカプセル化される。 &smbmdash;
+この場合、結果のプロトコルはNetBEUI(Network Basic Extended User Interface)と呼ばれる。
+NetBIOSは、Novell NetWareによって使われるIPX(Internetworking Packet Exchange)上でも
+動作できる。&smbmdash;また、TCP/IPプロトコル上でも動作でき、この場合、結果の
+プロトコルは、NBTあるいはNetBT、すなわちNetBIOS over TCP/IPと呼ばれる。
 </para>
 
 <para>
-MS Windows machines use a complex array of name resolution mechanisms. 
-Since we are primarily concerned with TCP/IP, this demonstration is 
-limited to this area.
+Microsoft Windows マシンは、たくさんの複雑な名前解決メカニズムを使う。主にTCP/IP
+で接続するので、このデモはその領域にのみ限っている。
 </para>
 
 <sect2>
-<title>The NetBIOS Name Cache</title>
+<title>NetBIOSネームキャッシュ</title>
 
 <para>
 <indexterm><primary>n-memory buffer</primary></indexterm>
-<indexterm><primary>local cache</primary></indexterm>
-<indexterm><primary></primary></indexterm>
-All MS Windows machines employ an in-memory buffer in which is 
-stored the NetBIOS names and IP addresses for all external 
-machines that machine has communicated with over the 
-past 10 to 15 minutes. It is more efficient to obtain an IP address 
-for a machine from the local cache than it is to go through all the 
-configured name resolution mechanisms.
+<indexterm><primary>ローカルキャッシュ</primary></indexterm>
+すべてのMicrosoft Windowsマシンは、おおよそ過去10分から15分の間に通信したすべての
+外部マシンのNetBIOS名とIPアドレスを格納する、メモリ中のバッファを使う。設定された
+すべての名前解決機構を使って行うよりも、ローカルキャッシュからマシンのIPアドレスを
+得る方がより効率的である。
 </para>
 
 <para>
-<indexterm><primary>name lookup</primary></indexterm>
-If a machine whose name is in the local name cache is shut 
-down before the name is expired and flushed from the cache, then 
-an attempt to exchange a message with that machine will be subject 
-to timeout delays. Its name is in the cache, so a name resolution 
-lookup will succeed, but the machine cannot respond. This can be 
-frustrating for users but is a characteristic of the protocol.
+<indexterm><primary>名前検索</primary></indexterm>
+もしも、ローカル名前キャッシュにその名前があるマシンが、キャッシュ上で満了になり
+削除される前にシャットダウンした場合、そのマシンへメッセージ交換を行おうとすると、
+そのマシンはタイムアウトするだろう。その名前がキャッシュにあるので、名前解決は
+成功するが、マシンは反応しない。これは、ユーザにとって不満を感じさせるが、これは
+プロトコルの特性である。
 </para>
 
 <para>
 <indexterm><primary>nbtstat</primary></indexterm>
 <indexterm><primary>nmblookup</primary></indexterm>
 <indexterm><primary>NetBIOS</primary></indexterm>
-The MS Windows utility that allows examination of the NetBIOS 
-name cache is called <quote>nbtstat.</quote> The Samba equivalent
-is called <command>nmblookup</command>.
+NetBIOS名前キャッシュの検査を行うMicrosoft Windows ユーティリティは、
+<quote>nbtstat</quote>である。Sambaにおける同等品は<command>nmblookup</command>である。
 </para>
 
 </sect2>
 
 <sect2>
-<title>The LMHOSTS File</title>
+<title>LMHOSTSファイル</title>
 
 <para>
 <indexterm><primary>LMHOSTS</primary></indexterm>
-This file is usually located in MS Windows NT 4.0 or Windows 200x/XP in the directory
-<filename>%SystemRoot%\SYSTEM32\DRIVERS\ETC</filename> and contains the IP address
-and the machine name in matched pairs. The <filename>LMHOSTS</filename> file
-performs NetBIOS name to IP address mapping.
+このファイルは通常Microsoft Windows NT 4.0かWindows 200x/XPのディレクトリ
+<filename>%SystemRoot%\SYSTEM32\DRIVERS\ETC</filename>にあり、IPアドレスとマシン名が
+対になったものを含む。<filename>LMHOSTS</filename>ファイルはNetBIOS名からIPアドレスへの
+マッピングを行う。
 </para>
 
 <para>
-It typically looks like this:
+典型的なものは以下の通り:
 </para>
 
 <para><programlisting>
@@ -551,7 +544,7 @@ It typically looks like this:
 </sect2>
 
 <sect2>
-<title>HOSTS File</title>
+<title>HOSTSファイル</title>
 
 <para>
 This file is usually located in MS Windows NT 4.0 or Windows 200x/XP in 
