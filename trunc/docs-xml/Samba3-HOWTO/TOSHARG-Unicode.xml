@@ -289,14 +289,13 @@ Samba-3では、Sambaはユニコードで通信できる。内部的には、Sa
 		<varlistentry><term>EUC-JP系列</term>
 			<listitem><para>
 <indexterm><primary>EUC-JP</primary></indexterm>
-<indexterm><primary>Japanese UNIX</primary></indexterm>
-			EUC-JP series means a locale that is equivalent to the industry
-			standard called EUC-JP, widely used in Japanese UNIX (although EUC
-			contains specifications for languages other than Japanese, such as
-			EUC-KR). In the case of EUC-JP series, for example, if a Japanese
-			filename consists of 0x8ba4 and 0x974c and <quote>.txt</quote> is written from
-			Windows on Samba, the filename on UNIX becomes 0xb6a6, 0xcdad,
-			<quote>.txt</quote> (an 8-byte BINARY string). 
+<indexterm><primary>日本でのUNIX</primary></indexterm>
+			EUC-JP系列は、日本でのUNIX(EUCには日本語以外の言語、たとえば
+			EUC-KRの仕様も含む)で広く使われているEUC-JPという業界標準と同等の
+			ロケールを意味する。EUC-JP系列の場合、例えば、もしも、日本語の
+			ファイル名に0x8ba4と0x974cと<quote>.txt</quote>を含むものが、
+			Samba上でWindowsから書かれた場合、UNIX上のファイル名は、
+			0xb6a6, 0xcdad,<quote>.txt</quote>となる(8バイトのバイナリ文字列)。
 			</para>
 
 			<para>
@@ -307,62 +306,69 @@ Samba-3では、Sambaはユニコードで通信できる。内部的には、Sa
 <indexterm><primary>Solaris</primary></indexterm>
 <indexterm><primary>IRIX</primary></indexterm>
 <indexterm><primary>Tru64 UNIX</primary></indexterm>
-<indexterm><primary>Japanese locale</primary></indexterm>
+<indexterm><primary>日本語のロケール</primary></indexterm>
 <indexterm><primary>Shift_JIS</primary></indexterm>
 <indexterm><primary>UTF-8</primary></indexterm>
-			Since EUC-JP is usually used on open source UNIX, Linux, and FreeBSD, and on commercial-based UNIX, Solaris,
-			IRIX, and Tru64 UNIX as Japanese locale (however, it is also possible on Solaris to use Shift_JIS and UTF-8,
-			and on Tru64 UNIX it is possible to use Shift_JIS). To use EUC-JP series, most Japanese filenames created from
-			Windows can be referred to also on UNIX. Also, most Japanized free software works mainly with EUC-JP only.
+			EUC-JPは通常オープンソースのUNIX、Linuxと振りと商用ベースのUNIX、
+			Solaris、IRIXとTru64 UNIXで日本語ロケールとして使われている
+			(しかし、SolarisではシフトJISとUTF-8を使うことも出来、Tru64 UNIX
+			ではシフトJISも使うことが出来る)。EUC-JP系列を使うためには、
+			Windowsから作成された日本語ファイル名の大半は、UNIX上でも参照
+			できる。また、ほとんどの日本語化されたフリーソフトウェアも
+			ほとんどがEUC-JPのみで動作する。
 			</para>
 
 			<para>
-			It is recommended to choose EUC-JP series when using Japanese filenames on UNIX.
+			UNIX上で日本語のファイル名を使うときにはEUC-JP系列を選択する
+			事を推奨する。
 			</para>
 
 			<para>
-			Although there is no character that needs to be carefully treated
-			like <quote>\ (0x5c)</quote>, broken filenames may be displayed and some
-			commands that cannot handle non-ASCII filenames may be aborted
-			during parsing filenames.
+			<quote>\ (0x5c)</quote>のように注意深く扱わなければならない文字が
+			無いにもかかわらず、不正なファイル名が表示されることもあり、
+			非ASCIIファイル名を扱えないいくつかのコマンドはファイル名の
+			処理中にアボートするかもしれない。
 			</para>
 
 			<para>
 <indexterm><primary>eucJP-ms locale</primary></indexterm>
-			Moreover, if you built Samba using differently installed libiconv,
-			the eucJP-ms locale included in libiconv and EUC-JP series locale
-			included in the operating system may not be compatible. In this case, you may need to
-			avoid using incompatible characters for filenames.
+			さらに、もしも、異なる、インストールされたlibiconvを使ってSambaを
+			構築した場合、eucJP-msロケールがlibiconv中に含まれ、OSに
+			含まれているEUC-JP系列とは非互換かもしれない。この場合、
+			ファイル名に非互換の文字を使うことを防止する必要があるかもしれない。
 			</para>
 			</listitem>
 		</varlistentry>
 
 		<varlistentry><term>UTF-8</term>
 			<listitem><para>
-			UTF-8 means a locale equivalent to UTF-8, the international standard defined by the Unicode consortium. In
-			UTF-8, a <parameter>character</parameter> is expressed using 1 to 3 bytes. In case of the Japanese language,
-			most characters are expressed using 3 bytes. Since on Windows Shift_JIS, where a character is expressed with 1
-			or 2 bytes is used to express Japanese, basically a byte length of a UTF-8 string the length of the UTF-8
-			string is 1.5 times that of the original Shift_JIS string. In the case of UTF-8, for example, if a Japanese
-			filename consists of 0x8ba4 and 0x974c, and <quote>.txt</quote> is written from Windows on Samba, the filename
-			on UNIX becomes 0xe585, 0xb1e6, 0x9c89, <quote>.txt</quote> (a 10-byte BINARY string).
+			UTF-8は、ユニコードコンソーシアムによって定義された国際標準である
+			UTF-8と同じロケールであることを意味する。UTF-8中では、
+			<parameter>文字</parameter>は1から3バイトで記述される。日本語
+			では、ほとんどの文字は3バイトとなる。WindowsのシフトJISでは、
+			日本語を表現する文字が、1か2バイトなので、UTF-8の文字列長は、
+			オリジナルのシフトJISの文字列の1.5倍である。UTF-8の場合、
+			たとえばSamba上に、Windowsから書かれるファイル名が、
+			0x8ba4と0x974cと<quote>.txt</quote>の場合、UNIX上のファイル名は、
+			0xe585, 0xb1e6, 0x9c89, <quote>.txt</quote>(10バイトのバイナリ
+			文字列)となる。
 			</para>
 
 			<para>
-			For systems where iconv() is not available or where iconv()'s locales
-			are not compatible with Windows, UTF-8 is the only locale available.
+			iconv()が有効でないシステムか、iconv()のロケールがWindowsと
+			非互換のものの場合、UTF-8は唯一の有効なロケールである。
 			</para>
 
 			<para> 
-			There are no systems that use UTF-8 as the default locale for Japanese.
+			日本においてはUTF-8を既定値のロケールとしているシステムはない。
 			</para>
 
 			<para>
-			Some broken filenames may be displayed, and some commands that
-			cannot handle non-ASCII filenames may be aborted during parsing
-			filenames. Especially, there may be <quote>\ (0x5c)</quote> in filenames, which
-			must be handled carefully, so you had better not touch filenames
-			written from Windows on UNIX.
+			何らかの不正なファイル名が表示されるかもしれず、非ASCII
+			ファイル名を扱えないコマンドがあるかもしれない。特に、
+			ファイル名に注意深く扱わなければならない
+			<quote>\ (0x5c)</quote>をファイル名に持つ場合は、UNIX上で、
+			Windowsから書かれたファイル名に触れない方が無難である。
 			</para>
 
 			<para>
