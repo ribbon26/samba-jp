@@ -87,25 +87,25 @@ ASCIIエンコーディングが取るよりも、少なくとも2倍の、よ�
 </para>
 
 <para>
-<indexterm><primary>single-byte charsets</primary></indexterm>
+<indexterm><primary>単一バイト文字</primary></indexterm>
 <indexterm><primary>SMB/CIFS</primary></indexterm>
 <indexterm><primary>negotiating the charset</primary></indexterm>
-Old Windows clients use single-byte charsets, named 
-<parameter>codepages</parameter>, by Microsoft. However, there is no support for 
-negotiating the charset to be used in the SMB/CIFS protocol. Thus, you 
-have to make sure you are using the same charset when talking to an older client.
-Newer clients (Windows NT, 200x, XP) talk Unicode over the wire.
+古いWindowsクライアントはMicrosoftによる<parameter>コードページ</parameter>という
+単一バイト文字セットを使っている。しかし、SMB/CIFSプロトコル中で使われるために
+調停される文字セットではサポートされていない。そのため、より古いクライアントと通信
+する時、同じ文字セットを使うようにしなければならない。より新しいクライアント
+(Windows NT、200x、XP)では、ユニコードを使って通信する。
 </para>
 </sect1>
 
 <sect1>
-<title>Samba and Charsets</title>
+<title>Sambaと文字セット</title>
 
 <para>
-<indexterm><primary>Unicode</primary></indexterm>
-<indexterm><primary>character sets</primary></indexterm>
-As of Samba-3, Samba can (and will) talk Unicode over the wire. Internally, 
-Samba knows of three kinds of character sets: 
+<indexterm><primary>ユニコード</primary></indexterm>
+<indexterm><primary>文字セット</primary></indexterm>
+Samba-3では、Sambaはユニコードで通信できる。内部的には、Sambaは3つの文字セットを
+認識する。
 </para>
 
 <variablelist>
@@ -114,28 +114,30 @@ Samba knows of three kinds of character sets:
 		<listitem><para>
 <indexterm><primary>UTF-8</primary></indexterm>
 <indexterm><primary>CP850</primary></indexterm>
-		This is the charset used internally by your operating system. 
-		The default is <constant>UTF-8</constant>, which is fine for most 
-		systems and covers all characters in all languages. The default
-		in previous Samba releases was to save filenames in the encoding of the 
-		clients &smbmdash; for example, CP850 for Western European countries.
+		これは使用しているOSによって内部的に使われる文字セットである。
+		既定値は<constant>UTF-8</constant>で、ほとんどのシステムに適しており、
+		すべての言語中のすべての文字をカバーする。以前のSambaリリースにおける
+		既定値は、クライアントのエンコーディングでファイル名を保存するための
+		ものであった。&smbmdash;たとえば、CP850は西ヨーロッパ各国用である。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
 		<term><smbconfoption name="display charset"/></term>
-		<listitem><para>This is the charset Samba uses to print messages
-		on your screen. It should generally be the same as the <parameter>unix charset</parameter>.
+		<listitem><para>これは、画面上でメッセージを表示するためにSambaが使う
+		文字セットである。これは一般的に<parameter>unix charset</parameter>と
+		同じにすべきである。
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
 		<term><smbconfoption name="dos charset"/></term>
-		<listitem><para>This is the charset Samba uses when communicating with 
-		DOS and Windows 9x/Me clients. It will talk Unicode to all newer clients.
-		The default depends on the charsets you have installed on your system.
-		Run <command>testparm -v | grep &quot;dos charset&quot;</command> to see 
-		what the default is on your system. 
+		<listitem><para>これは、DOSとWindows 9x/Meクライアントと通信する時に
+		Sambaが使う文字セットである。より新しいクライアントすべてとはユニコードで
+		通信する。既定値は、インストールした、使用するシステム上の文字セットに
+		依存する。使用するすシステム上での既定値が何かと言うことは、
+		<command>testparm -v | grep &quot;dos charset&quot;</command>を実行して
+		調べられる。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
@@ -143,26 +145,27 @@ Samba knows of three kinds of character sets:
 </sect1>
 
 <sect1>
-<title>Conversion from Old Names</title>
+<title>古い名前からの変換</title>
 
 <para>
-<indexterm><primary>charset conversion</primary></indexterm>
-Because previous Samba versions did not do any charset conversion, 
-characters in filenames are usually not correct in the UNIX charset but only 
-for the local charset used by the DOS/Windows clients.
+<indexterm><primary>文字セットの変換</primary></indexterm>
+以前のSambaバージョンは、何らの文字セット変換を行わないので、ファイル名中の文字セットは、
+通常UNIX文字セットでは正しくならない。DOS/Windowsクライアントによって使われるローカル
+文字セット専用である。
 </para>
 
-<para>Bjoern Jacke has written a utility named <ulink url="http://j3e.de/linux/convmv/">convmv</ulink>
-that can convert whole directory structures to different charsets with one single command. 
+<para>Bjoern Jackeは、<ulink url="http://j3e.de/linux/convmv/">convmv</ulink>という、
+1つのコマンドですべてのディレクトリ構造を異なった文字セットに変換できるユーティリティを
+作成した。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Japanese Charsets</title>
+<title>日本語の文字セット</title>
 
 <para>
-Setting up Japanese charsets is quite difficult. This is mainly because:
+日本語の文字セットを設定するのはかなり難しい。それは以下のような理由による:
 </para>
 
 <itemizedlist>
