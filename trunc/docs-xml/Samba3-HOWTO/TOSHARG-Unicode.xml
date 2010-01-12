@@ -230,60 +230,63 @@ Samba-3では、Sambaはユニコードで通信できる。内部的には、Sa
 <indexterm><primary>Shift_JIS</primary></indexterm>
 <indexterm><primary>UTF-8</primary></indexterm>
 <indexterm><primary>EUC-JP</primary></indexterm>
-	The <smbconfoption name="unix charset"/> can be either Shift_JIS series,
-	EUC-JP series, or UTF-8. UTF-8 is always available, but the availability of other locales
-	and the name itself depends on the system.
+	<smbconfoption name="unix charset"/>はシフトJIS系列、EUC-JP系列、あるいは
+	UTF-8系列に設定できる。UTF-8は常時利用可能であるが、他のロケールとそれ自身の
+	名前の有効性は使用するシステム依存である。
 	</para>
 
 	<para>
-	Additionally, you can consider using the Shift_JIS series as the
-	value of the <smbconfoption name="unix charset"/>
-	parameter by using the vfs_cap module, which does the same thing as
-	setting <quote>coding system = CAP</quote> in the Samba 2.2 series.
+	さらに追加すると、Samba 2.2系列において、<quote>coding system = CAP</quote>
+	と設定したのと同じ事を行うvfs capモジュールを使うことによって、
+	シフトJIS系列を<smbconfoption name="unix charset"/>パラメータの値として
+	使うことを考慮することが出来る。
 	</para>
 
 	<para>
-	Where to set <smbconfoption name="unix charset"/>
-	to is a difficult question. Here is a list of details, advantages, and
-	disadvantages of using a certain value.
+	<smbconfoption name="unix charset"/>をどこに設定するかは難しい質問である。
+	以下は特定の値を使う場合の詳細、利点、欠点の一覧である。
 	</para>
 
 	<variablelist>
-		<varlistentry><term>Shift_JIS series</term>
+		<varlistentry><term>シフトJIS系列</term>
 			<listitem><para>
-			Shift_JIS series means a locale that is equivalent to <constant>Shift_JIS</constant>,
-			used as a standard on Japanese Windows. In the case of <constant>Shift_JIS</constant>,
-			for example, if a Japanese filename consists of 0x8ba4 and 0x974c
-			(a 4-bytes Japanese character string meaning <quote>share</quote>) and <quote>.txt</quote>
-			is written from Windows on Samba, the filename on UNIX becomes
-			0x8ba4, 0x974c, <quote>.txt</quote> (an 8-byte BINARY string), same as Windows.
+			シフトJIS系列は日本語のWindows上で標準として使われている
+			<constant>Shift_JIS</constant>と同等なロケールを意味する。
+			<constant>Shift_JIS</constant>の場合は、たとえば、もしも
+			日本語のファイル名に0x8ba4 と 0x974c(4バイトの日本語文字列で、
+			<quote>share</quote>(訳注:<quote>共有</quote>)と
+			<quote>.txt</quote>が含まれていてSamba上にWindowsから書き込み
+			された場合、UNIX上のファイル名は
+			0x8ba4, 0x974c, <quote>.txt</quote>(8バイトのバイナリ文字列)
+			となり、これはWindowsのものと同じである。
 			</para>
 
-			<para>Since Shift_JIS series is usually used on some commercial-based
-			UNIXes; hp-ux and AIX as the Japanese locale (however, it is also possible
-			to use the EUC-JP locale series). To use Shift_JIS series on these platforms,
-			Japanese filenames created from Windows can be referred to also on
-			UNIX.</para>
+			<para>シフトJIS系列が、いくつかの商用ベースのUNIX、たとえば
+			hp-uxとAIXで、日本語のロケールで使われている(しかし、
+			EUC-JPロケール系列を使うことも可能である)。それらのプラット
+			フォーム上でシフトJISを使うと、Windowsから作成された
+			日本語のファイル名はUNIX上でも参照できる。</para>
 
 			<para>
-			If your UNIX is already working with Shift_JIS and there is a user 
-			who needs to use Japanese filenames written from Windows, the
-			Shift_JIS series is the best choice.  However, broken filenames
-			may be displayed, and some commands that cannot handle non-ASCII
-			filenames may be aborted during parsing filenames. Especially, there
-			may be <quote>\ (0x5c)</quote> in filenames, which need to be handled carefully.
-			It is best to not touch filenames written from Windows on UNIX.
+			もしも、使用しているUNIXがすでにシフトJISで動いていて、Windowsから
+			書かれる日本語ファイル名を使う事が必要なユーザには、シフトJIS系列
+			は最適の選択である。しかし、不正なファイル名が表示されるか、
+			非ASCIIファイル名を扱えないコマンドがファイル名を処理するときに
+			アボートするかもしれない。そして、ファイル名中に、注意して
+			扱わなければならない<quote>\ (0x5c)</quote>があるときは特に
+			である。UNIX上でWindowsから書かれたファイル名をさわらないのが
+			最も安全である。
 			</para>
 
 			<para>
-			Note that most Japanized free software actually works with EUC-JP
-			only. It is good practice to verify that the Japanized free software can work
-			with Shift_JIS.
+			ほとんどの日本語化されたフリーソフトウェアは実際EUC-JPのみで
+			動作する。日本語化されたフリーソフトウエアがシフトJISで動くかを
+			検証するのはよい習慣である。
 			</para>
 			</listitem>
 		</varlistentry>
 
-		<varlistentry><term>EUC-JP series</term>
+		<varlistentry><term>EUC-JP系列</term>
 			<listitem><para>
 <indexterm><primary>EUC-JP</primary></indexterm>
 <indexterm><primary>Japanese UNIX</primary></indexterm>
