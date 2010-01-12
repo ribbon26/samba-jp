@@ -171,9 +171,9 @@ Samba-3では、Sambaはユニコードで通信できる。内部的には、Sa
 <itemizedlist>
 	<listitem><para>
 <indexterm><primary>JIS X 0208</primary></indexterm>
-		The Windows character set is extended from the original legacy Japanese
-		standard (JIS X 0208) and is not standardized. This means that the strictly
-		standardized implementation cannot support the full Windows character set.
+		Windows文字セットはオリジナルの日本工業標準(JIS X 0208)から拡張された
+		ものであり、標準化されていない。これは、正確に標準にそった実装は、
+		Windows文字セット全部をサポート出来ないと言うことである。
 	</para></listitem>
 
 	<listitem><para>
@@ -181,51 +181,49 @@ Samba-3では、Sambaはユニコードで通信できる。内部的には、Sa
 <indexterm><primary>EUC-JP</primary></indexterm>
 <indexterm><primary>CAP</primary></indexterm>
 <indexterm><primary>HEX</primary></indexterm>
-<indexterm><primary>Japanese</primary></indexterm>
-		Mainly for historical reasons, there are several encoding methods in
-		Japanese, which are not fully compatible with each other. There are
-		two major encoding methods. One is the Shift_JIS series used in Windows
-		and some UNIXes. The other is the EUC-JP series used in most UNIXes
-		and Linux. Moreover, Samba previously also offered several unique encoding
-		methods, named CAP and HEX, to keep interoperability with CAP/NetAtalk and
-		UNIXes that can't use Japanese filenames.  Some implementations of the
-		EUC-JP series can't support the full Windows character set.
+<indexterm><primary>日本語</primary></indexterm>
+		主に歴史的な理由により、日本においては複数のエンコーディング方法があり、
+		おのおのは、互いに完全に互換ではない。主要なエンコーディング方法は2つ
+		ある。1つはWindowsといくつかのUNIXで使われるシフトJIS系列である。
+		もう1つはEUC-JP系列であり、ほとんどのUNIXとLinuxで使われている。さらに、
+		Sambaは以前に、CAPとHEXという、CAP/NetAtalkと日本語ファイル名を使えない
+		UNIXとの互換性を確保するための、固有なエンコーディング方法を提供して
+		いた。EUC-JP系列のいくつかの実装は、完全なWindows文字セットをサポート
+		できない。
 	</para></listitem>
 
-	<listitem><para>There are some code conversion tables between Unicode and legacy
-		Japanese character sets. One is compatible with Windows, another one
-		is based on the reference of the Unicode consortium, and others are 
-		a mixed implementation. The Unicode consortium does not officially
-		define any conversion tables between Unicode and legacy character
-		sets, so there cannot be standard one.
+	<listitem><para>ユニコードと旧来の日本語文字セットとの間での変換テーブルは
+		いくつかある。ある1つはWindowsと互換であり、そのほかはユニコード
+		コンソーシアムのものをベースにしたものであり、ほかには複数のものを
+		まぜた実装がある。ユニコードコンソーシアムは、公式にはユニコードと
+		他の旧来の文字セットとの間での変換テーブルを定義していないので、
+		それは標準にはなり得ない。
 	</para></listitem>
 
-	<listitem><para>The character set and conversion tables available in iconv() depend
-		on the iconv library that is available. Next to that, the Japanese locale 
-		names may be different on different systems.  This means that the value of 
-		the charset parameters depends on the implementation of iconv() you are using.
+	<listitem><para>iconv()内で有効な文字セットと変換テーブルは、利用できるiconv
+		ライブラリに依存する。その次に、日本語のロケール名は異なったシステム上
+		では異なっているかもしれない。これは、文字セットパラメータの値は、
+		使用しているiconv()の実装に依存するというということである。
 		</para>
 
 		<para>
 <indexterm><primary>UCS-2</primary></indexterm>
 <indexterm><primary>Shift_JIS</primary></indexterm>
 <indexterm><primary>ASCII</primary></indexterm>
-<indexterm><primary>English</primary></indexterm>
-		Though 2-byte fixed UCS-2 encoding is used in Windows internally,
-		Shift_JIS series encoding is usually used in Japanese environments
-		as ASCII encoding is in English environments.
+<indexterm><primary>英語</primary></indexterm>
+		2バイトの固定的なUCS-2エンコーディングがWindows内部で使われているが、
+		シフトJIS系列のエンコーディングは、英語環境でASCIIエンコーディングが
+		使われているように日本語環境で通常使われている。
 	</para></listitem>
 </itemizedlist>
 
-<sect2><title>Basic Parameter Setting</title>
+<sect2><title>基本的なパラメータの設定</title>
 
 	<para>
 <indexterm><primary>CP932</primary></indexterm>
-	The <smbconfoption name="dos charset"/> and 
-	<smbconfoption name="display charset"/>
-	should be set to the locale compatible with the character set 
-	and encoding method used on Windows. This is usually CP932
-	but sometimes has a different name.
+	<smbconfoption name="dos charset"/>と<smbconfoption name="display charset"/>は
+	ロケールと互換のある文字セットとWindows上で使われているエンコーディング方法に
+	設定すべきである。これは通常CP932であるが、時々違う名前を使う。
 	</para>
 
 	<para>
