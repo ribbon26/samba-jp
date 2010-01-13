@@ -100,104 +100,110 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 	</para>
 
 	<itemizedlist>
-		<listitem><para>Obtain the maximum affordable computational power.</para></listitem>
-		<listitem><para>Obtain faster program execution.</para></listitem>
-		<listitem><para>Deliver unstoppable services.</para></listitem>
-		<listitem><para>Avert points of failure.</para></listitem>
-		<listitem><para>Exact most effective utilization of resources.</para></listitem>
+		<listitem><para>コンピュータの能力を最大限使えること。</para></listitem>
+		<listitem><para>より高速なプロトコル実行を行うこと。</para></listitem>
+		<listitem><para>無停止サービスを提供すること。</para></listitem>
+		<listitem><para>単一障害点を避けること。</para></listitem>
+		<listitem><para>資源を最も効果的に使うこと。</para></listitem>
 	</itemizedlist>
 
 	<para>
-	A clustered file server ideally has the following properties:
-<indexterm><primary>clustered file server</primary></indexterm>
-<indexterm><primary>connect transparently</primary></indexterm>
-<indexterm><primary>transparently reconnected</primary></indexterm>
-<indexterm><primary>distributed file system</primary></indexterm>
+	クラスタ化されたファイルサーバは理想的に以下の属性を有している:
+<indexterm><primary>クラスタ化されたファイルサーバ</primary></indexterm>
+<indexterm><primary>透過的な接続</primary></indexterm>
+<indexterm><primary>透過的な再接続</primary></indexterm>
+<indexterm><primary>分散ファイルシステム</primary></indexterm>
 	</para>
 
 	<itemizedlist>
-		<listitem><para>All clients can connect transparently to any server.</para></listitem>
-		<listitem><para>A server can fail and clients are transparently reconnected to another server.</para></listitem>
-		<listitem><para>All servers serve out the same set of files.</para></listitem>
-		<listitem><para>All file changes are immediately seen on all servers.</para>
-			<itemizedlist><listitem><para>Requires a distributed file system.</para></listitem></itemizedlist></listitem>
-		<listitem><para>Infinite ability to scale by adding more servers or disks.</para></listitem>
+		<listitem><para>すべてのクライアントはどのサーバにも透過的に接続できる。</para></listitem>
+		<listitem><para>サーバが故障するとクライアントは透過的に他のサーバに再接続できる。</para></listitem>
+		<listitem><para>すべてのサーバは、同じファイル群を提供する。</para></listitem>
+		<listitem><para>すべてのファイルの変更は、すべてのサーバで直接行われるように見える。</para>
+			<itemizedlist><listitem><para>分散ファイルシステムが必要。</para></listitem></itemizedlist></listitem>
+		<listitem><para>より多くのサーバやディスクを追加することで、無限に拡張できる。</para></listitem>
 	</itemizedlist>
 
 	</sect2>
 
 	<sect2>
-	<title>Why Is This So Hard?</title>
+	<title>これがなぜ難しいか?</title>
 
 	<para>
-	In short, the problem is one of <emphasis>state</emphasis>.
+	簡単に言うと、問題は<emphasis>状態(state)</emphasis>にある。
 	</para>
 
 	<itemizedlist>
 		<listitem>
 			<para>
 <indexterm><primary>state information</primary></indexterm>
-			All TCP/IP connections are dependent on state information.
+			すべてのTCP/IP接続はステート情報に依存する。
 			</para>
 			<para>
 <indexterm><primary>TCP failover</primary></indexterm>
-			The TCP connection involves a packet sequence number. This
-			sequence number would need to be dynamically updated on all
-			machines in the cluster to effect seamless TCP failover.
+			TCP接続はパケットシーケンス番号を持っている。このシーケンス
+			番号は、シームレスなTCPフェールオーバーを引き起こすために、
+			クラスタ中で、すべてのマシン上で動的に更新される必要がある。
 			</para>
 		</listitem>
 		<listitem>
 			<para>
 <indexterm><primary>CIFS/SMB</primary></indexterm>
 <indexterm><primary>TCP</primary></indexterm>
-			CIFS/SMB (the Windows networking protocols) uses TCP connections.
+			CIFS/SMB(Windowsネットワークプロトコル)はTCP接続を使用している。
 			</para>
 			<para>
-			This means that from a basic design perspective, failover is not
-			seriously considered.
+			これは、基本的な設計の見地から、フェイルオーバーは真剣に考慮
+			されていない事を意味する。
 			<itemizedlist>
 				<listitem><para>
-				All current SMB clusters are failover solutions
-				&smbmdash; they rely on the clients to reconnect. They provide server
-				failover, but clients can lose information due to a server failure.
-<indexterm><primary>server failure</primary></indexterm>
+				すべての現在のSMBクラスタはフェールオーバーソリューション
+				である。&smbmdash;これらは再接続するクライアントに
+				頼っている。これは、サーバのフェールオーバーを提供するが、
+				クライアントはサーバの故障のために情報を失う可能性がある。
+<indexterm><primary>サーバの故障</primary></indexterm>
 				</para></listitem>
 			</itemizedlist>
 			</para>
 		</listitem>
 		<listitem>
 			<para>
-			Servers keep state information about client connections.
+			サーバはクライアント接続に関するステート情報を保存する。
 			<itemizedlist>
 <indexterm><primary>state</primary></indexterm>
-				<listitem><para>CIFS/SMB involves a lot of state.</para></listitem>
-				<listitem><para>Every file open must be compared with other open files
-						to check share modes.</para></listitem>
+				<listitem><para>CIFS/SMBには多くのステートがある。</para></listitem>
+				<listitem><para>すべてのファイルのオープンは、共有モードを
+				    チェックするために他のオープンしているファイルと比較する。</para></listitem>
 			</itemizedlist>
 			</para>
 		</listitem>
 	</itemizedlist>
 
 		<sect3>
-		<title>The Front-End Challenge</title>
+		<title>最先端の状況</title>
 
 		<para>
-<indexterm><primary>cluster servers</primary></indexterm>
-<indexterm><primary>single server</primary></indexterm>
-<indexterm><primary>TCP data streams</primary></indexterm>
+<indexterm><primary>クラスタサービス</primary></indexterm>
+<indexterm><primary>単一サーバ</primary></indexterm>
+<indexterm><primary>TCPデータストリーム</primary></indexterm>
 <indexterm><primary>front-end virtual server</primary></indexterm>
-<indexterm><primary>virtual server</primary></indexterm>
+<indexterm><primary>仮想サーバ</primary></indexterm>
 <indexterm><primary>de-multiplex</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
-		To make it possible for a cluster of file servers to appear as a single server that has one
-		name and one IP address, the incoming TCP data streams from clients must be processed by the
-		front-end virtual server. This server must de-multiplex the incoming packets at the SMB protocol
-		layer level and then feed the SMB packet to different servers in the cluster.
+		1つの名前と1つのIPアドレスを持つ単一のサーバのように、ファイルサーバの
+		クラスタを見せるためにすることは可能で、クライアントから受信した
+		TCPデータストリームはフロントエンドの仮想サーバによって処理される必要が
+		ある。このサーバはSMBプロトコルレイヤレベルで、入力したパケットを分割し、
+		次に、クラスタ中の異なったサーバにSMBパケットを中継する。
 		</para>
 
 		<para>
-<indexterm><primary>IPC$ connections</primary></indexterm>
-<indexterm><primary>RPC calls</primary></indexterm>
+<indexterm><primary>IPC$接続</primary></indexterm>
+<indexterm><primary>RPC呼び出し</primary></indexterm>
+		印刷とユーザ検索要求を扱うために、1つのサーバに、すべてのIPC$接続と
+		RPC呼び出しを分割することができた。RPC印刷ハンドルは、異なったIPC$
+		セッションで共有される。&smbmdash;これはクラスタサーバをまたがって
+		これを分割するのは難しい!
 		One could split all IPC$ connections and RPC calls to one server to handle printing and user
 		lookup requirements. RPC printing handles are shared between different IPC4 sessions &smbmdash; it is
 		hard to split this across clustered servers!
