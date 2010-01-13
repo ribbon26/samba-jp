@@ -16,12 +16,13 @@
 <indexterm><primary>intolerance</primary></indexterm>
 <indexterm><primary>vital task</primary></indexterm>
 ネットワーク管理者は、しばしばファイルと印刷サービスの可用性について関心を持っている。
-Network administrators are often concerned about the availability of file and print
-services. Network users are inclined toward intolerance of the services they depend
-on to perform vital task responsibilities.
+ネットワークユーザは、きわめて重要な、責任ある仕事を遂行するのに依存するサービスに
+対して、厳しい態度をとりがちである。
 </para>
 
 <para>
+コンピュータルームにあるサインが、スタッフに、彼らの責任を思い出させるのに
+役に立った。それは以下のようなものであった:
 A sign in a computer room served to remind staff of their responsibilities. It read:
 </para>
 
@@ -31,6 +32,11 @@ A sign in a computer room served to remind staff of their responsibilities. It r
 <indexterm><primary>managed by humans</primary></indexterm>
 <indexterm><primary>economically wise</primary></indexterm>
 <indexterm><primary>anticipate failure</primary></indexterm>
+すべての人間は間違う、大きな事でも小さな事でも、絶えず失敗する方法で。機械も同様に
+故障する。コンピュータは、人によって管理する機械であり、故障の結果は鮮烈である。
+あなたの責任は、失敗を扱うことであり、それを予想することであり、人間らしさを
+可能な限り排除し、適切な費用で目的を達成することである。
+あなたの動作は、問題の一部分か、あるいは解決方法の一部分だろうか?
 All humans fail, in both great and small ways we fail continually. Machines fail too.
 Computers are machines that are managed by humans, the fallout from failure
 can be spectacular. Your responsibility is to deal with failure, to anticipate it
@@ -40,14 +46,21 @@ Are your actions part of the problem or part of the solution?
 </blockquote>
 
 <para>
-If we are to deal with failure in a planned and productive manner, then first we must
-understand the problem. That is the purpose of this chapter.
+もしも、計画された、かつ精算セキュリティな方法で障害を扱うならば、最初に問題を理解する
+必要がある。それがこの章の目的である。
 </para>
 
 <para>
-<indexterm><primary>high availability</primary></indexterm>
+<indexterm><primary>高可用性high availability</primary></indexterm>
 <indexterm><primary>CIFS/SMB</primary></indexterm>
 <indexterm><primary>state of knowledge</primary></indexterm>
+付加的に、以下の議論の中には、障害に対してどのようにネットワーク基盤を提供するかに
+ついての情報の元が存在する。ここでの目的は、高可用性という題に対する長い論文を
+提供することではない。さらに追加すると、高可用性ソリューションの詳細な動作例を
+提供しないということを、意識的に行っている。その代わりに、
+Sambaと他のCIFS/SMB技術の実装に適用する、高可用性における知識と習慣の現在の状態の
+プレゼンテーションにおいて、純粋に着目する、詳細な文書を提供する試みを、誰かが
+立ち上げるだろうという希望的観測をこめて、問題の概要を提供する。
 Parenthetically, in the following discussion there are seeds of information on how to
 provision a network infrastructure against failure. Our purpose here is not to provide
 a lengthy dissertation on the subject of high availability. Additionally, we have made
@@ -61,25 +74,29 @@ applies to the deployment of Samba and other CIFS/SMB technologies.
 </sect1>
 
 <sect1>
-<title>Technical Discussion</title>
+<title>技術的な議論</title>
 
 <para>
-<indexterm><primary>SambaXP conference</primary></indexterm>
-<indexterm><primary>Germany</primary></indexterm>
+<indexterm><primary>SambaXPカンファレンス</primary></indexterm>
+<indexterm><primary>ドイツ</primary></indexterm>
 <indexterm><primary>inspired structure</primary></indexterm>
+以下の要約は、2003年4月に、ドイツのゲッティンンゲンで行われた、SambaXP 2003
+カンファレンスで、Jeremy Allisonによって発表されたものの一部である。
+素材は他のソースから追加されたが、それをフォローする構造にインスパイアされた
+のはJeremyであった。
 The following summary was part of a presentation by Jeremy Allison at the SambaXP 2003
 conference that was held at Goettingen, Germany, in April 2003. Material has been added
 from other sources, but it was Jeremy who inspired the structure that follows.
 </para>
 
 	<sect2>
-	<title>The Ultimate Goal</title>
+	<title>最終目的</title>
 
 	<para>
-<indexterm><primary>clustering technologies</primary></indexterm>
+<indexterm><primary>クラスタリング技術</primary></indexterm>
 <indexterm><primary>affordable power</primary></indexterm>
-<indexterm><primary>unstoppable services</primary></indexterm>
-	All clustering technologies aim to achieve one or more of the following:
+<indexterm><primary>無停止サービス</primary></indexterm>
+	すべてのクラスタリング技術は以下の1つあるいはそれ以上を達成することを目的としている:
 	</para>
 
 	<itemizedlist>
