@@ -396,23 +396,27 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		<title>Sambaに対する変更要求</title>
 
 		<para>
-		Samba needs to be significantly modified to work with a high-speed server interconnect
-		system to permit transparent failover clustering.
+		Sambaは、透過的なフィルオーバクラスタが出来るように、高速サーバ間接続システムで
+		動くように、明確に修正する必要がある。
 		</para>
 
 		<para>
-		Particular functions inside Samba that will be affected include:
+		影響を受けると思われるSamba内の特定の機能は以下の通り:
 		</para>
 
 		<itemizedlist>
 			<listitem><para>
-			The locking database, oplock notifications,
-			and the share mode database.
+			データベースのロック、oplockの通知と共有モードデータベース。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>failure semantics</primary></indexterm>
 <indexterm><primary>oplock messages</primary></indexterm>
+			障害の意味を定義する必要がある。SambaはWindowsと同じように
+			振る舞う。oplockメッセージが失敗したとき、ファイルオープン
+			要求は許可されるが、これはクラスタ環境では潜在的に危険である。
+			そのため、どのようにサーバ間プールの障害の意味が機能するかと、
+			どのようにそのような機能を実装したらよいだろうか?
 			Failure semantics need to be defined. Samba behaves the same way as Windows.
 			When oplock messages fail, a file open request is allowed, but this is 
 			potentially dangerous in a clustered environment. So how should interserver
@@ -420,8 +424,8 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 			</para></listitem>
 
 			<listitem><para>
-			Should this be implemented using a point-to-point lock manager, or can this
-			be done using multicast techniques?
+			これはポイントツーポイントロックマネージャを使って実装すべきか、
+			あるいは、マルチキャスト手法を使って行うべきだろうか?
 			</para></listitem>
 
 		</itemizedlist>
@@ -430,105 +434,110 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 	</sect2>
 
 	<sect2>
-	<title>A Simple Solution</title>
+	<title>簡単なソリューション</title>
 
 	<para>
-<indexterm><primary>failover servers</primary></indexterm>
-<indexterm><primary>exported file system</primary></indexterm>
-<indexterm><primary>distributed locking protocol</primary></indexterm>
-	Allowing failover servers to handle different functions within the exported file system
-	removes the problem of requiring a distributed locking protocol.
+<indexterm><primary>フェイルオーバサーバ</primary></indexterm>
+<indexterm><primary>エクスポートされたファイルシステム</primary></indexterm>
+<indexterm><primary>分散ロックプロトコル</primary></indexterm>
+	フェイルオーバサーバにエクスポートされたファイルシステム内で異なった機能を
+	扱えるようにすることは、分散ロッキングプロトコルを要求する問題をなくす。
 	</para>
 
 	<para>
 <indexterm><primary>high-speed server interconnect</primary></indexterm>
 <indexterm><primary>complex file name space</primary></indexterm>
-	If only one server is active in a pair, the need for high-speed server interconnect is avoided.
-	This allows the use of existing high-availability solutions, instead of inventing a new one.
-	This simpler solution comes at a price &smbmdash; the cost of which is the need to manage a more
-	complex file name space. Since there is now not a single file system, administrators
-	must remember where all services are located &smbmdash; a complexity not easily dealt with.
+	もしも、ペアの中で1つのサーバのみアクティブである場合、高速サーバ間通信の必要性は
+	無くなる。この場合、新しいものを開発する代わりに、既存の高可用性ソリューションが
+	使える。これはかなりのコストがかかる単純なソリューションである。&smbmdash;
+	そのコストとは、より複雑なファイル名空間を管理する必要があるということである。
+	単一のファイルシステムではないため、管理者はすべてのサービスがどこに配置されて
+	いるかを覚えておかなければならない。&smbmdash;複雑さは、扱うのが容易ではない。
 	</para>
 
 	<para>
-<indexterm><primary>virtual server</primary></indexterm>
-	The <emphasis>virtual server</emphasis> is still needed to redirect requests to backend
-	servers. Backend file space integrity is the responsibility of the administrator.
+<indexterm><primary>仮想サーバ</primary></indexterm>
+	<emphasis>仮想サーバ</emphasis>は、バックエンドサーバに要求をリダイレクトする
+	ため、引き続き必要である。バックエンドファイル空間の完全性は管理者の責任である。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>High-Availability Server Products</title>
+	<title>高可用性サーバ製品</title>
 
 	<para>
 <indexterm><primary>resource failover</primary></indexterm>
-<indexterm><primary>high-availability services</primary></indexterm>
+<indexterm><primary>高可用性サーバ</primary></indexterm>
 <indexterm><primary>dedicated heartbeat</primary></indexterm>
 <indexterm><primary>LAN</primary></indexterm>
-<indexterm><primary>failover process</primary></indexterm>
-	Failover servers must communicate in order to handle resource failover. This is essential
-	for high-availability services. The use of a dedicated heartbeat is a common technique to
-	introduce some intelligence into the failover process. This is often done over a dedicated
-	link (LAN or serial).
+<indexterm><primary>フェイルオーバプロセス</primary></indexterm>
+	フェイルオーバサーバはリソースのフェイルオーバを扱うために通信する必要がある。
+	これは高可用性サービスでは基本である。専用のハートビートを使うことは、
+	フェイルオーバプロセスで、ある種の自立性を導入する、一般的な技術である。
+	これは、しばしは専用のリンク(LANまたはシリアル通信)上で行われる。
 	</para>
 
 	<para>
 <indexterm><primary>SCSI</primary></indexterm>
-<indexterm><primary>Red Hat Cluster Manager</primary></indexterm>
+<indexterm><primary>Red Hatクラスタマネージャ</primary></indexterm>
 <indexterm><primary>Microsoft Wolfpack</primary></indexterm>
 <indexterm><primary>Fiber Channel</primary></indexterm>
 <indexterm><primary>failover communication</primary></indexterm>
-	Many failover solutions (like Red Hat Cluster Manager and Microsoft Wolfpack)
-	can use a shared SCSI of Fiber Channel disk storage array for failover communication.
-	Information regarding Red Hat high availability solutions for Samba may be obtained from
-	<ulink url="http://www.redhat.com/docs/manuals/enterprise/RHEL-AS-2.1-Manual/cluster-manager/s1-service-samba.html">www.redhat.com</ulink>.
+	多くのフェイルオーバソリューション(Red HatクラスタマネージャとMicrosoft Wolfpack
+	のような)はフェイルオーバ通信のためにファイバチャネルディスクストレージアレイ
+	をSCSIで共有して使える。Sambaに対するRed Hat高可用性ソリューションについての
+	情報は、
+	<ulink url="http://www.redhat.com/docs/manuals/enterprise/RHEL-AS-2.1-Manual/cluster-manager/s1-service-samba.html">www.redhat.com</ulink>
+	で得られる。
 	</para>
 
 	<para>
-<indexterm><primary>Linux High Availability project</primary></indexterm>
-	The Linux High Availability project is a resource worthy of consultation if your desire is
-	to build a highly available Samba file server solution. Please consult the home page at
-	<ulink url="http://www.linux-ha.org/">www.linux-ha.org/</ulink>.
+<indexterm><primary>Linux高可用性プロジェクト</primary></indexterm>
+	Linux高可用性プロジェクトは、高可用性Sambaファイルサーバソリューションを構築
+	したいならば、考慮するに値するリソースである。
+	<ulink url="http://www.linux-ha.org/">www.linux-ha.org/</ulink>にある
+	ホームページを見てほしい。
 	</para>
 
 	<para>
-<indexterm><primary>backend failures</primary></indexterm>
-<indexterm><primary>continuity of service</primary></indexterm>
-	Front-end server complexity remains a challenge for high availability because it must deal
-	gracefully with backend failures, while at the same time providing continuity of service
-	to all network clients.
+<indexterm><primary>バックエンドの障害</primary></indexterm>
+<indexterm><primary>サービスの継続性</primary></indexterm>
+	フロントエンドサーバの複雑性は、すべてのネットワーククライアントに対して、
+	サービスの継続性を同時に提供する間、バックエンドの障害をうまく扱わなければ
+	ならないという理由で、高可用性に対する挑戦の余地がある。
 	</para>
 	
 	</sect2>
 
 	<sect2>
-	<title>MS-DFS: The Poor Man's Cluster</title>
+	<title>MS-DFS: 貧者のクラスター</title>
 
 	<para>
 <indexterm><primary>MS-DFS</primary></indexterm>
-<indexterm><primary>DFS</primary><see>MS-DFS, Distributed File Systems</see></indexterm>
-	MS-DFS links can be used to redirect clients to disparate backend servers. This pushes
-	complexity back to the network client, something already included by Microsoft.
-	MS-DFS creates the illusion of a simple, continuous file system name space that works even
-	at the file level.
+<indexterm><primary>DFS</primary><see>MS-DFS, 分散ファイルシステム</see></indexterm>
+	MS-DFSリンクは異なったバックエンドサーバにクライアントをリダイレクトするのに
+	使われる。これはMicrosoftによってすでに導入された何かで、ネットワーククライアントに
+	複雑性を増やしてしまう。MS-DFSは単純な、ファイルレベルでさえ動作する、継続的な
+	ファイルシステム名前空間という幻影を作成する。
 	</para>
 
 	<para>
-	Above all, at the cost of complexity of management, a distributed system (pseudo-cluster) can
-	be created using existing Samba functionality.
+	とりわけ、管理の複雑さを犠牲にすると、分散システム(仮のクラスタ)は既存のSambaの
+	機能を使うことで作成できる。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Conclusions</title>
+	<title>結論</title>
 
 	<itemizedlist>
-		<listitem><para>Transparent SMB clustering is hard to do!</para></listitem>
-		<listitem><para>Client failover is the best we can do today.</para></listitem>
-		<listitem><para>Much more work is needed before a practical and manageable high-availability transparent cluster solution will be possible.</para></listitem>
-		<listitem><para>MS-DFS can be used to create the illusion of a single transparent cluster.</para></listitem>
+		<listitem><para>透過的なSMBクラスタは作るのが難しい!</para></listitem>
+		<listitem><para>クライアントフェイルオーバは現在出来る最も良いものである。</para></listitem>
+		<listitem><para>実用的で管理が楽な高可用性透過的クラスタソリューションを可能にする前には、
+		    たくさんの作業が必要である。</para></listitem>
+		<listitem><para>MS-DFSは単一の透過的クラスタという幻想を作るのことができる。</para></listitem>
 	</itemizedlist>
 
 	</sect2>
