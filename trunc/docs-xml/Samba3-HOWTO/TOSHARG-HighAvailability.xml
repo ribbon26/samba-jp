@@ -200,7 +200,7 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		<para>
 <indexterm><primary>IPC$接続</primary></indexterm>
 <indexterm><primary>RPC呼び出し</primary></indexterm>
-		印刷とユーザ検索要求を扱うために、1つのサーバに、すべてのIPC$接続と
+		印刷とユーザ検索要求を扱うために、1つのサーバに対する、すべてのIPC$接続と
 		RPC呼び出しを分割することができた。RPC印刷ハンドルは、異なったIPC$
 		セッションで共有される。&smbmdash;これはクラスタサーバをまたがって
 		これを分割するのは難しい!
@@ -210,6 +210,8 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		</para>
 
 		<para>
+		概念的に、すべての他のサーバはファイルサービスのみ提供する。これは
+		集中するよりも簡単な問題である。
 		Conceptually speaking, all other servers would then provide only file services. This is a simpler
 		problem to concentrate on.
 		</para>
@@ -217,59 +219,62 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		</sect3>
 
 		<sect3>
-		<title>Demultiplexing SMB Requests</title>
+		<title>SMBリクエストの分割</title>
 
 		<para>
-<indexterm><primary>SMB requests</primary></indexterm>
-<indexterm><primary>SMB state information</primary></indexterm>
-<indexterm><primary>front-end virtual server</primary></indexterm>
-<indexterm><primary>complicated problem</primary></indexterm>
-		De-multiplexing of SMB requests requires knowledge of SMB state information,
-		all of which must be held by the front-end <emphasis>virtual</emphasis> server.
-		This is a perplexing and complicated problem to solve.
+<indexterm><primary>SMBリクエスト</primary></indexterm>
+<indexterm><primary>SMBステート情報</primary></indexterm>
+<indexterm><primary>フロントエンド仮想サーバ</primary></indexterm>
+<indexterm><primary>込み入った問題</primary></indexterm>
+		SMBリクエストを分割する事は、SMBステート情報を知っていることが要求され、そのすべては
+		フロントエンドの<emphasis>仮想</emphasis>サーバによって保持されねばならない。
+		これは解決するのには複雑で難しい問題である。
 		</para>
 
 		<para>
 <indexterm><primary>vuid</primary></indexterm>
 <indexterm><primary>tid</primary></indexterm>
 <indexterm><primary>fid</primary></indexterm>
-		Windows XP and later have changed semantics so state information (vuid, tid, fid)
-		must match for a successful operation. This makes things simpler than before and is a
-		positive step forward.
+		Windows XPとその後継は、その意味を変更し、そのため、ステート情報
+		(vuid,tid,fid)は操作が成功するために一致しなければならない。これは、
+		以前よりも物事を単純にし、前へ進むためのよい一歩である。
 		</para>
 
 		<para>
-<indexterm><primary>SMB requests</primary></indexterm>
-<indexterm><primary>Terminal Server</primary></indexterm>
-		SMB requests are sent by vuid to their associated server. No code exists today to
-		effect this solution. This problem is conceptually similar to the problem of
-		correctly handling requests from multiple requests from Windows 2000
-		Terminal Server in Samba.
+<indexterm><primary>SMBリクエスト</primary></indexterm>
+<indexterm><primary>ターミナルサーバ</primary></indexterm>
+		SMBリクエストは、それに対応するサーバにvuidによって送られる。
+		このソリューションを作り出すコードは現在存在しない。この問題は、
+		Samba中で、Windows 2000ターミナルサーバからの複数のリクエストからの
+		リクエストを正しく処理する問題と、概念的に似ている。
 		</para>
 
 		<para>
-<indexterm><primary>de-multiplexing</primary></indexterm>
-		One possibility is to start by exposing the server pool to clients directly.
-		This could eliminate the de-multiplexing step.
+<indexterm><primary>分割</primary></indexterm>
+		直接クライアントにサーバプールを提示することで開始するという
+		1つの可能性がある。これは、分割ステップを省略できる。
 		</para>
 
 		</sect3>
 
 		<sect3>
-		<title>The Distributed File System Challenge</title>
+		<title>分散ファイルシステムの試み</title>
 
 		<para>
-<indexterm><primary>Distributed File Systems</primary></indexterm>
-		There exists many distributed file systems for UNIX and Linux.
+<indexterm><primary>分散ファイルシステム</primary></indexterm>
+		UNIXとLinux用に、たくさんの分散ファイルシステムがある。
 		</para>
 
 		<para>
-<indexterm><primary>backend</primary></indexterm>
+<indexterm><primary>バックエンド</primary></indexterm>
 <indexterm><primary>SMB semantics</primary></indexterm>
-<indexterm><primary>share modes</primary></indexterm>
+<indexterm><primary>共有モード</primary></indexterm>
 <indexterm><primary>locking</primary></indexterm>
 <indexterm><primary>oplock</primary></indexterm>
-<indexterm><primary>distributed file systems</primary></indexterm>
+<indexterm><primary>分散ファイルシステム</primary></indexterm>
+		SMB文法を認識することを、ずっと心にとめている間は、我々のクラスタの
+		バックエンドに多くが適用できる(共有モード、ロックとoplock問題は特に)。
+		一般的な自由に使える分散ファイルシステムには以下がある:
 		Many could be adopted to backend our cluster, so long as awareness of SMB
 		semantics is kept in mind (share modes, locking, and oplock issues in particular).
 		Common free distributed file systems include:
@@ -287,21 +292,24 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		</itemizedlist>
 
 		<para>
-<indexterm><primary>server pool</primary></indexterm>
-		The server pool (cluster) can use any distributed file system backend if all SMB
-		semantics are performed within this pool.
+<indexterm><primary>サーバプール</primary></indexterm>
+		サーバプール(クラスタ)は、もしもすべてのSMB文法がそのプール内で実行出来るならば、
+		任意の分散ファイルシステムを使える。
 		</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Restrictive Constraints on Distributed File Systems</title>
+		<title>分散ファイルシステム上の限定的な制約</title>
 
 		<para>
-<indexterm><primary>SMB services</primary></indexterm>
-<indexterm><primary>oplock handling</primary></indexterm>
-<indexterm><primary>server pool</primary></indexterm>
+<indexterm><primary>SMBサービス</primary></indexterm>
+<indexterm><primary>oplockハンドリング</primary></indexterm>
+<indexterm><primary>サーバプール</primary></indexterm>
 <indexterm><primary>backend file system pool</primary></indexterm>
+		クラスタ化されたサーバが純粋なSMBサービスを提供するとき、oplockの
+		取り扱いは、バックエンドのファイルシステムプールに渡される必要なしに
+		サーバプール内で完了してもよい。
 		Where a clustered server provides purely SMB services, oplock handling
 		may be done within the server pool without imposing a need for this to
 		be passed to the backend file system pool.
@@ -309,22 +317,22 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 
 		<para>
 <indexterm><primary>NFS</primary></indexterm>
-<indexterm><primary>interoperability</primary></indexterm>
-		On the other hand, where the server pool also provides NFS or other file services,
-		it will be essential that the implementation be oplock-aware so it can
-		interoperate with SMB services. This is a significant challenge today. A failure
-		to provide this interoperability will result in a significant loss of performance that will be
-		sorely noted by users of Microsoft Windows clients.
+<indexterm><primary>相互運用性</primary></indexterm>
+		他方、サーバプールがNFSや他のファイルサービスをも提供する場合、
+		SMBサービスと相互運用できるように、oplockを認識する実装は基本である。
+		これは、現在有意義な挑戦である。これの相互運用性の提供に失敗すると、
+		Microsoft Windows クライアントのユーザによってはっきりと気がつく
+		明確な性能の低下をもたらす。
 		</para>
 
 		<para>
-		Last, all state information must be shared across the server pool.
+		最後に、すべてのステート情報は、サーバプール間で共有されるべきである。
 		</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Server Pool Communications</title>
+		<title>サーバプールの通信</title>
 
 		<para>
 <indexterm><primary>POSIX semantics</primary></indexterm>
