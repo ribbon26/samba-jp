@@ -339,48 +339,53 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 <indexterm><primary>SMB</primary></indexterm>
 <indexterm><primary>POSIX locks</primary></indexterm>
 <indexterm><primary>SMB locks</primary></indexterm>
-		Most backend file systems support POSIX file semantics. This makes it difficult
-		to push SMB semantics back into the file system. POSIX locks have different properties
-		and semantics from SMB locks.
+		ほとんどのバックエンドファイルシステムは、POSIXファイルシステムを
+		サポートしている。これは、SMB文法をファイルシステム中で使うことを
+		困難にしている。POSIXのロック機構は、SMBのロック機構とは異なる
+		属性と文法である。
 		</para>
 
 		<para>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>tdb</primary></indexterm>
-<indexterm><primary>Clustered smbds</primary></indexterm>
-		All <command>smbd</command> processes in the server pool must of necessity communicate
-		very quickly. For this, the current <parameter>tdb</parameter> file structure that Samba
-		uses is not suitable for use across a network. Clustered <command>smbd</command>s must use something else.
+<indexterm><primary>クラスタ化されたsmbd</primary></indexterm>
+		サーバプール中のすべての<command>smbd</command>プロセスはごく短時間に
+		通信しなければならない。このため、Sambaが使う現在の
+		<parameter>tdb</parameter>ファイル構造はネットワーク間で使うのには
+		適していない。クラスタ化された<command>smbd</command>は何らかの、
+		他のものを使う必要がある。
 		</para>
 
 		</sect3>
 
 		<sect3>
-		<title>Server Pool Communications Demands</title>
+		<title>サーバプール通信の要求</title>
 
 		<para>
-		High-speed interserver communications in the server pool is a design prerequisite
-		for a fully functional system. Possibilities for this include:
+		サーバプール内の高速サーバ間通信は、完全に機能するシステムのために
+		あらかじめ必要な機能である。これを可能にするものは以下のものがある:
 		</para>
 
 		<itemizedlist>
 <indexterm><primary>Myrinet</primary></indexterm>
 <indexterm><primary>scalable coherent interface</primary><see>SCI</see></indexterm>
 			<listitem><para>
-			Proprietary shared memory bus (example: Myrinet or SCI [scalable coherent interface]).
-			These are high-cost items.
+			商用の共有メモリバス(例:MyrinetまたはSCI [scalable coherent interface])。
+			これはとても価格が高い。
 			</para></listitem>
 		
 			<listitem><para>
-			Gigabit Ethernet (now quite affordable).
+			ギガビットイーサネット(現在簡単に使える)。
 			</para></listitem>
 		
 			<listitem><para>
-			Raw Ethernet framing (to bypass TCP and UDP overheads).
+			生のイーサネットフレーミング(TCPとUDPのオーバヘッドをバイパス)。
 			</para></listitem>
 		</itemizedlist>
 
 		<para>
+		これを有効にし、効果的にするための性能要求のための計測を識別することは
+		まだしていない。
 		We have yet to identify metrics for  performance demands to enable this to happen
 		effectively.
 		</para>
@@ -388,7 +393,7 @@ from other sources, but it was Jeremy who inspired the structure that follows.
 		</sect3>
 
 		<sect3>
-		<title>Required Modifications to Samba</title>
+		<title>Sambaに対する変更要求</title>
 
 		<para>
 		Samba needs to be significantly modified to work with a high-speed server interconnect
