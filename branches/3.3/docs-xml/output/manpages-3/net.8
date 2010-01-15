@@ -1,30 +1,38 @@
+'\" t
 .\"     Title: net
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/30/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/15/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.3
+.\"  Language: English
 .\"
-.TH "NET" "8" "07/30/2009" "Samba 3\.3" "システム管理ツール"
+.TH "NET" "8" "01/15/2010" "Samba 3\&.3" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-net - Samba およびリモート CIFS サーバの管理ツール
+net \- Samba およびリモート CIFS サーバの管理ツール
 .SH "SYNOPSIS"
-.HP 1
+.HP \w'\ 'u
 net {<ads|rap|rpc>} [\-h] [\-w\ workgroup] [\-W\ myworkgroup] [\-U\ user] [\-I\ ip\-address] [\-p\ port] [\-n\ myname] [\-s\ conffile] [\-S\ server] [\-l] [\-P] [\-d\ debuglevel] [\-V] [\-\-request\-timeout\ seconds]
 .SH "説明"
 .PP
 このツールは、\fBsamba\fR(7)システムの一部である。
 .PP
-Samba の net ユーティリティは Windows や DOS に存在する NET コマンドと同様の位置づけのものである。 先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。 ADS は Active Directory が、RAP は従来の (Windows 9x / Windows NT 3\.x) クライアントが、 RPC は Windows NT 4\.0 および Windows 2000 によって使用されている。 この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。 すべてのコマンドがすべてのプロトコル上で使用できるわけではない。
+Samba の net ユーティリティは Windows や DOS に存在する NET コマンドと同様の位置づけのものである。 先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。 ADS は Active Directory が、RAP は従来の (Windows 9x / Windows NT 3\&.x) クライアントが、 RPC は Windows NT 4\&.0 および Windows 2000 によって使用されている。 この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。 すべてのコマンドがすべてのプロトコル上で使用できるわけではない。
 .SH "オプション"
 .PP
 \-h|\-\-help
 .RS 4
-コマンドラインオプションの要約を表示する。
+Print a summary of command line options\&.
 .RE
 .PP
 \-w target\-workgroup
@@ -52,20 +60,21 @@ Samba の net ユーティリティは Windows や DOS に存在する NET コ�
 操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。 既定値ではまず 445 を試行し、ついで 139 を試行する。
 .RE
 .PP
-\-n <primary NetBIOS name>
+\-n|\-\-netbiosname <primary NetBIOS name>
 .RS 4
-Samba 自身の NetBIOS 名を指定する。このオプションは、
-\fIsmb\.conf\fR中の、\fI\%smb.conf.5.html#\fR
-パラメータの設定に相当する。コマンドラインの指定は、
-\fIsmb\.conf\fR
-内の設定よりも優先される。
+This option allows you to override the NetBIOS name that Samba uses for itself\&. This is identical to setting the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&. However, a command line setting will take precedence over settings in
+smb\&.conf\&.
 .RE
 .PP
-\-s <configuration file>
+\-s|\-\-configfile <configuration file>
 .RS 4
-サーバーが必要とする詳細な設定を含む設定ファイルを 指定する。このファイルには、サーバーが提供するサービスに関する記述や、 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
-\fIsmb\.conf\fR
-を参照のこと。設定ファイルの名前の既定値は、コンパイル時 に決定される。
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
 .RE
 .PP
 \-S server
@@ -91,15 +100,17 @@ Samba 自身の NetBIOS 名を指定する。このオプションは、
 \-d|\-\-debuglevel=level
 .RS 4
 \fIlevel\fR
-は0から10までの整数値である。 既定値の値は、パラメータが設定されていなければ0である。
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
 .sp
-この値を大きくするほど、サーバの動作に関するより詳細な情報が ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告 のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況 に関する情報を生成する。
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
 .sp
-1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容 となっている
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
 .sp
-このパラメータの指定は、\fIsmb\.conf\fRファイル中の、
-\fI\%smb.conf.5.html#\fR
-パラメータの 指定よりも優先する。
+Note that specifying this parameter here will override the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&.
 .RE
 .SH "コマンド"
 .SS "CHANGESECRETPW"
@@ -222,14 +233,22 @@ net rap file userはSambaサーバに対して動作しない事に注意。
 .SS "RAP VALIDATE \fIuser\fR [\fIpassword\fR]"
 .PP
 指定したユーザがリモートサーバにログオン可能かどうかを確認する。 コマンドラインでパスワードが指定されなかった場合は、入力を求められる。
+.if n \{\
 .sp
+.\}
+.RS 4
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-Note
+.ps +1
+\fBNote\fR
+.ps -1
+.br
 .PP
-現在まだ未実装
+Currently NOT implemented\&.
+.sp .5v
+.RE
 .SS "RAP GROUPMEMBER"
 .SS "RAP GROUPMEMBER LIST GROUP"
 .PP
@@ -245,38 +264,61 @@ Note
 指定した
 \fIcommand\fR
 をリモートサーバ上で実行する。 OS/2 サーバに対してのみ機能する。
+.if n \{\
 .sp
+.\}
+.RS 4
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-Note
+.ps +1
+\fBNote\fR
+.ps -1
+.br
 .PP
-現在まだ未実装
+Currently NOT implemented\&.
+.sp .5v
+.RE
 .SS "RAP SERVICE"
 .SS "RAP SERVICE START NAME [arguments...]"
 .PP
 リモートサーバ上の指定したサービスを起動する。現在実装されていない。
+.if n \{\
 .sp
+.\}
+.RS 4
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-Note
+.ps +1
+\fBNote\fR
+.ps -1
+.br
 .PP
-現在まだ未実装
-
+Currently NOT implemented\&.
+.sp .5v
+.RE
 .SS "RAP SERVICE STOP"
 .PP
 リモートサーバ上の指定したサービスを停止する。
+.if n \{\
 .sp
+.\}
+.RS 4
 .it 1 an-trap
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-Note
+.ps +1
+\fBNote\fR
+.ps -1
+.br
 .PP
-現在まだ未実装
+Currently NOT implemented\&.
+.sp .5v
+.RE
 .SS "RAP PASSWORD \fIUSER\fR \fIOLDPASS\fR \fINEWPASS\fR"
 .PP
 
@@ -315,17 +357,21 @@ Note
 Samba は「gencache」という汎用のキャッシュインタフェースを用いている。 これは \'NET CACHE\' コマンドにより制御可能である。
 .PP
 タイムアウトに関するパラメータはすべて、以下のサフィックスをサポートしている:
-.IP "" 4
+.RS 4
 s \- 秒
-.IP "" 4
+.RE
+.RS 4
 m \- 分
-.IP "" 4
+.RE
+.RS 4
 h \- 時
-.IP "" 4
+.RE
+.RS 4
 d \- 日
-.IP "" 4
+.RE
+.RS 4
 w \- 週
-
+.RE
 .SS "CACHE ADD key data time-out"
 .PP
 指定した key と data の組合せを time\-out の期限でキャッシュに追加する。
@@ -401,7 +447,7 @@ rid \- 符号なし 32 ビット整数
 .sp -1
 .IP \(bu 2.3
 .\}
-sid \- 「S\-1\-\.\.\.」形式の完全な SID
+sid \- 「S\-1\-\&.\&.\&.」形式の完全な SID
 .RE
 .sp
 .RS 4
@@ -430,12 +476,16 @@ comment \- 任意の文字列によるグループの説明
 .PP
 新しいグループマップのエントリを追加する:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 net groupmap add {rid=int|sid=string} unixgroup=string \e
       [type={domain|local}] [ntgroup=string] [comment=string]
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 
 .SS "GROUPMAP DELETE"
@@ -449,12 +499,16 @@ net groupmap delete {ntgroup=string|sid=SID}
 .PP
 
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \e
        [comment=string] [type={domain|local}]
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 
 .SS "GROUPMAP LIST"
@@ -546,7 +600,7 @@ smbpasswd \-a \-i DOMAINと同じ影響を及ぼす。 両コマンドとも適�
 .SS "RPC GETSID"
 .PP
 ドメインの SID を取得して、ローカルの
-\fIsecrets\.tdb\fR
+secrets\&.tdb
 に格納する。
 .SS "ADS LEAVE"
 .PP
@@ -570,7 +624,7 @@ NET ADS TESTJOIN
 .SS "ADS PRINTER REMOVE PRINTER"
 .PP
 指定したプリンタを Active Directory のディレクトリから削除する。
-.SS "ADS SEARCH \fIEXPRESSION\fR \fIATTRIBUTES\.\.\.\fR"
+.SS "ADS SEARCH \fIEXPRESSION\fR \fIATTRIBUTES\&.\&.\&.\fR"
 .PP
 Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。 EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。
 .PP
@@ -587,7 +641,7 @@ Active Directory のサーバに対して低レベルな LDAP 検索を行ない
 指定された Kerberos レルムのワークグループ名を表示する。
 .SS "SAM CREATEBUILTINGROUP <NAME>"
 .PP
-BUILTINグループを(再)作成する。 このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators, Users, Guests, Power Users, Account Operators, Server Operators, Print Operators, Backup Operators, Replicator, RAS Servers, Pre\-Windows 2000 compatible Access\. このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+BUILTINグループを(再)作成する。 このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators, Users, Guests, Power Users, Account Operators, Server Operators, Print Operators, Backup Operators, Replicator, RAS Servers, Pre\-Windows 2000 compatible Access\&. このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
 .SS "SAM CREATELOCALGROUP <NAME>"
 .PP
 ローカルグループを作成する(別名である)。 このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
@@ -665,7 +719,7 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 有効なアカウントポリシーを表示する。
 .SS "SAM POLICY SHOW <account policy>"
 .PP
-アカウントポリシーの値を表示する。\.
+アカウントポリシーの値を表示する。\&.
 .SS "SAM POLICY SET <account policy> <value>"
 .PP
 アカウントポリシーに値を設定する。 有効な値は、 "forever", "never", "off", か数字である。
@@ -683,33 +737,36 @@ BUILTINグループを(再)作成する。 このコマンドでは通常使わ�
 指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバに対してバインドするユーザDNのパスワードとして使われる。
 .SS "USERSHARE"
 .PP
-Samba 3\.0\.23 より、root 以外のユーザが「net usershare」コマンドを用いてユーザ定義共有を公開する機能が追加された。
+Samba 3\&.0\&.23 より、root 以外のユーザが「net usershare」コマンドを用いてユーザ定義共有を公開する機能が追加された。
 .PP
-これを行なうには、まず smb\.conf の [global] セクションに以下を追加する必要がある: usershare path = /usr/local/samba/lib/usershares ついで /usr/local/samba/lib/usershares ディレクトリを作成し、所有者を root に、所有グループをユーザ定義共有の作成を許可したい UNIX グループ、例えば「serverops」とする。 /usr/local/samba/lib/usershares のパーミッションは 01770 に設定する。 (所有者と所有グループには完全なアクセス権があり、その他にはアクセス権が全くない。さらにスティッキービットにより、ディレクトリ中のファイルについて、名前の変更や削除が行なえるのはファイルの所有者のみとなる) 最後に、smb\.conf の [global] セクションに以下のような行を追加することで、作成可能なユーザ定義共有の最大数を smbd に設定する: usershare max shares = 100 これにより、最大 100 のユーザ定義共有を設定可能となる。 これにより、「serverops」という UNIX グループのメンバは必要に応じて以下のコマンドを実行することで、ユーザ定義共有を作成することが可能となる。
+これを行なうには、まず smb\&.conf の [global] セクションに以下を追加する必要がある: usershare path = /usr/local/samba/lib/usershares ついで /usr/local/samba/lib/usershares ディレクトリを作成し、所有者を root に、所有グループをユーザ定義共有の作成を許可したい UNIX グループ、例えば「serverops」とする。 /usr/local/samba/lib/usershares のパーミッションは 01770 に設定する。 (所有者と所有グループには完全なアクセス権があり、その他にはアクセス権が全くない。さらにスティッキービットにより、ディレクトリ中のファイルについて、名前の変更や削除が行なえるのはファイルの所有者のみとなる) 最後に、smb\&.conf の [global] セクションに以下のような行を追加することで、作成可能なユーザ定義共有の最大数を smbd に設定する: usershare max shares = 100 これにより、最大 100 のユーザ定義共有を設定可能となる。 これにより、「serverops」という UNIX グループのメンバは必要に応じて以下のコマンドを実行することで、ユーザ定義共有を作成することが可能となる。
 .PP
 ユーザ定義共有に関するコマンドを以下に示す:
-.IP "" 4
+.RS 4
 net usershare add sharename path [comment] [acl] [guest_ok=[y|n]] \- ユーザ定義の共有の追加または変更
-.IP "" 4
+.RE
+.RS 4
 net usershare delete sharename \- ユーザ定義の共有の削除
-.IP "" 4
+.RE
+.RS 4
 net usershare info [\-l|\-\-long] [wildcard sharename] \- ユーザ定義の共有の情報の出力
-.IP "" 4
+.RE
+.RS 4
 net usershare list [\-l|\-\-long] [wildcard sharename] \- ユーザ定義の共有の一覧出力
-
+.RE
 .SS "USERSHARE ADD sharename path [comment] [acl] [guest_ok=[y|n]]"
 .PP
 sharename というユーザ定義共有の新規作成もしくは修正(上書き)を行なう。
 .PP
-「path」には、公開するディレクトリのシステム上での絶対パス名を指定する。 公開可能なディレクトリには幾つかの制約がある。 グローバルな smb\.conf のパラメータである「usershare owner only」、「usershare prefix allow list」、「usershare prefix deny list」を参照のこと。
+「path」には、公開するディレクトリのシステム上での絶対パス名を指定する。 公開可能なディレクトリには幾つかの制約がある。 グローバルな smb\&.conf のパラメータである「usershare owner only」、「usershare prefix allow list」、「usershare prefix deny list」を参照のこと。
 .PP
 オプションの「comment」パラメータは、クライアントから共有を参照した際に表示されるコメント文字列を指定する。
 .PP
-オプションの「acl」フィールドは、共有単位でどのユーザに読み取りや書き込みのアクセス許可を与えるかを指定する。 ゲストアクセスは、 smb\.conf の「usershare allow guests」パラメータを有効にしない限り行なえない。 ユーザ定義共有の ACL の指定は「user:permission」という形式で行なわれる。user はシステムで有効なユーザ名であり、permission は「F」、「R」、「D」のいずれかである。 「F」は「フルコントロール」、すなわち読み取りと書き込み権を示す。「D」は「拒否」を示し、ユーザの共有へのアクセスを許可しない。「R」は「読み取り専用」、すなわちこの共有への読み取りアクセスのみの許可を示す (ファイルへの書き込みやファイルやディレクトリの新規作成は行なえない)。
+オプションの「acl」フィールドは、共有単位でどのユーザに読み取りや書き込みのアクセス許可を与えるかを指定する。 ゲストアクセスは、 smb\&.conf の「usershare allow guests」パラメータを有効にしない限り行なえない。 ユーザ定義共有の ACL の指定は「user:permission」という形式で行なわれる。user はシステムで有効なユーザ名であり、permission は「F」、「R」、「D」のいずれかである。 「F」は「フルコントロール」、すなわち読み取りと書き込み権を示す。「D」は「拒否」を示し、ユーザの共有へのアクセスを許可しない。「R」は「読み取り専用」、すなわちこの共有への読み取りアクセスのみの許可を示す (ファイルへの書き込みやファイルやディレクトリの新規作成は行なえない)。
 .PP
 「acl」オプションが指定されなかった場合のデフォルトは「Everyone:R」である。これは、認証された全てのユーザが読み取り専用のアクセス権を有することを意味する。
 .PP
-オプションの「guest_ok」パラメータは、smb\.conf 中の同名のパラメータと同じ意味を持ち、該当のユーザ定義共有に対するゲストアクセスを許可する。 このパラメータは、 smb\.conf 中でグローバルパラメータの「usershare allow guests」が有効になっている時のみ設定できる。
+オプションの「guest_ok」パラメータは、smb\&.conf 中の同名のパラメータと同じ意味を持ち、該当のユーザ定義共有に対するゲストアクセスを許可する。 このパラメータは、 smb\&.conf 中でグローバルパラメータの「usershare allow guests」が有効になっている時のみ設定できる。
 
 既存のユーザ定義共有を修正するコマンドは個別に用意されておらず、
 「net usershare add [sharename]」コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
@@ -731,45 +788,57 @@ net usershare info は、実行したユーザが作成したユーザ定義共�
 net usershare list は、実行したユーザが作成したユーザ定義共有の一覧を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。 「\-l」もしくは「\-\-long」オプションが指定されていた場合、他のユーザが作成したユーザ定義共有の情報も表示する。
 .SS "CONF"
 .PP
-バージョン 3\.2\.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
+バージョン 3\&.2\&.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
 .PP
 この設定データの配布は
-\fIsmb\.conf\fRファイルから2つのレベルで有効にできる。 レジストリからの共有定義は[global]セクション中で\fIregistry shares\fRを\(lqyes\(rqにすることで有効にでき、 グローバルオプションは、複合設定の場合、[global]セクション中で\fIinclude = registry\fRを設定することで、 レジストリのみの設定の場合は、[global]セクション中で、\fIconfig backend = registry\fRを設定することで有効になる。 詳細は\fBsmb.conf\fR(5)マニュアルページを参照のこと。
+\fIsmb\&.conf\fRファイルから2つのレベルで有効にできる。 レジストリからの共有定義は[global]セクション中で\fIregistry shares\fRを\(lqyes\(rqにすることで有効にでき、 グローバルオプションは、複合設定の場合、[global]セクション中で\m[blue]\fBinclude = registry\fR\m[]を設定することで、 レジストリのみの設定の場合は、[global]セクション中で、\m[blue]\fBconfig backend = registry\fR\m[]を設定することで有効になる。 詳細は\fBsmb.conf\fR(5)マニュアルページを参照のこと。
 .PP
 conf コマンドは以下のとおり:
-.IP "" 4
-net conf list \- smb\.conf風の形式で完全な設定をダンプ
-.IP "" 4
-net conf import \- smb\.conf形式で設定をインポート
-.IP "" 4
+.RS 4
+net conf list \- smb\&.conf風の形式で完全な設定をダンプ
+.RE
+.RS 4
+net conf import \- smb\&.conf形式で設定をインポート
+.RE
+.RS 4
 net conf listshares \- レジストリ共有のリスト
-.IP "" 4
+.RE
+.RS 4
 net conf drop \- レジストリから全部の設定を削除
-.IP "" 4
+.RE
+.RS 4
 net conf showshare \- レジストリ共有の定義を表示
-.IP "" 4
+.RE
+.RS 4
 net conf addshare \- 新しいレジストリ共有を作成
-.IP "" 4
+.RE
+.RS 4
 net conf delshare \- レジストリ共有を削除
-.IP "" 4
+.RE
+.RS 4
 net conf setparm \- パラメータを格納
-.IP "" 4
+.RE
+.RS 4
 net conf getparm \- パラメータの値を検索
-.IP "" 4
+.RE
+.RS 4
 net conf delparm \- パラメータを削除
-.IP "" 4
+.RE
+.RS 4
 net conf getincludes \- 共有定義のインクルードを表示
-.IP "" 4
+.RE
+.RS 4
 net conf setincludes \- 共有のためのインクルードを設定
-.IP "" 4
+.RE
+.RS 4
 net conf delincludes \- 共有定義からインクルードを削除
-
+.RE
 .SS "CONF LIST"
 .PP
-smb\.conf風の形式でレジストリ中にある設定データを標準出力に出力する。
+smb\&.conf風の形式でレジストリ中にある設定データを標準出力に出力する。
 .SS "CONF IMPORT [--test|-T] filename [section]"
 .PP
-このコマンドは、smb\.conf形式で、ファイルから設定情報をインポートする。もしも、 レジストリ中に存在するセクションが入力ファイル中に存在するならば、その内容は 置き換えられる。入力ファイル中に対となるものがない、レジストリ中のセクションは 何ら影響はない。もしも、それらを削除したいならば、"net conf drop" か "net conf delshare"を使うこと。 任意ではあるが、その、指定したセクションに対するimportコマンドの影響を避けるためにあるセクションを指定してもよい。テストモードはパラメータ"\-T"をコマンド行に 指定することで有効に出来る。テストモードでは、レジストリに対する変更は行われず、 設定の結果が代わりに標準出力に出力される。
+このコマンドは、smb\&.conf形式で、ファイルから設定情報をインポートする。もしも、 レジストリ中に存在するセクションが入力ファイル中に存在するならば、その内容は 置き換えられる。入力ファイル中に対となるものがない、レジストリ中のセクションは 何ら影響はない。もしも、それらを削除したいならば、"net conf drop" か "net conf delshare"を使うこと。 任意ではあるが、その、指定したセクションに対するimportコマンドの影響を避けるためにあるセクションを指定してもよい。テストモードはパラメータ"\-T"をコマンド行に 指定することで有効に出来る。テストモードでは、レジストリに対する変更は行われず、 設定の結果が代わりに標準出力に出力される。
 .SS "CONF LISTSHARES"
 .PP
 レジストリ中で定義された共有名の一覧を表示する。
@@ -799,27 +868,28 @@ smb\.conf風の形式でレジストリ中にある設定データを標準出�
 .PP
 (globalまたは共有の)提供されたセクションの、includeのリストを得る。
 .PP
-データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、 共有ごとにパラメータのインスタンスは1つだけである。 また、テキストファイル中の指定したような順番は認められない。すべての真の パラメータに対して、これは完全に問題がないが、includeディレクティブは smb\.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての 共有パラメータの後に評価される。
+データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、 共有ごとにパラメータのインスタンスは1つだけである。 また、テキストファイル中の指定したような順番は認められない。すべての真の パラメータに対して、これは完全に問題がないが、includeディレクティブは smb\&.confテキストファイル中では、むしろメタパラメータであるので、他のパラメータ との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての 共有パラメータの後に評価される。
 .PP
 さらに、現在、レジストリ構成からファイルのみインクルード出来る。将来は、 他のレジストリキーから設定データをインクルード出来る予定である。
 .SS "CONF SETINCLUDES section [filename]+"
 .PP
-(globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。 ファイル名は %Iのような通常のsmb\.confマクロを含んでいてもよい。
+(globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。 ファイル名は %Iのような通常のsmb\&.confマクロを含んでいてもよい。
 .SS "CONF DELINCLUDES section"
 .PP
 (globalか共有の)提供されたセクションからincludeリストを削除する。
 .SS "DOM"
 .PP
-バージョン 3\.2\.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
+バージョン 3\&.2\&.0 から、Sambaではクライアントもしくはサーバサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバに参加させる機能はWindows 2000からサポートされていた。
 .PP
 Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
 .PP
 クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
-.IP "" 4
+.RS 4
 net dom join \- リモートでマシンをドメインに参加させる
-.IP "" 4
+.RE
+.RS 4
 net dom unjoin \-リモートでマシンをドメインから削除する
-
+.RE
 .SS "DOM JOIN	domain=DOMAIN ou=OU account=ACCOUNT password=PASSWORD reboot"
 .PP
 リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
@@ -882,7 +952,7 @@ net dom unjoin \-リモートでマシンをドメインから削除する
 .PP
 ドメインに参加させたいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のように net で標準的に使用されるパラメータを別途指定する必要があることに注意。
 .PP
-例: net dom join \-S xp \-U XP\e\eadministrator%secret domain=MYDOM account=MYDOM\e\eadministrator password=topsecret reboot\.
+例: net dom join \-S xp \-U XP\e\eadministrator%secret domain=MYDOM account=MYDOM\e\eadministrator password=topsecret reboot\&.
 .PP
 この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
 .SS "DOM UNJOIN account=ACCOUNT password=PASSWORD reboot"
@@ -925,7 +995,7 @@ net dom unjoin \-リモートでマシンをドメインから削除する
 .PP
 ドメインから削除したいマシンに接続して認証を行う場合、\-S コンピュータ や\-U ユーザ のようにnetで標準的に使用されるパラメータを別途指定する必要があることに注意。
 .PP
-例: net dom unjoin \-S xp \-U XP\e\eadministrator%secret account=MYDOM\e\eadministrator password=topsecret reboot\.
+例: net dom unjoin \-S xp \-U XP\e\eadministrator%secret account=MYDOM\e\eadministrator password=topsecret reboot\&.
 .PP
 この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
 .SS "HELP [COMMAND]"
@@ -941,9 +1011,9 @@ net dom unjoin \-リモートでマシンをドメインから削除する
 net マニュアルページは Jelmer Vernoij によって執筆された。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.3\.7 対応のものである。
+このマニュアルページは Samba 3\&.3\&.7 \- 3\&.3\&.10 対応のものである。
 .PP
-このドキュメントの Samba 3\.0\.0 対応の翻訳は
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -953,7 +1023,7 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .sp -1
 .IP \(bu 2.3
 .\}
-たかはし もとのぶ (monyo@samba\.gr\.jp)
+たかはし もとのぶ (monyo@samba\&.gr\&.jp)
 .RE
 .sp
 .RS 4
@@ -964,11 +1034,11 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .sp -1
 .IP \(bu 2.3
 .\}
-山田 史朗 (shiro@miraclelinux\.com)
+山田 史朗 (shiro@miraclelinux\&.com)
 .sp
 .RE
 によって行なわれた。
 .PP
-Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+Samba 3\&.0\&.23 \- Samba 3\&.0\&.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.3\.7 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\&.2\&.4\-3\&.3\&.10 対応の翻訳は、太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。
