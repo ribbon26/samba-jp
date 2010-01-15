@@ -19,8 +19,8 @@
 <refsynopsisdiv>
         <cmdsynopsis>
                 <command>cifs.upcall</command>
-                <arg choice="opt">-c</arg>
-                <arg choice="opt">-v</arg>
+                <arg choice="opt">--trust-dns|-t</arg>
+                <arg choice="opt">--version|-v</arg>
                 <arg choice="req">keyid</arg>
         </cmdsynopsis>
 </refsynopsisdiv>
@@ -42,11 +42,32 @@
 	<variablelist>
 		<varlistentry>
 		<term>-c</term>
-		<listitem><para>kerberos upcallの処理時は"cifs/"で始まるサービスプリンシパルを使う。デフォルトでは"host/"サービスプリンシパルを使うようになっている。</para></listitem>
+                <listitem><para>このオプションは廃止され、現在は無効である。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--trust-dns|-t</term>
+		<listitem><para>krb5 upcallsと一緒に、サービスプリンシパルのサーバの部分として
+		    使われる名前は、UNCのホスト名の部分の既定値となる。このオプションは
+		    upcallプログラムに、ホスト名を得るため、サーバのネットワークアドレスを
+		    逆引きするために使われる。</para>
+		<para>これは、DNSを信頼しないよりも安全ではない。このオプションを使う場合、
+		    攻撃者はDNSの制御を得、異なったサーバにクライアントをマウントさせることが
+		    可能となる。代わりに、すべての可能なホスト名に対してKDCにサーバプリンシパルを
+		    追加することが望ましいが、このオプションはそれが不可能な場合のために
+		    存在する。既定値は、この形式のホスト名逆引きは信頼しない。
+
+This is less secure than not trusting DNS. When using this option, it's possible that an at
+tacker could get control of DNS and trick the client into mounting a different server altogether. It's preferable
+ to instead add server principals to the KDC for every possible hostname, but this option exists for cases where
+that isn't possible. The default is to not trust reverse hostname lookups in this fashion.
+		
+		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-v</term>
+		<term>--version|-v</term>
 		<listitem><para>バージョン番号を表示して終了する。</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -71,8 +92,8 @@
 	<para>CIFSがこのプログラムを便利に使えるように、request-key.conf<manvolnum>5</manvolnum>中にエントリを設定する必要がある。以下はそれぞれのキータイプのためのエントリの例である:</para>
 <programlisting>
 #OPERATION  TYPE           D C PROGRAM ARG1 ARG2...
-#=========  =============  = = ==========================================
-create	    cifs.spnego    * * /usr/local/sbin/cifs.upcall -c %k
+#=========  =============  = = ================================
+create      cifs.spnego    * * /usr/local/sbin/cifs.upcall %k
 create      dns_resolver   * * /usr/local/sbin/cifs.upcall %k
 </programlisting>
 <para>
@@ -101,8 +122,8 @@ create      dns_resolver   * * /usr/local/sbin/cifs.upcall %k
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.2.4-3.3.7  対応のものである。</para>
-        <para>このドキュメントの Samba 3.2.4-3.3.7 対応の翻訳は
+	<para>このマニュアルページは Samba 3.3.10  対応のものである。</para>
+        <para>このドキュメントの Samba 3.2.4-3.3.10 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
 		<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
