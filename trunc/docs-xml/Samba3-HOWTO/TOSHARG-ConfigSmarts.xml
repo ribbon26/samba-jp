@@ -37,68 +37,72 @@
 <indexterm><primary>複数のサーバ</primary></indexterm>
 <indexterm><primary>複数のホスティング</primary></indexterm>
 <indexterm><primary>ドメインコントローラ</primary></indexterm>
-There are a number of ways in which multiple servers can be hosted on a single Samba server. Multiple server
-hosting makes it possible to host multiple domain controllers on one machine. Each such machine is
-independent, and each can be stopped or started without affecting another.
+単一のSambaサーバ上で複数のサーバをホスト出来る方法はいくつもある。複数のサーバ
+ホスティングは1つのマシン上で複数のドメインをホストする事を可能にする。そのような
+各マシンは独立していて、他に影響を与えずに、起動/停止ができる。
 </para>
 
 <para>
-<indexterm><primary>multiple servers</primary></indexterm>
+<indexterm><primary>複数のサーバ</primary></indexterm>
 <indexterm><primary>DMS</primary></indexterm>
-<indexterm><primary>anonymous server</primary></indexterm>
-Sometimes it is desirable to host multiple servers, each with its own security mode. For example, a single
-UNIX/Linux host may be a domain member server (DMS) as well as a generic anonymous print server. In this case,
-only domain member machines and domain users can access the DMS, but even guest users can access the generic
-print server. Another example of a situation where it may be beneficial to host a generic (anonymous) server
-is to host a CDROM server.
+<indexterm><primary>匿名サーバ</primary></indexterm>
+時には、各サーバが固有のセキュリティモードを持つ、複数のサーバをホスティングする
+ことが好ましいことがある。例えば、一般的な匿名印刷サーバのように、単一のUNIX/Linux
+ホストはドメインメンバサーバ(DMS)になれる。この場合、ドメインメンバマシンとドメイン
+ユーザはDMSにアクセスでき、さらにゲストユーザでさえも、一般的な印刷サーバにアクセス
+できる。他の、汎用(匿名)サーバをホスティングするのに便利かもしれないシチュエーションの
+例としては、CDROMサーバのホスティングがある。
 </para>
 
 <para>
-<indexterm><primary>separate servers</primary></indexterm>
+<indexterm><primary>分離されたサーバ</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-Some environments dictate the need to have separate servers, each with their own resources, each of which are
-accessible only by certain users or groups. This is one of the simple, but highly effective, ways that Samba
-can replace many physical Windows servers in one Samba installation.
+いくつかの環境では、固有のリソースを持つ、特定のユーザかグループのみからアクセス可能な、
+分離されたサーバを持つ必要が規定されている。これは、Sambaが多数の物理的なサーバを、
+1つのSambaサーバに置き換えられる、単純で、とても効果的な方法の1つである。
 </para>
 
 <sect1>
-<title>Implementation</title>
+<title>実装</title>
 
 <para>
 </para>
 
 <sect2>
-<title>Multiple Server Hosting</title>
+<title>複数のサーバのホスティング</title>
 
 <para>
-<indexterm><primary>multiple server hosting</primary></indexterm>
-<indexterm><primary>separate instances</primary></indexterm>
+<indexterm><primary>複数のサーバのホスティング</primary></indexterm>
+<indexterm><primary>分離されたインスタンス</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>winbindd</primary></indexterm>
-<indexterm><primary>recompiling</primary></indexterm>
+<indexterm><primary>再コンパイル</primary></indexterm>
 <indexterm><primary>TDB</primary></indexterm>
-The use of multiple server hosting involves running multiple separate instances of Samba, each with it's own
-configuration file. This method is complicated by the fact that each instance of &nmbd;, &smbd; and &winbindd;
-must have write access to entirely separate TDB files. The ability to keep separate the TDB files used by
-&nmbd;, &smbd; and &winbindd; can be enabled either by recompiling Samba for each server hosted so each has its
-own default TDB directories, or by configuring these in the &smb.conf; file, in which case each instance of
-&nmbd;, &smbd; and &winbindd; must be told to start up with its own &smb.conf; configuration file.
+複数のサーバホスティングの使用は、それぞれ個別の設定ファイルを持っている、複数の分離
+されたSambaインスタンスを動かす必要がある。この方法は、各&nmbd;, &smbd; と &winbindd;
+のインスタンスは、完全に分離されたTDBファイルへの書き込みアクセスが出来なければならない
+という理由で、とても複雑である。&nmbd;, &smbd; と &winbindd;が使うTDBファイルを分離
+させる事は、ホスティングを行う各Sambaを再コンパイルすることで、各Sambaが、固有のTDB
+ファイルに対する既定値のディレクトリを持つか、&nmbd;, &smbd; と &winbindd;の
+各インスタンスが、それらの固有の&smb.conf;設定ファイルで起動するようにしなければ
+ならない、&smb.conf;ファイルを設定することで可能となる。
 </para>
 
 <para>
-<indexterm><primary>independent</primary></indexterm>
-<indexterm><primary>listen own socket</primary></indexterm>
-<indexterm><primary>socket</primary></indexterm>
+<indexterm><primary>独立</primary></indexterm>
+<indexterm><primary>固有のソケットのリッスン</primary></indexterm>
+<indexterm><primary>ソケット</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-Each instance should operate on its own IP address (that independent IP address can be an IP Alias).
-Each instance of &nmbd;, &smbd; and &winbindd; should listen only on its own IP socket. This can be secured
-using the <smbconfoption name="socket address"/> parameter. Each instance of the Samba server will have its
-own SID also, this means that the servers are discrete and independent of each other.
+各インスタンスは固有のIPアドレス(独立したIPアドレスはIPエイリアスで行える)で操作される
+べきである。&nmbd;, &smbd; と&winbindd;の各インスタンスは、その固有IPソケットのみを
+リッスンすべきである。これは<smbconfoption name="socket address"/>パラメータを使うことに
+よって、安全に出来る。Sambaサーバの各インスタンスは固有のSIDも持つべきであり、これは、
+サーバは互いに独立で、分離されていることを意味する。
 </para>
 
 <para>
-<indexterm><primary>multiple server hosting</primary></indexterm>
+<indexterm><primary>複数サーバのホスティング</primary></indexterm>
 <indexterm><primary>private dir</primary></indexterm>
 <indexterm><primary>pid directory</primary></indexterm>
 <indexterm><primary>lock directory</primary></indexterm>
@@ -107,17 +111,18 @@ own SID also, this means that the servers are discrete and independent of each o
 <indexterm><primary>netbios name</primary></indexterm>
 <indexterm><primary>workgroup</primary></indexterm>
 <indexterm><primary>socket address</primary></indexterm>
-The user of multiple server hosting is non-trivial, and requires careful configuration of each aspect of
-process management and start up. The &smb.conf; parameters that must be carefully configured includes:
+複数サーバホスティングのユーザはそれほど特異ではなく、プロセス管理と起動時それぞれの
+場面において、注意深い設定を要求する。注意深く設定しなければならない、&smb.conf;
+パラメータは以下を含む:
 <smbconfoption name="private dir"/>, <smbconfoption name="pid directory"/>,<smbconfoption name="lock
 directory"/>, <smbconfoption name="interfaces"/>, <smbconfoption name="bind interfaces only"/>, <smbconfoption
-name="netbios name"/>, <smbconfoption name="workgroup"/>, <smbconfoption name="socket address"/>.
+name="netbios name"/>, <smbconfoption name="workgroup"/>, <smbconfoption name="socket address"/>。
 </para>
 
 <para>
-<indexterm><primary>multiple servers</primary></indexterm>
-<indexterm><primary>contribute</primary></indexterm>
-<indexterm><primary>comprehensive documentation</primary></indexterm>
+<indexterm><primary>複数のサーバ</primary></indexterm>
+<indexterm><primary>貢献</primary></indexterm>
+<indexterm><primary>包括的な文書</primary></indexterm>
 Those who elect to create multiple Samba servers should have the ability to read and follow
 the Samba source code, and to modify it as needed. This mode of deployment is considered beyond the scope of
 this book. However, if someone will contribute more comprehensive documentation we will gladly review it, and
