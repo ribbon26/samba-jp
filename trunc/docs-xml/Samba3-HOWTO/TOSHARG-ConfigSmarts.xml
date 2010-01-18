@@ -121,24 +121,30 @@ name="netbios name"/>, <smbconfoption name="workgroup"/>, <smbconfoption name="s
 
 <para>
 <indexterm><primary>複数のサーバ</primary></indexterm>
-<indexterm><primary>貢献</primary></indexterm>
+<indexterm><primary>寄贈</primary></indexterm>
 <indexterm><primary>包括的な文書</primary></indexterm>
-Those who elect to create multiple Samba servers should have the ability to read and follow
-the Samba source code, and to modify it as needed. This mode of deployment is considered beyond the scope of
-this book. However, if someone will contribute more comprehensive documentation we will gladly review it, and
-if it is suitable extend this section of this chapter. Until such documentation becomes available the hosting
-of multiple samba servers on a single host is considered not supported for Samba-3 by the Samba Team.
+複数のSambaサーバを作成する事を選択した人は、Sambaソースコードを読解でき、必要に応じて
+それを変更出来る能力を持つべきである。このモードの配置は、この文書の範囲を超えていると
+考えられる。しかし、もしも誰かがより包括的な文書を寄贈してくれるのであれば、喜んでそれを
+レビューし、もしもそれが適切であれば、この章のこの節を拡張するだろう。そのような文書が
+有効になるまで、単一ホスト上での複数Sambaサーバのホスティングは、Sambaチームによって、
+Samba-3ではサポートされないとみなされる。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Multiple Virtual Server Personalities</title>
+<title>複数仮想サーバの性質(Personalities)</title>
 
 <para>
-<indexterm><primary>multiple virtual servers</primary></indexterm>
+<indexterm><primary>複数の仮想サーバ</primary></indexterm>
 <indexterm><primary>netbios alias</primary></indexterm>
-<indexterm><primary>meta-services</primary></indexterm>
+<indexterm><primary>メタサービズ</primary></indexterm>
+Sambaは複数の仮想サーバをホスティングできる能力を持ち、おのおのは、固有の性質を持つ。
+これはすべてのホスティングされるPersonalityに共通な&smb.conf;ファイルの設定で達成
+される。各サーバのpersonalityは固有の<smbconfoption name="netbios alias"/>で
+ホスティングされ、おのおのは、固有の異なった<smbconfoption name="[global]"/>セクションを
+持つ。各サーバはサービス止めたサービスのために固有のセクションを持っても良い。
 Samba has the ability to host multiple virtual servers, each of which have their own personality.  This is
 achieved by configuring an &smb.conf; file that is common to all personalities hosted.  Each server
 personality is hosted using its own <smbconfoption name="netbios alias"/> name, and each has its own distinct
@@ -149,6 +155,11 @@ personality is hosted using its own <smbconfoption name="netbios alias"/> name, 
 <indexterm><primary>workgroup</primary></indexterm>
 <indexterm><primary>security</primary></indexterm>
 <indexterm><primary>netbios aliases</primary></indexterm>
+複数の仮想サーバをホスティングするとき、おのおのは固有のpersonarityを持ち、おのおのは
+異なったワークグループにいる。プライマリサーバのみ、ドメインメンバかドメインコントローラに
+なれる。personalityは、動作している<smbconfoption name="security"/>モードと、使っている
+<smbconfoption name="netbios aliases"/>とそれに対して定義された
+<smbconfoption name="workgroup"/>の組み合わせによって定義される。
 When hosting multiple virtual servers, each with their own personality, each can be in a different workgroup.
 Only the primary server can be a domain member or a domain controller. The personality is defined by the
 combination of the <smbconfoption name="security"/> mode it is operating in, the <smbconfoption name="netbios
@@ -156,12 +167,22 @@ aliases"/> it has, and the <smbconfoption name="workgroup"/> that is defined for
 </para>
 
 <para>
-<indexterm><primary>NetBIOS name</primary></indexterm>
-<indexterm><primary>NetBIOS-less SMB</primary></indexterm>
-<indexterm><primary>smb ports</primary></indexterm>
-<indexterm><primary>TCP port 139</primary></indexterm>
-<indexterm><primary>TCP port 445</primary></indexterm>
+<indexterm><primary>NetBIOS名</primary></indexterm>
+<indexterm><primary>NetBIOSなしのSMB</primary></indexterm>
+<indexterm><primary>smbポート</primary></indexterm>
+<indexterm><primary>TCPポート 139</primary></indexterm>
+<indexterm><primary>TCPポート 445</primary></indexterm>
 <indexterm><primary>%L</primary></indexterm>
+この設定スタイルは、NetBIOS名を使うか、NetBIOS名なしのTCP上のサービスを使う事が出来る。
+もしもNetBIOSモード(最も一般的な方法)で動かす場合、パラメータ
+<smbconfoption name="smb ports">139</smbconfoption>はプライマリの&smb.conf;ファイル中に
+指定すべきである。それを間違うと、SambaはTCPポート445で動作することになり、
+最も良い場合で問題のある動作、悪い場合は、プライマリの&smb.conf;ファイルで指定された
+機能を得ることができるのみである。TCPポート139のみを使うNetBIOS over TCP/IPの使用は、
+<literal>%L</literal>マクロの使用が完全に有効になる事を意味する。もしも
+<smbconfoption name="smb ports">139</smbconfoption>が指定されていない場合(既定値では
+<parameter>445 139</parameter>)か、もしもこのパラメータの値が
+<parameter>139 445</parameter>の時は、<literal>%L</literal>は無効である。
 This configuration style can be used either with NetBIOS names, or using NetBIOS-less SMB over TCP services.
 If run using NetBIOS mode (the most common method) it is important that the parameter <smbconfoption name="smb
 ports">139</smbconfoption> should be specified in the primary &smb.conf; file. Failure to do this will result
@@ -174,10 +195,17 @@ is not serviceable.
 </para>
 
 <para>
-<indexterm><primary>host multiple servers</primary></indexterm>
-<indexterm><primary>multiple personality</primary></indexterm>
-<indexterm><primary>NetBIOS-less</primary></indexterm>
-<indexterm><primary>%i macro</primary></indexterm>
+<indexterm><primary>複数サーバのホスティング</primary></indexterm>
+<indexterm><primary>複数のpersonality</primary></indexterm>
+<indexterm><primary>NetBIOSなし</primary></indexterm>
+<indexterm><primary>%iマクロ</primary></indexterm>
+各サーバが固有のpersonalityを持つ、ポート445を使う(NetBIOSなしのSMBポート)複数のサーバを
+ホスティングするのは可能で、この場合、(IPアドレスによって)分離されたサーバの識別を提供する
+ために、<literal>%i</literal>が使える。おのおのは固有の<smbconfoption name="security"/>
+モードを持つ。仮想サーバを作成するために、<smbconfoption name="interfaces"/>と
+<smbconfoption name="bind interfaces only"/>を<smbconfoption name="netbios name"/>に
+追加する必要があるかもしれない。この方法は、TCPポート139のみを使うNetBIOS名を使うよりも
+より複雑であると考えられる。
 It is possible to host multiple servers, each with their own personality, using port 445 (the NetBIOS-less SMB
 port), in which case the <literal>%i</literal> macro can be used to provide separate server identities (by
 IP Address). Each can have its own <smbconfoption name="security"/> mode. It will be necessary to use the
@@ -187,17 +215,18 @@ more complex than that using NetBIOS names only using TCP port 139.
 </para>
 
 <para>
-<indexterm><primary>anonymous file server</primary></indexterm>
-Consider an example environment that consists of a standalone, user-mode security Samba server and a read-only
-Windows 95 file server that has to be replaced. Instead of replacing the Windows 95 machine with a new PC, it
-is possible to add this server as a read-only anonymous file server that is hosted on the Samba server. Here
-are some parameters:
+<indexterm><primary>匿名ファイルサーバ</primary></indexterm>
+スタンドアロンでユーザモードのセキュリティで動くSambaと置き換え対象の、
+読み取り専用Windows 95ファイルサーバからなる例題環境を考えてみよう。新しいPCでWindows 95
+マシンを置き換える代わりに、Sambaサーバ上でホスティングされる読み取り専用匿名ファイル
+サーバとしてこのサーバを追加することが可能である。以下はそれに必要ないくつかのパラメータ
+である:
 </para>
 
 <para>
-The Samba server is called <literal>ELASTIC</literal>, its workgroup name is <literal>ROBINSNEST</literal>.
-The CDROM server is called <literal>CDSERVER</literal> and its workgroup is <literal>ARTSDEPT</literal>. A
-possible implementation is shown here:
+Sambaサーバの名前は<literal>ELASTIC</literal>で、そのワークグループ名は<literal>ROBINSNEST</literal>である。
+CDROMサーバの名前は<literal>CDSERVER</literal>で、そのワークグループ名は<literal>ARTSDEPT</literal>
+である。出来うる実装は以下の通り:
 </para>
 
 <para>
