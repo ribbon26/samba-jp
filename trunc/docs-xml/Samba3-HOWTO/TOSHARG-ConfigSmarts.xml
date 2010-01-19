@@ -310,42 +310,44 @@ CDROMサーバの設定ファイルは<link linkend="cdserver">CDROMサーバの
 <indexterm><primary>分離されたワークグループ</primary></indexterm>
 <indexterm><primary>読み取り専用アクセス</primary></indexterm>
 <indexterm><primary>nobody account</primary></indexterm>
-The two servers have different resources and are in separate workgroups. The server <literal>ELASTIC</literal>
-can only be accessed by uses who have an appropriate account on the host server. All users will be able to
-access the CDROM data that is stored in the <filename>/export/cddata</filename> directory. File system
-permissions should set so that the <literal>others</literal> user has read-only access to the directory and its
-contents. The files can be owned by root (any user other than the nobody account).
+2つのサーバは異なったりソースを持ち、分離されたワークグループ内にいる。サーバ
+<literal>ELASTIC</literal>は、そのホストサーバ上に適切なアカウントを持つユーザから
+のみアクセスできる。すべてのユーザは、<filename>/export/cddata</filename>
+ディレクトリ中に格納されるCDROMデータにアクセスできる。ファイルシステムのアクセス許可は、
+<literal>その他</literal>ユーザがディレクトリとその内容に対して読み取り専用アクセスを
+設定すべきである。ファイルはrootが所有できる(nobodyアカウント以外の任意のユーザでも)。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Multiple Virtual Server Hosting</title>
+<title>複数の仮想サーバホスティング</title>
 
 <para>
-<indexterm><primary>primary domain controller</primary></indexterm>
+<indexterm><primary>プライマリドメインコントローラ</primary></indexterm>
 <indexterm><primary>extra machine</primary></indexterm>
-<indexterm><primary>same domain/workgroup</primary></indexterm>
-In this example, the requirement is for a primary domain controller for the domain called
-<literal>MIDEARTH</literal>. The PDC will be called <literal>MERLIN</literal>. An extra machine called
-<literal>SAURON</literal> is required. Each machine will have only its own shares. Both machines belong to the
-same domain/workgroup.
+<indexterm><primary>同じドメイン/ワークグループ</primary></indexterm>
+この例では、要求されていることは、<literal>MIDEARTH</literal>というドメインに対する
+プライマリドメインコントローラに対するものである。PDCは<literal>MERLIN</literal>
+である。その他のマシンとして<literal>SAURON</literal>が必要とされている。各マシンは
+それぞれ固有の共有のみ持つ。両マシンは同じドメイン/ワークグループに属している。
 </para>
 
 <para>
 <indexterm><primary>master smb.conf</primary></indexterm>
 <indexterm><primary>/etc/samba</primary></indexterm>
 <indexterm><primary></primary></indexterm>
-The master &smb.conf; file is shown in <link linkend="mastersmbc">the Master smb.conf File Global Section</link>.
-The two files that specify the share information for each server are shown in <link linkend="merlinsmbc">the
-smb-merlin.conf File Share Section</link>, and <link linkend="sauronsmbc">the smb-sauron.conf File Share
-Section</link>. All three files are locate in the <filename>/etc/samba</filename> directory.
+マスタの&smb.conf;ファイルは<link linkend="mastersmbc">マスタのsmb.conf ファイルのグローバルセクション</link>
+である。各サーバの共有情報を指定する2つのファイルは、
+<link linkend="merlinsmbc">smb-merlin.confファイルの共有セクション</link>と
+<link linkend="sauronsmbc">smb-sauron.confファイルの共有セクション</link>である。3つの
+ファイルはすべて<filename>/etc/samba</filename>ディレクトリに置かれる。
 </para>
 
 <example id="mastersmbc">
-<title>Master smb.conf File Global Section</title>
+<title>マスタのsmb.conf ファイルのグローバルセクション</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MIDEARTH</smbconfoption>
 <smbconfoption name="netbios name">MERLIN</smbconfoption>
@@ -373,9 +375,9 @@ Section</link>. All three files are locate in the <filename>/etc/samba</filename
 </example>
 
 <example id="merlinsmbc">
-<title>MERLIN smb-merlin.conf File Share Section</title>
+<title>smb-merlin.confファイルの共有セクション</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MIDEARTH</smbconfoption>
 <smbconfoption name="netbios name">MERLIN</smbconfoption>
@@ -407,9 +409,9 @@ Section</link>. All three files are locate in the <filename>/etc/samba</filename
 </example>
 
 <example id="sauronsmbc">
-<title>SAURON smb-sauron.conf File Share Section</title>
+<title>smb-sauron.confファイルの共有セクション</title>
 <smbconfblock>
-<smbconfcomment>Global parameters</smbconfcomment>
+<smbconfcomment>グローバルパラメータ</smbconfcomment>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">MIDEARTH</smbconfoption>
 <smbconfoption name="netbios name">SAURON</smbconfoption>
