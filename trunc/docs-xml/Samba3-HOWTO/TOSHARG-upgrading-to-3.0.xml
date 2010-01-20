@@ -736,20 +736,21 @@ Sambaのアップデートあるいはアップグレードをするときはい
 		</para>
 
 		<para>
-<indexterm><primary>old sambaAccount</primary></indexterm>
+<indexterm><primary>古いsambaAccount</primary></indexterm>
 <indexterm><primary>ldapsam_compat</primary></indexterm>
-<indexterm><primary>object class declaration</primary></indexterm>
+<indexterm><primary>オブジェクトクラスの定義</primary></indexterm>
 <indexterm><primary>samba.schema</primary></indexterm>
-		The old <literal>sambaAccount</literal> schema may still be used by specifying the
-		<parameter>ldapsam_compat</parameter> passdb backend. However, the sambaAccount and
-		associated attributes have been moved to the historical section of
-		the schema file and must be uncommented before use if needed.
-		The Samba-2.2 object class declaration for a <literal>sambaAccount</literal> has not changed
-		in the Samba-3 <filename>samba.schema</filename> file.
+		古い<literal>sambaAccount</literal>スキーマは、
+		<parameter>ldapsam_compat</parameter>passdb バックエンドを指定することで
+		引き続き使っても良い。しかし、sambaAccountと関連する属性はスキーマ
+		ファイルの歴史的セクションに移動済みで、もしも必要な場合、使う前に
+		コメントアウトしなければならない。<literal>sambaAccount</literal>
+		に対するSamba-2.2オブジェクトクラスの定義は、Samba-3の
+		<filename>samba.schema</filename>ファイル中では変更されていない。
 		</para>
 
 		<para>
-		Other new object classes and their uses include:
+		他の新しいオブジェクトクラスとそれが使うものは以下の通り:
 		</para>
 
 		<itemizedlist>
@@ -760,21 +761,22 @@ Sambaのアップデートあるいはアップグレードをするときはい
 <indexterm><primary>ldap suffix</primary></indexterm>
 <indexterm><primary>ldapsam</primary></indexterm>
 <indexterm><primary>idmap</primary></indexterm>
-			<literal>sambaDomain</literal> &smbmdash; domain information used to allocate RIDs
-			for users and groups as necessary. The attributes are added
-			in <quote>ldap suffix</quote> directory entry automatically if
-			an idmap UID/GID range has been set and the <quote>ldapsam</quote>
-			passdb backend has been selected.
+			<literal>sambaDomain</literal> &smbmdash;必要に応じて
+			ユーザとグループのRIDを割り当てるために使われるドメイン情報。
+			もしもidmap UID/GIDの範囲が設定され、<quote>ldapsam</quote>
+			passdbバックエンドが選択された場合、属性は
+			<quote>ldap suffix</quote>ディレクトリエントリ中に、
+			自動的に追加される。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>sambaGroupMapping</primary></indexterm>
 <indexterm><primary>ldap group suffix</primary></indexterm>
 <indexterm><primary>net groupmap</primary></indexterm>
-			sambaGroupMapping &smbmdash; an object representing the
-			relationship between a posixGroup and a Windows
-			group/SID. These entries are stored in the <quote>ldap
-			group suffix</quote> and managed by the <quote>net groupmap</quote> command.
+			sambaGroupMapping &smbmdash;は、posixGroupとWindowsのグループ/SID
+			との間で関連づけを行うためのオブジェクト。これらのエントリは
+			<quote>ldap group suffix</quote>中に格納され、
+			<quote>net groupmap</quote>コマンドによって管理される。
 			</para></listitem>
 
 			<listitem><para>
@@ -782,70 +784,72 @@ Sambaのアップデートあるいはアップグレードをするときはい
 <indexterm><primary>ldap idmap suffix</primary></indexterm>
 <indexterm><primary>idmap UID</primary></indexterm>
 <indexterm><primary>idmap GID</primary></indexterm>
-			<literal>sambaUNIXIdPool</literal> &smbmdash; created in the <quote>ldap idmap suffix</quote> entry
-			automatically and contains the next available <quote>idmap UID</quote> and
-			<quote>idmap GID</quote>.
+			<literal>sambaUNIXIdPool</literal> &smbmdash;
+			<quote>ldap idmap suffix</quote>エントリ中に自動的に作成され、
+			次に有効な<quote>idmap UID</quote>と<quote>idmap GID</quote>
+			を格納している。
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>sambaIdmapEntry</primary></indexterm>
 <indexterm><primary>idmap_ldap module</primary></indexterm>
-			<literal>sambaIdmapEntry</literal> &smbmdash; object storing a mapping between a
-			SID and a UNIX UID/GID. These objects are created by the
-			idmap_ldap module as needed.
+			<literal>sambaIdmapEntry</literal> &smbmdash;
+			SIDとUNIXのUID/GID間でのマッピングを格納するオブジェクト。
+			これらのオブジェクトは必要に応じてidmap ldapモジュールにより
+			作成される。
 			</para></listitem>
 		</itemizedlist>
 
 		</sect4>
 
 		<sect4>
-		<title>New Suffix for Searching</title>
+		<title>検索のための新しいサフィックス</title>
 
 		<para>
-<indexterm><primary>LDAP queries</primary></indexterm>
+<indexterm><primary>LDAPクエリ</primary></indexterm>
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>ldap suffix</primary></indexterm>
 <indexterm><primary>ldap user suffix</primary></indexterm>
 <indexterm><primary>ldap machine suffix</primary></indexterm>
 <indexterm><primary>ldap group suffix</primary></indexterm>
 <indexterm><primary>ldap idmap suffix</primary></indexterm>
-		The following new &smb.conf; parameters have been added to aid in directing
-		certain LDAP queries when <parameter>passdb backend = ldapsam://...</parameter> has been
-		specified.
+		以下の新しい&smb.conf;パラメータは、
+		<parameter>passdb backend = ldapsam://...</parameter>が指定された時に
+		特定のLDAPクエリを指示するのを支援するために追加された。
 		</para>
 
 		<itemizedlist>
-			<listitem><para>ldap suffix         &smbmdash; used to search for user and computer accounts.</para></listitem>
-			<listitem><para>ldap user suffix    &smbmdash; used to store user accounts.</para></listitem>
-			<listitem><para>ldap machine suffix &smbmdash; used to store machine trust accounts.</para></listitem>
-			<listitem><para>ldap group suffix   &smbmdash; location of posixGroup/sambaGroupMapping entries.</para></listitem>
-			<listitem><para>ldap idmap suffix   &smbmdash; location of sambaIdmapEntry objects.</para></listitem>
+			<listitem><para>ldap suffix         &smbmdash; ユーザとコンピュータアカウントを検索するのに使用。</para></listitem>
+			<listitem><para>ldap user suffix    &smbmdash; ユーザアカウントを格納するのに使用。</para></listitem>
+			<listitem><para>ldap machine suffix &smbmdash; マシン信頼アカウントを格納するのに使用。</para></listitem>
+			<listitem><para>ldap group suffix   &smbmdash; posixGroup/sambaGroupMappingエントリの位置。</para></listitem>
+			<listitem><para>ldap idmap suffix   &smbmdash; sambaIdmapEntryオブジェクトの位置。</para></listitem>
 		</itemizedlist>
 
 		<para>
 <indexterm><primary>ldap suffix</primary></indexterm>
-<indexterm><primary>subsuffix parameters</primary></indexterm>
-		If an <parameter>ldap suffix</parameter> is defined, it will be appended to all of the
-		remaining subsuffix parameters. In this case, the order of the suffix
-		listings in &smb.conf; is important. Always place the <parameter>ldap suffix</parameter> first
-		in the list.
+<indexterm><primary>subsuffixパラメータ</primary></indexterm>
+		もしも、<parameter>ldap suffix</parameter>が定義されていた場合、これは残りの
+		subsuffixパラメータに追加される。この場合、&smb.conf;中のサフィックスの
+		記述順序は重要である。常時、他のものよりも前に、
+		<parameter>ldap suffix</parameter>を記述すること。
 		</para>
 
 		<para>
-		Due to a limitation in Samba's &smb.conf; parsing, you should not surround
-		the domain names with quotation marks.
+		Sambaの&smb.conf;解析の制限により、引用符でドメイン名を囲ってはいけない。
 		</para>
 
 		</sect4>
 
 		<sect4>
-		<title>IdMap LDAP Support</title>
+		<title>IdMap LDAPサポート</title>
 
 		<para>
 <indexterm><primary>idmap backend</primary></indexterm>
-		Samba-3 supports an LDAP backend for the idmap subsystem. The
-		following options inform Samba that the idmap table should be
-		stored on the directory server <emphasis>onterose</emphasis> in the ou=Idmap,dc=quenya,dc=org partition.
+		Samba-3はidmapサブシステムにもLDAPバックエンドをサポートしている。以下の
+		オプションは、Sambaにidmapテーブルを、ディレクトリサーバ
+		<emphasis>onterose</emphasis>の
+		ou=Idmap,dc=quenya,dc=org部分に格納する事を指示する。
 		</para>
 
 		<smbconfblock>
@@ -859,9 +863,9 @@ Sambaのアップデートあるいはアップグレードをするときはい
 
 		<para>
 <indexterm><primary>NFS</primary></indexterm>
-		This configuration allows Winbind installations on multiple servers to
-		share a UID/GID number space, thus avoiding the interoperability problems
-		with NFS that were present in Samba-2.2.
+		この設定では、UID/GID名前空間を複数のサーバ上で共有するWinbindの利用が
+		出来るようになり、Samba-2.2で存在していた、NFSとの相互運用の問題を
+		解決する。
 		</para>
 
 		</sect4>
