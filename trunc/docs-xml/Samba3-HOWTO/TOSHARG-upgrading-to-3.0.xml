@@ -568,34 +568,34 @@ Sambaのアップデートあるいはアップグレードをするときはい
 		<row>
 
 			<entry>registry</entry>
-			<entry><para>Read-only Samba registry skeleton that provides support for
-				exporting various database tables via the winreg RPCs.</para></entry>
+			<entry><para>読み取り専用のSambaレジストリスケルトンで、winreg RPC経由で種々の
+			    データベーステーブルをエクスポートする機能を提供する。</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>sessionid</entry>
-			<entry><para>Temporary cache for miscellaneous session information.</para></entry>
+			<entry><para>その他のセッション情報のための一時的なキャッシュ。</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>share_info</entry>
-			<entry>Share ACL settings.</entry>
+			<entry>共有のACL設定。</entry>
 			<entry>yes</entry>
 		</row>
 		<row>
 
 			<entry>unexpected</entry>
-			<entry><para>Packets received for which no process was listening.</para></entry>
+			<entry><para>どのプロセスもリッスンしていないパケットの受信用。</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>winbindd_cache</entry>
-			<entry><para>Cache of identity information received from an NT4 or an ADS domain.</para></entry>
+			<entry><para>NT4かADSドメインから受信した識別情報のキャッシュ。</para></entry>
 			<entry>yes</entry>
 		</row>
 		<row>
 			<entry>winbindd_idmap</entry>
-			<entry><para>New ID map table from SIDS to UNIX UIDs/GIDs.</para></entry>
+			<entry><para>SIDからUNIXのUID/GIDへの新しいIDマップテーブル。</para></entry>
 			<entry>yes</entry>
 		</row>
 		</tbody>
@@ -605,81 +605,85 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	</sect3>
 
 	<sect3>
-	<title>Changes in Behavior</title>
+	<title>動作の変更点</title>
 
 	<para>
-	The following issues are known changes in behavior between Samba-2.2 and
-	Samba-3 that may affect certain installations of Samba.
+	以下の問題はSamba-2.2とSamba-3の間で、特定のインストール状態におけるSambaの動作の
+	変更点として知られている。
 	</para>
 
 	<orderedlist>
 		<listitem><para>
-<indexterm><primary>Windows domain</primary></indexterm>
-<indexterm><primary>getpwnam() call</primary></indexterm>
+<indexterm><primary>Windowsドメイン</primary></indexterm>
+<indexterm><primary>getpwnam()呼び出し</primary></indexterm>
 <indexterm><primary>NT_STATUS_LOGON_FAILURE</primary></indexterm>
-		When operating as a member of a Windows domain, Samba-2.2 would map any users authenticated by the remote DC
-		to the <quote>guest account</quote> if a UID could not be obtained via the getpwnam() call. Samba-3 rejects
-		the connection with the error message <quote>NT_STATUS_LOGON_FAILURE.</quote> There is no current workaround
-		to re-establish the Samba-2.2 behavior.
+		操作がWindowsドメインのメンバの場合、Samba-2.2は、もしもUIDがgetpwnam()
+		呼び出し経由で得られなかった場合、<quote>guest account</quote>に、リモート
+		DCによって認証された任意のユーザをマップする。Samba-3は、
+		<quote>NT_STATUS_LOGON_FAILURE</quote>というエラーメッセージで接続を
+		拒否する。Samba-2.2の動作を再度確立するための現時点での回避策はない。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>add user script</primary></indexterm>
 <indexterm><primary>add machine script</primary></indexterm>
-		When adding machines to a Samba-2.2 controlled domain, the
-		<quote>add user script</quote> was used to create the UNIX identity of the
-		machine trust account. Samba-3 introduces a new <quote>add machine
-		script</quote> that must be specified for this purpose. Samba-3 will
-		not fall back to using the <quote>add user script</quote> in the absence of
-		an <quote>add machine script</quote>.
+		Samba-2.2で制御されたドメインにマシンを追加するとき、
+		<quote>add user script</quote>はマシン信頼アカウントのUNIX識別子を
+		作成するのに使われる。Samba-3では新しい
+		<quote>add machine script</quote>という、この目的のために指定しなければ
+		ならないスクリプトを導入している。Samba-3は、
+		<quote>add machine script</quote>がない場合に、
+		<quote>add user script</quote>を使うように切り替える事はしない。
 		</para></listitem>
 	</orderedlist>
 
 	</sect3>
 
 	<sect3>
-	<title>Passdb Backends and Authentication</title>
+	<title>passdbバックエンドと認証</title>
 
 	<para>
-	There have been a few new changes that Samba administrators should be
-	aware of when moving to Samba-3.
+	Samba-3に移動するときにSamba管理者が知っておくべきいくつかの新しい変更が
+	ある。
 	</para>
 
 	<orderedlist>
 		<listitem><para>
 <indexterm><primary>encrypted passwords</primary></indexterm>
-		Encrypted passwords have been enabled by default in order to
-		interoperate better with out-of-the-box Windows client
-		installations. This does mean that either (a) a Samba account
-		must be created for each user, or (b) <quote>encrypt passwords = no</quote>
-		must be explicitly defined in &smb.conf;.
+		暗号化されたパスワードは、Windowsクライアントをそのまま使える事との
+		相互運用性を向上させるために、既定値で有効になった。これは、(a)
+		Sambaアカウントは各ユーザ毎に作成する必要があるか、(b)
+		<quote>encrypt passwords = no</quote>を明示的に &smb.conf;中で定義する
+		必要があるということである。
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-		Inclusion of new <smbconfoption name="security">ads</smbconfoption> option for integration
-		with an Active Directory domain using the native Windows Kerberos 5 and LDAP protocols.
+		ネイティブなWindows Kerberos 5とLDAPプロトコルを使う、Active Directory
+		ドメインとの統合のための、新しい<smbconfoption name="security">ads</smbconfoption>
+		オプションの包含。
 		</para></listitem>
 	</orderedlist>
 
 	<para>
-<indexterm><primary>account storage backends</primary></indexterm>
-	Samba-3 also includes the possibility of setting up chains of authentication methods (<smbconfoption
-	name="auth methods"/>) and account storage backends (<smbconfoption name="passdb backend"/>).  Please refer to
-	the &smb.conf; man page and <link linkend="passdb">Account Information Databases</link>, for
-	details. While both parameters assume sane default values, it is likely that you will need to understand what
-	the values actually mean in order to ensure Samba operates correctly.
+<indexterm><primary>アカウント格納バックエンド</primary></indexterm>
+	Samba-3は、認証方法を複数設定できる機能(<smbconfoption name="auth methods"/>)
+	と、アカウント格納バックエンドを複数設定できる機能(訳注:現在は無効)
+	(<smbconfoption name="passdb backend"/>)がある。詳細は、&smb.conf;マニュアル
+	ページと<link linkend="passdb">アカウント情報データベース</link>を参照して
+	ほしい。両方のパラメータが妥当な既定値を仮定している間、Sambaの動作を実際に
+	どの値が正しくさせているかを理解する必要があることはありえる。
 	</para>
 
 	<para>
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>net tool</primary></indexterm>
-	Certain functions of the <command>smbpasswd</command> tool have been split between the
-	new <command>smbpasswd</command> utility, the <command>net</command> tool, and the new <command>pdbedit</command>
-	utility. See the respective man pages for details.
+	<command>smbpasswd</command>の特定の機能は、新しい<command>smbpasswd</command>
+	ユーティリティ、<command>net</command>ツールと新しい<command>pdbedit</command>
+	ユーティリティの間で分割された。詳細は、それぞれのマニュアルページを参照のこと。
 	</para>
 
 	</sect3>
@@ -688,26 +692,25 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<title>LDAP</title>
 
 	<para>
-	This section outlines the new features effecting Samba/LDAP integration.
+	この節では、Samba/LDAP統合に影響する新しい機能の概要を説明する。
 	</para>
 
 		<sect4>
-		<title>New Schema</title>
+		<title>新しいスキーマ</title>
 
 		<para>
-<indexterm><primary>object class</primary></indexterm>
+<indexterm><primary>オブジェクトクラス</primary></indexterm>
 <indexterm><primary>sambaSamAccount</primary></indexterm>
 <indexterm><primary>LDIF</primary></indexterm>
-<indexterm><primary>attributes</primary></indexterm>
-		A new object class (sambaSamAccount) has been introduced to replace
-		the old sambaAccount. This change aids in the renaming of attributes
-		to prevent clashes with attributes from other vendors. There is a
-		conversion script (examples/LDAP/convertSambaAccount) to modify an LDIF
-		file to the new schema.
+<indexterm><primary>属性</primary></indexterm>
+		新しいオブジェクトクラス(sambaSamAccount)が古いsambaAccountを置き換える
+		ために導入された。この変更は、他のベンダからの属性を破壊するのを防ぐための、
+		属性の変更を支援する。LDIFファイルを新しいスキーマに変更するための変換
+		スクリプトがexamples/LDAP/convertSambaAccountにある。
 		</para>
 
 		<para>
-		Example:
+		例:
 <indexterm><primary>ldapsearch</primary></indexterm>
 		</para>
 		<para><screen>
@@ -717,16 +720,15 @@ Sambaのアップデートあるいはアップグレードをするときはい
 
 		<para>
 <indexterm><primary>net</primary><secondary>getlocalsid</secondary></indexterm>
-		The &lt;DOM SID&gt; can be obtained by running
+		&lt;DOM SID&gt;は以下を、Samba PDC上で、rootで動かすことで入手できる。
 <screen>
 &prompt;<userinput>net getlocalsid &lt;DOMAINNAME&gt;</userinput>
 </screen>
 <indexterm><primary>PDC</primary></indexterm>
-		on the Samba PDC as root.
 		</para>
 
 		<para>
-		Under Samba-2.x the domain SID can be obtained by executing:
+		Samba-2.x下では、ドメインSIDは以下を実行することで得られる:
 <indexterm><primary>smbpasswd</primary></indexterm>
 <screen>
 &prompt;<userinput>smbpasswd -S &lt;DOMAINNAME&gt;</userinput>
