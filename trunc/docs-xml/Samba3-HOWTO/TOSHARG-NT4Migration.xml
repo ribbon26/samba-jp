@@ -246,11 +246,18 @@ a master server and multiple slave servers) that can simultaneously serve multip
 </para>
 
 <para>
-<indexterm><primary>network administrators</primary></indexterm>
-<indexterm><primary>document design</primary></indexterm>
-<indexterm><primary>simple access controls</primary></indexterm>
+<indexterm><primary>ネットワーク管理者</primary></indexterm>
+<indexterm><primary>文書の設計</primary></indexterm>
+<indexterm><primary>単純なアクセス制御</primary></indexterm>
 <indexterm><primary>obtuse complexity</primary></indexterm>
-<indexterm><primary>document design</primary></indexterm>
+未経験のネットワーク管理者は、しばしば、ファイル、ディレクトリ、共有に対して、共有内の
+定義と同じようにアクセス制御を設定するための、手が込んだ技術を適用しようとする。
+設計と実装は単純にすること、そして、広範囲に設計を文書化すること。他の誰かが作成した
+文書を監査するようにすること。後継者が理解できないような、複雑な文書を作らないこと。
+覚えておいてほしいのは、複雑な設計と、実装を使うジョブのセキュリティは、新参の管理者が
+結び目のほぐし方を学ぶように、利用者に対して、運用障害と運用停止をもたらすかも
+しれない。アクセス制御は簡単かつ効果的にして、obtuse complexityによって中断されることの
+無いようにする。
 Inexperienced  network administrators often attempt elaborate techniques to set access
 controls on files, directories, shares, as well as in share definitions.
 Keep your design and implementation simple and document your design extensively. Have others
@@ -263,18 +270,20 @@ complexity.
 </sect3>
 
 <sect3>
-<title>Logon Scripts</title>
+<title>ログオンスクリプト</title>
 
 <para>
-<indexterm><primary>Logon scripts</primary></indexterm>
-Logon scripts can help to ensure that all users gain the share and printer connections they need.
+<indexterm><primary>ログオンスクリプト</primary></indexterm>
+ログオンスクリプトは、すべてのユーザが必要に応じて共有とプリンタへの接続を得る事を
+保証する事を手助けするものである。
 </para>
 
 <para>
-Logon scripts can be created on the fly so all commands executed are specific to the
-rights and privileges granted to the user. The preferred controls should be effected through
-group membership so group information can be used to create a custom logon script using
-the <smbconfoption name="root preexec"/> parameters to the <smbconfsection name="NETLOGON"/> share.
+ログオンスクリプトは、動的に作成でき、動作させるすべてのコマンドは、そのユーザが持つ
+権限と権利が指定される。優先する制御の設定は、グループメンバシップを使って設定
+すべきであり、グループ情報は、カスタムログオンスクリプトを作成するために使われ、
+それは、<smbconfsection name="NETLOGON"/>共有に対する
+<smbconfoption name="root preexec"/>パラメータを使う。
 </para>
 
 <para>
