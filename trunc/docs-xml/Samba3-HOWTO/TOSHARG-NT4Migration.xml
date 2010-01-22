@@ -551,105 +551,107 @@ Integrate Samba-3, then migrate while users are active, then change of control (
 		</itemizedlist></para></listitem>
 		</varlistentry>
 
-        <varlistentry><term>Access Control Points</term><listitem>
+        <varlistentry><term>アクセス制御が出来る場所</term><listitem>
 		<para>
-		Samba permits Access Control points to be set:
+		Sambaは以下の場所でアクセス制御を設定できる:
 		</para>
 
-<indexterm><primary>share ACLs</primary></indexterm>
-<indexterm><primary>UNIX permissions</primary></indexterm>
+<indexterm><primary>共有のACL</primary></indexterm>
+<indexterm><primary>UNIXのパーミッション</primary></indexterm>
 <indexterm><primary>POSIX ACLS</primary></indexterm>
-<indexterm><primary>share stanza controls</primary></indexterm>
+<indexterm><primary>共有セクションの制御</primary></indexterm>
 
 		<itemizedlist>
-			<listitem><para>On the share itself &smbmdash; using share ACLs.</para></listitem>
-			<listitem><para>On the file system &smbmdash; using UNIX permissions on files and directories.</para>
-			<para>Note: Can enable Posix ACLs in file system also.</para></listitem>
-			<listitem><para>Through Samba share parameters &smbmdash; not recommended except as last resort.</para></listitem>
+			<listitem><para>共有それ自身では&smbmdash;共有ACLを使う。</para></listitem>
+			<listitem><para>ファイルシステム上では&smbmdash;ファイルとディレクトリ上でUNIXのパーミッションを使う。</para>
+			<para>注意:POLIX ACLは、ファイルシステム中でも有効に出来る。</para></listitem>
+			<listitem><para>Sambaの共有パラメータも使えるが&smbmdash;苦肉の策以外、推奨しない。</para></listitem>
 		</itemizedlist></listitem>
         </varlistentry>
 
-        <varlistentry><term>Policies (migrate or create new ones)</term><listitem>
+        <varlistentry><term>ポリシー(移行または新しいものの作成)</term><listitem>
 		<para>
-<indexterm><primary>policies</primary></indexterm>
+<indexterm><primary>ポリシー</primary></indexterm>
 <indexterm><primary>NTConfig.POL</primary></indexterm>
-		Exercise great caution when making registry changes; use the right tool and be aware
-		that changes made through NT4-style <filename>NTConfig.POL</filename> files can leave
-		permanent changes.
-<indexterm><primary>Group Policy Editor</primary></indexterm>
-<indexterm><primary>tattoo effect</primary></indexterm>
-<indexterm><primary>permanent changes</primary></indexterm>
+		レジストリの変更時には、十分に用心すること;正しいツールを使い、恒久的に
+		変更点が保存される、NT4形式の<filename>NTConfig.POL</filename>ファイルを
+		経由して変更が行われることに注意。
+<indexterm><primary>グループポリシーエディタ</primary></indexterm>
+<indexterm><primary>入れ墨効果(tattoo effect)</primary></indexterm>
+<indexterm><primary>恒久的な変更</primary></indexterm>
 		</para>
                 <itemizedlist>
-                        <listitem><para>Using Group Policy Editor (NT4).</para></listitem>
-                        <listitem><para>Watch out for tattoo effect.</para></listitem>
+                        <listitem><para>グループポリシーエディタを使用(NT4)</para></listitem>
+                        <listitem><para>入れ墨効果(tattoo effect)に注意。</para></listitem>
 		</itemizedlist>
                 </listitem>
         </varlistentry>
 
-        <varlistentry><term>User and Group Profiles</term><listitem>
+        <varlistentry><term>ユーザとグループプロファイル</term><listitem>
 		<para>
 <indexterm><primary>NTUser.DAT</primary></indexterm>
 <indexterm><primary>SIDs</primary></indexterm>
-		Platform-specific, so use platform tool to change from a local to a roaming profile.
-		Can use new profiles tool to change SIDs (<filename>NTUser.DAT</filename>).
+		プラットフォーム固有の場合では、ローカルから、ローミングプロファイル変更するために、
+		プラットフォームのツールを使う。SIDを変更するために新しいプロファイルツールが
+		使える(<filename>NTUser.DAT</filename>)。
 		</para>
                 </listitem>
         </varlistentry>
 
-        <varlistentry><term>Logon Scripts</term><listitem>
+        <varlistentry><term>ログオンスクリプト</term><listitem>
                 <para>
-		Know how they work.
+		それがどのように動くかは分かっている。
 		</para>
                 </listitem>
         </varlistentry>
 
 
-        <varlistentry><term>User and Group Mapping to UNIX/Linux</term><listitem>
+        <varlistentry><term>ユーザとグループの、UNIX/Linuxへのマッピング</term><listitem>
 		<para>
 		<indexterm><primary>pdbedit</primary></indexterm>
-		User and group mapping code is new. Many problems have been experienced as network administrators
-		who are familiar with Samba-2.2.x migrate to Samba-3. Carefully study the chapters that document
-		the new password backend behavior and the new group mapping functionality.
+		ユーザとグループマッピングコードは新しくなった。Samba-2.2.xからSamba-3に
+		移行することになれているネットワーク管理者は、多くの問題を体験した。
+		新しいパスワードバックエンドの動作と、新しいグループマッピング機能について
+		記述している章を注意深く学習すること。
 		</para>
 			<itemizedlist>
-				<listitem><para>The <parameter>username map</parameter> facility may be needed.</para></listitem>
-				<listitem><para>Use <command>net groupmap</command> to connect NT4 groups to UNIX groups.</para></listitem>
+				<listitem><para><parameter>username map</parameter>機能が必要になるかもしれない。</para></listitem>
+				<listitem><para><command>net groupmap</command>でNT4グループをUNIXグループにつなぐ。</para></listitem>
 				<listitem><para>
-					Use <command>pdbedit</command> to set/change user configuration.
+					ユーザ設定を設定/変更するために<command>pdbedit</command>を使う。
 					</para>
 
 					<para>
-					When migrating to LDAP backend, it may be easier to dump the initial
-					LDAP database to LDIF, edit, then reload into LDAP.
+					LDAPバックエンドに移行するとき、初期LDAPデータベースをLDIFにダンプ、
+					編集し、次にLDAPに再ロードするのは容易である。
 					</para></listitem>
 			</itemizedlist></listitem>
         </varlistentry>
 
-        <varlistentry><term>OS-Specific Scripts/Programs May be Needed</term><listitem>
+        <varlistentry><term>OS固有のスクリプト/プログラムが必要になるかもしれない</term><listitem>
 		<para>
-		Every operating system has its peculiarities. These are the result of engineering decisions
-		that were based on the experience of the designer and may have side effects that were not
-		anticipated. Limitations that may bite the Windows network administrator include:
+		すべてのOSはそれ固有の習慣がある。設計者の体験と、予期されない副作用があるかもしれない
+		事をベースにする技術的な議論の結果がある。Windowsネットワーク管理者が引っかかる制限には
+		以下のものがある:
 		</para>
                 <itemizedlist>
-                        <listitem><para>Add/Delete Users: Note OS limits on size of name
-				(Linux 8 chars, NT4 up to 254 chars).</para></listitem>
-                        <listitem><para>Add/Delete Machines: Applied only to domain members
-				(Note: machine names may be limited to 16 characters).</para></listitem>
-                        <listitem><para>Use <command>net groupmap</command> to connect NT4 groups to UNIX groups.</para></listitem>
-                        <listitem><para>Add/Delete Groups: Note OS limits on size and nature.
-				Linux limit is 16 char, no spaces, and no uppercase chars (<command>groupadd</command>).</para></listitem>
+                        <listitem><para>ユーザの追加/削除: OSによる名前のサイズ制限に注意
+				(Linuxは8文字まで, NT4は254文字まで)。</para></listitem>
+                        <listitem><para>マシンの追加/削除: ドメインメンバのみに適用される
+				(注意:マシン名は16文字までに制限される)。</para></listitem>
+                        <listitem><para>NT4グループからUNIXグループへ接続するために<command>net groupmap</command>を使用。</para></listitem>
+                        <listitem><para>グループの追加/削除:OSによるサイズと特性の制限に注意。
+				Linuxは16文字まで、空白不可、大文字不可(<command>groupadd</command>)。</para></listitem>
 		</itemizedlist></listitem>
         </varlistentry>
 
-        <varlistentry><term>Migration Tools</term><listitem>
+        <varlistentry><term>移行ツール</term><listitem>
                 <para>
 				<indexterm><primary>pdbedit</primary></indexterm>
-				Domain Control (NT4-Style) Profiles, Policies, Access Controls, Security
+				ドメイン制御(NT4形式)プロファイル、ポリシー、アクセス制御、セキュリティ
 				<itemizedlist>
 					 <listitem><para>Samba: <command>net, rpcclient, smbpasswd, pdbedit, profiles</command></para></listitem>
-					 <listitem><para>Windows: <command>NT4 Domain User Manager, Server Manager (NEXUS)</command></para></listitem>
+					 <listitem><para>Windows: <command>NT4 ドメインユーザマネージャ, サーバマネージャ(NEXUS)</command></para></listitem>
 				</itemizedlist></para></listitem>
         </varlistentry>
 </variablelist>
