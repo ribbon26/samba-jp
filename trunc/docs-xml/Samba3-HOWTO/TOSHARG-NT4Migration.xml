@@ -288,76 +288,78 @@ complexity.
 
 <para>
 <indexterm><primary>kixstart</primary></indexterm>
-Some sites prefer to use a tool such as <command>kixstart</command> to establish a controlled
-user environment. In any case, you may wish to do a Google search for logon script process controls.
-In particular, you may wish to explore the use of the Microsoft Knowledge Base article KB189105 that
-deals with how to add printers without user intervention via the logon script process.
+いくつかのサイトでは、制御されたユーザ環境を確立するために、<command>kixstart</command>
+のようなツールを使っている。この場合、ログオンスクリプトプロセス制御のために、Google検索を
+行ってもよい。実際、ログインスクリプト経由で、ユーザが介入することなしに、
+プリンタを追加する方法について記述しているMicrosoft Knowledge Baseの記事KB189105の使用法
+を調査してもよい。
 </para>
 </sect3>
 
 <sect3>
-<title>Profile Migration/Creation</title>
+<title>プロファイルの移行/作成</title>
 
 <para>
-User and group profiles may be migrated using the tools described in the section titled Desktop Profile
-Management.
+ユーザとグループのプロファイルは、デスクトッププロファイル管理という節で説明されている
+ツールを使って移行できる。
 </para>
 
 
 <para>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>NTuser.DAT</primary></indexterm>
-Profiles may also be managed using the Samba-3 tool <command>profiles</command>. This tool allows the MS
-Windows NT-style security identifiers (SIDs) that are stored inside the profile
-<filename>NTuser.DAT</filename> file to be changed to the SID of the Samba-3 domain.
+プロファイルはSamba-3ツール<command>profiles</command>を使って管理しても良い。このツールは、
+Samba-3ドメインのSIDに変更される、<filename>NTuser.DAT</filename>プロファイルファイル中に
+格納されるMicrosoft Windows NT形式のセキュリティ識別子(SID)を扱える。
 </para>
 </sect3>
 
 <sect3>
-<title>User and Group Accounts</title>
+<title>ユーザとグループアカウント</title>
 
 <para>
-<indexterm><primary>migrate account settings</primary></indexterm>
-<indexterm><primary>migrate user</primary></indexterm>
-<indexterm><primary>migrate group</primary></indexterm>
+<indexterm><primary>アカウント設定の移行</primary></indexterm>
+<indexterm><primary>ユーザの移行</primary></indexterm>
+<indexterm><primary>グループの移行</primary></indexterm>
 <indexterm><primary>map</primary></indexterm>
-It is possible to migrate all account settings from an MS Windows NT4 domain to Samba-3. Before
-attempting to migrate user and group accounts, you are STRONGLY advised to create in Samba-3 the
-groups that are present on the MS Windows NT4 domain <emphasis>AND</emphasis> to map them to
-suitable UNIX/Linux groups. By following this simple advice, all user and group attributes
-should migrate painlessly.
+Microsoft Windows NT4ドメインからSamba-3に、すべてのアカウント設定を移行することは
+可能である。ユーザとグループアカウントを移行する前に、Microsoft Windows NT4ドメインに
+存在しているグループをSamba-3中に作成することと、それを適切なUNIX/Linuxグループにマップ
+することを<emphasis>強く推奨する</emphasis>。以下の単純な助言に従い、すべてのユーザと
+グループの属性は、無事に移行すべきである。
 </para>
 </sect3>
 
 </sect2>
 
 <sect2>
-<title>Steps in Migration Process</title>
+<title>移行プロセスの手順</title>
 
 <para>
-The approximate migration process is described below.
+おおよその移行プロセスは以下の通りである。
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	You have an NT4 PDC that has the users, groups, policies, and profiles to be migrated.
+	移行対象の、ユーザ、グループ、ポリシーとプロファイルを持つNT4 PDCがあるとする。
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>domain controller</primary></indexterm>
-<indexterm><primary>netlogon share</primary></indexterm>
+<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<indexterm><primary>netlogon共有</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-	Samba-3 is set up as a domain controller with netlogon share, profile share, and so on. Configure the &smb.conf; file
-	to function as a BDC: <parameter>domain master = No</parameter>.
+	Samba-3はnetlogon共有、プロフィル共有やその他を持つドメインコントローラとして
+	設定してある。&smb.conf;ファイルをBDCとして機能するように、
+	<parameter>domain master = No</parameter> と設定する。
 	</para></listitem>
 </itemizedlist>
 
 <procedure>
-<title>The Account Migration Process</title>
+<title>アカウント移行プロセス</title>
 
 	<step><para>
 	<indexterm><primary>pdbedit</primary></indexterm>
-	Create a BDC account in the old NT4 domain for the Samba server using NT Server Manager.
+	NT4 サーバマネージャを使い、Sambaサーバを古いNT4ドメイン中でBDCに設定する。
 	<emphasis>Samba must not be running.</emphasis>
 	</para></step>
 
@@ -375,14 +377,15 @@ The approximate migration process is described below.
 
 <indexterm><primary>pdbedit</primary></indexterm>
 	<step><para><userinput>pdbedit -L</userinput></para>
-		<para>Note: Did the users migrate?</para>
+		<para>注意: ユーザは移行できただろうか?</para>
 	</step>
 
 	<step><para>
 	<indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
 	<indexterm><primary>initGroups.sh</primary></indexterm>
-	Now assign each of the UNIX groups to NT groups:
-	(It may be useful to copy this text to a script called <filename>initGroups.sh</filename>)
+	次に、各UNIXグループをNTグループに割り当てる:
+	(filename>initGroups.sh</filename>として下記のテキストをコピーし、スクリプトに
+	  しておくと便利である。)
 	<programlisting>
 #!/bin/bash
 #### Keep this as a shell script for future re-use
@@ -400,96 +403,96 @@ net groupmap add ntgroup="QA Team"   unixgroup=qateam    type=d
 	</para></step>
 
 	<step><para><userinput>net groupmap list</userinput></para>
-		<para>Check that all groups are recognized.
+		<para>すべてのグループが認識されたかを確認する。
 	</para></step>
 </procedure>
 
 <para>
-Migrate all the profiles, then migrate all policy files.
+すべてのプロファイルの移行と、すべてのポリシファイルの移行。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Migration Options</title>
+<title>移行オプション</title>
 
 <para>
-Sites that wish to migrate from MS Windows NT4 domain control to a Samba-based solution
-generally fit into three basic categories. <link linkend="majtypes">Following table</link> shows the possibilities.
+Microsoft Windows NT4ドメイン制御からSambaベースのソリューションへの移行を行いたい
+サイトは、一般的に3つの基本的なカテゴリに適合する。
+<link linkend="majtypes">以下のテーブル</link>は、その例を表示する。
 </para>
 
-<table frame="all" id="majtypes"><title>The Three Major Site Types</title>
+<table frame="all" id="majtypes"><title>3つの主要なサイトのタイプ</title>
 <tgroup cols="2">
 	<colspec align="left"/>
 	<colspec align="justify"/> 
 	<thead>
-	<row><entry>Number of Users</entry><entry>Description</entry></row>
+	<row><entry>ユーザ数</entry><entry>説明</entry></row>
 	</thead>
 	<tbody>
-	<row><entry>&lt; 50</entry><entry><para>Want simple conversion with no pain.</para></entry></row>
-	<row><entry>50 - 250</entry><entry><para>Want new features; can manage some inhouse complexity.</para></entry></row>
-	<row><entry>&gt; 250</entry><entry><para>Solution/implementation must scale well; complex needs.
-		Cross-departmental decision process. Local expertise in most areas.</para></entry></row>
+	<row><entry>&lt; 50</entry><entry><para>特段の手間暇を掛けずに単純な移行をしたい。</para></entry></row>
+	<row><entry>50 - 250</entry><entry><para>新しい機能を追加したい。いくつかの、組織内の複雑制を管理することが出来る。</para></entry></row>
+	<row><entry>&gt; 250</entry><entry><para>ソリューション/実装は規模に対応しなければならない。
+	      複雑な要求がある。組織間の調整。ほとんどの領域での専門的な知識。</para></entry></row>
 	</tbody>
 </tgroup>
 </table>
 
 <sect2>
-<title>Planning for Success</title>
+<title>うまくいくための計画</title>
 
 <para>
-There are three basic choices for sites that intend to migrate from MS Windows NT4
-to Samba-3:
+Microsoft Windows NT4からSamba-3へ移行したいサイトには、3つの基本的な選択肢がある。
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	Simple conversion (total replacement).
+	単純な移行 (丸ごと取り替え)。
 	</para></listitem>
 
 	<listitem><para>
-	Upgraded conversion (could be one of integration).
+	アップグレードする移行(統合の一種でありえる)。
 	</para></listitem>
 
 	<listitem><para>
-	Complete redesign (completely new solution).
+	完全な再設計 (完全に新しいソリューション)。
 	</para></listitem>
 </itemizedlist>
 
 <para>
-Minimize downstream problems by:
+終了間際の問題を最小にするには:
 </para>
 
 <itemizedlist>
 	<listitem><para>
-	Taking sufficient time.
+	十分な時間の確保。
 	</para></listitem>
 
 	<listitem><para>
-	Avoiding panic.
+	パニックを防ぐ。
 	</para></listitem>
 
 	<listitem><para>
-	Testing all assumptions.
+	すべての仮定のテスト。
 	</para></listitem>
 
 	<listitem><para>
-	Testing the full roll-out program, including workstation deployment.
+	ワークステーションの展開を含む、完全に提供されるプログラムのテスト。
 	</para></listitem>
 </itemizedlist>
 
-<para><link linkend="natconchoices">Following table</link> lists the conversion choices given the type of migration
-being contemplated.
+<para><link linkend="natconchoices">以下のテーブル</link>は、与えられた、予想される
+移行のタイプの移行の選択肢を一覧表示する。
 </para>
 
-<table frame="all" id="natconchoices"><title>Nature of the Conversion Choices</title>
+<table frame="all" id="natconchoices"><title>移行方式による相違点の詳細</title>
 <tgroup cols="3">
 	<colspec align="justify" colwidth="1*"/>
 	<colspec align="justify" colwidth="1*"/>
 	<colspec align="justify" colwidth="1*"/>
 	<thead>
-	<row><entry>Simple Install</entry><entry>Upgrade Decisions</entry><entry>Redesign Decisions</entry></row>
+	<row><entry>単純移行</entry><entry>アップグレード</entry><entry>再設計</entry></row>
 	</thead>
 	<tbody>
 	<row>
