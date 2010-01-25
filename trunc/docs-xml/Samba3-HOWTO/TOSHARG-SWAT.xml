@@ -245,21 +245,20 @@ jht@frodo:/>
 <title>SWATを使用できるように有効化する</title>
 
 <para>
-SWAT should be installed to run via the network super-daemon. Depending on which system
-your UNIX/Linux system has, you will have either an <command>inetd</command>- or
-<command>xinetd</command>-based system.
+SWATはネットワークスーパーデーモン経由で動くようにインストールすべきである。
+使用しているUNIX/Linuxシステムが持っているものに依存するので、
+<command>inetd</command>か<command>xinetd</command>ベースのシステムのどちらかを使う。
 </para>
 
 <para>
-The nature and location of the network super-daemon varies with the operating system
-implementation. The control file (or files) can be located in the file 
-<filename>/etc/inetd.conf</filename> or in the directory <filename>/etc/[x]inet[d].d</filename>
-or in a similar location.
+ネットワークスーパーデーモンの機能と配置はOSの実装により変わる。制御ファイルは
+<filename>/etc/inetd.conf</filename>かディレクトリ<filename>/etc/[x]inet[d].d</filename>か
+同様の位置に置くことが可能である。
 </para>
 
 <para>
-The control entry for the older style file might be:
-<indexterm><primary>swat</primary><secondary>enable</secondary></indexterm>
+古い形式のファイルに対する制御エントリは以下の通り:
+<indexterm><primary>swat</primary><secondary>有効化</secondary></indexterm>
 </para>
 
 
@@ -269,7 +268,7 @@ The control entry for the older style file might be:
 </programlisting></para>
 
 <para>
-A control file for the newer style xinetd could be:
+新しい形式でのxintd用制御ファイルは以下の通り:
 </para>
 
 <para>
@@ -290,9 +289,9 @@ service swat
 	disable = no
 }
 </programlisting>
-In the above, the default setting for <parameter>disable</parameter> is <constant>yes</constant>.
-This means that SWAT is disabled. To enable use of SWAT, set this parameter to <constant>no</constant>
-as shown.
+上記の中で、<parameter>disable</parameter>の既定値の設定は<constant>yes</constant>である。
+これは、SWATが無効になっていることを意味する。SWATを有効にするには、上記のように、
+このパラメータを<constant>no</constant>に設定する。
 </para>
 
 <para>
@@ -300,59 +299,60 @@ as shown.
 <indexterm><primary>/usr/sbin</primary></indexterm>
 <indexterm><primary>/usr/share/samba/swat</primary></indexterm>
 <indexterm><primary>/usr/local/samba/swat</primary></indexterm>
-Both of the previous examples assume that the <command>swat</command> binary has been
-located in the <filename>/usr/sbin</filename> directory. In addition to the above,
-SWAT will use a directory access point from which it will load its Help files
-as well as other control information. The default location for this on most Linux
-systems is in the directory <filename>/usr/share/samba/swat</filename>. The default
-location using Samba defaults will be <filename>/usr/local/samba/swat</filename>.
+上記の例は両方とも<command>swat</command>バイナリがディレクトリ
+<filename>/usr/sbin</filename>に配置されていることを仮定している。上記に補足すると、
+SWATは他の制御情報と同じように、自身のヘルプファイルをそこからロードするディレクトリ
+アクセス点として使う。多くのLinuxシステムにおけるこのための既定値の位置は、
+<filename>/usr/share/samba/swat</filename>である。Sambaが使う既定値の位置は、
+<filename>/usr/local/samba/swat</filename>である。
 </para>
 
 <para>
 <indexterm><primary>SWAT permission allowed</primary></indexterm>
-<indexterm><primary>password change facility</primary></indexterm>
-Access to SWAT will prompt for a logon. If you log onto SWAT as any non-root user,
-the only permission allowed is to view certain aspects of configuration as well as
-access to the password change facility. The buttons that will be exposed to the non-root
-user are <guibutton>HOME</guibutton>, <guibutton>STATUS</guibutton>, <guibutton>VIEW</guibutton>, and 
-<guibutton>PASSWORD</guibutton>. The only page that allows
-change capability in this case is <guibutton>PASSWORD</guibutton>.
+<indexterm><primary>パスワード変更機能</primary></indexterm>
+SWATへアクセスするとログオンを要求される。もしも非rootユーザでSWATにログオンすると、
+パスワード変更機能へのアクセスと同じように、一定の設定範囲にのみアクセスが許可される。
+非rootユーザが見えるボタンは、<guibutton>HOME</guibutton>、<guibutton>STATUS</guibutton>、
+<guibutton>VIEW</guibutton>と<guibutton>PASSWORD</guibutton>である。この場合に変更
+可能なページは<guibutton>PASSWORD</guibutton>だけである。
 </para>
 
 <para>
-As long as you log onto SWAT as the user <emphasis>root</emphasis>, you should obtain
-full change and commit ability. The buttons that will be exposed include
-<guibutton>HOME</guibutton>, <guibutton>GLOBALS</guibutton>, <guibutton>SHARES</guibutton>, <guibutton>PRINTERS</guibutton>, 
-<guibutton>WIZARD</guibutton>, <guibutton>STATUS</guibutton>, <guibutton>VIEW</guibutton>, and <guibutton>PASSWORD</guibutton>.
+<emphasis>root</emphasis>ユーザでSWATにログオンすると、完全な修正、更新権限を得られる。
+表示されるものは、<guibutton>HOME</guibutton>, <guibutton>GLOBALS</guibutton>, 
+<guibutton>SHARES</guibutton>, <guibutton>PRINTERS</guibutton>,
+<guibutton>WIZARD</guibutton>, <guibutton>STATUS</guibutton>, <guibutton>VIEW</guibutton>
+と<guibutton>PASSWORD</guibutton>である。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Securing SWAT through SSL</title>
+<title>SSLを使うSWATのセキュア化</title>
 
 
 <para>
 <indexterm><primary>SSL</primary></indexterm>
 <indexterm><primary>swat</primary><secondary>security</secondary></indexterm>
-Many people have asked about how to set up SWAT with SSL to allow for secure remote
-administration of Samba. Here is a method that works, courtesy of Markus Krieger.
+多くの人が、Sambaをリモートから安全に管理することが出来るために、どのように
+SSLを使うSWATを設定するかについて問い合わせしている。以下はMarkus Kriegerの
+好意による、そのやりかたである。
 </para>
 
 <para>
-Modifications to the SWAT setup are as follows: 
+SWAT設定の変更点は以下のようになる:
 </para>
 
 <procedure>
 	<step><para>
 <indexterm><primary>OpenSSL</primary></indexterm>
-	Install OpenSSL.
+	OpenSSLをインストールする。
 	</para></step>
 
 	<step><para>
 <indexterm><primary>certificate</primary></indexterm>
 <indexterm><primary>private key</primary></indexterm>
-	Generate certificate and private key.
+	証明書(ertificate)とプライベートキーを生成する。
 <indexterm><primary>/usr/bin/openssl</primary></indexterm>
 <screen>
 &rootprompt;<userinput>/usr/bin/openssl req -new -x509 -days 365 -nodes -config \
@@ -361,12 +361,12 @@ Modifications to the SWAT setup are as follows:
 </screen></para></step>
 
 	<step><para>
-	Remove SWAT entry from [x]inetd.
+	[x]inetdからSWATエントリを削除する。
 	</para></step>
 
 	<step><para>
 <indexterm><primary>stunnel</primary></indexterm>
-	Start <command>stunnel</command>.
+	<command>stunnel</command>を起動する。
 
 <screen>
 &rootprompt;<userinput>stunnel -p /etc/stunnel/stunnel.pem -d 901 \
@@ -375,14 +375,15 @@ Modifications to the SWAT setup are as follows:
 </procedure>
 
 <para>
-Afterward, simply connect to SWAT by using the URL <ulink noescape="1"
-url="https://myhost:901">https://myhost:901</ulink>, accept the certificate, and the SSL connection is up.
+その後、単純に、URL
+<ulink noescape="1" url="https://myhost:901">https://myhost:901</ulink>
+を使ってSWATにアクセスし、証明書を受け付け、SSL接続を確立する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Enabling SWAT Internationalization Support</title>
+<title>SWAT国際化サポートの有効化</title>
 
 <para>
 SWAT can be configured to display its messages to match the settings of
