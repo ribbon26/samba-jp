@@ -42,95 +42,97 @@ SWATは常時Sambaパラメータが変更されることに追従している�
 <para>
 <indexterm><primary>文書化</primary></indexterm>
 <indexterm><primary>設定ファイル</primary></indexterm>
-<indexterm><primary>internal ordering</primary></indexterm>
-Some network administrators believe that it is a good idea to write systems
-documentation inside configuration files, and for them SWAT will always be a nasty tool. SWAT
-does not store the configuration file in any intermediate form; rather, it stores only the
-parameter settings, so when SWAT writes the &smb.conf; file to disk, it writes only
-those parameters that are at other than the default settings. The result is that all comments,
-as well as parameters that are no longer supported, will be lost from the &smb.conf; file.
-Additionally, the parameters will be written back in internal ordering.
+<indexterm><primary>内部順</primary></indexterm>
+ネットワーク管理者の何人かは、設定ファイル中にシステムの説明を書き込むことは良いアイデア
+だと思っている人もいるが、そういう人にとって、SWATは常にひどいツールである。SWATは、
+何らかの中間的な形式でも、設定ファイルに格納しない。というよりは、パラメータの設定のみを
+書き込む。SWATが&smb.conf;ファイルをディスクに書き込むときには、既定値の設定以外の
+パラメータのみを書き込む。結果、パラメータと同じように、すべてのコメントは保持されず、
+&smb.conf;ファイル中から無くなってしまう。おまけに、パラメータは内部での順番に
+書き戻される。
 </para>
 
 <note><para>
-<indexterm><primary>stripped of comments</primary></indexterm>
-Before using SWAT, please be warned &smbmdash; SWAT will completely replace your &smb.conf; with
-a fully optimized file that has been stripped of all comments you might have placed there
-and only nondefault settings will be written to the file.
+<indexterm><primary>コメントの削除</primary></indexterm>
+SWATを使う前には、&smbmdash; SWATは、書き込んだであろうすべてのコメントを削除した、完全に
+最適化されたファイルで、&smb.conf;ファイルを完全に置き換え、ファイルには既定値の設定以外の
+設定のみが書かれる。
 </para></note>
 
 </sect1>
 
 <sect1>
-<title>Guidelines and Technical Tips</title>
+<title>ガイドラインと技術的なTips</title>
 
 <para>
-<indexterm><primary>internationalization support</primary></indexterm>
-This section aims to unlock the dark secrets behind how SWAT may be made to work,
-how it can be made more secure, and how to solve internationalization support problems.
+<indexterm><primary>国際化サポート</primary></indexterm>
+この節では、どのようにSWATが動くかせるかという仕掛けの背景にある、秘密の闇を明らかにする
+事と、どのようにセキュアに出来るかということと、どのように国際化のサポートを解決するか
+という事を説明する。
 </para>
 
 <sect2>
-<title>Validate SWAT Installation</title>
+<title>SWATインストールの有効か</title>
 
 <para>
-<indexterm><primary>SWAT binary support</primary></indexterm>
-The very first step that should be taken before attempting to configure a host
-system for SWAT operation is to check that it is installed. This may seem a trivial
-point to some, but several Linux distributions do not install SWAT by default,
-even though they do ship an installable binary support package containing SWAT
-on the distribution media.
+<indexterm><primary>SWATバイナリサポート</primary></indexterm>
+SWAT操作のためにホストシステムを設定する試みの前にやるべきである、ごく最初のステップは、
+それがインストールされているかを調べることである。これは、ある人にとっては取るに足らない
+ことに見えるかもしれないが、いくつかのLinuxディストリビューションでは、
+ディストリビューションメディア上で、SWATを含む、インストール可能なバイナリパッケージを
+提供しているにもかかわらず、SWATを既定値ではインストールしていない。
 </para>
 
 <para>
 <indexterm><primary>swat</primary></indexterm>
-When you have confirmed that SWAT is installed, it is necessary to validate
-that the installation includes the binary <command>swat</command> file as well
-as all the supporting text and Web files. A number of operating system distributions
-in the past have failed to include the necessary support files, even though the
-<command>swat</command> binary executable file was installed. 
+SWATがインストールされていることを確認したら、すべてのサポートしているテキストとWeb
+ファイルと同じように、インストールされているバイナリ<command>swat</command>ファイルを
+有効化することが必要である。過去、多くのOSディストリビューションが、
+<command>swat</command>バイナリ実行形式ファイルがインストールされているのにも
+かかわらず、サポートに必要なファイルを含めることに失敗している。
 </para>
 
 <para>
 <indexterm><primary>inetd</primary></indexterm>
 <indexterm><primary>xinetd</primary></indexterm>
-Finally, when you are sure that SWAT has been fully installed, please check that SWAT
-is enabled in the control file for the internetworking super-daemon (inetd or xinetd)
-that is used on your operating system platform. 
+最後に、SWATが完全にインストールされたと思ったら、使用しているOSプラットフォームで
+使われているinetd系スーパーデーモン(inetdかxinetd)用の制御ファイルで、SWATが
+有効になっているかを調べてほしい。
 </para>
 
 <sect3>
-<title>Locating the <command>SWAT</command> File</title>
+<title><command>SWAT</command>ファイルの配置</title>
 
 <para>
 <indexterm><primary>/usr/local/samba/bin</primary></indexterm>
 <indexterm><primary>/usr/sbin</primary></indexterm>
 <indexterm><primary>/opt/samba/bin</primary></indexterm>
-To validate that SWAT is installed, first locate the <command>swat</command> binary
-file on the system. It may be found under the following directories:</para>
+SWATがインストールされたかを検証するため、最初に、システム上の<command>swat</command>
+バイナリファイルを捜す。それはおそらく以下のディレクトリ配下にあるだろう:</para>
 <para><simplelist>
-	<member><filename>/usr/local/samba/bin</filename> &smbmdash; the default Samba location</member>
-	<member><filename>/usr/sbin</filename> &smbmdash; the default location on most Linux systems</member>
+	<member><filename>/usr/local/samba/bin</filename> &smbmdash; 既定値のSambaでの位置</member>
+	<member><filename>/usr/sbin</filename> &smbmdash; ほとんどのLinuxシステムでの既定値の位置</member>
 	<member><filename>/opt/samba/bin</filename></member>
 </simplelist>
 </para>
 
 <para>
-The actual location is much dependent on the choice of the operating system vendor or as determined
-by the administrator who compiled and installed Samba.
+実際の位置はOSベンダの選択か、Sambaをコンパイルしてインストールした管理者の決定によって
+大きく変わる。
 </para>
 
 <para>
-There are a number of methods that may be used to locate the <command>swat</command> binary file.
-The following methods may be helpful.
+<command>swat</command>バイナリファイルを見つけるために使う方法にはいろいろある。
+以下の方法を使うと便利である。
 </para>
 
 <para>
 <indexterm><primary>swat</primary></indexterm>
-<indexterm><primary>operating system search path</primary></indexterm>
-<indexterm><primary>swat command-line options</primary></indexterm>
-If <command>swat</command> is in your current operating system search path, it will be easy to 
-find it. You can ask what are the command-line options for <command>swat</command> as shown here:
+<indexterm><primary>OSサーチパス</primary></indexterm>
+<indexterm><primary>swatコマンドラインオプション</primary></indexterm>
+もしも、<command>swat</command>が現在のOSサーチパス中にあるならば、それを見つけるのは
+簡単である。以下のように、<command>swat</command>が、どのようなコマンドラインオプションを
+持っているかを調べてみればよい:
 <screen>
 frodo:~ # swat -?
 Usage: swat [OPTION...]
@@ -151,11 +153,11 @@ Common samba options:
 </sect3>
 
 <sect3>
-<title>Locating the SWAT Support Files</title>
+<title>SWATサポートファイルの配置</title>
 
 <para>
-Now that you have found that <command>swat</command> is in the search path, it is easy
-to identify where the file is located. Here is another simple way this may be done:
+<command>swat</command>がサーチパス中に見つかったならば、ファイルがどこに
+配置されているかを識別するのは簡単である。これを行う簡単な別解は以下の通り:
 <screen>
 frodo:~ # whereis swat
 swat: /usr/sbin/swat /usr/share/man/man8/swat.8.gz
@@ -163,8 +165,8 @@ swat: /usr/sbin/swat /usr/share/man/man8/swat.8.gz
 </para>
 
 <para>
-If the above measures fail to locate the <command>swat</command> binary, another approach
-is needed. The following may be used:
+もしも上記による調査で、<command>swat</command>バイナリを見つけるのに失敗したら、
+他の方法が必要である。以下が使える:
 <screen>
 frodo:/ # find / -name swat -print
 /etc/xinetd.d/swat
@@ -175,15 +177,15 @@ frodo:/ #
 </para>
 
 <para>
-This list shows that there is a control file for <command>xinetd</command>, the internetwork
-super-daemon that is installed on this server. The location of the SWAT binary file is
-<filename>/usr/sbin/swat</filename>, and the support files for it are located under the
-directory <filename>/usr/share/samba/swat</filename>.
+この一覧は、このサーバにインストールされているinetd系スーパーデーモン
+<command>xinetd</command>の制御ファイルを表示している。SWATバイナリファイルの位置は
+<filename>/usr/sbin/swat</filename>であり、それがサポートしているファイルはディレクトリ
+<filename>/usr/share/samba/swat</filename>配下にあることを表示している。
 </para>
 
 <para>
-We must now check where <command>swat</command> expects to find its support files. This can
-be done as follows:
+次に、<command>swat</command>が使うサポートファイルがどこにあるかを調べる。これは
+以下のやり方で行う:
 <screen>
 frodo:/ # strings /usr/sbin/swat | grep "/swat"
 /swat/
@@ -194,9 +196,9 @@ frodo:/ #
 </para>
 
 <para>
-The <filename>/usr/share/samba/swat/</filename> entry shown in this listing is the location of the
-support files. You should verify that the support files exist under this directory. A sample
-list is as shown:
+この一覧の中にある<filename>/usr/share/samba/swat/</filename>エントリは、サポートファイルの
+位置である。このディレクトリ配下にサポートファイルが存在しているかを調べるべきである。
+以下は一覧の例である:
 <screen>
 jht@frodo:/> find /usr/share/samba/swat -print
 /usr/share/samba/swat
@@ -232,15 +234,15 @@ jht@frodo:/>
 </para>
 
 <para>
-If the files needed are not available, it is necessary to obtain and install them
-before SWAT can be used.
+もしも必要とされるファイルが内ならば、SWATを使う前に、それらを入手してインストールする
+必要がある。
 </para>
 
 </sect3>
 </sect2>
 
 <sect2 id="xinetd">
-<title>Enabling SWAT for Use</title>
+<title>SWATを使用できるように有効化する</title>
 
 <para>
 SWAT should be installed to run via the network super-daemon. Depending on which system
