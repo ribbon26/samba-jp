@@ -83,108 +83,109 @@ TESTGROUPというワークグループに属していることを仮定する�
 <indexterm><primary>名前解決</primary></indexterm>
 <indexterm><primary>dnsプロキシ</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
-Also, if you do not have DNS server access for name resolution, please check
-that the settings for your &smb.conf; file results in <parameter>dns proxy = no</parameter>. The
-best way to check this is with <command>testparm smb.conf</command>.
+また、もしも、名前解決用のDNSサーバアクセスが出来ないならば、&smb.conf;に
+<parameter>dns proxy = no</parameter>が設定されているかをチェックする。
+これをチェックする最も良い方法は、<command>testparm smb.conf</command>である。
 </para>
 
 
 <para>
-<indexterm><primary>log files</primary></indexterm>
+<indexterm><primary>ログファイル</primary></indexterm>
 <indexterm><primary>tail</primary></indexterm>
 <indexterm><primary>/usr/local/samba/var</primary></indexterm>
 <indexterm><primary>/var/log/samba</primary></indexterm>
-<indexterm><primary>log files</primary><secondary>monitoring</secondary></indexterm>
-It is helpful to monitor the log files during testing by using the
-<command>tail -F log_file_name</command> in a separate
-terminal console (use ctrl-alt-F1 through F6 or multiple terminals in X). 
-Relevant log files can be found (for default installations) in
-<filename>/usr/local/samba/var</filename>. Also, connection logs from
-machines can be found here or possibly in <filename>/var/log/samba</filename>,
-depending on how or if you specified logging in your &smb.conf; file.
+<indexterm><primary>ログファイル</primary><secondary>モニタリング</secondary></indexterm>
+別のターミナルコンソール(X中で複数のターミナルを使うには、ctrl-alt-F1からF6を使用)で、
+<command>tail -F log_file_name</command>を使うことで、テストの間ログファイルをモニタする
+のは便利である。適切なログファイルは(既定値によるインストールでは)、
+<filename>/usr/local/samba/var</filename>にある。また、マシンからの接続ログは、ここか、
+<filename>/var/log/samba</filename>か、あるいは
+&smb.conf;ファイル中でロギングを指定した場合には、それに依存する場所にある。
 </para>
 
 <para>
-If you make changes to your &smb.conf; file while going through these test,
-remember to restart &smbd; and &nmbd;.
+もしも、それらのテスト中に&smb.conf;ファイルを変更したならば、&smbd;と&nmbd;の再起動を
+忘れないこと。
 </para>
 
 </sect1>
 
 <sect1>
-<title>The Tests</title>
+<title>テスト</title>
 <procedure>
-<title>Diagnosing Your Samba Server</title>
+<title>使用しているSambaサーバの診断</title>
 
 
 <step performance="required">
 <para>
 <indexterm><primary>testparm</primary></indexterm>
-In the directory in which you store your &smb.conf; file, run the command
-<command>testparm smb.conf</command>. If it reports any errors, then your &smb.conf;
-configuration file is faulty.
+&smb.conf;ファイルを格納しているディレクトリ中で、<command>testparm smb.conf</command>を
+実行する。もしも何らかのエラーが発生した場合、その&smb.conf;の設定には間違いがある。
 </para>
 
 <note><para>
 <indexterm><primary>/etc/samba</primary></indexterm>
 <indexterm><primary>/usr/local/samba/lib</primary></indexterm>
-Your &smb.conf; file may be located in <filename>/etc/samba</filename>
-or in <filename>/usr/local/samba/lib</filename>.
+使用している&smb.conf;ファイルは、<filename>/etc/samba</filename>か
+<filename>/usr/local/samba/lib</filename>にあってもよい。
 </para></note>
 </step>
 
 <step performance="required">
 <para>
 <indexterm><primary>ping</primary></indexterm>
-Run the command <command>ping BIGSERVER</command> from the PC and
-<command>ping ACLIENT</command> from the UNIX box. If you do not get a valid response,
-then your TCP/IP software is not correctly installed. 
+PCから<command>ping BIGSERVER</command>コマンドを動かし、UNIXマシンから
+<command>ping ACLIENT</command>を動かす。正常な応答がない場合、TCP/IP層の設定が
+うまくいっていない。
 </para>
 
 <para>
-You will need to start a <quote>DOS prompt</quote> window on the PC to run ping.
+PC上でpingを動かす場合には、<quote>DOS プロンプト</quote>を起動する必要がある。
 </para>
 
 <para>
 <indexterm><primary>/etc/hosts</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>/etc/resolv.conf</primary></indexterm>
-If you get a message saying <quote><errorname>host not found</errorname></quote> or a similar message, then
-your DNS software or <filename>/etc/hosts</filename> file is not correctly set up.  If using DNS, check that
-the <filename>/etc/resolv.conf</filename> has correct, current, entries in it. It is possible to run
-Samba without DNS entries for the server and client, but it is assumed you do have correct entries for the
-remainder of these tests.
+もしも、<quote><errorname>host not found</errorname></quote>か同様なメッセージが
+表示されたならば、DNSソフトウェアか<filename>/etc/hosts</filename>ファイルが正しく
+設定されていない。もしもDNSを使っている場合、<filename>/etc/resolv.conf</filename>に、
+正しい、最新のエントリがあるかどうかをチェックする。DNSエントリなしにSambaをサーバと
+クライアントとして動作させることは可能であるが、この後のテストでは、正しいエントリが
+あると仮定している。
 </para>
 
 <para>
-<indexterm><primary>firewall</primary></indexterm>
+<indexterm><primary>ファイアウォール</primary></indexterm>
 <indexterm><primary>iptables</primary></indexterm>
 <indexterm><primary>ipchains</primary></indexterm>
-Another reason why ping might fail is if your host is running firewall 
-software. You will need to relax the rules to let in the workstation
-in question, perhaps by allowing access from another subnet (on Linux
-this is done via the appropriate firewall maintenance commands <command>ipchains</command>
-or <command>iptables</command>).
+pingが失敗するかもしれない他の理由としては、使用しているホスト上でファイアウォール
+ソフトウェアが動作している場合である。ワークステーションからの問い合わせに対して
+ルールをゆるめる必要がありえ、それはおそらく、他のサブネットからのアクセスを許可する
+ことであろう(Linux上では、これは、<command>ipchains</command>か
+<command>iptables</command>という、適切なファイアウォール管理コマンドによって行える)。
 </para>
 
 <note>
 <para>
-Modern Linux distributions install ipchains/iptables by default. 
-This is a common problem that is often overlooked.
+最新のUNIXディストリビューションでは、既定値でipchains/iptablesをインストールしている。
+これは、しばしばよく見落とされる問題である。
 </para>
 </note>
 
 <para>
 <indexterm><primary>iptables</primary></indexterm>
 <indexterm><primary>ipchains</primary></indexterm>
-If you wish to check what firewall rules may be present in a system under test, simply run
-<command>iptables -L -v</command>, or if <parameter>ipchains</parameter>-based firewall rules are in use,
-<command>ipchains -L -v</command>.
+もしも、テスト中にシステム中どのようなファイアウォールルールが存在しているかを調べたい
+場合、単純に<command>iptables -L -v</command>か、あるいは
+<parameter>ipchains</parameter>ベースのファイアウォールを使っている場合には、
+<command>ipchains -L -v</command>を入力する。
 </para>
 
 <para>
-Here is a sample listing from a system that has an external Ethernet interface (eth1) on which Samba
-is not active and an internal (private network) interface (eth0) on which Samba is active:
+以下は、Sambaが有効になっていない外部向けのイーサネットインタフェース(eth1)とSambaが
+有効になっている内部向けの(プライベートネットワーク)インタフェース(eth0)を持つ、
+システムからの結果例である。
 <screen>
 frodo:~ # iptables -L -v
 Chain INPUT (policy DROP 98496 packets, 12M bytes)
