@@ -38,23 +38,22 @@
 <title>前提条件</title>
 
 <para>
-In all of the tests, it is assumed you have a Samba server called 
-BIGSERVER and a PC called ACLIENT, both in workgroup TESTGROUP.
+すべてのテストにおいて、SambaサーバはBIGSERVERで、PCクライアントがACLIENTで、両者とも
+TESTGROUPというワークグループに属していることを仮定する。
 </para>
 
 <para>
-The procedure is similar for other types of clients.
+手続きは、他のクライアントのタイプと同様である。
 </para>
 
 <para>
-It is also assumed you know the name of an available share in your
-&smb.conf;. I for our examples this share is called <smbconfsection name="tmp"/>.
-You can add a <smbconfsection name="tmp"/> share like this by adding the
-lines shown in <link linkend="tmpshare">the next example</link>.
+&smb.conf;中の有効な共有名も分かっているものとする。ここでの例における共有の名前は
+<smbconfsection name="tmp"/>である。これは、<link linkend="tmpshare">次の例</link>
+で示される行を追加することで、このような<smbconfsection name="tmp"/>共有を追加できる。
 </para>
 
 <example id="tmpshare">
-<title>smb.conf with [tmp] Share</title>
+<title>[tmp]共有のためのsmb.conf</title>
 <smbconfblock>
 <smbconfsection name="[tmp]"/>
 <smbconfoption name="comment">temporary files </smbconfoption>
@@ -64,24 +63,25 @@ lines shown in <link linkend="tmpshare">the next example</link>.
 </example>
 
 <note><para>
-These tests assume version 3.0.0 or later of the Samba suite.
-Some commands shown did not exist in earlier versions. 
+これらのテストはバージョン3.0.0以降のSambaシステムを仮定する。以前のバージョンでは
+いくつかのコマンドは存在しない。
 </para></note>
 
 <para>
-<indexterm><primary>error messages</primary></indexterm>
-<indexterm><primary>name resolution</primary></indexterm>
+<indexterm><primary>エラーメッセージ</primary></indexterm>
+<indexterm><primary>名前解決</primary></indexterm>
 <indexterm><primary>/etc/resolv.conf</primary></indexterm>
-Please pay attention to the error messages you receive. If any error message
-reports that your server is being unfriendly, you should first check that your
-IP name resolution is correctly set up. Make sure your <filename>/etc/resolv.conf</filename>
-file points to name servers that really do exist.
+受け取ったエラーメッセージに注意をはらってほしい。もしもエラーメッセージが、使用している
+サーバが調子が悪いという事を報告しているのであれば、まず初めに使用しているIPを名前解決
+する方式が正しく設定されているかどうかをチェックすべきである。実際に存在している
+ネームサーバを、<filename>/etc/resolv.conf</filename>が正しく指し示しているようにする
+こと。
 </para>
 
 <para>
-<indexterm><primary>DNS server access</primary></indexterm>
-<indexterm><primary>name resolution</primary></indexterm>
-<indexterm><primary>dns proxy</primary></indexterm>
+<indexterm><primary>DNSサーバアクセス</primary></indexterm>
+<indexterm><primary>名前解決</primary></indexterm>
+<indexterm><primary>dnsプロキシ</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
 Also, if you do not have DNS server access for name resolution, please check
 that the settings for your &smb.conf; file results in <parameter>dns proxy = no</parameter>. The
