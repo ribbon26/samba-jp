@@ -215,8 +215,8 @@ Chain reject_func (0 references)
 
 <step performance="required">
 <para>
-Run the command <command>smbclient -L BIGSERVER</command>
-on the UNIX box. You should get back a list of available shares. 
+UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
+これで有効な共有の一覧が得られる。
 </para>
 
 <para>
@@ -226,46 +226,44 @@ on the UNIX box. You should get back a list of available shares.
 <indexterm><primary>valid users</primary></indexterm>
 <indexterm><primary>guest account</primary></indexterm>
 <indexterm><primary>invalid users</primary></indexterm>
-If you get an error message containing the string <quote>bad password</quote>, then
-you probably have either an incorrect <parameter>hosts allow</parameter>, 
-<parameter>hosts deny</parameter>, or <parameter>valid users</parameter> line in your 
-&smb.conf;, or your guest account is not valid. Check what your guest account is using &testparm; and
-temporarily remove any <parameter>hosts allow</parameter>, <parameter>hosts deny</parameter>,
-<parameter>valid users</parameter>, or <parameter>invalid users</parameter> lines.
+もしも<quote>bad password</quote>という文字列があるエラーメッセージが表示されたら、
+不正な<parameter>hosts allow</parameter>、<parameter>hosts deny</parameter>か
+<parameter>valid users</parameter>行が&smb.conf;にあるか、ゲストアカウントが無効に
+なっている。&testparm;でゲストアカウントが何かを調べ、一時的に
+<parameter>hosts allow</parameter>, <parameter>hosts deny</parameter>,
+<parameter>valid users</parameter>, か<parameter>invalid users</parameter>行を
+削除してみる。
 </para>
 
 <para>
 <indexterm><primary>inetd.conf</primary></indexterm>
-If you get a message <literal>connection refused</literal> response, then the <command>smbd</command> server may
-not be running. If you installed it in <filename>inetd.conf</filename>, then you probably edited
-that file incorrectly. If you installed it as a daemon, then check that
-it is running and check that the netbios-ssn port is in a LISTEN
-state using <command>netstat -a</command>.
+もしも、<literal>connection refused</literal>というメッセージが帰ってきたら、
+<command>smbd</command>サーバが動いていないかもしれない。もしも
+<filename>inetd.conf</filename>経由で動作するようにしていたら、おそらくこのファイルの
+編集が間違っている。もしもdaemonとして動作するようにしていたら、動作しているかを調べ、
+<command>netstat -a</command>を使ってnetbios-ssnポートがLISTEN中かを確認する。
 </para>
 
 <note><para>
 <indexterm><primary>inetd</primary></indexterm>
 <indexterm><primary>xinetd</primary><see>inetd</see></indexterm>
-Some UNIX/Linux systems use <command>xinetd</command> in place of
-<command>inetd</command>. Check your system documentation for the location
-of the control files for your particular system implementation of
-the network super daemon.
+ある種のUNIX/Linuxシステムでは、<command>inetd</command>の代わりに
+<command>xinetd</command>を使っている。ネットワークスーパーデーモンの、
+特定のシステム実装についての、制御ファイルの位置の説明文書を調べること。
 </para></note>
 
 <para>
-If you get a message saying <literal>session request failed,</literal> the server refused the
-connection. If it says <quote>Your server software is being unfriendly,</quote> then
-it's probably because you have invalid command line parameters to &smbd;,
-or a similar fatal problem with the initial startup of &smbd;. Also
-check your config file (&smb.conf;) for syntax errors with &testparm;
-and that the various directories where Samba keeps its log and lock
-files exist.
+もしも、<literal>session request failed</literal>というメッセージが表示されたならば、
+サーバは接続を拒否している。もしも<quote>Your server software is being unfriendly</quote>
+というメッセージが表示されたならば、それはおそらく&smbd;に対するコマンドラインオプションを
+間違えているか、&smbd;の初期起動時に同様の致命的な問題がある。&testparm;で設定ファイル
+(&smb.conf;)の文法と、ログとロックファイルを保持する種々のディレクトリもチェックする。
 </para>
 
 <para>
-There are a number of reasons for which smbd may refuse or decline
-a session request. The most common of these involve one or more of
-the &smb.conf; file entries as shown in <link linkend="modif1">the next example</link>.
+セッション要求を拒否するか、断るかもしれない数多くの理由がある。それらは、
+<link linkend="modif1">次の例</link>で示されている&smb.conf;ファイルのエントリ
+によって発生する。
 </para>
 
 
