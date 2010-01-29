@@ -353,14 +353,14 @@ IPアドレス、ブロードキャスト、サブネットマスクが正しい
 </para>
 
 <para>
-You should get the PC's IP address back. If you do not, then the client
-software on the PC isn't installed correctly, or isn't started, or you
-got the name of the PC wrong. 
+PCのIPアドレスが表示されるはずである。もしもそうでなければ、PC上のクライアント
+ソフトウェアの設定が間違っているか、開始していないか、PCの名前が間違っているか
+である。
 </para>
 
 <para>
-If ACLIENT does not resolve via DNS, then use the IP address of the
-client in the above test.
+もしもACLIENTがDNS経由で名前解決できない場合、上記のテストで、クライアントのIP
+アドレスを使用してみる。
 </para>
 
 </step>
@@ -368,33 +368,34 @@ client in the above test.
 <step performance="required">
 
 <para>
-Run the command <command>nmblookup -d 2 `*'</command>.
+<command>nmblookup -d 2 `*'</command>コマンドを動かす。
 </para>
 
 <para>
-This time we are trying the same as the previous test but are trying
-it via a broadcast to the default broadcast address. A number of
-NetBIOS/TCP/IP hosts on the network should respond, although Samba may
-not catch all of the responses in the short time it listens. You
-should see the <literal>got a positive name query response</literal>
-messages from several hosts.
+この時点では前述のテストと同じ事を試みるが、既定値のブロードキャストアドレスに、
+ブロードキャスト経由で行う。それをリッスンしているSambaは短時間にすべての応答を
+受け取れないかもしれないが、ネットワーク上にある、たくさんのNetBIOS/TCP/IPホストが、
+これに応答する。いくつかのホストからの、
+<literal>got a positive name query response</literal>メッセージを受け取るはずである。
 </para>
 
 <para>
 <indexterm><primary>nmblookup</primary></indexterm>
-If this does not give a result similar to the previous test, then nmblookup isn't correctly getting your
-broadcast address through its automatic mechanism. In this case you should experiment with the <smbconfoption
-name="interfaces"/> option in &smb.conf; to manually configure your IP address, broadcast, and netmask.
+もしも、上記のテストのような結果が得られないのであれば、nmblookupが、その自動
+メカニズムによる、使用しているブロードキャストアドレスを正しく入手できていない。
+この場合、使用するIPアドレス、ブロードキャストとサブネットマスクを、
+&smb.conf;中の<smbconfoption name="interfaces"/>オプションに、手動で設定する
+ことをやってみるべきである。
 </para>
 
 <para>
-If your PC and server aren't on the same subnet, then you will need to use the
-<option>-B</option> option to set the broadcast address to that of the PC's subnet.
+もしも、使用しているPCとサーバが同じサブネットにない場合、そのPCのサブネットの
+ブロードキャストアドレスを指定する<option>-B</option>オプションを使う必要がある。
 </para>
 
 <para>
-This test will probably fail if your subnet mask and broadcast address are
-not correct. (Refer to test 3 notes above).
+このテストは、サブネットマスクとブロードキャストアドレスが間違っている場合、おそらく
+失敗する(3つ前の注意(Note)を参照)。
 </para>
 
 </step>
@@ -404,58 +405,62 @@ not correct. (Refer to test 3 notes above).
 
 <para>
 <indexterm><primary>smbclient</primary></indexterm>
-Run the command <command>smbclient //BIGSERVER/TMP</command>. You should 
-then be prompted for a password. You should use the password of the account
-with which you are logged into the UNIX box. If you want to test with
-another account, then add the <option>-U accountname</option> option to the end of
-the command line &smbmdash; for example, <command>smbclient //bigserver/tmp -Ujohndoe</command>.
+<command>smbclient //BIGSERVER/TMP</command>コマンドを動かす。パスワード要求が来る
+はずである。UNIXマシンにログインするアカウントのパスワードを入力する。もしも他の
+アカウントで、テストを行いたいならば、コマンドラインの最後の所に、
+<option>-U accountname</option>オプションを追加する。 &smbmdash;たとえば、
+<command>smbclient //bigserver/tmp -Ujohndoe</command>である。
 </para>
 
 <note><para>
-It is possible to specify the password along with the username as follows:
+以下のように、ユーザ名に引き続いてパスワードを指定することも出来る:
 <command>smbclient //bigserver/tmp -Ujohndoe%secret</command>.
 </para></note>
 
 <para>
-Once you enter the password, you should get the <prompt>smb></prompt> prompt. If you
-do not, then look at the error message. If it says <quote><errorname>invalid network
-name,</errorname></quote> then the service <smbconfsection name="tmp"/> is not correctly set up in your &smb.conf;.
+パスワードを入力すると、<prompt>smb></prompt>プロンプトが出るはずである。もしも
+そうでなければ、エラーメッセージが表示される。もしもそれが
+<quote><errorname>invalid network name</errorname></quote>であれば、サービス
+<smbconfsection name="tmp"/>が&smb.conf;中で正しく設定されていない。
 </para>
 
 <para>
-If it says <quote><errorname>bad password,</errorname></quote> then the likely causes are:
+<quote><errorname>bad password</errorname></quote>という表示がされたならば、
+あり得そうな原因は以下の通り:
 </para>
 
 <orderedlist>
 <listitem>
 	<para>
-	You have shadow passwords (or some other password system) but didn't
-	compile in support for them in &smbd;.
+	shadowパスワード(かその他のパスワードシステム)を使っているが、&smbd;中で
+	それをサポートするようにコンパイルされていない。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	Your <smbconfoption name="valid users"/> configuration is incorrect.
+	使用している<smbconfoption name="valid users"/>の設定が間違っている。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	You have a mixed-case password and you haven't enabled the <smbconfoption name="password level"/> option at a high enough level.
+	大文字小文字を混ぜたパスワードを使っているが、十分に大きなレベルを
+	<smbconfoption name="password level"/>オプションで有効にしていない。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	The <smbconfoption name="path"/> line in &smb.conf; is incorrect. Check it with &testparm;.
+	&smb.conf;中の<smbconfoption name="path"/>行が間違っている。&testparm;で
+	検査すること。
 	</para>
 </listitem>
 
 <listitem>
 	<para>
-	You enabled password encryption but didn't map UNIX to Samba users. Run
-	<command>smbpasswd -a username</command>
+	パスワード暗号化を有効にしているが、SambaユーザにUNIXユーザをマップしていない。
+	<command>smbpasswd -a username</command>を実行する。
 	</para>
 </listitem>
 </orderedlist>
@@ -465,9 +470,10 @@ If it says <quote><errorname>bad password,</errorname></quote> then the likely c
 <indexterm><primary>get</primary></indexterm>
 <indexterm><primary>put</primary></indexterm>
 <indexterm><primary>help command</primary></indexterm>
-Once connected, you should be able to use the commands <command>dir</command>, <command>get</command>,
-<command>put</command>, and so on. Type <command>help command</command> for instructions. You should
-especially check that the amount of free disk space shown is correct when you type <command>dir</command>.
+接続後、コマンド<command>dir</command>, <command>get</command>,<command>put</command>
+などが使えるようになっているはずである。どう入力するかを調べるために、
+<command>help command</command>を入力する。<command>dir</command>コマンドを入力した
+時に、空きディスクスペースが正しいかを、特にチェックすべきである。
 </para>
 
 </step>
@@ -476,34 +482,33 @@ especially check that the amount of free disk space shown is correct when you ty
 
 <para>
 <indexterm><primary>net view</primary></indexterm>
-On the PC, type the command <command>net view \\BIGSERVER</command>. You will 
-need to do this from within a DOS prompt window. You should get back a 
-list of shares available on the server.
+PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。これは、DOSウィンドウ
+内で入力する必要がある。サーバ上で有効な共有一覧が表示されるべきである。
 </para>
 
 <para>
 <indexterm><primary>nmbd</primary></indexterm>
-If you get a message <literal>network name not found</literal> or similar error, then NetBIOS
-name resolution is not working. This is usually caused by a problem in <command>nmbd</command>.
-To overcome it, you could do one of the following (you only need to choose one of them):
+<literal>network name not found</literal>か似たようなエラーが表示された場合、NetBIOS
+名前解決が動作していない。これは通常<command>nmbd</command>の問題である。これを解決
+するために、以下のどれかを行う(どれか1つを選ぶのみでよい):
 </para>
 
 <orderedlist>
 <listitem><para>
-	Fix the &nmbd; installation.
+	&nmbd;のインストールを修正する。
 </para></listitem>
 
 <listitem><para>
-	Add the IP address of BIGSERVER to the <command>wins server</command> box in the
-	advanced TCP/IP setup on the PC.
+	PC上のTCP/IP設定中にある「詳細設定」において<command>wins</command>タブ中に
+	BIGSERVERのIPアドレスを追加する。
 </para></listitem>
 
 <listitem><para>
-	Enable Windows name resolution via DNS in the advanced section of the TCP/IP setup.
+        TCP/IP設定中にある「詳細設定」においてDNS経由での名前解決を有効にする。
 </para></listitem>
 
 <listitem><para>
-	Add BIGSERVER to your lmhosts file on the PC.
+        PC上のlmhostsファイルにBIGSERVERを追加する。
 </para></listitem>
 </orderedlist>
 
