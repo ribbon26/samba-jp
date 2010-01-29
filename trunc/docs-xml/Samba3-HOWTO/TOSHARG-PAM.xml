@@ -573,20 +573,18 @@ Linux-PAM ライブラリーからの成功や失敗の応答のサマリーを�
 		</para>
 
 		<para>
-The arguments are a list of tokens that are passed to the module 
-when it is invoked, 
-much like arguments to a typical Linux shell command. Generally, 
-valid arguments are optional and are specific to any given module. 
-Invalid arguments are ignored by a module; however, 
-when encountering an invalid argument, 
-the module is required to write an error to syslog(3). 
-For a list of generic options, see the next section.
+引数は、起動時にモジュールに渡されるトークンのリストであり、典型的な
+Linux のシェルコマンドへの引数と同様である。一般的に、有効な引数は
+オプションであり、与えられたモジュール固有のものであることが多い。
+無効な引数はモジュールによって無視される。しかしながら、無効な引数に
+出会った場合、そのモジュールは syslog(3) に対してエラーメッセージを
+出力しなければならない。共通的なオプションについては次のセクションを
+参照して欲しい。
 		</para>
 
 		<para>
-If you wish to include spaces in an argument, 
-you should surround that argument with square brackets. 
-For example:
+引数の中に空白を含める場合は引数全体を大括弧 [] で括るようにする。
+次に例を示す：
 		</para>
 
 <para><programlisting>
@@ -596,11 +594,10 @@ user_name=<quote>%u</quote> and password=PASSWORD(<quote>%p</quote>) and service
 </programlisting></para>
 
 		<para>
-When using this convention, 
-you can include <quote>[</quote> characters inside the string, 
-and if you wish to have a <quote>]</quote>
-character inside the string that will survive the argument parsing, 
-you should use <quote>\[</quote>. In other words,
+この書式を使う場合は文字列の中に <quote>[</quote> 文字を含んでもよい。
+また文字列の中に <quote>]</quote> 文字を含める場合は、引数のパースが
+正しく行えるように <quote>\[</quote> を使うべきである。すなわち以下の
+ようになる。
 		</para>
 
 <para><programlisting>
@@ -608,10 +605,9 @@ you should use <quote>\[</quote>. In other words,
 </programlisting></para>
 
 		<para>
-Any line in one of the configuration files that is not formatted correctly 
-will generally tend (erring on the side of caution) 
-to make the authentication process fail. 
-A corresponding error is written to the system log files with a call to syslog(3). 
+設定ファイルの中でひとつでも書式が正しくない行があれば、（エラーが
+起こって）認証処理は失敗すると思った方がよい。対応するエラーは
+syslog(3) への呼び出しを通してシステムのログファイルに書き込まれる。
 		</para>
 		</listitem>
 	</varlistentry>
@@ -622,19 +618,19 @@ A corresponding error is written to the system log files with a call to syslog(3
 </sect2>
 
 <sect2>
-<title>Example System Configurations</title>
+<title>システム設定の例</title>
 
 <para>
-The following is an example <filename>/etc/pam.d/login</filename> configuration file. 
-This example had all options uncommented and is probably not usable 
-because it stacks many conditions 
-before allowing successful completion of the login process. 
-Essentially, all conditions can be disabled by commenting them out, 
-except the calls to <filename>pam_pwdb.so</filename>.
+以下に設定ファイル <filename>/etc/pam.d/login</filename> を例として示す。
+この例ではすべてのオプションがアンコメントされて（＝有効になって）おり、
+おそらくこのままでは使い物にならないだろう。というのは、ログインプロセス
+が成功するまでに多くの条件が積み重なっているからである。
+<filename>pam_pwdb.so</filename> の呼び出しを除き、原則的にはすべての
+条件をコメントアウトして無効にすることができる。
 </para>
 
 <sect3>
-<title>PAM: Original Login Config</title>
+<title>PAM: オリジナルのログイン設定</title>
 
 <para>
 	<programlisting>
@@ -658,11 +654,11 @@ password     required    pam_pwdb.so shadow md5
 </sect3>
 
 <sect3>
-<title>PAM: Login Using <filename>pam_smbpass</filename></title>
+<title>PAM: <filename>pam_smbpass</filename> を使ったログイン</title>
 
 <para>
-PAM allows use of replaceable modules. 
-Those available on a sample system include:
+PAM では交換式モジュールが利用できる。サンプルシステムでは
+以下のものが利用可能：
 </para>
 
 <para><prompt>$</prompt><userinput>/bin/ls /lib/security</userinput>
@@ -682,24 +678,25 @@ pam_userdb.so    pam_warn.so         pam_unix_session.so
 </programlisting></para>
 
 <para>
-The following example for the login program replaces the use of 
-the <filename>pam_pwdb.so</filename> module that uses the system 
-password database (<filename>/etc/passwd</filename>,
-<filename>/etc/shadow</filename>, <filename>/etc/group</filename>) with 
-the module <filename>pam_smbpass.so</filename>, which uses the Samba 
-database containing the Microsoft MD4 encrypted password 
-hashes. This database is stored either in 
+以下のログインプログラムの例では、システムパスワードデータベース
+(<filename>/etc/passwd</filename>,
+<filename>/etc/shadow</filename>, <filename>/etc/group</filename>) 
+を使う <filename>pam_pwdb.so</filename> を
+<filename>pam_smbpass.so</filename> で置き換えている。
+後者では Microsoft MD4 暗号化パスワードハッシュを含む Samba 
+のデータベースを使う。このデータベースはお使いの UNIX/Linux 
+システムの実装により
 <filename>/usr/local/samba/private/smbpasswd</filename>, 
-<filename>/etc/samba/smbpasswd</filename> or in 
-<filename>/etc/samba.d/smbpasswd</filename>, depending on the 
-Samba implementation for your UNIX/Linux system. The 
-<filename>pam_smbpass.so</filename> module is provided by 
-Samba version 2.2.1 or later. It can be compiled by specifying the 
-<option>--with-pam_smbpass</option> options when running Sambaの
-<command>configure</command> script. For more information
-on the <filename>pam_smbpass</filename> module, see the documentation
-in the <filename>source/pam_smbpass</filename> directory of the Samba 
-source distribution.
+<filename>/etc/samba/smbpasswd</filename>,
+<filename>/etc/samba.d/smbpasswd</filename>
+のいずれかに格納される。<filename>pam_smbpass.so</filename> 
+モジュールは Samba 2.2.1 以降で提供される。このモジュールを
+コンパイルしたい場合は、Samba の <command>configure</command> 
+スクリプト実行時に <option>--with-pam_smbpass</option> 
+オプションを指定する。<filename>pam_smbpass</filename> 
+モジュールに関する詳細については Samba ソースの配布物の
+<filename>source/pam_smbpass</filename> ディレクトリーにある
+ドキュメントを参照して欲しい。
 </para>
 
 <para>
@@ -714,8 +711,8 @@ password    required    pam_smbpass.so nodelay
 </programlisting></para>
 
 <para>
-The following is the PAM configuration file for a particular 
-Linux system. The default condition uses <filename>pam_pwdb.so</filename>.
+以下に、ある Linux システムにおける PAM の設定ファイルを示す。
+デフォルト設定では <filename>pam_pwdb.so</filename> を使う。
 </para>
 
 <para>
@@ -730,12 +727,11 @@ password   required     pam_pwdb.so shadow md5
 </programlisting></para>
 
 <para>
-In the following example, 
-the decision has been made to use the <command>smbpasswd</command> database 
-even for basic Samba authentication. 
-Such a decision could also be made for the <command>passwd</command> program 
-and would thus allow the <command>smbpasswd</command> passwords 
-to be changed using the <command>passwd</command> program:
+以下の例では、基本的な Samba 認証であっても
+<command>smbpasswd</command> データベースを使うようになっている。
+このような設定を行った場合、<command>passwd</command> プログラムに
+対しても影響を及ぼす。つまり、<command>smbpasswd</command> の
+パスワードを <command>passwd</command> コマンドで変更できるようになる：
 </para>
 
 <para>
@@ -750,17 +746,21 @@ password   required     pam_smbpass.so nodelay smbconf=/etc/samba.d/smb.conf
 </programlisting>
 </para>
 
-<note><para>PAM allows stacking of authentication mechanisms. It is 
-also possible to pass information obtained within one PAM module through 
-to the next module in the PAM stack. Please refer to the documentation for 
-your particular system implementation for details regarding the specific 
-capabilities of PAM in this environment. Some Linux implementations also 
-provide the <filename>pam_stack.so</filename> module that allows all 
-authentication to be configured in a single central file. The 
-<filename>pam_stack.so</filename> method has some devoted followers 
-on the basis that it allows for easier administration. As with all issues in 
-life, though, every decision has trade-offs, so you may want to examine the 
-PAM documentation for further helpful information.
+<note><para>
+PAM では階層的な（スタックされた）認証の仕組みを提供している。
+たとえば、ある PAM モジュールが受け取った情報を、PAM スタックの
+次のモジュールに渡すことができる。PAM に関する特定の機能の詳細については、
+お使いのシステムに特化したドキュメントを参照して欲しい。
+さらにいくつかの Lunux の実装では、すべての認証を中心となる単一のファイルで
+設定できる <filename>pam_stack.so</filename> と呼ばれるモジュールが
+提供されている。
+
+<filename>pam_stack.so</filename> 方式は管理者の手間を軽減
+してくれるので、熱心なファンもいる。
+
+もっとも、環境によってもいろんな問題があるわけであり、前述のどの方式を
+取るにしてもそれぞれのトレードオフがある。より有益な情報を探すために、
+PAM のドキュメントをあたってみるのもよいだろう。
 </para></note>
 
 </sect3>
@@ -768,131 +768,163 @@ PAM documentation for further helpful information.
 </sect2>
 
 <sect2>
-<title>&smb.conf; PAM Configuration</title>
+<title>&smb.conf; の PAM 設定</title>
 
 <para>
-There is an option in &smb.conf; called <smbconfoption name="obey pam restrictions"/>.
-The following is from the online help for this option in SWAT:
+<smbconfoption name="obey pam restrictions"/> と呼ばれる &smb.conf; 
+のオプションがある。このオプションに関する SWAT のヘルプを以下に示す：
 </para>
 
 <blockquote>
 <para>
-When Samba is configured to enable PAM support 
-(i.e., <option>--with-pam</option>), 
-this parameter will control whether or not Samba should obey PAM's 
-account and session management directives. 
-The default behavior is to use PAM for clear-text authentication only 
-and to ignore any account or session management. 
-Samba always ignores PAM for authentication in the case of 
-<smbconfoption name="encrypt passwords">yes</smbconfoption>. 
-The reason is that PAM modules cannot support the challenge/response 
-authentication mechanism needed in the presence of SMB password encryption. 
+Samba が PAM サポート (<option>--with-pam</option>) 付きでコンパイル
+されている場合、Samba が PAM の account および session 管理
+ディレクティブに従うかどうかをこのパラメータで 制御できる。
+PAM を使うが認証は平文のみで、かつどの account/session 管理も
+無視するというのがデフォルトの動作である。
+<smbconfoption name="encrypt passwords">yes</smbconfoption>
+の場合、Samba は常に認証については PAM を無視する。その理由は、
+SMB パスワード暗号を使う場合に必要なチャレンジ／レスポンス方式の
+認証メカニズムを PAM モジュールが サポートしていないからである。
 </para>
 
-<para>Default: <smbconfoption name="obey pam restrictions">no</smbconfoption></para>
+<para>デフォルト：<smbconfoption name="obey pam restrictions">no</smbconfoption></para>
 </blockquote>
 
 </sect2>
 
 <sect2>
-<title>Remote CIFS Authentication Using <filename>winbindd.so</filename></title>
+<title><filename>winbindd.so</filename>を使った遠隔 CIFS 認証</title>
 
 <para>
-All operating systems depend on the provision of user credentials acceptable to the platform.
-UNIX requires the provision of a user identifier (UID) as well as a group identifier (GID).
-These are both simple integer numbers that are obtained from a password backend such
-as <filename>/etc/passwd</filename>.
+どんな OS であっても、その OS 自身がアクセス可能なユーザー証明情報が
+（どこからか）提供されていることを前提としている。UNIX ではユーザー
+識別子(UID)だけでなくグループ識別子(GID)も必要となる。これらはいずれも
+単純な整数値であり、<filename>/etc/passwd</filename> といったパスワード
+バックエンドより取得する。
 </para>
 
 <para>
-Users and groups on a Windows NT server are assigned a relative ID (RID) which is unique for
-the domain when the user or group is created. To convert the Windows NT user or group into
-a  UNIX user or group, a mapping between RIDs and UNIX user and group IDs is required. This
-is one of the jobs that winbind performs.
+Windows NT サーバーでは、ユーザーとグループは相対ID(RID)に割り当て
+られている。これらはユーザーやグループが作られる際、ドメイン毎に
+一意となる。Windows NT のユーザーやグループを UNIX のユーザーやグループ
+に変換するためには、RID と UNIX のユーザー／グループの ID を
+マッピングする必要がある。これが winbind が行う仕事のひとつである。
 </para>
 
 <para>
-As winbind users and groups are resolved from a server, user and group IDs are allocated
-from a specified range. This is done on a first come, first served basis, although all
-existing users and groups will be mapped as soon as a client performs a user or  group 
-enumeration command. The allocated UNIX IDs are stored in a database file under the Samba
-lock directory and will be remembered.
+winbind のユーザーとグループはサーバーから解決要求が出され、ユーザーと
+グループの ID が指定された範囲内で割り当てられる。クライアントが
+ユーザーとグループを列挙するコマンドを実行すると、すぐに既存の全
+ユーザーとグループがマッピングされ、割り当て処理が先着順に行われる。
+割り当てられた UNIX ID は Samba の lock ディレクトリー配下のデータベース
+ファイルに保持されて記憶される。
 </para>
 
 <para>
-The astute administrator will realize from this that the combination of <filename>pam_smbpass.so</filename>, 
-<command>winbindd</command>, and a distributed <smbconfoption name="passdb backend"></smbconfoption>
-such as <parameter>ldap</parameter> will allow the establishment of a centrally managed, distributed user/password
-database that can also be used by all PAM-aware (e.g., Linux) programs and applications. This arrangement can have
-particularly potent advantages compared with the use of Microsoft Active Directory Service (ADS) insofar as
-the reduction of wide-area network authentication traffic.
+これにより、目先が利く管理者なら、<filename>pam_smbpass.so</filename> や
+<command>winbindd</command> と、<parameter>ldap</parameter> のような
+分散型の <smbconfoption name="passdb backend"></smbconfoption> との
+組み合わせにより、（Linux のような）PAM を意識したプログラムや
+アプリケーションからも使うことのできる、中央集権型で管理された分散型の
+ユーザー／パスワードデータベースが使えるようになるということが理解
+できるだろう。このお膳立てにより、広範囲のネットワーク認証のトラフィック
+が削減できるという限りにおいては、マイクロソフトのアクティブディレクトリー
+サービス(ADS)に比較して、特に強力な優位性を持てる。
 </para>
 
 <warning><para>
-The RID to UNIX ID database is the only location where the user and group  mappings are 
-stored by <command>winbindd</command>. If this file is deleted or corrupted, there is no way for <command>winbindd</command>
-to determine which user and group IDs correspond to Windows NT user and group RIDs.
+UNIX の ID データベースに対応する RID はユーザーとグループのマッピング
+が格納されているファイルにのみ存在し、<command>winbindd</command> 
+によって格納される。このファイルが削除されていたり壊れていたりする場合、
+<command>winbindd</command> はどのユーザーやグループが Windows NT
+のユーザーやグループの RID と対応するのかを決定できなくなる。
 </para></warning>
 
 </sect2>
 
 <sect2>
-<title>Password Synchronization Using <filename>pam_smbpass.so</filename></title>
+<title><filename>pam_smbpass.so</filename> を使ったパスワードの同期</title>
 
 <para>
-<filename>pam_smbpass</filename> is a PAM module that can be used on conforming systems to
-keep the <filename>smbpasswd</filename> (Samba password) database in sync with the UNIX
-password file. PAM is an API supported
-under some UNIX operating systems, such as Solaris, HPUX, and Linux, that provides a
-generic interface to authentication mechanisms.
+<filename>pam_smbpass</filename> は PAM モジュールのひとつであり、
+システム上で <filename>smbpasswd</filename> （Samba のパスワード）
+データベースと UNIX のパスワードファイルとの同期を取るために
+使われる。PAM は Solaris, HPUX, Linux などの UNIX オペレーティングシステム
+上でサポートされている API であり、認証メカニズムに対する標準的な
+インターフェースを提供する。
 </para>
 
 <para>
-This module authenticates a local <filename>smbpasswd</filename> user database. If you require
-support for authenticating against a remote SMB server, or if you are
-concerned about the presence of SUID root binaries on your system, it is
-recommended that you use <filename>pam_winbind</filename> instead.
+このモジュールはローカルにある <filename>smbpasswd</filename> ユーザー
+データベースを使って認証する。リモートの SMB サーバで認証したり、
+システム上の SUID root されたバイナリーの存在を調べたいという向きには、
+<filename>pam_winbind</filename> の方を使うことをお勧めする。
 </para>
 
 <para>
-Options recognized by this module are shown in <link linkend="smbpassoptions">next table</link>.
+このモジュールで認識されるオプションについては、
+<link linkend="smbpassoptions">次のテーブル</link>を参照して欲しい。
 <table frame="all" id="smbpassoptions">
-	<title>Options recognized by <parameter>pam_smbpass</parameter></title>
+	<title><parameter>pam_smbpass</parameter>で認識されるオプション
+	</title>
 	<tgroup cols="2" align="left">
 		<colspec align="left"/>
 		<colspec align="justify" colwidth="1*"/>
 	<tbody>
-		<row><entry>debug</entry><entry>Log more debugging info.</entry></row>
-		<row><entry>audit</entry><entry>Like debug, but also logs unknown usernames.</entry></row>
-		<row><entry>use_first_pass</entry><entry>Do not prompt the user for passwords; take them from PAM_ items instead.</entry></row>
-		<row><entry>try_first_pass</entry><entry>Try to get the password from a previous PAM module; fall back to prompting the user.</entry></row>
+		<row><entry>debug</entry><entry>
+より多くのデバッグ情報を出力する</entry></row>
+		<row><entry>audit</entry><entry>
+debugと似ているが、認識できないユーザー名も表示する</entry></row>
+		<row><entry>use_first_pass</entry><entry>
+ユーザーにパスワード入力を求めない。
+パスワードは PAM_ 項目から持ってくる</entry></row>
+		<row><entry>try_first_pass</entry><entry>
+直前の PAM モジュールからパスワードの取得を試みる。
+取得できなければユーザーからの入力を求める。</entry></row>
 		<row><entry>use_authtok</entry>
-			<entry>Like try_first_pass, but *fail* if the new PAM_AUTHTOK has not been previously set (intended for stacking password modules only).</entry></row>
-		<row><entry>not_set_pass</entry><entry>Do not make passwords used by this module available to other modules.</entry></row>
-		<row><entry>nodelay</entry><entry>dDo not insert ~1-second delays on authentication failure.</entry></row>
-		<row><entry>nullok</entry><entry>Null passwords are allowed.</entry></row>
-		<row><entry>nonull</entry><entry>Null passwords are not allowed. Used to override the Samba configuration.</entry></row>
-		<row><entry>migrate</entry><entry>Only meaningful in an <quote>auth</quote> context; used to update smbpasswd file with a password used for successful authentication.</entry></row>
-		<row><entry>smbconf=<replaceable>file</replaceable></entry><entry>Specify an alternate path to the &smb.conf; file.</entry></row>
+			<entry>
+try_first_pass に似ているが、
+（パスワードモジュールだけをスタックさせるための）
+新しい PAM_AUTHTOK が事前にセットされていなければ『失敗する』
+</entry></row>
+		<row><entry>not_set_pass</entry><entry>
+このモジュールで使われたパスワードを他のモジュールに流用させない
+</entry></row>
+		<row><entry>nodelay</entry><entry>
+認証の失敗までに最大１秒の遅延を挟まない</entry></row>
+		<row><entry>nullok</entry><entry>
+null のパスワードを認める</entry></row>
+		<row><entry>nonull</entry><entry>
+null のパスワードを認めない。これは Samba の設定に優先する
+</entry></row>
+		<row><entry>migrate</entry><entry>
+<quote>auth</quote> コンテキストでのみ意味を持つ。
+成功した認証で使われたパスワードを使って smbpasswd ファイルを更新する。
+</entry></row>
+		<row><entry>smbconf=<replaceable>ファイル名</replaceable></entry>
+		<entry>&smb.conf; ファイルへの別のパスを指定する</entry></row>
 	</tbody>
 </tgroup>
 </table>
 </para>
 
 <para>
-The following are examples of the use of <filename>pam_smbpass.so</filename> in the format of the Linux
-<filename>/etc/pam.d/</filename> files structure. Those wishing to implement this
-tool on other platforms will need to adapt this appropriately.
+Linux の <filename>/etc/pam.d/</filename> 形式のファイル構造で
+<filename>pam_smbpass.so</filename> を使うときの例を以下に示す。
+このツールを別のプラットフォームに実装したいと思っている方は、
+適当に読み替えてみてほしい。
 </para>
 
 <sect3>
-<title>Password Synchronization Configuration</title>
+<title>パスワードの同期設定</title>
 
 <para>
-The following is a sample PAM configuration that shows the use of pam_smbpass to make
-sure <filename>private/smbpasswd</filename> is kept in sync when <filename>/etc/passwd (/etc/shadow)</filename>
-is changed. It is useful when an expired password might be changed by an
-application (such as <command>ssh</command>).
+以下の PAM 設定例では、<filename>/etc/passwd (/etc/shadow)</filename> 
+が変更されたときに、pam_smbpass を利用して
+<filename>private/smbpasswd</filename>が連動して変更されるようにしている。
+これはパスワードの有効期限が切れたときに（<command>ssh</command>のような）
+アプリケーションがパスワードを変更するような場合に便利である。
 </para>
 
 <para>
@@ -911,14 +943,15 @@ session    required     pam_unix.so
 </sect3>
 
 <sect3>
-<title>Password Migration Configuration</title>
+<title>パスワード移行のための設定</title>
 
 <para>
-The following PAM configuration shows the use of <filename>pam_smbpass</filename> to migrate
-from plaintext to encrypted passwords for Samba. Unlike other methods,
-this can be used for users who have never connected to Samba shares:
-password migration takes place when users <command>ftp</command> in, login using <command>ssh</command>, pop
-their mail, and so on.
+以下は <filename>pam_smbpass</filename> を使って平文から
+Samba 用の暗号化パスワードに移行するための PAM 設定である。
+他のメソッドと違い、この方法なら一度も Samba の共有に接続
+したことがなくても使える：パスワードを移行すれば、ユーザーが
+<command>ftp</command> で接続したり、<command>ssh</command>
+でログインしてメールを取り出したりする場合などにも使える。
 </para>
 
 <para>
@@ -939,12 +972,13 @@ session    required    pam_unix.so
 </sect3>
 
 <sect3>
-<title>Mature Password Configuration</title>
+<title>従来のパスワード設定</title>
 
 <para>
-The following is a sample PAM configuration for a mature <filename>smbpasswd</filename> installation.
-<filename>private/smbpasswd</filename> is fully populated, and we consider it an error if
-the SMB password does not exist or does not match the UNIX password.
+以下の例は、従来の <filename>smbpasswd</filename> 利用時のための
+PAM 設定である。<filename>private/smbpasswd</filename> 全体が
+投入され、SMB パスワードが存在しなかったり UNIX のパスワードと
+合致しない場合はエラーと見なされる。
 </para>
 
 <para>
@@ -963,12 +997,13 @@ session    required     pam_unix.so
 </sect3>
 
 <sect3>
-<title>Kerberos Password Integration Configuration</title>
+<title>ケルベロスパスワード統合設定</title>
 
 <para>
-The following is a sample PAM configuration that shows <parameter>pam_smbpass</parameter> used together with
-<parameter>pam_krb5</parameter>. This could be useful on a Samba PDC that is also a member of
-a Kerberos realm.
+以下の PAM 設定例は、<parameter>pam_krb5</parameter> といっしょに
+使われる <parameter>pam_smbpass</parameter> を示している。
+これは Samba PDC 上で、かつそれがケルベロス・レルムのメンバーで
+ある場合に有用である。
 </para>
 
 <para>
@@ -993,18 +1028,19 @@ session    required    pam_krb5.so
 </sect1>
 
 <sect1>
-<title>Common Errors</title>
+<title>よくあるエラー</title>
 
 <para>
-PAM can be fickle and sensitive to configuration glitches. Here we look at a few cases from
-the Samba mailing list.
+PAM は割と扱いづらく、設定エラーを引き起こしやすい。以下に
+Samba のメーリングリストで見かけたいくつかのケースを紹介する。
 </para>
 
 	<sect2>
-	<title>pam_winbind Problem</title>
+	<title>pam_winbind の問題</title>
 
 	<para>
-	A user reported, <emphasis>I have the following PAM configuration</emphasis>:
+あるユーザーから<emphasis>PAM の設定で以下の問題が起こった</emphasis>
+との報告があった：
 	</para>
 
 <para>
@@ -1021,31 +1057,41 @@ password required /lib/security/pam_stack.so service=system-auth
 </para>
 
 	<para>
-	<emphasis>When I open a new console with [ctrl][alt][F1], I can't log in with my user <quote>pitie.</quote>
-	I have tried with user <quote>scienceu\pitie</quote> also.</emphasis>
+	<emphasis>
+[ctrl][alt][F1]で新しくコンソールを開くと、私の ID 
+<quote>pitie</quote> ではログインできない。ユーザー 
+<quote>scienceu\pitie</quote> でやってみたが、それでもだめだった。
+</emphasis>
 	</para>
 
 	<para>
-	The problem may lie with the inclusion of <parameter>pam_stack.so
-	service=system-auth</parameter>. That file often contains a lot of stuff that may
-	duplicate what you are already doing. Try commenting out the <parameter>pam_stack</parameter> lines
-	for <parameter>auth</parameter> and <parameter>account</parameter> and see if things work. If they do, look at
-	<filename>/etc/pam.d/system-auth</filename> and copy only what you need from it into your
-	<filename>/etc/pam.d/login</filename> file. Alternatively, if you want all services to use
-	Winbind, you can put the Winbind-specific stuff in <filename>/etc/pam.d/system-auth</filename>.
+この問題は
+<parameter>pam_stack.so service=system-auth</parameter>がある
+時に発生する。このファイルに入っている多くの設定には、
+すでに実行中ものが二重に入っていることがよくある。
+<parameter>auth</parameter> と <parameter>account</parameter>
+から <parameter>pam_stack</parameter> の行をコメントアウト
+したらどうなるかやってみてくれ。それで動くなら、
+<filename>/etc/pam.d/system-auth</filename> ファイルを見て、
+その中で本当に必要な行だけを <filename>/etc/pam.d/login</filename>
+ファイルにコピーすればいい。別のやり方として、もしすべての
+サービスで winbind を動かしてもいいなら、
+<filename>/etc/pam.d/system-auth</filename> に winbind 固有の
+設定を追加してもいい。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Winbind Is Not Resolving Users and Groups</title>
+	<title>Winbind がユーザーとグループを解決してくれない</title>
 
 	<para>
 	<quote>
-	My &smb.conf; file is correctly configured. I have specified 
-	<smbconfoption name="idmap uid">12000</smbconfoption> 
-	and <smbconfoption name="idmap gid">3000-3500,</smbconfoption>
-	and <command>winbind</command> is running. When I do the following it all works fine.
+僕の &smb.conf; は正しく設定されている。
+<smbconfoption name="idmap uid">12000</smbconfoption> と
+<smbconfoption name="idmap gid">3000-3500</smbconfoption>
+を指定しているし <command>winbind</command> も動いている。
+以下のコマンドはちゃんと動いている。
 	</quote>
 	</para>
 
@@ -1073,18 +1119,19 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 
 	<para>
 	<quote>
-	But this command fails:
+しかし、このコマンドが失敗する：
 	</quote>
 <screen>
 &rootprompt;<userinput>chown maryo a_file</userinput>
 chown: 'maryo': invalid user
 </screen>
-	<quote>This is driving me nuts! What can be wrong?</quote>
+	<quote>一体どうなってんの？何か間違ってる？</quote>
 	</para>
 
 	<para>
-	Your system is likely running <command>nscd</command>, the name service
-	caching daemon. Shut it down, do not restart it! You will find your problem resolved.
+名前キャッシュデーモンである <command>nscd</command> が動いてる
+んじゃないかな？そいつを終わらせて、起動しないようにしてくれ。
+それでうまくいくと思うよ。
 	</para>
 
 	</sect2>
