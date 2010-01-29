@@ -182,17 +182,14 @@
 		<para>
 <indexterm><primary>IPC$接続</primary></indexterm>
 <indexterm><primary>RPC呼び出し</primary></indexterm>
-		印刷とユーザ検索要求を扱うために、1つのサーバに対する、すべてのIPC$接続と
-		RPC呼び出しを分割することができた。RPC印刷ハンドルは、異なったIPC$
-		セッションで共有される。&smbmdash;これはクラスタサーバをまたがって
-		これを分割するのは難しい!
-		One could split all IPC$ connections and RPC calls to one server to handle printing and user
-		lookup requirements. RPC printing handles are shared between different IPC4 sessions &smbmdash; it is
-		hard to split this across clustered servers!
+		印刷とユーザ検索要求を扱うためには、すべてのIPC$接続とRPC呼び出しを1台の
+		サーバに振り分けるしかない。RPC印刷ハンドルは、異なったIPC$
+		セッションで共有される。&smbmdash;これをクラスタを構成するサーバ間で
+		分割するのは難しい!
 		</para>
 
 		<para>
-		概念的に、すべての他のサーバはファイルサービスのみ提供する。これは
+		概念的に、他のすべてのサーバはファイルサービスのみ提供する。これは
 		集中するよりも簡単な問題である。
 		Conceptually speaking, all other servers would then provide only file services. This is a simpler
 		problem to concentrate on.
@@ -290,11 +287,8 @@
 <indexterm><primary>サーバプール</primary></indexterm>
 <indexterm><primary>backend file system pool</primary></indexterm>
 		クラスタ化されたサーバが純粋なSMBサービスを提供するとき、oplockの
-		取り扱いは、バックエンドのファイルシステムプールに渡される必要なしに
-		サーバプール内で完了してもよい。
-		Where a clustered server provides purely SMB services, oplock handling
-		may be done within the server pool without imposing a need for this to
-		be passed to the backend file system pool.
+		処理は、バックエンドのファイルシステムプールに渡す必要性はなく、
+		サーバプール内で完結してもよい。
 		</para>
 
 		<para>
