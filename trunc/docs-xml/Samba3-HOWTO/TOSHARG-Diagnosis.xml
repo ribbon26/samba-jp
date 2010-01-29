@@ -268,7 +268,7 @@ UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
 
 
 <example id="modif1">
-<title>Configuration for Allowing Connections Only from a Certain Subnet</title>
+<title>特定のサブネットからのみ接続を受け付ける設定例</title>
 <smbconfblock>
 <smbconfsection name="[globals]"/>
 <smbconfoption name="hosts deny">ALL</smbconfoption>
@@ -280,14 +280,14 @@ UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
 
 <para>
 <indexterm><primary>loopback adapter</primary></indexterm>
-In <link linkend="modif1">Configuration for Allowing Connections Only from a Certain Subnet</link>, no
-allowance has been made for any session requests that will automatically translate to the loopback adapter
-address 127.0.0.1.  To solve this problem, change these lines as shown in <link linkend="modif2">the following
-example</link>.
+<link linkend="modif1">特定のサブネットからのみ接続を受け付ける設定例</link>では、
+ループバックアダプタアドレス 127.0.0.1へ自動的に変換される任意のセッション要求は
+許可されない。この問題を解決するためには、<link linkend="modif2">以下の例</link>で
+示されているような行に変更する。
 </para>
 
 <example id="modif2">
-<title>Configuration for Allowing Connections from a Certain Subnet and localhost</title>
+<title>特定のサブネットとローカルホストから接続を許可する例</title>
 <smbconfblock>
 <smbconfsection name="[globals]"/>
 <smbconfoption name="hosts deny">ALL</smbconfoption>
@@ -299,21 +299,23 @@ example</link>.
 <para>
 <indexterm><primary>inetd</primary></indexterm>
 <indexterm><primary>smbclient</primary></indexterm>
-Another common cause of these two errors is having something already running on port <constant>139</constant>,
-such as Samba (&smbd; is running from <application>inetd</application> already) or Digital's Pathworks. Check
-your <filename>inetd.conf</filename> file before trying to start &smbd; as a daemon &smbmdash; it can avoid a
-lot of frustration!
+他の、よくある2つのエラーの例は、Samba(すでに<application>inetd</application>経由で
+&smbd;が動いている)か、DECのPathworksのような、ポート<constant>139</constant>上で
+何かがすでに動いているものである。デーモンで&smbd;を動かす前に
+<filename>inetd.conf</filename>ファイルをチェックすること。&smbmdash;そうすれば
+多くのトラブルを防げる!
 </para>
 
 <para>
-<indexterm><primary>subnet mask</primary></indexterm>
-<indexterm><primary>broadcast address</primary></indexterm>
+<indexterm><primary>サブネットマスク</primary></indexterm>
+<indexterm><primary>ブロードキャストアドレス</primary></indexterm>
 <indexterm><primary>log.nmbd</primary></indexterm>
-<indexterm><primary>network interface</primary></indexterm>
-<indexterm><primary>IP address</primary></indexterm>
-And yet another possible cause for failure of this test is when the subnet mask and/or broadcast address
-settings are incorrect. Please check that the network interface IP address/broadcast address/subnet mask
-settings are correct and that Samba has correctly noted these in the <filename>log.nmbd</filename> file.
+<indexterm><primary>ネットワークインタフェース</primary></indexterm>
+<indexterm><primary>IPアドレス</primary></indexterm>
+さらに、このテストが失敗する、他のあり得そうな例としては、サブネットマスクか
+ブロードキャストアドレスの設定が不正な場合である。ネットワークインタフェースの
+IPアドレス、ブロードキャスト、サブネットマスクが正しいかと、それらが
+<filename>log.nmbd</filename>ファイル中に正しくSambaが記録しているかを確認すること。
 </para>
 
 </step>
@@ -322,23 +324,23 @@ settings are correct and that Samba has correctly noted these in the <filename>l
 
 <para>
 <indexterm><primary>nmblookup</primary></indexterm>
-Run the command <command>nmblookup -B BIGSERVER __SAMBA__</command>.
-You should get back the IP address of your Samba server.
+<command>nmblookup -B BIGSERVER __SAMBA__</command>コマンドを動かす。
+使用しているSambaサーバのIPアドレスが表示されるはずである。
 </para>
 
 <para>
 <indexterm><primary>inetd.conf</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
-<indexterm><primary>port 137</primary></indexterm>
-If you do not, then &nmbd; is incorrectly installed. Check your <filename>inetd.conf</filename>
-if you run it from there, or that the daemon is running and listening to UDP port 137.
+<indexterm><primary>ポート 137</primary></indexterm>
+そうでない場合、&nmbd;が駄々しくインストールされていない。<filename>inetd.conf</filename>
+経由で動かしている場合はそこを、あるいはデーモンが動いていてUDPポート137をリッスン
+しているかどうかをチェックする。
 </para>
 
 <para>
-One common problem is that many inetd implementations can't take many
-parameters on the command line. If this is the case, then create a
-one-line script that contains the right parameters and run that from
-inetd.
+ある1つのよくある問題は、多くのinetdの実装が、コマンドライン上に多数のパラメータを使えない
+というものである。もしもこの場合、正しいパラメータを含む1行のみのスクリプトを作成し、
+それをinetdから起動する。
 </para>
 
 </step>
@@ -347,7 +349,7 @@ inetd.
 
 <para>
 <indexterm><primary>nmblookup</primary></indexterm>
-Run the command <command>nmblookup -B ACLIENT `*'</command>.
+<command>nmblookup -B ACLIENT `*'</command>を起動する。
 </para>
 
 <para>
