@@ -513,53 +513,23 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 </orderedlist>
 
 <para>
-If you get a message <quote><errorname>invalid network name</errorname></quote> or 
-<quote><errorname>bad password error,</errorname></quote> then apply the
-same fixes as for the <command>smbclient -L</command> test. In
-particular, make sure your <command>hosts allow</command> line is correct (see the man pages).
+もしも、<quote><errorname>invalid network name</errorname></quote>か
+<quote><errorname>bad password error,</errorname></quote>というメッセージが表示された
+ならば、<command>smbclient -L</command>テストでのと同じ修正を行う。特に、
+<command>hosts allow</command>行(マニュアルページを参照)が正しいかを確認すること。
 </para>
 
 <para>
-Also, do not overlook that fact that when the workstation requests the
-connection to the Samba server, it will attempt to connect using the 
-name with which you logged onto your Windows machine. You need to make
-sure that an account exists on your Samba server with that exact same
-name and password.
+また、ワークステーションがSambaサーバに接続を要求するとき、Windowsマシンにログオンしている
+名前を使うという事実を見落とさないこと。Sambaサーバ上で存在しているアカウントと正確に
+同じ名前とパスワードにする必要がある。
 </para>
 
 <para>
-If you get a message <quote><errorname>specified computer is not receiving requests</errorname></quote> or similar error,
-it probably means that the host is not contactable via TCP services.
-Check to see if the host is running TCP wrappers, and if so, add an entry in
-the <filename>hosts.allow</filename> file for your client (or subnet, and so on.)
-</para>
-
-</step>
-
-<step performance="required">
-
-<para>
-Run the command <command>net use x: \\BIGSERVER\TMP</command>. You should 
-be prompted for a password, then you should get a <computeroutput>command completed 
-successfully</computeroutput> message. If not, then your PC software is incorrectly 
-installed or your &smb.conf; is incorrect. Make sure your <parameter>hosts allow</parameter>
-and other config lines in &smb.conf; are correct.
-</para>
-
-<para>
-It's also possible that the server can't work out what username to connect you as.
-To see if this is the problem, add the line
-<smbconfoption name="user">username</smbconfoption> to the
-<smbconfsection name="[tmp]"/> section of 
-&smb.conf; where <parameter>username</parameter> is the
-username corresponding to the password you typed. If you find this
-fixes things, you may need the username mapping option. 
-</para>
-
-<para>
-It might also be the case that your client only sends encrypted passwords 
-and you have <smbconfoption name="encrypt passwords">no</smbconfoption> in &smb.conf;.
-Change this setting to `yes' to fix this.
+もしも<quote><errorname>specified computer is not receiving requests</errorname></quote>
+か、同等のエラーが表示されたならば、おそらくTCP経由でホストに接続できないことを
+意味する。TCPラッパーがホスト上で動いているかを調べ、そうであれば、クライアント
+(かサブネット等)のエントリを<filename>hosts.allow</filename>に追加する。
 </para>
 
 </step>
@@ -567,18 +537,25 @@ Change this setting to `yes' to fix this.
 <step performance="required">
 
 <para>
-Run the command <command>nmblookup -M <parameter>testgroup</parameter></command> where 
-<parameter>testgroup</parameter> is the name of the workgroup that your Samba server and 
-Windows PCs belong to. You should get back the IP address of the 
-master browser for that workgroup.
+<command>net use x: \\BIGSERVER\TMP</command>を実行する。パスワード要求が来るはずである。
+次に、<computeroutput>command completed successfully</computeroutput>メッセージが表示
+されるはずである。そうでない場合、PC上のソフトウェアが正しくインストールされていないか、
+&smb.conf;が間違っている。&smb.conf;中の<parameter>hosts allow</parameter>と他の
+設定行が正しいかを確認する。
 </para>
 
 <para>
-If you do not, then the election process has failed. Wait a minute to
-see if it is just being slow, then try again. If it still fails after
-that, then look at the browsing options you have set in &smb.conf;. Make
-sure you have <smbconfoption name="preferred master">yes</smbconfoption> to ensure that 
-an election is held at startup.
+サーバが、どのユーザ名で接続するかを見いだせないという事もあり得る。この問題かどうかを
+見るためには、&smb.conf;中の<smbconfsection name="[tmp]"/>セクションに
+<smbconfoption name="user">username</smbconfoption>行を追加する。ここで、
+<parameter>username</parameter>は、入力するパスワードに対応するものである。
+もしもこれで修正されるならば、ユーザ名マッピングオプションが必要となるかもしれない。
+</para>
+
+<para>
+クライアントが暗号化パスワードのみを送り、&smb.conf;中で
+<smbconfoption name="encrypt passwords">no</smbconfoption>が設定されているという
+場合もあるかもしれない。これを修正するためには、設定を`yes'に変更する。
 </para>
 
 </step>
@@ -586,17 +563,33 @@ an election is held at startup.
 <step performance="required">
 
 <para>
-From file manager, try to browse the server. Your Samba server should
-appear in the browse list of your local workgroup (or the one you
-specified in &smb.conf;). You should be able to double-click on the name
-of the server and get a list of shares. If you get the error message <quote>invalid password,</quote>
- you are probably running Windows NT and it
-is refusing to browse a server that has no encrypted password
-capability and is in user-level security mode. In this case, either set
-<smbconfoption name="security">server</smbconfoption> and 
-<smbconfoption name="password server">Windows_NT_Machine</smbconfoption> in your
-&smb.conf; file or make sure <smbconfoption name="encrypt passwords"/> is
-set to <quote>yes</quote>.
+ワークグループの名前が<parameter>testgroup</parameter>である、SambaサーバとWindows PCが
+属している所で<command>nmblookup -M <parameter>testgroup</parameter></command>を
+実行する。そのワークグループにおけるマスタブラウザのIPアドレスが表示されるはずである。
+</para>
+
+<para>
+そうでない場合、選択プロセスが失敗している。ただ単に遅れているのかもしれないので
+しばらく待ち、再度試してみる。それでも失敗した場合、&smb.conf;中にある
+ブラウジングオプションを調べてみる。起動時に選択(election)が行われるように、
+<smbconfoption name="preferred master">yes</smbconfoption>を書いておくこと。
+</para>
+
+</step>
+
+<step performance="required">
+
+<para>
+ファイルマネージャから、サーバをブラウジングしてみる。ローカルワークグループ
+(か&smb.conf;中で指定したもの)のブラウズリスト中にSambaサーバが現れるはずである。
+サーバの名前をダブルクリックし、共有の一覧が得られるべきである。もしも、
+<quote>invalid password</quote>というエラーが表示されたならば、おそらくWindows NTが
+動作していて、それがユーザレベルのセキュリティモードで動作していて暗号化パスワードを
+扱えない状態になっていてサーバのブラウジングを拒否している。この場合、
+<smbconfoption name="security">server</smbconfoption>と
+<smbconfoption name="password server">Windows_NT_Machine</smbconfoption>のどちらかを
+&smb.conf;ファイル中に設定するか、<smbconfoption name="encrypt passwords"/>を
+<quote>yes</quote>に設定するようにする。
 </para>
 
 </step>
