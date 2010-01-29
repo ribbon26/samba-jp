@@ -140,30 +140,22 @@ Samba-3ではサポートされないとみなされる。
 <indexterm><primary>複数の仮想サーバ</primary></indexterm>
 <indexterm><primary>netbios alias</primary></indexterm>
 <indexterm><primary>メタサービズ</primary></indexterm>
-Sambaは複数の仮想サーバをホスティングできる能力を持ち、おのおのは、固有の性質を持つ。
-これはすべてのホスティングされるPersonalityに共通な&smb.conf;ファイルの設定で達成
-される。各サーバのpersonalityは固有の<smbconfoption name="netbios alias"/>で
+Sambaは、固有の設定を持つ、複数の仮想サーバをホスティングできる能力がある。
+これは、すべてのホスティングされる、個別設定に共通な&smb.conf;ファイルの設定で達成
+される。各(仮想)サーバの個別設定は、固有の<smbconfoption name="netbios alias"/>で
 ホスティングされ、おのおのは、固有の異なった<smbconfoption name="[global]"/>セクションを
-持つ。各サーバはサービス止めたサービスのために固有のセクションを持っても良い。
-Samba has the ability to host multiple virtual servers, each of which have their own personality.  This is
-achieved by configuring an &smb.conf; file that is common to all personalities hosted.  Each server
-personality is hosted using its own <smbconfoption name="netbios alias"/> name, and each has its own distinct
-<smbconfoption name="[global]"/> section. Each server may have its own stanzas for services and meta-services.
+持つ。各サーバはサービスとメタサービスのために固有のセクションを持っても良い。
 </para>
 
 <para>
 <indexterm><primary>workgroup</primary></indexterm>
 <indexterm><primary>security</primary></indexterm>
 <indexterm><primary>netbios aliases</primary></indexterm>
-複数の仮想サーバをホスティングするとき、おのおのは固有のpersonarityを持ち、おのおのは
+複数の仮想サーバをホスティングするとき、おのおのには個別設定が出来、おのおのは
 異なったワークグループにいる。プライマリサーバのみ、ドメインメンバかドメインコントローラに
-なれる。personalityは、動作している<smbconfoption name="security"/>モードと、使っている
+なれる。個別設定は、動作している<smbconfoption name="security"/>モードと、使っている
 <smbconfoption name="netbios aliases"/>とそれに対して定義された
 <smbconfoption name="workgroup"/>の組み合わせによって定義される。
-When hosting multiple virtual servers, each with their own personality, each can be in a different workgroup.
-Only the primary server can be a domain member or a domain controller. The personality is defined by the
-combination of the <smbconfoption name="security"/> mode it is operating in, the <smbconfoption name="netbios
-aliases"/> it has, and the <smbconfoption name="workgroup"/> that is defined for it.
 </para>
 
 <para>
@@ -173,25 +165,16 @@ aliases"/> it has, and the <smbconfoption name="workgroup"/> that is defined for
 <indexterm><primary>TCPポート 139</primary></indexterm>
 <indexterm><primary>TCPポート 445</primary></indexterm>
 <indexterm><primary>%L</primary></indexterm>
-この設定スタイルは、NetBIOS名を使うか、NetBIOS名なしのTCP上のサービスを使う事が出来る。
+この設定スタイルは、NetBIOS名を使うか、NetBIOS名なしのTCPサービスのSMBを使う事が出来る。
 もしもNetBIOSモード(最も一般的な方法)で動かす場合、パラメータ
 <smbconfoption name="smb ports">139</smbconfoption>はプライマリの&smb.conf;ファイル中に
 指定すべきである。それを間違うと、SambaはTCPポート445で動作することになり、
-最も良い場合で問題のある動作、悪い場合は、プライマリの&smb.conf;ファイルで指定された
+最も良い場合で問題のある動作、最悪の場合は、プライマリの&smb.conf;ファイルで指定された
 機能を得ることができるのみである。TCPポート139のみを使うNetBIOS over TCP/IPの使用は、
 <literal>%L</literal>マクロの使用が完全に有効になる事を意味する。もしも
 <smbconfoption name="smb ports">139</smbconfoption>が指定されていない場合(既定値では
 <parameter>445 139</parameter>)か、もしもこのパラメータの値が
 <parameter>139 445</parameter>の時は、<literal>%L</literal>は無効である。
-This configuration style can be used either with NetBIOS names, or using NetBIOS-less SMB over TCP services.
-If run using NetBIOS mode (the most common method) it is important that the parameter <smbconfoption name="smb
-ports">139</smbconfoption> should be specified in the primary &smb.conf; file. Failure to do this will result
-in Samba operating over TCP port 445 and problematic operation at best, and at worst only being able to obtain
-the functionality that is specified in the primary &smb.conf; file. The use of NetBIOS over TCP/IP using only
-TCP port 139 means that the use of the <literal>%L</literal> macro is fully enabled. If the <smbconfoption
-name="smb ports">139</smbconfoption> is not specified (the default is <parameter>445 139</parameter>, or if
-the value of this parameter is set at <parameter>139 445</parameter> then the <literal>%L</literal> macro
-is not serviceable.
 </para>
 
 <para>
@@ -199,19 +182,13 @@ is not serviceable.
 <indexterm><primary>複数のpersonality</primary></indexterm>
 <indexterm><primary>NetBIOSなし</primary></indexterm>
 <indexterm><primary>%iマクロ</primary></indexterm>
-各サーバが固有のpersonalityを持つ、ポート445を使う(NetBIOSなしのSMBポート)複数のサーバを
-ホスティングするのは可能で、この場合、(IPアドレスによって)分離されたサーバの識別を提供する
+各サーバの個別設定で、ポート445を使う(NetBIOSなしのSMBポート)複数のサーバを
+ホスティングするのは可能で、この場合、(IPアドレスによって)分離されたサーバを識別する
 ために、<literal>%i</literal>が使える。おのおのは固有の<smbconfoption name="security"/>
 モードを持つ。仮想サーバを作成するために、<smbconfoption name="interfaces"/>と
 <smbconfoption name="bind interfaces only"/>を<smbconfoption name="netbios name"/>に
 追加する必要があるかもしれない。この方法は、TCPポート139のみを使うNetBIOS名を使うよりも
 より複雑であると考えられる。
-It is possible to host multiple servers, each with their own personality, using port 445 (the NetBIOS-less SMB
-port), in which case the <literal>%i</literal> macro can be used to provide separate server identities (by
-IP Address). Each can have its own <smbconfoption name="security"/> mode. It will be necessary to use the
-<smbconfoption name="interfaces"/>, <smbconfoption name="bind interfaces only"/> and IP aliases in addition to
-the <smbconfoption name="netbios name"/> parameters to create the virtual servers. This method is considerably
-more complex than that using NetBIOS names only using TCP port 139.
 </para>
 
 <para>
