@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="problems">
 
@@ -10,75 +10,78 @@
 	<pubdate>8 Apr 2003</pubdate>
 </chapterinfo>
 
-<title>Analyzing and Solving Samba Problems</title>
+<title>Sambaの問題の調査と解決方法</title>
 
 <para>
 <indexterm><primary>RFCs</primary></indexterm>
 <indexterm><primary>SMB</primary></indexterm>
 <indexterm><primary>documentation</primary></indexterm>
-There are many sources of information available in the form of mailing lists, RFCs, and documentation. The
-documentation that comes with the Samba distribution contains good explanations of general SMB topics such as
-browsing.
+メーリングリスト、RFCやドキュメントのような形で、数多くの情報源が存在している。Sambaの
+配布物に由来するドキュメントには、ブラウジングのような一般的なSMBのトピックについての
+良い説明が含まれている。
 </para> 
 	
 <sect1>
-<title>Diagnostics Tools</title>
+<title>診断ツール</title>
 
 <para>
 <indexterm><primary>sniffer</primary></indexterm>
 <indexterm><primary>LAN</primary></indexterm>
-<indexterm><primary>analyzes data</primary></indexterm>
-<indexterm><primary>SMB networking</primary></indexterm>
-<indexterm><primary>network analyzer</primary></indexterm>
-With SMB networking, it is often not immediately clear what the cause is of a certain problem. Samba itself
-provides rather useful information, but in some cases you might have to fall back to using a
-<emphasis>sniffer</emphasis>. A sniffer is a program that listens on your LAN, analyzes the data sent on it,
-and displays it on the screen.
+<indexterm><primary>データの解析</primary></indexterm>
+<indexterm><primary>SMB ネットワーキング</primary></indexterm>
+<indexterm><primary>ネットワークアナライザ</primary></indexterm>
+SMBネットワーキングにおいて、特定の問題について、何が原因かと言うことが、簡単に
+分からないことがよくある。Sambaそれ自身はむしろ役立つ情報を提供するが、いくつかの
+例では、<emphasis>sniffer</emphasis>を使った方がよいかもしれない。snifferは
+LANをモニタし、そこに送信されているデータを解析し、画面上に表示するプログラムである。
 </para>
 
 <sect2>
-<title>Debugging with Samba Itself</title>
+<title>Sambaそれ自身によるデバッグ</title>
 
 <para>
-<indexterm><primary>diagnostic tools</primary></indexterm>
-<indexterm><primary>debugging problems</primary></indexterm>
+<indexterm><primary>診断ツール</primary></indexterm>
+<indexterm><primary>問題のデバッグ</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
-<indexterm><primary>debugging passwords</primary></indexterm>
+<indexterm><primary>パスワードのデバッグ</primary></indexterm>
 <indexterm><primary>debug level</primary></indexterm>
 <indexterm><primary>log level</primary></indexterm>
-One of the best diagnostic tools for debugging problems is Samba itself.  You can use the <option>-d
-option</option> for both &smbd; and &nmbd; to specify the <smbconfoption name="debug level"/> at which to run.
-See the man pages for <command>smbd, nmbd</command>, and &smb.conf; for more information regarding debugging
-options. The debug level (log level) can range from 1 (the default) to 10 (100 for debugging passwords).
+問題をデバッグするための最も良い診断ツールの1つは、Sambaそれ自身である。動作するときの、
+<smbconfoption name="debug level"/>を、&smbd;と&nmbd;両方に指定する、
+<option>-d オプション</option>が使える。<command>smbd, nmbd</command>と&smb.conf;の
+マニュアルページに、デバッギングオプションに関連するより詳細な情報があるので参照すること。
+debug level(log level)は1(既定値)から10までを指定できる(100はパスワードデバッグ用)。
 </para>
 	
 <para>
-<indexterm><primary>debugging</primary></indexterm>
+<indexterm><primary>デバッギング</primary></indexterm>
 <indexterm><primary>gcc</primary></indexterm>
 <indexterm><primary>gdb</primary></indexterm>
 <indexterm><primary>smbd</primary></indexterm>
 <indexterm><primary>nmbd</primary></indexterm>
 <indexterm><primary>LsaEnumTrustedDomains</primary></indexterm>
 <indexterm><primary>attach gdb</primary></indexterm>
-Another helpful method of debugging is to compile Samba using the <command>gcc -g </command> flag. This will
-include debug information in the binaries and allow you to attach <command>gdb</command> to the running
-<command>smbd/nmbd</command> process.  To attach <command>gdb</command> to an <command>smbd</command> process
-for an NT workstation, first get the workstation to make the connection. Pressing ctrl-alt-delete and going
-down to the domain box is sufficient (at least, the first time you join the domain) to generate a
-<parameter>LsaEnumTrustedDomains</parameter>. Thereafter, the workstation maintains an open connection and
-there will be an smbd process running (assuming that you haven't set a really short smbd idle timeout). So, in
-between pressing <command>ctrl-alt-delete</command> and actually typing in your password, you can attach
-<command>gdb</command> and continue.
+別の、デバッギングに便利な方法は、<command>gcc -g </command>フラグ付きでSambaをコンパイル
+することである。これは、バイナリ中にデバッグ情報を埋め込み、動作中の
+<command>smbd/nmbd</command>プロセスに<command>gdb</command>がアタッチできるようにする。
+NTワークステーション向けに、ある<command>smbd</command>プロセスに<command>gdb</command>を
+アタッチするためには、最初にワークステーションとの接続を確立する。
+<parameter>LsaEnumTrustedDomains</parameter>を生成するのに、ctrl-alt-deleteを
+押し、ドメインログオン画面を表示すれば(少なくとも、最初にドメインに参加しておく)
+十分である。その後、ワークステーションは開いているコネクションを維持し、smbdプロセスが
+走り出す(短い、smbdのアイドルタイムアウトを設定していないと仮定する)。
+<command>ctrl-alt-delete</command>を押してからパスワードを実際に入力するまでの間に、
+<command>gdb</command>をアタッチでき、そのあと継続できる。
 </para>
 
 <para>
-Some useful Samba commands worth investigating are:
+調べてみる価値のある便利なSambaのコマンドのいくつかは以下の通り:
 <indexterm><primary>testparm</primary></indexterm>
 <indexterm><primary>smbclient</primary></indexterm>
 <screen>
 &prompt;<userinput>testparm | more</userinput>
-&prompt;<userinput>smbclient -L //{netbios name of server}</userinput>
+&prompt;<userinput>smbclient -L //{サーバのnetbios名}</userinput>
 </screen>
 </para>
 
@@ -91,10 +94,10 @@ Some useful Samba commands worth investigating are:
 <indexterm><primary>tcpdump</primary></indexterm>
 <indexterm><primary>tethereal</primary></indexterm>
 <indexterm><primary>ethereal</primary></indexterm>
-<ulink url="http://www.tcpdump.org/">Tcpdump</ulink> was the first 
-UNIX sniffer with SMB support. It is a command-line utility and 
-now, its SMB support is somewhat lagging that of <command>ethereal</command> 
-and <command>tethereal</command>.
+<ulink url="http://www.tcpdump.org/">Tcpdump</ulink>はSMBをサポートした最初の
+UNIX上でのsnifferである。これはコマンドラインユーティリティで、現在、そのSMB
+サポートは、<command>ethereal</command>や<command>tethereal</command>よりは
+若干遅れている。
 </para>
 
 </sect2>
@@ -104,34 +107,35 @@ and <command>tethereal</command>.
 
 <para>
 <indexterm><primary>ethereal</primary></indexterm>
-<ulink url="http://www.ethereal.com/">Ethereal</ulink> is a graphical sniffer, available for both UNIX (Gtk)
-and Windows. Ethereal's SMB support is quite good. For details on the use of <command>ethereal</command>, read
-the well-written Ethereal User Guide.
+<ulink url="http://www.ethereal.com/">Ethereal</ulink>は、GUIのsnifferで、UNIX(Gtk)
+とWindows両方で使える。EtherealのSMBサポートはとても良い。<command>ethereal</command>の
+使用法の詳細は、良くできているEthereal User Guideを読むこと。
 </para>
 
-<figure id="ethereal1"><title>Starting a Capture.</title><imagefile>ethereal1</imagefile></figure>
+<figure id="ethereal1"><title>キャプチャの開始</title><imagefile>ethereal1</imagefile></figure>
 
 <para>
 <indexterm><primary>ports</primary></indexterm>
-Listen for data on ports 137, 138, 139, and 445. For example, use the filter <userinput>port 137, port 138,
-port 139, or port 445</userinput> as seen in <link linkend="ethereal1">Starting a Capture</link> snapshot.
+ポート137,138,139,445をリッスン。例えば、<link linkend="ethereal1">キャプチャの開始</link>
+画面であるように、<userinput>port 137, port 138,port 139,か port 445</userinput>を
+フィルタとして使う。
 </para>
 
 <para>
-A console version of ethereal is available as well and is called <command>tethereal</command>.
+<command>tethereal</command>という名前のコンソールバージョンのecherealもある。
 </para>
 
-<figure id="ethereal2"><title>Main Ethereal Data Window.</title><imagefile>ethereal2</imagefile></figure>
+<figure id="ethereal2"><title>Etherealメインデータウィンドウ</title><imagefile>ethereal2</imagefile></figure>
 
 </sect2>
 
 <sect2>
-<title>The Windows Network Monitor</title>
+<title>Windowsのネットワークモニタ</title>
 	
 <para>
-<indexterm><primary>Network Monitor</primary></indexterm>
+<indexterm><primary>ネットワークモニタ</primary></indexterm>
 <indexterm><primary>Netmon</primary></indexterm>
-<indexterm><primary>Microsoft Developer Network CDs</primary></indexterm>
+<indexterm><primary>Microsoft Developer Network CD</primary></indexterm>
 <indexterm><primary>SMS</primary></indexterm>
 <indexterm><primary>promiscuous mode</primary></indexterm>
 <indexterm><primary>ethereal</primary></indexterm>
