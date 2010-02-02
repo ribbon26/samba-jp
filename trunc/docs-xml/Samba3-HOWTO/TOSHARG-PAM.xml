@@ -566,10 +566,10 @@ Linux-PAM ライブラリからの成功や失敗の応答のサマリを受け�
 		<para>
 動的ローダブルオブジェクトファイルのパス名 - 差し替え可能な
 モジュールそのもの。モジュールパスの最初の文字が
-<quote>/</quote> の場合、それは完全なパスであるとみなされる。
+<quote>/</quote> の場合、それは絶対パスであるとみなされる。
 そうでない場合、与えられたモジュールパスは既定値のモジュール
 パスである <filename>/lib/security</filename> の後ろに付加される
-（ただし前述の注意事項を参照のこと）。
+(ただし前述の注意事項を参照のこと)。
 		</para>
 
 		<para>
@@ -578,13 +578,13 @@ Linux のシェルコマンドへの引数と同様である。一般的に、�
 オプションであり、与えられたモジュール固有のものであることが多い。
 無効な引数はモジュールによって無視される。しかしながら、無効な引数に
 出会った場合、そのモジュールは syslog(3) に対してエラーメッセージを
-出力しなければならない。共通的なオプションについては次のセクションを
+出力しなければならない。共通的なオプションについては次の節を
 参照して欲しい。
 		</para>
 
 		<para>
 引数の中に空白を含める場合は引数全体を大括弧 [] で括るようにする。
-次に例を示す：
+次に例を示す:
 		</para>
 
 <para><programlisting>
@@ -595,7 +595,7 @@ user_name=<quote>%u</quote> and password=PASSWORD(<quote>%p</quote>) and service
 
 		<para>
 この書式を使う場合は文字列の中に <quote>[</quote> 文字を含んでもよい。
-また文字列の中に <quote>]</quote> 文字を含める場合は、引数のパースが
+また文字列の中に <quote>]</quote> 文字を含める場合は、引数の解析が
 正しく行えるように <quote>\[</quote> を使うべきである。すなわち以下の
 ようになる。
 		</para>
@@ -605,8 +605,8 @@ user_name=<quote>%u</quote> and password=PASSWORD(<quote>%p</quote>) and service
 </programlisting></para>
 
 		<para>
-設定ファイルの中でひとつでも書式が正しくない行があれば、（エラーが
-起こって）認証処理は失敗すると思った方がよい。対応するエラーは
+設定ファイルの中でひとつでも書式が正しくない行があれば、(エラーが
+起こって)認証処理は失敗すると思った方がよい。対応するエラーは
 syslog(3) への呼び出しを通してシステムのログファイルに書き込まれる。
 		</para>
 		</listitem>
@@ -621,8 +621,8 @@ syslog(3) への呼び出しを通してシステムのログファイルに書�
 <title>システム設定の例</title>
 
 <para>
-以下に設定ファイル <filename>/etc/pam.d/login</filename> を例として示す。
-この例ではすべてのオプションがアンコメントされて（＝有効になって）おり、
+以下は設定ファイル <filename>/etc/pam.d/login</filename>の例である。
+この例ではすべてのオプションがコメント状態をはずされて(＝有効になって)おり、
 おそらくこのままでは使い物にならないだろう。というのは、ログインプロセス
 が成功するまでに多くの条件が積み重なっているからである。
 <filename>pam_pwdb.so</filename> の呼び出しを除き、原則的にはすべての
@@ -658,7 +658,7 @@ password     required    pam_pwdb.so shadow md5
 
 <para>
 PAM では交換式モジュールが利用できる。サンプルシステムでは
-以下のものが利用可能：
+以下のものが利用可能:
 </para>
 
 <para><prompt>$</prompt><userinput>/bin/ls /lib/security</userinput>
@@ -684,7 +684,7 @@ pam_userdb.so    pam_warn.so         pam_unix_session.so
 を使う <filename>pam_pwdb.so</filename> を
 <filename>pam_smbpass.so</filename> で置き換えている。
 後者では Microsoft MD4 暗号化パスワードハッシュを含む Samba 
-のデータベースを使う。このデータベースはお使いの UNIX/Linux 
+のデータベースを使う。このデータベースは使用している UNIX/Linux 
 システムの実装により
 <filename>/usr/local/samba/private/smbpasswd</filename>, 
 <filename>/etc/samba/smbpasswd</filename>,
@@ -695,7 +695,7 @@ pam_userdb.so    pam_warn.so         pam_unix_session.so
 スクリプト実行時に <option>--with-pam_smbpass</option> 
 オプションを指定する。<filename>pam_smbpass</filename> 
 モジュールに関する詳細については Samba ソースの配布物の
-<filename>source/pam_smbpass</filename> ディレクトリーにある
+<filename>source/pam_smbpass</filename> ディレクトリにある
 ドキュメントを参照して欲しい。
 </para>
 
@@ -712,7 +712,7 @@ password    required    pam_smbpass.so nodelay
 
 <para>
 以下に、ある Linux システムにおける PAM の設定ファイルを示す。
-既定値設定では <filename>pam_pwdb.so</filename> を使う。
+既定値の設定では <filename>pam_pwdb.so</filename> を使う。
 </para>
 
 <para>
@@ -731,7 +731,7 @@ password   required     pam_pwdb.so shadow md5
 <command>smbpasswd</command> データベースを使うようになっている。
 このような設定を行った場合、<command>passwd</command> プログラムに
 対しても影響を及ぼす。つまり、<command>smbpasswd</command> の
-パスワードを <command>passwd</command> コマンドで変更できるようになる：
+パスワードを <command>passwd</command> コマンドで変更できるようになる:
 </para>
 
 <para>
@@ -747,17 +747,15 @@ password   required     pam_smbpass.so nodelay smbconf=/etc/samba.d/smb.conf
 </para>
 
 <note><para>
-PAM では階層的な（スタックされた）認証の仕組みを提供している。
+PAM では階層的な(スタックされた)認証の仕組みを提供している。
 たとえば、ある PAM モジュールが受け取った情報を、PAM スタックの
 次のモジュールに渡すことができる。PAM に関する特定の機能の詳細については、
 お使いのシステムに特化したドキュメントを参照して欲しい。
 さらにいくつかの Lunux の実装では、すべての認証を中心となる単一のファイルで
 設定できる <filename>pam_stack.so</filename> と呼ばれるモジュールが
 提供されている。
-
 <filename>pam_stack.so</filename> 方式は管理者の手間を軽減
 してくれるので、熱心なファンもいる。
-
 もっとも、環境によってもいろんな問題があるわけであり、前述のどの方式を
 取るにしてもそれぞれのトレードオフがある。より有益な情報を探すために、
 PAM のドキュメントをあたってみるのもよいだろう。
@@ -788,7 +786,7 @@ SMB パスワード暗号を使う場合に必要なチャレンジ／レスポ�
 認証メカニズムを PAM モジュールが サポートしていないからである。
 </para>
 
-<para>既定値：<smbconfoption name="obey pam restrictions">no</smbconfoption></para>
+<para>既定値:<smbconfoption name="obey pam restrictions">no</smbconfoption></para>
 </blockquote>
 
 </sect2>
