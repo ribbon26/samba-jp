@@ -622,7 +622,7 @@ syslog(3) への呼び出しを通してシステムのログファイルに書�
 
 <para>
 以下は設定ファイル <filename>/etc/pam.d/login</filename>の例である。
-この例ではすべてのオプションがコメント状態をはずされて(＝有効になって)おり、
+この例ではすべてのオプションがコメント状態をはずされて(=有効になって)おり、
 おそらくこのままでは使い物にならないだろう。というのは、ログインプロセス
 が成功するまでに多くの条件が積み重なっているからである。
 <filename>pam_pwdb.so</filename> の呼び出しを除き、原則的にはすべての
@@ -796,7 +796,7 @@ SMB パスワード暗号を使う場合に必要なチャレンジ／レスポ�
 
 <para>
 どんな OS であっても、その OS 自身がアクセス可能なユーザ証明情報が
-（どこからか）提供されていることを前提としている。UNIX ではユーザ
+(どこからか)提供されていることを前提としている。UNIX ではユーザ
 識別子(UID)だけでなくグループ識別子(GID)も必要となる。これらはいずれも
 単純な整数値であり、<filename>/etc/passwd</filename> といったパスワード
 バックエンドより取得する。
@@ -806,7 +806,7 @@ SMB パスワード暗号を使う場合に必要なチャレンジ／レスポ�
 Windows NT サーバでは、ユーザとグループは相対ID(RID)に割り当て
 られている。これらはユーザやグループが作られる際、ドメイン毎に
 一意となる。Windows NT のユーザやグループを UNIX のユーザやグループ
-に変換するためには、RID と UNIX のユーザ／グループの ID を
+に変換するためには、RID と UNIX のユーザ/グループの ID を
 マッピングする必要がある。これが winbind が行う仕事のひとつである。
 </para>
 
@@ -815,7 +815,7 @@ winbind のユーザとグループはサーバから解決要求が出され、
 グループの ID が指定された範囲内で割り当てられる。クライアントが
 ユーザとグループを列挙するコマンドを実行すると、すぐに既存の全
 ユーザとグループがマッピングされ、割り当て処理が先着順に行われる。
-割り当てられた UNIX ID は Samba の lock ディレクトリー配下のデータベース
+割り当てられた UNIX ID は Samba の lock ディレクトリ配下のデータベース
 ファイルに保持されて記憶される。
 </para>
 
@@ -823,12 +823,12 @@ winbind のユーザとグループはサーバから解決要求が出され、
 これにより、目先が利く管理者なら、<filename>pam_smbpass.so</filename> や
 <command>winbindd</command> と、<parameter>ldap</parameter> のような
 分散型の <smbconfoption name="passdb backend"></smbconfoption> との
-組み合わせにより、（Linux のような）PAM を意識したプログラムや
+組み合わせにより、(Linux のような)PAM を意識したプログラムや
 アプリケーションからも使うことのできる、中央集権型で管理された分散型の
-ユーザ／パスワードデータベースが使えるようになるということが理解
+ユーザ/パスワードデータベースが使えるようになるということが理解
 できるだろう。このお膳立てにより、広範囲のネットワーク認証のトラフィック
-が削減できるという限りにおいては、マイクロソフトのアクティブディレクトリー
-サービス(ADS)に比較して、特に強力な優位性を持てる。
+が削減できるという限りにおいては、マイクロソフトのActive Directory Service
+(ADS)に比較して、特に強力な優位性を持てる。
 </para>
 
 <warning><para>
@@ -846,7 +846,7 @@ UNIX の ID データベースに対応する RID はユーザとグループの
 
 <para>
 <filename>pam_smbpass</filename> は PAM モジュールのひとつであり、
-システム上で <filename>smbpasswd</filename> （Samba のパスワード）
+システム上で <filename>smbpasswd</filename> (Sambaのパスワード)
 データベースと UNIX のパスワードファイルとの同期を取るために
 使われる。PAM は Solaris, HPUX, Linux などの UNIX オペレーティングシステム
 上でサポートされている API であり、認証メカニズムに対する標準的な
@@ -856,7 +856,7 @@ UNIX の ID データベースに対応する RID はユーザとグループの
 <para>
 このモジュールはローカルにある <filename>smbpasswd</filename> ユーザ
 データベースを使って認証する。リモートの SMB サーバで認証したり、
-システム上の SUID root されたバイナリーの存在を調べたいという向きには、
+システム上の SUID root されたバイナリの存在を調べたいという向きには、
 <filename>pam_winbind</filename> の方を使うことをお勧めする。
 </para>
 
@@ -883,18 +883,18 @@ debugと似ているが、認識できないユーザ名も表示する</entry><
 		<row><entry>use_authtok</entry>
 			<entry>
 try_first_pass に似ているが、
-（パスワードモジュールだけをスタックさせるための）
+(パスワードモジュールだけをスタックさせるための)
 新しい PAM_AUTHTOK が事前にセットされていなければ『失敗する』
 </entry></row>
 		<row><entry>not_set_pass</entry><entry>
 このモジュールで使われたパスワードを他のモジュールに流用させない
 </entry></row>
 		<row><entry>nodelay</entry><entry>
-認証の失敗までに最大１秒の遅延を挟まない</entry></row>
+認証の失敗までに最大1秒の遅延を挟まない</entry></row>
 		<row><entry>nullok</entry><entry>
-null のパスワードを認める</entry></row>
+パスワードなしを認める</entry></row>
 		<row><entry>nonull</entry><entry>
-null のパスワードを認めない。これは Samba の設定に優先する
+パスワードなしを認めない。これは Samba の設定に優先する。
 </entry></row>
 		<row><entry>migrate</entry><entry>
 <quote>auth</quote> コンテキストでのみ意味を持つ。
@@ -921,7 +921,7 @@ Linux の <filename>/etc/pam.d/</filename> 形式のファイル構造で
 以下の PAM 設定例では、<filename>/etc/passwd (/etc/shadow)</filename> 
 が変更されたときに、pam_smbpass を利用して
 <filename>private/smbpasswd</filename>が連動して変更されるようにしている。
-これはパスワードの有効期限が切れたときに（<command>ssh</command>のような）
+これはパスワードの有効期限が切れたときに(<command>ssh</command>のような)
 アプリケーションがパスワードを変更するような場合に便利である。
 </para>
 
@@ -947,7 +947,7 @@ session    required     pam_unix.so
 以下は <filename>pam_smbpass</filename> を使って平文から
 Samba 用の暗号化パスワードに移行するための PAM 設定である。
 他のメソッドと違い、この方法なら一度も Samba の共有に接続
-したことがなくても使える：パスワードを移行すれば、ユーザが
+したことがなくても使える:パスワードを移行すれば、ユーザが
 <command>ftp</command> で接続したり、<command>ssh</command>
 でログインしてメールを取り出したりする場合などにも使える。
 </para>
@@ -995,12 +995,12 @@ session    required     pam_unix.so
 </sect3>
 
 <sect3>
-<title>ケルベロスパスワード統合設定</title>
+<title>Kerberosパスワード統合設定</title>
 
 <para>
 以下の PAM 設定例は、<parameter>pam_krb5</parameter> といっしょに
 使われる <parameter>pam_smbpass</parameter> を示している。
-これは Samba PDC 上で、かつそれがケルベロス・レルムのメンバーで
+これは Samba PDC 上で、かつそれがkerberos realmのメンバで
 ある場合に有用である。
 </para>
 
@@ -1038,7 +1038,7 @@ Samba のメーリングリストで見かけたいくつかのケースを紹�
 
 	<para>
 あるユーザから<emphasis>PAM の設定で以下の問題が起こった</emphasis>
-との報告があった：
+との報告があった:
 	</para>
 
 <para>
@@ -1117,7 +1117,7 @@ maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
 
 	<para>
 	<quote>
-しかし、このコマンドが失敗する：
+しかし、このコマンドが失敗する:
 	</quote>
 <screen>
 &rootprompt;<userinput>chown maryo a_file</userinput>
