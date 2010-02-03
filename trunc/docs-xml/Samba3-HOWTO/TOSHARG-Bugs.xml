@@ -24,74 +24,68 @@ Sambaの<ulink url="https://bugzilla.samba.org/">Bugzilla</ulink>機能を使っ
 </para>
 
 <para>
-
-Please do as much as you can yourself to help track down the
-bug. Samba is maintained by a dedicated group of people who volunteer
-their time, skills, and efforts. We receive far more mail than
-we can possibly answer, so you have a much higher chance of a response
-and a fix if you send us a <quote>developer-friendly</quote> bug report that lets
-us fix it fast. 
+自分自身で出来るだけバグを追い詰めてほしい。Sambaは、ボランティアで時間、技術、労力を
+提供している自主的なグループによって保守されている。問い合わせに対応しきれないメールを
+受け取っているので、早く修正できる形で、<quote>開発者にわかりやすい</quote>バグ報告を
+送ってもらえると、返事とバグ修正の機会が大きくなる。
 </para>
 
 <para>
 <indexterm><primary>comp.protocols.smb</primary></indexterm>
 <indexterm><primary>newsgroup</primary></indexterm>
-<indexterm><primary>configuration problem</primary></indexterm>
-If you post the bug to the comp.protocols.smb
-newsgroup or the mailing list, do not assume that we will read it. If you suspect that your 
-problem is not a bug but a configuration problem, it is better to send 
-it to the Samba mailing list, as there are thousands of other users on
-that list who may be able to help you.
+<indexterm><primary>設定の問題</primary></indexterm>
+もしも、comp.protocols.smbニュースグループか、メーリングリストに投稿した
+場合、それを開発者が読むと思ってはいけない。もしも、問題がバグではなくて、
+設定の問題だと推測したならば、手助けできる人がたくさんいるSambaメーリング
+リストに送った方がよい。
 </para>
 
 <para>
-You may also like to look though the recent mailing list archives,
-which are conveniently accessible on the Samba Web pages
-at <ulink noescape="1" url="http://samba.org/samba/">http://samba.org/samba/</ulink>.
+<ulink noescape="1" url="http://samba.org/samba/">http://samba.org/samba/</ulink>の、
+Samba Webページ上で便利にアクセスできる、最近のメーリングリストアーカイブを見る事を
+好むかもしれない。
 </para>
 
 </sect1>
 
 <sect1>
-<title>General Information</title>
+<title>一般的な情報</title>
 
 <para>
-Before submitting a bug report, check your config for silly
-errors. Look in your log files for obvious messages that tell
-you've misconfigured something. Run testparm to check your config
-file for correct syntax.
+バグレポートを投稿する前に、エラーに対する設定を確認する。設定を間違えていると
+いう明確なメッセージをログファイルの中でサポートする。正しい文法になっているか、
+設定ファイルをtestparmでチェックする。
 </para>
 
 <para>
-Have you looked through <link linkend="diagnosis">The Samba Checklist</link>? This is extremely important.
+<link linkend="diagnosis">Sambaチェックリスト</link>を見てみたか?これはとても
+重要である。
 </para>
 
 <para>
-If you include part of a log file with your bug report, then be sure to
-annotate it with exactly what you were doing on the client at the
-time and exactly what the results were.
+もしも、バグレポートの中にログファイルを含めるならば、その時点でクライアント上で
+何をしたかということを正確に、その結果が何であるかを正確に注釈を付けること。
 </para>
 
 </sect1>
 
 <sect1 id="dbglvl">
-<title>Debug Levels</title>
+<title>デバッグレベル</title>
 
 <para>
-If the bug has anything to do with Samba behaving incorrectly as a
-server (like refusing to open a file), then the log files will probably
-be quite useful. Depending on the problem, a log level of between 3 and
-10 showing the problem may be appropriate. A higher level gives more
-detail but may use too much disk space.
+もしも、バグが、サーバとしてSambaの正しくない動作を何かしているならば
+(例えばファイルのオープンを断るなど)、ログファイルがとても便利に使えるだろう。
+現象にもよるが、ログレベル3から10の間が、適切に問題を表示するかもしれない。
+より大きなレベルはより詳細な結果が得られるが、とてもたくさんのディスクを
+消費する。
 </para>
 
 <para>
 <indexterm><primary>debug level</primary></indexterm>
 <indexterm><primary>log level</primary></indexterm>
-To set the debug level, use the <smbconfoption name="log level"/> in your 
-&smb.conf;. You may also find it useful to set the log 
-level higher for just one machine and keep separate logs for each machine. 
-To do this, add the following lines to your main &smb.conf; file:
+debug levelを設定するには、&smb.conf;中で<smbconfoption name="log level"/>を指定する。
+また、特定のマシンだけログレベルを大きくし、各マシン毎に分離すると便利である。
+これを行うには、&smb.conf;中に以下の行を追加する:
 </para>
 
 <smbconfblock>
@@ -101,27 +95,28 @@ To do this, add the following lines to your main &smb.conf; file:
 </smbconfblock>
 
 <para>
-and create a file <filename>/usr/local/samba/lib/smb.conf.<replaceable>machine</replaceable></filename> where
-<replaceable>machine</replaceable> is the name of the client you wish to debug. In that file put any
-&smb.conf; commands you want; for example, <smbconfoption name="log level"/> may be useful. This also allows
-you to experiment with different security systems, protocol levels, and so on, on just one machine.
+かつ、希望するコマンドを含む&smb.conf;を、新たに
+<filename>/usr/local/samba/lib/smb.conf.<replaceable>machine</replaceable>として
+作成する。例えば、<smbconfoption name="log level"/>は便利に使えるだろう。
+これはまた、異なったセキュリティシステム、プロトコルレベルなどを1つのマシン上で
+体験することもできる。
 </para>
 
 <para>
-The &smb.conf; entry <smbconfoption name="log level"/> is synonymous with the parameter <smbconfoption
-name="debuglevel"/> that has been used in older versions of Samba and is being retained for backward
-compatibility of &smb.conf; files.
+&smb.conf;のエントリ<smbconfoption name="log level"/>は、古いバージョンのSambaで
+使われていたパラメータ<smbconfoption name="debuglevel"/>と同義語であり、
+&smb.conf;ファイルの下位互換性のためにそのまま残っている。
 </para>
 
 <para>
-As the <smbconfoption name="log level"/> value is increased, you will record a significantly greater level of
-debugging information. For most debugging operations, you may not need a setting higher than
-<constant>3</constant>. Nearly all bugs can be tracked at a setting of <constant>10</constant>, but be
-prepared for a large volume of log data.
+<smbconfoption name="log level"/>の値を大きくすると、きわめて大量のデバッグ情報を
+記録することになる。多くのデバッグ作業において、この値を<constant>3</constant>より
+大きくする必要はないだろう。値を<constant>10</constant>にすると、ほとんどすべての
+バグが記録されるが、大きなログデータ領域を準備する必要がある。
 </para>
 
 	<sect2>
-	<title>Debugging-Specific Operations</title>
+	<title>デバッグ固有の操作</title>
 
 	<para>
 <indexterm><primary>debugging</primary></indexterm>
