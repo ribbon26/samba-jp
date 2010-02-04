@@ -191,11 +191,10 @@ debug levelを設定するには、&smb.conf;中で<smbconfoption name="log leve
 
 
 <para>
-<indexterm><primary>core files</primary></indexterm>
-You may also find that a core file appeared in a <filename>corefiles</filename>
-subdirectory of the directory where you keep your Samba log
-files. This file is the most useful tool for tracking down the bug. To
-use it, you do this:
+<indexterm><primary>コアファイル</primary></indexterm>
+Sambaログファイルが保存されているディレクトリの<filename>corefiles</filename>サブ
+ディレクトリにコアファイルが存在する場合があるかもしれない。このファイルは、
+バグを追跡するのに最も便利なものである。これを利用するには以下のようにする:
 <indexterm><primary>gdb</primary></indexterm>
 <indexterm><primary>debug</primary></indexterm>
 <screen>
@@ -205,79 +204,80 @@ use it, you do this:
 
 <para>
 <indexterm><primary>dbx</primary></indexterm>
-<indexterm><primary>stack trace</primary></indexterm>
-adding appropriate paths to smbd and core so gdb can find them. If you
-do not have gdb, try <userinput>dbx</userinput>. Then within the debugger,
-use the command <command>where</command> to give a stack trace of where the
-problem occurred. Include this in your report.
+<indexterm><primary>スタックトレース</primary></indexterm>
+smbdとcoreに対する適切なパスを追加すると、gdbはそれらを扱えることが出来る。
+もしもgdbを用意していないならば、<userinput>dbx</userinput>を試してみること。
+デバッガ内で<command>where</command>コマンドを使うと、どこで問題が発生したかの
+トレースが得られる。これをレポートに含める。
 </para>
 
 <para>
 <indexterm><primary>disass</primary></indexterm>
-If you know any assembly language, do a <command>disass</command> of the routine
-where the problem occurred (if it's in a library routine, then
-disassemble the routine that called it) and try to work out exactly
-where the problem is by looking at the surrounding code. Even if you
-do not know assembly, including this information in the bug report can be
-useful. 
+もしも、何らかのアセンブラ言語について知っているならば、どこで問題が発生したか
+を(もしもそれがライブラリルーチン内ならば、それを呼び出しているルーチンを
+逆アセンブルする)、<command>disass</command>で逆アセンブルし、そのコードの周辺を
+調べることで、正確にどこで現象が起きたかを調べてみる。アセンブラ言語について
+知らなくても、逆アセンブル結果をバグレポートに含めることは解析に役に立つ。
 </para>
 </sect1>
 
 <sect1>
-<title>Attaching to a Running Process</title>
+<title>稼働中のプロセスへのアタッチ</title>
 
 <para>
 <indexterm><primary>PID</primary></indexterm>
 <indexterm><primary>gdb</primary></indexterm>
 <indexterm><primary>smbstatus</primary></indexterm>
-Unfortunately, some UNIXes (in particular some recent Linux kernels)
-refuse to dump a core file if the task has changed UID (which smbd
-does often). To debug with this sort of system, you could try to attach
-to the running process using
-<userinput>gdb smbd <replaceable>PID</replaceable></userinput>, where you get
-<replaceable>PID</replaceable> from <application>smbstatus</application>.
-Then use <command>c</command> to continue and try to cause the core dump
-using the client. The debugger should catch the fault and tell you
-where it occurred.
+不幸にも、いくつかのUNIX(特に最近のLinuxカーネルのいくつか)は、タスクがUIDを
+変えたとき(smbdはしばしばこれを行う)コアファイルの作成を抑制する。
+このような種類のシステムでデバッグするには、まず、
+<application>smbstatus</application>で<replaceable>PID</replaceable>を得、
+次に、<userinput>gdb smbd <replaceable>PID</replaceable></userinput>
+を使って、稼働中のプロセスにアタッチしてみる。次に、<command>c</command>
+を使って処理を続行し、クライアントを使ってコアダンプを起こさせる。
+デバッガはフォルトを受け取り、どこでそれが起こったかを表示する。
 </para>
 
 <para>
-Sometimes it is necessary to build Samba binary files that have debugging
-symbols so as to make it possible to capture enough information from a crashed
-operation to permit the Samba Team to fix the problem.
+時には、Samba Teamに問題を修正してもらうために、クラッシュした操作からの十分な情報を
+キャプチャすることを可能とさせるために、デバッグシンボルを持つSambaバイナリファイルを
+構築する必要がある。
 </para>
 
 <para>
-Compile with <constant>-g</constant> to ensure you have symbols in place. 
-Add the following line to the &smb.conf; file global section:
+<constant>-g</constant>オプションを付けてコンパイルすると、シンボルが埋め込まれる。
+以下の行を、&smb.conf;ファイルのグローバルセクションに追加する:
 <screen>
 panic action = "/bin/sleep 90000"
 </screen>
-to catch any panics. If <command>smbd</command> seems to be frozen, look for any sleep
-processes. If it is not, and appears to be spinning, find the PID
-of the spinning process and type:
+これにより任意のパニックをキャッチできる。もしも、<command>smbd</command>が
+固まってしまったように見えたら、sleepしているプロセスを捜す。もしも存在せず、
+空回りしてるように見えたら、空回りしているように見えるプロセスのPIDを調べ、
+以下のように入力する:
 <screen>
 &rootprompt; gdb /usr/local/samba/sbin/smbd
 </screen>
 <indexterm><primary>spinning process</primary></indexterm>
-then <quote>attach `pid'</quote> (of the spinning process), then type <quote>bt</quote> to
-get a backtrace to see where the smbd is in the call path.
+次に、<quote>attach `pid'</quote>(pidは空回りしているプロセス)を行い、次に
+コールパス中のどこにsmbdがいるかを見るために<quote>bt</quote>を入力して
+バックトレースを取る。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Patches</title>
+<title>パッチ</title>
 
 
 <para>
 <indexterm><primary>diff</primary></indexterm>
 <indexterm><primary>patch</primary></indexterm>
-The best sort of bug report is one that includes a fix! If you send us
-patches, please use <userinput>diff -u</userinput> format if your version of 
-diff supports it; otherwise, use <userinput>diff -c4</userinput>. Make sure 
-you do the diff against a clean version of the source and let me know 
-exactly what version you used. 
+最も良い形のバグレポートは、修正を含むものである!もしも、パッチを送って
+もらえるのであれば、使用しているdiffがサポートしているのであれば、
+<userinput>diff -u</userinput>で差分を取ってほしい。そうでない場合、
+<userinput>diff -c4</userinput>を使ってほしい。オリジナルのソースに対する
+diffを取るようにすることと、正確にどのバージョンを使用しているかを知らせて
+ほしい。
 </para>
 
 </sect1>
