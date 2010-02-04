@@ -119,13 +119,13 @@ debug levelを設定するには、&smb.conf;中で<smbconfoption name="log leve
 	<title>デバッグ固有の操作</title>
 
 	<para>
-<indexterm><primary>debugging</primary></indexterm>
-<indexterm><primary>logging</primary></indexterm>
+<indexterm><primary>デバッグ</primary></indexterm>
+<indexterm><primary>ロギング</primary></indexterm>
 <indexterm><primary>functional components</primary></indexterm>
 <indexterm><primary>cluttering</primary></indexterm>
-	Samba-3.x permits debugging (logging) of specific functional components without unnecessarily
-	cluttering the log files with detailed logs for all operations. An example configuration to 
-	achieve this is shown in:
+	Samba-3.xはすべての操作に対する詳細なログが書かれるログファイル中で、
+	必要のない項目を外して特定の機能コンポーネントだけをデバッグ(ロギング)する
+	ことができる。これを行うための設定例は以下の通り:
 	</para>
 
 <para>
@@ -137,18 +137,19 @@ debug levelを設定するには、&smb.conf;中で<smbconfoption name="log leve
 </para>
 
 	<para>
-	This will cause the level of detail to be expanded to the debug class (log level) passed to
-	each functional area per the value shown above. The first value passed to the <parameter>log level</parameter>
-	of <constant>0</constant> means turn off all unnecessary debugging except the debug classes set for
-	the functional areas as specified. The table shown in <link linkend="dbgclass">Debuggable Functions</link>
-	may be used to attain very precise analysis of each SMB operation Samba is conducting.
+	これは、上記で示されている値毎に各機能単位にデバッグクラス(ログレベル)を
+	渡すために詳細なレベルを拡張している。<parameter>log level</parameter>の
+	<constant>0</constant>という最初の値は、特定の機能単位に対するデバッグクラスを
+	除き、すべての不必要なデバッグ出力を抑止する。
+	<link linkend="dbgclass">デバッグ単位</link>の表は、Sambaが処理している各SMB
+	操作をとても正確に分析するのに使うことが出来るかもしれない。
 	</para>
 
 	<table frame="all" id="dbgclass">
-		<title>Debuggable Functions</title>
+		<title>デバッグ単位</title>
 	<tgroup cols="2" align="center">
 		<thead>
-		<row><entry>Function Name</entry><entry>Function Name</entry></row>
+		<row><entry>機能名</entry><entry>機能名</entry></row>
 		</thead>
 		<tbody>
 		<row><entry>all</entry><entry>passdb</entry></row>
@@ -168,25 +169,24 @@ debug levelを設定するには、&smb.conf;中で<smbconfoption name="log leve
 </sect1>
 
 <sect1>
-<title>Internal Errors</title>
+<title>内部エラー</title>
 
 <para>
-If you get the message <quote><errorname>INTERNAL ERROR</errorname></quote> in your log files, 
-it means that Samba got an unexpected signal while running. It is probably a
-segmentation fault and almost certainly means a bug in Samba (unless
-you have faulty hardware or system software).
+もしも、ログファイル中に、<quote><errorname>INTERNAL ERROR</errorname></quote>という
+メッセージがあったら、これはSambaが動作中に予期しないシグナルを受け取ったことを意味する。
+これはおそらくセグメンテーションフォルトで、多くの場合Sambaのバグである(ハードウェア
+の故障かシステムソフトゥエアのバグを除く)。
 </para>
 
 <para>
-If the message came from smbd, it will probably be accompanied by
-a message that details the last SMB message received by smbd. This
-information is often useful in tracking down the problem, so please
-include it in your bug report.
+メッセージがsmbd由来であれば、smbが受け取った最後のSMBメッセージを詳細に説明する
+メッセージがおそらくあるだろう。この情報は、問題を解析するのにしばしば便利であるので、
+バグレポートの中に一緒に入れてほしい。
 </para>
 
 <para>
-You should also detail how to reproduce the problem, if
-possible. Please make this reasonably detailed.
+もしも可能ならば、どのように問題を再現するかについての詳細も説明してほしい。
+適度に詳細を記述してほしい。
 </para>
 
 
