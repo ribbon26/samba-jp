@@ -147,37 +147,41 @@ samba.orgのマシンはSamba,rsync,distcc, ccacheとjitterbugを含むいくつ
 	<para>
 	<indexterm><primary>rsync</primary></indexterm>
 	<indexterm><primary>ftp</primary></indexterm>
-	<parameter>pserver.samba.org</parameter> also exports unpacked copies of most parts of the Subversion tree
-	at the Samba <ulink noescape="1" url="ftp://pserver.samba.org/pub/unpacked">pserver</ulink> location and also
-	via anonymous rsync at the Samba <ulink noescape="1"
-	url="rsync://pserver.samba.org/ftp/unpacked/">rsync</ulink> server location.  I recommend using rsync rather
-	than ftp, because rsync is capable of compressing data streams, but it is also more useful than FTP because
-	during a partial update it will transfer only the data that is missing plus a small overhead.  See <ulink
-	noescape="1" url="http://rsync.samba.org/">the rsync home page</ulink> for more info on rsync.
+	<parameter>pserver.samba.org</parameter>も、
+	<ulink noescape="1" url="ftp://pserver.samba.org/pub/unpacked">pserver</ulink>
+	というSambaのサイトの所から、Subversionツリーのほとんどの部分のパックされてない
+	コピーをエクスポートでき、また、
+	<ulink noescape="1" url="rsync://pserver.samba.org/ftp/unpacked/">rsync</ulink>
+	という、Sambaの匿名rsyncサーバ経由でも同じようにできる。ftpよりはrsyncの方が、
+	rsyncはデータを圧縮転送できるのでお勧めであり、また、抜けているデータのみを
+	転送出来るという、部分更新が出来て、オーバヘッドが少ないという点でもお勧めで
+	ある。rsyncについてのより詳細な情報は、
+	<ulink noescape="1" url="http://rsync.samba.org/">the rsync home page</ulink>
+	を参照のこと。
 	</para>
 
 	<para>
-	The disadvantage of the unpacked trees is that they do not support automatic
-	merging of local changes as Subversion does. <command>rsync</command> access is most convenient 
-	for an initial install.                      
+	アンパックされたツリーの欠点は、Subversionのように、ローカルな変更の自動マージを
+	サポートしないと言うことである。<command>rsync</command>によるアクセスは、
+	初期導入に最も便利である。
 	</para>
 </sect1>
 
 <sect1>
-<title>Verifying Samba's PGP Signature</title>
+<title>SambaのPGP署名の検証</title>
 
 <para>
 <indexterm><primary>GPG</primary></indexterm>
 <indexterm><primary>PGP</primary></indexterm>
-It is strongly recommended that you verify the PGP signature for any source file before
-installing it. Even if you're not downloading from a mirror site, verifying PGP signatures
-should be a standard reflex. Many people today use the GNU GPG tool set in place of PGP.
-GPG can substitute for PGP.
+インストールする前に、任意のソースファイルのPGP署名を検証することを強く推奨する。
+ミラーサイトからダウンロードしていないとしても、PGP署名の検証は、標準的な習慣と
+すべきである。多くの人は現在PGPの代替としてGNU GPGツールを使っている。GPGは
+PGPの代わりとして使える。
 </para>
 
 
 <para>
-With that said, go ahead and download the following files:
+そんなわけで、以下のようにしてファイルをダウンロードする:
 </para>
 
 <para><screen>
@@ -188,12 +192,12 @@ With that said, go ahead and download the following files:
 
 <para>
 <indexterm><primary>PGP</primary></indexterm>
-The first file is the PGP signature for the Samba source file; the other is the Samba public
-PGP key itself. Import the public PGP key with:
+最初のファイルはSambaソースファイルのPGP署名である。もう1つはSambaの公開PGPキーそれ自身
+である。以下のようにしてPGPキーをインポートする:
 <screen>
 &prompt;<userinput>gpg --import samba-pubkey.asc</userinput>
 </screen>
-and verify the Samba source code integrity with:
+そして、Sambaソースコードの正当性を以下のようにして検査する:
 <screen>
 &prompt;<userinput>gzip -d samba-3.0.20.tar.gz</userinput>
 &prompt;<userinput>gpg --verify samba-3.0.20.tar.asc</userinput>
@@ -201,9 +205,9 @@ and verify the Samba source code integrity with:
 </para>
 
 <para>
-If you receive a message like, <quote>Good signature from Samba Distribution Verification Key...,</quote>
-then all is well. The warnings about trust relationships can be ignored. An
-example of what you would not want to see would be:
+もしも、<quote>Good signature from Samba Distribution Verification Key...,</quote>
+というようなメッセージが表示されたならば、すべて問題はない。信頼性の関係についての
+警告は無視して良い。以下のような表示が出たら問題である:
 <screen>
 gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 </screen>
@@ -212,7 +216,7 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 </sect1>
 
 <sect1>
-	<title>Building the Binaries</title>
+	<title>バイナリの構築</title>
 	
 	<para>
 	<indexterm><primary>autogen.sh</primary></indexterm>
