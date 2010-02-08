@@ -294,32 +294,32 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	<title>Active Directoryサポートを伴うSambaのコンパイル</title>
 	
 	<para>
-	In order to compile Samba with ADS support, you need to have installed
-	on your system:
+	ADSをサポートするようにSambaをコンパイルするためには、以下のものをシステムに
+	インストールする必要がある:
 	</para>
 
 	<itemizedlist>
 	
 	    <listitem><para>
-		The MIT or Heimdal Kerberos development libraries
-	    (either install from the sources or use a package).
+		MIT あるいは Heimdal Kerberos開発ライブラリ
+		(ソース、あるいはパッケージからのどちらかからインストール)
 		</para></listitem>
 	
 	    <listitem><para>
-		The OpenLDAP development libraries.
+		OpenLDAP開発ライブラリ。
 		</para></listitem>
 	    
 	</itemizedlist>
 
 	<para>
-	If your Kerberos libraries are in a nonstandard location, then
-	remember to add the configure option
+	もしも、使用しているKerberosライブラリが標準でない位置にあるならば、
+	以下のconfigure オプションを追加するのを忘れないこと。
 	<option>--with-krb5=<replaceable>DIR</replaceable></option>.
 	</para>
 
 	<para>
-	After you run configure, make sure that the 
-	<filename>include/config.h</filename> it generates contain lines like this:
+	configrue を実行後、生成された<filename>include/config.h</filename>が、
+	以下のような行を含んでいるかを確認する:
 <programlisting>
 #define HAVE_KRB5 1
 #define HAVE_LDAP 1
@@ -327,15 +327,15 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	</para>
 
 	<para>
-	If it does not, configure did not find your KRB5 libraries or
-	your LDAP libraries. Look in <filename>config.log</filename> to figure
-	out why and fix it.
+	もしもそうでない場合、configureはインストールされているKRB5ライブラリか
+	LDAPライブラリを見つけるのに失敗している。なぜそうなったかを
+	<filename>config.log</filename>をみて確認して修正する。
 	</para>
 
 	<sect3>
-	<title>Installing the Required Packages for Debian</title>
+	<title>Debian用の、必要とされるパッケージのインストール</title>
 
-	<para>On Debian, you need to install the following packages:</para>
+	<para>Debianでは、以下のパッケージのインストールが必要である:</para>
 	<para>
 		<itemizedlist>
 			<listitem><para>libkrb5-dev</para></listitem>
@@ -345,9 +345,9 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	</sect3>
 
 	<sect3>
-	<title>Installing the Required Packages for Red Hat Linux</title>
+	  <title>Red Hat Linux用の、必要とされるパッケージのインストール</title>
 
-	<para>On Red Hat Linux, this means you should have at least: </para>
+	<para>Red Hat Linuxでは、少なくとも:</para>
 	<para>
 		<itemizedlist>
 			<listitem><para>krb5-workstation (for kinit)</para></listitem>
@@ -356,29 +356,30 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 		</itemizedlist>
 	</para>
 
-	<para>in addition to the standard development environment.</para>
+	<para>を標準開発環境に追加する必要があることを意味する。</para>
 
-	<para>If these files are not installed on your system, you should check the installation
-	CDs to find which has them and install the files using your tool of choice. If in doubt
-	about what tool to use, refer to the Red Hat Linux documentation.</para>
+	<para>もしも、使用しているシステム上にこれらのファイルがインストールされて
+	いないならば、どこにそれらがあるかをインストールCDでチェックすべきであり、
+	使用しているツールにあわせてインストールする。もしもどのツールが使っている
+	かが分からない場合は、Red Hat Linuxのドキュメントを参照すること。</para>
 
 	</sect3>
 
 	<sect3>
-	<title>SuSE Linux Package Requirements</title>
+	<title>SuSE Linuxパッケージでの要求</title>
 
 	<para>
-	SuSE Linux installs Heimdal packages that may be required to allow you to build
-	binary packages. You should verify that the development libraries have been installed on
-	your system.
+	SuSE Linuxはバイナリパッケージを構築する事が出来るのに必要とされるだろうHeimdal
+	パッケージをインストールする。使用しているシステム上に、開発ライブラリが
+	インストールされているかを調べるべきである。
 	</para>
 
 	<para>
-	SuSE Linux Samba RPMs support Kerberos. Please refer to the documentation for
-	your SuSE Linux system for information regarding SuSE Linux specific configuration.
-	Additionally, SuSE is very active in the maintenance of Samba packages that provide
-	the maximum capabilities that are available. You should consider using SuSE-provided
-	packages where they are available.
+	SuSE Linux のSamba RPMはKerberosをサポートする。SuSE Linux固有の設定に関連する
+	情報は、使用しているSuSE Linuxシステムのドキュメントを参照して欲しい。さらに、
+	SuSEは使用可能な機能を最大限提供するように、Sambaパッケージのメンテナンスをとても
+	頻繁に行っている。使用可能な、SuSEが提供しているパッケージの使用について考慮
+	すべきである。
 	</para>
 
 	</sect3>
@@ -388,48 +389,47 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 </sect1>
 
 <sect1 id="startingSamba">
-	<title>Starting the &smbd; &nmbd; and &winbindd;</title>
+	<title>&smbd; &nmbd;と&winbindd;の起動</title>
 
 
 	<para>
 	<indexterm><primary>inetd</primary></indexterm>
-	You must choose to start &smbd;, &winbindd;  and &nmbd; either as daemons or from
-	<application>inetd</application>. Don't try to do both!  Either you can put
-	them in <filename> inetd.conf</filename> and have them started on demand by
-	<application>inetd</application> or <application>xinetd</application>, or you
-	can start them as daemons either from the command-line or in
-	<filename>/etc/rc.local</filename>. See the man pages for details on the
-	command line options. Take particular care to read the bit about what user
-	you need to have to start Samba. In many cases, you must be root.
+	&smbd;, &winbindd; と &nmbd;の起動を、デーモンか<application>inetd</application>
+	からの起動のどちらかにするかを選ぶ必要がある。両方同時に行ってはいけない!
+	<application>inetd</application>によって必要時に起動するように、
+	<filename> inetd.conf</filename>にそれらを記述するか、コマンドラインか、
+	<filename>/etc/rc.local</filename>に記述することで、デーモンとして起動できる。
+	コマンドラインオプションの詳細についてはマニュアルを参照のこと。どのユーザで
+	Sambaを起動する必要があることについての部分を注意深く読むこと。ほとんどの場合、
+	rootで起動する必要がある。
 	</para>
 
 	<para>
-	The main advantage of starting &smbd; and &nmbd; using the recommended daemon method
-	is that they will respond slightly more quickly to an initial connection request.
+	推奨される、デーモンによる方法を使って&smbd; と &nmbd;を開始することの利点は、
+	最初の接続要求時に、若干より迅速に反応すると言うことである。
 	</para>
 
 	<sect2>
-	<title>Starting from inetd.conf</title>
+	<title>inetd.confからの起動</title>
 
 	<indexterm><primary>inetd</primary></indexterm>
 	
 	<note>
-	<para>The following will be different if 
-	you use NIS, NIS+, or LDAP to distribute services maps.</para>
+	<para>以下は、もしもNIS、NIS+あるいはLDAPが分散されたサービスマップを
+	使っている場合は異なる。</para>
 	</note>
 	
-	<para>Look at your <filename>/etc/services</filename>. 
-	What is defined at port 139/tcp? If nothing is defined, 
-	then add a line like this:</para>
+	<para><filename>/etc/services</filename>を見る。ポート139/tcpに何が定義されて
+	いるだろうか?もしも何も定義されていないならば、以下のように行を追加する:</para>
 
 	<para><programlisting>netbios-ssn     139/tcp</programlisting></para>
 
-	<para>Similarly for 137/udp, you should have an entry like:</para>
+	<para>137/udpに対して、以下のようなエントリを同様に追加する:</para>
 
 	<para><programlisting>netbios-ns	137/udp</programlisting></para>
 
 	<para>
-	Next, edit your <filename>/etc/inetd.conf</filename> and add two lines like this:
+	次に、<filename>/etc/inetd.conf</filename>を編集し、以下のように2行追加する:
 <programlisting>
 netbios-ssn stream tcp nowait root /usr/local/samba/sbin/smbd smbd 
 netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd 
@@ -438,43 +438,42 @@ netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd
 
 <indexterm><primary>/etc/inetd.conf</primary></indexterm>
 	<para>
-	The exact syntax of <filename>/etc/inetd.conf</filename> 
-	varies between UNIXes. Look at the other entries in inetd.conf 
-	for a guide.
+	<filename>/etc/inetd.conf</filename>の正しい文法はUNIX毎に異なる。ガイドの
+	inetd.conf中の他の項目を参照すること。
 	</para>
 
 	<para>
 	<indexterm><primary>xinetd</primary></indexterm>
-	Some distributions use xinetd instead of inetd. Consult the 
-	xinetd manual for configuration information.
+	いくつかのディストリビューションはinetdの代わりにxinetdを使っている。
+	設定情報についてはxinetdのマニュアルを参照すること。
 	</para>
 
-	<note><para>Some UNIXes already have entries like netbios_ns 
-	(note the underscore) in <filename>/etc/services</filename>. 
-	You must edit <filename>/etc/services</filename> or
-	<filename>/etc/inetd.conf</filename> to make them consistent.
+	<note><para>いくつかのUNIXではすでに<filename>/etc/services</filename>中に
+	netbios_ns(下線に注意)のようなエントリが存在している。整合性を取るために、
+	<filename>/etc/services</filename>か<filename>/etc/inetd.conf</filename>を
+	編集する必要がある。
 	</para></note>
 
 	<note><para>
 	<indexterm><primary>ifconfig</primary></indexterm>
-	On many systems you may need to use the
-	<smbconfoption name="interfaces"/> option in &smb.conf; to specify
-	the IP address and netmask of your interfaces. Run 
-	<application>ifconfig</application> as root if you do
-	not know what the broadcast is for your net. &nmbd; tries
-	to determine it at runtime, but fails on some UNIXes. 
+	多くのシステムでは、使用しているネットワークインタフェースのIPアドレスと
+	ネットマスクを指定するために、 &smb.conf;中で
+	<smbconfoption name="interfaces"/>オプションを使う必要があるかもしれない。
+	使用しているネットワークでの、ブロードキャストが何であるかを知らないのであれば、
+	rootで<application>ifconfig</application>を起動する。&nmbd;は実行時にそれを
+	決めようとするが、ある種のUNIXでは失敗する。
 	</para></note>
 
 	<warning><para>
-	Many UNIXes only accept around five parameters on the command
-	line in <filename>inetd.conf</filename>.  This means you shouldn't
-	use spaces between the options and arguments, or you should use
-	a script and start the script from <command>inetd</command>.
+	多くのUNIXは、<filename>inetd.conf</filename>中で、コマンドライン上におおよそ
+	5つのパラメータのみを受け付ける。これは、オプションと引数間でスペースが使えない
+	という事を意味するので、そうしたくなければ、スクリプトを使い、
+	<command>inetd</command>経由でスクリプトを起動する。
 	</para></warning>
 
 	<para>
-	Restart <application>inetd</application>, perhaps just send it a HUP,
-	like this:
+	おそらく以下のようにHUPを送ることで、<application>inetd</application>を
+	再起動する:
 <indexterm><primary>killall</primary></indexterm>
 <screen>
 &rootprompt;<userinput>killall -HUP inetd</userinput>
@@ -484,13 +483,13 @@ netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd
 	</sect2>
 	
 	<sect2>
-	<title>Alternative: Starting &smbd; as a Daemon</title>
+	<title>もう一つの方法: &smbd;をデーモンとして起動する</title>
 		
 	<para>
 	<indexterm><primary>daemon</primary></indexterm>
 <indexterm><primary>startsmb</primary></indexterm>
-	To start the server as a daemon, you should create a script something
-	like this one, perhaps calling it <filename>startsmb</filename>.
+	サービスをデーモンとして起動するには、<filename>startsmb</filename>という、
+	下記のようなスクリプトを作成すべきである。
 	</para>
 
 <para><programlisting>
@@ -501,87 +500,88 @@ netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd
 </programlisting></para>
 
 	<para>
-	Make it executable with <command>chmod +x startsmb</command>.
+	<command>chmod +x startsmb</command>でこれを実行可能にする。
 	</para>
 
 	<para>
-	You can then run <command>startsmb</command> by hand or execute
-	it from <filename>/etc/rc.local</filename>.
+	手動か、<filename>/etc/rc.local</filename>から<command>startsmb</command>を
+	実行することが出来る。
 	</para>
 
 	<para>
-	To kill it, send a kill signal to the processes &nmbd; and &smbd;.
+	これを停止するには、プロセス&nmbd; と &smbd;にkillシグナルを送る。
 	</para>
 
 	<note><para>
-	If you use the SVR4-style init system, you may like to look at the
-	<filename>examples/svr4-startup</filename> script to make Samba fit
-	into that system.
+	もしも、SVR4形式のinitシステムを使っているならば、そのシステムにSambaを
+	適合するように、<filename>examples/svr4-startup</filename>スクリプトを
+	みてやってもよいだろう。
 	</para></note>
 
 	<sect3>
-	<title>Starting Samba for Red Hat Linux</title>
+	<title>Red Hat LinuxでのSambaの起動</title>
 
 	<para>
-	Red Hat Linux has not always included all Samba components in the standard installation.
-	So versions of Red Hat Linux do not install the winbind utility, even though it is present
-	on the installation CDROM media. Check to see if the <command>winbindd</command> is present
-	on the system:
+	Red Hat Linuxは標準的なインストール状態ではすべてのSambaコンポーネントが
+	常時含まれるわけではない。そのためRed Hat Linuxのバージョンによっては、
+	インストールCDROMメディアにあったとしても、winbindユーティリティをインストール
+	しない。システム上に<command>winbindd</command>があるかをチェックすること:
 <screen>
 &rootprompt; ls /usr/sbin/winbindd
 /usr/sbin/winbindd
 </screen>
-	This means that the appropriate RPM package was installed. The following response means
-	that it is not installed:
+	これは、適切なRPMパッケージがインストールされていることを意味する。以下の応答は、
+	インストールされていない場合である:
 <screen>
 /bin/ls: /usr/sbin/winbind: No such file or directory
 </screen>
-	In this case, it should be installed if you intend to use <command>winbindd</command>. Search
-	the CDROM installation media for the samba-winbind RPM and install it following Red Hat
-	guidelines.
+	この場合、<command>winbindd</command>を使うつもりであるならば、インストールが
+	必要である。samba-winbind RPMをCDROMインストールメディアから捜し、以下の
+	Red Hatガイドラインに従ってインストールする。
 	</para>
 
 	<para>
-	The process for starting Samba will now be outlined. Be sure to configure Samba's &smb.conf;
-	file before starting Samba. When configured, start Samba by executing:
+	Sambaの起動の手順の概要を以下で説明する。Sambaを起動する前に、Sambaの
+	&smb.conf;をきちんと設定しておくこと。設定後、以下のようにしてSambaを
+	起動する:
 <screen>
 &rootprompt; service smb start
 &rootprompt; service winbind start
 </screen>
-	These steps will start &nmbd;, &smbd; and &winbindd;.
+	このステップで &nmbd;, &smbd; と &winbindd;を起動する。
 	</para>
 
 	<para>
-	To ensure that these services will be automatically restarted when the system is rebooted
-	execute:
+	システムが再起動したときに、自動的にこれらのサービスが再起動するようにするには、
+	以下を実行する:
 <screen>
 &rootprompt; chkconfig smb on
 &rootprompt; chkconfig winbind on
 </screen>
-	Samba will be started automatically at every system reboot.
+	Sambaは毎再帰同時に自動的に起動するようになる。
 	</para>
 
 	</sect3>
 
 	<sect3>
-	<title>Starting Samba for Novell SUSE Linux</title>
+	<title>Novell SUSE LinuxにおけるSambaの起動</title>
 
 	<para>
-	Novell SUSE Linux products automatically install all essential Samba components in a default installation.
-	Configure your &smb.conf; file, then execute the following to start Samba:
+	Novell SuSE Linux 製品は自動的にすべての基本的なSambaコンポーネントを既定値の
+	インストール作業でインストールする。&smb.conf;ファイルを設定後、以下を行う
+	事でSambaを起動する:
 <screen>
 &rootprompt; rcnmb start
 &rootprompt; rcsmb start
 &rootprompt; rcwinbind start
 </screen>
-	Now execute these commands so that Samba will be started automatically following a system
-	reboot:
+	以下のコマンドを実行後、Sambaはシステム再起動後に自動的に起動する:
 <screen>
 &rootprompt; chkconfig nmb on
 &rootprompt; chkconfig smb on
 &rootprompt; chkconfig winbind on
 </screen>
-	The Samba services will now be started automatically following a system reboot.
+	これで、Sambaサーバはシステム再起動後に自動的に起動する。
 	</para>
 
 	</sect3>
