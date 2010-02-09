@@ -274,10 +274,9 @@ Outlookを終了する時に長い時間かかっていることを改善する�
 <title>処理速度の改善</title>
 
 <para>
-
-Configure the Windows 95 TCP/IP registry settings to give better
-performance. I use a program called <command>MTUSPEED.exe</command> that I got off the
-Internet. There are various other utilities of this type freely available.
+Windows 95 TCP/IPレジストリの設定を修正するとより良いパフォーマンスが得られる。
+インターネットから入手した<command>MTUSPEED.exe</command>というプログラムを
+使っている。自由に使えるこの手のタイプのユーティリティは数多くある。
 </para>
 
 </sect2>
@@ -285,36 +284,33 @@ Internet. There are various other utilities of this type freely available.
 </sect1>
 
 <sect1>
-<title>Windows 2000 Service Pack 2</title>
+<title>Windows 2000 サービスパック 2</title>
 
 <para> 
-There are several annoyances with Windows 2000 SP2, one of which
-only appears when using a Samba server to host user profiles
-to Windows 2000 SP2 clients in a Windows domain. This assumes
-that Samba is a member of the domain, but the problem will
-most likely occur if it is not.
+Windows 2000 SP2には数多くの不満な点があり、その1つは、Windowsドメイン中で
+Windows 2000 SP2クライアントに対してユーザプロファイルをホスティングするために、
+Sambaサーバを使う時にのみ現れる。これは、Sambaがドメインのメンバであることを
+仮定するが、もしもそうでない場合にたぶんおそらく現れるだろう。
 </para>
 
 <para> 
-In order to serve profiles successfully to Windows 2000 SP2 
-clients (when not operating as a PDC), Samba must have 
-<smbconfoption name="nt acl support">no</smbconfoption>
-added to the file share that houses the roaming profiles.
-If this is not done, then the Windows 2000 SP2 client will
-complain about not being able to access the profile (Access 
-Denied) and create multiple copies of it on disk (DOMAIN.user.001,
-DOMAIN.user.002, and so on). See the &smb.conf; man page
-for more details on this option. Also note that the 
-<smbconfoption name="nt acl support"/> parameter was formally a global parameter in
-releases prior to Samba 2.2.2.
+Windows 2000 SP2クライアントに正しくプロファイルを提供するために(PDCとして
+動作していない場合)、Sambaはローミングプロファイルを格納するファイル共有のために、
+<smbconfoption name="nt acl support">no</smbconfoption>を設定しなければならない。
+もしもこれが行われていない場合、Windows 2000 SP2クライアントはプロファイルにアクセス
+出来ないと、警告を出し(Access Denied)、その複数のコピーをディスク上に作成する
+(DOMAIN.user.001,DOMAIN.user.002など)。このオプションについては、&smb.conf;の
+マニュアルページを参照のこと。また、<smbconfoption name="nt acl support"/>
+パラメータが、Samba 2.2.2より前のリリースでは、正式にはグローバルパラメータであった
+事にも注意。
 </para>
 
 <para> 
-<link linkend="minimalprofile">Following example</link> provides a minimal profile share.
+<link linkend="minimalprofile">以下の例</link>は、最低限のプロファイル共有を提供する。
 </para>
 
 <example id="minimalprofile">
-<title>Minimal Profile Share</title>
+<title>最低限のプロファイル共有</title>
 <smbconfblock>
 <smbconfsection name="[profile]"/>
 <smbconfoption name="path">/export/profile</smbconfoption>
@@ -326,33 +322,33 @@ releases prior to Samba 2.2.2.
 </example>
 
 <para>
-The reason for this bug is that the Windows 200x SP2 client copies
-the security descriptor for the profile that contains
-the Samba server's SID, and not the domain SID. The client
-compares the SID for SAMBA\user and realizes it is
-different from the one assigned to DOMAIN\user; hence,
-<errorname>access denied</errorname> message.
+このバグの原因は、Windows 200x SP2クライアントが、SambaサーバのSIDを含むプロファイルの
+ためのセキュリティディスクリプタをコピーする事によるものである。クライアントは、
+Samba\userのSIDを比較し、DOMAIN\userに割り当てられたものと違うと理解する。そのため、
+<errorname>access denied</errorname>メッセージが表示される。
 </para>
 
 <para>
-When the <smbconfoption name="nt acl support"/> parameter is disabled, Samba will send
-the Windows 200x client a response to the QuerySecurityDescriptor trans2 call, which causes the client
-to set a default ACL for the profile. This default ACL includes:
+<smbconfoption name="nt acl support"/>が無効になっている場合、SambaはWindows 200x
+クライアントに、プロファイルに対する既定値のACLを設定させる、
+QuerySecurityDescriptor trans2呼び出しのレスポンスを送信する。この既定値の
+ACLは以下を含む:
 </para>
 
-<para><emphasis>DOMAIN\user 	<quote>Full Control</quote></emphasis>></para>
+<para><emphasis>DOMAIN\user 	<quote>フルコントロール</quote></emphasis>></para>
 
-<note><para>This bug does not occur when using Winbind to
-create accounts on the Samba host for Domain users.</para></note>
+<note><para>このバグはドメインユーザ用に、Sambaホスト上でアカウントを作成するために、
+Winbindを使う時には起こらない。</para></note>
 
 </sect1>
 
 <sect1>
 <title>Windows NT 3.1</title>
 
-<para>If you have problems communicating across routers with Windows 
-NT 3.1 workstations, read <ulink url="http://support.microsoft.com/default.aspx?scid=kb;Q103765">this Microsoft Knowledge Base article:</ulink>.
-
+<para>もしも、Windows NT 3.1ワークステーションでルータ越しに通信をする時に
+問題が起きたならば、
+<ulink url="http://support.microsoft.com/default.aspx?scid=kb;Q103765">this\
+ Microsoft Knowledge Base article:</ulink>を読むこと。
 </para>
 
 </sect1>
