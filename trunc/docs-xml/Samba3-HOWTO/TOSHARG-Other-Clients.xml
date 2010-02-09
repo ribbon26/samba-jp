@@ -113,29 +113,30 @@ Linux(と他のUNIXベースのシステム)についての詳細は、
 	<sect2>
 		<title>OS/2クライアント用のプリンタドライバのダウンロード</title>
 
-		<para>Create a share called <smbconfsection name="[PRINTDRV]"/> that is 
-		world-readable. Copy your OS/2 driver files there. The <filename>.EA_</filename>
-		files must still be separate, so you will need to use the original install files
-		and not copy an installed driver from an OS/2 system.</para>
+		<para>誰でもが書き込み可能な、<smbconfsection name="[PRINTDRV]"/>という
+		共有を作成する。そこに使用しているOS/2ドライバファイルをコピーする。
+		<filename>.EA_</filename>ファイルは引き続き分離しなければならないので、
+		オリジナルのインストールファイルを使う必要があり、OS/2システムからの
+		インストールされたドライバをコピーしてはいけない。</para>
 		
-		<para>Install the NT driver first for that printer. Then, add to your &smb.conf; a parameter,
-		<smbconfoption name="os2 driver map"><replaceable>filename</replaceable></smbconfoption>. 
-		Next, in the file specified by <replaceable>filename</replaceable>, map the 
-		name of the NT driver name to the OS/2 driver name as follows:</para>
+		<para>そのプリンタに対し、NTドライバを最初にインストールする。次に、
+		使用している&smb.conf;に、パラメータ
+		<smbconfoption name="os2 driver map"><replaceable>filename</replaceable></smbconfoption>
+		を追加する。次に、<replaceable>filename</replaceable>で指定されるファイル中に、
+		以下のようにNTドライバ名をOS/2ドライバ名にマップするように記述する:</para>
 		
 		<para><parameter><replaceable>nt driver name</replaceable> = <replaceable>os2 driver name</replaceable>.<replaceable>device name</replaceable></parameter>, e.g.,</para>
 
 		<para><parameter>
 		HP LaserJet 5L = LASERJET.HP LaserJet 5L</parameter></para>
 
-		<para>You can have multiple drivers mapped in this file.</para>
+		<para>このファイル中にマップされた複数のドライバを定義できる。</para>
 	
-		<para>If you only specify the OS/2 driver name, and not the 
-		device name, the first attempt to download the driver will 
-		actually download the files, but the OS/2 client will tell 
-		you the driver is not available. On the second attempt, it 
-		will work. This is fixed simply by adding the device name
-  		 to the mapping, after which it will work on the first attempt.
+		<para>もしも、OS/2ドライバ名のみを指定し、デバイス名を指定しない場合、
+		ドライバを最初にダウンロードするときには、実際にファイルをダウンロード
+		するが、OS/2クライアントは、ドライバが有効でないと表示する。2回目に
+		ダウンロードするときには動く。これは、マッピングにデバイス名を追加する
+		ことにより簡単に解決し、その後、最初のダウンロード要求で動くようになる。
 		</para>
 	</sect2>
 </sect1>
@@ -144,50 +145,51 @@ Linux(と他のUNIXベースのシステム)についての詳細は、
 <title>Windows for Workgroups</title>
 
 <sect2>
-<title>Latest TCP/IP Stack from Microsoft</title>
+<title>Microsoftからの最新版 TCP/IPスタック</title>
 
-<para>Use the latest TCP/IP stack from Microsoft if you use Windows
-for Workgroups. The early TCP/IP stacks had lots of bugs.</para>
+<para>もしもWindows for Workgroupsを使うのであれば、Microsoftから最新のTCP/IPスタックを
+使う。古いTCP/IPスタックにはたくさんのバグがある。</para>
 
 <para> 
-Microsoft has released an incremental upgrade to its TCP/IP 32-bit VxD drivers. The latest release can be
-found at ftp.microsoft.com, located in <filename>/Softlib/MSLFILES/TCP32B.EXE</filename>.  There is an
-update.txt file there that describes the problems that were fixed. New files include
+MicrosoftはそのTCP/IP 32ビットVxDドライバの増分更新を公開している。最新のリリースは、
+ftp.microsoft.comの<filename>/Softlib/MSLFILES/TCP32B.EXE</filename>にある。そこには
+修正された問題について説明してあるupdate.txtがある。そこには更新された
 <filename>WINSOCK.DLL</filename>, <filename>TELNET.EXE</filename>, <filename>WSOCK.386</filename>,
 <filename>VNBT.386</filename>, <filename>WSTCP.386</filename>, <filename>TRACERT.EXE</filename>,
-<filename>NETSTAT.EXE</filename>, and <filename>NBTSTAT.EXE</filename>.
+<filename>NETSTAT.EXE</filename>,<filename>NBTSTAT.EXE</filename>ファイルがある。
 </para>
 
 <para>
-More information about this patch is available in <ulink
-url="http://support.microsoft.com/kb/q99891/">Knowledge Base article 99891</ulink>.
+このパッチについての詳細情報は、
+<ulink url="http://support.microsoft.com/kb/q99891/">Knowledge Base article 99891</ulink>
+にある。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Delete .pwl Files After Password Change</title>
+<title>パスワード変更後に.pwlファイルの削除</title>
 
 <para>
-Windows for Workgroups does a lousy job with passwords. When you change passwords on either
-the UNIX box or the PC, the safest thing to do is delete the .pwl files in the Windows
-directory. The PC will complain about not finding the files, but will soon get over it,
-allowing you to enter the new password.
+Windows for Workgroupsは、パスワード管理の出来が悪い。UNIXマシンかPCのどちらかで
+パスワードを変更した時、最も安全にするにはWindowsディレクトリ中の.pwlファイルを
+削除することである。PCはそのファイルが見つからないと警告を出すが、間もなく、
+新しいパスワードが入力できるようになる。
 </para>
 
 <para> 
-If you do not do this, you may find that Windows for Workgroups remembers and uses the old
-password, even if you told it a new one.
+もしもこれをしないと、新しいものを入れても、Windows for Workgroupsは古いパスワードを
+記憶してそれを使うようになるかもしれない。
 </para>
 
 <para> 
-Often Windows for Workgroups will totally ignore a password you give it in a dialog box.
+しばしばWindows for Workgroupsはダイアログボックス中で入力したパスワードを完全に無視する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Configuring Windows for Workgroups Password Handling</title>
+<title>Windows for Workgroupsにおけるパスワードの取り扱い方法の設定</title>
 
 <para>
 <indexterm><primary>admincfg.exe</primary></indexterm>
