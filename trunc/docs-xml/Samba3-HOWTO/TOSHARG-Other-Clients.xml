@@ -193,52 +193,50 @@ Windows for Workgroupsは、パスワード管理の出来が悪い。UNIXマシ
 
 <para>
 <indexterm><primary>admincfg.exe</primary></indexterm>
-There is a program call <filename>admincfg.exe</filename> on the last disk (disk 8) of the WFW 3.11 disk set.
-To install it, type <userinput>EXPAND A:\ADMINCFG.EX_ C:\WINDOWS\ADMINCFG.EXE</userinput>.  Then add an icon
-for it via the <application>Program Manager</application> <guimenu>New</guimenu> menu.  This program allows
-you to control how WFW handles passwords, Disable Password Caching and so on, for use with <smbconfoption
-name="security">user</smbconfoption>.
+WFS 3.11ディスクセットの最後のディスク(8枚目)に、<filename>admincfg.exe</filename>という
+プログラムがある。これをインストールするためには、
+<userinput>EXPAND A:\ADMINCFG.EX_ C:\WINDOWS\ADMINCFG.EXE</userinput>と入力する。
+次に、<application>Program Manager</application>の<guimenu>New</guimenu>経由でアイコンを
+追加する。このプログラムは、どのようにWFWがパスワードを扱うか、パスワードのキャッシュを
+無効にするなどを、<smbconfoption name="security">user</smbconfoption>用に制御する。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Password Case Sensitivity</title>
+<title>パスワードにおける大文字小文字の区別</title>
 
-<para>Windows for Workgroups uppercases the password before sending it to the server.
-UNIX passwords can be case-sensitive though. Check the &smb.conf; information on
-<smbconfoption name="password level"/> to specify what characters
-Samba should try to uppercase when checking.</para>
+<para>Windows for Workgroupsはサーバに送る前にパスワードをすべて大文字にする。しかし、
+UNIXのパスワードは大文字小文字を区別する。チェックするときにどの文字をSambaが大文字と
+して試すべきかを指定するための、<smbconfoption name="password level"/>上の
+&smb.conf;情報をチェックすること。
 
 </sect2>
 
 <sect2>
-<title>Use TCP/IP as Default Protocol</title>
+<title>既定値のプロトコルとしてTCP/IPの使用</title>
 
-<para>To support print queue reporting, you may find
-that you have to use TCP/IP as the default protocol under
-Windows for Workgroups. For some reason, if you leave NetBEUI as the default,
-it may break the print queue reporting on some systems.
-It is presumably a Windows for Workgroups bug.</para>
+<para>印刷キューの通知をサポートするために、Windows for Workgroups下でTCP/IPを
+既定値のプロトコルとして使う事が必要である。もしもNetBEUIを既定値のままにすると、
+あるシステム上では印刷キューの通知がうまくいかない。これはおそらく
+Windows for Workgroupsのバグであろう。</para>
 
 </sect2>
 
 <sect2 id="speedimpr">
-<title>Speed Improvement</title>
+<title>処理速度の改善</title>
 
 <para>
-Note that some people have found that setting <parameter>DefaultRcvWindow</parameter> in
-the <smbconfsection name="[MSTCP]"/> section of the 
-<filename>SYSTEM.INI</filename> file under Windows for Workgroups to 3072 gives a
-big improvement.
+ある人によると、Windows for Workgroupsの中にある<filename>SYSTEM.INI</filename>ファイルの
+<smbconfsection name="[MSTCP]"/>セクション中に<parameter>DefaultRcvWindow</parameter>の
+設定を3072にすると、速度が大幅に改善したと報告している。
 </para>
 
 <para>
-My own experience with DefaultRcvWindow is that I get a much better
-performance with a large value (16384 or larger). Other people have
-reported that anything over 3072 slows things down enormously. One
-person even reported a speed drop of a factor of 30 when he went from
-3072 to 8192.
+実際にDefaultRcvWindowについて実験してみたら、より大きな値(16384かそれ以上)の値を使うと
+より処理速度が改善した。他の人は、3072より大きな値は、かえって大幅にスピードが落ちると
+報告している。ある人の報告では、3072から8192間での間で、30の倍数の時にスピードが落ちる
+というものもあった。
 </para>
 </sect2>
 </sect1>
