@@ -79,32 +79,34 @@
 
 	<para>
 <indexterm><primary>OpenSSL</primary></indexterm>
-	We will be using the <ulink url="http://www.openssl.org">OpenSSL</ulink> <footnote><para>The downside to
-	making our own CA, is that the certificate is not automatically recognized by clients, like the commercial
-	ones are.</para></footnote> software for this, which is included with every great <trademark
-	class="registered">Linux</trademark> distribution.
+	これに対しては、ほとんどの<trademark class="registered">Linux</trademark>
+	ディストリビューションに含まれている<ulink url="http://www.openssl.org">OpenSSL</ulink>
+	<footnote><para>固有の認証局(CA)を作ることの不都合な点は、商用のものがそうであるように、
+	証明書がクライアントによって自動的に認識されないということである。</para></footnote>
+	を使うことになる。
 	</para>
 
 	<para>
-	TLS is used for many types of servers, but the instructions<footnote><para>For information straight from the
-	horse's mouth, please visit <ulink
-	url="http://www.openssl.org/docs/HOWTO/">http://www.openssl.org/docs/HOWTO/</ulink>; the main OpenSSL
-	site.</para></footnote> presented here, are tailored for &OL;.
+	TLSは多くの種類のサーバによって使われるが、その手続きは、
+	<footnote><para>一番確かなところからの情報は、
+	<ulink url="http://www.openssl.org/docs/HOWTO/">http://www.openssl.org/docs/HOWTO/</ulink>
+	のmain OpenSSLサイトを参照のこと。</para></footnote>
+	ここで説明されていて、&OL; に特化している。
 	</para>
 
 	<note><para>
-	The <emphasis>Common Name (CN)</emphasis>, in the following example, <emphasis>MUST</emphasis> be
-	the fully qualified domain name (FQDN) of your ldap server.
+	以下の例における<emphasis>Common Name (CN)</emphasis>は、使用しているLDAPサーバの
+	完全に記述されたドメイン名(FQDN)で<emphasis>なければならない</emphasis>。
 	</para></note>
 
 	<para>
-	First we need to generate the CA:
+	最初に認証局(CA)を生成する必要がある:
 <screen width="90">
 <computeroutput>
 &rootprompt; mkdir myCA
 </computeroutput>
 </screen>
-	Move into that directory:
+	そのディレクトリに移動する:
 <screen width="90">
 <computeroutput>
 &rootprompt; cd myCA
@@ -146,21 +148,21 @@ Email Address []:support@abmas.biz
 	</para>
 
 	<para>
-	There are some things to note here. 
+	注意すべき点がいくつかある。
 	</para>
 
 	<orderedlist>
 		<listitem>
 			<para>
-			You <emphasis>MUST</emphasis> remember the password, as we will need
-			it to sign the server certificate..
+			サーバの証明書に署名するのに必要なので、
+			パスワードを<emphasis>覚えておく必要がある</emphasis>。
 			</para>
 		</listitem>
 
 		<listitem>
 			<para>
-			The <emphasis>Common Name (CN)</emphasis>, <emphasis>MUST</emphasis> be the
-			fully qualified domain name (FQDN) of your ldap server.
+			<emphasis>Common Name (CN)</emphasis>は使用しているLDAPサーバの
+			完全に記述されたドメイン名(FQDN)で<emphasis>なければならない</emphasis>。
 			</para>
 		</listitem>
 	</orderedlist>
@@ -168,10 +170,10 @@ Email Address []:support@abmas.biz
 	</sect2>
 
 	<sect2 id="s1-config-ldap-tls-server">
-	<title>Generating the Server Certificate</title>
+	<title>サーバ証明書の生成</title>
 
 	<para>
-	Now we need to generate the server certificate:
+	次にサーバ証明書を生成する必要がある:
 <screen width="90">
 <computeroutput>
 &rootprompt; openssl req -new -nodes -keyout newreq.pem -out newreq.pem
@@ -204,26 +206,26 @@ An optional company name []:
 	</para>	
 
 	<para>
-	Again, there are some things to note here. 
+	繰り返すが、ここでもいくつか注意すべき事がある。
 	</para>		
 
 	<orderedlist>
 		<listitem>
 			<para>
-			You should <emphasis>NOT</emphasis> enter a password.
+			パスワードを入力<emphasis>すべきではない</emphasis>。
 			</para>
 		</listitem>
 
 		<listitem>
 			<para>
-			The <emphasis>Common Name (CN)</emphasis>, <emphasis>MUST</emphasis> be
-			the fully qualified domain name (FQDN) of your ldap server.
+                        <emphasis>Common Name (CN)</emphasis>は使用しているLDAPサーバの
+                        完全に記述されたドメイン名(FQDN)で<emphasis>なければならない</emphasis>。
 			</para>
 		</listitem>
 	</orderedlist>
 
 	<para>
-	Now we sign the certificate with the new CA:
+	次に新しい認証局(CA)の証明書に署名する:
 <screen width="90">
 <computeroutput>
 &rootprompt; /usr/share/ssl/misc/CA.pl -sign
@@ -270,18 +272,17 @@ Signed certificate is in newcert.pem
 	</para>
 
 	<para>
-	That completes the server certificate generation. 
+	これでサーバ証明書の生成が完了する。
 	</para>
 
 	</sect2>
 
 	<sect2 id="s1-config-ldap-tls-install">
-	<title>Installing the Certificates</title>
+	<title>証明書のインストール</title>
 
 	<para>
-	Now we need to copy the certificates to the right configuration directories,
-	rename them at the same time (for convenience), change the ownership and
-	finally the permissions:
+	次に、正しい設定ディレクトリ中に証明書をコピーする必要があり、その後同時に改名して
+	(利便性のために)、所有権を変更し、最後にアクセス許可を与える:
 <screen width="90">
 <computeroutput>
 &rootprompt; cp demoCA/cacert.pem /etc/openldap/
@@ -295,8 +296,8 @@ Signed certificate is in newcert.pem
 	</para>
 
 	<para>
-	Now we just need to add these locations to <filename>slapd.conf</filename>,
-	anywhere before the <option>database</option> declaration as shown here:
+	次に、これらのファイル位置情報を、以下のようにして、<filename>slapd.conf</filename>
+	の、<option>database</option>定義の前のどこかに追加する必要がある:
 <screen width="90">
 <computeroutput>
 TLSCertificateFile /etc/openldap/servercrt.pem
@@ -307,7 +308,7 @@ TLSCACertificateFile /etc/openldap/cacert.pem
 	</para>
 
 	<para>
-	Here is the declaration and <filename>ldap.conf</filename>:
+	以下は、<filename>ldap.conf</filename>での定義である:
 <filename>ldap.conf</filename>
 <screen width="90">
 <computeroutput>
@@ -317,7 +318,7 @@ TLS_CACERT /etc/openldap/cacert.pem
 	</para>
 
 	<para>
-	That's all there is to it. Now on to <xref linkend="s1-test-ldap-tls"></xref>
+	これですべてである。次に<xref linkend="s1-test-ldap-tls"></xref>を行う。
 	</para>
 
 	</sect2>
@@ -325,11 +326,11 @@ TLS_CACERT /etc/openldap/cacert.pem
 </sect1>
 
 <sect1 id="s1-test-ldap-tls">
-<title>Testing</title>
+<title>評価</title>
 
 <para>
-<indexterm><primary>Transport Layer Security, TLS</primary><secondary>Testing</secondary></indexterm>
-This is the easy part. Restart the server:
+<indexterm><primary>Transport Layer Security, TLS</primary><secondary>評価</secondary></indexterm>
+ここは簡単な部分である。サーバを再起動する:
 <screen width="90">
 <computeroutput>
 &rootprompt; /etc/init.d/ldap restart
@@ -338,15 +339,16 @@ Checking configuration files for slapd: config file testing succeeded
 Starting slapd:                                            [  OK  ]
 </computeroutput>
 </screen>
-	Then, using <command>ldapsearch</command>, test an anonymous search with the
-	<option>-ZZ</option><footnote><para>See <command>man ldapsearch</command></para></footnote> option:
+	次に、<command>ldapsearch</command>を使い、<option>-ZZ</option>オプションを使って
+	<footnote><para><command>man ldapsearch</command>を参照</para></footnote>
+	匿名検索で評価する:
 <screen width="90">
 <computeroutput>
 &rootprompt; ldapsearch -x -b "dc=ldap,dc=abmas,dc=biz" \
         -H 'ldap://ldap.abmas.biz:389' -ZZ
 </computeroutput>
 </screen>
-	Your results should be the same as before you restarted the server, for example:
+	以下のように、サーバを再起動する前と結果は同じであるべきである:
 <screen width="90">
 <computeroutput>
 &rootprompt; ldapsearch -x -b "dc=ldap,dc=abmas,dc=biz" \
@@ -382,30 +384,32 @@ sambaNextUserRid: 67109862
 sambaNextGroupRid: 67109863
 </computeroutput>
 </screen>
-	If you have any problems, please read <xref linkend="s1-int-ldap-tls"></xref>
+	何か問題が起きた場合は、<xref linkend="s1-int-ldap-tls"></xref>を読んでみてほしい。
 </para>
 
 </sect1>
 
 <sect1 id="s1-int-ldap-tls">
-<title>Troubleshooting</title>
+<title>トラブルシューティング</title>
 
 <para>
-<indexterm><primary>Transport Layer Security, TLS</primary><secondary>Troubleshooting</secondary></indexterm>
-The most common error when configuring TLS, as I have already mentioned numerous times, is that the
-<emphasis>Common Name (CN)</emphasis> you entered in <xref linkend="s1-config-ldap-tls-server"></xref> is
-<emphasis>NOT</emphasis> the Fully Qualified Domain Name (FQDN) of your ldap server.
+<indexterm><primary>Transport Layer Security, TLS</primary><secondary>トラブルシューティング</secondary></indexterm>
+TLSを設定しているときに最もよくあるエラーは、何回も説明したように、
+<xref linkend="s1-config-ldap-tls-server"></xref>で入力した<emphasis>Common Name (CN)</emphasis>が、
+使用しているLDAPサーバの、完全に記述されたドメイン名(FQDN)<emphasis>でない</emphasis>という
+ものである。
 </para>
 
 <para>
-Other errors could be that you have a typo somewhere in your <command>ldapsearch</command> command, or that
-your have the wrong permissions on the <filename>servercrt.pem</filename> and <filename>cacert.pem</filename>
-files. They should be set with <command>chmod 640</command>, as per <xref
-linkend="s1-config-ldap-tls-install"></xref>.
+他のエラーとしては、<command>ldapsearch</command>コマンドのどこかでタイプミスしたとか、
+<filename>servercrt.pem</filename>と<filename>cacert.pem</filename>に間違ったアクセス
+許可を設定しているかである。<xref linkend="s1-config-ldap-tls-install"></xref>単位に
+<command>chmod 640</command>で設定すべきである。
 </para>
 
 <para>
-For anything else, it's best to read through your ldap logfile or join the &OL; mailing list.
+それ以外は、ldapのログファイルを読むか、&OL;メーリングリストに参加するのが最も良い方法
+である。
 </para>
 
 </sect1>
