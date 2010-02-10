@@ -22,52 +22,59 @@
 
 	<para>
 <indexterm><primary>RFC 2830</primary></indexterm>
-	<trademark>OpenLDAP</trademark> clients and servers are capable of using the Transport Layer Security (TLS)
-	framework to provide integrity and confidentiality protections in accordance with <ulink
-	url="http://rfc.net/rfc2830.html">RFC 2830</ulink>; <emphasis>Lightweight Directory Access Protocol (v3):
-	Extension for Transport Layer Security.</emphasis>
+	<trademark>OpenLDAP</trademark>クライアントとサーバは、
+	<ulink url="http://rfc.net/rfc2830.html">RFC 2830</ulink>(訳注:現在は
+	<ulink url="http://rfc.net/rfc4513.html">RFC 4513</ulink>が最新)
+	<emphasis>Lightweight Directory Access Protocol (v3):
+        Extension for Transport Layer Security.</emphasis>
+	による、完全性と機密性を提供するため、Transport Layer Security (TLS)を使う
+	能力がある。
 	</para>
 
 	<para>
-<indexterm><primary>X.509 certificates</primary></indexterm>
-	TLS uses X.509 certificates. All servers are required to have valid certificates, whereas client certificates
-	are optional. We will only be discussing server certificates.
+<indexterm><primary>X.509 証明書</primary></indexterm>
+	TLSはX.509証明書を使う。すべてのサーバは有効な証明書を持つ必要があるが、
+	クライアント証明書はあってもなくてもよい。ここではサーバ証明書のみを
+	議論の対象とする。
 	</para>
 
 	<tip><para>
 <indexterm><primary>DN</primary></indexterm>
 <indexterm><primary>CN</primary></indexterm>
 <indexterm><primary>FQDN</primary></indexterm>
-	The DN of a server certificate must use the CN attribute to name the server, and the CN must carry the
-	server's fully qualified domain name (FQDN). Additional alias names and wildcards may be present in the
-	<option>subjectAltName</option> certificate extension. More details on server certificate names are in <ulink
-	url="http://rfc.net/rfc2830.html">RFC2830</ulink>.
+	サーバ証明書のDNはサーバの名前を指定するCN属性を使う必要があり、CNは、サーバの、
+	完全に記述されたドメイン名(FQDN)を引き継ぐ必要がある。追加の別名と
+	ワイルドカードは、<option>subjectAltName</option>証明書エクステンションに存在しても
+	よい。サーバ証明書の名前についてのより詳細については、
+	<ulink url="http://rfc.net/rfc2830.html">RFC2830</ulink>にある。
 	</para></tip>
 
 	<para>
-	We will discuss this more in the next sections.
+	これについては次の節で詳細に説明する。
 	</para>
 
 	</sect1>
 
 	<sect1 id="s1-config-ldap-tls">
-	<title>Configuring</title>
+	<title>設定</title>
 
 	<para>
-	<indexterm><primary>Transport Layer Seccurity, TLS</primary><secondary>Configuring</secondary></indexterm>
+	<indexterm><primary>Transport Layer Seccurity, TLS</primary><secondary>設定</secondary></indexterm>
 	Now on to the good bit.
 	</para>
 
 	<sect2 id="s1-config-ldap-tls-certs">
-	<title>Generating the Certificate Authority</title>
+	<title>認証局の作成</title>
 
 	<para>
-<indexterm><primary>Certificate Authority</primary><see>CA</see></indexterm>
-	In order to create the relevant certificates, we need to become our own Certificate Authority (CA).
-	<footnote><para>We could however, get our generated server certificate signed by proper CAs, like <ulink
-	url="http://www.thawte.com/">Thawte</ulink> and <ulink url="http://www.verisign.com/">VeriSign</ulink>, which
-	you pay for, or the free ones, via <ulink url="http://www.cacert.org/">CAcert</ulink>
-	</para></footnote> This is necessary, so we can sign the server certificate.
+<indexterm><primary>認証局</primary><see>CA</see></indexterm>
+	適切な証明書を作成するために、固有の認証局(CA)を立てる必要がある。
+	<footnote><para>しかし、作成したサーバ証明書は、たとえば、
+	<ulink url="http://www.thawte.com/">Thawte</ulink>と
+	<ulink url="http://www.verisign.com/">VeriSign</ulink>のような、有料または
+	<ulink url="http://www.cacert.org/">CAcert</ulink>経由の、無料のものを使って、
+	適切なCAによって署名されるようにできる。</para></footnote>
+	これは必要であり、そうすると、サーバ証明書に署名できる。
 	</para>
 
 	<para>
