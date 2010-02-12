@@ -24,13 +24,18 @@ are valid.
 </para>
 
 <para>
-We live in a modern age where many information technology users demand mobility
-and freedom. Microsoft Windows users in particular expect to be able to plug their
-notebook computer into a network port and have things <quote>just work.</quote>
+多くの情報技術を利用する人が、携帯性と利用の自由を要求する現代に、我々は生きている。
+Microsoft Windows ユーザは特に、使用しているノートPCをネットワークに繋げば、
+<quote>ちゃんと動く</quote>事を期待している。
 </para>
 
 <para>
 <indexterm><primary>ADS</primary></indexterm>
+UNIX管理者はpoint。Microsoft Windowsの領域における多くの標準的な習慣が、セキュリティの
+観点からは悪い習慣上で最も良い境界にある(???)。Microsoft Windows ネットワーク
+プロトコルは、ネットワーク上に、ワークステーションそれ自身を登録する機能を用意している。
+Windows 2000のActive DirectoryはDNS名前空間に、UNIX管理者が困惑するような、エントリを
+登録する。世界は変わってしまったのである!
 UNIX administrators have a point. Many of the normative practices in the Microsoft
 Windows world at best border on bad practice from a security perspective.
 Microsoft Windows networking protocols allow workstations to arbitrarily register
@@ -42,33 +47,36 @@ that are equally perplexing to UNIX administrators. Welcome to the new world!
 <para>
 <indexterm><primary>ISC</primary><secondary>DNS</secondary></indexterm>
 <indexterm><primary>ISC</primary><secondary>DHCP</secondary></indexterm>
-<indexterm><primary>Dynamic DNS</primary><see>DDNS</see></indexterm>
-The purpose of this chapter is to demonstrate the configuration of the Internet
-Software Consortium (ISC) DNS and DHCP servers to provide dynamic services that are
-compatible with their equivalents in the Microsoft Windows 2000 Server products.
+<indexterm><primary>ダイナミックDNS</primary><see>DDNS</see></indexterm>
+この章の目的は、Microsoft Windows 2000 サーバ製品中でのものと互換性のある、動的サービスを
+提供するために、Internet Software Consortium (ISC) のDNSとDHCPサーバの設定をデモすること
+である。
 </para>
 
 <para>
-This chapter provides no more than a working example of configuration files for both DNS and DHCP servers. The
-examples used match configuration examples used elsewhere in this document.
+この章では、DNSとDHCPサーバの両方に対する、動く設定ファイルの例を提供する以上のものでは
+ない。例は、このドキュメント中のどこかで使われている設定例に一致するものを使う。
 </para>
 
 <para>
 <indexterm><primary>DNS</primary></indexterm>
 <indexterm><primary>DHCP</primary></indexterm>
 <indexterm><primary>BIND9.NET</primary></indexterm>
-This chapter explicitly does not provide a tutorial, nor does it pretend to be a reference guide on DNS and
-DHCP, as this is well beyond the scope and intent of this document as a whole. Anyone who wants more detailed
-reference materials on DNS or DHCP should visit the ISC Web site at <ulink noescape="1"
-url="http://www.isc.org"> http://www.isc.org</ulink>.  Those wanting a written text might also be interested
-in the O'Reilly publications on DNS, see the <ulink
-url="http://www.oreilly.com/catalog/dns/index.htm">O'Reilly</ulink> web site, and the <ulink
-url="http://www.bind9.net/books-dhcp">BIND9.NET</ulink> web site for details.
-The books are:
+この章では、明示的にチュートリアルでも、全体として、この文書の意図と範囲を超えているので、
+DNSとDHCPのリファレンスガイドの代替品を提供しない。DNSまたはDHCPについてのより詳細な
+参考情報を知りたいのであれば、ISCのWebサイト 
+<ulink noescape="1" url="http://www.isc.org"> http://www.isc.org</ulink>を参照のこと。
+書籍として情報が欲しいのであれば、
+<ulink url="http://www.oreilly.com/catalog/dns/index.htm">オライリー</ulink>
+のWebサイトに行って、DNSの本の情報を、また、
+<ulink url="http://www.bind9.net/books-dhcp">BIND9.NET</ulink>というWebサイトを
+見てみると良い。
+
+書籍情報は以下の通り:
 </para>
 
 <orderedlist>
-	<listitem><para>DNS and BIND, By Cricket Liu, Paul Albitz, ISBN: 1-56592-010-4</para></listitem>
+	<listitem><para>DNS and BIND, By Cricket Liu, Paul Albitz, ISBN: 1-56592-010-4(訳注:日本語訳あり)</para></listitem>
 	<listitem><para>DNS &amp; Bind Cookbook, By Cricket Liu, ISBN: 0-596-00410-9</para></listitem>
 	<listitem><para>The DHCP Handbook (2nd Edition), By: Ralph Droms, Ted Lemon, ISBN 0-672-32327-3</para></listitem>
 </orderedlist>
@@ -76,7 +84,7 @@ The books are:
 </sect1>
 
 <sect1>
-<title>Example Configuration</title>
+<title>設定例</title>
 
 <para>
 <indexterm><primary>WINS</primary></indexterm>
