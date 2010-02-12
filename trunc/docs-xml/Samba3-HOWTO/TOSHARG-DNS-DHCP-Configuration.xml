@@ -89,69 +89,68 @@ DNSとDHCPのリファレンスガイドの代替品を提供しない。DNSま�
 <para>
 <indexterm><primary>WINS</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
-The DNS is to the Internet what water is to life. Nearly all information resources (host names) are resolved
-to their Internet protocol (IP) addresses through DNS.  Windows networking tried hard to avoid the
-complexities of DNS, but alas, DNS won.  <indexterm><primary>WINS</primary></indexterm> The alternative to
-DNS, the Windows Internet Name Service (WINS) &smbmdash; an artifact of NetBIOS networking over the TCP/IP
-protocols &smbmdash; has demonstrated scalability problems as well as a flat, nonhierarchical namespace that
-became unmanageable as the size and complexity of information technology networks grew.
+DNSは、インターネットにとっては、生活における水のようなものである。ほとんどすべての
+情報リソース(ホスト名)はDNSを通してそのIPアドレスに解決される。Windowsネットワークは
+DNSの複雑さを防ぐために、かなりいろいろな事をやっていたが、結局DNSの勝ちであった。
+<indexterm><primary>WINS</primary></indexterm>
+DNSの代わりとしてWindows Internet Name Service (WINS) &smbmdash;がある。
+NetBIOS networking over the TCP/IPプロトコルの悪い点は、情報技術ネットワークの
+複雑さと規模が発展していく時に、管理できなくなる、平坦で階層構造のない名前空間の
+ような拡張性の問題が明らかとなっていることである。
 </para>
 
 <para>
 <indexterm><primary>RFC 1001</primary></indexterm>
 <indexterm><primary>RFC 1002</primary></indexterm>
-WINS is a Microsoft implementation of the RFC1001/1002 NetBIOS Name Service (NBNS).
-It allows NetBIOS clients (like Microsoft Windows machines) to register an arbitrary
-machine name that the administrator or user has chosen together with the IP
-address that the machine has been given. Through the use of WINS, network client machines
-could resolve machine names to their IP address.
+WINSはMicrosoftによるRFC1001/1002 NetBIOS Name Service (NBNS)の実装である。これは、
+NetBIOSクライアント(Microsoft Windowsマシンのような)に、マシンに与えられたIPアドレスと
+一緒に管理者かユーザが選べる任意のマシン名を解決することができる。WINSを使うと、
+ネットワーククライアントマシンは、マシン名をそのIPアドレスに解決できる。
 </para>
 
 <para>
-The demand for an alternative to the limitations of NetBIOS networking finally drove
-Microsoft to use DNS and Active Directory. Microsoft's new implementation attempts
-to use DNS in a manner similar to the way that WINS is used for NetBIOS networking.
-Both WINS and Microsoft DNS rely on dynamic name registration.
+NetBIOSネットワークファミリの制限に対する代替のための要求は、最終的に、Microsoftが
+DNSとActive Directoryを使うように追い込んだ。Microsoftの新しい実装は、NetBIOS
+ネットワークにおいて、WINSが使われる方法と同様のやり方で、DNSを使うことを試みている。
+WINSとMicrosoft DNSの両方は、動的な名前登録に頼っている。
 </para> 
 
 <para>
-Microsoft Windows clients can perform dynamic name registration to the DNS server
-on startup. Alternatively, where DHCP is used to assign workstation IP addresses,
-it is possible to register hostnames and their IP address by the DHCP server as
-soon as a client acknowledges an IP address lease. Finally, Microsoft DNS can resolve
-hostnames via Microsoft WINS.
+Microsoft Windows クライアントは起動時にDNSサーバに対して動的な名前登録を行うことが
+できる。その代わりに、ワークステーションのIPアドレスを割り当てるところにDNSが使われる
+場面において、クライアントが、IPアドレスの貸出を受け取ったら直ちに、DHCPサーバによって
+そのホスト名とIPアドレスを登録することが出来る。最後に、Microsoft DNSは、Microsoft WINS
+経由でホスト名を解決できる。
 </para>
 
-<para>
-The following configurations demonstrate a simple, insecure dynamic DNS server and
-a simple DHCP server that matches the DNS configuration.
+<para>以下の設定は、単純な、セキュリティを考慮していないDNSサーバと、DNSの設定にあわせた
+単純なDHCPサーバの例を提示している。
 </para>
 
 	<sect2>
-	<title>Dynamic DNS</title>
+	<title>ダイナミックDNS</title>
 
 	<para>
 	<indexterm><primary>DNS</primary><secondary>Dynamic</secondary></indexterm>
-	The example DNS configuration is for a private network in the IP address
-	space for network 192.168.1.0/24. The private class network address space
-	is set forth in RFC1918.
+	DNS設定の例は、ネットワーク 192.168.1.0/25のIPアドレス範囲中のプライベート
+	ネットワーク用である。プライベートなネットワークアドレス空間はRFC1918に
+	説明がある。
 	</para>
 
 
 	<para>
 	<indexterm><primary>BIND</primary></indexterm>
-	It is assumed that this network will be situated behind a secure firewall.
-	The files that follow work with ISC BIND version 9. BIND is the Berkeley
-	Internet Name Daemon.
+	このネットワークは安全なファイアウォールの内側に位置していることを仮定している。
+	以下のファイルはISC BINDバージョン9用である。BINDは
+	Berkeley Internet Name Daemonの略である。
 	</para>
 
 	<para>
-	The master configuration file <filename>/etc/named.conf</filename>
-	determines the location of all further configuration files used.
-	The location and name of this file is specified in the startup script
-	that is part of the operating system.
+	マスタ設定ファイル<filename>/etc/named.conf</filename>は、この後使用する
+	すべての設定ファイルの位置を決める。このファイルの位置と名前は、OSの一部である
+	起動スクリプト内で指定されている。
 <programlisting>
-# Quenya.Org configuration file
+# Quenya.Org の設定ファイル
 
 acl mynet {
 	192.168.1.0/24;
@@ -227,8 +226,8 @@ zone "1.168.192.in-addr.arpa" {
 	</para>
 
 	<para>
-	The following files are all located in the directory <filename>/var/named</filename>.
-	This is the <filename>/var/named/localhost.zone</filename> file:
+	以下のファイルはすべて<filename>/var/named</filename>というディレクトリにある。
+	これは<filename>/var/named/localhost.zone</filename>ファイルである:
 <programlisting>
 $TTL 1W
 @               IN SOA  @   root (
@@ -244,7 +243,7 @@ $TTL 1W
 	</para>
 
 	<para>
-	The <filename>/var/named/127.0.0.zone</filename> file:
+	<filename>/var/named/127.0.0.zone</filename>ファイルである:
 <programlisting>
 $TTL 1W
 @               IN SOA          localhost.  root.localhost. (
@@ -260,7 +259,7 @@ $TTL 1W
 	</para>
 
 	<para>
-		The <filename>/var/named/quenya.org.host</filename> file:
+		<filename>/var/named/quenya.org.host</filename>ファイルである:
 <programlisting>
 $ORIGIN .
 $TTL 38400      ; 10 hours 40 minutes
@@ -283,7 +282,7 @@ www                     CNAME   marvel
 </para>
 
 <para>
-	The <filename>/var/named/192.168.1.0.rev</filename> file:
+	<filename>/var/named/192.168.1.0.rev</filename>ファイルである:
 <programlisting>
 $ORIGIN .
 $TTL 38400      ; 10 hours 40 minutes
@@ -303,22 +302,22 @@ $ORIGIN 1.168.192.in-addr.arpa.
 
 	<para>
 <indexterm><primary>BIND</primary></indexterm>
-<indexterm><primary>dynamic registration files</primary></indexterm>
-	The configuration files shown here were copied from a fully working system. All dynamically registered
-	entries have been removed. In addition to these files, BIND version 9 will
-	create for each of the dynamic registration files a file that has a 
-	<filename>.jnl</filename> extension. Do not edit or tamper with the configuration
-	files or with the <filename>.jnl</filename> files that are created.
+<indexterm><primary>動的登録ファイル</primary></indexterm>
+	ここで示された設定ファイルは完全に動くシステムからコピーしたものである。すべての
+	動的に登録されるエントリは削除されている。それらのファイルに対してはさらに、
+	BINDバージョン9が、<filename>.jnl</filename>という拡張子を持つファイルである、
+	各動的登録ファイルを作成する。構成ファイルと作成された<filename>.jnl</filename>
+	ファイルを編集したり、不正に変更してはならない。
 	</para>
 
 	</sect2>
 
 	<sect2 id="DHCP">
-	<title>DHCP Server</title>
+	<title>DHCPサーバ</title>
 
 	<para>
-	The following file is used with the ISC DHCP Server version 3.
-	The file is located in <filename>/etc/dhcpd.conf</filename>:
+	以下のファイルはISC DHCPサーバ バージョン3で使われる。ファイルは、
+	<filename>/etc/dhcpd.conf</filename>にある:
 	</para>
 
 	<para>
@@ -347,9 +346,9 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 	</para>
 
 	<para>
-	In this example, IP addresses between 192.168.1.1 and 192.168.1.59 are
-	reserved for fixed-address (commonly called <constant>hard-wired</constant>) IP addresses. The
-	addresses between 192.168.1.60 and 192.168.1.254 are allocated for dynamic use.
+	この例では、192.168.1.1と192.168.1.59のIPアドレス範囲は固定IPアドレス
+	(よく<constant>hard-wired</constant>と呼ばれる)のために予約されている。
+	192.168.1.60から192.168.1.254の間のアドレスは動的な割り当てに使われる。
 	</para>
 
 	</sect2>
