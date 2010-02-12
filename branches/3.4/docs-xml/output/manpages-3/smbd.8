@@ -1,0 +1,381 @@
+'\" t
+.\"     Title: smbd
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: システム管理ツール
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "SMBD" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+smbd \- SMB/CIFS サービスをクライアントへ提供するサーバ
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+smbd [\-D] [\-F] [\-S] [\-i] [\-h] [\-V] [\-b] [\-d\ <debug\ level>] [\-l\ <log\ directory>] [\-p\ <port\ number>] [\-O\ <socket\ option>] [\-s\ <configuration\ file>]
+.SH "説明"
+.PP
+このプログラムは
+\fBSamba\fR(7)システムの一部である。
+.PP
+smbd
+は、Windows クライアントにファイル共有と印刷サービスを提供するサーバデーモンである。 サーバは SMB (または CIFS) プロトコルを使用するクライアントに ファイル・スペースと印刷サービスを提供する。サーバは LanManager プロトコルと互換性があり、LanManager クライアントに 対するサービスが可能である。クライアントには MSCLIENT 3\&.0 for DOS、Windows for Workgroups、Windows 95/98/Me、Windows 2000、 Windows NT、OS/2、DAVE for Macintosh、smbfs for Linux が含まれる。
+.PP
+サーバが提供できるサービスについての詳細な記述は、 それらサービスの属性を制御する設定ファイルの マニュアルページにある (\fBsmb.conf\fR(5)を参照)。このマニュアルページでは サービスについて記述せず、サーバを動作させる上での 管理の面にしぼって記述する。
+.PP
+このサーバを動作させることは 重要なセキュリティーとの関係があること、そして
+\fBsmb.conf\fR(5)
+のマニュアルページはインストールを進める前に 必ず読むべきものであることに注意すること。
+.PP
+セッションはクライアントに要求されるたびに作られる。 各クライアントは各セッション毎にサーバプロセスのコピーを得る。 このコピーはセッションの間、クライアントによるすべての 接続を提供する。クライアントのすべての接続が切断されると、 そのクライアントに対するサーバのコピーは終了する。
+.PP
+設定ファイルとそれに含まれるファイルが変更されると、 1分ごとに自動的に再読込される。サーバに SIGHUP を送ることにより 再読み込みを強制することもできる。設定ファイルの再読込は、 すでに確立されているサービスの接続には影響しない。 ユーザがサービスから切断するか、smbd
+を終了して再起動するまで設定ファイルの変更は反映されない。
+.SH "オプション"
+.PP
+\-D
+.RS 4
+このパラメータが指定されると、 サーバはデーモンとして動作することになる。つまり、自身を分離して バックグラウンドで走らせ、適切なポートに対する要求を 処理するようになる。 臨時にファイルおよび印刷サービスを提供する サーバとして利用する以外の場合は、サーバをデーモンとして 起動するのが
+smbd
+の起動方法として推奨される。
+smbd
+がシェルのコマンドラインから 実行されたときはこのスイッチが指定されたと見なされる。
+.RE
+.PP
+\-F
+.RS 4
+このパラメータを指定すると、
+smbd
+のメインプロセスはデーモン化しなくなる。 つまり、 2 回の
+fork(2)
+と端末からの切り離しを行なわない。 通常通り接続要求を処理するための子プロセスが生成されるが、 メインプロセスは終了しない。 この動作方式は、 Daniel J\&. Bernstein 作の
+daemontools
+パッケージに含まれる
+supervise
+と
+svscan
+や、 AIX のプロセスモニターなど、プロセス監視の下で
+smbd
+を動作させるのに都合がよい。
+.RE
+.PP
+\-S
+.RS 4
+このパラメータが指定されると、smbd
+は ファイルではなく標準出力にログを出力する。
+.RE
+.PP
+\-i
+.RS 4
+このパラメータが指定されると、 サーバはコマンドラインでデーモンとして実行されていたとしても デーモンではなく、"対話形式"で動作する。 このパラメータを設定することにより、コマンドラインからの起動により暗黙 的にデーモンモードとなることを無効にする。 また、\-S
+パラメータが指定されているかのように、
+smbd
+は標準出力にログを出力する。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
+.sp
+Note that specifying this parameter here will override the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&.
+.RE
+.PP
+\-V|\-\-version
+.RS 4
+Prints the program version number\&.
+.RE
+.PP
+\-s|\-\-configfile <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+Base directory name for log/debug files\&. The extension
+\fB"\&.progname"\fR
+will be appended (e\&.g\&. log\&.smbclient, log\&.smbd, etc\&.\&.\&.)\&. The log file is never removed by the client\&.
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\&.
+.RE
+.PP
+\-b
+.RS 4
+どのようにSambaがビルドされたか表示する。
+.RE
+.PP
+\-p|\-\-port<port number(s)>
+.RS 4
+\fIport number(s)\fR
+は 空白か、コンマで分離された、smbdがリッスンするTCPポート番号のリストである。 既定値はsmb\&.conf中の\m[blue]\fBports\fR\m[]パラメータからとられる。
+.sp
+既定値は 139(NetBIOS over TCP上のSMBを使う場合)と445(TCP上での普通のSMBを使う場合)である。
+.RE
+.PP
+\-P|\-\-profiling\-level<profiling level>
+.RS 4
+\fIprofiling level\fR
+は 収集するプロファイリングデータのレベルを指定する数値である。0はプロファイリングを 停止、1はプロファイリングカウンタのみONにする。2は完全なプロファイリングをONにし、3はすべてのプロファイリングデータをリセットする。
+.RE
+.SH "関連ファイル"
+.PP
+/etc/inetd\&.conf
+.RS 4
+サーバを
+inetd
+メタ・デーモンによって動作させるには、このファイルに メタ・デーモン用の適切な起動情報を含める必要がある。
+.RE
+.PP
+/etc/rc
+.RS 4
+(あるいは、あなたのシステムが 使用する初期化スクリプト)
+.sp
+システム起動時にデーモンとしてサーバを動作させるなら、 このファイルにサーバのための適切な起動手続きを 含める必要がある。
+.RE
+.PP
+/etc/services
+.RS 4
+
+inetd
+メタ・デーモンを 介してサーバを動作させるなら、このファイルにサービスポート (例:139)とプロトコルタイプ(例:tcp)に対するサービス名 (例:netbios\-ssn)のマッピングを含める必要がある。
+.RE
+.PP
+/usr/local/samba/lib/smb\&.conf
+.RS 4
+このファイルはサーバの設定ファイルである
+\fBsmb.conf\fR(5)
+のデフォルトの位置である。その他、システムがこのファイルをインストール しそうな場所としては、
+/usr/samba/lib/smb\&.conf
+や
+/etc/samba/smb\&.conf
+がある。
+.sp
+このファイルにはサーバがクライアントから利用できるようにする 全てのサービスを記述する。さらなる情報は
+\fBsmb.conf\fR(5)
+を参照のこと。
+.RE
+.SH "制限"
+.PP
+いくつかのシステム上において、smbd
+は setuid() を呼び出した後に uid を root に戻すことができない。この種のシステムは、トラップドア uid システムと呼ばれる。 そのようなシステムの場合、異なる二人のユーザとして (PC のような) クライアントから同時に接続を行うことができない。 二人目のユーザ接続の試みは、「アクセス拒否」 または類似の結果となる。
+.SH "環境変数"
+.PP
+\fBPRINTER\fR
+.RS 4
+プリント・サービスでプリンタの名前が 指定されていないとき、多くのシステムでは使用するプリンタ名として、 この変数の値が(もしくは変数が定義されていないなら\fBlp\fR
+が)利用される。しかしながら これはサーバの特性であるという訳ではない。
+.RE
+.SH "PAM との相互作用"
+.PP
+Samba はアカウントチェック(アカウントが無効か?)や セッション管理のため(平文のパスワードが提供されたときに) 認証に PAM を使う。samba の PAM をサポートする程度は、 SMBプロトコルと\fBsmb.conf\fR(5)の
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]の制限によって限定される。これが設定されると、以下の制限が適用される。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIアカウントの妥当性確認\fR: Samba サーバに対するすべてのアクセスは、アカウントが妥当か、無効になっていないか、 その時間にログインが許可されているかを PAM と照らし合わせて チェックされる。これは暗号化されたログインにも当てはまる。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIセッション管理\fR: 共有レベルのセキュリティ (訳注:smb\&.conf での security = share を指す)を使用していない場合、 ユーザはアクセスが許可される前に PAM のセッションチェックをパスしなくてはいけない。 一方、共有レベルのセキュリティではこれはスキップされることに注意。 また、いくつかの古い pam 設定ファイルではセッションをサポートするために 行の追加が必要かも知れないことにも注意。
+.SH "バージョン"
+.PP
+このマニュアルページは Samba バージョン 3用にである。
+.SH "診断"
+.PP
+サーバによって出力されたほとんどの診断は、指定されたログファイルに 記録される。ログファイルの名前はコンパイル時に指定されるが、 コマンドラインで変更することもできる。
+.PP
+利用できる診断の数と性質は、サーバで使用されるデバッグ・レベルに 依存する。もし問題を抱えているなら、デバッグ・レベルを 3 に設定してログファイルに目を通すこと。
+.PP
+ほとんどのメッセージは充分に自明であろう。あいにく、 このマニュアルページ作成時にはあまりにもさまざまな診断メッセージが 存在しているため、診断メッセージをすべて記述することを保証できない。 そのような場合にもっともよい方法は、ソースコードを検索 (grep)することであり、着目している診断メッセージを引き起こした条件を 探すことである。
+.SH "TDBファイル"
+.PP
+Sambaは通常/var/lib/sambaにあるいくつかのTDB (Trivial Database) ファイルにそのデータを格納する。
+.PP
+(*) 情報はリスタートをまたがって継続する(しかし、必ずしもバックアップが重要ではない)。
+.PP
+account_policy\&.tdb*
+.RS 4
+パスワードの満了期間などのような、NTアカウントポリシーの設定
+.RE
+.PP
+brlock\&.tdb
+.RS 4
+バイトレンジロック
+.RE
+.PP
+browse\&.dat
+.RS 4
+ブラウズリスト
+.RE
+.PP
+connections\&.tdb
+.RS 4
+共有の接続(最大コネクションの強制などに使う)
+.RE
+.PP
+gencache\&.tdb
+.RS 4
+汎用キャッシュdb
+.RE
+.PP
+group_mapping\&.tdb*
+.RS 4
+グループマッピング情報
+.RE
+.PP
+locking\&.tdb
+.RS 4
+共有モードとoplocks
+.RE
+.PP
+login_cache\&.tdb*
+.RS 4
+不正なログイン記録
+.RE
+.PP
+messages\&.tdb
+.RS 4
+Sambaメッセージングシステム
+.RE
+.PP
+netsamlogon_cache\&.tdb*
+.RS 4
+net_samlogon() 要求 (ドメインメンバとして)からのユーザ net_info_3構造体のキャッシュ
+.RE
+.PP
+ntdrivers\&.tdb*
+.RS 4
+インストールされたプリンタドライバ
+.RE
+.PP
+ntforms\&.tdb*
+.RS 4
+インストールされたプリンタのフォーム
+.RE
+.PP
+ntprinters\&.tdb*
+.RS 4
+インストールされたプリンタの情報
+.RE
+.PP
+printing/
+.RS 4
+キャッシュされたlpq出力のプリンとキュー毎のtdbを含むディレクトリ
+.RE
+.PP
+registry\&.tdb
+.RS 4
+Windowsレジストリの骨格(regedit\&.exe経由)
+.RE
+.PP
+sessionid\&.tdb
+.RS 4
+セッション情報(すなわち\'utmp = yes\'のサポート)
+.RE
+.PP
+share_info\&.tdb*
+.RS 4
+共有のacl
+.RE
+.PP
+winbindd_cache\&.tdb
+.RS 4
+winbinddが使うユーザリストのキャッシュなど
+.RE
+.PP
+winbindd_idmap\&.tdb*
+.RS 4
+winbinddが使うローカルのidmap db
+.RE
+.PP
+wins\&.dat*
+.RS 4
+\'wins support = yes\'の時のwinsデータベース
+.RE
+.SH "シグナル"
+.PP
+smbd
+に SIGHUP を送ることで、
+smb\&.conf
+の内容を短時間の内に 再読み込みさせることができる。
+.PP
+smbd
+のプロセスをシャットダウンさせるのに、 最後の手段として以外には
+SIGKILL (\-9)
+は
+\fI使わない\fR
+ことを推奨する。共有メモリのエリアが不整合なままに なってしまうことがあるためである。smbd
+を安全に終了させる方法は、SIGTERM (\-15) を送って、smbd
+自身が終了するのを待つことである。
+.PP
+\fBsmbcontrol\fR(1)
+を使うと
+smbd
+のデバッグ・ログ・レベルを上げたり下げたりできる (SIGUSR[1|2] シグナルは Samba 2\&.2 ではもはや使用されない)。 これにより、低いログ・レベルで動作している間に発生する 一時的な問題を診断することができる。
+.PP
+デバッグ書き込みを送る
+smbd
+のシグナル・ ハンドラは再入可能になっていない。ゆえにシグナルを発行するときは、
+smbd
+が SMB 待ちの状態になるまで待つ必要がある。 select 呼び出しの前にシグナルのブロッキングを解除し、呼び出しの後で再び ブロッキングすればシグナル・ハンドラを安全にすることができるが、 これはパフォーマンスに影響するだろう。
+.SH "関連項目"
+.PP
+\fBhosts_access\fR(5),
+\fBinetd\fR(8),
+\fBnmbd\fR(8),
+\fBsmb.conf\fR(5),
+\fBsmbclient\fR(1),
+\fBtestparm\fR(1),
+\fBtestprns\fR(1), and the およびインターネット RFC の
+rfc1001\&.txt,
+rfc1002\&.txt\&. 加えて CIFS(以前は SMB)の仕様は以下のWebページから入手できる:
+http://samba\&.org/cifs/\&.
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが 開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発されている。
+.PP
+オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。 マニュアルページは YODL 形式(別の、優秀なオープンソースソフトウェアで、 (ftp://ftp\&.icce\&.rug\&.nl/pub/unix/にある) で変換され、Jeremy Allison によって Samba 2\&.0 リリースのために更新された。 Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\&.0 のための DocBook XML 4\&.2 形式への変換は Alexander Bokovoy が行った。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.2\&.4 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は、ちかましゅうへいによって行なわれた。
+.PP
+このドキュメントの Samba 3\&.2\&.4 \- 3\&.4\&.4 対応の翻訳は、太田俊哉(ribbon@samba\&.gr\&.jp)によって行なわれた。

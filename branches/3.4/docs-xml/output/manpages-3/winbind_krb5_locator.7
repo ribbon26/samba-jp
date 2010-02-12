@@ -1,0 +1,64 @@
+'\" t
+.\"     Title: winbind_krb5_locator
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: 7
+.\"    Source: Samba 3.3
+.\"  Language: English
+.\"
+.TH "WINBIND_KRB5_LOCATOR" "7" "01/08/2010" "Samba 3\&.3" "7"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+winbind_krb5_locator \- Windowsの方式で、MITとHeimdal KerberosのためのKDCを決定するためのプラグイン
+.SH "説明"
+.PP
+このプラグインは、
+\fBsamba\fR(7)システムの一部である。
+.PP
+
+winbind_krb5_locatorは MITとHeimdalKerberosライブラリにおいて、Sambaシステムの実装と 同じセマンティクスで、(KDCとkpasswdサービス用の) Kerberosサーバを検出することを可能にするプラグインである。 この機能はサイト構成のDNSサービスレコードの探索と、最も 近いドメインコントローラー情報のキャッシュに対応している。 このプラグインは、最も最近のKerberosの実装によって 提供されているパブリックロケーターAPIを利用する。
+.SH "必須条件"
+.PP
+MIT Kerberos(バージョン1\&.5以降)か Heimdal Kerberos(バージョン1\&.0以降)が必要である。
+.PP
+このプラグインは、あらかじめ設定済みで、稼働中の
+\fBwinbindd\fR(8)デーモンに 問い合わせを行う。
+.PP
+
+winbind_krb5_locator\&.soファイルはシステムの Kerberosライブラリがあるプラグインディレクトリに手動で コピーする必要がある。 MIT Kerberosでは通常以下のディレクトリ:
+/usr/lib/krb5/plugins/libkrb5/。 Heimdal Kerberosでは通常以下のディレクトリ:
+/usr/lib/plugin/krb5/。 あなたが利用しているKerberosで正しいインストールパスを 確認すること。 このプラグインを使うために
+/etc/krb5\&.confを変更する必要は無い。
+.PP
+適切なプラグインディレクトリにロケータープラグインをコピー した後に、即座にこの機能が有効になる。ユーザーは
+/etc/krb5\&.confを変更したり、サーバー情報を 追加したりすることなく、Kerberos対応のWindows環境に対する kinitを行うことが可能となる。
+.SH "バージョン"
+.PP
+このマニュアルページはSamba 3システム用である。
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell によって作成された。現在 Samba は、Samba Team によって Linux カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+.PP
+The winbind_krb5_locatorマニュアルページはGuenther Deschnerによって記述された。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.3\&.2 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.3\&.2 \- 3\&.4\&.4 対応の翻訳は
+.PP
+太田俊哉 (ribbon@samba\&.gr\&.jp)
+.PP
+武田保真
+.sp
+.RE
+によって行なわれた。

@@ -1,0 +1,628 @@
+'\" t
+.\"     Title: winbindd
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: システム管理ツール
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "WINBINDD" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+winbindd \- NT サーバからの名前解決を行う Name Service Switch (NSS)デーモン
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+winbindd [\-F] [\-S] [\-i] [\-Y] [\-d\ <debug\ level>] [\-s\ <smb\ config\ file>] [\-n]
+.SH "説明"
+.PP
+このプログラムは、\fBsamba\fR(7)
+システムの一部である。
+.PP
+winbindd
+は、 はデーモンであり、 現在 C ライブラリの大半に実装されている NSS (ネームサービススイッチ) 機能、 PAM を利用する任意のアプリケーション、
+ntlm_auth
+および Samba 自身に対する各種サービスを提供する。
+.PP
+NSS 機能を使用しない場合でも、 winbindd はドメインコントローラとの通信を行い、
+smbd
+、ntlm_auth
+、 PAM モジュールの
+pam_winbind\&.so
+に対するサービスを提供する。 この場合、
+\m[blue]\fBidmap uid\fR\m[]
+および
+\m[blue]\fBidmap gid\fR\m[]
+パラメータは不要である (これは「netlogon [proxy only mode」と呼ばれる)。
+.PP
+NSS 機能は、ユーザーやシステムの情報を NIS や DNS などの様々なデータベースサービスから取得することを可能とする。 実際の動作は、
+/etc/nsswitch\&.conf
+ファイルにて設定する。 各ユーザやグループに対しては、 Samba サーバの管理者が指定したユーザ ID とグループ ID の範囲から ID が割り当てられる。
+.PP
+
+winbindd
+によって提供されるサービスは「winbind」と呼ばれ、 Windows NT サーバからユーザとグループの情報を取得するために用いられる。 このサービスは関連する PAM モジュールを通じて、 認証サービスを提供することも可能である。
+.PP
+
+pam_winbind
+モジュールは、
+\fIauth\fR
+、
+\fIaccount\fR
+、
+\fIpassword\fR
+の各モジュールタイプをサポートしている。
+\fIaccount\fR
+モジュールについては、システムによるユーザの UID の取得可否を確認するために getpwnam() を実行するだけの機能しかない。 これは、ドメインコントローラにより既にアクセス制御が行われているためである。
+libnss_winbind
+もしくはシステムに応じた名称のライブラリが適切にインストールされていれば、このモジュールは必ず成功するはずである。
+.PP
+winbind サービスは、以下の NSS データベースを実装している:
+.PP
+\-D
+.RS 4
+もしも指定されたならば、このパラメータは、サーバをデーモンとして動かす。 すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。 このスイッチは、もしも、winbindd
+がシェルのコマンド行上で実行された事を仮定する。
+.RE
+.PP
+hosts
+.RS 4
+これは、 IRIX でのみ有効である。 ユーザ情報(訳注: ホスト情報だと思われる)は、伝統的に
+hosts(5)
+ファイルに格納され、
+gethostbyname(3)
+関数によって取得される。 名前解決は WINS サーバ経由か、ブロードキャストによって行われる。
+.RE
+.PP
+passwd
+.RS 4
+ユーザ情報は、伝統的に
+passwd(5)
+ファイルに格納され、
+getpwent(3)
+関数によって取得される。
+.RE
+.PP
+group
+.RS 4
+グループ情報は、伝統的に
+group(5)
+ファイルに格納され、
+getgrent(3)
+関数によって取得される。
+.RE
+.PP
+一例として、 以下のような簡単な設定を
+/etc/nsswitch\&.conf
+ファイルに記述することで、 ユーザ情報やグループ情報は、最初に
+/etc/passwd
+や
+/etc/group
+ファイルから、ついで Windows NT サーバから取得される。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+passwd:         files winbind
+group:          files winbind
+## IRIX においてのみ有効。hostを解決するためにwinbindを使う:
+hosts:          files dns winbind
+## その他のNSSが有効のシステムでは、以下のように libnss_wins\&.soを使う:
+hosts:          files dns wins
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+以下のような簡単な設定を
+/etc/nsswitch\&.conf
+ファイルに記述することで、 ホスト名は、最初に
+/etc/hosts
+ファイルから、ついで WINS サーバから取得される。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+hosts:		files wins
+.fi
+.if n \{\
+.RE
+.\}
+.SH "オプション"
+.PP
+\-F
+.RS 4
+このパラメータを指定すると、
+winbindd
+のメインプロセスがデーモンとして動作しなくなる。 つまり、 2 回の
+fork(2)
+と端末からの切り離しを行なわない。 接続要求を処理するための子プロセスは通常どおり生成されるが、 メインプロセスは終了しない。 この動作モードは、 Daniel J\&. Bernstein 作の
+daemontools
+パッケージに含まれる
+supervise
+と
+svscan
+や、 AIX のプロセスモニタなどのプロセス監視機構配下で
+winbindd
+を動作させるためのものである。
+.RE
+.PP
+\-S
+.RS 4
+このパラメータを指定すると、
+winbindd
+はファイルの代わりに標準出力にログを出力するようになる。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
+.sp
+Note that specifying this parameter here will override the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&.
+.RE
+.PP
+\-V|\-\-version
+.RS 4
+Prints the program version number\&.
+.RE
+.PP
+\-s|\-\-configfile <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+Base directory name for log/debug files\&. The extension
+\fB"\&.progname"\fR
+will be appended (e\&.g\&. log\&.smbclient, log\&.smbd, etc\&.\&.\&.)\&. The log file is never removed by the client\&.
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\&.
+.RE
+.PP
+\-i
+.RS 4
+
+winbindd
+にデーモンとしての動作と端末からの切り離しを行なわないように指示する。 このオプションは、
+winbindd
+の対話的なデバッグが必要な開発者のためのものである。 この際、\-S
+パラメータが指定されたときと同じく、ログは標準出力に出力される。
+.RE
+.PP
+\-n
+.RS 4
+キャッシュを無効にする。これにより、
+winbindd
+は、 クライアントに応答する前にドメインコントローラからの応答を毎回待たなければならず動作が遅くなるが、 キャッシュを使用しなくなるため、より厳密な結果を得られるようになる。 なお、ドメインコントローラが応答するまで
+winbindd
+は処理を停止してしまう。
+.RE
+.PP
+\-Y
+.RS 4
+単一デーモンモード。
+winbindd
+は単一のプロセスだけで動作する (Samba 2\&.2 での動作モード)。
+winbindd
+のデフォルトの動作では、 期限切れのキャッシュエントリの更新を行う子プロセスが起動される。
+.RE
+.SH "名前と ID の解決"
+.PP
+Windows NT サーバ上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。 Windows NT のユーザとグループを UNIX のユーザとグループに変換するには、 SID とユーザ ID およびグループ ID 間のマッピングが必要となる。 これは
+winbindd
+が行なう作業の一つである。
+.PP
+winbindd のユーザとグループが解決される際に、 ユーザ ID とグループ ID が指定された範囲から割り当てられる。 ID は解決された順に順番に割り当てられるが、 クライアントがユーザやグループの列挙コマンドを実行すれば、存在するすべてのユーザとグループのマッピングが行われる。 割り当てられた UNIX 側の ID は、 Samba のロックディレクトリ配下のデータベースファイルに格納され、記憶される。
+.PP
+\fI警告:\fR
+SID と UNIX の ID を変換するデータベース以外に winbindd がユーザとグループのマッピング情報を格納している場所はない。 このファイルが削除されたり壊れたりしてしまうと winbindd が、ユーザ ID やグループ ID と Windows NT のユーザあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
+.SH "設定"
+.PP
+
+winbindd
+デーモンの設定は、
+\fBsmb.conf\fR(5)
+ファイルのパラメータで行う。 すべてのパラメータは、 smb\&.conf の [global] セクション内に記述しなければならない。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind separator\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBidmap uid\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBidmap gid\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBidmap backend\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind cache time\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind enum users\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind enum groups\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBtemplate homedir\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBtemplate shell\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind use default domain\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\m[blue]\fBwinbind: rpc only\fR\m[]
+このパラメータを設定すると、ドメインコントローラから情報を 検索するため、LDAPの変わりにwinbindがRPCを使うことを強制 する。
+.SH "設定例"
+.PP
+ユーザとグループ名の解決と認証をドメインコントローラで行うには、 winbindd を以下のように設定する。 この設定例は、古いバージョンの Red Hat Linux で動作を確認した。
+.PP
+/etc/nsswitch\&.conf
+に以下の記述を行なう:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+passwd: files winbind
+group:  files winbind
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+/etc/pam\&.d/*
+内の
+\fIauth\fR
+行を以下のような設定に置き換える:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+auth  required    /lib/security/pam_securetty\&.so
+auth  required	  /lib/security/pam_nologin\&.so
+auth  sufficient  /lib/security/pam_winbind\&.so
+auth  required    /lib/security/pam_unix\&.so \e
+                  use_first_pass shadow nullok
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+pam_unix PAM モジュールは、近年 pam_pwdb モジュールの代わりに用いられている。 Linux システムによっては、pam_unix の代わりに pam_unix2 モジュールが用いられている。
+.sp .5v
+.RE
+.PP
+\fIsufficient\fR
+キーワードと
+\fIuse_first_pass\fR
+キーワードを使用している点に注意すること。
+.PP
+ここで
+\fIaccount\fR
+行を以下の設定に置き換える:
+.PP
+account required /lib/security/pam_winbind\&.so
+.PP
+次はドメインへの参加である。
+net
+プログラムを以下のように実行する:
+.PP
+net join \-S PDC \-U Administrator
+.PP
+
+\fI\-U\fR
+に続くユーザ名は、 PDC 上で administrator 権限を持つドメインのユーザであれば誰でもよい。 「PDC」の部分は、実際の PDC の IP もしくは名前に置き換えること。
+.PP
+引き続き
+libnss_winbind\&.so
+を
+/lib
+に、
+pam_winbind\&.so
+を
+/lib/security
+にコピーする。
+/lib/libnss_winbind\&.so
+から
+/lib/libnss_winbind\&.so\&.2
+へのシンボリックリンクも用意する必要がある。 ただし古いバージョンの glibc を使用しているなら、 シンボリックリンク先は
+/lib/libnss_winbind\&.so\&.1
+にしなければならない。
+.PP
+最後に、
+\fBsmb.conf\fR(5)
+に以下のような設定を記述する:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+[global]
+	winbind separator = +
+        winbind cache time = 10
+        template shell = /bin/bash
+        template homedir = /home/%D/%U
+        idmap uid = 10000\-20000
+        idmap gid = 10000\-20000
+        workgroup = DOMAIN
+        security = domain
+        password server = *
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+ここで winbindd を起動すると、ユーザおよびグループの対応を行うデータベースが Windows NT のユーザとグループの情報を取り込むに従い、大きくなっていくのが確認できる。 また、「ドメイン名+ユーザー名」という形式でユーザ名を指定することで、 ドメインのユーザが UNIX にログインできることも確認できるだろう。
+getent passwd
+と
+getent group
+コマンドを実行すれば、 winbindd が正常に稼働していることを確認できる。
+.SH "注意"
+.PP
+以下の注意点は、
+winbindd
+の設定や実行の際に有用である:
+.PP
+
+winbindd
+が機能するには、同じマシン上で
+\fBnmbd\fR(8)
+を実行していなければならない。
+.PP
+PAM は非常に設定ミスを犯しやすい。 PAM の設定ファイルを変更する際は、 何を行なっているかをきちんと確認すること。 PAM の設定を誤ることで、 誰もシステムにログインできなくなってしまうこともあり得る。
+.PP
+複数の UNIX マシンで
+winbindd
+を実行した場合、一般的に winbindd によって割り当てられるユーザ ID とグループ ID はマシン毎に異なる。
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+パラメータで、情報を共有する設定を行わない限り、 ユーザ ID とグループ ID はローカルマシン内でのみ有効である。
+.PP
+Windows NT の SID と UNIX のユーザ ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、 マッピング情報は失われてしまう。
+.SH "シグナル"
+.PP
+以下のシグナルによって
+winbindd
+デーモンを操作することが 可能である。
+.PP
+SIGHUP
+.RS 4
+\fBsmb.conf\fR(5)
+ファイルを再読み込みさせ、 実行中の
+winbindd
+にパラメータの変更を反映させる。 このシグナルにより、 ユーザ情報とグループ情報のキャッシュもクリアされる。 また、winbindd が信頼するドメインの一覧も再取得される。
+.RE
+.PP
+SIGUSR2
+.RS 4
+ステータス情報を
+winbindd
+のログファイルに書き込ませる。
+.sp
+ログファイルは、 log file パラメータで指定したファイルである。
+.RE
+.SH "ファイル"
+.PP
+/etc/nsswitch\&.conf(5)
+.RS 4
+ネームサービススイッチの設定ファイル。
+.RE
+.PP
+/tmp/\&.winbindd/pipe
+.RS 4
+クライアントが
+winbindd
+と通信するための UNIX パイプ。 セキュリティ上の理由で、
+/tmp/\&.winbindd
+ディレクトリと
+/tmp/\&.winbindd/pipe
+ファイルの両方の所有者が root 以外の場合、クライアントは winbindd デーモンとの接続を行なわない。
+.RE
+.PP
+$LOCKDIR/winbindd_privileged/pipe
+.RS 4
+winbind の「特権」クライアントが
+winbindd
+と通信するための UNIX パイプ。 セキュリティ上の理由で、 winbindd のいくつかの機能 (ntlm_auth
+ユーティリティが必要とする機能など) へのアクセスは制限されており、 デフォルトでは、 「root」グループに属するユーザだけがアクセスできる。 管理者が $LOCKDIR/winbindd_privileged のグループパーミッションを変更することで、 「squid」などのプログラムが ntlm_auth を利用できるようにすることなどが可能である。
+$LOCKDIR/winbindd_privileged
+ディレクトリと
+$LOCKDIR/winbindd_privileged/pipe
+ファイルの両方の所有者が root 以外の場合、winbindクライアントは winbindd デーモンとの接続を行なわない事に注意。
+.RE
+.PP
+/lib/libnss_winbind\&.so\&.X
+.RS 4
+ネームサービススイッチライブラリの実体。
+.RE
+.PP
+$LOCKDIR/winbindd_idmap\&.tdb
+.RS 4
+Windows NT の RID から UNIX の ユーザ/グループ ID へのマッピング情報の保管場所。 ロックディレクトリは、Samba のコンパイル時に
+\fI\-\-with\-lockdir\fR
+オプションを用いて指定する。 このディレクトリの既定値は
+/usr/local/samba/var/locks
+である。
+.RE
+.PP
+$LOCKDIR/winbindd_cache\&.tdb
+.RS 4
+キャッシュされたユーザ/グループ情報の保管場所。
+.RE
+.SH "バージョン"
+.PP
+このマニュアルは、Samba システムのバージョン 3 に適用される。
+.SH "参照"
+.PP
+nsswitch\&.conf(5),
+\fBsamba\fR(7),
+\fBwbinfo\fR(1),
+\fBntlm_auth\fR(8),
+\fBsmb.conf\fR(5),
+\fBpam_winbind\fR(8)
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell によって作成された。現在 Samba は、Samba Team によって Linux カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+.PP
+wbinfo
+および
+winbindd
+コマンドは Tim Potter によって作成された。
+.PP
+Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\&.0 のための DocBook XML 4\&.2 形式の変換は Alexander Bokovoy によって行われた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.3\&.6 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.24 対応の翻訳は
+.PP
+たかはしもとのぶ (monyo@samba\&.gr\&.jp)
+.PP
+さとうふみやす
+.sp
+.RE
+によって行なわれた。
+.PP
+このドキュメントの Samba 3\&.2\&.4 \- 3\&.4\&.4 対応の翻訳は 太田俊哉(ribbon@samba\&.gr\&.jp)によって行われた。

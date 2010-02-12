@@ -1,0 +1,246 @@
+'\" t
+.\"     Title: nmblookup
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "NMBLOOKUP" "1" "01/08/2010" "Samba 3\&.4" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+nmblookup \- NetBIOS 名を検索する NetBIOS over TCP/IP クライアント
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+nmblookup [\-M] [\-R] [\-S] [\-r] [\-A] [\-h] [\-B\ <broadcast\ address>] [\-U\ <unicast\ address>] [\-d\ <debug\ level>] [\-s\ <smb\ config\ file>] [\-i\ <NetBIOS\ scope>] [\-T] [\-f] {name}
+.SH "解説"
+.PP
+このツールは
+\fBsamba\fR(7)
+の一部である。
+.PP
+nmblookup
+は、NetBIOS over TCP/IP が使われているネットワークにおいて、NetBIOS 名の問い合わせや、IP アドレスへの変換に使われる。オプションを設定することで、 特定のブロードキャストアドレスや特定のマシンに対して名前の問い合わせを 行なう事ができる。全ての問い合わせは、UDP を使って行なわれる。
+.SH "オプション"
+.PP
+\-M
+.RS 4
+タイプ
+\fB0x1d\fR
+の NetBIOS 名、\fIname\fR
+に問い合わせることで、 マスタブラウザの検索をおこなう。\fIname\fR
+が "\-" の場合、特殊な名前である
+\fB__MSBROWSE__\fR
+の検索を行う。 もし name に "\-" を使用したいのなら、"\-" が引数として扱われない ように注意しなければならない。使用例:
+\fBnmblookup \-M \-\- \-\fR
+.RE
+.PP
+\-R
+.RS 4
+再帰検索を行なう為に、パケット中の 再帰要求ビットを設定する。これは、WINS サーバが動作している マシンに対して問い合わせを行ない、WINS サーバに名前を 問い合わせたいときに使用する。このビットが設定されていない場合、 通常の(ブロードキャスト応答による) NetBIOS 名の応答処理が 行われる。詳細は RFC1001 および RFC1002 を参照の事。
+.RE
+.PP
+\-S
+.RS 4
+名前問い合わせで IP アドレスが返却された場合、 ノードステータスの問い合わせも行なう。 ノードステータスの問い合わせは、そのホストが登録している NetBIOS 名の一覧を返却する。
+.RE
+.PP
+\-r
+.RS 4
+UDP のポート 137 を使って、UDP データグラムを送受信する。このオプションは、 Windows 95 がパケットの送信元のポートを無視して UDPのポート 137 にしか応答を返却しないというバグに対応する為のものである。 しかし、ほとんどの UNIX システムで、このポートを使用するには root 権限が必要であり、更に、\fBnmbd\fR(8)
+デーモンが動作している場合、 このポートを使用している。
+.RE
+.PP
+\-A
+.RS 4
+\fIname\fR
+を IP アドレスとして解釈して、ノードステータスの問い合わせを このアドレスに行なう。
+.RE
+.PP
+\-n|\-\-netbiosname <primary NetBIOS name>
+.RS 4
+This option allows you to override the NetBIOS name that Samba uses for itself\&. This is identical to setting the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&. However, a command line setting will take precedence over settings in
+smb\&.conf\&.
+.RE
+.PP
+\-i|\-\-scope <scope>
+.RS 4
+This specifies a NetBIOS scope that
+nmblookup
+will use to communicate with when generating NetBIOS names\&. For details on the use of NetBIOS scopes, see rfc1001\&.txt and rfc1002\&.txt\&. NetBIOS scopes are
+\fIvery\fR
+rarely used, only set this parameter if you are the system administrator in charge of all the NetBIOS systems you communicate with\&.
+.RE
+.PP
+\-W|\-\-workgroup=domain
+.RS 4
+Set the SMB domain of the username\&. This overrides the default domain which is the domain defined in smb\&.conf\&. If the domain specified is the same as the servers NetBIOS name, it causes the client to log on using the servers local SAM (as opposed to the Domain SAM)\&.
+.RE
+.PP
+\-O|\-\-socket\-options socket options
+.RS 4
+TCP socket options to set on the client socket\&. See the socket options parameter in the
+smb\&.conf
+manual page for the list of valid options\&.
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\&.
+.RE
+.PP
+\-B <broadcast address>
+.RS 4
+指定されたブロードキャストアドレスに対し 問い合わせを送信する。このオプションを指定しない場合の nmblookup のデフォルト動作は、問い合わせを ネットワークインタフェースのブロードキャストアドレスに送信する。 ネットワークインタフェースのブロードキャストアドレスは、 自動検出に任せるか
+\fBsmb.conf\fR(5)\fIinterfaces\fR
+パラメータで指定する。
+.RE
+.PP
+\-U <unicast address>
+.RS 4
+指定されたアドレスもしくは
+\fIunicast address\fR
+で指定したホストに 対して、ユニキャストの問い合わせを行なう。このオプションは、 (\fI\-R\fR
+オプションと共に) WINS サーバに問い合わせを行なう時には必須である。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
+.sp
+Note that specifying this parameter here will override the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&.
+.RE
+.PP
+\-V|\-\-version
+.RS 4
+Prints the program version number\&.
+.RE
+.PP
+\-s|\-\-configfile <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+Base directory name for log/debug files\&. The extension
+\fB"\&.progname"\fR
+will be appended (e\&.g\&. log\&.smbclient, log\&.smbd, etc\&.\&.\&.)\&. The log file is never removed by the client\&.
+.RE
+.PP
+\-T
+.RS 4
+このパラメータは、問い合わせ中に発見した あらゆる IP アドレスについて DNS の逆引きを行うことで、 DNS 名を取得し、標準的な表示である
+.sp
+\fIIPアドレス \&.\&.\&.\&. NetBIOS名\fR
+.sp
+の組の前に表示する。
+.RE
+.PP
+\-f
+.RS 4
+検索した名前に適用されているフラグを表示させる。 フラグには Response(レスポンス)、 Authoritative(権威がある)、Recursion_Desired、 Recursive_available、Broadcast(ブロードキャスト)などがある。
+.RE
+.PP
+name
+.RS 4
+これは問合せ対象の NetBIOS 名である。 オプションの指定によっては、NetBIOS 名の場合もあれば、IP アドレスの場合もある。NetBIOS 名の場合は、名前の最後に \'#<type>\' を追加する事で名前のタイプを指定する事ができる。 名前として「*」を指定することもでき、その場合はブロードキャストの範囲内に登録されている全ての名前が返却される。
+.RE
+.SH "使用例"
+.PP
+nmblookup
+は、 (nslookup
+が DNS サーバに対して 問い合わせるのと同様に) WINSサーバに対して問い合わせを 行うことができる。WINS サーバに問い合わせを行なう際は、
+nmblookup
+を以下のようにして実行する 必要がある:
+.PP
+nmblookup \-U server \-R \'name\'
+.PP
+たとえば、以下のように実行する:
+.PP
+nmblookup \-U samba\&.org \-R \'IRIX#1B\'
+.PP
+これは、samba\&.org の WINSサーバに対して、IRIX ワークグループのドメインマスタブラウザ (タイプ1B) を問い合わせる。
+.SH "バージョン"
+.PP
+このマニュアルページは Samba 3 対応のものである。
+.SH "関連項目"
+.PP
+\fBnmbd\fR(8)
+、
+\fBsamba\fR(7)
+、
+\fBsmb.conf\fR(5)
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連ユーティリティは、 Andrew Tridgellによって作成された。 現在 Samba は、Samba Team によって Linux カーネルの 開発と同様に、オープンソースプロジェクトとして 開発されている。
+.PP
+オリジナルのSambaマニュアルは、Karl Auer によって執筆された。 マニュアルのソースは Jeremy Allison によって YODL 形式に変換され、 Samba 2\&.0 リリース用に更新された。 (YODL はオープンソース・ソフトウエアの優れた作品である
+ftp://ftp\&.icce\&.rug\&.nl/pub/unix/
+より入手可能。) Samba 2\&.2 における DocBook形式への変換は Gerald Carter によって行なわれた。Samba 3\&.0 における DocBook XML 4\&.2 形式への変換は Alexander Bokovoy によって行われた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.0\&.3 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+たかはしもとのぶ (monyo@samba\&.gr\&.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+はせがわ ようすけ
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+山田 史朗 (shiro@miraclelinux\&.com)
+.sp
+.RE
+.PP Samba 3\&.0\&.3 \- Samba 3\&.0\&.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
+.PP Samba 3\&.2\&.4 \- 3\&.4\&.4 対応の翻訳は、太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。

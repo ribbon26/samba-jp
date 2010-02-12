@@ -1,0 +1,380 @@
+'\" t
+.\"     Title: ntlm_auth
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "NTLM_AUTH" "1" "01/08/2010" "Samba 3\&.4" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+ntlm_auth \- Winbind 機構の NTLM 認証機能を外部から利用可能とするツール
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+ntlm_auth [\-d\ debuglevel] [\-l\ logdir] [\-s\ <smb\ config\ file>]
+.SH "説明"
+.PP
+このツールは
+\fBsamba\fR(7)
+システムの一部である。
+.PP
+ntlm_auth
+はユーザを NTLM 認証方式で認証するためのヘルパーユーティリティである。ユーザ認証が成功した場合 0 を返し、アクセスが拒否された 場合は 0 を返す。ntlm_auth は winbind を使用してドメインのユーザと認証データに アクセスする。このユーティリティは外部プログラム（現在は
+Squid
+と
+mod_ntlm_winbind) で用いることを目的としている。
+.SH "その他の必要条件"
+.PP
+多くの機能については、
+\fBwinbindd\fR(8)
+デーモンが機能している必要がある。
+.PP
+幾つかの機能については、上記に加えて
+$LOCKDIR
+中の
+winbindd_privileged
+ディレクトリへアクセスできることも必要である。 これには、コマンドを root で実行するか、
+winbindd_privileged
+ディレクトリにアクセス可能なグループに所属させる必要がある。 セキュリティ上、 このディレクトリは誰もがアクセス可能にすべきでない。
+.SH "オプション"
+.PP
+\-\-helper\-protocol=PROTO
+.RS 4
+標準入出力を用いるヘルパープログラムとして動作させる。 認識可能なプロトコルは以下のとおり:
+.PP
+squid\-2\&.4\-basic
+.RS 4
+Squid 2\&.4 のベーシック(平文)認証で用いるためのサーバ側ヘルパー
+.RE
+.PP
+squid\-2\&.5\-basic
+.RS 4
+Squid 2\&.5 のベーシック(平文)認証で用いるためのサーバ側ヘルパー
+.RE
+.PP
+squid\-2\&.5\-ntlmssp
+.RS 4
+Squid 2\&.5 の NTLMSSP 認証で用いるためのサーバ側ヘルパー
+.sp
+これは、
+$LOCKDIR
+内の
+winbindd_privileged
+ディレクトリへのアクセスが必要である。 利用されるプロトコルについての詳細は
+http://devel\&.squid\-cache\&.org/ntlm/squid_helper_protocol\&.html
+を参照のこと。 このプロトコルでは
+YR
+コマンドの引数として NTLMSSP のネゴシエートパケットが含まれるように拡張されている。 (これにより、プロトコル情報の交換における情報の消失を回避している)。
+.RE
+.PP
+ntlmssp\-client\-1
+.RS 4
+Samba の NTLMSSP 認証の結果を用いる任意の外部プログラムのためのクライアント側ヘルパー
+.sp
+このヘルパーはクライアントであり、任意のユーザから実行可能である。 用いられるプロトコルは前述したプロトコルを逆転させたものである。
+YR
+コマンド (引数無し) により、 認証情報の交換が開始される。
+.RE
+.PP
+gss\-spnego
+.RS 4
+GSS\-SPNEGO を実装するサーバ側ヘルパー。 これは
+squid\-2\&.5\-ntlmssp
+とほぼ同様のプロトコルを用いるが、微妙な違いがある。この違いについては現時点ではドキュメント化されておらず、ソースコードを確認するしかない。
+.sp
+これは、
+$LOCKDIR
+内の
+winbindd_privileged
+ディレクトリへのアクセスが必要である。
+.RE
+.PP
+gss\-spnego\-client
+.RS 4
+GSS\-SPNEGO を実装するクライアント側ヘルパー。 これは前述したヘルパーとほぼ同様のプロトコルを用いる。 現在のところドキュメント化されていない。
+.RE
+.PP
+ntlm\-server\-1
+.RS 4
+RADIUS サーバ、もしくは pppd の「winbind」プラグインに、 MSCHAP や MSCHAPv2 認証を提供するために用いられるサーバ側ヘルパー。
+.sp
+このプロトコルは、以下の形式の行からなる:
+Parameter: 値
+および
+Paramter:: Base64エンコード値。単独のピリオド(
+\&.) は、(ヘルパーがユーザ認証を行なう際に) 一方が他方へ提供するデータの終了を意味する。
+.sp
+外部プログラムからヘルパーに情報を提供するために現在実装されているパラメータは以下のとおりである:
+.PP
+Username
+.RS 4
+ユーザ名。これは Samba の
+\m[blue]\fBunix charset\fR\m[]
+でエンコードされているとみなされる。
+.PP \fBExample\ \&1.\ \&\fR Username: bob
+.PP \fBExample\ \&2.\ \&\fR Username:: Ym9i
+.RE
+.PP
+Username (訳注: domain の誤りだと思われる)
+.RS 4
+ユーザの所属するドメイン。これは Samba の
+\m[blue]\fBunix charset\fR\m[]
+でエンコードされているとみなされる。
+.PP \fBExample\ \&3.\ \&\fR Domain: WORKGROUP
+.PP \fBExample\ \&4.\ \&\fR Domain:: V09SS0dST1VQ
+.RE
+.PP
+Full\-Username
+.RS 4
+完全なユーザ名。これは Samba の
+\m[blue]\fBunix charset\fR\m[]
+でエンコードされているとみなされる。 また、ディリミタには
+\m[blue]\fBwinbind separator\fR\m[]
+が用いられる。
+.PP \fBExample\ \&5.\ \&\fR Full\-Username: WORKGROUP\ebob
+.PP \fBExample\ \&6.\ \&\fR Full\-Username:: V09SS0dST1VQYm9i
+.RE
+.PP
+LANMAN\-Challenge
+.RS 4
+8 バイトの
+LANMAN Challenge
+の値。 これはサーバ側でランダムに生成されるか、サーバとクライアントの双方である規則に従って生成される(MSCHAPv2 の場合)。
+.PP \fBExample\ \&7.\ \&\fR LANMAN\-Challege: 0102030405060708
+.RE
+.PP
+LANMAN\-Response
+.RS 4
+24 バイトの
+LANMAN Response
+の値。 これはユーザのパスワードと提供された
+LANMAN Challenge
+から計算される。 通常、この値は認証を受けようとするクライアントからネットワーク経由で提供される。
+.PP \fBExample\ \&8.\ \&\fR LANMAN\-Response: 0102030405060708090A0B0C0D0E0F101112131415161718
+.RE
+.PP
+NT\-Response
+.RS 4
+24 バイト以上の
+NT Response
+。 これはユーザのパスワードと提供された
+LANMAN Challenge
+から計算される。 通常、この値は認証を受けようとするクライアントからネットワーク経由で提供される。
+.PP \fBExample\ \&9.\ \&\fR NT\-Response: 0102030405060708090A0B0C0D0E0F101112131415161718
+.RE
+.PP
+Password
+.RS 4
+ユーザのパスワード。 これは、ヘルパーが平文のパスワードを用いるレガシーな環境で用いられている場合に、ネットワーククライアントから提供される。
+.PP \fBExample\ \&10.\ \&\fR Password: samba2
+.PP \fBExample\ \&11.\ \&\fR Password:: c2FtYmEy
+.RE
+.PP
+Request\-User\-Session\-Key
+.RS 4
+認証に成功した際に、ログインに対応するユーザのセッション鍵を返却するか。
+.PP \fBExample\ \&12.\ \&\fR Request\-User\-Session\-Key: Yes
+.RE
+.PP
+Request\-LanMan\-Session\-Key
+.RS 4
+認証に成功した際に、ログインに対応する LANMAN セッション鍵を返却するか。
+.PP \fBExample\ \&13.\ \&\fR Request\-LanMan\-Session\-Key: Yes
+.RE
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBWarning\fR
+.ps -1
+.br
+
+		実装の際は、改行文字のような微妙なデータが混入されることを考慮して、すべてのデータ(ユーザ名やパスワードを含む)を base64 エンコードするように考慮すべきである。
+		ただしこの場合、ヘルパー側で base64 でエンコードされている文字列をデコードする必要が発生する。
+		.sp .5v
+.RE
+.RE
+.RE
+.PP
+\-\-username=USERNAME
+.RS 4
+認証するユーザのユーザ名を指定する
+.RE
+.PP
+\-\-domain=DOMAIN
+.RS 4
+認証するユーザのドメイン名を指定する
+.RE
+.PP
+\-\-workstation=WORKSTATION
+.RS 4
+認証するユーザが使用するワークステーション名を指定する
+.RE
+.PP
+\-\-challenge=STRING
+.RS 4
+NTLM チャレンジ (HEXADECIMAL エンコード)
+.RE
+.PP
+\-\-lm\-response=RESPONSE
+.RS 4
+チャレンジに対する LM レスポンス (HEXADECIMAL エンコード)
+.RE
+.PP
+\-\-nt\-response=RESPONSE
+.RS 4
+チャレンジに対する NT もしくは NTLMv2 レスポンス (HEXADECIMAL エンコード)
+.RE
+.PP
+\-\-password=PASSWORD
+.RS 4
+ユーザの平文パスワード
+.sp
+コマンドラインでこの指定がない場合、必要時にはプロンプトが表示される。
+.sp
+NTLMSSPベースのサーバロールのために、このパラメータは拡張 されたパスワードを指定し、winbinddの動作なしでテストすることを可能 にする。
+.RE
+.PP
+\-\-request\-lm\-key
+.RS 4
+LMセッションキーの検索
+.RE
+.PP
+\-\-request\-nt\-key
+.RS 4
+NTキーの要求
+.RE
+.PP
+\-\-diagnostics
+.RS 4
+認証チェーン上での診断の実行。
+\-\-passwordによるパスワードを使うか、 パスワード要求のプロンプトを出す。
+.RE
+.PP
+\-\-require\-membership\-of={SID|Name}
+.RS 4
+成功のために、認証のために指定したグループ (かSIDの名前)のメンバとなるユーザを要求する。
+.RE
+.PP
+\-d|\-\-debuglevel=level
+.RS 4
+\fIlevel\fR
+is an integer from 0 to 10\&. The default value if this parameter is not specified is 0\&.
+.sp
+The higher this value, the more detail will be logged to the log files about the activities of the server\&. At level 0, only critical errors and serious warnings will be logged\&. Level 1 is a reasonable level for day\-to\-day running \- it generates a small amount of information about operations carried out\&.
+.sp
+Levels above 1 will generate considerable amounts of log data, and should only be used when investigating a problem\&. Levels above 3 are designed for use only by developers and generate HUGE amounts of log data, most of which is extremely cryptic\&.
+.sp
+Note that specifying this parameter here will override the
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
+parameter in the
+smb\&.conf
+file\&.
+.RE
+.PP
+\-V|\-\-version
+.RS 4
+Prints the program version number\&.
+.RE
+.PP
+\-s|\-\-configfile <configuration file>
+.RS 4
+The file specified contains the configuration details required by the server\&. The information in this file includes server\-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide\&. See
+smb\&.conf
+for more information\&. The default configuration file name is determined at compile time\&.
+.RE
+.PP
+\-l|\-\-log\-basename=logdirectory
+.RS 4
+Base directory name for log/debug files\&. The extension
+\fB"\&.progname"\fR
+will be appended (e\&.g\&. log\&.smbclient, log\&.smbd, etc\&.\&.\&.)\&. The log file is never removed by the client\&.
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\&.
+.RE
+.SH "セットアップ例"
+.PP
+基本とNTLMSSP認証の両方でsquid 2\&.5用に設定するには、
+squid\&.confファイル中に以下を設定する。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+auth_param ntlm program ntlm_auth \-\-helper\-protocol=squid\-2\&.5\-ntlmssp
+auth_param basic program ntlm_auth \-\-helper\-protocol=squid\-2\&.5\-basic
+auth_param basic children 5
+auth_param basic realm Squid proxy\-caching web server
+auth_param basic credentialsttl 2 hours
+.fi
+.if n \{\
+.RE
+.\}
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+この例は、ntlm_authのパスが通っていることと、それが、上記で説明 されている、winbindd_privileged上のグループ パーミッションが設定されていることを仮定している。
+.sp .5v
+.RE
+.PP
+上記の例で、グループ制限を追加して、squid 2\&.5用にntlm_auth をセットアップするには、以下の記述を、squid\&.conf
+に書く。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+auth_param ntlm program ntlm_auth \-\-helper\-protocol=squid\-2\&.5\-ntlmssp \-\-require\-membership\-of=\'WORKGROUP\eDomain Users\'
+auth_param basic program ntlm_auth \-\-helper\-protocol=squid\-2\&.5\-basic \-\-require\-membership\-of=\'WORKGROUP\eDomain Users\'
+.fi
+.if n \{\
+.RE
+.\}
+.SH "トラブルシューティング"
+.PP
+もしも、ntlm_authの、NTLMSSP認証ヘルパ (\-\-helper\-protocol=squid\-2\&.5\-ntlmssp) に対して、MS Windows 9X または Millenium Edition 配下で MSIEを動かして認証の問題が発生したら、
+の、Microsoft Knowledge Baseの#239869を見て，そこに書いてある ことを実行すること。
+.SH "バージョン"
+.PP
+このマニュアルページは Samba 3 対応のものである。
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連ユーティリティは、 Andrew Tridgellによって作成された。 現在 Samba は、Samba Team によってLinux カーネルの 開発と同様に、オープンソースプロジェク トとして開発されている。
+.PP
+The ntlm_authのマニュアルページは Jelmer Vernooij と Andrew Bartlett によって書かれた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.0\&.23 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.24 対応の翻訳は たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
+.PP
+このドキュメントの Samba 3\&.2\&.4 \- 3\&.4\&.4 対応の翻訳は 太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。

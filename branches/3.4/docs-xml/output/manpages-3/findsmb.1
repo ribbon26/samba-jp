@@ -1,0 +1,118 @@
+'\" t
+.\"     Title: findsmb
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "FINDSMB" "1" "01/08/2010" "Samba 3\&.4" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+findsmb \- サブネット内で SMB 名前問合わせに応答したマシンの情報を一覧表示する。
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+findsmb [subnet\ のブロードキャストアドレス]
+.SH "解説"
+.PP
+この perl スクリプトは
+\fBSamba\fR(7)
+システムの一部である。
+.PP
+findsmb
+はサブネット内で、 SMB 名前問合わせ リクエストに応答したマシンに関するいくつかの情報を表示する perl スクリプトである。 情報を取得するために
+\fBnmblookup\fR(1)
+と
+\fBsmbclient\fR(1)
+を利用している。
+.SH "オプション"
+.PP
+\-r
+.RS 4
+findsmb
+がリモートマシンに 登録されている Netbios 名を取得するときに、Windows95 に 含まれているバグを考慮するかどうか決定する。 このオプションは、Windows 95 や Windows 98 の動作している マシンのみに有効な機能であるので、デフォルトでは無効に なっている。 もしこのオプションが指定されると、\fBnmblookup\fR(1)
+は、
+\fB\-B\fR
+オプションを指定して呼び出される。
+.RE
+.PP
+subnet のブロードキャストアドレス
+.RS 4
+このオプションが指定されなければ、findsmb
+は
+\fBfindsmb\fR(1)
+が動作しているマシンのサブネットを探索する。 ここでの値は\fBnmblookup\fR(1)
+へ
+\fB\-B\fR
+オプションの一部として渡される。
+.RE
+.SH "使用例"
+.PP
+findsmbは、最初の
+nmblookup
+に対して応答を返したすべてのマシンについて、IP アドレス、NetBIOS 名、 ワークグループ名、オペレーティングシステム、SMB サーバーのバージョン といった情報を一覧表示する。
+.PP
+ワークグループのローカルマスタブラウザには、マシンのワークグループ名の前に\'+\'が付く。ワークグループのドメインマスタブラウザには、マシンのワークグループ名の前に\'*\'が付く。Windows for Workgroups、Windows95、Windows98 が動作しているマシンに関しては、オペレーティングシステムやサーバのバージョンに関する情報は何も表示されない。
+.PP
+\fB\-r\fR
+オプションを指定する場合は、\fBnmbd\fR(8)
+が動作していない状態で実行しなければならない。 もし、システム上で
+nmbd
+が動作している場合、マシンのIPアドレスとDNS名だけしか取得できない。 Windows 95 や Windows 98 の動作しているマシンから正常な情報を取得するためには、nmbdが動作していないマシンで、\fB\-r\fRオプションを指定して、コマンドを root で実行しなければならない。
+.PP
+例えば、\fB\-r\fR
+オプションを指定せずに
+findsmb
+コマンドを実行すると、次のような出力を得られるだろう。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+IP ADDR         NETBIOS NAME   WORKGROUP/OS/VERSION 
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\- 
+192\&.168\&.35\&.10   MINESET\-TEST1  [DMVENGR]
+192\&.168\&.35\&.55   LINUXBOX      *[MYGROUP] [Unix] [Samba 2\&.0\&.6]
+192\&.168\&.35\&.56   HERBNT2        [HERB\-NT]
+192\&.168\&.35\&.63   GANDALF        [MVENGR] [Unix] [Samba 2\&.0\&.5a for IRIX]
+192\&.168\&.35\&.65   SAUNA          [WORKGROUP] [Unix] [Samba 1\&.9\&.18p10]
+192\&.168\&.35\&.71   FROGSTAR       [ENGR] [Unix] [Samba 2\&.0\&.0 for IRIX]
+192\&.168\&.35\&.78   HERBDHCP1     +[HERB]
+192\&.168\&.35\&.88   SCNT2         +[MVENGR] [Windows NT 4\&.0] [NT LAN Manager 4\&.0]
+192\&.168\&.35\&.93   FROGSTAR\-PC    [MVENGR] [Windows 5\&.0] [Windows 2000 LAN Manager]
+192\&.168\&.35\&.97   HERBNT1       *[HERB\-NT] [Windows NT 4\&.0] [NT LAN Manager 4\&.0]
+.fi
+.if n \{\
+.RE
+.\}
+.SH "バージョン"
+.PP
+このマニュアルページは、Samba バージョン 3 向けに記述されている。
+.SH "関連項目"
+.PP
+\fBnmbd\fR(8)、
+\fBsmbclient\fR(1)、\fBnmblookup\fR(1)
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作られた。Samba は現在、Linux カーネルが開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発されている。
+.PP
+オリジナルの Samba のマニュアルページは Karl Auer によって書かれた。マニュアルページのソースは YODL 形式(別の、優秀なオープンソースソフトウェアで、ftp://ftp\&.icce\&.rug\&.nl/pub/unix/にある)で変換され、Jeremy Allison によって Samba 2\&.0 リリースのために更新された。 Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\&.0 のための DocBook XML 4\&.2 形式の変換は Alexander Bokovoy によって行われた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.2\&.4\-3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は、武田 保真によって行なわれた。
+.PP
+Samba 3\&.0\&.23 \- Samba 3\&.0\&.24 対応の翻訳は、たかはしもとのぶ(monyo@samba\&.gr\&.jp) によって行なわれた。
+.PP
+Samba 3\&.2\&.4\-3\&.4\&.4 対応の翻訳は、太田俊哉(ribbon@samba\&.gr\&.jp) によって行なわれた。

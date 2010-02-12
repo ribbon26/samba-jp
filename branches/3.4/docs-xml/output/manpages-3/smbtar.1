@@ -1,0 +1,200 @@
+'\" t
+.\"     Title: smbtar
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "SMBTAR" "1" "01/08/2010" "Samba 3\&.4" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+smbtar \- SMB/CIFS の共有ディレクトリから直接 UNIX のテープ・ドライブへ バックアップを行うためのシェル・スクリプト
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+smbtar [\-r] [\-i] [\-a] [\-v] {\-s\ server} [\-p\ password] [\-x\ services] [\-X] [\-N\ filename] [\-b\ blocksize] [\-d\ directory] [\-l\ loglevel] [\-u\ user] [\-t\ tape] {filenames}
+.SH "説明"
+.PP
+このツールは
+\fBSamba\fR(7)システムの一部である。
+.PP
+smbtar
+は
+\fBsmbclient \fR(1)
+をハンドルする とても小さいシェルスクリプトであり、SMB の共有ディレクトリを直接テープへ ダンプする。
+.SH "オプション"
+.PP
+\-s server
+.RS 4
+共有がある SMB/CIFS サーバ。
+.RE
+.PP
+\-x service
+.RS 4
+サーバ上の接続する共有名。デフォルト値は "backup"。
+.RE
+.PP
+\-X
+.RS 4
+除外モード。tar の作成または復元から filenames\&.\&.\&. を除外する。
+.RE
+.PP
+\-d directory
+.RS 4
+ファイルの復元/バックアップをおこなう前に移動する初期
+\fIディレクトリ\fR。
+.RE
+.PP
+\-v
+.RS 4
+冗長モード。
+.RE
+.PP
+\-p password
+.RS 4
+共有へアクセスするために使用するパスワード。 デフォルト値: なし。
+.RE
+.PP
+\-u user
+.RS 4
+接続するためのユーザ ID。 デフォルト値: UNIX のログイン名。
+.RE
+.PP
+\-a
+.RS 4
+DOS アーカイブ・ビット・モードをリセットし、ファイルがすでにアーカイブされていることがわかるようにする。
+.RE
+.PP
+\-t tape
+.RS 4
+テープ・デバイス。通常のファイルかテープ・デバイス である。デフォルト値:
+\fI$TAPE\fR
+環境変数。 設定されていなければ、tar\&.out
+という名前の ファイル。
+.RE
+.PP
+\-b blocksize
+.RS 4
+ブロック化係数。既定値は 20。詳細な説明は
+tar(1)
+を参照のこと。
+.RE
+.PP
+\-N filename
+.RS 4
+filename より新しいファイルだけをバックアップする。 例えば、ログ・ファイルを差分 (incremental) バックアップするのに 利用できる。
+.RE
+.PP
+\-i
+.RS 4
+差分 (incremental) モード。アーカイブ・ビットが セットされているファイルだけバックアップする。アーカイブ・ビットは 各ファイルが読み出された後にリセットされる。
+.RE
+.PP
+\-r
+.RS 4
+復元。ファイルが tar ファイルから共有へ復元される。
+.RE
+.PP
+\-l log level
+.RS 4
+ログ (デバッグ) のレベル。\fBsmbclient\fR(1)
+の
+\fI\-d\fR
+フラグに相当する。
+.RE
+.SH "環境変数"
+.PP
+\fI$TAPE\fR
+変数は書き込み先となるデフォルトの テープ・デバイスを指定する。\-t オプションで上書きできる。
+.SH "バグ"
+.PP
+smbtar
+スクリプトは普通の tar とは異なる オプションを受け取る。また tar は smbclient から起動される。
+.SH "警告"
+.PP
+セキュリティにいっそうの注意を払っているサイトでは、スクリプトが PC のパスワードを扱うやり方を好まないだろう。バックアップと復元は共有全体に 対しても、ファイルの一覧に対しても動作する。smbtar は GNU tar との親和性が高いが、ほかのバージョンの tar ではうまく動作しないかもしれない。
+.SH "診断"
+.PP
+\fBsmbclient\fR(1 )
+コマンドの
+\fIDIAGNOSTICS\fR
+セクションを参照のこと。
+.SH "バージョン"
+.PP
+この man ページは、Samba システムのバージョン 3\&.用である。
+.SH "関連項目"
+.PP
+\fBsmbd\fR(8),
+\fBsmbclient\fR(1),
+\fBsmb.conf\fR(5)\&.
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが開発されている ように、オープンソースプロジェクトである Samba Team によって開発されている。
+.PP
+Ricky Poulten
+が tar の拡張とこのマニュアルページを書いた。smbtar
+スクリプトは
+Martin Kraemer
+によって大幅に改良し書き直された。拡張、改良、 バグフィックス、その他の提案 をしてくれた大勢に感謝する。マニュアルページは YODL 形式 (別の、優秀なオープンソースソフトウェアで、ftp://ftp\&.icce\&.rug\&.nl/pub/unix/
+にある) で変換され、Jeremy Allison によって Samba 2\&.0 リリースのために更新された。Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。Samba 3\&.0 のための DocBook XML 4\&.2 形式の変換は Alexander Bokovoy が行った。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.2\&.4 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 \- 3\&.4\&.4 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+佐藤 文優
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+高橋 基信 (monyo@samba\&.gr\&.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+はせがわ ようすけ
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+山田 史朗 (shiro@miraclelinux\&.com)
+.sp
+.RE
+によって行なわれた。

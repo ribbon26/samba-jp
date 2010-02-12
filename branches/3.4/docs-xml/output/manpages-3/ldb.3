@@ -1,0 +1,459 @@
+'\" t
+.\"     Title: ldb
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: C ライブラリ関数
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "LDB" "3" "01/08/2010" "Samba 3\&.4" "C ライブラリ関数"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+ldb \- 軽量データベースライブラリ
+.SH "SYNOPSIS"
+.sp
+.nf
+#include <ldb\&.h>
+.fi
+.SH "説明"
+.PP
+ldb は軽量の埋め込み型データベースライブラリーおよび API である。 LDAP と非常に良く似たプログラミングインタフェースにより、データを tdb(3) データベースもしくは実際の LDAP データベースに格納できる。
+.PP
+tdb バックエンドと共に使われる場合、ldb はデータベースデーモンを 必要としない。その代わり、ldb 関数へのコールは ldb ライブラリにより 即時に処理され、データベースに対して直接 I/O が行われる。その上、 オペレーティングシステムのバイト単位のロック機構を使って、複数の 読み書きを同時に実行できる。これにより API へのオーバーヘッドが 非常に少なくて済む。時には伝統的な LDAP アーキテクチャを使った 実行に比べて 10 倍以上の速度が出ることもある。
+.PP
+データベースの分類的には、ldb は（バークレー DB や tdb のような） キー／値のペアを扱うデータベースと本格的な LDAP の中間に位置する。 ldb は LDAP のような構造属性志向の API と良好なインデックス機能 を備えており、軽量データベースを使った非常に洗練された アプリケーションを作れる。その際、重厚な LDAP システムを使うための 管理上のオーバーヘッドを必要としない。
+.PP
+ldb データベースを操作するために、数多くの有用なコマンドラインツール が用意されている。これらのコマンドは、ldap のコマンドラインツール群 とよく似た形式を持っている。
+.PP
+tdb バックエンドにおけるデフォルトの操作モードでは、ldb は 「スキーマを持たない LDAP」のようにも見える。デフォルトでは ldb はスキーマを必要としない。これにより、データベースを構築するのに伴う 複雑さが大幅に緩和されている。アプリケーションが成長するのに伴って その構成は複雑さを増してゆくが、ldb がオプションで提供するスキーマ とよく似た属性を使うことで、優位性を得ることができる。また、既存の ldb コードを使いながら、完全な LDAP API を使う方向に移行してゆく ことも可能である。
+.PP
+ldb を使うのが初めてなら、まずは ldbsearch(1) とldbedit(1) の マニュアルに目を通した上で、ローカルのデータベースを作るところから 始めることを推奨する。その後、ldb_connect(3) と ldb_search(3) の マニュアルを参照されたい。
+.SH "ツール"
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+ldbsearch(1)
+\- コマンドラインの ldb 検索ユーティリティー
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+ldbedit(1)
+\- 自分の好きなエディタで ldb データベースの全部または一部を編集する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+ldbadd(1)
+\- LDIF 形式の入力を使って ldb データベースにレコードを追加する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+ldbdel(1)
+\- ldb データベースからレコードを削除する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+ldbmodify(1)
+\- LDIF 形式の入力を使って ldb データベースのレコードを修正する
+.SH "関数"
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_connect(3)\fR
+\- ldb バックエンドに接続する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_search(3)\fR
+\- データベース検索を行う
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_add(3)\fR
+\- データベースにレコードを追加する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_delete(3)\fR
+\- データベースからレコードを削除する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_modify(3)\fR
+\- データベース内のレコードを修正する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_errstring(3)\fR
+\- 最後の操作で発生した拡張エラー情報を取り出す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_write(3)\fR
+\- LDIF 形式のメッセージを書き込む
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_write_file(3)\fR
+\- LDIF 形式のメッセージをファイルに書き出す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_read(3)\fR
+\- LDIF 形式のメッセージを読み込む
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_read_free(3)\fR
+\- ldb_ldif_read() の結果を開放する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_read_file(3)\fR
+\- LDIF 形式のメッセージをファイルから読み込む
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_ldif_read_string(3)\fR
+\- LDIF 形式のメッセージを文字列から読み込む
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_element(3)\fR
+\- ldb_message の中から要素を見つける
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_val_equal_exact(3)\fR
+\- ２つの ldb_val 構造体を比較する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_val(3)\fR
+\- 要素を値により検索する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_add_empty(3)\fR
+\- ldb_message に空のメッセージ要素を追加する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_add(3)\fR
+\- ldb_message に空でないメッセージ要素を追加する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_element_compare(3)\fR
+\- ２つの ldb_message_element 構造体を比較する
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_int(3)\fR
+\- ldb_message から一個の整数値を返す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_uint(3)\fR
+\- ldb_message から一個の符号なし整数値を返す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_double(3)\fR
+\- ldb_message から一個の double 値を返す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_msg_find_string(3)\fR
+\- ldb_message から一個の文字列を返す
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_set_alloc(3)\fR
+\- ldb で使用するメモリ確保関数をセットする
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_set_debug(3)\fR
+\- ldb で使用するデバッグハンドラー関数をセットする
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+
+\fBldb_set_debug_stderr(3)\fR
+\- stderr 出力を使うデバッグハンドラー関数をセットする
+.SH "著者"
+.PP
+ldb は
+Andrew Tridgell
+によって書かれた。
+.PP
+問題を報告したり何らかの提案をしたい場合は、
+: http://ldb.samba.org/
+Web サイトで現在の連絡先と メンテナー情報を確認してほしい。
+.PP
+ldb は the GNU Lesser General Public License version 2 およびそれ以降 の元にリリースされている。ライセンスの詳細は COPYING ファイルを参照のこと。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.2\&.4 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.2\&.4 \- 3\&.4\&.4 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+堀田 倫英(hotta@net\-newbie\&.com)
+.sp
+.RE
+によって行なわれた。

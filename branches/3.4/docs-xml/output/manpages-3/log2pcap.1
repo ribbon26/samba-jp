@@ -1,0 +1,120 @@
+'\" t
+.\"     Title: log2pcap
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ユーザコマンド
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "LOG2PCAP" "1" "01/08/2010" "Samba 3\&.4" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+log2pcap \- Samba のログファイルからネットワークトレースを抽出する
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+log2pcap [\-h] [\-q] [logfile] [pcap_file]
+.SH "説明"
+.PP
+このツールは
+\fBsamba\fR(7)システムの一部である。
+.PP
+log2pcap
+samba のログファイルを読み込み、 ログファイルに記録されているパケットダンプをもとに、pcap ファイル (ethereal や tcpdump に代表される殆どの sniffer で読み込み可能) を作成する。
+.PP
+SMB のヘッダーや値を正しく取得するためには、ログファイルの
+\fIlog level\fR
+は最低
+\fB5\fR
+は必要であり、パケットの最初の 512 データバイトを取得するには
+\fB10\fR、全てのパケット情報を取得するには
+\fB50\fR
+必要である。
+.SH "オプション"
+.PP
+\-h
+.RS 4
+もしこのパラメータが指定された場合、 出力は
+text2pcap
+ユーティリティで 読み込むことのできる HEX ダンプとなる。
+.RE
+.PP
+\-q
+.RS 4
+サイレントモード。不完全なデータや無くなった データに対する警告メッセージを出さない。
+.RE
+.PP
+logfile
+.RS 4
+Samba のログファイル。もしログファイルが指定されなかった場合、 log2pcap は stdin からログを読み込もうとする。
+.RE
+.PP
+pcap_file
+.RS 4
+pcap (もしくは hexdump) データを出力するファイル名。 もしこの引数が指定されていない場合、結果は stdout に出力される。
+.RE
+.PP
+\-h|\-\-help
+.RS 4
+Print a summary of command line options\&.
+.RE
+.SH "使用例"
+.PP
+Samba の全てのログファイルから、全てのネットワークトラフィックを抽出する:
+.PP
+.if n \{\
+.RS 4
+.\}
+.nf
+			$ log2pcap < /var/log/* > trace\&.pcap
+	
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+text2pcap を使用して pcap に変換する:
+.PP
+.if n \{\
+.RS 4
+.\}
+.nf
+	$ log2pcap \-h samba\&.log | text2pcap \-T 139,139 \- trace\&.pcap
+	
+.fi
+.if n \{\
+.RE
+.\}
+.SH "バージョン"
+.PP
+このマニュアルページは Samba バージョン 3用である。
+.SH "バグ"
+.PP
+SMB のデータだけが Samba のログより抽出され、LDAP や NetBIOS のルックアップなど、それ以外のデータは取得できない。
+.PP
+生成された TCP と IP のヘッダーは正しい checksum の値を保持していない。
+.SH "関連項目"
+.PP
+\fBtext2pcap\fR(1),
+\fBethereal\fR(1)
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様の オープンソースプロジェクトとして 開発が行なわれている。
+.PP
+このマニュアルページは Jelmer Vernooij によって書かれた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.0\&.3 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は、山田 史朗 (shiro@miraclelinux\&.com)によって行なわれた。
+.PP
+Samba 3\&.0\&.3 \- 3\&.4\&.4 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。

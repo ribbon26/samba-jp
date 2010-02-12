@@ -1,0 +1,130 @@
+'\" t
+.\"     Title: vfs_audit
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: システム管理ツール
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "VFS_AUDIT" "8" "01/08/2010" "Samba 3\&.4" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+vfs_audit \- 選択したSamba VFSモジュールの動作状況をsystem logに保存する
+.SH "SYNOPSIS"
+.HP \w'\ 'u
+vfs objects = audit
+.SH "説明"
+.PP
+このVFSモジュールは
+\fBsamba\fR(7)システムの一部である\&.
+.PP
+vfs_audit
+VFSモジュールは指定したクライアントの動作を
+\fBsyslog\fR(3)を使用して、システムログに記録する。
+.PP
+以下のようなSamba VFSの動作が記録される
+.RS 4
+connect
+.RE
+.RS 4
+disconnect
+.RE
+.RS 4
+opendir
+.RE
+.RS 4
+mkdir
+.RE
+.RS 4
+rmdir
+.RE
+.RS 4
+open
+.RE
+.RS 4
+close
+.RE
+.RS 4
+rename
+.RE
+.RS 4
+unlink
+.RE
+.RS 4
+chmod
+.RE
+.RS 4
+fchmod
+.RE
+.RS 4
+chmod_acl
+.RE
+.RS 4
+fchmod_acl
+.RE
+.PP
+このモジュールはスタッカブルである
+.SH "オプション"
+.PP
+audit:facility = FACILITY
+.RS 4
+
+\fBsyslog\fR(3)
+にFACILITYでメッセージを記録する。
+.RE
+.PP
+audit:priority = PRIORITY
+.RS 4
+
+\fBsyslog\fR(3)にPRIORITYでメッセージを記録する。
+.RE
+.SH "EXAMPLES"
+.PP
+すべての共有のログをLOCAL1ファシリティー、NOTICEプライオリティーで記録する。
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+        \fI[global]\fR
+	\m[blue]\fBvfs objects = audit\fR\m[]
+	\m[blue]\fBaudit:facility = LOCAL1\fR\m[]
+	\m[blue]\fBaudit:priority = NOTICE\fR\m[]
+.fi
+.if n \{\
+.RE
+.\}
+.SH "バージョン"
+.PP
+このマニュアルはSambaシステムバージョン3\&.0\&.25(訳注:3\&.3?)に対応している
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\&.0\&.25 \-3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+平田祥司 (shouji@microft\&.co\&.jp)
+.sp
+.RE
+によって行なわれた。

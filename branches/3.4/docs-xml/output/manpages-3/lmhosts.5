@@ -1,0 +1,157 @@
+'\" t
+.\"     Title: lmhosts
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 01/08/2010
+.\"    Manual: ファイルフォーマットと変換
+.\"    Source: Samba 3.4
+.\"  Language: English
+.\"
+.TH "LMHOSTS" "5" "01/08/2010" "Samba 3\&.4" "ファイルフォーマットと変換"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+lmhosts \- Samba の NetBIOS hosts ファイル
+.SH "SYNOPSIS"
+.PP
+lmhosts
+は
+\fBSamba \fR(7)
+が NetBIOS 名を IP アドレスに関連付ける為のファイルである。
+.SH "説明"
+.PP
+このファイルは
+\fBsamba\fR(7)
+システムの一部である。
+.PP
+lmhosts
+は
+\fISamba\fR
+において NetBIOS 名を IP アドレスに関連付ける為のファイルである。このファイルは
+/etc/hosts
+ファイルと非常に酷似した形式をしているが、 ホスト名の部分は NetBIOS の命名形式で記述しなければならない。
+.SH "ファイル形式"
+.PP
+これは 1 行につき 1 つの NetBIOS 名を記述した ASCII ファイルである。 各行には 2 つのフィールドが有り、空白文字で区切られている。 \'#\' 文字で始まる行は全て無視される。lmhosts ファイルの各行は、 以下の様な情報が含まれている :
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+IP アドレス \- \'\&.\' 文字で区切られた 10 進数数字での表記
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+NetBIOS 名 \- 最大 15 文字の NetBIOS ホスト名であり、 \'#\' 文字に続けて 2 桁の 16 進数値で表現された NetBIOS 名のタイプをオプションで指定できる。
+.sp
+もし \'#\' 文字以降が省略されると、NetBIOS 名のタイプに関わらず、 検索に使用した名前と一致した全てのホスト名に対応した IP アドレスが返される。
+.sp
+.RE
+.PP
+例は下記のとおり :
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#
+# Sample Samba lmhosts file\&.
+#
+192\&.9\&.200\&.1	TESTPC
+192\&.9\&.200\&.20	NTSERVER#20
+192\&.9\&.200\&.21	SAMBASERVER
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+この例では、IP と NetBIOS 名の関連付けを 3 つ記述している。 1 番目と 3 番目のエントリは要求された NetBIOS 名のタイプに関係なく、 それぞれ "TESTPC" と "SAMBASERVER" という名前要求がされた時にだけ返される。
+.PP
+2 番目のエントリは NetBIOS 名が "NTSERVER" で名前タイプが "0x20" である要求の場合にのみ返される。それ以外の名前タイプが指定されても、 名前は解決されない。
+.PP
+lmhosts
+ファイルを置く規定の場所は、\fBsmb.conf\fR(5)
+ファイルと同じディレクトリである\&.
+.SH "ファイル"
+.PP
+lmhosts は設定ファイルのディレクトリに置かれたものが読み込まれる。 このディレクトリの一は通常
+/etc/samba
+もしくは
+/usr/local/samba/lib
+である。
+.SH "バージョン"
+.PP
+このマニュアルは、Samba システムのバージョン 3 に適用される。
+.SH "参照"
+.PP
+\fBsmbclient\fR(1),
+\fBsmb.conf\fR(5), and
+\fBsmbpasswd\fR(8)
+.SH "著者"
+.PP
+オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell によって作成された。現在 Samba は、Samba Team によって Linux カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+.PP
+オリジナルの Samba のマニュアルページは Karl Auer によって書かれた。 マニュアルページのソースは YODL 形式(別の、優秀なオープンソースソフトウェアで、
+ftp://ftp\&.icce\&.rug\&.nl/pub/unix/
+にある)で変換され、Jeremy Allison によって Samba 2\&.0 リリースのために更新された。 Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\&.0 のための DocBook XML 4\&.2 形式の変換は Alexander Bokovoy によって行われた。
+.SH "日本語訳"
+.PP
+このマニュアルページは Samba 3\&.0\&.3 \- 3\&.4\&.4 対応のものである。
+.PP
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+でん
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+たかはしもとのぶ (monyo@samba\&.gr\&.jp)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+山田 史朗 (shiro@miraclelinux\&.com)
+.sp
+.RE
+によって行なわれた。
+.PP
+Samba 3\&.0\&.3 \- Samba 3\&.4\&.4 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
