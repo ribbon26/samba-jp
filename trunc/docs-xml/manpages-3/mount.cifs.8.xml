@@ -56,8 +56,8 @@
 		で区切られた key=value の組み合わせで指定される。
 		ここで列挙されているオプション以外でも、CIFS
 	ファイルシステムのカーネルモジュール (cifs.ko) がサポートしているオプションを指定することもできる。
-		認識されないcifs マウントオプションは、そのままcifs vfs ca-ネルもジュールに渡され、
-		カーネルのログに記録される。
+		認識されないcifs マウントオプションは、そのままcifs vfsカーネルモジュールに
+		渡され、カーネルのログに記録される。
 	</para>
 
 	<para><emphasis>mount.cifs</emphasis> はcifsdという名のスレッドをを起動するcifs vfs を引き起こす。マウント後は、
@@ -475,7 +475,7 @@
 		  これが既定値である。
 		</para>
 		<para>
-		  より詳細は、<emphasis>INODE NUMBERS</emphasis>節を参照。
+		  より詳細は、<emphasis>INODE番号</emphasis>節を参照。
 		</para></listitem>
         </varlistentry>
 
@@ -490,13 +490,13 @@
 		 便利である。
                 </para>
                 <para>
-                より詳細は、<emphasis>INODE NUMBERS</emphasis>節を参照。
+                より詳細は、<emphasis>INODE番号</emphasis>節を参照。
                 </para> </listitem>
          </varlistentry>
 
          <varlistentry>
                 <term>nouser_xattr</term>
-                <listitem><para>(デフォルト値) サーバ側でサポートされていた場合でも、getfattr/setfattr を用いた拡張属性の参照、設定を許可しない。</para></listitem>
+                <listitem><para>(既定値)サーバ側でサポートされていた場合でも、getfattr/setfattr を用いた拡張属性の参照、設定を許可しない。</para></listitem>
         </varlistentry>
 
 	<varlistentry>
@@ -516,7 +516,7 @@
 		<term>wsize=<replaceable>arg</replaceable></term>
 
 		<listitem><para>ネットワークへの書き込みサイズのデフォルト値(既定値では57334）。
-		現在CIFS我認めている最大wsizeは57344(4096バイトページの14倍)である。</para></listitem>
+		現在CIFSが認めている最大のwsizeは57344(4096バイトページの14倍)である。</para></listitem>
 	</varlistentry>
 	 <varlistentry>
                 <term>--verbose</term>
@@ -538,6 +538,30 @@
 	<para>
 		mount.cifs は、それが可能であれば、バックスラッシュを通常のスラッシュに変換しようとするが、共有名のあとの任意のパス要素には行えない。
 	</para>
+</refsect1>
+
+ <refsect1>
+        <title>INODE番号</title>
+        <para>
+	  UNIX拡張が有効になっている時、POSIX呼び出しの応答中で、サーバによって
+	  提供された実際のinode番号を、inode番号として使う。
+        </para>
+        <para>
+	  UNIX拡張が無効で、"serverinfo"マウントオプションが有効な時、サーバの
+	  inode番号を知るすべはない。クライアントは通常inode番号に、サーバが割り当てた
+	  "固有のID"をマップする。
+        </para>
+        <para>
+	  固有のIDはサーバのinode番号とは異なることに注意。固有のIDの値は、
+	  サーバ全体の範囲を超えて個別であり、しばしば2の32乗よりも大きい。
+	  この値はしばしばLFS(Large File Support)なしでコンパイルされたプログラムに、
+	  対象の構造体のフィールド中に適合しないために、glibcのEOVERFLOWエラーを
+	  引き起こすトリガとなる。この問題を防止するために、使用するプログラムを
+	  LFS付きで(すなわち、-D_FILE_OFFSET_BITS=64を指定して)コンパイルすることを
+	  強く推奨する。また、クライアント上で2の32乗よりも小さいinodeの値を生成する
+	  "noserverino"マウントオプションを使う事も出来る。しかし、適切にハードリンクを
+	  検出できないかもしれない。
+        </para>
 </refsect1>
 
 <refsect1>
