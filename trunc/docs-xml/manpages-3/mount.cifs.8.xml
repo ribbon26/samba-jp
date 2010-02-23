@@ -144,34 +144,52 @@
 
 	<varlistentry>
 		<term>uid=<replaceable>arg</replaceable></term>
+		<listitem>
+		<para>サーバが所有者の情報を提供しない時に、マウントされた
+		ファイルシステム上の、すべてのファイルとディレクトリを所有する
+		uidを設定する。これは、ユーザ名か数値によるuidのどちらかで指定できる。
+		指定されない場合は、既定値としてuid 0 が使われる。mount.cifsヘルパは、
+		非数値形式のuidを指定することをサポートするため、バージョン1.10以上で
+		なければならない。詳細については、以下の、「ファイルとディレクトリの
+                 所有権とアクセス許可」の節を参照。</para>
 
-		<listitem><para>マウント先のファイルの所有者として用いる uid
-		を設定する。 これはユーザ名でも数値の uid でも指定できる。
-		対象となるサーバが、適切に設定されたSambaサーバのように、CIFS Unix extensions を
-		サポートする場合、サーバはuid,gidとモードを提供するので、このパラメータはサーバと
-		クライアントのuidとgid番号づけが異なるまで、このパラメータは指定されるべきでない。
-		もしもサーバとクライアントが同じドメイン(すなわち、winbindまたはnss_ldapが実行中)で、
-		サーバがUnix Extensionをサポートする場合、uidとgidはサーバ(とuidとgid)から検索されるのでマウント時に指定してはいけない。
-		CIFS Unix extensionsをサポートしないサーバのために、存在するファイルを検索した時に
-		返る既定値のuid(とgid)マウントオプションは、"uid="(またはgid)マウントオプションが
-		指定されるまで、(ユーザのマウント時にsetuidが構成されている場合を除きroot)
-		マウントを実行する、uid(gid)である。新しく作成されたファイルとディレクトリのuid(gid)の
-		ため、すなわち、サーバ共有の最後のマウント後に作成されたファイルは、クライアントのメモリ
-		に中に残っているinodeと同じだけ、期待されたuid(gid)はキャッシュされる。(Windowsのように)
-		uid/gid 所有者をレポートしないサーバのために、クライアントでパーミッションもチェック出来、
-		自然な形でクライアント上でfile_modeとdir_modeを指定することでクライアントサイドでパーミッション
-		チェックを有効にする。mount.cifs ヘルパは、非数値形式でuid(またはgid)を指定するときは、
-		バージョン1.10またはそれ以降のバージョンが必要であることに注意。</para></listitem>
-	</varlistentry>
+    </listitem>
+        </varlistentry>
 
-	<varlistentry>
-		<term>gid=<replaceable>arg</replaceable></term>
+        <varlistentry>
+        <term>forceuid</term>
+        <listitem>
+               <para>ファイルとディレクトリのためにサーバによって提供された任意のuidを
+		 無視し、常時uid=オプションでの値に、所有者を割り当てるように、
+		 クライアントに指示する。詳細については、以下の、「ファイルとディレクトリの
+		 所有権とアクセス許可」の節を参照。</para>
+        </listitem>
+        </varlistentry>
 
-		<listitem><para>マウント先のファイルの所有者として用いる gid
-		を設定する。 これはグループ名でも数値の gid でも指定できる。
-		その他の注意事項は上記uidと同じである。
-		</para></listitem>
-	</varlistentry>
+        <varlistentry>
+        <term>gid=<replaceable>arg</replaceable></term>
+        <listitem>
+
+	  <para>サーバが所有者の情報を提供しない時に、マウントされた
+                ファイルシステム上の、すべてのファイルとディレクトリを所有する
+                gidを設定する。これは、グループ名か数値によるgidのどちらかで指定できる。
+                指定されない場合は、既定値としてgid 0 が使われる。mount.cifsヘルパは、
+                非数値形式のuidを指定することをサポートするため、バージョン1.10以上で
+                なければならない。詳細については、以下の、「ファイルとディレクトリの
+                 所有権とアクセス許可」の節を参照。</para>
+
+        </listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>forcegid</term>
+        <listitem>
+	  <para>ファイルとディレクトリのためにサーバによって提供された任意のgidを
+                 無視し、常時gid=オプションでの値に、所有者を割り当てるように、
+                 クライアントに指示する。詳細については、以下の、「ファイルとディレクトリの
+                 所有権とアクセス許可」の節を参照。</para>
+        </listitem>
+        </varlistentry>
 
 	<varlistentry>
 		<term>port=<replaceable>arg</replaceable></term>
