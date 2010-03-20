@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: rpcclient
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 08/13/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 03/20/2010
 .\"    Manual: ユーザコマンド
 .\"    Source: Samba 3.2
+.\"  Language: English
 .\"
-.TH "RPCCLIENT" "1" "08/13/2009" "Samba 3\.2" "ユーザコマンド"
+.TH "RPCCLIENT" "1" "03/20/2010" "Samba 3\&.2" "ユーザコマンド"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-rpcclient - クライアント側の MS-RPC 関数を発行するツール
+rpcclient \- クライアント側の MS\-RPC 関数を発行するツール
 .SH "SYNOPSIS"
-.HP 1
+.HP \w'\ 'u
 rpcclient [\-A\ authfile] [\-c\ <command\ string>] [\-d\ debuglevel] [\-h] [\-l\ logdir] [\-N] [\-s\ <smb\ config\ file>] [\-U\ username[%password]] [\-W\ workgroup] [\-N] [\-I\ destinationIP] {server}
 .SH "説明"
 .PP
@@ -30,7 +38,7 @@ server
 接続先のサーバを NetBIOS 名で指定する。 サーバは SMB/CIFS サーバである必要がある。 この名前の解決には
 \fBsmb.conf\fR(5 )
 ファイルの
-\fIname resolve order\fR
+\m[blue]\fBname resolve order\fR\m[]
 パラメータが用いられる。
 .RE
 .PP
@@ -42,7 +50,7 @@ server
 \-I IP\-address
 .RS 4
 \fIIP address\fR
-は接続先の サーバのアドレスを指定する。記述方法は、標準的な "a\.b\.c\.d" のフォーマットで指定する。
+は接続先の サーバのアドレスを指定する。記述方法は、標準的な "a\&.b\&.c\&.d" のフォーマットで指定する。
 .sp
 通常、クライアントは上記の
 \fIname resolve order \fR
@@ -60,8 +68,8 @@ server
 .sp
 1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容 となっている
 .sp
-このパラメータの指定は、\fIsmb\.conf\fRファイル中の、
-\fI\%smb.conf.5.html#\fR
+このパラメータの指定は、smb\&.confファイル中の、
+\m[blue]\fB\%smb.conf.5.html#\fR\m[]
 パラメータの 指定よりも優先する。
 .RE
 .PP
@@ -73,15 +81,15 @@ server
 \-s <configuration file>
 .RS 4
 サーバーが必要とする詳細な設定を含む設定ファイルを 指定する。このファイルには、サーバーが提供するサービスに関する記述や、 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
-\fIsmb\.conf\fR
+smb\&.conf
 を参照のこと。設定ファイルの名前の既定値は、コンパイル時 に決定される。
 .RE
 .PP
 \-l|\-\-log\-basename=logdirectory
 .RS 4
 ログ/デバッグファイルのファイル名。拡張子として
-\fB"\.progname"\fR
-が追加される(例えば log\.smbclient, log\.smbd,など)。ログファイルはクライアントによって削除されることはない。
+\fB"\&.progname"\fR
+が追加される(例えば log\&.smbclient, log\&.smbd,など)。ログファイルはクライアントによって削除されることはない。
 .RE
 .PP
 \-N
@@ -102,14 +110,17 @@ Kerberos による認証を試みる。アクティブディレクトリ環境�
 .RS 4
 このオプションは、指定したファイルから、接続に使用する ユーザー名とパスワードを読み込むために使用する。ファイルの形式は次の通り:
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 username = <value>
 password = <value>
 domain   = <value>
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 ファイルのパーミッションを確認し、ほかのユーザーから参照されない ように注意すること。
 .RE
@@ -128,9 +139,9 @@ SMB のユーザー名、またはユーザー名とパスワードを指定す�
 \-n <primary NetBIOS name>
 .RS 4
 Samba 自身の NetBIOS 名を指定する。このオプションは、
-\fIsmb\.conf\fR中の、\fI\%smb.conf.5.html#\fR
+smb\&.conf中の、\m[blue]\fB\%smb.conf.5.html#\fR\m[]
 パラメータの設定に相当する。コマンドラインの指定は、
-\fIsmb\.conf\fR
+smb\&.conf
 内の設定よりも優先される。
 .RE
 .PP
@@ -141,12 +152,12 @@ nmblookupが、通信用のNetBIOS名 を生成する時に使うNetBIOS スコ�
 .PP
 \-W|\-\-workgroup=domain
 .RS 4
-ユーザー名の SMB ドメインを指定する。このオプションは、 smb\.conf 内のデフォルトのドメイン設定よりも優先される。ドメイン名として サーバーの NetBIOS 名を指定すると、クライアントは (ドメインの SAM では なく) サーバーのローカル SAM を使用してログオンを試みる。
+ユーザー名の SMB ドメインを指定する。このオプションは、 smb\&.conf 内のデフォルトのドメイン設定よりも優先される。ドメイン名として サーバーの NetBIOS 名を指定すると、クライアントは (ドメインの SAM では なく) サーバーのローカル SAM を使用してログオンを試みる。
 .RE
 .PP
 \-O socket options
 .RS 4
-クライアントのソケットに設定する TCP のソケットオプ ション。有効なオプションの一覧については、\fIsmb\.conf\fR
+クライアントのソケットに設定する TCP のソケットオプ ション。有効なオプションの一覧については、smb\&.conf
 マニュアルページ 中の socket options パラメータを参照のこと。
 .RE
 .PP
@@ -391,8 +402,9 @@ getdriverdir
 \fIconfig\fR
 パラメータでは以下の形式のファイルを 指定する。
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Long Printer Name:\e
 Driver File Name:\e
@@ -403,7 +415,9 @@ Language Monitor Name:\e
 Default Data Type:\e
 Comma Separated list of Files
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 空のフィールドには、"NULL" という文字列を指定しておくこと。
 .sp
@@ -485,7 +499,7 @@ getdriver <printername>
 getdriverdir <arch>
 .RS 4
 GetPrinterDriverDirectory() RPC を発行して、SMB 共有名と指定された アーキテクチャ用のプリンタドライバの格納されているサブディレクトリを 取得する。\fIarch\fR
-に指定できる値は、 "Windows 4\.0" (for Windows 95/98), "Windows NT x86", "Windows NT PowerPC", "Windows Alpha_AXP", "Windows NT R4000" である。
+に指定できる値は、 "Windows 4\&.0" (for Windows 95/98), "Windows NT x86", "Windows NT PowerPC", "Windows Alpha_AXP", "Windows NT R4000" である。
 .RE
 .PP
 getprinter <printername>
@@ -622,12 +636,12 @@ SMB 上の MSRPC コードは ネットワークトレースを行なうこと�
 .PP
 オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が 行なわれている。
 .PP
-オリジナルの rpcclient マニュアルページは Matthew Geddes と Luke Keneth Casson Leighton によって作成され、 Gerald Carter によって書き直された。 Samba 2\.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\.0 における DocBook XML 4\.2 形式への変換は Alexander Bokovoy によって行われた。
+オリジナルの rpcclient マニュアルページは Matthew Geddes と Luke Keneth Casson Leighton によって作成され、 Gerald Carter によって書き直された。 Samba 2\&.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\&.0 における DocBook XML 4\&.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.23 \- Samba 3\.2\.4\-3\.2\.14 対応のものである。
+このマニュアルページは Samba 3\&.0\&.23 \- Samba 3\&.2\&.4\-3\&.2\&.15 対応のものである。
 .PP
-このドキュメントの Samba 3\.0\.0 対応の翻訳は
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -637,7 +651,7 @@ SMB 上の MSRPC コードは ネットワークトレースを行なうこと�
 .sp -1
 .IP \(bu 2.3
 .\}
-高橋 基信 (monyo@samba\.gr\.jp)
+高橋 基信 (monyo@samba\&.gr\&.jp)
 .RE
 .sp
 .RS 4
@@ -659,9 +673,9 @@ SMB 上の MSRPC コードは ネットワークトレースを行なうこと�
 .sp -1
 .IP \(bu 2.3
 .\}
-山田 史朗 (shiro@miraclelinux\.com)
+山田 史朗 (shiro@miraclelinux\&.com)
 .sp
 .RE
 によって行なわれた。
 .PP
-Samba 3\.0\.23 \- Samba 3\.2\.4\-3\.2\.14 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+Samba 3\&.0\&.23 \- Samba 3\&.2\&.4\-3\&.2\&.15 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。

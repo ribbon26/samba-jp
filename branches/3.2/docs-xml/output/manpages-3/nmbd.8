@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: nmbd
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 08/13/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 03/20/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.2
+.\"  Language: English
 .\"
-.TH "NMBD" "8" "08/13/2009" "Samba 3\.2" "システム管理ツール"
+.TH "NMBD" "8" "03/20/2010" "Samba 3\&.2" "システム管理ツール"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-nmbd - NetBIOS over TCP/IP クライアントへの NetBIOS ネームサーバ機能の提供
+nmbd \- NetBIOS over TCP/IP クライアントへの NetBIOS ネームサーバ機能の提供
 .SH "SYNOPSIS"
-.HP 1
+.HP \w'\ 'u
 nmbd [\-D] [\-F] [\-S] [\-a] [\-i] [\-o] [\-h] [\-V] [\-d\ <debug\ level>] [\-H\ <lmhosts\ file>] [\-l\ <log\ directory>] [\-p\ <port\ number>] [\-s\ <configuration\ file>]
 .SH "説明"
 .PP
@@ -29,9 +37,9 @@ SMB/CIFS クライアントは、起動時に SMB/CIFS サーバを探索し、 
 サービスの中でもとりわけ
 nmbd
 は、 そのようなリクエストを監視し、自分の NetBIOS 名が指定されたなら、 自身の IP アドレスを返答する。 「自分の NetBIOS 名」は、 既定値では動作しているホストのプライマリDNS 名であるが、 これは
-\fIsmb\.conf\fR
+smb\&.conf
 の
-\fInetbios name\fR
+\m[blue]\fBnetbios name\fR\m[]
 によって変更可能である。 このように
 nmbd
 は、 自分の名前(復数の場合もある)を、 ブロードキャストの問い合わせに対して返答する。nmbd が返す追加の名前を、
@@ -61,7 +69,7 @@ inetd
 nmbd
 のメインプロセスはデーモン化しなくなる。 つまり、 2 回の
 fork(2)
-と端末からの切り離しを行なわない。 通常通り接続要求を処理するための子プロセスが生成されるが、 メインプロセスは終了しない。 この動作方式は、 Daniel J\. Bernstein 作の
+と端末からの切り離しを行なわない。 通常通り接続要求を処理するための子プロセスが生成されるが、 メインプロセスは終了しない。 この動作方式は、 Daniel J\&. Bernstein 作の
 daemontools
 パッケージに含まれる
 supervise
@@ -95,16 +103,16 @@ nmbd
 .RS 4
 NetBIOS lmhosts ファイルの指定。lmhosts ファイルは、 NetBIOS 名と IP アドレスの組で構成されるリストである。 これは、nmbd サーバによってロードされ、任意の NetBIOS 名を解決する問い合わせのために、
 \fBsmb.conf\fR(5)中で記述されている、
-\fIname resolve order\fR
+\m[blue]\fBname resolve order\fR\m[]
 名前解決メカニズムに従って、サーバが必要とする NetBIOS 名の問い合わせを解決するために使われる。 このファイルの内容は、
 nmbd
 が、 任意の名前問い合わせに応答する時には\fI決して使われない\fRことに注意。 このファイルに行を追加すると、 このホストからの NetBIOS 解決に\fIのみ\fR影響する。
 .sp
 このファイルへの既定値のパス名は、 Samba をビルドする過程でバイナリに埋め込まれる。 共通のデフォルト値は、
-\fI/usr/local/samba/lib/lmhosts\fR、
-\fI/usr/samba/lib/lmhosts\fR
+/usr/local/samba/lib/lmhosts、
+/usr/samba/lib/lmhosts
 または
-\fI/etc/samba/lmhosts\fR
+/etc/samba/lmhosts
 である。 このファイルの内容の詳細は、
 \fBlmhosts\fR(5)
 マニュアルページを参照のこと。
@@ -118,15 +126,15 @@ nmbd
 \-s <configuration file>
 .RS 4
 サーバーが必要とする詳細な設定を含む設定ファイルを 指定する。このファイルには、サーバーが提供するサービスに関する記述や、 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
-\fIsmb\.conf\fR
+smb\&.conf
 を参照のこと。設定ファイルの名前の既定値は、コンパイル時 に決定される。
 .RE
 .PP
 \-l|\-\-log\-basename=logdirectory
 .RS 4
 ログ/デバッグファイルのファイル名。拡張子として
-\fB"\.progname"\fR
-が追加される(例えば log\.smbclient, log\.smbd,など)。ログファイルはクライアントによって削除されることはない。
+\fB"\&.progname"\fR
+が追加される(例えば log\&.smbclient, log\&.smbd,など)。ログファイルはクライアントによって削除されることはない。
 .RE
 .PP
 \-p <UDP port number>
@@ -136,46 +144,46 @@ UDP ポート番号には正の整数を指定する。 このオプションは
 .RE
 .SH "関連ファイル"
 .PP
-\fI/etc/inetd\.conf\fR
+/etc/inetd\&.conf
 .RS 4
 サーバが
 inetd
 メタ・デーモン経由で動作しているならば、このファイルは メタ・デーモンのための適切な起動情報を含む必要がある。
 .RE
 .PP
-\fI/etc/rc\fR
+/etc/rc
 .RS 4
 (またはシステムが使う初期化スクリプト)
 .sp
 サーバをデーモンとして起動させるならば、 このファイルにサーバに応じた適切なスタートアップ 手順を含む必要がある。
 .RE
 .PP
-\fI/etc/services\fR
+/etc/services
 .RS 4
 サーバを
 inetd
 メタ・デーモン経由で起動させるなら、このファイルにサービス名 (例えば netbios\-ssn)とサービスポート(例えば139)、 プロトコルタイプ(例えば tcp)のマッピングを含んでいなければいけない。
 .RE
 .PP
-\fI/usr/local/samba/lib/smb\.conf\fR
+/usr/local/samba/lib/smb\&.conf
 .RS 4
 これは、
 \fBsmb.conf\fR(5)
 のデフォルトの位置である。 本ファイルのこれ以外の標準的なインストール位置は、
-\fI/usr/samba/lib/smb\.conf\fR
+/usr/samba/lib/smb\&.conf
 と
-\fI/etc/samba/smb\.conf\fR
+/etc/samba/smb\&.conf
 である。
 .sp
 WINS サーバとして動作させるなら (\fBsmb.conf\fR(5)
 マニュアルページの
-\fIwins support\fR
+\m[blue]\fBwins support\fR\m[]
 パラメータを参照)、
 nmbd
 は、Samba がインストールされた場所の下に作成される
-\fIvar/locks\fR
+var/locks
 ディレクトリ中の
-\fIwins\.dat\fR
+wins\&.dat
 ファイルに WINS データベースを格納する。
 .sp
 nmbd
@@ -184,13 +192,13 @@ nmbd
 (
 \fBsmb.conf\fR(5)
 マニュアルページの
-\fIlocal master\fR
+\m[blue]\fBlocal master\fR\m[]
 パラメータを参照) として動作している場合、
 nmbd
 は、Samba がインストールされた場所の下に作成される
-\fIvar/locks\fR
+var/locks
 ディレクトリ中の
-\fIbrowse\.dat\fR
+browse\&.dat
 ファイルにブラウジングのデータベースを格納する。
 .RE
 .SH "シグナル"
@@ -202,17 +210,17 @@ nmbd
 .PP
 nmbd
 が SIGHUP を受け取ると、名前の一覧を
-\fI/usr/local/samba/var/locks\fR
+/usr/local/samba/var/locks
 ディレクトリ (または Samba 自身がインストールされた場所の配下に作成される
-\fIvar/locks\fR
+var/locks
 ディレクトリ)中のファイル
-\fInamelist\.debug\fR
+namelist\&.debug
 にダンプする。 同様に nmbd はサーバデータベースを
-\fIlog\.nmb\fR
+log\&.nmb
 ファイルにダンプする。
 .PP
 \fBsmbcontrol\fR(1)
-を使うと nmbd のデバッグ・ログ・レベルを上げたり下げたりできる (SIGUSR[1|2] シグナルは Samba 2\.2 からもはや使用されていない)。 これにより、通常は低いログ・レベルで動作させた状態で、 一時的な問題を診断することができる。
+を使うと nmbd のデバッグ・ログ・レベルを上げたり下げたりできる (SIGUSR[1|2] シグナルは Samba 2\&.2 からもはや使用されていない)。 これにより、通常は低いログ・レベルで動作させた状態で、 一時的な問題を診断することができる。
 .SH "バージョン"
 .PP
 この man ページは、Samba システムのバージョン 3 用になっている。
@@ -225,21 +233,21 @@ nmbd
 \fBsmbclient\fR(1)、
 \fBtestparm\fR(1)、
 \fBtestprns\fR(1)、 Internet RFC の
-\fIrfc1001\.txt\fR、\fIrfc1002\.txt\fR。 その他 CIFS(以前のSMB)の仕様を以下のWebページにあるリンクから入手できる:
-http://samba\.org/cifs/
+rfc1001\&.txt、rfc1002\&.txt。 その他 CIFS(以前のSMB)の仕様を以下のWebページにあるリンクから入手できる:
+http://samba\&.org/cifs/
 。
 .SH "著者"
 .PP
 オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが 開発されているような方法でのオープンソースプロジェクトである Samba Team によって開発されている。
 .PP
 オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。 マニュアルページは YODL 形式(別の、優秀なオープンソースソフトウェアで、
-ftp://ftp\.icce\.rug\.nl/pub/unix/
-にある) で変換され、Jeremy Allison によって Samba 2\.0 リリースのために更新された。 Samba 2\.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\.0 のための DocBook XML 4\.2 形式への変換は Alexander Bokovoy が行った。
+ftp://ftp\&.icce\&.rug\&.nl/pub/unix/
+にある) で変換され、Jeremy Allison によって Samba 2\&.0 リリースのために更新された。 Samba 2\&.2 のための DocBook 形式への変換は Gerald Carter が行った。 Samba 3\&.0 のための DocBook XML 4\&.2 形式への変換は Alexander Bokovoy が行った。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\.0\.23 \- Samba 3\.0\.24 対応のものである。
+このマニュアルページは Samba 3\&.0\&.23 \- Samba 3\&.0\&.24 対応のものである。
 .PP
-このドキュメントの Samba 3\.0\.0 対応の翻訳は
+このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
 .sp
 .RS 4
 .ie n \{\
@@ -249,7 +257,7 @@ ftp://ftp\.icce\.rug\.nl/pub/unix/
 .sp -1
 .IP \(bu 2.3
 .\}
-たかはしもとのぶ (monyo@samba\.gr\.jp)
+たかはしもとのぶ (monyo@samba\&.gr\&.jp)
 .RE
 .sp
 .RS 4
@@ -276,6 +284,6 @@ ftp://ftp\.icce\.rug\.nl/pub/unix/
 .RE
 によって行なわれた。
 .PP
-Samba 3\.0\.23 \- Samba 3\.0\.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\.gr\.jp) によって行なわれた。
+Samba 3\&.0\&.23 \- Samba 3\&.0\&.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-Samba 3\.2\.4\-3\.2\.14 対応の翻訳は、太田俊哉 (ribbon@samba\.gr\.jp) によって行なわれた。
+Samba 3\&.2\&.4\-3\&.2\&.15 対応の翻訳は、太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。
