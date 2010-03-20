@@ -1,1 +1,133 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>eventlogadm</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="eventlogadm"><a name="eventlogadm.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>eventlogadm — Samba のイベントログ格納領域にレコードを書き込む</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>		<code class="literal">addsource</code>		<em class="replaceable"><code>EVENTLOG</code></em>		<em class="replaceable"><code>SOURCENAME</code></em>		<em class="replaceable"><code>MSGFILE</code></em>		 </p></div><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>		<code class="literal">write</code>		<em class="replaceable"><code>EVENTLOG</code></em>		 </p></div><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>                <code class="literal">dump</code>                <em class="replaceable"><code>EVENTLOG</code></em>                <em class="replaceable"><code>RECORD_NUMBER</code></em>                 </p></div></div><div class="refsect1" title="説明"><a name="id2489396"></a><h2>説明</h2><p>このツールは <a class="citerefentry" href="samba.1.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(1)</span></a> の一部として提供されている。</p><p><code class="literal">eventlogadm</code>は特定の形式に従ったイベントログのレコードを標準入力から読み込み、それらを Samba のイベントログ格納領域に書き込む。こうすることで、Windows クライアントから通常の管理ツールを使ってこれらのレコードを操作できるようになる。</p></div><div class="refsect1" title="オプション"><a name="id2489434"></a><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-d</code></span></dt><dd><p>		<code class="literal">-d</code> オプションを指定すると、		<code class="literal">eventlogadm</code>はデバッグ情報を出力する。		</p></dd><dt><span class="term">		<code class="option">-o</code>		<code class="literal">addsource</code>		<em class="replaceable"><code>EVENTLOG</code></em>		<em class="replaceable"><code>SOURCENAME</code></em>		<em class="replaceable"><code>MSGFILE</code></em>		</span></dt><dd><p>		<code class="literal">-o addsource</code> オプションは、新しいイベントログのソースを生成する。		</p></dd><dt><span class="term">		<code class="option">-o</code>		<code class="literal">write</code>		<em class="replaceable"><code>EVENTLOG</code></em>		</span></dt><dd><p>		<code class="literal">-o write</code> はイベントログのレコードを標準入力から		読み込み、それらを EVENTLOG で指定された名前の Samba のイベントログ		格納領域に書き込む。		</p></dd><dt><span class="term">                <code class="option">-o</code>                <code class="literal">dump</code>                <em class="replaceable"><code>EVENTLOG</code></em>                <em class="replaceable"><code>RECORD_NUMBER</code></em>                </span></dt><dd><p>                <code class="literal">-o dump</code>は、EVENTLOG tdbからのイベントログレコードを		読み、画面上の標準出力にそれをダンプする。                </p></dd><dt><span class="term"><code class="option">-h</code></span></dt><dd><p>		使用法を表示する		</p></dd></dl></div></div><div class="refsect1" title="EVENTLOG レコードフォーマット"><a name="id2489594"></a><h2>EVENTLOG レコードフォーマット</h2><p>書き込みの際、<code class="literal">eventlogadm</code>は標準入力から書式に従ったレコードが読み込めることを期待している。これらのレコードは、レコードキーとデータがコロン(:)で区切られた行の並びである。各レコードは、少なくとも１個以上の空行で区切られている必要がある。</p><p>イベントログのフィールドは以下の通り:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>		<code class="literal">LEN</code> - <code class="literal">eventlogadm</code> はこのフィールドの値を自動計算するので、このフィールドには 0 をセットする。		</p></li><li class="listitem"><p>		<code class="literal">RS1</code> - 1699505740 という値をセットする。		</p></li><li class="listitem"><p>		<code class="literal">RCN</code> - 0 をセットする。		</p></li><li class="listitem"><p>		<code class="literal">TMG</code> -イベントログが生成された時刻。00:00:00 January 1, 1970, UTC からの 累積秒数をセットする。		</p></li><li class="listitem"><p>		<code class="literal">TMW</code> -イベントログが書き込まれた時刻。00:00:00 January 1, 1970, UTC からの 累積秒数をセットする。		</p></li><li class="listitem"><p>		<code class="literal">EID</code> - イベントログ ID		</p></li><li class="listitem"><p>		<code class="literal">ETP</code> - イベントログのタイプで、以下のいずれか：		"INFO",		"ERROR", "WARNING", "AUDIT		SUCCESS" or "AUDIT FAILURE".		</p></li><li class="listitem"><p>		<code class="literal">ECT</code> -イベントカテゴリ：これはマシンファイルに依存する。主にイベントビューワ－におけるフィルタ条件として使われる。		</p></li><li class="listitem"><p>		<code class="literal">RS2</code> - 0 をセットする。		</p></li><li class="listitem"><p>		<code class="literal">CRN</code> - 0 をセットする。		</p></li><li class="listitem"><p>		<code class="literal">USL</code> - 0 をセットする。		</p></li><li class="listitem"><p>		<code class="literal">SRC</code> -このフィールドはイベントログに関連付けられるソースを指定する。イベントログとしてメッセージファイルが指定された場合、メッセージファイルの DLL に対してこのソース名が関連付けられたレジストリーエントリーがあるはずである。		</p></li><li class="listitem"><p>		<code class="literal">SRN</code> -イベントログが生成されたマシンの名前。これは通常ホスト名となる。		</p></li><li class="listitem"><p>		<code class="literal">STR</code> - イベントログに関連付けられたテキスト。１つのレコードに複数の文字列を持つこともできる。		</p></li><li class="listitem"><p>		<code class="literal">DAT</code> - このフィールドはセットしないようにする。		</p></li></ul></div></div><div class="refsect1" title="記述例"><a name="id2487502"></a><h2>記述例</h2><p><code class="literal">eventlogadm</code> で認識できるレコードフォーマットの例：	</p><pre class="programlisting">	LEN: 0	RS1: 1699505740	RCN: 0	TMG: 112863.3.6	TMW: 112863.3.6	EID: 1000	ETP: INFO	ECT: 0	RS2: 0	CRN: 0	USL: 0	SRC: cron	SRN: dmlinux	STR: (root) CMD ( rm -f /var/spool/cron/lastrun/cron.hourly)	DAT:	</pre><p>メッセージファイルの DLL を指定して、イベントログのソースをセットする：	</p><pre class="programlisting">	eventlogadm -o addsource Application MyApplication | \\	    	%SystemRoot%/system32/MyApplication.dll	</pre><p>システムログからのフィルターメッセージをイベントログとして指定する：	</p><pre class="programlisting">	tail -f /var/log/messages | \\		入力をパースしてイベントログのレコードにするプログラム | \\	      	eventlogadm SystemLogEvents	</pre></div><div class="refsect1" title="バージョン"><a name="id2487562"></a><h2>バージョン</h2><p>このマニュアルは Samba スイートのバージョン 3.0.25 に適合する。</p></div><div class="refsect1" title="著者"><a name="id2487573"></a><h2>著者</h2><p>		オリジナルの Samba ソフトウェアおよび関連するユーティリティーは、		Andrew Tridgell によって書かれた。現在は Samba は Samba Team によって 		Linux カーネルの開発と同様に、オープンソースプロジェクトとして		開発されている。	</p></div><div class="refsect1" title="日本語訳"><a name="id2487593"></a><h2>日本語訳</h2><p>このマニュアルページは Samba 3.4.6  対応のものである。</p><p>このドキュメントの Samba 3.2.4-3.4.6 対応の翻訳は	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>堀田 倫英(hotta@net-newbie.com)</p></li><li class="listitem"><p>太田俊哉(ribbon@samba.gr.jp)</p></li></ul></div><p>			によって行なわれた。</p></div></div></body></html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>eventlogadm</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="eventlogadm"><a name="eventlogadm.8"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>eventlogadm &#8212; Samba &#12398;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#26684;&#32013;&#38936;&#22495;&#12395;&#12524;&#12467;&#12540;&#12489;&#12434;&#26360;&#12365;&#36796;&#12416;</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>
+		<code class="literal">addsource</code>
+		<em class="replaceable"><code>EVENTLOG</code></em>
+		<em class="replaceable"><code>SOURCENAME</code></em>
+		<em class="replaceable"><code>MSGFILE</code></em>
+		 </p></div><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>
+		<code class="literal">write</code>
+		<em class="replaceable"><code>EVENTLOG</code></em>
+		 </p></div><div class="cmdsynopsis"><p><code class="literal">eventlogadm</code> [<code class="option">-d</code>] [<code class="option">-h</code>]  <code class="option">-o</code>
+                <code class="literal">dump</code>
+                <em class="replaceable"><code>EVENTLOG</code></em>
+                <em class="replaceable"><code>RECORD_NUMBER</code></em>
+                 </p></div></div><div class="refsect1" title="&#35500;&#26126;"><a name="id2489396"></a><h2>&#35500;&#26126;</h2><p>&#12371;&#12398;&#12484;&#12540;&#12523;&#12399; <a class="citerefentry" href="samba.1.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(1)</span></a> &#12398;&#19968;&#37096;&#12392;&#12375;&#12390;&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;</p><p><code class="literal">eventlogadm</code>
+&#12399;&#29305;&#23450;&#12398;&#24418;&#24335;&#12395;&#24467;&#12387;&#12383;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12524;&#12467;&#12540;&#12489;&#12434;&#27161;&#28310;&#20837;&#21147;&#12363;&#12425;&#35501;&#12415;&#36796;&#12415;&#12289;
+&#12381;&#12428;&#12425;&#12434; Samba &#12398;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#26684;&#32013;&#38936;&#22495;&#12395;&#26360;&#12365;&#36796;&#12416;&#12290;&#12371;&#12358;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;
+Windows &#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12363;&#12425;&#36890;&#24120;&#12398;&#31649;&#29702;&#12484;&#12540;&#12523;&#12434;&#20351;&#12387;&#12390;&#12371;&#12428;&#12425;&#12398;&#12524;&#12467;&#12540;&#12489;&#12434;
+&#25805;&#20316;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;</p></div><div class="refsect1" title="&#12458;&#12503;&#12471;&#12519;&#12531;"><a name="id2489434"></a><h2>&#12458;&#12503;&#12471;&#12519;&#12531;</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-d</code></span></dt><dd><p>
+		<code class="literal">-d</code> &#12458;&#12503;&#12471;&#12519;&#12531;&#12434;&#25351;&#23450;&#12377;&#12427;&#12392;&#12289;
+		<code class="literal">eventlogadm</code>&#12399;&#12487;&#12496;&#12483;&#12464;&#24773;&#22577;&#12434;&#20986;&#21147;&#12377;&#12427;&#12290;
+		</p></dd><dt><span class="term">
+		<code class="option">-o</code>
+		<code class="literal">addsource</code>
+		<em class="replaceable"><code>EVENTLOG</code></em>
+		<em class="replaceable"><code>SOURCENAME</code></em>
+		<em class="replaceable"><code>MSGFILE</code></em>
+		</span></dt><dd><p>
+		<code class="literal">-o addsource</code> &#12458;&#12503;&#12471;&#12519;&#12531;&#12399;&#12289;&#26032;&#12375;&#12356;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;
+&#12477;&#12540;&#12473;&#12434;&#29983;&#25104;&#12377;&#12427;&#12290;
+		</p></dd><dt><span class="term">
+		<code class="option">-o</code>
+		<code class="literal">write</code>
+		<em class="replaceable"><code>EVENTLOG</code></em>
+		</span></dt><dd><p>
+		<code class="literal">-o write</code> &#12399;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12524;&#12467;&#12540;&#12489;&#12434;&#27161;&#28310;&#20837;&#21147;&#12363;&#12425;
+		&#35501;&#12415;&#36796;&#12415;&#12289;&#12381;&#12428;&#12425;&#12434; EVENTLOG &#12391;&#25351;&#23450;&#12373;&#12428;&#12383;&#21517;&#21069;&#12398; Samba &#12398;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;
+		&#26684;&#32013;&#38936;&#22495;&#12395;&#26360;&#12365;&#36796;&#12416;&#12290;
+		</p></dd><dt><span class="term">
+                <code class="option">-o</code>
+                <code class="literal">dump</code>
+                <em class="replaceable"><code>EVENTLOG</code></em>
+                <em class="replaceable"><code>RECORD_NUMBER</code></em>
+                </span></dt><dd><p>
+                <code class="literal">-o dump</code>&#12399;&#12289;EVENTLOG tdb&#12363;&#12425;&#12398;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12524;&#12467;&#12540;&#12489;&#12434;
+		&#35501;&#12415;&#12289;&#30011;&#38754;&#19978;&#12398;&#27161;&#28310;&#20986;&#21147;&#12395;&#12381;&#12428;&#12434;&#12480;&#12531;&#12503;&#12377;&#12427;&#12290;
+                </p></dd><dt><span class="term"><code class="option">-h</code></span></dt><dd><p>
+		&#20351;&#29992;&#27861;&#12434;&#34920;&#31034;&#12377;&#12427;
+		</p></dd></dl></div></div><div class="refsect1" title="EVENTLOG &#12524;&#12467;&#12540;&#12489;&#12501;&#12457;&#12540;&#12510;&#12483;&#12488;"><a name="id2489594"></a><h2>EVENTLOG &#12524;&#12467;&#12540;&#12489;&#12501;&#12457;&#12540;&#12510;&#12483;&#12488;</h2><p>&#26360;&#12365;&#36796;&#12415;&#12398;&#38555;&#12289;<code class="literal">eventlogadm</code>
+&#12399;&#27161;&#28310;&#20837;&#21147;&#12363;&#12425;&#26360;&#24335;&#12395;&#24467;&#12387;&#12383;&#12524;&#12467;&#12540;&#12489;&#12364;&#35501;&#12415;&#36796;&#12417;&#12427;&#12371;&#12392;&#12434;&#26399;&#24453;&#12375;&#12390;&#12356;&#12427;&#12290;
+&#12371;&#12428;&#12425;&#12398;&#12524;&#12467;&#12540;&#12489;&#12399;&#12289;&#12524;&#12467;&#12540;&#12489;&#12461;&#12540;&#12392;&#12487;&#12540;&#12479;&#12364;&#12467;&#12525;&#12531;(:)&#12391;&#21306;&#20999;&#12425;&#12428;&#12383;
+&#34892;&#12398;&#20006;&#12403;&#12391;&#12354;&#12427;&#12290;&#21508;&#12524;&#12467;&#12540;&#12489;&#12399;&#12289;&#23569;&#12394;&#12367;&#12392;&#12418;&#65297;&#20491;&#20197;&#19978;&#12398;&#31354;&#34892;&#12391;&#21306;&#20999;&#12425;&#12428;&#12390;&#12356;&#12427;
+&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;</p><p>&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+		<code class="literal">LEN</code> - <code class="literal">eventlogadm</code> &#12399;&#12371;&#12398;
+&#12501;&#12451;&#12540;&#12523;&#12489;&#12398;&#20516;&#12434;&#33258;&#21205;&#35336;&#31639;&#12377;&#12427;&#12398;&#12391;&#12289;&#12371;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12395;&#12399; 0 &#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">RS1</code> - 1699505740 &#12392;&#12356;&#12358;&#20516;&#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">RCN</code> - 0 &#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">TMG</code> -
+&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12364;&#29983;&#25104;&#12373;&#12428;&#12383;&#26178;&#21051;&#12290;
+00:00:00 January 1, 1970, UTC &#12363;&#12425;&#12398; &#32047;&#31309;&#31186;&#25968;&#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">TMW</code> -
+&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12364;&#26360;&#12365;&#36796;&#12414;&#12428;&#12383;&#26178;&#21051;&#12290;
+00:00:00 January 1, 1970, UTC &#12363;&#12425;&#12398; &#32047;&#31309;&#31186;&#25968;&#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">EID</code> - &#12452;&#12505;&#12531;&#12488;&#12525;&#12464; ID
+		</p></li><li class="listitem"><p>
+		<code class="literal">ETP</code> - &#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12479;&#12452;&#12503;&#12391;&#12289;&#20197;&#19979;&#12398;&#12356;&#12378;&#12428;&#12363;&#65306;
+		"INFO",
+		"ERROR", "WARNING", "AUDIT
+		SUCCESS" or "AUDIT FAILURE".
+		</p></li><li class="listitem"><p>
+		<code class="literal">ECT</code> -
+&#12452;&#12505;&#12531;&#12488;&#12459;&#12486;&#12468;&#12522;&#65306;&#12371;&#12428;&#12399;&#12510;&#12471;&#12531;&#12501;&#12449;&#12452;&#12523;&#12395;&#20381;&#23384;&#12377;&#12427;&#12290;
+&#20027;&#12395;&#12452;&#12505;&#12531;&#12488;&#12499;&#12517;&#12540;&#12527;&#65293;&#12395;&#12362;&#12369;&#12427;&#12501;&#12451;&#12523;&#12479;&#26465;&#20214;&#12392;&#12375;&#12390;&#20351;&#12431;&#12428;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">RS2</code> - 0 &#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">CRN</code> - 0 &#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">USL</code> - 0 &#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">SRC</code> -
+&#12371;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12399;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12395;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12427;&#12477;&#12540;&#12473;&#12434;&#25351;&#23450;&#12377;&#12427;&#12290;
+&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12392;&#12375;&#12390;&#12513;&#12483;&#12475;&#12540;&#12472;&#12501;&#12449;&#12452;&#12523;&#12364;&#25351;&#23450;&#12373;&#12428;&#12383;&#22580;&#21512;&#12289;
+&#12513;&#12483;&#12475;&#12540;&#12472;&#12501;&#12449;&#12452;&#12523;&#12398; DLL &#12395;&#23550;&#12375;&#12390;&#12371;&#12398;&#12477;&#12540;&#12473;&#21517;&#12364;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12383;
+&#12524;&#12472;&#12473;&#12488;&#12522;&#12540;&#12456;&#12531;&#12488;&#12522;&#12540;&#12364;&#12354;&#12427;&#12399;&#12378;&#12391;&#12354;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">SRN</code> -
+&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12364;&#29983;&#25104;&#12373;&#12428;&#12383;&#12510;&#12471;&#12531;&#12398;&#21517;&#21069;&#12290;&#12371;&#12428;&#12399;&#36890;&#24120;&#12507;&#12473;&#12488;&#21517;&#12392;&#12394;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">STR</code> - &#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12395;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12383;&#12486;&#12461;&#12473;&#12488;&#12290;
+&#65297;&#12388;&#12398;&#12524;&#12467;&#12540;&#12489;&#12395;&#35079;&#25968;&#12398;&#25991;&#23383;&#21015;&#12434;&#25345;&#12388;&#12371;&#12392;&#12418;&#12391;&#12365;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		<code class="literal">DAT</code> - &#12371;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12399;&#12475;&#12483;&#12488;&#12375;&#12394;&#12356;&#12424;&#12358;&#12395;&#12377;&#12427;&#12290;
+		</p></li></ul></div></div><div class="refsect1" title="&#35352;&#36848;&#20363;"><a name="id2487502"></a><h2>&#35352;&#36848;&#20363;</h2><p>
+<code class="literal">eventlogadm</code> &#12391;&#35469;&#35672;&#12391;&#12365;&#12427;&#12524;&#12467;&#12540;&#12489;&#12501;&#12457;&#12540;&#12510;&#12483;&#12488;&#12398;&#20363;&#65306;
+	</p><pre class="programlisting">
+	LEN: 0
+	RS1: 1699505740
+	RCN: 0
+	TMG: 112863.3.6
+	TMW: 112863.3.6
+	EID: 1000
+	ETP: INFO
+	ECT: 0
+	RS2: 0
+	CRN: 0
+	USL: 0
+	SRC: cron
+	SRN: dmlinux
+	STR: (root) CMD ( rm -f /var/spool/cron/lastrun/cron.hourly)
+	DAT:
+	</pre><p>
+&#12513;&#12483;&#12475;&#12540;&#12472;&#12501;&#12449;&#12452;&#12523;&#12398; DLL &#12434;&#25351;&#23450;&#12375;&#12390;&#12289;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12477;&#12540;&#12473;&#12434;&#12475;&#12483;&#12488;&#12377;&#12427;&#65306;
+	</p><pre class="programlisting">
+	eventlogadm -o addsource Application MyApplication | \\
+	    	%SystemRoot%/system32/MyApplication.dll
+	</pre><p>
+&#12471;&#12473;&#12486;&#12512;&#12525;&#12464;&#12363;&#12425;&#12398;&#12501;&#12451;&#12523;&#12479;&#12540;&#12513;&#12483;&#12475;&#12540;&#12472;&#12434;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12392;&#12375;&#12390;&#25351;&#23450;&#12377;&#12427;&#65306;
+	</p><pre class="programlisting">
+	tail -f /var/log/messages | \\
+		&#20837;&#21147;&#12434;&#12497;&#12540;&#12473;&#12375;&#12390;&#12452;&#12505;&#12531;&#12488;&#12525;&#12464;&#12398;&#12524;&#12467;&#12540;&#12489;&#12395;&#12377;&#12427;&#12503;&#12525;&#12464;&#12521;&#12512; | \\
+	      	eventlogadm SystemLogEvents
+	</pre></div><div class="refsect1" title="&#12496;&#12540;&#12472;&#12519;&#12531;"><a name="id2487562"></a><h2>&#12496;&#12540;&#12472;&#12519;&#12531;</h2><p>&#12371;&#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12399; Samba &#12473;&#12452;&#12540;&#12488;&#12398;&#12496;&#12540;&#12472;&#12519;&#12531; 3.0.25 &#12395;&#36969;&#21512;&#12377;&#12427;&#12290;</p></div><div class="refsect1" title="&#33879;&#32773;"><a name="id2487573"></a><h2>&#33879;&#32773;</h2><p>
+		&#12458;&#12522;&#12472;&#12490;&#12523;&#12398; Samba &#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12362;&#12424;&#12403;&#38306;&#36899;&#12377;&#12427;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12540;&#12399;&#12289;
+		Andrew Tridgell &#12395;&#12424;&#12387;&#12390;&#26360;&#12363;&#12428;&#12383;&#12290;&#29694;&#22312;&#12399; Samba &#12399; Samba Team &#12395;&#12424;&#12387;&#12390; 
+		Linux &#12459;&#12540;&#12493;&#12523;&#12398;&#38283;&#30330;&#12392;&#21516;&#27096;&#12395;&#12289;&#12458;&#12540;&#12503;&#12531;&#12477;&#12540;&#12473;&#12503;&#12525;&#12472;&#12455;&#12463;&#12488;&#12392;&#12375;&#12390;
+		&#38283;&#30330;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+	</p></div><div class="refsect1" title="&#26085;&#26412;&#35486;&#35379;"><a name="id2487593"></a><h2>&#26085;&#26412;&#35486;&#35379;</h2><p>&#12371;&#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12506;&#12540;&#12472;&#12399; Samba 3.4.6-3.4.7 &#23550;&#24540;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;</p><p>&#12371;&#12398;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12398; Samba 3.2.4-3.4.7 &#23550;&#24540;&#12398;&#32763;&#35379;&#12399;
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>&#22528;&#30000; &#20523;&#33521;(hotta@net-newbie.com)</p></li><li class="listitem"><p>&#22826;&#30000;&#20426;&#21705;(ribbon@samba.gr.jp)</p></li></ul></div><p>	
+		&#12395;&#12424;&#12387;&#12390;&#34892;&#12394;&#12431;&#12428;&#12383;&#12290;</p></div></div></body></html>
