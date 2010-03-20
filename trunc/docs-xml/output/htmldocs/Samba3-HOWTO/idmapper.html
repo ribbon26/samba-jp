@@ -1,1 +1,783 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 14. 識別情報のマッピング(IDMAP)</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="公式のSamba 3.2.x HOWTOとリファレンスガイド"><link rel="up" href="optional.html" title="Part III. 詳細な設定方法"><link rel="prev" href="NetCommand.html" title="Chapter 13. リモートとローカル管理:Netコマンド"><link rel="next" href="rights.html" title="Chapter 15. User Rights and Privileges"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 14. 識別情報のマッピング(IDMAP)</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="NetCommand.html">Prev</a> </td><th width="60%" align="center">Part III. 詳細な設定方法</th><td width="20%" align="right"> <a accesskey="n" href="rights.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter 14. 識別情報のマッピング(IDMAP)"><div class="titlepage"><div><div><h2 class="title"><a name="idmapper"></a>Chapter 14. 識別情報のマッピング(IDMAP)</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>></code></p></div></div></div></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="idmapper.html#id2617369">SambaサーバのサーバタイプとIDMAP</a></span></dt><dd><dl><dt><span class="sect2"><a href="idmapper.html#id2617396">スタンドアロンSambaサーバ</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2617467">ドメインメンバサーバかドメインメンバクライアント</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2618560">プライマリドメインコントローラ</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2618816">バックアップドメインコントローラ</a></span></dt></dl></dd><dt><span class="sect1"><a href="idmapper.html#id2618896">IDMAPバックエンドの使用例</a></span></dt><dd><dl><dt><span class="sect2"><a href="idmapper.html#id2618960">規定値のWinbind TDB</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2619729">IDMAP_RIDを使うWinbind</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2620366">Winbindを使ったIDMAPデータのLDAPへの格納</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2621000">RFC2307bis Schema拡張を使ったADSからのIDMAPとNSSに対するLDAPの使用</a></span></dt></dl></dd></dl></div><p><a class="indexterm" name="id2617041"></a><a class="indexterm" name="id2617048"></a><a class="indexterm" name="id2617055"></a><a class="indexterm" name="id2617062"></a><a class="indexterm" name="id2617071"></a><a class="indexterm" name="id2617078"></a><a class="indexterm" name="id2617084"></a>Microsoft Windows オペレーティングシステムは、Sambaを実装したOSとの間での相互運用性を行うために、難しい問題を要求してくるといういくつかの特徴がある。この章では、SambaサーバをMicrosoft Windowsネットワーク環境に統合するための難問の1つを解決するために使う、Samba-3(バージョン 3.0.8以降)のメカニズムについて明示的に説明する。この章では、Windowsのセキュリティ識別子(SID)をUNIXのUIDとGIDについての識別情報マッピング(IDMAP)について説明する。</p><p>いろいろな場面において十分に適用出来るようにするため、各可能なSambaの配布タイプについて解説を行う。これは、どのようにIDMAP機能が実装されたかについての概要によってフォローされる。</p><p><a class="indexterm" name="id2617117"></a><a class="indexterm" name="id2617124"></a><a class="indexterm" name="id2617131"></a><a class="indexterm" name="id2617138"></a>IDMAP機能は、複数のSambaサーバ(またはSambaネットワーククライアント)がドメイン中でインストールされている場合に重要である。単一のSambaサーバにおいては、IDMAP基盤については余り気にかける必要はない。既定値におけるSambaの動作はほとんどの場合、十分に使えるものである。複数のSambaサーバが使われる場合、あるサーバから別のサーバにデータを移動する時にはしばしばこれが必要で、それはやっかい事が始まる所でもある!</p><p><a class="indexterm" name="id2617172"></a><a class="indexterm" name="id2617178"></a><a class="indexterm" name="id2617184"></a><a class="indexterm" name="id2617191"></a><a class="indexterm" name="id2617197"></a><a class="indexterm" name="id2617204"></a><a class="indexterm" name="id2617212"></a><a class="indexterm" name="id2617219"></a>LDAPディレクトリ中にユーザとグループアカウント情報が格納されている場合、すべてのサーバはユーザとグループに対して一貫したUIDとGIDを使うことが出来る。これは、NSSとnss_ldapツールを使うことで出来る。Sambaはローカルアカウントのみを使うように設定出来、その場合、IDMAPでの問題が発生する範囲は若干少なくなる。これは、サーバが単一のドメインに属していて、ドメイン間の信頼関係が必要ない時に有効に動作する。別の言い方をすると、もしもSambaサーバがNT4ドメインのメンバかADSのドメインメンバである場合か、不慮のクロスオーバがないように、セキュリティ名前空間を保持する必要がある場合、(すなわち、ユーザ<code class="literal">DOMINICUS\FJones</code>は<code class="literal">FRANCISCUS\FJones</code>というユーザのアカウントリソースへのアクセスが出来ないようにしなければならない)<sup>[<a name="id2617270" href="#ftn.id2617270" class="footnote">4</a>]</sup>クローズする試みは、IDMAP機能が設定されているという方法に対して提供されなければならない。</p><p><a class="indexterm" name="id2617299"></a><a class="indexterm" name="id2617306"></a><a class="indexterm" name="id2617313"></a><a class="indexterm" name="id2617320"></a><a class="indexterm" name="id2617326"></a><a class="indexterm" name="id2617333"></a>IDMAPの使用は、Sambaサーバが一つ以上のドメインからワークステーションまたはサーバによってアクセスされる場合に重要であり、そのような場合、winbindを動作させることが重要で、そうすると、外部のSIDをローカルのUNIX UIDとGIDに解決(IDマッピング)することが出来るようになる。</p><p><a class="indexterm" name="id2617353"></a>IDMAP機能は、Samba起動時に<code class="literal">winbindd</code>の実行を必要とする。</p><div class="sect1" title="SambaサーバのサーバタイプとIDMAP"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2617369"></a>SambaサーバのサーバタイプとIDMAP</h2></div></div></div><p><a class="indexterm" name="id2617378"></a>4つの基本的なサーバタイプがあり、これは、 <a class="link" href="ServerType.html" title="Chapter 3. サーバタイプとセキュリティモード">サーバタイプとセキュリティモードの章</a>に説明がある。</p><div class="sect2" title="スタンドアロンSambaサーバ"><div class="titlepage"><div><div><h3 class="title"><a name="id2617396"></a>スタンドアロンSambaサーバ</h3></div></div></div><p>	<a class="indexterm" name="id2617404"></a>	<a class="indexterm" name="id2617411"></a>	<a class="indexterm" name="id2617418"></a>	スタンドアロンSambaサーバはWindows NT4ドメイン、Windows 200x Active Directory	ドメインかSambaドメインのメンバでない形で動く。	</p><p>	<a class="indexterm" name="id2617434"></a>	<a class="indexterm" name="id2617441"></a>	<a class="indexterm" name="id2617448"></a>	定義により、これは、ユーザとグループはローカルに作成/制御され、ネットワーク	ユーザの識別はローカルのUNIX/Linuxユーザログイン情報に一致しなければならない。	そのため、IDMAP機能はほとんど関心を払う必要はなく、winbindも不要で、IDMAP	機能は関連しないか、興味を持つべきものではない。	</p></div><div class="sect2" title="ドメインメンバサーバかドメインメンバクライアント"><div class="titlepage"><div><div><h3 class="title"><a name="id2617467"></a>ドメインメンバサーバかドメインメンバクライアント</h3></div></div></div><p>	<a class="indexterm" name="id2617476"></a>	<a class="indexterm" name="id2617483"></a>	<a class="indexterm" name="id2617489"></a>	<a class="indexterm" name="id2617496"></a>	<a class="indexterm" name="id2617503"></a>	Samba-3はWindows NT4 PDCまたはBDCとして動作でき、それによって、Windows NT4と	互換性を持つドメイン制御プロトコルを提供する。Samba-3のファイルと印刷共有	プロトコルはすべてのバージョンのMicrosoft Windows製品と互換がある。Windows NT4は	Microsoft Windows Active Directoryと同様、広範囲にWindows SIDを使用する。	</p><p>	<a class="indexterm" name="id2617523"></a>	<a class="indexterm" name="id2617530"></a>	<a class="indexterm" name="id2617537"></a>	Samba-3ドメインメンバサーバとクライアントはMicrosoft Windows SIDと正しく相互に	処理を行わなければならない。入力されたSIDはローカルのUNIX UIDとGIDに変換され	なければならない。Sambaサーバから出力する情報は、適切なSIDでMicrosoft Windows	クライアントとサーバに提供されなければならない。	</p><p>	<a class="indexterm" name="id2617557"></a>	<a class="indexterm" name="id2617563"></a>	Windowsネットワークドメイン(NT4形式またはADS)のメンバであるSambaはいろいろな	方法で識別情報のマッピングを扱うように設定出来る。使用するメカニズムは、	<code class="literal">winbindd</code>デーモンが使われるか否かとどのようにwinbindの	機能が設定されているかに依存する。設定オプションの簡単な説明は以下の通り:	</p><div class="variablelist"><dl><dt><span class="term">Winbindが使用されず、ユーザとグループがローカルの場合: </span></dt><dd><p>				<a class="indexterm" name="id2617601"></a>				<a class="indexterm" name="id2617608"></a>				<a class="indexterm" name="id2617615"></a>				<a class="indexterm" name="id2617622"></a>				<a class="indexterm" name="id2617629"></a>				<a class="indexterm" name="id2617636"></a>				<a class="indexterm" name="id2617642"></a>				<a class="indexterm" name="id2617649"></a>				<a class="indexterm" name="id2617656"></a>				<a class="indexterm" name="id2617663"></a>				<a class="indexterm" name="id2617670"></a>				<code class="literal">winbindd</code>が使われないと、Samba				(<code class="literal">smbd</code>)は、入力されたネットワークからの				情報の識別を解決するための、基本的なUNIX/Linuxメカニズムを				使用する。これは、セッションセットアップ要求時にLoginID				(アカウント名)を使い、getpwnam()システムファンクションコール				にそれを渡す。この呼び出しは最近のUNIX/Linuxシステム上では				ネームサービススイッチ(NSS)メカニズムを使うように実装されて				いる。"ユーザとグループがローカル"という場合、それらは				ローカルシステム上の、<code class="filename">/etc/passwd</code>と				<code class="filename">/etc/group</code>にそれぞれ格納されることを				意味する。				</p><p>				<a class="indexterm" name="id2617726"></a>				<a class="indexterm" name="id2617732"></a>				たとえば、ユーザ<code class="literal">BERYLIUM\WambatW</code>が				Sambaサーバに対して接続をオープンしようとする場合、				入力されるSessionSetupAndX要求は、<code class="filename">/etc/passwd</code>				ファイル中のユーザ<code class="literal">WambatW</code>を検索するために				システムを呼び出す。				</p><p>				<a class="indexterm" name="id2617766"></a>				<a class="indexterm" name="id2617773"></a>				<a class="indexterm" name="id2617780"></a>				<a class="indexterm" name="id2617786"></a>				<a class="indexterm" name="id2617793"></a>				<a class="indexterm" name="id2617799"></a>				<a class="indexterm" name="id2617806"></a>				<a class="indexterm" name="id2617813"></a>				この設定は、スタンドアロンSambaサーバ、ドメインメンバサーバ				(NT4またはADS)とsmbpasswdまたはtdbsamベースのSamba passdb				バックエンドを使うPDCに対して使うことが出来る。				</p></dd><dt><span class="term">Winbindは使わないが、ユーザとグループはNSS経由で解決する場合</span></dt><dd><p>				<a class="indexterm" name="id2617843"></a>				<a class="indexterm" name="id2617850"></a>				<a class="indexterm" name="id2617858"></a>				<a class="indexterm" name="id2617865"></a>				<a class="indexterm" name="id2617872"></a>				<a class="indexterm" name="id2617878"></a>				この場合、ユーザとグループアカウントは、ローカルアカウントとして				取り扱われる。ローカルアカウントそのものとただ1つ違う点は、				共有可能なリポジトリ内にアカウントが格納されると言うことである。				一般的には、これは、NIS形式のデータベースか、そうでなければ				LDAP内にあると言うことである。				</p><p>				<a class="indexterm" name="id2617898"></a>				<a class="indexterm" name="id2617906"></a>				<a class="indexterm" name="id2617913"></a>				<a class="indexterm" name="id2617919"></a>				<a class="indexterm" name="id2617926"></a>				<a class="indexterm" name="id2617932"></a>				<a class="indexterm" name="id2617939"></a>				この設定は、スタンドアロンSambaサーバ、ドメインメンバサーバ				(NT4またはADS)とsmbpasswdまたはtdbsamベースのSamba passdb                                バックエンドを使うPDCに対して使うことが出来る。				</p></dd><dt><span class="term">Winbind/NSSと既定値のローカルなIDMAPテーブルの場合: </span></dt><dd><p>				<a class="indexterm" name="id2617969"></a>				<a class="indexterm" name="id2617976"></a>				<a class="indexterm" name="id2617984"></a>				<a class="indexterm" name="id2617990"></a>				Windows NT4ドメインかADSドメインのメンバである単一のSamba				サーバか単純なSambaサーバのみを必要とするサイトは多数ある。				標準的なサーバの例は、ドメイン用のドメインコントローラ				からアカウント認証情報を入手するためにwinbindを使うように				設定され、ローカルアカウントを持たないアプライアンスの				ようなファイルサーバである。ドメイン制御機能は、Samba-3、				Microsoft Windows NT4かMicrosoft Windows Active Directory				によって提供される。				</p><p>				<a class="indexterm" name="id2618011"></a>				<a class="indexterm" name="id2618018"></a>				<a class="indexterm" name="id2618025"></a>				<a class="indexterm" name="id2618032"></a>				<a class="indexterm" name="id2618039"></a>				Winbindは、この状態においては非常に有益である。必要と				されるすべては、<code class="filename">smb.conf</code>ファイル中で定義することが出来る				UIDとGIDの値の範囲である。<code class="filename">/etc/nsswitch.conf</code>				ファイルは、入力されたSIDを適切なUIDとGIDにマッピングする				ための、すべての難しい作業をこなす<code class="literal">winbind</code>				を使うために設定される。SIDはwinbindがそれを受け取る順で				UID/GIDに割り当てられる。				</p><p>				<a class="indexterm" name="id2618080"></a>				<a class="indexterm" name="id2618087"></a>				<a class="indexterm" name="id2618094"></a>				<a class="indexterm" name="id2618100"></a>				この設定は、複数のSambaサーバにまたがってUID/GIDとユーザや				グループとのマッピングが同一であることが求められる環境(サイト)				では実用的でない。この方法の危険性の1つは、winbind機構の				IDMAPデータベースファイルが壊れるか喪失した場合、IDMAP				ファイル修正、再生成しても、UIDやGIDが以前と異なるユーザや				グループにマッピングされてしまい、結果としてSambaサーバ上に				格納されたWindowsファイルの所有者が不正になってしまう可能性				がある点である。				</p></dd><dt><span class="term">Winbind/NSSがRIDベースのIDMAPの場合: </span></dt><dd><p>				<a class="indexterm" name="id2618143"></a>				<a class="indexterm" name="id2618149"></a>				<a class="indexterm" name="id2618156"></a>				<a class="indexterm" name="id2618162"></a>				IDMAP_RID機能はSamba 3.0.8から提供された。これは、				ADSスキーマ拡張を適用しないMicrosoft ADSを使用する				ことに関わりがあり、IDMAPテーブルをメンテナンスする				目的のためにLDAPディレクトリサーバをインストールして				いない、たくさんのサイトのために作業を簡単にする。				もしも単一のADSドメイン(ドメインのフォレストではなく				複数のドメインツリーでない)で、IDMAPテーブル問題に				対して単純なステレオタイプの解決方法を望んでいるなら、				IDMAP_RIDは明らかな選択肢である。				</p><p>				<a class="indexterm" name="id2618196"></a>				<a class="indexterm" name="id2618203"></a>				<a class="indexterm" name="id2618209"></a>				<a class="indexterm" name="id2618216"></a>				<a class="indexterm" name="id2618223"></a>				<a class="indexterm" name="id2618229"></a>				<a class="indexterm" name="id2618236"></a>				<a class="indexterm" name="id2618243"></a>				この機能は<em class="parameter"><code>idmap uid</code></em>と				<em class="parameter"><code>idmap gid</code></em>のレンジを割り当てることを				要求し、それが、SIDの相対識別子(RID)の部分を直接UIDのベースにRIDの				値を足した分に、自動マッピングするための、このレンジの				サブセットを割り当てることが可能な				<em class="parameter"><code>idmap uid</code></em>の範囲内であることを要求する。				たとえば、もしも<em class="parameter"><code>idmap uid</code></em>の範囲が				<code class="constant">1000-100000000</code>で、				<em class="parameter"><code>idmap backend = idmap_rid:DOMAIN_NAME=1000-50000000</code></em>				で、発生したSIDが				<code class="constant">S-1-5-21-34567898-12529001-32973135-1234</code>				という値ならば、結果のUIDは<code class="constant">1000 + 1234 = 2234</code>である。				</p></dd><dt><span class="term">WinbindとNSS/LDAPバックエンドベースのIDMAP機能: </span></dt><dd><p>				<a class="indexterm" name="id2618316"></a>				<a class="indexterm" name="id2618323"></a>				<a class="indexterm" name="id2618330"></a>				<a class="indexterm" name="id2618336"></a>				<a class="indexterm" name="id2618343"></a>				<a class="indexterm" name="id2618349"></a>				<a class="indexterm" name="id2618356"></a>				<a class="indexterm" name="id2618363"></a>				この設定では、<code class="literal">winbind</code>は<code class="filename">smb.conf</code>ファイル内で				指定された<em class="parameter"><code>idmap uid</code></em>と				<em class="parameter"><code>idmap gid</code></em>の範囲からSIDからUIDとGIDに				解決を行うが、ローカルのwinbind IDMAPテーブルを使う代わりに、				すべてのドメインメンバマシン(クライアントとサーバ)が共通の				IDMAPテーブルを共有できるためのLDAPディレクトリ中に格納された				ものを使う。				</p><p>				<a class="indexterm" name="id2618410"></a>				<a class="indexterm" name="id2618417"></a>				<a class="indexterm" name="id2618424"></a>				すべてのLDAP IDMAPクライアントは、<code class="filename">smb.conf</code>ファイル中の				<em class="parameter"><code>idmap backend</code></em>機能がLDAPリダイレクトを				正しく扱えないため、マスタLDAPサーバのみを使うということは				重要である。				</p></dd><dt><span class="term">UNIX/LinuxのユーザとグループIDを解決するためにNSSを使うwinbindの場合: </span></dt><dd><p>				passdb バックエンドとしてのLDAPの使用はPDC、BDCとドメイン				メンバサーバに対する優れた解である。それは、UID、GIDと				一致したSIDがすべてのサーバ間で首尾一貫している事を				保証するきちんとした解である。				</p><p>				<a class="indexterm" name="id2618476"></a>				<a class="indexterm" name="id2618483"></a>				LDAPベースのpassdbバックエンドの使用は、PADL nss_ldap				ユーティリティか同等品を要求する。この状況の場合、				winbindは外部のSID、すなわち、スタンドアロン				WindowsクライアントからのSID(すなわち、このドメインの				メンバでない)を他のドメインからのSIDと同じように				扱うために使われる。外部のUID/GIDは、ローカルのIDMAP				テーブルでwinbindを使う時と同じ方法で正確に、				割り当てられた範囲(idmap uidとidmap gid)にマップされる。				</p><p>				<a class="indexterm" name="id2618503"></a>				<a class="indexterm" name="id2618510"></a>				<a class="indexterm" name="id2618517"></a>				nss_ldapツールセットはActive Directory経由と同様に、LDAP				経由でUIDとGIDにアクセスするために使われる。Active Directory				を使うために、AD4UNIXスキーマ拡張か、Microsoft Services for				UNIXバージョン3.5かそれ以降のどちらかをを、UNIXアカウント				認証情報を管理するために、ADSスキーマを	拡張するために				インストールしてADSスキーマを変更することが必要である。				ADSスキーマが拡張されると、Microsoft管理コンソール(MMC)				スナップインもADSのユーザとコンピュータ管理ツールから				UNIXの認証情報を設定/管理することが出来るようにインストール				される。各アカウントは、UIDとGIDデータがSambaによって使われる				ことが出来る前に、UNIXで有効な状態と分離されなければならない。				</p></dd></dl></div></div><div class="sect2" title="プライマリドメインコントローラ"><div class="titlepage"><div><div><h3 class="title"><a name="id2618560"></a>プライマリドメインコントローラ</h3></div></div></div><p>	<a class="indexterm" name="id2618568"></a>	<a class="indexterm" name="id2618576"></a>	<a class="indexterm" name="id2618582"></a>	<a class="indexterm" name="id2618589"></a>	Microsoft Windowsドメインセキュリティシステムは、アカウント作成のプロセスの	一部として、ユーザとグループSIDを生成する。WindowsはUNIXのUIDかGIDのような	概念を持たない。その代わり、固有のタイプのセキュリティ記述子を持つ。Sambaが	ドメインコントローラとして使われる時、各ユーザとグループに固有のSIDを生成する	手段を提供する。Sambaは、<code class="filename">smb.conf</code>ファイル中で指定されたベースの値にUID	またはGIDを2倍した値を足すという算術的に計算されたRIDを足すマシンとドメイン	SIDを生成する。この方法は<span class="quote">“<span class="quote">算術的マッピング</span>”</span>と呼ばれる。	</p><p>	<a class="indexterm" name="id2618623"></a>	例をあげると、もしもユーザのUIDが4321の場合、算術的なRIDベースが1000だとすると、	RIDは<code class="literal">1000 + (2 x 4321) = 9642</code>となる。そのため、もしもドメイン	SIDが<code class="literal">S-1-5-21-89238497-92787123-12341112</code>ならば、	結果のSIDは<code class="literal">S-1-5-21-89238497-92787123-12341112-9642</code>となる。	</p><p>	<a class="indexterm" name="id2618658"></a>	<a class="indexterm" name="id2618665"></a>	<a class="indexterm" name="id2618671"></a>	<a class="indexterm" name="id2618678"></a>	前述のタイプのSIDはSambaによって、自動的な機能としてその場で生成されるか	(<em class="parameter"><code>passdb backend = [tdbsam | smbpasswd]</code></em>を使った場合)、	あるいはLDAPベースのldapsam中でアカウントの一部として恒久的に格納されても	よい。	</p><p>	<a class="indexterm" name="id2618701"></a>	<a class="indexterm" name="id2618707"></a>	<a class="indexterm" name="id2618714"></a>	<a class="indexterm" name="id2618721"></a>	<a class="indexterm" name="id2618728"></a>	<a class="indexterm" name="id2618735"></a>	<a class="indexterm" name="id2618741"></a>	<a class="indexterm" name="id2618748"></a>	<a class="indexterm" name="id2618756"></a>	ADSはUIDとGIDのような追加のアカウント属性に適応するために拡張できるディレクトリ	スキーマを使う。Microsoft Service for UNIX 3.5をインストールすると、通常のADS	スキーマをUNIXアカウント属性を含むように拡張する。これらはもちろん通常の	ADSアカウント管理のMMCインタフェーススナップインモジュールを等して別途管理され	なければならない。	</p><p>	<a class="indexterm" name="id2618776"></a>	<a class="indexterm" name="id2618782"></a>	<a class="indexterm" name="id2618790"></a>	<a class="indexterm" name="id2618796"></a>	ドメイン内で使われるセキュリティ識別子は、競合を避けるためと完全性を保つために	管理されねばならない。NT4ドメインコンテキスト中で、PDCはすべてのセキュリティ	認証情報の、バックアップドメインコントローラ(BDC)への配布を管理する。現時点で、	そのような情報のために適したSambaドメインコントローラのpassdbバックエンドは、	LDAP中バックエンドのみである。	</p></div><div class="sect2" title="バックアップドメインコントローラ"><div class="titlepage"><div><div><h3 class="title"><a name="id2618816"></a>バックアップドメインコントローラ</h3></div></div></div><p>	<a class="indexterm" name="id2618824"></a>	<a class="indexterm" name="id2618831"></a>	<a class="indexterm" name="id2618838"></a>	<a class="indexterm" name="id2618845"></a>	<a class="indexterm" name="id2618852"></a>	<a class="indexterm" name="id2618859"></a>	<a class="indexterm" name="id2618866"></a>	ユーザとグループアカウントの中の情報の変更はBDCからPDCに送られる。PDCのみが	ディレクトリに対して書き込むことができる。	</p><p>	IDMAPの情報は、すべてのドメインコントローラがマスタ(書き込み可能な)LDAPサーバに	対してアクセス可能である限り、LDAPサーバに直接書き込める。Samba-3は現時点で	IDMAPバックエンド中でLDAPリダイレクトを扱えない。これは、IDMAP機能をスレーブ	(複製される)LDAPサーバで使うのは危険だということである。	</p></div></div><div class="sect1" title="IDMAPバックエンドの使用例"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2618896"></a>IDMAPバックエンドの使用例</h2></div></div></div><p><a class="indexterm" name="id2618905"></a><a class="indexterm" name="id2618914"></a><a class="indexterm" name="id2618924"></a><a class="indexterm" name="id2618930"></a><a class="indexterm" name="id2618937"></a><code class="literal">winbind</code>を使う誰にとっても、下記の設定例は有用である。多くの場合、<code class="literal">winbind</code>は、ドメインメンバサーバ(DMS)とドメインメンバクライアント(DMC)を使うために一番興味がある事項である。</p><div class="sect2" title="規定値のWinbind TDB"><div class="titlepage"><div><div><h3 class="title"><a name="id2618960"></a>規定値のWinbind TDB</h3></div></div></div><p>	2つの共通的な設定が使われる:	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>		ネットワーク上にNT4 PDC(BDCがあってもなくても)かSambaPDC(BDCがあってもなくても)がある。		</p></li><li class="listitem"><p>		ネットワークは Microsoft Windows 200x ADSを使っている。		</p></li></ul></div><div class="sect3" title="NT4形式のドメイン(Sambaドメインを含む)"><div class="titlepage"><div><div><h4 class="title"><a name="id2618990"></a>NT4形式のドメイン(Sambaドメインを含む)</h4></div></div></div><p>	<a class="link" href="idmapper.html#idmapnt4dms" title="Example 14.1. NT4形式のドメインメンバサーバのsmb.conf">NT4ドメインメンバサーバのsmb.con</a>は、NT4	 DMSに対する<code class="filename">smb.conf</code>ファイルのグローバルセクション部分の例を示す。	</p><div class="example"><a name="idmapnt4dms"></a><p class="title"><b>Example 14.1. NT4形式のドメインメンバサーバのsmb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># グローバルパラメータ</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2619047"></a><em class="parameter"><code>workgroup = MEGANET2</code></em></td></tr><tr><td><a class="indexterm" name="id2619058"></a><em class="parameter"><code>security = DOMAIN</code></em></td></tr><tr><td><a class="indexterm" name="id2619070"></a><em class="parameter"><code>idmap uid = 10000-20000</code></em></td></tr><tr><td><a class="indexterm" name="id2619082"></a><em class="parameter"><code>idmap gid = 10000-20000</code></em></td></tr><tr><td><a class="indexterm" name="id2619094"></a><em class="parameter"><code>template primary group = "Domain Users"</code></em></td></tr><tr><td><a class="indexterm" name="id2619106"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr></table></div></div><br class="example-break"><p>	<a class="indexterm" name="id2619121"></a>	<a class="indexterm" name="id2619128"></a>	<code class="literal">winbind</code>の使用は、NSSの設定を必要とする。以下を含むように	<code class="filename">/etc/nsswitch.conf</code>のエントリを編集する:</p><pre class="screen">...passwd: files winbindshadow: files winbindgroup:  files winbind...hosts:  files [dns] wins...</pre><p>	ホストエントリでDNSを使う場合は、サイト上でDNSが使われている場合にのみ行う。	</p><p>	DMSを作成するには以下のような手順を踏む:	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>		上記の設定を使って、<code class="filename">smb.conf</code>ファイルを作成するかインストールする。		</p></li><li class="step" title="Step 2"><p>		以下を実行する:</p><pre class="screen"><code class="prompt">root# </code> net rpc join -UAdministrator%passwordJoined domain MEGANET2.</pre><p>	<a class="indexterm" name="id2619202"></a>	ドメインへの参加が成功するかどうかは、以下のコマンドで確認できる:</p><pre class="screen"><code class="prompt">root# </code> net rpc testjoinJoin to 'MIDEARTH' is OK</pre><p>		ドメインへの参加が失敗した場合、以下のようなエラーメッセージが出力される:		<a class="indexterm" name="id2619228"></a></p><pre class="screen"><code class="prompt">root# </code> net rpc testjoin[2004/11/05 16:34:12, 0] utils/net_rpc_join.c:net_rpc_join_ok(66)Join to domain 'MEGANET2' is not valid</pre><p>		</p></li><li class="step" title="Step 3"><p>		<a class="indexterm" name="id2619255"></a>		<a class="indexterm" name="id2619262"></a>		<a class="indexterm" name="id2619269"></a>		<code class="literal">nmbd, winbind,</code>と<code class="literal">smbd</code>をこの順番で起動する。		</p></li></ol></div></div><div class="sect3" title="ADSドメイン"><div class="titlepage"><div><div><h4 class="title"><a name="id2619292"></a>ADSドメイン</h4></div></div></div><p>	<a class="indexterm" name="id2619300"></a>	<a class="indexterm" name="id2619306"></a>	ADSドメインへの参加手続きは、NT4ドメインへの参加と似ているが、<code class="filename">smb.conf</code>ファイルは	<a class="link" href="idmapper.html#idmapadsdms" title="Example 14.2. ADSドメインメンバサーバのsmb.conf">ADSドメインメンバサーバのsmb.conf</a>で示された	内容の部分が異なる。	</p><div class="example"><a name="idmapadsdms"></a><p class="title"><b>Example 14.2. ADSドメインメンバサーバのsmb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># グローバルパラメータ</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2619363"></a><em class="parameter"><code>workgroup = BUTTERNET</code></em></td></tr><tr><td><a class="indexterm" name="id2619375"></a><em class="parameter"><code>netbios name = GARGOYLE</code></em></td></tr><tr><td><a class="indexterm" name="id2619387"></a><em class="parameter"><code>realm = BUTTERNET.BIZ</code></em></td></tr><tr><td><a class="indexterm" name="id2619399"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2619410"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2619422"></a><em class="parameter"><code>idmap uid = 500-10000000</code></em></td></tr><tr><td><a class="indexterm" name="id2619434"></a><em class="parameter"><code>idmap gid = 500-10000000</code></em></td></tr><tr><td><a class="indexterm" name="id2619446"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2619458"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2619470"></a><em class="parameter"><code>printer admin = "BUTTERNET\Domain Admins"</code></em></td></tr></table></div></div><br class="example-break"><p>	<a class="indexterm" name="id2619485"></a>	<a class="indexterm" name="id2619492"></a>	<a class="indexterm" name="id2619499"></a>	<a class="indexterm" name="id2619506"></a>	<a class="indexterm" name="id2619512"></a>	<a class="indexterm" name="id2619519"></a>	<a class="indexterm" name="id2619526"></a>	ADSのDMS操作はkerberos(KRB)を使用すること要求する。これを動作させるため、	<code class="filename">krb5.conf</code>ファイルを設定する必要がある。正確な要求	内容は、どのバージョンのMITかHeimdal kerberosが使われているかに依存する。	現時点でMIT Kerberosのバージョンが1.3.5で、Heimdal が 0.61である最新の	バージョンのみを使うことを推奨する。	</p><p>	DMSを作成するには以下のステップを必要とする:	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>		上記の設定で<code class="filename">smb.conf</code>ファイルを作成するかインストールする。		</p></li><li class="step" title="Step 2"><p>		上記で示されたように、<code class="filename">/etc/nsswitch.conf</code>ファイルを編集する。		</p></li><li class="step" title="Step 3"><p>		以下を実行する:		<a class="indexterm" name="id2619597"></a></p><pre class="screen"><code class="prompt">root# </code> net ads join -UAdministrator%passwordJoined domain BUTTERNET.</pre><p>	ドメインへの参加が成功するか失敗するかは以下のコマンドで確認出来る:</p><pre class="screen"><code class="prompt">root# </code> net ads testjoinUsing short domain name -- BUTTERNETJoined 'GARGOYLE' to realm 'BUTTERNET.BIZ'</pre><p>	</p><p>	ドメインへの参加が不正か失敗するかは以下を実行することで検出できる:</p><pre class="screen"><code class="prompt">root# </code> net ads testjoinGARGOYLE$@'s password:[2004/11/05 16:53:03, 0] utils/net_ads.c:ads_startup(186)  ads_connect: No results returnedJoin to domain is not valid</pre><p>		<a class="indexterm" name="id2619658"></a>		<a class="indexterm" name="id2619665"></a>		<a class="indexterm" name="id2619672"></a>		<a class="indexterm" name="id2619679"></a>		特定のエラーメッセージは、発生した不成功のタイプに依存するため、		上記とは異なるかもしれない。<em class="parameter"><code>log level</code></em>を10まで		増やし、テストを再実行し、失敗の真の原因を探るために､生成されたログ		ファイルを調べること。		</p></li><li class="step" title="Step 4"><p>		<code class="literal">nmbd</code>, <code class="literal">winbind</code>と <code class="literal">smbd</code>		デーモンをこの順番で起動する。		</p></li></ol></div></div></div><div class="sect2" title="IDMAP_RIDを使うWinbind"><div class="titlepage"><div><div><h3 class="title"><a name="id2619729"></a>IDMAP_RIDを使うWinbind</h3></div></div></div><p>	<a class="indexterm" name="id2619737"></a>	<a class="indexterm" name="id2619744"></a>	<a class="indexterm" name="id2619751"></a>	<a class="indexterm" name="id2619757"></a>	<code class="literal">idmap_rid</code>機能は、ネイティブなwinbindとは異なり、新しい	ツールで、MicrosoftのSIDをUNIXのUIDとGIDに、予測可能なマッピングを作成する。	Samba IDMAP機能にこの手法を実装する一番の利点は、集中したIDMAPデータを保存する	必要性をなくすということである。不都合な点は、単一のADSドメイン内のみで使う	事ができる事と、ドメイン間信頼機能とは互換性がないことである。	</p><p>	<a class="indexterm" name="id2619790"></a>	<a class="indexterm" name="id2619796"></a>	<a class="indexterm" name="id2619803"></a>	<a class="indexterm" name="id2619810"></a>	このSIDからUID/GIDへのマッピングにおける代替手法はidmap_ridプラグインを	使って実現できる。このプラグインは、RIDに指定されたベース値を加える事に	よってUIDとGIDを引き出すために、ユーザSIDのRIDを使う。このユーティリティは	複数のドメイン環境とは互換がない、<span class="quote">“<span class="quote">allow trusted domains = No</span>”</span>	パラメータを指定することを要求する。<em class="parameter"><code>idmap uid</code></em>と	<em class="parameter"><code>idmap gid</code></em>の範囲を指定する必要がある。	</p><p>	<a class="indexterm" name="id2619849"></a>	<a class="indexterm" name="id2619856"></a>	idmap_rid機能はNT4/Samba形式のドメインとActive Directoryで使える。これをNT4	ドメインで使うためには、<em class="parameter"><code>realm</code></em>パラメータを含んでは	いけない。さらに、ドメインに参加するために使う手法は、	<code class="constant">net rpc join</code>を使う。	</p><p>	ADSドメイン環境での<code class="filename">smb.conf</code>ファイルの例は、	<a class="link" href="idmapper.html#idmapadsridDMS" title="Example 14.3. idmap_ridを使うADSドメインメンバのsmb.conf">idmap_ridを使うADSドメインメンバのsmb.conf</a>	である。	</p><div class="example"><a name="idmapadsridDMS"></a><p class="title"><b>Example 14.3. idmap_ridを使うADSドメインメンバのsmb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># グローバルパラメータ</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2619930"></a><em class="parameter"><code>workgroup = KPAK</code></em></td></tr><tr><td><a class="indexterm" name="id2619942"></a><em class="parameter"><code>netbios name = BIGJOE</code></em></td></tr><tr><td><a class="indexterm" name="id2619953"></a><em class="parameter"><code>realm = CORP.KPAK.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2619965"></a><em class="parameter"><code>server string = Office Server</code></em></td></tr><tr><td><a class="indexterm" name="id2619977"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2619989"></a><em class="parameter"><code>allow trusted domains = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620001"></a><em class="parameter"><code>idmap backend = idmap_rid:KPAK=500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620013"></a><em class="parameter"><code>idmap uid = 500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620025"></a><em class="parameter"><code>idmap gid = 500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620036"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2620048"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2620060"></a><em class="parameter"><code>winbind enum users = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620072"></a><em class="parameter"><code>winbind enum groups = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620084"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2620096"></a><em class="parameter"><code>printer admin = "Domain Admins"</code></em></td></tr></table></div></div><br class="example-break"><p>	<a class="indexterm" name="id2620111"></a>	<a class="indexterm" name="id2620118"></a>	<a class="indexterm" name="id2620125"></a>	<a class="indexterm" name="id2620132"></a>	たくさんのユーザが居る大きなドメイン中で、ユーザとグループを列挙することを無効に	することは避けられない。例えば、Active Directory中に22000人ものユーザが居る	サイトで、winbindベースのユーザとグループの解決は、<code class="literal">winbind</code>を	最初に開始する時点から12分以上利用できない。列挙を無効にすると、瞬間的に反応が	返る。ユーザとグループの列挙を無効にすると言うことは、<code class="literal">getent passwd</code>	と<code class="literal">getent group</code>コマンドを使ってユーザかグループの一覧を	表示することが出来ないと言うことである。特定のユーザのみを検索することは	以下のような方法で可能である。	</p><p>	<a class="indexterm" name="id2620177"></a>	<a class="indexterm" name="id2620184"></a>	このツールを使用するには、ネイティブなwinbindの使用ごとにNSSの設定を必要とする。	以下のパラメータを含むように<code class="filename">/etc/nsswitch.conf</code>ファイルを	編集する。</p><pre class="screen">...passwd: files winbindshadow: files winbindgroup:  files winbind...hosts:  files wins...</pre><p>	</p><p>	以下の手順でidmap_rid機能を使うことが出来る:	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>		上記の設定で<code class="filename">smb.conf</code>ファイルを作成またはインストールする。		</p></li><li class="step" title="Step 2"><p>		    上記で示されたように<code class="filename">/etc/nsswitch.conf</code>ファイルを編集する。		</p></li><li class="step" title="Step 3"><p>		以下を実行する:</p><pre class="screen"><code class="prompt">root# </code> net ads join -UAdministrator%passwordUsing short domain name -- KPAKJoined 'BIGJOE' to realm 'CORP.KPAK.COM'</pre><p>		</p><p>		<a class="indexterm" name="id2620271"></a>		ドメインへの参加が不正または失敗するかは以下を実行することで検出できる:</p><pre class="screen"><code class="prompt">root# </code> net ads testjoinBIGJOE$@'s password:[2004/11/05 16:53:03, 0] utils/net_ads.c:ads_startup(186)  ads_connect: No results returnedJoin to domain is not valid</pre><p>		特定のエラーメッセージは、発生した問題のタイプに依存するため、上記と		異なるかもしれない。<em class="parameter"><code>log level</code></em>を10まであげて、		テストを再実行し、失敗の真の原因を識別するために生成したログファイルを		調べること。		</p></li><li class="step" title="Step 4"><p>		<code class="literal">nmbd</code>, <code class="literal">winbind</code>と<code class="literal">smbd</code>		デーモンをこの順番で起動する。		</p></li><li class="step" title="Step 5"><p>		この設定の動作は以下を実行することで検証できる:		<a class="indexterm" name="id2620344"></a></p><pre class="screen"><code class="prompt">root# </code> getent passwd administratoradministrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash</pre><p>		</p></li></ol></div></div><div class="sect2" title="Winbindを使ったIDMAPデータのLDAPへの格納"><div class="titlepage"><div><div><h3 class="title"><a name="id2620366"></a>Winbindを使ったIDMAPデータのLDAPへの格納</h3></div></div></div><p>	<a class="indexterm" name="id2620375"></a>	<a class="indexterm" name="id2620382"></a>	IDMAPの情報をLDAP中に格納することは、NT4/Samba-3形式のドメインとADSドメインで	利用できる。OpenLDAPは、多くの標準準拠のLDAPサーバが使われているにもかかわらず、	この目的に多用されているLDAPサーバである。従って、このIDMAP設定を、Sun iPlanet	LDAP Server,Novell eDirectory, Microsoft ADS plus ADAMやその他で使うことは可能で	ある。	</p><p>	ADSドメインのための例は、	<a class="link" href="idmapper.html#idmapldapDMS" title="Example 14.4. LDAPを使うADSドメインメンバサーバ">LDAPを使うADSドメインメンバサーバ</a>にある。	</p><div class="example"><a name="idmapldapDMS"></a><p class="title"><b>Example 14.4. LDAPを使うADSドメインメンバサーバ</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># グローバルパラメータ</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2620444"></a><em class="parameter"><code>workgroup = SNOWSHOW</code></em></td></tr><tr><td><a class="indexterm" name="id2620455"></a><em class="parameter"><code>netbios name = GOODELF</code></em></td></tr><tr><td><a class="indexterm" name="id2620467"></a><em class="parameter"><code>realm = SNOWSHOW.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620479"></a><em class="parameter"><code>server string = Samba Server</code></em></td></tr><tr><td><a class="indexterm" name="id2620491"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2620502"></a><em class="parameter"><code>log level = 1 ads:10 auth:10 sam:10 rpc:10</code></em></td></tr><tr><td><a class="indexterm" name="id2620514"></a><em class="parameter"><code>ldap admin dn = cn=Manager,dc=SNOWSHOW,dc=COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620526"></a><em class="parameter"><code>ldap idmap suffix = ou=Idmap</code></em></td></tr><tr><td><a class="indexterm" name="id2620538"></a><em class="parameter"><code>ldap suffix = dc=SNOWSHOW,dc=COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620550"></a><em class="parameter"><code>idmap backend = ldap:ldap://ldap.snowshow.com</code></em></td></tr><tr><td><a class="indexterm" name="id2620563"></a><em class="parameter"><code>idmap uid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2620574"></a><em class="parameter"><code>idmap gid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2620586"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2620598"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr></table></div></div><br class="example-break"><p>	<a class="indexterm" name="id2620613"></a>	NT4またはSamba-3形式のドメインの場合、<em class="parameter"><code>realm</code></em>は使わず、	ドメインに参加するために使うコマンドは<code class="literal">net rpc join</code>である。	上記の例は、<a class="link" href="bugreport.html#dbglvl" title="デバッグレベル">バグの報告</a>に記述されている高度な	エラー報告のテクニックも示している。	</p><p>	<a class="indexterm" name="id2620649"></a>	<a class="indexterm" name="id2620656"></a>	<a class="indexterm" name="id2620663"></a>	MIT kerberosがインストールされている場合(バージョン 1.3.4以降)、以下の内容を	含むように<code class="filename">/etc/krb5.conf</code>を編集する:</p><pre class="screen">[logging] default = FILE:/var/log/krb5libs.log kdc = FILE:/var/log/krb5kdc.log admin_server = FILE:/var/log/kadmind.log[libdefaults] default_realm = SNOWSHOW.COM dns_lookup_realm = false dns_lookup_kdc = true[appdefaults] pam = {   debug = false   ticket_lifetime = 36000   renew_lifetime = 36000   forwardable = true   krb4_convert = false }</pre><p>	</p><p>	Heimdal kerberosがインストールされている場合、<code class="filename">/etc/krb5.conf</code>	ファイルは空白にするか(すなわち内容が無い)、以下の内容を含むように編集する:</p><pre class="screen">[libdefaults]        default_realm = SNOWSHOW.COM        clockskew = 300[realms]        SNOWSHOW.COM = {                kdc = ADSDC.SHOWSHOW.COM        }        [domain_realm]        .snowshow.com = SNOWSHOW.COM</pre><p>	</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>	Sambaは、<code class="filename">/etc/krb5.conf</code>ファイルがない時はHeimdalライブラリを	使えない。それが空白のファイルであるならば、Heimdal kerberosライブラリは使用可能	である。SambaがHeimdalライブラリを使う時には、自動的にこれを見つけることが出来る	ので、特に何も設定しなくても良い。	</p></div><p>	以下のエントリを含むようにNSS制御ファイル<code class="filename">/etc/nsswitch.conf</code>	を編集する:</p><pre class="screen">...passwd: files ldapshadow: files ldapgroup:  files ldap...hosts:  files wins...</pre><p>	</p><p>	<a class="indexterm" name="id2620761"></a>	<a class="indexterm" name="id2620768"></a>	この解決方法のためには、<a class="ulink" href="http://www.padl.com" target="_top">PADL</a>の	<code class="literal">nss_ldap</code>ツールセットが必要である。必要とされる情報を	<code class="filename">/etc/ldap.conf</code>ファイルに設定すること。以下は、	動作するファイルの例である:</p><pre class="screen">host    192.168.2.1base    dc=snowshow,dc=combinddn  cn=Manager,dc=snowshow,dc=combindpw  not24getpam_password exopnss_base_passwd ou=People,dc=snowshow,dc=com?onenss_base_shadow ou=People,dc=snowshow,dc=com?onenss_base_group  ou=Groups,dc=snowshow,dc=com?onessl     no</pre><p>	</p><p>	以下の手続きは動くようにするための設定手順である:	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>		上記で示されたように<code class="filename">smb.conf</code>ファイルを設定する。		</p></li><li class="step" title="Step 2"><p>		上記で示されたように<code class="filename">/etc/krb5.conf</code>ファイルを作成する。		</p></li><li class="step" title="Step 3"><p>		上記で示されたように<code class="filename">/etc/nsswitch.conf</code>ファイルを設定する。		</p></li><li class="step" title="Step 4"><p>		PADL nss_ldapツールセットをダウンロードし、コンパイルし、インストールする。		上記で示されたように<code class="filename">/etc/ldap.conf</code>ファイルを設定する。		</p></li><li class="step" title="Step 5"><p>		LDAPサーバを設定し、以下のLDIFファイルで示されるような、IDMAPによって		必要とされるトップレベルのエントリをディレクトリに追加(初期化)する。</p><pre class="screen">dn: dc=snowshow,dc=comobjectClass: dcObjectobjectClass: organizationdc: snowshowo: The Greatest Snow Show in Singapore.description: Posix and Samba LDAP Identity Databasedn: cn=Manager,dc=snowshow,dc=comobjectClass: organizationalRolecn: Managerdescription: Directory Managerdn: ou=Idmap,dc=snowshow,dc=comobjectClass: organizationalUnitou: idmap</pre><p>		</p></li><li class="step" title="Step 6"><p>		Samba DMSをADSドメインに、以下のコマンドを使って参加させる:</p><pre class="screen"><code class="prompt">root# </code> net ads testjoinUsing short domain name -- SNOWSHOWJoined 'GOODELF' to realm 'SNOWSHOW.COM'</pre><p>		</p></li><li class="step" title="Step 7"><p>		以下のようにして、Sambaの<code class="filename">secrets.tdb</code>ファイルに		LDAPサーバへのアクセスパスワードを格納する:</p><pre class="screen"><code class="prompt">root# </code> smbpasswd -w not24get</pre><p>		</p></li><li class="step" title="Step 8"><p>		<code class="literal">nmbd</code>, <code class="literal">winbind</code>と<code class="literal">smbd</code>		デーモンをこの順番で起動する。		</p></li></ol></div><p>	<a class="indexterm" name="id2620981"></a>	ドメインへの参加が成功するか失敗するかを識別するため、この章の始めの方で	紹介された診断手続きに従うこと。多くの場合、失敗の理由が何も示されない	コマンドプロンプトの静かな結果によって、失敗は表示される。	</p></div><div class="sect2" title="RFC2307bis Schema拡張を使ったADSからのIDMAPとNSSに対するLDAPの使用"><div class="titlepage"><div><div><h3 class="title"><a name="id2621000"></a>RFC2307bis Schema拡張を使ったADSからのIDMAPとNSSに対するLDAPの使用</h3></div></div></div><p>	<a class="indexterm" name="id2621011"></a>	<a class="indexterm" name="id2621018"></a>	この方法はきれいなものではない。以下で提供される情報は手引きのみであり、かつ、	全くもって不確かで完全ではない。この方法は動く。数多くの巨大サイトで使用され、	耐えられるレベルのパフォーマンスを提供している。	</p><p>	<code class="filename">smb.conf</code>ファイルの例は	<a class="link" href="idmapper.html#idmaprfc2307" title="Example 14.5. NSS経由のRFC2307bisスキーマ拡張日付を使うADSドメインメンバサーバ">NSS経由のRFC2307bisスキーマ拡張日付を使うADSドメインメンバサーバ</a>	にある。	</p><div class="example"><a name="idmaprfc2307"></a><p class="title"><b>Example 14.5. NSS経由のRFC2307bisスキーマ拡張日付を使うADSドメインメンバサーバ</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># グローバルパラメータ</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2621089"></a><em class="parameter"><code>workgroup = BOBBY</code></em></td></tr><tr><td><a class="indexterm" name="id2621100"></a><em class="parameter"><code>realm = BOBBY.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2621111"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2621123"></a><em class="parameter"><code>idmap uid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2621135"></a><em class="parameter"><code>idmap gid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2621146"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2621158"></a><em class="parameter"><code>winbind cache time = 5</code></em></td></tr><tr><td><a class="indexterm" name="id2621170"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2621182"></a><em class="parameter"><code>winbind trusted domains only = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2621195"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr></table></div></div><br class="example-break"><p>	<a class="indexterm" name="id2621210"></a>	DMSは通常の手順でドメインに参加しなければならない。更に追加で、PADL nss_ldap	ツールセットのコンパイルとインストールが必要である。以下のようにしてこのツールを	構築する:</p><pre class="screen">./configure --enable-rfc2307bis --enable-schema-mappingmake install</pre><p> 	</p><p>	<a class="indexterm" name="id2621235"></a>	<code class="filename">/etc/nsswitch.conf</code>ファイル中には以下の内容が必要である:</p><pre class="screen">...passwd: files ldapshadow: files ldapgroup:  files ldap...hosts:  files wins...</pre><p>	</p><p>	<a class="indexterm" name="id2621259"></a>	<a class="indexterm" name="id2621266"></a>	<code class="filename">/etc/ldap.conf</code>も設定しなければならない。特定の説明に	ついては、PADLのドキュメントとnss_ldapのソースコードを参照のこと。	</p><p>	次のステップではADSスキーマの準備を必要とする。これは、この章の残りの部分で	簡単に説明する。	</p><div class="sect3" title="IDMAP, Active DirectoryとMicrosoftの Services for UNIX 3.5"><div class="titlepage"><div><div><h4 class="title"><a name="id2621291"></a>IDMAP, Active DirectoryとMicrosoftの Services for UNIX 3.5</h4></div></div></div><p>		<a class="indexterm" name="id2621300"></a>		Microsoft Windows Service for UNIX (SFU)バージョン3.5は、Microsoftの		Webサイト<a class="ulink" href="http://www.microsoft.com/windows/sfu/" target="_top">ダウンロード</a>		から自由にダウンロードできる。このツールをダウンロードする必要はあり、		以下のMicrosoftの手順に従ってインストールする。		</p></div><div class="sect3" title="IDMAP, Active Directory と AD4UNIX"><div class="titlepage"><div><div><h4 class="title"><a name="id2621325"></a>IDMAP, Active Directory と AD4UNIX</h4></div></div></div><p>		AD4UNIXツールの取得とインストールの手順は、		<a class="ulink" href="http://www.geekcomix.com/cgi-bin/classnotes/wiki.pl?LDAP01/An_Alternative_Approach" target="_top">		Geekcomix</a>		というWebサイトにある。		</p></div></div></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><code class="literal"><sup>[<a name="ftn.id2617270" href="#id2617270" class="literal">4</a>] </sup>DOMINICUS\FJones</code><code class="literal">FRANCISCUS\FJones</code><code class="literal">FJones</code></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="NetCommand.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="rights.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 13. リモートとローカル管理:Netコマンド </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 15. User Rights and Privileges</td></tr></table></div></body></html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Chapter�14.�&#35672;&#21029;&#24773;&#22577;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;(IDMAP)</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="&#20844;&#24335;&#12398;Samba 3.2.x HOWTO&#12392;&#12522;&#12501;&#12449;&#12524;&#12531;&#12473;&#12460;&#12452;&#12489;"><link rel="up" href="optional.html" title="Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;"><link rel="prev" href="NetCommand.html" title="Chapter�13.�&#12522;&#12514;&#12540;&#12488;&#12392;&#12525;&#12540;&#12459;&#12523;&#31649;&#29702;:Net&#12467;&#12510;&#12531;&#12489;"><link rel="next" href="rights.html" title="Chapter�15.�User Rights and Privileges"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter�14.�&#35672;&#21029;&#24773;&#22577;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;(IDMAP)</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="NetCommand.html">Prev</a>�</td><th width="60%" align="center">Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;</th><td width="20%" align="right">�<a accesskey="n" href="rights.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter�14.�&#35672;&#21029;&#24773;&#22577;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;(IDMAP)"><div class="titlepage"><div><div><h2 class="title"><a name="idmapper"></a>Chapter�14.�&#35672;&#21029;&#24773;&#22577;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;(IDMAP)</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>&gt;</code></p></div></div></div></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="idmapper.html#id2617614">Samba&#12469;&#12540;&#12496;&#12398;&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12392;IDMAP</a></span></dt><dd><dl><dt><span class="sect2"><a href="idmapper.html#id2617642">&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2617713">&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12363;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2618805">&#12503;&#12521;&#12452;&#12510;&#12522;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2619061">&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;</a></span></dt></dl></dd><dt><span class="sect1"><a href="idmapper.html#id2619141">IDMAP&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#20351;&#29992;&#20363;</a></span></dt><dd><dl><dt><span class="sect2"><a href="idmapper.html#id2619206">&#35215;&#23450;&#20516;&#12398;Winbind TDB</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2619974">IDMAP_RID&#12434;&#20351;&#12358;Winbind</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2620611">Winbind&#12434;&#20351;&#12387;&#12383;IDMAP&#12487;&#12540;&#12479;&#12398;LDAP&#12408;&#12398;&#26684;&#32013;</a></span></dt><dt><span class="sect2"><a href="idmapper.html#id2621246">RFC2307bis Schema&#25313;&#24373;&#12434;&#20351;&#12387;&#12383;ADS&#12363;&#12425;&#12398;IDMAP&#12392;NSS&#12395;&#23550;&#12377;&#12427;LDAP&#12398;&#20351;&#29992;</a></span></dt></dl></dd></dl></div><p>
+<a class="indexterm" name="id2617287"></a>
+<a class="indexterm" name="id2617294"></a>
+<a class="indexterm" name="id2617300"></a>
+<a class="indexterm" name="id2617307"></a>
+<a class="indexterm" name="id2617317"></a>
+<a class="indexterm" name="id2617323"></a>
+<a class="indexterm" name="id2617330"></a>
+Microsoft Windows &#12458;&#12506;&#12524;&#12540;&#12486;&#12451;&#12531;&#12464;&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;Samba&#12434;&#23455;&#35013;&#12375;&#12383;OS&#12392;&#12398;&#38291;&#12391;&#12398;&#30456;&#20114;&#36939;&#29992;&#24615;&#12434;
+&#34892;&#12358;&#12383;&#12417;&#12395;&#12289;&#38627;&#12375;&#12356;&#21839;&#38988;&#12434;&#35201;&#27714;&#12375;&#12390;&#12367;&#12427;&#12392;&#12356;&#12358;&#12356;&#12367;&#12388;&#12363;&#12398;&#29305;&#24500;&#12364;&#12354;&#12427;&#12290;&#12371;&#12398;&#31456;&#12391;&#12399;&#12289;
+Samba&#12469;&#12540;&#12496;&#12434;Microsoft Windows&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#29872;&#22659;&#12395;&#32113;&#21512;&#12377;&#12427;&#12383;&#12417;&#12398;&#38627;&#21839;&#12398;1&#12388;&#12434;&#35299;&#27770;&#12377;&#12427;&#12383;&#12417;&#12395;
+&#20351;&#12358;&#12289;Samba-3(&#12496;&#12540;&#12472;&#12519;&#12531; 3.0.8&#20197;&#38477;)&#12398;&#12513;&#12459;&#12491;&#12474;&#12512;&#12395;&#12388;&#12356;&#12390;&#26126;&#31034;&#30340;&#12395;&#35500;&#26126;&#12377;&#12427;&#12290;&#12371;&#12398;&#31456;&#12391;&#12399;&#12289;
+Windows&#12398;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#35672;&#21029;&#23376;(SID)&#12434;UNIX&#12398;UID&#12392;GID&#12395;&#12388;&#12356;&#12390;&#12398;&#35672;&#21029;&#24773;&#22577;&#12510;&#12483;&#12500;&#12531;&#12464;(IDMAP)
+&#12395;&#12388;&#12356;&#12390;&#35500;&#26126;&#12377;&#12427;&#12290;
+</p><p>
+&#12356;&#12429;&#12356;&#12429;&#12394;&#22580;&#38754;&#12395;&#12362;&#12356;&#12390;&#21313;&#20998;&#12395;&#36969;&#29992;&#20986;&#26469;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12383;&#12417;&#12289;&#21508;&#21487;&#33021;&#12394;Samba&#12398;&#37197;&#24067;&#12479;&#12452;&#12503;&#12395;
+&#12388;&#12356;&#12390;&#35299;&#35500;&#12434;&#34892;&#12358;&#12290;&#12371;&#12428;&#12399;&#12289;&#12393;&#12398;&#12424;&#12358;&#12395;IDMAP&#27231;&#33021;&#12364;&#23455;&#35013;&#12373;&#12428;&#12383;&#12363;&#12395;&#12388;&#12356;&#12390;&#12398;&#27010;&#35201;&#12395;&#12424;&#12387;&#12390;
+&#12501;&#12457;&#12525;&#12540;&#12373;&#12428;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2617362"></a>
+<a class="indexterm" name="id2617370"></a>
+<a class="indexterm" name="id2617377"></a>
+<a class="indexterm" name="id2617384"></a>
+IDMAP&#27231;&#33021;&#12399;&#12289;&#35079;&#25968;&#12398;Samba&#12469;&#12540;&#12496;(&#12414;&#12383;&#12399;Samba&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;)&#12364;&#12489;&#12513;&#12452;&#12531;&#20013;&#12391;
+&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12395;&#37325;&#35201;&#12391;&#12354;&#12427;&#12290;&#21336;&#19968;&#12398;Samba&#12469;&#12540;&#12496;&#12395;&#12362;&#12356;&#12390;&#12399;&#12289;IDMAP&#22522;&#30436;
+&#12395;&#12388;&#12356;&#12390;&#12399;&#20313;&#12426;&#27671;&#12395;&#12363;&#12369;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;&#12290;&#26082;&#23450;&#20516;&#12395;&#12362;&#12369;&#12427;Samba&#12398;&#21205;&#20316;&#12399;&#12411;&#12392;&#12435;&#12393;
+&#12398;&#22580;&#21512;&#12289;&#21313;&#20998;&#12395;&#20351;&#12360;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#35079;&#25968;&#12398;Samba&#12469;&#12540;&#12496;&#12364;&#20351;&#12431;&#12428;&#12427;&#22580;&#21512;&#12289;&#12354;&#12427;&#12469;&#12540;&#12496;&#12363;&#12425;
+&#21029;&#12398;&#12469;&#12540;&#12496;&#12395;&#12487;&#12540;&#12479;&#12434;&#31227;&#21205;&#12377;&#12427;&#26178;&#12395;&#12399;&#12375;&#12400;&#12375;&#12400;&#12371;&#12428;&#12364;&#24517;&#35201;&#12391;&#12289;&#12381;&#12428;&#12399;&#12420;&#12387;&#12363;&#12356;&#20107;&#12364;&#22987;&#12414;&#12427;
+&#25152;&#12391;&#12418;&#12354;&#12427;!
+</p><p>
+<a class="indexterm" name="id2617417"></a>
+<a class="indexterm" name="id2617423"></a>
+<a class="indexterm" name="id2617429"></a>
+<a class="indexterm" name="id2617436"></a>
+<a class="indexterm" name="id2617443"></a>
+<a class="indexterm" name="id2617450"></a>
+<a class="indexterm" name="id2617457"></a>
+<a class="indexterm" name="id2617465"></a>
+LDAP&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#20013;&#12395;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12450;&#12459;&#12454;&#12531;&#12488;&#24773;&#22577;&#12364;&#26684;&#32013;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;&#12377;&#12409;&#12390;&#12398;&#12469;&#12540;&#12496;&#12399;
+&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12395;&#23550;&#12375;&#12390;&#19968;&#36011;&#12375;&#12383;UID&#12392;GID&#12434;&#20351;&#12358;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;NSS&#12392;nss_ldap&#12484;&#12540;&#12523;
+&#12434;&#20351;&#12358;&#12371;&#12392;&#12391;&#20986;&#26469;&#12427;&#12290;Samba&#12399;&#12525;&#12540;&#12459;&#12523;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#12415;&#12434;&#20351;&#12358;&#12424;&#12358;&#12395;&#35373;&#23450;&#20986;&#26469;&#12289;&#12381;&#12398;&#22580;&#21512;&#12289;IDMAP
+&#12391;&#12398;&#21839;&#38988;&#12364;&#30330;&#29983;&#12377;&#12427;&#31684;&#22258;&#12399;&#33509;&#24178;&#23569;&#12394;&#12367;&#12394;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;&#12469;&#12540;&#12496;&#12364;&#21336;&#19968;&#12398;&#12489;&#12513;&#12452;&#12531;&#12395;&#23646;&#12375;&#12390;&#12356;&#12390;&#12289;
+&#12489;&#12513;&#12452;&#12531;&#38291;&#12398;&#20449;&#38972;&#38306;&#20418;&#12364;&#24517;&#35201;&#12394;&#12356;&#26178;&#12395;&#26377;&#21177;&#12395;&#21205;&#20316;&#12377;&#12427;&#12290;&#21029;&#12398;&#35328;&#12356;&#26041;&#12434;&#12377;&#12427;&#12392;&#12289;&#12418;&#12375;&#12418;Samba
+&#12469;&#12540;&#12496;&#12364;NT4&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12363;ADS&#12398;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12391;&#12354;&#12427;&#22580;&#21512;&#12363;&#12289;&#19981;&#24942;&#12398;&#12463;&#12525;&#12473;&#12458;&#12540;&#12496;&#12364;
+&#12394;&#12356;&#12424;&#12358;&#12395;&#12289;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#21517;&#21069;&#31354;&#38291;&#12434;&#20445;&#25345;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#22580;&#21512;&#12289;(&#12377;&#12394;&#12431;&#12385;&#12289;&#12518;&#12540;&#12470;
+<code class="literal">DOMINICUS\FJones</code>&#12399;<code class="literal">FRANCISCUS\FJones</code>&#12392;&#12356;&#12358;
+&#12518;&#12540;&#12470;&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#12522;&#12477;&#12540;&#12473;&#12408;&#12398;&#12450;&#12463;&#12475;&#12473;&#12364;&#20986;&#26469;&#12394;&#12356;&#12424;&#12358;&#12395;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;)
+<sup>[<a name="id2617515" href="#ftn.id2617515" class="footnote">4</a>]</sup>&#12463;&#12525;&#12540;&#12474;&#12377;&#12427;&#35430;&#12415;&#12399;&#12289;
+IDMAP&#27231;&#33021;&#12364;&#35373;&#23450;&#12373;&#12428;&#12390;&#12356;&#12427;&#12392;&#12356;&#12358;&#26041;&#27861;&#12395;&#23550;&#12375;&#12390;&#25552;&#20379;&#12373;&#12428;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+</p><p>
+<a class="indexterm" name="id2617545"></a>
+<a class="indexterm" name="id2617551"></a>
+<a class="indexterm" name="id2617558"></a>
+<a class="indexterm" name="id2617565"></a>
+<a class="indexterm" name="id2617571"></a>
+<a class="indexterm" name="id2617578"></a>
+IDMAP&#12398;&#20351;&#29992;&#12399;&#12289;Samba&#12469;&#12540;&#12496;&#12364;&#19968;&#12388;&#20197;&#19978;&#12398;&#12489;&#12513;&#12452;&#12531;&#12363;&#12425;&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12414;&#12383;&#12399;&#12469;&#12540;&#12496;&#12395;&#12424;&#12387;&#12390;
+&#12450;&#12463;&#12475;&#12473;&#12373;&#12428;&#12427;&#22580;&#21512;&#12395;&#37325;&#35201;&#12391;&#12354;&#12426;&#12289;&#12381;&#12398;&#12424;&#12358;&#12394;&#22580;&#21512;&#12289;winbind&#12434;&#21205;&#20316;&#12373;&#12379;&#12427;&#12371;&#12392;&#12364;&#37325;&#35201;&#12391;&#12289;&#12381;&#12358;&#12377;&#12427;
+&#12392;&#12289;&#22806;&#37096;&#12398;SID&#12434;&#12525;&#12540;&#12459;&#12523;&#12398;UNIX UID&#12392;GID&#12395;&#35299;&#27770;(ID&#12510;&#12483;&#12500;&#12531;&#12464;)&#12377;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2617598"></a>
+IDMAP&#27231;&#33021;&#12399;&#12289;Samba&#36215;&#21205;&#26178;&#12395;<code class="literal">winbindd</code>&#12398;&#23455;&#34892;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12290;
+</p><div class="sect1" title="Samba&#12469;&#12540;&#12496;&#12398;&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12392;IDMAP"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2617614"></a>Samba&#12469;&#12540;&#12496;&#12398;&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12392;IDMAP</h2></div></div></div><p>
+<a class="indexterm" name="id2617623"></a>
+4&#12388;&#12398;&#22522;&#26412;&#30340;&#12394;&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12364;&#12354;&#12426;&#12289;&#12371;&#12428;&#12399;&#12289;
+ <a class="link" href="ServerType.html" title="Chapter�3.�&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12392;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12514;&#12540;&#12489;">&#12469;&#12540;&#12496;&#12479;&#12452;&#12503;&#12392;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12514;&#12540;&#12489;&#12398;&#31456;</a>&#12395;
+&#35500;&#26126;&#12364;&#12354;&#12427;&#12290;
+</p><div class="sect2" title="&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;"><div class="titlepage"><div><div><h3 class="title"><a name="id2617642"></a>&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;</h3></div></div></div><p>
+	<a class="indexterm" name="id2617650"></a>
+	<a class="indexterm" name="id2617657"></a>
+	<a class="indexterm" name="id2617664"></a>
+	&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;&#12399;Windows NT4&#12489;&#12513;&#12452;&#12531;&#12289;Windows 200x Active Directory
+	&#12489;&#12513;&#12452;&#12531;&#12363;Samba&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12394;&#12356;&#24418;&#12391;&#21205;&#12367;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2617680"></a>
+	<a class="indexterm" name="id2617686"></a>
+	<a class="indexterm" name="id2617693"></a>
+	&#23450;&#32681;&#12395;&#12424;&#12426;&#12289;&#12371;&#12428;&#12399;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12399;&#12525;&#12540;&#12459;&#12523;&#12395;&#20316;&#25104;/&#21046;&#24481;&#12373;&#12428;&#12289;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;
+	&#12518;&#12540;&#12470;&#12398;&#35672;&#21029;&#12399;&#12525;&#12540;&#12459;&#12523;&#12398;UNIX/Linux&#12518;&#12540;&#12470;&#12525;&#12464;&#12452;&#12531;&#24773;&#22577;&#12395;&#19968;&#33268;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+	&#12381;&#12398;&#12383;&#12417;&#12289;IDMAP&#27231;&#33021;&#12399;&#12411;&#12392;&#12435;&#12393;&#38306;&#24515;&#12434;&#25173;&#12358;&#24517;&#35201;&#12399;&#12394;&#12367;&#12289;winbind&#12418;&#19981;&#35201;&#12391;&#12289;IDMAP
+	&#27231;&#33021;&#12399;&#38306;&#36899;&#12375;&#12394;&#12356;&#12363;&#12289;&#33288;&#21619;&#12434;&#25345;&#12388;&#12409;&#12365;&#12418;&#12398;&#12391;&#12399;&#12394;&#12356;&#12290;
+	</p></div><div class="sect2" title="&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12363;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;"><div class="titlepage"><div><div><h3 class="title"><a name="id2617713"></a>&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12363;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;</h3></div></div></div><p>
+	<a class="indexterm" name="id2617722"></a>
+	<a class="indexterm" name="id2617728"></a>
+	<a class="indexterm" name="id2617735"></a>
+	<a class="indexterm" name="id2617742"></a>
+	<a class="indexterm" name="id2617748"></a>
+	Samba-3&#12399;Windows NT4 PDC&#12414;&#12383;&#12399;BDC&#12392;&#12375;&#12390;&#21205;&#20316;&#12391;&#12365;&#12289;&#12381;&#12428;&#12395;&#12424;&#12387;&#12390;&#12289;Windows NT4&#12392;
+	&#20114;&#25563;&#24615;&#12434;&#25345;&#12388;&#12489;&#12513;&#12452;&#12531;&#21046;&#24481;&#12503;&#12525;&#12488;&#12467;&#12523;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;Samba-3&#12398;&#12501;&#12449;&#12452;&#12523;&#12392;&#21360;&#21047;&#20849;&#26377;
+	&#12503;&#12525;&#12488;&#12467;&#12523;&#12399;&#12377;&#12409;&#12390;&#12398;&#12496;&#12540;&#12472;&#12519;&#12531;&#12398;Microsoft Windows&#35069;&#21697;&#12392;&#20114;&#25563;&#12364;&#12354;&#12427;&#12290;Windows NT4&#12399;
+	Microsoft Windows Active Directory&#12392;&#21516;&#27096;&#12289;&#24195;&#31684;&#22258;&#12395;Windows SID&#12434;&#20351;&#29992;&#12377;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2617769"></a>
+	<a class="indexterm" name="id2617776"></a>
+	<a class="indexterm" name="id2617782"></a>
+	Samba-3&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12392;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12399;Microsoft Windows SID&#12392;&#27491;&#12375;&#12367;&#30456;&#20114;&#12395;
+	&#20966;&#29702;&#12434;&#34892;&#12431;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;&#20837;&#21147;&#12373;&#12428;&#12383;SID&#12399;&#12525;&#12540;&#12459;&#12523;&#12398;UNIX UID&#12392;GID&#12395;&#22793;&#25563;&#12373;&#12428;
+	&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;Samba&#12469;&#12540;&#12496;&#12363;&#12425;&#20986;&#21147;&#12377;&#12427;&#24773;&#22577;&#12399;&#12289;&#36969;&#20999;&#12394;SID&#12391;Microsoft Windows
+	&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12392;&#12469;&#12540;&#12496;&#12395;&#25552;&#20379;&#12373;&#12428;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2617802"></a>
+	<a class="indexterm" name="id2617809"></a>
+	Windows&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12489;&#12513;&#12452;&#12531;(NT4&#24418;&#24335;&#12414;&#12383;&#12399;ADS)&#12398;&#12513;&#12531;&#12496;&#12391;&#12354;&#12427;Samba&#12399;&#12356;&#12429;&#12356;&#12429;&#12394;
+	&#26041;&#27861;&#12391;&#35672;&#21029;&#24773;&#22577;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12434;&#25201;&#12358;&#12424;&#12358;&#12395;&#35373;&#23450;&#20986;&#26469;&#12427;&#12290;&#20351;&#29992;&#12377;&#12427;&#12513;&#12459;&#12491;&#12474;&#12512;&#12399;&#12289;
+	<code class="literal">winbindd</code>&#12487;&#12540;&#12514;&#12531;&#12364;&#20351;&#12431;&#12428;&#12427;&#12363;&#21542;&#12363;&#12392;&#12393;&#12398;&#12424;&#12358;&#12395;winbind&#12398;
+	&#27231;&#33021;&#12364;&#35373;&#23450;&#12373;&#12428;&#12390;&#12356;&#12427;&#12363;&#12395;&#20381;&#23384;&#12377;&#12427;&#12290;&#35373;&#23450;&#12458;&#12503;&#12471;&#12519;&#12531;&#12398;&#31777;&#21336;&#12394;&#35500;&#26126;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+	</p><div class="variablelist"><dl><dt><span class="term">Winbind&#12364;&#20351;&#29992;&#12373;&#12428;&#12378;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12364;&#12525;&#12540;&#12459;&#12523;&#12398;&#22580;&#21512;: </span></dt><dd><p>
+				<a class="indexterm" name="id2617846"></a>
+				<a class="indexterm" name="id2617853"></a>
+				<a class="indexterm" name="id2617860"></a>
+				<a class="indexterm" name="id2617867"></a>
+				<a class="indexterm" name="id2617874"></a>
+				<a class="indexterm" name="id2617881"></a>
+				<a class="indexterm" name="id2617888"></a>
+				<a class="indexterm" name="id2617894"></a>
+				<a class="indexterm" name="id2617901"></a>
+				<a class="indexterm" name="id2617908"></a>
+				<a class="indexterm" name="id2617915"></a>
+				<code class="literal">winbindd</code>&#12364;&#20351;&#12431;&#12428;&#12394;&#12356;&#12392;&#12289;Samba
+				(<code class="literal">smbd</code>)&#12399;&#12289;&#20837;&#21147;&#12373;&#12428;&#12383;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12363;&#12425;&#12398;
+				&#24773;&#22577;&#12398;&#35672;&#21029;&#12434;&#35299;&#27770;&#12377;&#12427;&#12383;&#12417;&#12398;&#12289;&#22522;&#26412;&#30340;&#12394;UNIX/Linux&#12513;&#12459;&#12491;&#12474;&#12512;&#12434;
+				&#20351;&#29992;&#12377;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;&#12475;&#12483;&#12471;&#12519;&#12531;&#12475;&#12483;&#12488;&#12450;&#12483;&#12503;&#35201;&#27714;&#26178;&#12395;LoginID
+				(&#12450;&#12459;&#12454;&#12531;&#12488;&#21517;)&#12434;&#20351;&#12356;&#12289;getpwnam()&#12471;&#12473;&#12486;&#12512;&#12501;&#12449;&#12531;&#12463;&#12471;&#12519;&#12531;&#12467;&#12540;&#12523;
+				&#12395;&#12381;&#12428;&#12434;&#28193;&#12377;&#12290;&#12371;&#12398;&#21628;&#12403;&#20986;&#12375;&#12399;&#26368;&#36817;&#12398;UNIX/Linux&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;&#12399;
+				&#12493;&#12540;&#12512;&#12469;&#12540;&#12499;&#12473;&#12473;&#12452;&#12483;&#12481;(NSS)&#12513;&#12459;&#12491;&#12474;&#12512;&#12434;&#20351;&#12358;&#12424;&#12358;&#12395;&#23455;&#35013;&#12373;&#12428;&#12390;
+				&#12356;&#12427;&#12290;"&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12364;&#12525;&#12540;&#12459;&#12523;"&#12392;&#12356;&#12358;&#22580;&#21512;&#12289;&#12381;&#12428;&#12425;&#12399;
+				&#12525;&#12540;&#12459;&#12523;&#12471;&#12473;&#12486;&#12512;&#19978;&#12398;&#12289;<code class="filename">/etc/passwd</code>&#12392;
+				<code class="filename">/etc/group</code>&#12395;&#12381;&#12428;&#12382;&#12428;&#26684;&#32013;&#12373;&#12428;&#12427;&#12371;&#12392;&#12434;
+				&#24847;&#21619;&#12377;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2617971"></a>
+				<a class="indexterm" name="id2617978"></a>
+				&#12383;&#12392;&#12360;&#12400;&#12289;&#12518;&#12540;&#12470;<code class="literal">BERYLIUM\WambatW</code>&#12364;
+				Samba&#12469;&#12540;&#12496;&#12395;&#23550;&#12375;&#12390;&#25509;&#32154;&#12434;&#12458;&#12540;&#12503;&#12531;&#12375;&#12424;&#12358;&#12392;&#12377;&#12427;&#22580;&#21512;&#12289;
+				&#20837;&#21147;&#12373;&#12428;&#12427;SessionSetupAndX&#35201;&#27714;&#12399;&#12289;<code class="filename">/etc/passwd</code>
+				&#12501;&#12449;&#12452;&#12523;&#20013;&#12398;&#12518;&#12540;&#12470;<code class="literal">WambatW</code>&#12434;&#26908;&#32034;&#12377;&#12427;&#12383;&#12417;&#12395;
+				&#12471;&#12473;&#12486;&#12512;&#12434;&#21628;&#12403;&#20986;&#12377;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618011"></a>
+				<a class="indexterm" name="id2618018"></a>
+				<a class="indexterm" name="id2618025"></a>
+				<a class="indexterm" name="id2618032"></a>
+				<a class="indexterm" name="id2618038"></a>
+				<a class="indexterm" name="id2618045"></a>
+				<a class="indexterm" name="id2618052"></a>
+				<a class="indexterm" name="id2618058"></a>
+				&#12371;&#12398;&#35373;&#23450;&#12399;&#12289;&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;&#12289;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;
+				(NT4&#12414;&#12383;&#12399;ADS)&#12392;smbpasswd&#12414;&#12383;&#12399;tdbsam&#12505;&#12540;&#12473;&#12398;Samba passdb
+				&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12434;&#20351;&#12358;PDC&#12395;&#23550;&#12375;&#12390;&#20351;&#12358;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12290;
+				</p></dd><dt><span class="term">Winbind&#12399;&#20351;&#12431;&#12394;&#12356;&#12364;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12399;NSS&#32076;&#30001;&#12391;&#35299;&#27770;&#12377;&#12427;&#22580;&#21512;</span></dt><dd><p>
+				<a class="indexterm" name="id2618089"></a>
+				<a class="indexterm" name="id2618096"></a>
+				<a class="indexterm" name="id2618103"></a>
+				<a class="indexterm" name="id2618110"></a>
+				<a class="indexterm" name="id2618117"></a>
+				<a class="indexterm" name="id2618123"></a>
+				&#12371;&#12398;&#22580;&#21512;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12450;&#12459;&#12454;&#12531;&#12488;&#12399;&#12289;&#12525;&#12540;&#12459;&#12523;&#12450;&#12459;&#12454;&#12531;&#12488;&#12392;&#12375;&#12390;
+				&#21462;&#12426;&#25201;&#12431;&#12428;&#12427;&#12290;&#12525;&#12540;&#12459;&#12523;&#12450;&#12459;&#12454;&#12531;&#12488;&#12381;&#12398;&#12418;&#12398;&#12392;&#12383;&#12384;1&#12388;&#36949;&#12358;&#28857;&#12399;&#12289;
+				&#20849;&#26377;&#21487;&#33021;&#12394;&#12522;&#12509;&#12472;&#12488;&#12522;&#20869;&#12395;&#12450;&#12459;&#12454;&#12531;&#12488;&#12364;&#26684;&#32013;&#12373;&#12428;&#12427;&#12392;&#35328;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+				&#19968;&#33324;&#30340;&#12395;&#12399;&#12289;&#12371;&#12428;&#12399;&#12289;NIS&#24418;&#24335;&#12398;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12363;&#12289;&#12381;&#12358;&#12391;&#12394;&#12369;&#12428;&#12400;
+				LDAP&#20869;&#12395;&#12354;&#12427;&#12392;&#35328;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618144"></a>
+				<a class="indexterm" name="id2618151"></a>
+				<a class="indexterm" name="id2618158"></a>
+				<a class="indexterm" name="id2618165"></a>
+				<a class="indexterm" name="id2618171"></a>
+				<a class="indexterm" name="id2618178"></a>
+				<a class="indexterm" name="id2618184"></a>
+				&#12371;&#12398;&#35373;&#23450;&#12399;&#12289;&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;Samba&#12469;&#12540;&#12496;&#12289;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;
+				(NT4&#12414;&#12383;&#12399;ADS)&#12392;smbpasswd&#12414;&#12383;&#12399;tdbsam&#12505;&#12540;&#12473;&#12398;Samba passdb
+                                &#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12434;&#20351;&#12358;PDC&#12395;&#23550;&#12375;&#12390;&#20351;&#12358;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12290;
+				</p></dd><dt><span class="term">Winbind/NSS&#12392;&#26082;&#23450;&#20516;&#12398;&#12525;&#12540;&#12459;&#12523;&#12394;IDMAP&#12486;&#12540;&#12502;&#12523;&#12398;&#22580;&#21512;: </span></dt><dd><p>
+				<a class="indexterm" name="id2618215"></a>
+				<a class="indexterm" name="id2618222"></a>
+				<a class="indexterm" name="id2618229"></a>
+				<a class="indexterm" name="id2618236"></a>
+				Windows NT4&#12489;&#12513;&#12452;&#12531;&#12363;ADS&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12354;&#12427;&#21336;&#19968;&#12398;Samba
+				&#12469;&#12540;&#12496;&#12363;&#21336;&#32020;&#12394;Samba&#12469;&#12540;&#12496;&#12398;&#12415;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12469;&#12452;&#12488;&#12399;&#22810;&#25968;&#12354;&#12427;&#12290;
+				&#27161;&#28310;&#30340;&#12394;&#12469;&#12540;&#12496;&#12398;&#20363;&#12399;&#12289;&#12489;&#12513;&#12452;&#12531;&#29992;&#12398;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;
+				&#12363;&#12425;&#12450;&#12459;&#12454;&#12531;&#12488;&#35469;&#35388;&#24773;&#22577;&#12434;&#20837;&#25163;&#12377;&#12427;&#12383;&#12417;&#12395;winbind&#12434;&#20351;&#12358;&#12424;&#12358;&#12395;
+				&#35373;&#23450;&#12373;&#12428;&#12289;&#12525;&#12540;&#12459;&#12523;&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#25345;&#12383;&#12394;&#12356;&#12450;&#12503;&#12521;&#12452;&#12450;&#12531;&#12473;&#12398;
+				&#12424;&#12358;&#12394;&#12501;&#12449;&#12452;&#12523;&#12469;&#12540;&#12496;&#12391;&#12354;&#12427;&#12290;&#12489;&#12513;&#12452;&#12531;&#21046;&#24481;&#27231;&#33021;&#12399;&#12289;Samba-3&#12289;
+				Microsoft Windows NT4&#12363;Microsoft Windows Active Directory
+				&#12395;&#12424;&#12387;&#12390;&#25552;&#20379;&#12373;&#12428;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618257"></a>
+				<a class="indexterm" name="id2618263"></a>
+				<a class="indexterm" name="id2618270"></a>
+				<a class="indexterm" name="id2618277"></a>
+				<a class="indexterm" name="id2618284"></a>
+				Winbind&#12399;&#12289;&#12371;&#12398;&#29366;&#24907;&#12395;&#12362;&#12356;&#12390;&#12399;&#38750;&#24120;&#12395;&#26377;&#30410;&#12391;&#12354;&#12427;&#12290;&#24517;&#35201;&#12392;
+				&#12373;&#12428;&#12427;&#12377;&#12409;&#12390;&#12399;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#20013;&#12391;&#23450;&#32681;&#12377;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;
+				UID&#12392;GID&#12398;&#20516;&#12398;&#31684;&#22258;&#12391;&#12354;&#12427;&#12290;<code class="filename">/etc/nsswitch.conf</code>
+				&#12501;&#12449;&#12452;&#12523;&#12399;&#12289;&#20837;&#21147;&#12373;&#12428;&#12383;SID&#12434;&#36969;&#20999;&#12394;UID&#12392;GID&#12395;&#12510;&#12483;&#12500;&#12531;&#12464;&#12377;&#12427;
+				&#12383;&#12417;&#12398;&#12289;&#12377;&#12409;&#12390;&#12398;&#38627;&#12375;&#12356;&#20316;&#26989;&#12434;&#12371;&#12394;&#12377;<code class="literal">winbind</code>
+				&#12434;&#20351;&#12358;&#12383;&#12417;&#12395;&#35373;&#23450;&#12373;&#12428;&#12427;&#12290;SID&#12399;winbind&#12364;&#12381;&#12428;&#12434;&#21463;&#12369;&#21462;&#12427;&#38918;&#12391;
+				UID/GID&#12395;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618326"></a>
+				<a class="indexterm" name="id2618332"></a>
+				<a class="indexterm" name="id2618339"></a>
+				<a class="indexterm" name="id2618346"></a>
+				&#12371;&#12398;&#35373;&#23450;&#12399;&#12289;&#35079;&#25968;&#12398;Samba&#12469;&#12540;&#12496;&#12395;&#12414;&#12383;&#12364;&#12387;&#12390;UID/GID&#12392;&#12518;&#12540;&#12470;&#12420;
+				&#12464;&#12523;&#12540;&#12503;&#12392;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12364;&#21516;&#19968;&#12391;&#12354;&#12427;&#12371;&#12392;&#12364;&#27714;&#12417;&#12425;&#12428;&#12427;&#29872;&#22659;(&#12469;&#12452;&#12488;)
+				&#12391;&#12399;&#23455;&#29992;&#30340;&#12391;&#12394;&#12356;&#12290;&#12371;&#12398;&#26041;&#27861;&#12398;&#21361;&#38522;&#24615;&#12398;1&#12388;&#12399;&#12289;winbind&#27231;&#27083;&#12398;
+				IDMAP&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12501;&#12449;&#12452;&#12523;&#12364;&#22730;&#12428;&#12427;&#12363;&#21930;&#22833;&#12375;&#12383;&#22580;&#21512;&#12289;IDMAP
+				&#12501;&#12449;&#12452;&#12523;&#20462;&#27491;&#12289;&#20877;&#29983;&#25104;&#12375;&#12390;&#12418;&#12289;UID&#12420;GID&#12364;&#20197;&#21069;&#12392;&#30064;&#12394;&#12427;&#12518;&#12540;&#12470;&#12420;
+				&#12464;&#12523;&#12540;&#12503;&#12395;&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12390;&#12375;&#12414;&#12356;&#12289;&#32080;&#26524;&#12392;&#12375;&#12390;Samba&#12469;&#12540;&#12496;&#19978;&#12395;
+				&#26684;&#32013;&#12373;&#12428;&#12383;Windows&#12501;&#12449;&#12452;&#12523;&#12398;&#25152;&#26377;&#32773;&#12364;&#19981;&#27491;&#12395;&#12394;&#12387;&#12390;&#12375;&#12414;&#12358;&#21487;&#33021;&#24615;
+				&#12364;&#12354;&#12427;&#28857;&#12391;&#12354;&#12427;&#12290;
+				</p></dd><dt><span class="term">Winbind/NSS&#12364;RID&#12505;&#12540;&#12473;&#12398;IDMAP&#12398;&#22580;&#21512;: </span></dt><dd><p>
+				<a class="indexterm" name="id2618388"></a>
+				<a class="indexterm" name="id2618394"></a>
+				<a class="indexterm" name="id2618401"></a>
+				<a class="indexterm" name="id2618408"></a>
+				IDMAP_RID&#27231;&#33021;&#12399;Samba 3.0.8&#12363;&#12425;&#25552;&#20379;&#12373;&#12428;&#12383;&#12290;&#12371;&#12428;&#12399;&#12289;
+				ADS&#12473;&#12461;&#12540;&#12510;&#25313;&#24373;&#12434;&#36969;&#29992;&#12375;&#12394;&#12356;Microsoft ADS&#12434;&#20351;&#29992;&#12377;&#12427;
+				&#12371;&#12392;&#12395;&#38306;&#12431;&#12426;&#12364;&#12354;&#12426;&#12289;IDMAP&#12486;&#12540;&#12502;&#12523;&#12434;&#12513;&#12531;&#12486;&#12490;&#12531;&#12473;&#12377;&#12427;
+				&#30446;&#30340;&#12398;&#12383;&#12417;&#12395;LDAP&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12469;&#12540;&#12496;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12390;
+				&#12356;&#12394;&#12356;&#12289;&#12383;&#12367;&#12373;&#12435;&#12398;&#12469;&#12452;&#12488;&#12398;&#12383;&#12417;&#12395;&#20316;&#26989;&#12434;&#31777;&#21336;&#12395;&#12377;&#12427;&#12290;
+				&#12418;&#12375;&#12418;&#21336;&#19968;&#12398;ADS&#12489;&#12513;&#12452;&#12531;(&#12489;&#12513;&#12452;&#12531;&#12398;&#12501;&#12457;&#12524;&#12473;&#12488;&#12391;&#12399;&#12394;&#12367;
+				&#35079;&#25968;&#12398;&#12489;&#12513;&#12452;&#12531;&#12484;&#12522;&#12540;&#12391;&#12394;&#12356;)&#12391;&#12289;IDMAP&#12486;&#12540;&#12502;&#12523;&#21839;&#38988;&#12395;
+				&#23550;&#12375;&#12390;&#21336;&#32020;&#12394;&#12473;&#12486;&#12524;&#12458;&#12479;&#12452;&#12503;&#12398;&#35299;&#27770;&#26041;&#27861;&#12434;&#26395;&#12435;&#12391;&#12356;&#12427;&#12394;&#12425;&#12289;
+				IDMAP_RID&#12399;&#26126;&#12425;&#12363;&#12394;&#36984;&#25246;&#32930;&#12391;&#12354;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618441"></a>
+				<a class="indexterm" name="id2618448"></a>
+				<a class="indexterm" name="id2618455"></a>
+				<a class="indexterm" name="id2618462"></a>
+				<a class="indexterm" name="id2618468"></a>
+				<a class="indexterm" name="id2618475"></a>
+				<a class="indexterm" name="id2618481"></a>
+				<a class="indexterm" name="id2618489"></a>
+				&#12371;&#12398;&#27231;&#33021;&#12399;<em class="parameter"><code>idmap uid</code></em>&#12392;
+				<em class="parameter"><code>idmap gid</code></em>&#12398;&#12524;&#12531;&#12472;&#12434;&#21106;&#12426;&#24403;&#12390;&#12427;&#12371;&#12392;&#12434;
+				&#35201;&#27714;&#12375;&#12289;&#12381;&#12428;&#12364;&#12289;SID&#12398;&#30456;&#23550;&#35672;&#21029;&#23376;(RID)&#12398;&#37096;&#20998;&#12434;&#30452;&#25509;UID&#12398;&#12505;&#12540;&#12473;&#12395;RID&#12398;
+				&#20516;&#12434;&#36275;&#12375;&#12383;&#20998;&#12395;&#12289;&#33258;&#21205;&#12510;&#12483;&#12500;&#12531;&#12464;&#12377;&#12427;&#12383;&#12417;&#12398;&#12289;&#12371;&#12398;&#12524;&#12531;&#12472;&#12398;
+				&#12469;&#12502;&#12475;&#12483;&#12488;&#12434;&#21106;&#12426;&#24403;&#12390;&#12427;&#12371;&#12392;&#12364;&#21487;&#33021;&#12394;
+				<em class="parameter"><code>idmap uid</code></em>&#12398;&#31684;&#22258;&#20869;&#12391;&#12354;&#12427;&#12371;&#12392;&#12434;&#35201;&#27714;&#12377;&#12427;&#12290;
+				&#12383;&#12392;&#12360;&#12400;&#12289;&#12418;&#12375;&#12418;<em class="parameter"><code>idmap uid</code></em>&#12398;&#31684;&#22258;&#12364;
+				<code class="constant">1000-100000000</code>&#12391;&#12289;
+				<em class="parameter"><code>idmap backend = idmap_rid:DOMAIN_NAME=1000-50000000</code></em>
+				&#12391;&#12289;&#30330;&#29983;&#12375;&#12383;SID&#12364;
+				<code class="constant">S-1-5-21-34567898-12529001-32973135-1234</code>
+				&#12392;&#12356;&#12358;&#20516;&#12394;&#12425;&#12400;&#12289;&#32080;&#26524;&#12398;UID&#12399;<code class="constant">1000 + 1234 = 2234</code>&#12391;&#12354;&#12427;&#12290;
+				</p></dd><dt><span class="term">Winbind&#12392;NSS/LDAP&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12505;&#12540;&#12473;&#12398;IDMAP&#27231;&#33021;: </span></dt><dd><p>
+				<a class="indexterm" name="id2618561"></a>
+				<a class="indexterm" name="id2618568"></a>
+				<a class="indexterm" name="id2618575"></a>
+				<a class="indexterm" name="id2618582"></a>
+				<a class="indexterm" name="id2618588"></a>
+				<a class="indexterm" name="id2618595"></a>
+				<a class="indexterm" name="id2618602"></a>
+				<a class="indexterm" name="id2618608"></a>
+				&#12371;&#12398;&#35373;&#23450;&#12391;&#12399;&#12289;<code class="literal">winbind</code>&#12399;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#20869;&#12391;
+				&#25351;&#23450;&#12373;&#12428;&#12383;<em class="parameter"><code>idmap uid</code></em>&#12392;
+				<em class="parameter"><code>idmap gid</code></em>&#12398;&#31684;&#22258;&#12363;&#12425;SID&#12363;&#12425;UID&#12392;GID&#12395;
+				&#35299;&#27770;&#12434;&#34892;&#12358;&#12364;&#12289;&#12525;&#12540;&#12459;&#12523;&#12398;winbind IDMAP&#12486;&#12540;&#12502;&#12523;&#12434;&#20351;&#12358;&#20195;&#12431;&#12426;&#12395;&#12289;
+				&#12377;&#12409;&#12390;&#12398;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12510;&#12471;&#12531;(&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12392;&#12469;&#12540;&#12496;)&#12364;&#20849;&#36890;&#12398;
+				IDMAP&#12486;&#12540;&#12502;&#12523;&#12434;&#20849;&#26377;&#12391;&#12365;&#12427;&#12383;&#12417;&#12398;LDAP&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#20013;&#12395;&#26684;&#32013;&#12373;&#12428;&#12383;
+				&#12418;&#12398;&#12434;&#20351;&#12358;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618655"></a>
+				<a class="indexterm" name="id2618662"></a>
+				<a class="indexterm" name="id2618670"></a>
+				&#12377;&#12409;&#12390;&#12398;LDAP IDMAP&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12399;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#20013;&#12398;
+				<em class="parameter"><code>idmap backend</code></em>&#27231;&#33021;&#12364;LDAP&#12522;&#12480;&#12452;&#12524;&#12463;&#12488;&#12434;
+				&#27491;&#12375;&#12367;&#25201;&#12360;&#12394;&#12356;&#12383;&#12417;&#12289;&#12510;&#12473;&#12479;LDAP&#12469;&#12540;&#12496;&#12398;&#12415;&#12434;&#20351;&#12358;&#12392;&#12356;&#12358;&#12371;&#12392;&#12399;
+				&#37325;&#35201;&#12391;&#12354;&#12427;&#12290;
+				</p></dd><dt><span class="term">UNIX/Linux&#12398;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;ID&#12434;&#35299;&#27770;&#12377;&#12427;&#12383;&#12417;&#12395;NSS&#12434;&#20351;&#12358;winbind&#12398;&#22580;&#21512;: </span></dt><dd><p>
+				passdb &#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12392;&#12375;&#12390;&#12398;LDAP&#12398;&#20351;&#29992;&#12399;PDC&#12289;BDC&#12392;&#12489;&#12513;&#12452;&#12531;
+				&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12395;&#23550;&#12377;&#12427;&#20778;&#12428;&#12383;&#35299;&#12391;&#12354;&#12427;&#12290;&#12381;&#12428;&#12399;&#12289;UID&#12289;GID&#12392;
+				&#19968;&#33268;&#12375;&#12383;SID&#12364;&#12377;&#12409;&#12390;&#12398;&#12469;&#12540;&#12496;&#38291;&#12391;&#39318;&#23614;&#19968;&#36011;&#12375;&#12390;&#12356;&#12427;&#20107;&#12434;
+				&#20445;&#35388;&#12377;&#12427;&#12365;&#12385;&#12435;&#12392;&#12375;&#12383;&#35299;&#12391;&#12354;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618721"></a>
+				<a class="indexterm" name="id2618728"></a>
+				LDAP&#12505;&#12540;&#12473;&#12398;passdb&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#20351;&#29992;&#12399;&#12289;PADL nss_ldap
+				&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12363;&#21516;&#31561;&#21697;&#12434;&#35201;&#27714;&#12377;&#12427;&#12290;&#12371;&#12398;&#29366;&#27841;&#12398;&#22580;&#21512;&#12289;
+				winbind&#12399;&#22806;&#37096;&#12398;SID&#12289;&#12377;&#12394;&#12431;&#12385;&#12289;&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;
+				Windows&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12363;&#12425;&#12398;SID(&#12377;&#12394;&#12431;&#12385;&#12289;&#12371;&#12398;&#12489;&#12513;&#12452;&#12531;&#12398;
+				&#12513;&#12531;&#12496;&#12391;&#12394;&#12356;)&#12434;&#20182;&#12398;&#12489;&#12513;&#12452;&#12531;&#12363;&#12425;&#12398;SID&#12392;&#21516;&#12376;&#12424;&#12358;&#12395;
+				&#25201;&#12358;&#12383;&#12417;&#12395;&#20351;&#12431;&#12428;&#12427;&#12290;&#22806;&#37096;&#12398;UID/GID&#12399;&#12289;&#12525;&#12540;&#12459;&#12523;&#12398;IDMAP
+				&#12486;&#12540;&#12502;&#12523;&#12391;winbind&#12434;&#20351;&#12358;&#26178;&#12392;&#21516;&#12376;&#26041;&#27861;&#12391;&#27491;&#30906;&#12395;&#12289;
+				&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12383;&#31684;&#22258;(idmap uid&#12392;idmap gid)&#12395;&#12510;&#12483;&#12503;&#12373;&#12428;&#12427;&#12290;
+				</p><p>
+				<a class="indexterm" name="id2618749"></a>
+				<a class="indexterm" name="id2618755"></a>
+				<a class="indexterm" name="id2618762"></a>
+				nss_ldap&#12484;&#12540;&#12523;&#12475;&#12483;&#12488;&#12399;Active Directory&#32076;&#30001;&#12392;&#21516;&#27096;&#12395;&#12289;LDAP
+				&#32076;&#30001;&#12391;UID&#12392;GID&#12395;&#12450;&#12463;&#12475;&#12473;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#12431;&#12428;&#12427;&#12290;Active Directory
+				&#12434;&#20351;&#12358;&#12383;&#12417;&#12395;&#12289;AD4UNIX&#12473;&#12461;&#12540;&#12510;&#25313;&#24373;&#12363;&#12289;Microsoft Services for
+				UNIX&#12496;&#12540;&#12472;&#12519;&#12531;3.5&#12363;&#12381;&#12428;&#20197;&#38477;&#12398;&#12393;&#12385;&#12425;&#12363;&#12434;&#12434;&#12289;UNIX&#12450;&#12459;&#12454;&#12531;&#12488;
+				&#35469;&#35388;&#24773;&#22577;&#12434;&#31649;&#29702;&#12377;&#12427;&#12383;&#12417;&#12395;&#12289;ADS&#12473;&#12461;&#12540;&#12510;&#12434;	&#25313;&#24373;&#12377;&#12427;&#12383;&#12417;&#12395;
+				&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12390;ADS&#12473;&#12461;&#12540;&#12510;&#12434;&#22793;&#26356;&#12377;&#12427;&#12371;&#12392;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;
+				ADS&#12473;&#12461;&#12540;&#12510;&#12364;&#25313;&#24373;&#12373;&#12428;&#12427;&#12392;&#12289;Microsoft&#31649;&#29702;&#12467;&#12531;&#12477;&#12540;&#12523;(MMC)
+				&#12473;&#12490;&#12483;&#12503;&#12452;&#12531;&#12418;ADS&#12398;&#12518;&#12540;&#12470;&#12392;&#12467;&#12531;&#12500;&#12517;&#12540;&#12479;&#31649;&#29702;&#12484;&#12540;&#12523;&#12363;&#12425;
+				UNIX&#12398;&#35469;&#35388;&#24773;&#22577;&#12434;&#35373;&#23450;/&#31649;&#29702;&#12377;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12424;&#12358;&#12395;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;
+				&#12373;&#12428;&#12427;&#12290;&#21508;&#12450;&#12459;&#12454;&#12531;&#12488;&#12399;&#12289;UID&#12392;GID&#12487;&#12540;&#12479;&#12364;Samba&#12395;&#12424;&#12387;&#12390;&#20351;&#12431;&#12428;&#12427;
+				&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#21069;&#12395;&#12289;UNIX&#12391;&#26377;&#21177;&#12394;&#29366;&#24907;&#12392;&#20998;&#38626;&#12373;&#12428;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+				</p></dd></dl></div></div><div class="sect2" title="&#12503;&#12521;&#12452;&#12510;&#12522;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;"><div class="titlepage"><div><div><h3 class="title"><a name="id2618805"></a>&#12503;&#12521;&#12452;&#12510;&#12522;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;</h3></div></div></div><p>
+	<a class="indexterm" name="id2618814"></a>
+	<a class="indexterm" name="id2618821"></a>
+	<a class="indexterm" name="id2618827"></a>
+	<a class="indexterm" name="id2618834"></a>
+	Microsoft Windows&#12489;&#12513;&#12452;&#12531;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;&#12450;&#12459;&#12454;&#12531;&#12488;&#20316;&#25104;&#12398;&#12503;&#12525;&#12475;&#12473;&#12398;
+	&#19968;&#37096;&#12392;&#12375;&#12390;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;SID&#12434;&#29983;&#25104;&#12377;&#12427;&#12290;Windows&#12399;UNIX&#12398;UID&#12363;GID&#12398;&#12424;&#12358;&#12394;
+	&#27010;&#24565;&#12434;&#25345;&#12383;&#12394;&#12356;&#12290;&#12381;&#12398;&#20195;&#12431;&#12426;&#12289;&#22266;&#26377;&#12398;&#12479;&#12452;&#12503;&#12398;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#35352;&#36848;&#23376;&#12434;&#25345;&#12388;&#12290;Samba&#12364;
+	&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12392;&#12375;&#12390;&#20351;&#12431;&#12428;&#12427;&#26178;&#12289;&#21508;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12395;&#22266;&#26377;&#12398;SID&#12434;&#29983;&#25104;&#12377;&#12427;
+	&#25163;&#27573;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;Samba&#12399;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#20013;&#12391;&#25351;&#23450;&#12373;&#12428;&#12383;&#12505;&#12540;&#12473;&#12398;&#20516;&#12395;UID
+	&#12414;&#12383;&#12399;GID&#12434;2&#20493;&#12375;&#12383;&#20516;&#12434;&#36275;&#12377;&#12392;&#12356;&#12358;&#31639;&#34899;&#30340;&#12395;&#35336;&#31639;&#12373;&#12428;&#12383;RID&#12434;&#36275;&#12377;&#12510;&#12471;&#12531;&#12392;&#12489;&#12513;&#12452;&#12531;
+	SID&#12434;&#29983;&#25104;&#12377;&#12427;&#12290;&#12371;&#12398;&#26041;&#27861;&#12399;<span class="quote">&#8220;<span class="quote">&#31639;&#34899;&#30340;&#12510;&#12483;&#12500;&#12531;&#12464;</span>&#8221;</span>&#12392;&#21628;&#12400;&#12428;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2618868"></a>
+	&#20363;&#12434;&#12354;&#12370;&#12427;&#12392;&#12289;&#12418;&#12375;&#12418;&#12518;&#12540;&#12470;&#12398;UID&#12364;4321&#12398;&#22580;&#21512;&#12289;&#31639;&#34899;&#30340;&#12394;RID&#12505;&#12540;&#12473;&#12364;1000&#12384;&#12392;&#12377;&#12427;&#12392;&#12289;
+	RID&#12399;<code class="literal">1000 + (2 x 4321) = 9642</code>&#12392;&#12394;&#12427;&#12290;&#12381;&#12398;&#12383;&#12417;&#12289;&#12418;&#12375;&#12418;&#12489;&#12513;&#12452;&#12531;
+	SID&#12364;<code class="literal">S-1-5-21-89238497-92787123-12341112</code>&#12394;&#12425;&#12400;&#12289;
+	&#32080;&#26524;&#12398;SID&#12399;<code class="literal">S-1-5-21-89238497-92787123-12341112-9642</code>&#12392;&#12394;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2618903"></a>
+	<a class="indexterm" name="id2618910"></a>
+	<a class="indexterm" name="id2618916"></a>
+	<a class="indexterm" name="id2618923"></a>
+	&#21069;&#36848;&#12398;&#12479;&#12452;&#12503;&#12398;SID&#12399;Samba&#12395;&#12424;&#12387;&#12390;&#12289;&#33258;&#21205;&#30340;&#12394;&#27231;&#33021;&#12392;&#12375;&#12390;&#12381;&#12398;&#22580;&#12391;&#29983;&#25104;&#12373;&#12428;&#12427;&#12363;
+	(<em class="parameter"><code>passdb backend = [tdbsam | smbpasswd]</code></em>&#12434;&#20351;&#12387;&#12383;&#22580;&#21512;)&#12289;
+	&#12354;&#12427;&#12356;&#12399;LDAP&#12505;&#12540;&#12473;&#12398;ldapsam&#20013;&#12391;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#19968;&#37096;&#12392;&#12375;&#12390;&#24658;&#20037;&#30340;&#12395;&#26684;&#32013;&#12373;&#12428;&#12390;&#12418;
+	&#12424;&#12356;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2618946"></a>
+	<a class="indexterm" name="id2618953"></a>
+	<a class="indexterm" name="id2618959"></a>
+	<a class="indexterm" name="id2618966"></a>
+	<a class="indexterm" name="id2618974"></a>
+	<a class="indexterm" name="id2618980"></a>
+	<a class="indexterm" name="id2618987"></a>
+	<a class="indexterm" name="id2618994"></a>
+	<a class="indexterm" name="id2619001"></a>
+	ADS&#12399;UID&#12392;GID&#12398;&#12424;&#12358;&#12394;&#36861;&#21152;&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#23646;&#24615;&#12395;&#36969;&#24540;&#12377;&#12427;&#12383;&#12417;&#12395;&#25313;&#24373;&#12391;&#12365;&#12427;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;
+	&#12473;&#12461;&#12540;&#12510;&#12434;&#20351;&#12358;&#12290;Microsoft Service for UNIX 3.5&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12392;&#12289;&#36890;&#24120;&#12398;ADS
+	&#12473;&#12461;&#12540;&#12510;&#12434;UNIX&#12450;&#12459;&#12454;&#12531;&#12488;&#23646;&#24615;&#12434;&#21547;&#12416;&#12424;&#12358;&#12395;&#25313;&#24373;&#12377;&#12427;&#12290;&#12371;&#12428;&#12425;&#12399;&#12418;&#12385;&#12429;&#12435;&#36890;&#24120;&#12398;
+	ADS&#12450;&#12459;&#12454;&#12531;&#12488;&#31649;&#29702;&#12398;MMC&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12473;&#12490;&#12483;&#12503;&#12452;&#12531;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#31561;&#12375;&#12390;&#21029;&#36884;&#31649;&#29702;&#12373;&#12428;
+	&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2619021"></a>
+	<a class="indexterm" name="id2619028"></a>
+	<a class="indexterm" name="id2619035"></a>
+	<a class="indexterm" name="id2619042"></a>
+	&#12489;&#12513;&#12452;&#12531;&#20869;&#12391;&#20351;&#12431;&#12428;&#12427;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#35672;&#21029;&#23376;&#12399;&#12289;&#31478;&#21512;&#12434;&#36991;&#12369;&#12427;&#12383;&#12417;&#12392;&#23436;&#20840;&#24615;&#12434;&#20445;&#12388;&#12383;&#12417;&#12395;
+	&#31649;&#29702;&#12373;&#12428;&#12397;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;NT4&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12486;&#12461;&#12473;&#12488;&#20013;&#12391;&#12289;PDC&#12399;&#12377;&#12409;&#12390;&#12398;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;
+	&#35469;&#35388;&#24773;&#22577;&#12398;&#12289;&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;(BDC)&#12408;&#12398;&#37197;&#24067;&#12434;&#31649;&#29702;&#12377;&#12427;&#12290;&#29694;&#26178;&#28857;&#12391;&#12289;
+	&#12381;&#12398;&#12424;&#12358;&#12394;&#24773;&#22577;&#12398;&#12383;&#12417;&#12395;&#36969;&#12375;&#12383;Samba&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12398;passdb&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12399;&#12289;
+	LDAP&#20013;&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#12415;&#12391;&#12354;&#12427;&#12290;
+	</p></div><div class="sect2" title="&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;"><div class="titlepage"><div><div><h3 class="title"><a name="id2619061"></a>&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;</h3></div></div></div><p>
+	<a class="indexterm" name="id2619070"></a>
+	<a class="indexterm" name="id2619076"></a>
+	<a class="indexterm" name="id2619084"></a>
+	<a class="indexterm" name="id2619091"></a>
+	<a class="indexterm" name="id2619097"></a>
+	<a class="indexterm" name="id2619104"></a>
+	<a class="indexterm" name="id2619111"></a>
+	&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20013;&#12398;&#24773;&#22577;&#12398;&#22793;&#26356;&#12399;BDC&#12363;&#12425;PDC&#12395;&#36865;&#12425;&#12428;&#12427;&#12290;PDC&#12398;&#12415;&#12364;
+	&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#23550;&#12375;&#12390;&#26360;&#12365;&#36796;&#12416;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+	</p><p>
+	IDMAP&#12398;&#24773;&#22577;&#12399;&#12289;&#12377;&#12409;&#12390;&#12398;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12364;&#12510;&#12473;&#12479;(&#26360;&#12365;&#36796;&#12415;&#21487;&#33021;&#12394;)LDAP&#12469;&#12540;&#12496;&#12395;
+	&#23550;&#12375;&#12390;&#12450;&#12463;&#12475;&#12473;&#21487;&#33021;&#12391;&#12354;&#12427;&#38480;&#12426;&#12289;LDAP&#12469;&#12540;&#12496;&#12395;&#30452;&#25509;&#26360;&#12365;&#36796;&#12417;&#12427;&#12290;Samba-3&#12399;&#29694;&#26178;&#28857;&#12391;
+	IDMAP&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#20013;&#12391;LDAP&#12522;&#12480;&#12452;&#12524;&#12463;&#12488;&#12434;&#25201;&#12360;&#12394;&#12356;&#12290;&#12371;&#12428;&#12399;&#12289;IDMAP&#27231;&#33021;&#12434;&#12473;&#12524;&#12540;&#12502;
+	(&#35079;&#35069;&#12373;&#12428;&#12427;)LDAP&#12469;&#12540;&#12496;&#12391;&#20351;&#12358;&#12398;&#12399;&#21361;&#38522;&#12384;&#12392;&#12356;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+	</p></div></div><div class="sect1" title="IDMAP&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#20351;&#29992;&#20363;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2619141"></a>IDMAP&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#20351;&#29992;&#20363;</h2></div></div></div><p>
+<a class="indexterm" name="id2619150"></a>
+<a class="indexterm" name="id2619159"></a>
+<a class="indexterm" name="id2619169"></a>
+<a class="indexterm" name="id2619176"></a>
+<a class="indexterm" name="id2619182"></a>
+<code class="literal">winbind</code>&#12434;&#20351;&#12358;&#35504;&#12395;&#12392;&#12387;&#12390;&#12418;&#12289;&#19979;&#35352;&#12398;&#35373;&#23450;&#20363;&#12399;&#26377;&#29992;&#12391;&#12354;&#12427;&#12290;&#22810;&#12367;&#12398;&#22580;&#21512;&#12289;
+<code class="literal">winbind</code>&#12399;&#12289;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;(DMS)&#12392;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;
+(DMC)&#12434;&#20351;&#12358;&#12383;&#12417;&#12395;&#19968;&#30058;&#33288;&#21619;&#12364;&#12354;&#12427;&#20107;&#38917;&#12391;&#12354;&#12427;&#12290;
+</p><div class="sect2" title="&#35215;&#23450;&#20516;&#12398;Winbind TDB"><div class="titlepage"><div><div><h3 class="title"><a name="id2619206"></a>&#35215;&#23450;&#20516;&#12398;Winbind TDB</h3></div></div></div><p>
+	2&#12388;&#12398;&#20849;&#36890;&#30340;&#12394;&#35373;&#23450;&#12364;&#20351;&#12431;&#12428;&#12427;:
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+		&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#19978;&#12395;NT4 PDC(BDC&#12364;&#12354;&#12387;&#12390;&#12418;&#12394;&#12367;&#12390;&#12418;)&#12363;SambaPDC(BDC&#12364;&#12354;&#12387;&#12390;&#12418;&#12394;&#12367;&#12390;&#12418;)&#12364;&#12354;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12399; Microsoft Windows 200x ADS&#12434;&#20351;&#12387;&#12390;&#12356;&#12427;&#12290;
+		</p></li></ul></div><div class="sect3" title="NT4&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;(Samba&#12489;&#12513;&#12452;&#12531;&#12434;&#21547;&#12416;)"><div class="titlepage"><div><div><h4 class="title"><a name="id2619235"></a>NT4&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;(Samba&#12489;&#12513;&#12452;&#12531;&#12434;&#21547;&#12416;)</h4></div></div></div><p>
+	<a class="link" href="idmapper.html#idmapnt4dms" title="Example�14.1.�NT4&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.conf">NT4&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.con</a>&#12399;&#12289;NT4
+	 DMS&#12395;&#23550;&#12377;&#12427;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12398;&#12464;&#12525;&#12540;&#12496;&#12523;&#12475;&#12463;&#12471;&#12519;&#12531;&#37096;&#20998;&#12398;&#20363;&#12434;&#31034;&#12377;&#12290;
+	</p><div class="example"><a name="idmapnt4dms"></a><p class="title"><b>Example�14.1.�NT4&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># &#12464;&#12525;&#12540;&#12496;&#12523;&#12497;&#12521;&#12513;&#12540;&#12479;</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2619292"></a><em class="parameter"><code>workgroup = MEGANET2</code></em></td></tr><tr><td><a class="indexterm" name="id2619304"></a><em class="parameter"><code>security = DOMAIN</code></em></td></tr><tr><td><a class="indexterm" name="id2619315"></a><em class="parameter"><code>idmap uid = 10000-20000</code></em></td></tr><tr><td><a class="indexterm" name="id2619327"></a><em class="parameter"><code>idmap gid = 10000-20000</code></em></td></tr><tr><td><a class="indexterm" name="id2619339"></a><em class="parameter"><code>template primary group = "Domain Users"</code></em></td></tr><tr><td><a class="indexterm" name="id2619351"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr></table></div></div><br class="example-break"><p>
+	<a class="indexterm" name="id2619366"></a>
+	<a class="indexterm" name="id2619373"></a>
+	<code class="literal">winbind</code>&#12398;&#20351;&#29992;&#12399;&#12289;NSS&#12398;&#35373;&#23450;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12290;&#20197;&#19979;&#12434;&#21547;&#12416;&#12424;&#12358;&#12395;
+	<code class="filename">/etc/nsswitch.conf</code>&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#32232;&#38598;&#12377;&#12427;:
+</p><pre class="screen">
+...
+passwd: files winbind
+shadow: files winbind
+group:  files winbind
+...
+hosts:  files [dns] wins
+...
+</pre><p>
+	&#12507;&#12473;&#12488;&#12456;&#12531;&#12488;&#12522;&#12391;DNS&#12434;&#20351;&#12358;&#22580;&#21512;&#12399;&#12289;&#12469;&#12452;&#12488;&#19978;&#12391;DNS&#12364;&#20351;&#12431;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12395;&#12398;&#12415;&#34892;&#12358;&#12290;
+	</p><p>
+	DMS&#12434;&#20316;&#25104;&#12377;&#12427;&#12395;&#12399;&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#25163;&#38918;&#12434;&#36367;&#12416;:
+	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>
+		&#19978;&#35352;&#12398;&#35373;&#23450;&#12434;&#20351;&#12387;&#12390;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#20316;&#25104;&#12377;&#12427;&#12363;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 2"><p>
+		&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net rpc join -UAdministrator%password
+Joined domain MEGANET2.
+</pre><p>
+	<a class="indexterm" name="id2619447"></a>
+	&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#25104;&#21151;&#12377;&#12427;&#12363;&#12393;&#12358;&#12363;&#12399;&#12289;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12391;&#30906;&#35469;&#12391;&#12365;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net rpc testjoin
+Join to 'MIDEARTH' is OK
+</pre><p>
+		&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#22833;&#25943;&#12375;&#12383;&#22580;&#21512;&#12289;&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#12456;&#12521;&#12540;&#12513;&#12483;&#12475;&#12540;&#12472;&#12364;&#20986;&#21147;&#12373;&#12428;&#12427;:
+		<a class="indexterm" name="id2619474"></a>
+</p><pre class="screen">
+<code class="prompt">root# </code> net rpc testjoin
+[2004/11/05 16:34:12, 0] utils/net_rpc_join.c:net_rpc_join_ok(66)
+Join to domain 'MEGANET2' is not valid
+</pre><p>
+		</p></li><li class="step" title="Step 3"><p>
+		<a class="indexterm" name="id2619501"></a>
+		<a class="indexterm" name="id2619507"></a>
+		<a class="indexterm" name="id2619514"></a>
+		<code class="literal">nmbd, winbind,</code>&#12392;<code class="literal">smbd</code>&#12434;&#12371;&#12398;&#38918;&#30058;&#12391;&#36215;&#21205;&#12377;&#12427;&#12290;
+		</p></li></ol></div></div><div class="sect3" title="ADS&#12489;&#12513;&#12452;&#12531;"><div class="titlepage"><div><div><h4 class="title"><a name="id2619537"></a>ADS&#12489;&#12513;&#12452;&#12531;</h4></div></div></div><p>
+	<a class="indexterm" name="id2619545"></a>
+	<a class="indexterm" name="id2619552"></a>
+	ADS&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#25163;&#32154;&#12365;&#12399;&#12289;NT4&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12392;&#20284;&#12390;&#12356;&#12427;&#12364;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12399;
+	<a class="link" href="idmapper.html#idmapadsdms" title="Example�14.2.�ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.conf">ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.conf</a>&#12391;&#31034;&#12373;&#12428;&#12383;
+	&#20869;&#23481;&#12398;&#37096;&#20998;&#12364;&#30064;&#12394;&#12427;&#12290;
+	</p><div class="example"><a name="idmapadsdms"></a><p class="title"><b>Example�14.2.�ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12398;smb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># &#12464;&#12525;&#12540;&#12496;&#12523;&#12497;&#12521;&#12513;&#12540;&#12479;</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2619609"></a><em class="parameter"><code>workgroup = BUTTERNET</code></em></td></tr><tr><td><a class="indexterm" name="id2619620"></a><em class="parameter"><code>netbios name = GARGOYLE</code></em></td></tr><tr><td><a class="indexterm" name="id2619632"></a><em class="parameter"><code>realm = BUTTERNET.BIZ</code></em></td></tr><tr><td><a class="indexterm" name="id2619644"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2619656"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2619667"></a><em class="parameter"><code>idmap uid = 500-10000000</code></em></td></tr><tr><td><a class="indexterm" name="id2619679"></a><em class="parameter"><code>idmap gid = 500-10000000</code></em></td></tr><tr><td><a class="indexterm" name="id2619691"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2619703"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2619715"></a><em class="parameter"><code>printer admin = "BUTTERNET\Domain Admins"</code></em></td></tr></table></div></div><br class="example-break"><p>
+	<a class="indexterm" name="id2619730"></a>
+	<a class="indexterm" name="id2619737"></a>
+	<a class="indexterm" name="id2619744"></a>
+	<a class="indexterm" name="id2619751"></a>
+	<a class="indexterm" name="id2619758"></a>
+	<a class="indexterm" name="id2619764"></a>
+	<a class="indexterm" name="id2619771"></a>
+	ADS&#12398;DMS&#25805;&#20316;&#12399;kerberos(KRB)&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#35201;&#27714;&#12377;&#12427;&#12290;&#12371;&#12428;&#12434;&#21205;&#20316;&#12373;&#12379;&#12427;&#12383;&#12417;&#12289;
+	<code class="filename">krb5.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#35373;&#23450;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;&#27491;&#30906;&#12394;&#35201;&#27714;
+	&#20869;&#23481;&#12399;&#12289;&#12393;&#12398;&#12496;&#12540;&#12472;&#12519;&#12531;&#12398;MIT&#12363;Heimdal kerberos&#12364;&#20351;&#12431;&#12428;&#12390;&#12356;&#12427;&#12363;&#12395;&#20381;&#23384;&#12377;&#12427;&#12290;
+	&#29694;&#26178;&#28857;&#12391;MIT Kerberos&#12398;&#12496;&#12540;&#12472;&#12519;&#12531;&#12364;1.3.5&#12391;&#12289;Heimdal &#12364; 0.61&#12391;&#12354;&#12427;&#26368;&#26032;&#12398;
+	&#12496;&#12540;&#12472;&#12519;&#12531;&#12398;&#12415;&#12434;&#20351;&#12358;&#12371;&#12392;&#12434;&#25512;&#22888;&#12377;&#12427;&#12290;
+	</p><p>
+	DMS&#12434;&#20316;&#25104;&#12377;&#12427;&#12395;&#12399;&#20197;&#19979;&#12398;&#12473;&#12486;&#12483;&#12503;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;:
+	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>
+		&#19978;&#35352;&#12398;&#35373;&#23450;&#12391;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#20316;&#25104;&#12377;&#12427;&#12363;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 2"><p>
+		&#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;&#12289;<code class="filename">/etc/nsswitch.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#32232;&#38598;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 3"><p>
+		&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;:
+		<a class="indexterm" name="id2619842"></a>
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads join -UAdministrator%password
+Joined domain BUTTERNET.
+</pre><p>
+	&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#25104;&#21151;&#12377;&#12427;&#12363;&#22833;&#25943;&#12377;&#12427;&#12363;&#12399;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12391;&#30906;&#35469;&#20986;&#26469;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads testjoin
+Using short domain name -- BUTTERNET
+Joined 'GARGOYLE' to realm 'BUTTERNET.BIZ'
+</pre><p>
+	</p><p>
+	&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#19981;&#27491;&#12363;&#22833;&#25943;&#12377;&#12427;&#12363;&#12399;&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12391;&#26908;&#20986;&#12391;&#12365;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads testjoin
+GARGOYLE$@'s password:
+[2004/11/05 16:53:03, 0] utils/net_ads.c:ads_startup(186)
+  ads_connect: No results returned
+Join to domain is not valid
+</pre><p>
+		<a class="indexterm" name="id2619903"></a>
+		<a class="indexterm" name="id2619910"></a>
+		<a class="indexterm" name="id2619917"></a>
+		<a class="indexterm" name="id2619924"></a>
+		&#29305;&#23450;&#12398;&#12456;&#12521;&#12540;&#12513;&#12483;&#12475;&#12540;&#12472;&#12399;&#12289;&#30330;&#29983;&#12375;&#12383;&#19981;&#25104;&#21151;&#12398;&#12479;&#12452;&#12503;&#12395;&#20381;&#23384;&#12377;&#12427;&#12383;&#12417;&#12289;
+		&#19978;&#35352;&#12392;&#12399;&#30064;&#12394;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;<em class="parameter"><code>log level</code></em>&#12434;10&#12414;&#12391;
+		&#22679;&#12420;&#12375;&#12289;&#12486;&#12473;&#12488;&#12434;&#20877;&#23455;&#34892;&#12375;&#12289;&#22833;&#25943;&#12398;&#30495;&#12398;&#21407;&#22240;&#12434;&#25506;&#12427;&#12383;&#12417;&#12395;&#65380;&#29983;&#25104;&#12373;&#12428;&#12383;&#12525;&#12464;
+		&#12501;&#12449;&#12452;&#12523;&#12434;&#35519;&#12409;&#12427;&#12371;&#12392;&#12290;
+		</p></li><li class="step" title="Step 4"><p>
+		<code class="literal">nmbd</code>, <code class="literal">winbind</code>&#12392; <code class="literal">smbd</code>
+		&#12487;&#12540;&#12514;&#12531;&#12434;&#12371;&#12398;&#38918;&#30058;&#12391;&#36215;&#21205;&#12377;&#12427;&#12290;
+		</p></li></ol></div></div></div><div class="sect2" title="IDMAP_RID&#12434;&#20351;&#12358;Winbind"><div class="titlepage"><div><div><h3 class="title"><a name="id2619974"></a>IDMAP_RID&#12434;&#20351;&#12358;Winbind</h3></div></div></div><p>
+	<a class="indexterm" name="id2619983"></a>
+	<a class="indexterm" name="id2619990"></a>
+	<a class="indexterm" name="id2619996"></a>
+	<a class="indexterm" name="id2620003"></a>
+	<code class="literal">idmap_rid</code>&#27231;&#33021;&#12399;&#12289;&#12493;&#12452;&#12486;&#12451;&#12502;&#12394;winbind&#12392;&#12399;&#30064;&#12394;&#12426;&#12289;&#26032;&#12375;&#12356;
+	&#12484;&#12540;&#12523;&#12391;&#12289;Microsoft&#12398;SID&#12434;UNIX&#12398;UID&#12392;GID&#12395;&#12289;&#20104;&#28204;&#21487;&#33021;&#12394;&#12510;&#12483;&#12500;&#12531;&#12464;&#12434;&#20316;&#25104;&#12377;&#12427;&#12290;
+	Samba IDMAP&#27231;&#33021;&#12395;&#12371;&#12398;&#25163;&#27861;&#12434;&#23455;&#35013;&#12377;&#12427;&#19968;&#30058;&#12398;&#21033;&#28857;&#12399;&#12289;&#38598;&#20013;&#12375;&#12383;IDMAP&#12487;&#12540;&#12479;&#12434;&#20445;&#23384;&#12377;&#12427;
+	&#24517;&#35201;&#24615;&#12434;&#12394;&#12367;&#12377;&#12392;&#12356;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;&#19981;&#37117;&#21512;&#12394;&#28857;&#12399;&#12289;&#21336;&#19968;&#12398;ADS&#12489;&#12513;&#12452;&#12531;&#20869;&#12398;&#12415;&#12391;&#20351;&#12358;
+	&#20107;&#12364;&#12391;&#12365;&#12427;&#20107;&#12392;&#12289;&#12489;&#12513;&#12452;&#12531;&#38291;&#20449;&#38972;&#27231;&#33021;&#12392;&#12399;&#20114;&#25563;&#24615;&#12364;&#12394;&#12356;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2620035"></a>
+	<a class="indexterm" name="id2620041"></a>
+	<a class="indexterm" name="id2620049"></a>
+	<a class="indexterm" name="id2620056"></a>
+	&#12371;&#12398;SID&#12363;&#12425;UID/GID&#12408;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12395;&#12362;&#12369;&#12427;&#20195;&#26367;&#25163;&#27861;&#12399;idmap_rid&#12503;&#12521;&#12464;&#12452;&#12531;&#12434;
+	&#20351;&#12387;&#12390;&#23455;&#29694;&#12391;&#12365;&#12427;&#12290;&#12371;&#12398;&#12503;&#12521;&#12464;&#12452;&#12531;&#12399;&#12289;RID&#12395;&#25351;&#23450;&#12373;&#12428;&#12383;&#12505;&#12540;&#12473;&#20516;&#12434;&#21152;&#12360;&#12427;&#20107;&#12395;
+	&#12424;&#12387;&#12390;UID&#12392;GID&#12434;&#24341;&#12365;&#20986;&#12377;&#12383;&#12417;&#12395;&#12289;&#12518;&#12540;&#12470;SID&#12398;RID&#12434;&#20351;&#12358;&#12290;&#12371;&#12398;&#12518;&#12540;&#12486;&#12451;&#12522;&#12486;&#12451;&#12399;
+	&#35079;&#25968;&#12398;&#12489;&#12513;&#12452;&#12531;&#29872;&#22659;&#12392;&#12399;&#20114;&#25563;&#12364;&#12394;&#12356;&#12289;<span class="quote">&#8220;<span class="quote">allow trusted domains = No</span>&#8221;</span>
+	&#12497;&#12521;&#12513;&#12540;&#12479;&#12434;&#25351;&#23450;&#12377;&#12427;&#12371;&#12392;&#12434;&#35201;&#27714;&#12377;&#12427;&#12290;<em class="parameter"><code>idmap uid</code></em>&#12392;
+	<em class="parameter"><code>idmap gid</code></em>&#12398;&#31684;&#22258;&#12434;&#25351;&#23450;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2620094"></a>
+	<a class="indexterm" name="id2620101"></a>
+	idmap_rid&#27231;&#33021;&#12399;NT4/Samba&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;&#12392;Active Directory&#12391;&#20351;&#12360;&#12427;&#12290;&#12371;&#12428;&#12434;NT4
+	&#12489;&#12513;&#12452;&#12531;&#12391;&#20351;&#12358;&#12383;&#12417;&#12395;&#12399;&#12289;<em class="parameter"><code>realm</code></em>&#12497;&#12521;&#12513;&#12540;&#12479;&#12434;&#21547;&#12435;&#12391;&#12399;
+	&#12356;&#12369;&#12394;&#12356;&#12290;&#12373;&#12425;&#12395;&#12289;&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#12358;&#25163;&#27861;&#12399;&#12289;
+	<code class="constant">net rpc join</code>&#12434;&#20351;&#12358;&#12290;
+	</p><p>
+	ADS&#12489;&#12513;&#12452;&#12531;&#29872;&#22659;&#12391;&#12398;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12398;&#20363;&#12399;&#12289;
+	<a class="link" href="idmapper.html#idmapadsridDMS" title="Example�14.3.�idmap_rid&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12398;smb.conf">idmap_rid&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12398;smb.conf</a>
+	&#12391;&#12354;&#12427;&#12290;
+	</p><div class="example"><a name="idmapadsridDMS"></a><p class="title"><b>Example�14.3.�idmap_rid&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12398;smb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># &#12464;&#12525;&#12540;&#12496;&#12523;&#12497;&#12521;&#12513;&#12540;&#12479;</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2620176"></a><em class="parameter"><code>workgroup = KPAK</code></em></td></tr><tr><td><a class="indexterm" name="id2620187"></a><em class="parameter"><code>netbios name = BIGJOE</code></em></td></tr><tr><td><a class="indexterm" name="id2620199"></a><em class="parameter"><code>realm = CORP.KPAK.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620210"></a><em class="parameter"><code>server string = Office Server</code></em></td></tr><tr><td><a class="indexterm" name="id2620222"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2620234"></a><em class="parameter"><code>allow trusted domains = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620246"></a><em class="parameter"><code>idmap backend = idmap_rid:KPAK=500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620258"></a><em class="parameter"><code>idmap uid = 500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620270"></a><em class="parameter"><code>idmap gid = 500-100000000</code></em></td></tr><tr><td><a class="indexterm" name="id2620282"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2620294"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2620306"></a><em class="parameter"><code>winbind enum users = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620318"></a><em class="parameter"><code>winbind enum groups = No</code></em></td></tr><tr><td><a class="indexterm" name="id2620330"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2620342"></a><em class="parameter"><code>printer admin = "Domain Admins"</code></em></td></tr></table></div></div><br class="example-break"><p>
+	<a class="indexterm" name="id2620357"></a>
+	<a class="indexterm" name="id2620364"></a>
+	<a class="indexterm" name="id2620371"></a>
+	<a class="indexterm" name="id2620378"></a>
+	&#12383;&#12367;&#12373;&#12435;&#12398;&#12518;&#12540;&#12470;&#12364;&#23621;&#12427;&#22823;&#12365;&#12394;&#12489;&#12513;&#12452;&#12531;&#20013;&#12391;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#21015;&#25369;&#12377;&#12427;&#12371;&#12392;&#12434;&#28961;&#21177;&#12395;
+	&#12377;&#12427;&#12371;&#12392;&#12399;&#36991;&#12369;&#12425;&#12428;&#12394;&#12356;&#12290;&#20363;&#12360;&#12400;&#12289;Active Directory&#20013;&#12395;22000&#20154;&#12418;&#12398;&#12518;&#12540;&#12470;&#12364;&#23621;&#12427;
+	&#12469;&#12452;&#12488;&#12391;&#12289;winbind&#12505;&#12540;&#12473;&#12398;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#35299;&#27770;&#12399;&#12289;<code class="literal">winbind</code>&#12434;
+	&#26368;&#21021;&#12395;&#38283;&#22987;&#12377;&#12427;&#26178;&#28857;&#12363;&#12425;12&#20998;&#20197;&#19978;&#21033;&#29992;&#12391;&#12365;&#12394;&#12356;&#12290;&#21015;&#25369;&#12434;&#28961;&#21177;&#12395;&#12377;&#12427;&#12392;&#12289;&#30636;&#38291;&#30340;&#12395;&#21453;&#24540;&#12364;
+	&#36820;&#12427;&#12290;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#21015;&#25369;&#12434;&#28961;&#21177;&#12395;&#12377;&#12427;&#12392;&#35328;&#12358;&#12371;&#12392;&#12399;&#12289;<code class="literal">getent passwd</code>
+	&#12392;<code class="literal">getent group</code>&#12467;&#12510;&#12531;&#12489;&#12434;&#20351;&#12387;&#12390;&#12518;&#12540;&#12470;&#12363;&#12464;&#12523;&#12540;&#12503;&#12398;&#19968;&#35239;&#12434;
+	&#34920;&#31034;&#12377;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12394;&#12356;&#12392;&#35328;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;&#29305;&#23450;&#12398;&#12518;&#12540;&#12470;&#12398;&#12415;&#12434;&#26908;&#32034;&#12377;&#12427;&#12371;&#12392;&#12399;
+	&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#26041;&#27861;&#12391;&#21487;&#33021;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2620423"></a>
+	<a class="indexterm" name="id2620429"></a>
+	&#12371;&#12398;&#12484;&#12540;&#12523;&#12434;&#20351;&#29992;&#12377;&#12427;&#12395;&#12399;&#12289;&#12493;&#12452;&#12486;&#12451;&#12502;&#12394;winbind&#12398;&#20351;&#29992;&#12372;&#12392;&#12395;NSS&#12398;&#35373;&#23450;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12290;
+	&#20197;&#19979;&#12398;&#12497;&#12521;&#12513;&#12540;&#12479;&#12434;&#21547;&#12416;&#12424;&#12358;&#12395;<code class="filename">/etc/nsswitch.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;
+	&#32232;&#38598;&#12377;&#12427;&#12290;
+</p><pre class="screen">
+...
+passwd: files winbind
+shadow: files winbind
+group:  files winbind
+...
+hosts:  files wins
+...
+</pre><p>
+	</p><p>
+	&#20197;&#19979;&#12398;&#25163;&#38918;&#12391;idmap_rid&#27231;&#33021;&#12434;&#20351;&#12358;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;:
+	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>
+		&#19978;&#35352;&#12398;&#35373;&#23450;&#12391;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#20316;&#25104;&#12414;&#12383;&#12399;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 2"><p>
+		    &#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;<code class="filename">/etc/nsswitch.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#32232;&#38598;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 3"><p>
+		&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads join -UAdministrator%password
+Using short domain name -- KPAK
+Joined 'BIGJOE' to realm 'CORP.KPAK.COM'
+</pre><p>
+		</p><p>
+		<a class="indexterm" name="id2620516"></a>
+		&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#19981;&#27491;&#12414;&#12383;&#12399;&#22833;&#25943;&#12377;&#12427;&#12363;&#12399;&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12391;&#26908;&#20986;&#12391;&#12365;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads testjoin
+BIGJOE$@'s password:
+[2004/11/05 16:53:03, 0] utils/net_ads.c:ads_startup(186)
+  ads_connect: No results returned
+Join to domain is not valid
+</pre><p>
+		&#29305;&#23450;&#12398;&#12456;&#12521;&#12540;&#12513;&#12483;&#12475;&#12540;&#12472;&#12399;&#12289;&#30330;&#29983;&#12375;&#12383;&#21839;&#38988;&#12398;&#12479;&#12452;&#12503;&#12395;&#20381;&#23384;&#12377;&#12427;&#12383;&#12417;&#12289;&#19978;&#35352;&#12392;
+		&#30064;&#12394;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;<em class="parameter"><code>log level</code></em>&#12434;10&#12414;&#12391;&#12354;&#12370;&#12390;&#12289;
+		&#12486;&#12473;&#12488;&#12434;&#20877;&#23455;&#34892;&#12375;&#12289;&#22833;&#25943;&#12398;&#30495;&#12398;&#21407;&#22240;&#12434;&#35672;&#21029;&#12377;&#12427;&#12383;&#12417;&#12395;&#29983;&#25104;&#12375;&#12383;&#12525;&#12464;&#12501;&#12449;&#12452;&#12523;&#12434;
+		&#35519;&#12409;&#12427;&#12371;&#12392;&#12290;
+		</p></li><li class="step" title="Step 4"><p>
+		<code class="literal">nmbd</code>, <code class="literal">winbind</code>&#12392;<code class="literal">smbd</code>
+		&#12487;&#12540;&#12514;&#12531;&#12434;&#12371;&#12398;&#38918;&#30058;&#12391;&#36215;&#21205;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 5"><p>
+		&#12371;&#12398;&#35373;&#23450;&#12398;&#21205;&#20316;&#12399;&#20197;&#19979;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12391;&#26908;&#35388;&#12391;&#12365;&#12427;:
+		<a class="indexterm" name="id2620589"></a>
+</p><pre class="screen">
+<code class="prompt">root# </code> getent passwd administrator
+administrator:x:1000:1013:Administrator:/home/BE/administrator:/bin/bash
+</pre><p>
+		</p></li></ol></div></div><div class="sect2" title="Winbind&#12434;&#20351;&#12387;&#12383;IDMAP&#12487;&#12540;&#12479;&#12398;LDAP&#12408;&#12398;&#26684;&#32013;"><div class="titlepage"><div><div><h3 class="title"><a name="id2620611"></a>Winbind&#12434;&#20351;&#12387;&#12383;IDMAP&#12487;&#12540;&#12479;&#12398;LDAP&#12408;&#12398;&#26684;&#32013;</h3></div></div></div><p>
+	<a class="indexterm" name="id2620620"></a>
+	<a class="indexterm" name="id2620627"></a>
+	IDMAP&#12398;&#24773;&#22577;&#12434;LDAP&#20013;&#12395;&#26684;&#32013;&#12377;&#12427;&#12371;&#12392;&#12399;&#12289;NT4/Samba-3&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;&#12392;ADS&#12489;&#12513;&#12452;&#12531;&#12391;
+	&#21033;&#29992;&#12391;&#12365;&#12427;&#12290;OpenLDAP&#12399;&#12289;&#22810;&#12367;&#12398;&#27161;&#28310;&#28310;&#25312;&#12398;LDAP&#12469;&#12540;&#12496;&#12364;&#20351;&#12431;&#12428;&#12390;&#12356;&#12427;&#12395;&#12418;&#12363;&#12363;&#12431;&#12425;&#12378;&#12289;
+	&#12371;&#12398;&#30446;&#30340;&#12395;&#22810;&#29992;&#12373;&#12428;&#12390;&#12356;&#12427;LDAP&#12469;&#12540;&#12496;&#12391;&#12354;&#12427;&#12290;&#24467;&#12387;&#12390;&#12289;&#12371;&#12398;IDMAP&#35373;&#23450;&#12434;&#12289;Sun iPlanet
+	LDAP Server,Novell eDirectory, Microsoft ADS plus ADAM&#12420;&#12381;&#12398;&#20182;&#12391;&#20351;&#12358;&#12371;&#12392;&#12399;&#21487;&#33021;&#12391;
+	&#12354;&#12427;&#12290;
+	</p><p>
+	ADS&#12489;&#12513;&#12452;&#12531;&#12398;&#12383;&#12417;&#12398;&#20363;&#12399;&#12289;
+	<a class="link" href="idmapper.html#idmapldapDMS" title="Example�14.4.�LDAP&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;">LDAP&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;</a>&#12395;&#12354;&#12427;&#12290;
+	</p><div class="example"><a name="idmapldapDMS"></a><p class="title"><b>Example�14.4.�LDAP&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># &#12464;&#12525;&#12540;&#12496;&#12523;&#12497;&#12521;&#12513;&#12540;&#12479;</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2620689"></a><em class="parameter"><code>workgroup = SNOWSHOW</code></em></td></tr><tr><td><a class="indexterm" name="id2620701"></a><em class="parameter"><code>netbios name = GOODELF</code></em></td></tr><tr><td><a class="indexterm" name="id2620712"></a><em class="parameter"><code>realm = SNOWSHOW.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620724"></a><em class="parameter"><code>server string = Samba Server</code></em></td></tr><tr><td><a class="indexterm" name="id2620736"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2620748"></a><em class="parameter"><code>log level = 1 ads:10 auth:10 sam:10 rpc:10</code></em></td></tr><tr><td><a class="indexterm" name="id2620760"></a><em class="parameter"><code>ldap admin dn = cn=Manager,dc=SNOWSHOW,dc=COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620772"></a><em class="parameter"><code>ldap idmap suffix = ou=Idmap</code></em></td></tr><tr><td><a class="indexterm" name="id2620784"></a><em class="parameter"><code>ldap suffix = dc=SNOWSHOW,dc=COM</code></em></td></tr><tr><td><a class="indexterm" name="id2620796"></a><em class="parameter"><code>idmap backend = ldap:ldap://ldap.snowshow.com</code></em></td></tr><tr><td><a class="indexterm" name="id2620808"></a><em class="parameter"><code>idmap uid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2620820"></a><em class="parameter"><code>idmap gid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2620831"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2620843"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr></table></div></div><br class="example-break"><p>
+	<a class="indexterm" name="id2620859"></a>
+	NT4&#12414;&#12383;&#12399;Samba-3&#24418;&#24335;&#12398;&#12489;&#12513;&#12452;&#12531;&#12398;&#22580;&#21512;&#12289;<em class="parameter"><code>realm</code></em>&#12399;&#20351;&#12431;&#12378;&#12289;
+	&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#12358;&#12467;&#12510;&#12531;&#12489;&#12399;<code class="literal">net rpc join</code>&#12391;&#12354;&#12427;&#12290;
+	&#19978;&#35352;&#12398;&#20363;&#12399;&#12289;<a class="link" href="bugreport.html#dbglvl" title="&#12487;&#12496;&#12483;&#12464;&#12524;&#12505;&#12523;">&#12496;&#12464;&#12398;&#22577;&#21578;</a>&#12395;&#35352;&#36848;&#12373;&#12428;&#12390;&#12356;&#12427;&#39640;&#24230;&#12394;
+	&#12456;&#12521;&#12540;&#22577;&#21578;&#12398;&#12486;&#12463;&#12491;&#12483;&#12463;&#12418;&#31034;&#12375;&#12390;&#12356;&#12427;&#12290;
+	</p><p>
+	<a class="indexterm" name="id2620894"></a>
+	<a class="indexterm" name="id2620901"></a>
+	<a class="indexterm" name="id2620908"></a>
+	MIT kerberos&#12364;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;(&#12496;&#12540;&#12472;&#12519;&#12531; 1.3.4&#20197;&#38477;)&#12289;&#20197;&#19979;&#12398;&#20869;&#23481;&#12434;
+	&#21547;&#12416;&#12424;&#12358;&#12395;<code class="filename">/etc/krb5.conf</code>&#12434;&#32232;&#38598;&#12377;&#12427;:
+</p><pre class="screen">
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = SNOWSHOW.COM
+ dns_lookup_realm = false
+ dns_lookup_kdc = true
+
+[appdefaults]
+ pam = {
+   debug = false
+   ticket_lifetime = 36000
+   renew_lifetime = 36000
+   forwardable = true
+   krb4_convert = false
+ }
+</pre><p>
+	</p><p>
+	Heimdal kerberos&#12364;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;<code class="filename">/etc/krb5.conf</code>
+	&#12501;&#12449;&#12452;&#12523;&#12399;&#31354;&#30333;&#12395;&#12377;&#12427;&#12363;(&#12377;&#12394;&#12431;&#12385;&#20869;&#23481;&#12364;&#28961;&#12356;)&#12289;&#20197;&#19979;&#12398;&#20869;&#23481;&#12434;&#21547;&#12416;&#12424;&#12358;&#12395;&#32232;&#38598;&#12377;&#12427;:
+</p><pre class="screen">
+[libdefaults]
+        default_realm = SNOWSHOW.COM
+        clockskew = 300
+
+[realms]
+        SNOWSHOW.COM = {
+                kdc = ADSDC.SHOWSHOW.COM
+        }
+        
+[domain_realm]
+        .snowshow.com = SNOWSHOW.COM
+</pre><p>
+	</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+	Samba&#12399;&#12289;<code class="filename">/etc/krb5.conf</code>&#12501;&#12449;&#12452;&#12523;&#12364;&#12394;&#12356;&#26178;&#12399;Heimdal&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;
+	&#20351;&#12360;&#12394;&#12356;&#12290;&#12381;&#12428;&#12364;&#31354;&#30333;&#12398;&#12501;&#12449;&#12452;&#12523;&#12391;&#12354;&#12427;&#12394;&#12425;&#12400;&#12289;Heimdal kerberos&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#20351;&#29992;&#21487;&#33021;
+	&#12391;&#12354;&#12427;&#12290;Samba&#12364;Heimdal&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;&#20351;&#12358;&#26178;&#12395;&#12399;&#12289;&#33258;&#21205;&#30340;&#12395;&#12371;&#12428;&#12434;&#35211;&#12388;&#12369;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;
+	&#12398;&#12391;&#12289;&#29305;&#12395;&#20309;&#12418;&#35373;&#23450;&#12375;&#12394;&#12367;&#12390;&#12418;&#33391;&#12356;&#12290;
+	</p></div><p>
+	&#20197;&#19979;&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#21547;&#12416;&#12424;&#12358;&#12395;NSS&#21046;&#24481;&#12501;&#12449;&#12452;&#12523;<code class="filename">/etc/nsswitch.conf</code>
+	&#12434;&#32232;&#38598;&#12377;&#12427;:
+</p><pre class="screen">
+...
+passwd: files ldap
+shadow: files ldap
+group:  files ldap
+...
+hosts:  files wins
+...
+</pre><p>
+	</p><p>
+	<a class="indexterm" name="id2621006"></a>
+	<a class="indexterm" name="id2621013"></a>
+	&#12371;&#12398;&#35299;&#27770;&#26041;&#27861;&#12398;&#12383;&#12417;&#12395;&#12399;&#12289;<a class="ulink" href="http://www.padl.com" target="_top">PADL</a>&#12398;
+	<code class="literal">nss_ldap</code>&#12484;&#12540;&#12523;&#12475;&#12483;&#12488;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;&#24517;&#35201;&#12392;&#12373;&#12428;&#12427;&#24773;&#22577;&#12434;
+	<code class="filename">/etc/ldap.conf</code>&#12501;&#12449;&#12452;&#12523;&#12395;&#35373;&#23450;&#12377;&#12427;&#12371;&#12392;&#12290;&#20197;&#19979;&#12399;&#12289;
+	&#21205;&#20316;&#12377;&#12427;&#12501;&#12449;&#12452;&#12523;&#12398;&#20363;&#12391;&#12354;&#12427;:
+</p><pre class="screen">
+host    192.168.2.1
+base    dc=snowshow,dc=com
+binddn  cn=Manager,dc=snowshow,dc=com
+bindpw  not24get
+
+pam_password exop
+
+nss_base_passwd ou=People,dc=snowshow,dc=com?one
+nss_base_shadow ou=People,dc=snowshow,dc=com?one
+nss_base_group  ou=Groups,dc=snowshow,dc=com?one
+ssl     no
+</pre><p>
+	</p><p>
+	&#20197;&#19979;&#12398;&#25163;&#32154;&#12365;&#12399;&#21205;&#12367;&#12424;&#12358;&#12395;&#12377;&#12427;&#12383;&#12417;&#12398;&#35373;&#23450;&#25163;&#38918;&#12391;&#12354;&#12427;:
+	</p><div class="procedure"><ol class="procedure" type="1"><li class="step" title="Step 1"><p>
+		&#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#35373;&#23450;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 2"><p>
+		&#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;<code class="filename">/etc/krb5.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#20316;&#25104;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 3"><p>
+		&#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;<code class="filename">/etc/nsswitch.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#35373;&#23450;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 4"><p>
+		PADL nss_ldap&#12484;&#12540;&#12523;&#12475;&#12483;&#12488;&#12434;&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12375;&#12289;&#12467;&#12531;&#12497;&#12452;&#12523;&#12375;&#12289;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12290;
+		&#19978;&#35352;&#12391;&#31034;&#12373;&#12428;&#12383;&#12424;&#12358;&#12395;<code class="filename">/etc/ldap.conf</code>&#12501;&#12449;&#12452;&#12523;&#12434;&#35373;&#23450;&#12377;&#12427;&#12290;
+		</p></li><li class="step" title="Step 5"><p>
+		LDAP&#12469;&#12540;&#12496;&#12434;&#35373;&#23450;&#12375;&#12289;&#20197;&#19979;&#12398;LDIF&#12501;&#12449;&#12452;&#12523;&#12391;&#31034;&#12373;&#12428;&#12427;&#12424;&#12358;&#12394;&#12289;IDMAP&#12395;&#12424;&#12387;&#12390;
+		&#24517;&#35201;&#12392;&#12373;&#12428;&#12427;&#12488;&#12483;&#12503;&#12524;&#12505;&#12523;&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#36861;&#21152;(&#21021;&#26399;&#21270;)&#12377;&#12427;&#12290;
+</p><pre class="screen">
+dn: dc=snowshow,dc=com
+objectClass: dcObject
+objectClass: organization
+dc: snowshow
+o: The Greatest Snow Show in Singapore.
+description: Posix and Samba LDAP Identity Database
+
+dn: cn=Manager,dc=snowshow,dc=com
+objectClass: organizationalRole
+cn: Manager
+description: Directory Manager
+
+dn: ou=Idmap,dc=snowshow,dc=com
+objectClass: organizationalUnit
+ou: idmap
+</pre><p>
+		</p></li><li class="step" title="Step 6"><p>
+		Samba DMS&#12434;ADS&#12489;&#12513;&#12452;&#12531;&#12395;&#12289;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;&#20351;&#12387;&#12390;&#21442;&#21152;&#12373;&#12379;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> net ads testjoin
+Using short domain name -- SNOWSHOW
+Joined 'GOODELF' to realm 'SNOWSHOW.COM'
+</pre><p>
+		</p></li><li class="step" title="Step 7"><p>
+		&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;&#12289;Samba&#12398;<code class="filename">secrets.tdb</code>&#12501;&#12449;&#12452;&#12523;&#12395;
+		LDAP&#12469;&#12540;&#12496;&#12408;&#12398;&#12450;&#12463;&#12475;&#12473;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#26684;&#32013;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code> smbpasswd -w not24get
+</pre><p>
+		</p></li><li class="step" title="Step 8"><p>
+		<code class="literal">nmbd</code>, <code class="literal">winbind</code>&#12392;<code class="literal">smbd</code>
+		&#12487;&#12540;&#12514;&#12531;&#12434;&#12371;&#12398;&#38918;&#30058;&#12391;&#36215;&#21205;&#12377;&#12427;&#12290;
+		</p></li></ol></div><p>
+	<a class="indexterm" name="id2621226"></a>
+	&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#12364;&#25104;&#21151;&#12377;&#12427;&#12363;&#22833;&#25943;&#12377;&#12427;&#12363;&#12434;&#35672;&#21029;&#12377;&#12427;&#12383;&#12417;&#12289;&#12371;&#12398;&#31456;&#12398;&#22987;&#12417;&#12398;&#26041;&#12391;
+	&#32057;&#20171;&#12373;&#12428;&#12383;&#35386;&#26029;&#25163;&#32154;&#12365;&#12395;&#24467;&#12358;&#12371;&#12392;&#12290;&#22810;&#12367;&#12398;&#22580;&#21512;&#12289;&#22833;&#25943;&#12398;&#29702;&#30001;&#12364;&#20309;&#12418;&#31034;&#12373;&#12428;&#12394;&#12356;
+	&#12467;&#12510;&#12531;&#12489;&#12503;&#12525;&#12531;&#12503;&#12488;&#12398;&#38745;&#12363;&#12394;&#32080;&#26524;&#12395;&#12424;&#12387;&#12390;&#12289;&#22833;&#25943;&#12399;&#34920;&#31034;&#12373;&#12428;&#12427;&#12290;
+	</p></div><div class="sect2" title="RFC2307bis Schema&#25313;&#24373;&#12434;&#20351;&#12387;&#12383;ADS&#12363;&#12425;&#12398;IDMAP&#12392;NSS&#12395;&#23550;&#12377;&#12427;LDAP&#12398;&#20351;&#29992;"><div class="titlepage"><div><div><h3 class="title"><a name="id2621246"></a>RFC2307bis Schema&#25313;&#24373;&#12434;&#20351;&#12387;&#12383;ADS&#12363;&#12425;&#12398;IDMAP&#12392;NSS&#12395;&#23550;&#12377;&#12427;LDAP&#12398;&#20351;&#29992;</h3></div></div></div><p>
+	<a class="indexterm" name="id2621256"></a>
+	<a class="indexterm" name="id2621263"></a>
+	&#12371;&#12398;&#26041;&#27861;&#12399;&#12365;&#12428;&#12356;&#12394;&#12418;&#12398;&#12391;&#12399;&#12394;&#12356;&#12290;&#20197;&#19979;&#12391;&#25552;&#20379;&#12373;&#12428;&#12427;&#24773;&#22577;&#12399;&#25163;&#24341;&#12365;&#12398;&#12415;&#12391;&#12354;&#12426;&#12289;&#12363;&#12388;&#12289;
+	&#20840;&#12367;&#12418;&#12387;&#12390;&#19981;&#30906;&#12363;&#12391;&#23436;&#20840;&#12391;&#12399;&#12394;&#12356;&#12290;&#12371;&#12398;&#26041;&#27861;&#12399;&#21205;&#12367;&#12290;&#25968;&#22810;&#12367;&#12398;&#24040;&#22823;&#12469;&#12452;&#12488;&#12391;&#20351;&#29992;&#12373;&#12428;&#12289;
+	&#32784;&#12360;&#12425;&#12428;&#12427;&#12524;&#12505;&#12523;&#12398;&#12497;&#12501;&#12457;&#12540;&#12510;&#12531;&#12473;&#12434;&#25552;&#20379;&#12375;&#12390;&#12356;&#12427;&#12290;
+	</p><p>
+	<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12398;&#20363;&#12399;
+	<a class="link" href="idmapper.html#idmaprfc2307" title="Example�14.5.�NSS&#32076;&#30001;&#12398;RFC2307bis&#12473;&#12461;&#12540;&#12510;&#25313;&#24373;&#26085;&#20184;&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;">NSS&#32076;&#30001;&#12398;RFC2307bis&#12473;&#12461;&#12540;&#12510;&#25313;&#24373;&#26085;&#20184;&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;</a>
+	&#12395;&#12354;&#12427;&#12290;
+	</p><div class="example"><a name="idmaprfc2307"></a><p class="title"><b>Example�14.5.�NSS&#32076;&#30001;&#12398;RFC2307bis&#12473;&#12461;&#12540;&#12510;&#25313;&#24373;&#26085;&#20184;&#12434;&#20351;&#12358;ADS&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td># &#12464;&#12525;&#12540;&#12496;&#12523;&#12497;&#12521;&#12513;&#12540;&#12479;</td></tr><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td><a class="indexterm" name="id2621334"></a><em class="parameter"><code>workgroup = BOBBY</code></em></td></tr><tr><td><a class="indexterm" name="id2621345"></a><em class="parameter"><code>realm = BOBBY.COM</code></em></td></tr><tr><td><a class="indexterm" name="id2621357"></a><em class="parameter"><code>security = ADS</code></em></td></tr><tr><td><a class="indexterm" name="id2621368"></a><em class="parameter"><code>idmap uid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2621380"></a><em class="parameter"><code>idmap gid = 150000-550000</code></em></td></tr><tr><td><a class="indexterm" name="id2621392"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr><tr><td><a class="indexterm" name="id2621404"></a><em class="parameter"><code>winbind cache time = 5</code></em></td></tr><tr><td><a class="indexterm" name="id2621416"></a><em class="parameter"><code>winbind use default domain = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2621428"></a><em class="parameter"><code>winbind trusted domains only = Yes</code></em></td></tr><tr><td><a class="indexterm" name="id2621440"></a><em class="parameter"><code>winbind nested groups = Yes</code></em></td></tr></table></div></div><br class="example-break"><p>
+	<a class="indexterm" name="id2621455"></a>
+	DMS&#12399;&#36890;&#24120;&#12398;&#25163;&#38918;&#12391;&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;&#26356;&#12395;&#36861;&#21152;&#12391;&#12289;PADL nss_ldap
+	&#12484;&#12540;&#12523;&#12475;&#12483;&#12488;&#12398;&#12467;&#12531;&#12497;&#12452;&#12523;&#12392;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;&#12371;&#12398;&#12484;&#12540;&#12523;&#12434;
+	&#27083;&#31689;&#12377;&#12427;:
+</p><pre class="screen">
+./configure --enable-rfc2307bis --enable-schema-mapping
+make install
+</pre><p> 
+	</p><p>
+	<a class="indexterm" name="id2621480"></a>
+	<code class="filename">/etc/nsswitch.conf</code>&#12501;&#12449;&#12452;&#12523;&#20013;&#12395;&#12399;&#20197;&#19979;&#12398;&#20869;&#23481;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;:
+</p><pre class="screen">
+...
+passwd: files ldap
+shadow: files ldap
+group:  files ldap
+...
+hosts:  files wins
+...
+</pre><p>
+	</p><p>
+	<a class="indexterm" name="id2621505"></a>
+	<a class="indexterm" name="id2621512"></a>
+	<code class="filename">/etc/ldap.conf</code>&#12418;&#35373;&#23450;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;&#29305;&#23450;&#12398;&#35500;&#26126;&#12395;
+	&#12388;&#12356;&#12390;&#12399;&#12289;PADL&#12398;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12392;nss_ldap&#12398;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+	</p><p>
+	&#27425;&#12398;&#12473;&#12486;&#12483;&#12503;&#12391;&#12399;ADS&#12473;&#12461;&#12540;&#12510;&#12398;&#28310;&#20633;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;&#12371;&#12398;&#31456;&#12398;&#27531;&#12426;&#12398;&#37096;&#20998;&#12391;
+	&#31777;&#21336;&#12395;&#35500;&#26126;&#12377;&#12427;&#12290;
+	</p><div class="sect3" title="IDMAP, Active Directory&#12392;Microsoft&#12398; Services for UNIX 3.5"><div class="titlepage"><div><div><h4 class="title"><a name="id2621536"></a>IDMAP, Active Directory&#12392;Microsoft&#12398; Services for UNIX 3.5</h4></div></div></div><p>
+		<a class="indexterm" name="id2621546"></a>
+		Microsoft Windows Service for UNIX (SFU)&#12496;&#12540;&#12472;&#12519;&#12531;3.5&#12399;&#12289;Microsoft&#12398;
+		Web&#12469;&#12452;&#12488;<a class="ulink" href="http://www.microsoft.com/windows/sfu/" target="_top">&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;</a>
+		&#12363;&#12425;&#33258;&#30001;&#12395;&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12391;&#12365;&#12427;&#12290;&#12371;&#12398;&#12484;&#12540;&#12523;&#12434;&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12377;&#12427;&#24517;&#35201;&#12399;&#12354;&#12426;&#12289;
+		&#20197;&#19979;&#12398;Microsoft&#12398;&#25163;&#38918;&#12395;&#24467;&#12387;&#12390;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12290;
+		</p></div><div class="sect3" title="IDMAP, Active Directory &#12392; AD4UNIX"><div class="titlepage"><div><div><h4 class="title"><a name="id2621571"></a>IDMAP, Active Directory &#12392; AD4UNIX</h4></div></div></div><p>
+		AD4UNIX&#12484;&#12540;&#12523;&#12398;&#21462;&#24471;&#12392;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12398;&#25163;&#38918;&#12399;&#12289;
+		<a class="ulink" href="http://www.geekcomix.com/cgi-bin/classnotes/wiki.pl?LDAP01/An_Alternative_Approach" target="_top">
+		Geekcomix</a>
+		&#12392;&#12356;&#12358;Web&#12469;&#12452;&#12488;&#12395;&#12354;&#12427;&#12290;
+		</p></div></div></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><code class="literal"><sup>[<a name="ftn.id2617515" href="#id2617515" class="literal">4</a>] </sup>DOMINICUS\FJones</code><code class="literal">FRANCISCUS\FJones</code><code class="literal">FJones</code></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="NetCommand.html">Prev</a>�</td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right">�<a accesskey="n" href="rights.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter�13.�&#12522;&#12514;&#12540;&#12488;&#12392;&#12525;&#12540;&#12459;&#12523;&#31649;&#29702;:Net&#12467;&#12510;&#12531;&#12489;�</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">�Chapter�15.�User Rights and Privileges</td></tr></table></div></body></html>

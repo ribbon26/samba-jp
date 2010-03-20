@@ -1,1 +1,775 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 28. PAM ベースの分散型認証</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="公式のSamba 3.2.x HOWTOとリファレンスガイド"><link rel="up" href="optional.html" title="Part III. 詳細な設定方法"><link rel="prev" href="ProfileMgmt.html" title="Chapter 27. デスクトッププロファイルの管理"><link rel="next" href="integrate-ms-networks.html" title="Chapter 29. Microsoft Windows ネットワークへのSambaの統合"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 28. PAM ベースの分散型認証</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ProfileMgmt.html">Prev</a> </td><th width="60%" align="center">Part III. 詳細な設定方法</th><td width="20%" align="right"> <a accesskey="n" href="integrate-ms-networks.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter 28. PAM ベースの分散型認証"><div class="titlepage"><div><div><h2 class="title"><a name="pam"></a>Chapter 28. PAM ベースの分散型認証</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Stephen</span> <span class="surname">Langasek</span></h3><div class="affiliation"><div class="address"><p><code class="email"><<a class="email" href="mailto:vorlon@netexpress.net">vorlon@netexpress.net</a>></code></p></div></div></div></div><div><p class="pubdate">May 31, 2003</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="pam.html#id2687121">その機能と利点</a></span></dt><dt><span class="sect1"><a href="pam.html#id2687825">技術的な議論</a></span></dt><dd><dl><dt><span class="sect2"><a href="pam.html#id2687885">PAM 設定のための文法</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689138">システム設定の例</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689506"><code class="filename">smb.conf</code> の PAM 設定</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689602"><code class="filename">winbindd.so</code>を使った遠隔 CIFS 認証</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689736"><code class="filename">pam_smbpass.so</code> を使ったパスワードの同期</a></span></dt></dl></dd><dt><span class="sect1"><a href="pam.html#id2690202">よくあるエラー</a></span></dt><dd><dl><dt><span class="sect2"><a href="pam.html#id2690217">pam_winbind の問題</a></span></dt><dt><span class="sect2"><a href="pam.html#id2690332">Winbind がユーザとグループを解決してくれない</a></span></dt></dl></dd></dl></div><p><a class="indexterm" name="id2687033"></a><a class="indexterm" name="id2687040"></a><a class="indexterm" name="id2687047"></a><a class="indexterm" name="id2687053"></a>この章は、何らかの PAM が利用できる UNIX/Linux システムに対して Winbindベースの認証を導入する際の助けになるだろう。Winbind を使うと、いずれかのWindows NT ドメイン、Windows 200x の Active Directory ベースのドメイン、そして Samba ベースのドメイン環境において、ユーザレベルのアプリケーションアクセス認証を利用できるようになる。また、あなたの Samba 環境の設定に対する適切な PAM ベースのローカルホストアクセス制御にも役立つ。</p><p><a class="indexterm" name="id2687074"></a><a class="indexterm" name="id2687081"></a>PAM 経由の Winbind の設定方法を知ることに加え、さらに一般的な PAM 管理の可能性と、特に <code class="filename">pam_smbpass.so</code> のようなツールを導入して便利に使う方法も学ぶことができるだろう。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Winbind を使うのは、PAM 構成を単独で行うよりも敷居が高い。Winbind に関するより詳細な情報については<a class="link" href="winbind.html" title="Chapter 24. Winbind: ドメインアカウントの使用">Winbind: ドメインアカウントを使う</a>を参照されたい。</p></div><div class="sect1" title="その機能と利点"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2687121"></a>その機能と利点</h2></div></div></div><p><a class="indexterm" name="id2687129"></a><a class="indexterm" name="id2687136"></a><a class="indexterm" name="id2687143"></a><a class="indexterm" name="id2687150"></a><a class="indexterm" name="id2687159"></a><a class="indexterm" name="id2687166"></a><a class="indexterm" name="id2687173"></a><a class="indexterm" name="id2687179"></a>現在、多くの UNIX システム（例：Oracle(Sun)Solaris）や xxxxBSDファミリーおよびLinux では、着脱可能な認証モジュール(PAM)機能を使って全ての認証、承認処理、リソースの制御サービスを提供している。PAM の導入以前は、システムパスワードデータベース(<code class="filename">/etc/passwd</code>)以外のものを使おうとするなら、セキュリティサービスを提供するすべてのプログラムそれぞれに対して代替手段を準備する必要がある。つまり、<code class="literal">login</code>, <code class="literal">passwd</code>, <code class="literal">chown</code> といったものの代替手段を別途用意しなければならないということである。</p><p><a class="indexterm" name="id2687233"></a><a class="indexterm" name="id2687240"></a><a class="indexterm" name="id2687246"></a><a class="indexterm" name="id2687253"></a>PAM を使うと、これらのセキュリティプログラムを、これらが依存する認証／承認インフラから切り離すことができる。PAM を構成するには、<code class="filename">/etc/pam.conf</code> という１つのファイルを適切に変更する(Solaris)か、または<code class="filename">/etc/pam.d</code>配下にある個別の制御ファイルを編集する。</p><p><a class="indexterm" name="id2687285"></a><a class="indexterm" name="id2687293"></a>PAM が有効になっている UNIX/Linux システムでは、動的なロードができる適切なライブラリモジュールが利用できるようになっていれば、システムでさまざまな認証バックエンドを使うように構成するのは簡単である。それらのバックエンドはシステムでローカルに閉じていてもよいし、リモートサーバ上で集約されていてもよい。</p><p>PAM サポートモジュールで使えるもの：</p><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/passwd</code></span></dt><dd><p><a class="indexterm" name="id2687330"></a><a class="indexterm" name="id2687337"></a><a class="indexterm" name="id2687344"></a><a class="indexterm" name="id2687351"></a><a class="indexterm" name="id2687358"></a><a class="indexterm" name="id2687364"></a>これらの PAM モジュールは標準の UNIX ユーザデータベースを利用する。最も有名なものは、<code class="filename">pam_unix.so</code>, <code class="filename">pam_unix2.so</code>, <code class="filename">pam_pwdb.so</code>,<code class="filename">pam_userdb.so</code>と呼ばれるものである。</p></dd><dt><span class="term">Kerberos</span></dt><dd><p><a class="indexterm" name="id2687409"></a><a class="indexterm" name="id2687416"></a><a class="indexterm" name="id2687423"></a><a class="indexterm" name="id2687430"></a><a class="indexterm" name="id2687437"></a><code class="filename">pam_krb5.so</code> モジュールを使うと、ケルベロス準拠のあらゆるサーバを使える。このツールは MIT Kerberos, Heimdal Kerberos, そしておそらく（もし有効であれば）Microsoft Active Directory にアクセスするのにも使える。</p></dd><dt><span class="term">LDAP</span></dt><dd><p><a class="indexterm" name="id2687468"></a><a class="indexterm" name="id2687475"></a><a class="indexterm" name="id2687482"></a><a class="indexterm" name="id2687488"></a><a class="indexterm" name="id2687495"></a><a class="indexterm" name="id2687502"></a><code class="filename">pam_ldap.so</code> モジュールを使うと、LDAP v2 もしくは v3準拠のあらゆるバックエンドサーバを使える。よく使われる LDAP バックエンドサーバには OpenLDAP v2.0 and v2.1, Sun ONE iDentity server, Novell eDirectory server, Microsoft Active Directory がある。</p></dd><dt><span class="term">NetWare Bindery</span></dt><dd><p><a class="indexterm" name="id2687535"></a><a class="indexterm" name="id2687542"></a><a class="indexterm" name="id2687549"></a><a class="indexterm" name="id2687556"></a><code class="filename">pam_ncp_auth.so</code> モジュールを使うと、バインダリ(Bindery)が有効な NetWare コアプロトコルベースのサーバによる認証を利用できるようになる。</p></dd><dt><span class="term">SMB Password</span></dt><dd><p><a class="indexterm" name="id2687585"></a><a class="indexterm" name="id2687592"></a><a class="indexterm" name="id2687599"></a><code class="filename">pam_smbpass.so</code> と呼ばれるモジュールを使うと、Samba の<code class="filename">smb.conf</code> ファイルで設定された passdb バックエンドのユーザ認証を利用できるようになる。</p></dd><dt><span class="term">SMB Server</span></dt><dd><p><a class="indexterm" name="id2687633"></a><a class="indexterm" name="id2687640"></a><code class="filename">pam_smb_auth.so</code> モジュールは、オリジナルの MS Windowsネットワーク認証のためのツールである。Winbind モジュールがリリースされている現在、このモジュールはすでに多少古臭くなってしまっている。</p></dd><dt><span class="term">Winbind</span></dt><dd><p><a class="indexterm" name="id2687671"></a><a class="indexterm" name="id2687678"></a><a class="indexterm" name="id2687685"></a><a class="indexterm" name="id2687692"></a><code class="filename">pam_winbind.so</code> モジュールは、Samba は MS Windows のドメインコントローラーからの認証情報を取得できるようにするものである。これにより、PAM が有効なアプリケーションに対して認証されたユーザへのアクセス権を与えるのが簡単になる。</p></dd><dt><span class="term">RADIUS</span></dt><dd><p><a class="indexterm" name="id2687725"></a>PAM RADIUS (Remote Access Dial-In User Service) と呼ばれる認証モジュールがある。ほとんどのケースでは、管理者がこのツールのソースコードを持ってきて自分自身でインストールを行う必要がある。RADIUS プロトコルは多くのルータやターミナルサーバで使われているプロトコルである。</p></dd></dl></div><p><a class="indexterm" name="id2687751"></a><a class="indexterm" name="id2687758"></a>上記のうち、<code class="filename">pam_smbpasswd.so</code> と <code class="filename">pam_winbind.so</code>モジュールは、Samba 自身が提供するものである。</p><p><a class="indexterm" name="id2687784"></a><a class="indexterm" name="id2687791"></a><a class="indexterm" name="id2687798"></a><a class="indexterm" name="id2687805"></a>いったんこれらのモジュールを設定してしまえば、広範囲にまたがるネットワーク帯域や PAM を利用した効率的な認証サービスを提供するような分散 Samba ドメインコントローラの利用においても、高い柔軟性を得ることができる。つまり、単一のユーザアカウントデータベースを使って、中央集中的な管理や保守の行き届いた分散認証を実現できるのである。</p></div><div class="sect1" title="技術的な議論"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2687825"></a>技術的な議論</h2></div></div></div><p><a class="indexterm" name="id2687832"></a><a class="indexterm" name="id2687839"></a><a class="indexterm" name="id2687846"></a><a class="indexterm" name="id2687853"></a>システム管理者が自分のシステム上のアプリケーションにアクセス権を付与する際、PAM はかなり柔軟に設定できるように設計されている。PAM によって制御されるシステムセキュリティのためのローカル設定には、単一ファイル <code class="filename">/etc/pam.conf</code> と <code class="filename">/etc/pam.d/</code>ディレクトリーの２つがある。</p><div class="sect2" title="PAM 設定のための文法"><div class="titlepage"><div><div><h3 class="title"><a name="id2687885"></a>PAM 設定のための文法</h3></div></div></div><p><a class="indexterm" name="id2687894"></a><a class="indexterm" name="id2687901"></a>この章では、これらのファイルで記述するエントリに関する正しい文法、および一般的なオプションについて解説する。設定ファイルにおける PAM 特有のトークンでは、大文字小文字の区別を行わない。ただし、モジュールのパスについては大文字小文字を区別する。なぜなら、これらはファイルの名前を示すものであり、大文字小文字を区別するような一般的なファイルシステムの性質に影響を受けるからである。与えられたモジュールに渡すための引数が大文字小文字を区別するかどうかは、それぞれのモジュールで規定されている。</p><p>後述の設定行に加え、システム管理者の便宜のために２つの特殊文字がある：<span class="quote">“<span class="quote">#</span>”</span> から行末まではコメントとみなされる。またモジュールを指定する行については <span class="quote">“<span class="quote">\</span>”</span> で改行をエスケープすることで、次の行にまたがることができる。</p><p><a class="indexterm" name="id2687956"></a><a class="indexterm" name="id2687964"></a>PAM の認証モジュール（ダイナミックリンクされたライブラリファイル）が既定値の位置にある場合は、そのパスを明示する必要はない。Linux の場合、既定値の位置は <code class="filename">/lib/security</code> となる。モジュールが既定値位置以外にある場合は</p><pre class="programlisting">auth  required  /other_path/pam_strange_module.so</pre><p>のようにパスを明示しなければならない。</p><div class="sect3" title="/etc/pam.d にあるエントリーの構造"><div class="titlepage"><div><div><h4 class="title"><a name="id2687997"></a><code class="filename">/etc/pam.d</code> にあるエントリーの構造</h4></div></div></div><p>このセクションの残りの部分は、Linux-PAM プロジェクトのドキュメントからの引用である。PAM に関する詳細は<a class="ulink" href="http://ftp.kernel.org/pub/linux/libs/pam/" target="_top">the Official Linux-PAM home page</a>を参照のこと。</p><p><a class="indexterm" name="id2688026"></a><code class="filename">/etc/pam.conf</code> ファイル中の一般的な設定行は、以下の書式で記述する：</p><pre class="programlisting">サービス名  モジュールタイプ  制御フラグ  モジュールパス  引数</pre><p></p><p>これら各トークンの意味について解説する。Linux-PAM を構成するための2番目のやり方（最近はむしろこちらの方が多いようだが）は、<code class="filename">/etc/pam.d/</code> ディレクトリーの中身を介するという方法である。それぞれのトークンの意味するところを解説した後、この方法について述べることにする。</p><div class="variablelist"><dl><dt><span class="term">サービス名</span></dt><dd><p><a class="indexterm" name="id2688083"></a><a class="indexterm" name="id2688090"></a><a class="indexterm" name="id2688097"></a>このエントリに関連付けられるサービスの名前。<code class="literal">ftpd</code>, <code class="literal">rlogind</code>, <code class="literal">su</code> のように、サービス名はアプリケーションにつけられた伝統的な名前であることが多い。</p><p>既定値の認証メカニズムを定義するために予約されている、特別な名前もある。これは <em class="parameter"><code>OTHER</code></em> と呼ばれるが、大文字小文字は固定されていない。名前付きサービスに特化したモジュールがある場合、<em class="parameter"><code>OTHER</code></em>エントリーは無視される事に注意。		</p></dd><dt><span class="term">モジュールタイプ</span></dt><dd><p>（現時点では）以下の通り4つのタイプのモジュールがある。		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><a class="indexterm" name="id2688173"></a><a class="indexterm" name="id2688180"></a><em class="parameter"><code>auth:</code></em> このモジュールタイプは、ユーザを認証するにあたって２つの側面がある。まず、アプリケーションに対してパスワード問い合わせの指示を行うか、または別の手段を使って、操作しているユーザが誰なのかを特定する。次に、このモジュールはその資格認定から承認という性質を通して(<code class="filename">/etc/groups</code> ファイルとは独立した形で)グループの会員資格やその他の特権に関する許可を与えることができる。			</p></li><li class="listitem"><p><a class="indexterm" name="id2688217"></a><a class="indexterm" name="id2688224"></a><em class="parameter"><code>account:</code></em> このモジュールは、認証をベースとしないアカウント管理を行う。よくある利用法としては、利用時間帯、現時点で利用可能なシステムリソース（最大ユーザ数）、またはユーザがログインした場所などをベースとした、サービスへのアクセスの制限や許可が挙げられる。たとえば <span class="quote">“<span class="quote">root</span>”</span> ログインの許可は、コンソールからのみに制限されているかもしれない。			</p></li><li class="listitem"><p><a class="indexterm" name="id2688259"></a><em class="parameter"><code>session:</code></em> このモジュールは、主に対象のユーザがサービスを割り当てられる前後に行われるべきことに関連付けられる。たとえばそのユーザに関する何らかのデータ交換をする際のオープン/クローズ情報のログを取ったり、ディレクトリをマウントすることなどが挙げられる。</p></li><li class="listitem"><p><a class="indexterm" name="id2688286"></a><em class="parameter"><code>password:</code></em> この最後のモジュールタイプは、そのユーザに関連する認証トークンを更新するために必要なものである。典型的には、<span class="quote">“<span class="quote">チャレンジ/レスポンス</span>”</span> 認証を行う<em class="parameter"><code>(auth)</code></em> モジュールタイプがある。</p></li></ul></div></dd><dt><span class="term">制御フラグ</span></dt><dd><p>制御フラグは、関連するモジュールの成功／失敗に対して PAMライブラリがどう対応するのかを指示するのに使われる。PAM モジュール群はスタック化(同じタイプのモジュール群を次々に重ねること)できるので、制御フラグがそれぞれのモジュールの相対的な重要度を決定する。アプリケーションは <code class="filename">/etc/pam.conf</code> ファイルにあるモジュールについて、個々の成功や失敗に影響されない。その代わり、Linux-PAM ライブラリからの成功や失敗の応答のサマリを受け取る。これらのモジュールは、<code class="filename">/etc/pam.conf</code> に記述されている順に実行される。つまり前の方にあるエントリは後ろの方のものより先に実行される。Linux-PAM v0.60 の場合、制御フラグは２つの文法のうちのいずれかで定義できる。</p><p><a class="indexterm" name="id2688373"></a><a class="indexterm" name="id2688380"></a><a class="indexterm" name="id2688387"></a><a class="indexterm" name="id2688393"></a>制御フラグについてのシンプルな(かつ従来の)文法では、特定のモジュールの成功や失敗について、それらを通知するための重大度を単一のキーワードで指定する。キーワードには <em class="parameter"><code>required</code></em>, <em class="parameter"><code>requisite</code></em>, <em class="parameter"><code>sufficient</code></em>, <em class="parameter"><code>optional</code></em> の4種類ある。	</p><p>		Linux-PAM ライブラリでは以下の方式でこれらのキーワードを		解釈する。		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="parameter"><code>required:</code></em>このモジュールタイプ機能が成功するためにはこのモジュールが成功することが必須である。ただしこのモジュールが失敗した場合でも、(同じモジュールタイプを持つ)残りのすべてのモジュールの実行が完了するまでは、失敗したことはユーザには通知されない。			</p></li><li class="listitem"><p><em class="parameter"><code>requisite:</code></em> required と似ているが、このモジュールが失敗を返したとき制御が直接アプリケーションに戻されるところが異なる。その戻り値は、失敗したモジュールのうち最初に required もしくは requisite 指定されていたものに関連付けられる。安全でない媒体を通してユーザがパスワードを入力するような可能性がある場合、このフラグはその状況を排除するために使える。そのような可能性が残っていると、システム上の有効なアカウントの情報を攻撃者に知らせてしまうようなことにつながりかねない。このような可能性があると、共用ホスト環境で慎重に扱うべきパスワードを公開してしまうようなゆゆしき環境において、一方的に不利になるだろう。			</p></li><li class="listitem"><p><em class="parameter"><code>sufficient:</code></em> このモジュールが成功すると、Linux-PAM ライブラリがこのモジュールタイプについてその目的を達成したものとするのに<em class="parameter"><code>sufficient</code></em>(十分である)とみなされる。これまでに要求されたモジュールのうち失敗したものがない場合、このタイプに関して<span class="quote">“<span class="quote">スタックされた</span>”</span>モジュールは、これ以上起動されない(この場合、この後に続くモジュールは起動されない)。ただし、このモジュールが失敗しても、このモジュールタイプレベルで成功したアプリケーションについては致命的エラーとはみなされない。			</p></li><li class="listitem"><p><em class="parameter"><code>optional:</code></em> この制御フラグは、その名前が示しているように、そのモジュールの成功/失敗が、そのユーザアプリケーションがサービスを提供できるかどうかを決めるものではないことを示す。一般に、そのモジュールスタック全体が成功か失敗かを決定する際、Linux-PAM はこのようなモジュールを考慮しない。しかしながら、それ以前もしくはそれ以降のどのモジュールも明確に成功か失敗かを示さない場合、このモジュールがアプリケーションへの応答の性質を決めることがある。後者のひとつの例として、他のモジュールが PAM_IGNORE のようなものを返した場合が挙げられる。			</p></li></ul></div><p>ユーザを認証する方法について、その文法が複雑に(新しく)なればなるほど、管理者はより詳しく記述し、より細かく制御できるようになるものである。この制御フラグの書式は、以下のように<em class="parameter"><code>値=アクション</code></em> トークンの並びが大括弧で区切られたものである:		</p><pre class="programlisting">[値1=アクション1 値2=アクション2 ...]</pre><p>ここで、<em class="parameter"><code>値1</code></em> は以下の戻り値のいずれかである:</p><pre class="screen"><em class="parameter"><code>success; open_err; symbol_err; service_err; system_err; buf_err;</code></em><em class="parameter"><code>perm_denied; auth_err; cred_insufficient; authinfo_unavail;</code></em><em class="parameter"><code>user_unknown; maxtries; new_authtok_reqd; acct_expired; session_err;</code></em><em class="parameter"><code>cred_unavail; cred_expired; cred_err; no_module_data; conv_err;</code></em><em class="parameter"><code>authtok_err; authtok_recover_err; authtok_lock_busy;</code></em><em class="parameter"><code>authtok_disable_aging; try_again; ignore; abort; authtok_expired;</code></em><em class="parameter"><code>module_unknown; bad_item;</code></em> と <em class="parameter"><code>default</code></em>.</pre><p></p><p>最後の<em class="parameter"><code>default</code></em>は、明示的に定義されない戻り値に対する動作を規定するのに使える。		</p><p><em class="parameter"><code>アクション1</code></em> には正の整数かまたは以下のトークンのいずれかを指定する:<em class="parameter"><code>ignore</code></em>; <em class="parameter"><code>ok</code></em>; <em class="parameter"><code>done</code></em>;<em class="parameter"><code>bad</code></em>; <em class="parameter"><code>die</code></em>; <em class="parameter"><code>reset</code></em>.正の整数 J がアクションとして指定された場合、現在のモジュールタイプについて続く J 個のモジュールをスキップする。この方法により、管理者は異なった実行パスを持つ多くのスタックされたモジュールを、適度に洗練された方法で組み合わせることができる。個々のモジュールの反応によって、どのパスにあるものが適用されるかが決定される。		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="parameter"><code>ignore:</code></em> モジュールスタックに対して使われると、そのモジュールの戻り値は、アプリケーションが受け取るリターンコードには影響しない。			</p></li><li class="listitem"><p><em class="parameter"><code>bad:</code></em> このアクションが指定されると、戻り値はモジュールの失敗を表しているとみなされる。このモジュールがスタックの中で最初に失敗すると、その戻り値はスタック全体の値として使われる。			</p></li><li class="listitem"><p><em class="parameter"><code>die:</code></em> bad と同じだが、さらにモジュールスタックが終了して即時に PAM がアプリケーションに結果を返す。			</p></li><li class="listitem"><p><em class="parameter"><code>ok:</code></em> この戻り値をモジュールスタック全体の戻り値として直接返すべきだと管理者が考えていることを PAM に教える。つまり、このスタックの直前の状態が戻り値 PAM_SUCCESS を返すことになっていた場合は、モジュールの戻り値がこの値を上書きする。もしスタックの直前の状態が特定のモジュールの失敗を表す何らかの値を保持している場合は、この <em class="parameter"><code>ok</code></em>値はその値を上書きしない。			</p></li><li class="listitem"><p><em class="parameter"><code>done:</code></em> <em class="parameter"><code>ok</code></em> と同じだが、モジュールスタックを終了させて PAM の制御を即時にアプリケーションに戻すという副作用があるところが異なる。                        </p></li><li class="listitem"><p><em class="parameter"><code>reset:</code></em> モジュールスタックの状態を保持するメモリをクリアし、次のスタックモジュールから実行を再開する。			</p></li></ul></div><p><em class="parameter"><code>required</code></em>; <em class="parameter"><code>requisite</code></em>;<em class="parameter"><code>sufficient</code></em>; <em class="parameter"><code>optional</code></em>はそれぞれ [...] という構文をもつという意味では同等の、以下の表現を備えている：		</p><p>		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="parameter"><code>required</code></em> は<em class="parameter"><code>[success=ok new_authtok_reqd=ok ignore=ignore default=bad]</code></em>と同等。			</p></li><li class="listitem"><p><em class="parameter"><code>requisite</code></em> は<em class="parameter"><code>[success=ok new_authtok_reqd=ok ignore=ignore default=die]</code></em>と同等。			</p></li><li class="listitem"><p><em class="parameter"><code>sufficient</code></em> は<em class="parameter"><code>[success=done  new_authtok_reqd=done  default=ignore]</code></em>と同等。			</p></li><li class="listitem"><p><em class="parameter"><code>optional</code></em> は<em class="parameter"><code>[success=ok new_authtok_reqd=ok default=ignore]</code></em>と同等である。			</p></li></ul></div><p>		</p><p>この新しい書式が持つパワーの感触をつかむために、これで何ができるのかを体験してみるとよいだろう。Linux-PAM-0.63 ではクライアント・プラグイン・エージェントの概念が導入された。これにより、PAM ではクライアント・サーバ・アプリケーションに対して、トランスポート・プロトコルの継承を利用したマシン間の認証を可能にしている。<em class="parameter"><code>[ ... value=action ... ]</code></em> という制御用構文により、アプリケーションがそれに準拠するクライアントに対してバイナリ・プロンプトのサポートを構成できるようになっている。ただしレガシーアプリケーションの場合は柔軟に代替認証モードにフェイルオーバーできる。		</p></dd><dt><span class="term">module-path</span></dt><dd><p>動的ローダブルオブジェクトファイルのパス名 - 差し替え可能なモジュールそのもの。モジュールパスの最初の文字が<span class="quote">“<span class="quote">/</span>”</span> の場合、それは絶対パスであるとみなされる。そうでない場合、与えられたモジュールパスは既定値のモジュールパスである <code class="filename">/lib/security</code> の後ろに付加される(ただし前述の注意事項を参照のこと)。		</p><p>引数は、起動時にモジュールに渡されるトークンのリストであり、典型的なLinux のシェルコマンドへの引数と同様である。一般的に、有効な引数はオプションであり、与えられたモジュール固有のものであることが多い。無効な引数はモジュールによって無視される。しかしながら、無効な引数に出会った場合、そのモジュールは syslog(3) に対してエラーメッセージを出力しなければならない。共通的なオプションについては次の節を参照して欲しい。		</p><p>引数の中に空白を含める場合は引数全体を大括弧 [] で括るようにする。次に例を示す:		</p><pre class="programlisting">squid auth required pam_mysql.so user=passwd_query passwd=mada \db=eminence [query=select user_name from internet_service where \user_name=<span class="quote">“<span class="quote">%u</span>”</span> and password=PASSWORD(<span class="quote">“<span class="quote">%p</span>”</span>) and service=<span class="quote">“<span class="quote">web_proxy</span>”</span>]</pre><p>この書式を使う場合は文字列の中に <span class="quote">“<span class="quote">[</span>”</span> 文字を含んでもよい。また文字列の中に <span class="quote">“<span class="quote">]</span>”</span> 文字を含める場合は、引数の解析が正しく行えるように <span class="quote">“<span class="quote">\[</span>”</span> を使うべきである。すなわち以下のようになる。		</p><pre class="programlisting">[..[..\]..]    -->   ..[..]..</pre><p>設定ファイルの中でひとつでも書式が正しくない行があれば、(エラーが起こって)認証処理は失敗すると思った方がよい。対応するエラーはsyslog(3) への呼び出しを通してシステムのログファイルに書き込まれる。		</p></dd></dl></div></div></div><div class="sect2" title="システム設定の例"><div class="titlepage"><div><div><h3 class="title"><a name="id2689138"></a>システム設定の例</h3></div></div></div><p>以下は設定ファイル <code class="filename">/etc/pam.d/login</code>の例である。この例ではすべてのオプションがコメント状態をはずされて(=有効になって)おり、おそらくこのままでは使い物にならないだろう。というのは、ログインプロセスが成功するまでに多くの条件が積み重なっているからである。<code class="filename">pam_pwdb.so</code> の呼び出しを除き、原則的にはすべての条件をコメントアウトして無効にすることができる。</p><div class="sect3" title="PAM: オリジナルのログイン設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2689175"></a>PAM: オリジナルのログイン設定</h4></div></div></div><p>	</p><pre class="programlisting">#%PAM-1.0# The PAM configuration file for the <span class="quote">“<span class="quote">login</span>”</span> service#auth         required    pam_securetty.soauth         required    pam_nologin.so# auth       required    pam_dialup.so# auth       optional    pam_mail.soauth         required    pam_pwdb.so shadow md5# account    requisite   pam_time.soaccount      required    pam_pwdb.sosession      required    pam_pwdb.so# session    optional    pam_lastlog.so# password   required    pam_cracklib.so retry=3password     required    pam_pwdb.so shadow md5</pre><p></p></div><div class="sect3" title="PAM: pam_smbpass を使ったログイン"><div class="titlepage"><div><div><h4 class="title"><a name="id2689204"></a>PAM: <code class="filename">pam_smbpass</code> を使ったログイン</h4></div></div></div><p>PAM では交換式モジュールが利用できる。サンプルシステムでは以下のものが利用可能:</p><p><code class="prompt">$</code><strong class="userinput"><code>/bin/ls /lib/security</code></strong></p><pre class="programlisting">pam_access.so    pam_ftp.so          pam_limits.so     pam_ncp_auth.so  pam_rhosts_auth.so  pam_stress.so     pam_cracklib.so  pam_group.so        pam_listfile.so   pam_nologin.so   pam_rootok.so       pam_tally.so      pam_deny.so      pam_issue.so        pam_mail.so       pam_permit.so    pam_securetty.so    pam_time.so       pam_dialup.so    pam_lastlog.so      pam_mkhomedir.so  pam_pwdb.so      pam_shells.so       pam_unix.so       pam_env.so       pam_ldap.so         pam_motd.so       pam_radius.so    pam_smbpass.so      pam_unix_acct.so  pam_wheel.so     pam_unix_auth.so    pam_unix_passwd.sopam_userdb.so    pam_warn.so         pam_unix_session.so</pre><p>以下のログインプログラムの例では、システムパスワードデータベース(<code class="filename">/etc/passwd</code>,<code class="filename">/etc/shadow</code>, <code class="filename">/etc/group</code>) を使う <code class="filename">pam_pwdb.so</code> を<code class="filename">pam_smbpass.so</code> で置き換えている。後者では Microsoft MD4 暗号化パスワードハッシュを含む Samba のデータベースを使う。このデータベースは使用している UNIX/Linux システムの実装により<code class="filename">/usr/local/samba/private/smbpasswd</code>, <code class="filename">/etc/samba/smbpasswd</code>,<code class="filename">/etc/samba.d/smbpasswd</code>のいずれかに格納される。<code class="filename">pam_smbpass.so</code> モジュールは Samba 2.2.1 以降で提供される。このモジュールをコンパイルしたい場合は、Samba の <code class="literal">configure</code> スクリプト実行時に <code class="option">--with-pam_smbpass</code> オプションを指定する。<code class="filename">pam_smbpass</code> モジュールに関する詳細については Samba ソースの配布物の<code class="filename">source/pam_smbpass</code> ディレクトリにあるドキュメントを参照して欲しい。</p><p>	</p><pre class="programlisting">#%PAM-1.0# The PAM configuration file for the <span class="quote">“<span class="quote">login</span>”</span> service#auth        required    pam_smbpass.so nodelayaccount     required    pam_smbpass.so nodelaysession     required    pam_smbpass.so nodelaypassword    required    pam_smbpass.so nodelay</pre><p>以下に、ある Linux システムにおける PAM の設定ファイルを示す。既定値の設定では <code class="filename">pam_pwdb.so</code> を使う。</p><p>	</p><pre class="programlisting">#%PAM-1.0# The PAM configuration file for the <span class="quote">“<span class="quote">samba</span>”</span> service#auth       required     pam_pwdb.so nullok nodelay shadow auditaccount    required     pam_pwdb.so audit nodelaysession    required     pam_pwdb.so nodelaypassword   required     pam_pwdb.so shadow md5</pre><p>以下の例では、基本的な Samba 認証であっても<code class="literal">smbpasswd</code> データベースを使うようになっている。このような設定を行った場合、<code class="literal">passwd</code> プログラムに対しても影響を及ぼす。つまり、<code class="literal">smbpasswd</code> のパスワードを <code class="literal">passwd</code> コマンドで変更できるようになる:</p><p>		</p><pre class="programlisting">#%PAM-1.0# The PAM configuration file for the <span class="quote">“<span class="quote">samba</span>”</span> service#auth       required     pam_smbpass.so nodelayaccount    required     pam_pwdb.so audit nodelaysession    required     pam_pwdb.so nodelaypassword   required     pam_smbpass.so nodelay smbconf=/etc/samba.d/smb.conf</pre><p></p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>PAM では階層的な(スタックされた)認証の仕組みを提供している。たとえば、ある PAM モジュールが受け取った情報を、PAM スタックの次のモジュールに渡すことができる。PAM に関する特定の機能の詳細については、お使いのシステムに特化したドキュメントを参照して欲しい。さらにいくつかの Lunux の実装では、すべての認証を中心となる単一のファイルで設定できる <code class="filename">pam_stack.so</code> と呼ばれるモジュールが提供されている。<code class="filename">pam_stack.so</code> 方式は管理者の手間を軽減してくれるので、熱心なファンもいる。もっとも、環境によってもいろんな問題があるわけであり、前述のどの方式を取るにしてもそれぞれのトレードオフがある。より有益な情報を探すために、PAM のドキュメントをあたってみるのもよいだろう。</p></div></div></div><div class="sect2" title="smb.conf の PAM 設定"><div class="titlepage"><div><div><h3 class="title"><a name="id2689506"></a><code class="filename">smb.conf</code> の PAM 設定</h3></div></div></div><p><a class="link" href="smb.conf.5.html#OBEYPAMRESTRICTIONS" target="_top">obey pam restrictions</a> と呼ばれる <code class="filename">smb.conf</code> のオプションがある。このオプションに関する SWAT のヘルプを以下に示す：</p><div class="blockquote"><blockquote class="blockquote"><p>Samba が PAM サポート (<code class="option">--with-pam</code>) 付きでコンパイルされている場合、Samba が PAM の account および session 管理ディレクティブに従うかどうかをこのパラメータで 制御できる。PAM を使うが認証は平文のみで、かつどの account/session 管理も無視するというのが既定値の動作である。<a class="link" href="smb.conf.5.html#ENCRYPTPASSWORDS" target="_top">encrypt passwords = yes</a>の場合、Samba は常に認証については PAM を無視する。その理由は、SMB パスワード暗号を使う場合に必要なチャレンジ／レスポンス方式の認証メカニズムを PAM モジュールが サポートしていないからである。</p><p>既定値:<a class="link" href="smb.conf.5.html#OBEYPAMRESTRICTIONS" target="_top">obey pam restrictions = no</a></p></blockquote></div></div><div class="sect2" title="winbindd.soを使った遠隔 CIFS 認証"><div class="titlepage"><div><div><h3 class="title"><a name="id2689602"></a><code class="filename">winbindd.so</code>を使った遠隔 CIFS 認証</h3></div></div></div><p>どんな OS であっても、その OS 自身がアクセス可能なユーザ証明情報が(どこからか)提供されていることを前提としている。UNIX ではユーザ識別子(UID)だけでなくグループ識別子(GID)も必要となる。これらはいずれも単純な整数値であり、<code class="filename">/etc/passwd</code> といったパスワードバックエンドより取得する。</p><p>Windows NT サーバでは、ユーザとグループは相対ID(RID)に割り当てられている。これらはユーザやグループが作られる際、ドメイン毎に一意となる。Windows NT のユーザやグループを UNIX のユーザやグループに変換するためには、RID と UNIX のユーザ/グループの ID をマッピングする必要がある。これが winbind が行う仕事のひとつである。</p><p>winbind のユーザとグループはサーバから解決要求が出され、ユーザとグループの ID が指定された範囲内で割り当てられる。クライアントがユーザとグループを列挙するコマンドを実行すると、すぐに既存の全ユーザとグループがマッピングされ、割り当て処理が先着順に行われる。割り当てられた UNIX ID は Samba の lock ディレクトリ配下のデータベースファイルに保持されて記憶される。</p><p>これにより、目先が利く管理者なら、<code class="filename">pam_smbpass.so</code> や<code class="literal">winbindd</code> と、<em class="parameter"><code>ldap</code></em> のような分散型の <a class="link" href="smb.conf.5.html#PASSDBBACKEND" target="_top">passdb backend</a> との組み合わせにより、(Linux のような)PAM を意識したプログラムやアプリケーションからも使うことのできる、中央集権型で管理された分散型のユーザ/パスワードデータベースが使えるようになるということが理解できるだろう。このお膳立てにより、広範囲のネットワーク認証のトラフィックが削減できるという限りにおいては、マイクロソフトのActive Directory Service(ADS)に比較して、特に強力な優位性を持てる。</p><div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>UNIX の ID データベースに対応する RID はユーザとグループのマッピングが格納されているファイルにのみ存在し、<code class="literal">winbindd</code> によって格納される。このファイルが削除されていたり壊れていたりする場合、<code class="literal">winbindd</code> はどのユーザやグループが Windows NTのユーザやグループの RID と対応するのかを決定できなくなる。</p></div></div><div class="sect2" title="pam_smbpass.so を使ったパスワードの同期"><div class="titlepage"><div><div><h3 class="title"><a name="id2689736"></a><code class="filename">pam_smbpass.so</code> を使ったパスワードの同期</h3></div></div></div><p><code class="filename">pam_smbpass</code> は PAM モジュールのひとつであり、システム上で <code class="filename">smbpasswd</code> (Sambaのパスワード)データベースと UNIX のパスワードファイルとの同期を取るために使われる。PAM は Solaris, HPUX, Linux などの UNIX オペレーティングシステム上でサポートされている API であり、認証メカニズムに対する標準的なインターフェースを提供する。</p><p>このモジュールはローカルにある <code class="filename">smbpasswd</code> ユーザデータベースを使って認証する。リモートの SMB サーバで認証したり、システム上の SUID root されたバイナリの存在を調べたいという向きには、<code class="filename">pam_winbind</code> の方を使うことをお勧めする。</p><p>このモジュールで認識されるオプションについては、<a class="link" href="pam.html#smbpassoptions" title="Table 28.1. pam_smbpassで認識されるオプション">次のテーブル</a>を参照して欲しい。</p><div class="table"><a name="smbpassoptions"></a><p class="title"><b>Table 28.1. <em class="parameter"><code>pam_smbpass</code></em>で認識されるオプション	</b></p><div class="table-contents"><table summary="pam_smbpassで認識されるオプション	" border="1"><colgroup><col align="left"><col align="justify"></colgroup><tbody><tr><td align="left">debug</td><td align="justify">より多くのデバッグ情報を出力する</td></tr><tr><td align="left">audit</td><td align="justify">debugと似ているが、認識できないユーザ名も表示する</td></tr><tr><td align="left">use_first_pass</td><td align="justify">ユーザにパスワード入力を求めない。パスワードは PAM_ 項目から持ってくる</td></tr><tr><td align="left">try_first_pass</td><td align="justify">直前の PAM モジュールからパスワードの取得を試みる。取得できなければユーザからの入力を求める。</td></tr><tr><td align="left">use_authtok</td><td align="justify">try_first_pass に似ているが、(パスワードモジュールだけをスタックさせるための)新しい PAM_AUTHTOK が事前にセットされていなければ『失敗する』</td></tr><tr><td align="left">not_set_pass</td><td align="justify">このモジュールで使われたパスワードを他のモジュールに流用させない</td></tr><tr><td align="left">nodelay</td><td align="justify">認証の失敗までに最大1秒の遅延を挟まない</td></tr><tr><td align="left">nullok</td><td align="justify">パスワードなしを認める</td></tr><tr><td align="left">nonull</td><td align="justify">パスワードなしを認めない。これは Samba の設定に優先する。</td></tr><tr><td align="left">migrate</td><td align="justify"><span class="quote">“<span class="quote">auth</span>”</span> コンテキストでのみ意味を持つ。成功した認証で使われたパスワードを使って smbpasswd ファイルを更新する。</td></tr><tr><td align="left">smbconf=<em class="replaceable"><code>ファイル名</code></em></td><td align="justify"><code class="filename">smb.conf</code> ファイルへの別のパスを指定する</td></tr></tbody></table></div></div><p><br class="table-break"></p><p>Linux の <code class="filename">/etc/pam.d/</code> 形式のファイル構造で<code class="filename">pam_smbpass.so</code> を使うときの例を以下に示す。このツールを別のプラットフォームに実装したいと思っている方は、適当に読み替えてみてほしい。</p><div class="sect3" title="パスワードの同期設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2689999"></a>パスワードの同期設定</h4></div></div></div><p>以下の PAM 設定例では、<code class="filename">/etc/passwd (/etc/shadow)</code> が変更されたときに、pam_smbpass を利用して<code class="filename">private/smbpasswd</code>が連動して変更されるようにしている。これはパスワードの有効期限が切れたときに(<code class="literal">ssh</code>のような)アプリケーションがパスワードを変更するような場合に便利である。</p><p>	</p><pre class="programlisting">#%PAM-1.0# password-sync#auth       requisite    pam_nologin.soauth       required     pam_unix.soaccount    required     pam_unix.sopassword   requisite    pam_cracklib.so retry=3password   requisite    pam_unix.so shadow md5 use_authtok try_first_passpassword   required     pam_smbpass.so nullok use_authtok try_first_passsession    required     pam_unix.so</pre></div><div class="sect3" title="パスワード移行のための設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2690048"></a>パスワード移行のための設定</h4></div></div></div><p>以下は <code class="filename">pam_smbpass</code> を使って平文からSamba 用の暗号化パスワードに移行するための PAM 設定である。他のメソッドと違い、この方法なら一度も Samba の共有に接続したことがなくても使える:パスワードを移行すれば、ユーザが<code class="literal">ftp</code> で接続したり、<code class="literal">ssh</code>でログインしてメールを取り出したりする場合などにも使える。</p><p>	</p><pre class="programlisting">#%PAM-1.0# password-migration#auth       requisite   pam_nologin.so# pam_smbpass is called IF pam_unix succeeds.auth       requisite   pam_unix.soauth       optional    pam_smbpass.so migrateaccount    required    pam_unix.sopassword   requisite   pam_cracklib.so retry=3password   requisite   pam_unix.so shadow md5 use_authtok try_first_passpassword   optional    pam_smbpass.so nullok use_authtok try_first_passsession    required    pam_unix.so</pre></div><div class="sect3" title="従来のパスワード設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2690105"></a>従来のパスワード設定</h4></div></div></div><p>以下の例は、従来の <code class="filename">smbpasswd</code> 利用時のためのPAM 設定である。<code class="filename">private/smbpasswd</code> 全体が投入され、SMB パスワードが存在しなかったり UNIX のパスワードと合致しない場合はエラーと見なされる。</p><p></p><pre class="programlisting">#%PAM-1.0# password-mature#auth       requisite    pam_nologin.soauth       required     pam_unix.soaccount    required     pam_unix.sopassword   requisite    pam_cracklib.so retry=3password   requisite    pam_unix.so shadow md5 use_authtok try_first_passpassword   required     pam_smbpass.so use_authtok use_first_passsession    required     pam_unix.so</pre></div><div class="sect3" title="Kerberosパスワード統合設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2690149"></a>Kerberosパスワード統合設定</h4></div></div></div><p>以下の PAM 設定例は、<em class="parameter"><code>pam_krb5</code></em> といっしょに使われる <em class="parameter"><code>pam_smbpass</code></em> を示している。これは Samba PDC 上で、かつそれがkerberos realmのメンバである場合に有用である。</p><p>		</p><pre class="programlisting">#%PAM-1.0# kdc-pdc#auth       requisite   pam_nologin.soauth       requisite   pam_krb5.soauth       optional    pam_smbpass.so migrateaccount    required    pam_krb5.sopassword   requisite   pam_cracklib.so retry=3password   optional    pam_smbpass.so nullok use_authtok try_first_passpassword   required    pam_krb5.so use_authtok try_first_passsession    required    pam_krb5.so</pre></div></div></div><div class="sect1" title="よくあるエラー"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2690202"></a>よくあるエラー</h2></div></div></div><p>PAM は割と扱いづらく、設定エラーを引き起こしやすい。以下にSamba のメーリングリストで見かけたいくつかのケースを紹介する。</p><div class="sect2" title="pam_winbind の問題"><div class="titlepage"><div><div><h3 class="title"><a name="id2690217"></a>pam_winbind の問題</h3></div></div></div><p>あるユーザから<span class="emphasis"><em>PAM の設定で以下の問題が起こった</em></span>との報告があった:	</p><p></p><pre class="programlisting">auth required /lib/security/pam_securetty.soauth sufficient /lib/security/pam_winbind.soauth sufficient /lib/security/pam_unix.so use_first_pass nullokauth required /lib/security/pam_stack.so service=system-authauth required /lib/security/pam_nologin.soaccount required /lib/security/pam_stack.so service=system-authaccount required /lib/security/pam_winbind.sopassword required /lib/security/pam_stack.so service=system-auth</pre><p></p><p>	<span class="emphasis"><em>[ctrl][alt][F1]で新しくコンソールを開くと、私の ID <span class="quote">“<span class="quote">pitie</span>”</span> ではログインできない。ユーザ <span class="quote">“<span class="quote">scienceu\pitie</span>”</span> でやってみたが、それでもだめだった。</em></span>	</p><p>この問題は<em class="parameter"><code>pam_stack.so service=system-auth</code></em>がある時に発生する。このファイルに入っている多くの設定には、すでに実行中ものが二重に入っていることがよくある。<em class="parameter"><code>auth</code></em> と <em class="parameter"><code>account</code></em>から <em class="parameter"><code>pam_stack</code></em> の行をコメントアウトしたらどうなるかやってみてくれ。それで動くなら、<code class="filename">/etc/pam.d/system-auth</code> ファイルを見て、その中で本当に必要な行だけを <code class="filename">/etc/pam.d/login</code>ファイルにコピーすればいい。別のやり方として、もしすべてのサービスで winbind を動かしてもいいなら、<code class="filename">/etc/pam.d/system-auth</code> に winbind 固有の設定を追加してもいい。	</p></div><div class="sect2" title="Winbind がユーザとグループを解決してくれない"><div class="titlepage"><div><div><h3 class="title"><a name="id2690332"></a>Winbind がユーザとグループを解決してくれない</h3></div></div></div><p>	<span class="quote">“<span class="quote">僕の <code class="filename">smb.conf</code> は正しく設定されている。<a class="link" href="smb.conf.5.html#IDMAPUID" target="_top">idmap uid = 12000</a> と<a class="link" href="smb.conf.5.html#IDMAPGID" target="_top">idmap gid = 3000-3500</a>を指定しているし <code class="literal">winbind</code> も動いている。以下のコマンドはちゃんと動いている。	</span>”</span>	</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>wbinfo -u</code></strong>MIDEARTH\maryoMIDEARTH\jackbMIDEARTH\ameds...MIDEARTH\root<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -g</code></strong>MIDEARTH\Domain UsersMIDEARTH\Domain AdminsMIDEARTH\Domain Guests...MIDEARTH\Accounts<code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong>root:x:0:0:root:/root:/bin/bashbin:x:1:1:bin:/bin:/bin/bash...maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false</pre><p>	<span class="quote">“<span class="quote">しかし、このコマンドが失敗する:	</span>”</span></p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>chown maryo a_file</code></strong>chown: 'maryo': invalid user</pre><p>	<span class="quote">“<span class="quote">一体どうなってんの？何か間違ってる？</span>”</span>	</p><p>名前キャッシュデーモンである <code class="literal">nscd</code> が動いてるんじゃないかな？そいつを終わらせて、起動しないようにしてくれ。それでうまくいくと思うよ。	</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ProfileMgmt.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="integrate-ms-networks.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 27. デスクトッププロファイルの管理 </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 29. Microsoft Windows ネットワークへのSambaの統合</td></tr></table></div></body></html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Chapter�28.�PAM &#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="&#20844;&#24335;&#12398;Samba 3.2.x HOWTO&#12392;&#12522;&#12501;&#12449;&#12524;&#12531;&#12473;&#12460;&#12452;&#12489;"><link rel="up" href="optional.html" title="Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;"><link rel="prev" href="ProfileMgmt.html" title="Chapter�27.�&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#12503;&#12525;&#12501;&#12449;&#12452;&#12523;&#12398;&#31649;&#29702;"><link rel="next" href="integrate-ms-networks.html" title="Chapter�29.�Microsoft Windows &#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12408;&#12398;Samba&#12398;&#32113;&#21512;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter�28.�PAM &#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ProfileMgmt.html">Prev</a>�</td><th width="60%" align="center">Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;</th><td width="20%" align="right">�<a accesskey="n" href="integrate-ms-networks.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter�28.�PAM &#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;"><div class="titlepage"><div><div><h2 class="title"><a name="pam"></a>Chapter�28.�PAM &#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Stephen</span> <span class="surname">Langasek</span></h3><div class="affiliation"><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:vorlon@netexpress.net">vorlon@netexpress.net</a>&gt;</code></p></div></div></div></div><div><p class="pubdate">May 31, 2003</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="pam.html#id2687367">&#12381;&#12398;&#27231;&#33021;&#12392;&#21033;&#28857;</a></span></dt><dt><span class="sect1"><a href="pam.html#id2688070">&#25216;&#34899;&#30340;&#12394;&#35696;&#35542;</a></span></dt><dd><dl><dt><span class="sect2"><a href="pam.html#id2688130">PAM &#35373;&#23450;&#12398;&#12383;&#12417;&#12398;&#25991;&#27861;</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689384">&#12471;&#12473;&#12486;&#12512;&#35373;&#23450;&#12398;&#20363;</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689752"><code class="filename">smb.conf</code> &#12398; PAM &#35373;&#23450;</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689847"><code class="filename">winbindd.so</code>&#12434;&#20351;&#12387;&#12383;&#36960;&#38548; CIFS &#35469;&#35388;</a></span></dt><dt><span class="sect2"><a href="pam.html#id2689982"><code class="filename">pam_smbpass.so</code> &#12434;&#20351;&#12387;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21516;&#26399;</a></span></dt></dl></dd><dt><span class="sect1"><a href="pam.html#id2690447">&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;</a></span></dt><dd><dl><dt><span class="sect2"><a href="pam.html#id2690462">pam_winbind &#12398;&#21839;&#38988;</a></span></dt><dt><span class="sect2"><a href="pam.html#id2690577">Winbind &#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12390;&#12367;&#12428;&#12394;&#12356;</a></span></dt></dl></dd></dl></div><p>
+<a class="indexterm" name="id2687278"></a>
+<a class="indexterm" name="id2687286"></a>
+<a class="indexterm" name="id2687292"></a>
+<a class="indexterm" name="id2687299"></a>
+&#12371;&#12398;&#31456;&#12399;&#12289;&#20309;&#12425;&#12363;&#12398; PAM &#12364;&#21033;&#29992;&#12391;&#12365;&#12427; UNIX/Linux &#12471;&#12473;&#12486;&#12512;&#12395;&#23550;&#12375;&#12390; Winbind
+&#12505;&#12540;&#12473;&#12398;&#35469;&#35388;&#12434;&#23566;&#20837;&#12377;&#12427;&#38555;&#12398;&#21161;&#12369;&#12395;&#12394;&#12427;&#12384;&#12429;&#12358;&#12290;Winbind &#12434;&#20351;&#12358;&#12392;&#12289;&#12356;&#12378;&#12428;&#12363;&#12398;
+Windows NT &#12489;&#12513;&#12452;&#12531;&#12289;Windows 200x &#12398; Active Directory &#12505;&#12540;&#12473;&#12398;&#12489;&#12513;&#12452;&#12531;&#12289;
+&#12381;&#12375;&#12390; Samba &#12505;&#12540;&#12473;&#12398;&#12489;&#12513;&#12452;&#12531;&#29872;&#22659;&#12395;&#12362;&#12356;&#12390;&#12289;&#12518;&#12540;&#12470;&#12524;&#12505;&#12523;&#12398;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;
+&#12450;&#12463;&#12475;&#12473;&#35469;&#35388;&#12434;&#21033;&#29992;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;&#12414;&#12383;&#12289;&#12354;&#12394;&#12383;&#12398; Samba &#29872;&#22659;&#12398;&#35373;&#23450;&#12395;
+&#23550;&#12377;&#12427;&#36969;&#20999;&#12394; PAM &#12505;&#12540;&#12473;&#12398;&#12525;&#12540;&#12459;&#12523;&#12507;&#12473;&#12488;&#12450;&#12463;&#12475;&#12473;&#21046;&#24481;&#12395;&#12418;&#24441;&#31435;&#12388;&#12290;
+</p><p>
+<a class="indexterm" name="id2687320"></a>
+<a class="indexterm" name="id2687327"></a>
+PAM &#32076;&#30001;&#12398; Winbind &#12398;&#35373;&#23450;&#26041;&#27861;&#12434;&#30693;&#12427;&#12371;&#12392;&#12395;&#21152;&#12360;&#12289;&#12373;&#12425;&#12395;&#19968;&#33324;&#30340;&#12394; PAM &#31649;&#29702;
+&#12398;&#21487;&#33021;&#24615;&#12392;&#12289;&#29305;&#12395; <code class="filename">pam_smbpass.so</code> &#12398;&#12424;&#12358;&#12394;&#12484;&#12540;&#12523;&#12434;
+&#23566;&#20837;&#12375;&#12390;&#20415;&#21033;&#12395;&#20351;&#12358;&#26041;&#27861;&#12418;&#23398;&#12406;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12384;&#12429;&#12358;&#12290;
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+Winbind &#12434;&#20351;&#12358;&#12398;&#12399;&#12289;PAM &#27083;&#25104;&#12434;&#21336;&#29420;&#12391;&#34892;&#12358;&#12424;&#12426;&#12418;&#25975;&#23621;&#12364;&#39640;&#12356;&#12290;Winbind &#12395;&#38306;&#12377;&#12427;
+&#12424;&#12426;&#35443;&#32048;&#12394;&#24773;&#22577;&#12395;&#12388;&#12356;&#12390;&#12399;
+<a class="link" href="winbind.html" title="Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;">Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#20351;&#12358;</a>
+&#12434;&#21442;&#29031;&#12373;&#12428;&#12383;&#12356;&#12290;
+</p></div><div class="sect1" title="&#12381;&#12398;&#27231;&#33021;&#12392;&#21033;&#28857;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2687367"></a>&#12381;&#12398;&#27231;&#33021;&#12392;&#21033;&#28857;</h2></div></div></div><p>
+<a class="indexterm" name="id2687375"></a>
+<a class="indexterm" name="id2687381"></a>
+<a class="indexterm" name="id2687388"></a>
+<a class="indexterm" name="id2687395"></a>
+<a class="indexterm" name="id2687404"></a>
+<a class="indexterm" name="id2687411"></a>
+<a class="indexterm" name="id2687418"></a>
+<a class="indexterm" name="id2687425"></a>
+&#29694;&#22312;&#12289;&#22810;&#12367;&#12398; UNIX &#12471;&#12473;&#12486;&#12512;&#65288;&#20363;&#65306;Oracle(Sun)Solaris&#65289;&#12420; xxxxBSD&#12501;&#12449;&#12511;&#12522;&#12540;&#12362;&#12424;&#12403;
+Linux &#12391;&#12399;&#12289;&#30528;&#33073;&#21487;&#33021;&#12394;&#35469;&#35388;&#12514;&#12472;&#12517;&#12540;&#12523;(PAM)&#27231;&#33021;&#12434;&#20351;&#12387;&#12390;&#20840;&#12390;&#12398;&#35469;&#35388;&#12289;&#25215;&#35469;&#20966;&#29702;&#12289;
+&#12522;&#12477;&#12540;&#12473;&#12398;&#21046;&#24481;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12375;&#12390;&#12356;&#12427;&#12290;PAM &#12398;&#23566;&#20837;&#20197;&#21069;&#12399;&#12289;&#12471;&#12473;&#12486;&#12512;&#12497;&#12473;&#12527;&#12540;&#12489;
+&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;(<code class="filename">/etc/passwd</code>)&#20197;&#22806;&#12398;&#12418;&#12398;&#12434;&#20351;&#12362;&#12358;&#12392;&#12377;&#12427;&#12394;&#12425;&#12289;
+&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#12377;&#12409;&#12390;&#12398;&#12503;&#12525;&#12464;&#12521;&#12512;&#12381;&#12428;&#12382;&#12428;&#12395;&#23550;&#12375;&#12390;&#20195;&#26367;&#25163;&#27573;
+&#12434;&#28310;&#20633;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;&#12388;&#12414;&#12426;&#12289;<code class="literal">login</code>, 
+<code class="literal">passwd</code>, <code class="literal">chown</code> &#12392;&#12356;&#12387;&#12383;&#12418;&#12398;&#12398;&#20195;&#26367;&#25163;&#27573;
+&#12434;&#21029;&#36884;&#29992;&#24847;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12392;&#12356;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2687478"></a>
+<a class="indexterm" name="id2687485"></a>
+<a class="indexterm" name="id2687492"></a>
+<a class="indexterm" name="id2687499"></a>
+PAM &#12434;&#20351;&#12358;&#12392;&#12289;&#12371;&#12428;&#12425;&#12398;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12503;&#12525;&#12464;&#12521;&#12512;&#12434;&#12289;&#12371;&#12428;&#12425;&#12364;&#20381;&#23384;&#12377;&#12427;&#35469;&#35388;&#65295;
+&#25215;&#35469;&#12452;&#12531;&#12501;&#12521;&#12363;&#12425;&#20999;&#12426;&#38626;&#12377;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;PAM &#12434;&#27083;&#25104;&#12377;&#12427;&#12395;&#12399;&#12289;
+<code class="filename">/etc/pam.conf</code> &#12392;&#12356;&#12358;&#65297;&#12388;&#12398;&#12501;&#12449;&#12452;&#12523;&#12434;&#36969;&#20999;&#12395;&#22793;&#26356;&#12377;&#12427;
+(Solaris)&#12363;&#12289;&#12414;&#12383;&#12399;<code class="filename">/etc/pam.d</code>&#37197;&#19979;&#12395;&#12354;&#12427;&#20491;&#21029;&#12398;&#21046;&#24481;
+&#12501;&#12449;&#12452;&#12523;&#12434;&#32232;&#38598;&#12377;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2687531"></a>
+<a class="indexterm" name="id2687538"></a>
+PAM &#12364;&#26377;&#21177;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427; UNIX/Linux &#12471;&#12473;&#12486;&#12512;&#12391;&#12399;&#12289;&#21205;&#30340;&#12394;&#12525;&#12540;&#12489;&#12364;&#12391;&#12365;&#12427;&#36969;&#20999;&#12394;
+&#12521;&#12452;&#12502;&#12521;&#12522;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#21033;&#29992;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12387;&#12390;&#12356;&#12428;&#12400;&#12289;&#12471;&#12473;&#12486;&#12512;&#12391;&#12373;&#12414;&#12374;&#12414;&#12394;
+&#35469;&#35388;&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12434;&#20351;&#12358;&#12424;&#12358;&#12395;&#27083;&#25104;&#12377;&#12427;&#12398;&#12399;&#31777;&#21336;&#12391;&#12354;&#12427;&#12290;&#12381;&#12428;&#12425;&#12398;&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12399;
+&#12471;&#12473;&#12486;&#12512;&#12391;&#12525;&#12540;&#12459;&#12523;&#12395;&#38281;&#12376;&#12390;&#12356;&#12390;&#12418;&#12424;&#12356;&#12375;&#12289;&#12522;&#12514;&#12540;&#12488;&#12469;&#12540;&#12496;&#19978;&#12391;&#38598;&#32004;&#12373;&#12428;&#12390;&#12356;&#12390;&#12418;&#12424;&#12356;&#12290;
+</p><p>
+PAM &#12469;&#12509;&#12540;&#12488;&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#20351;&#12360;&#12427;&#12418;&#12398;&#65306;
+</p><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/passwd</code></span></dt><dd><p>
+<a class="indexterm" name="id2687576"></a>
+<a class="indexterm" name="id2687583"></a>
+<a class="indexterm" name="id2687589"></a>
+<a class="indexterm" name="id2687596"></a>
+<a class="indexterm" name="id2687603"></a>
+<a class="indexterm" name="id2687610"></a>
+&#12371;&#12428;&#12425;&#12398; PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#27161;&#28310;&#12398; UNIX &#12518;&#12540;&#12470;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#21033;&#29992;&#12377;&#12427;&#12290;
+&#26368;&#12418;&#26377;&#21517;&#12394;&#12418;&#12398;&#12399;&#12289;<code class="filename">pam_unix.so</code>, 
+<code class="filename">pam_unix2.so</code>, <code class="filename">pam_pwdb.so</code>,
+<code class="filename">pam_userdb.so</code>&#12392;&#21628;&#12400;&#12428;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+</p></dd><dt><span class="term">Kerberos</span></dt><dd><p>
+<a class="indexterm" name="id2687655"></a>
+<a class="indexterm" name="id2687662"></a>
+<a class="indexterm" name="id2687668"></a>
+<a class="indexterm" name="id2687675"></a>
+<a class="indexterm" name="id2687682"></a>
+<code class="filename">pam_krb5.so</code> &#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#20351;&#12358;&#12392;&#12289;&#12465;&#12523;&#12505;&#12525;&#12473;&#28310;&#25312;&#12398;
+&#12354;&#12425;&#12422;&#12427;&#12469;&#12540;&#12496;&#12434;&#20351;&#12360;&#12427;&#12290;&#12371;&#12398;&#12484;&#12540;&#12523;&#12399; MIT Kerberos, Heimdal Kerberos, 
+&#12381;&#12375;&#12390;&#12362;&#12381;&#12425;&#12367;&#65288;&#12418;&#12375;&#26377;&#21177;&#12391;&#12354;&#12428;&#12400;&#65289;Microsoft Active Directory &#12395;&#12450;&#12463;&#12475;&#12473;
+&#12377;&#12427;&#12398;&#12395;&#12418;&#20351;&#12360;&#12427;&#12290;
+</p></dd><dt><span class="term">LDAP</span></dt><dd><p>
+<a class="indexterm" name="id2687713"></a>
+<a class="indexterm" name="id2687720"></a>
+<a class="indexterm" name="id2687727"></a>
+<a class="indexterm" name="id2687734"></a>
+<a class="indexterm" name="id2687741"></a>
+<a class="indexterm" name="id2687748"></a>
+<code class="filename">pam_ldap.so</code> &#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#20351;&#12358;&#12392;&#12289;LDAP v2 &#12418;&#12375;&#12367;&#12399; v3
+&#28310;&#25312;&#12398;&#12354;&#12425;&#12422;&#12427;&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12469;&#12540;&#12496;&#12434;&#20351;&#12360;&#12427;&#12290;&#12424;&#12367;&#20351;&#12431;&#12428;&#12427; LDAP &#12496;&#12483;&#12463;&#12456;&#12531;&#12489;
+&#12469;&#12540;&#12496;&#12395;&#12399; OpenLDAP v2.0 and v2.1, Sun ONE iDentity server, 
+Novell eDirectory server, Microsoft Active Directory &#12364;&#12354;&#12427;&#12290;
+</p></dd><dt><span class="term">NetWare Bindery</span></dt><dd><p>
+<a class="indexterm" name="id2687781"></a>
+<a class="indexterm" name="id2687788"></a>
+<a class="indexterm" name="id2687794"></a>
+<a class="indexterm" name="id2687801"></a>
+<code class="filename">pam_ncp_auth.so</code> &#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#20351;&#12358;&#12392;&#12289;&#12496;&#12452;&#12531;&#12480;&#12522;(Bindery)&#12364;
+&#26377;&#21177;&#12394; NetWare &#12467;&#12450;&#12503;&#12525;&#12488;&#12467;&#12523;&#12505;&#12540;&#12473;&#12398;&#12469;&#12540;&#12496;&#12395;&#12424;&#12427;&#35469;&#35388;&#12434;&#21033;&#29992;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;
+</p></dd><dt><span class="term">SMB Password</span></dt><dd><p>
+<a class="indexterm" name="id2687830"></a>
+<a class="indexterm" name="id2687837"></a>
+<a class="indexterm" name="id2687844"></a>
+<code class="filename">pam_smbpass.so</code> &#12392;&#21628;&#12400;&#12428;&#12427;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#20351;&#12358;&#12392;&#12289;Samba &#12398;
+<code class="filename">smb.conf</code> &#12501;&#12449;&#12452;&#12523;&#12391;&#35373;&#23450;&#12373;&#12428;&#12383; passdb &#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12398;&#12518;&#12540;&#12470;&#35469;&#35388;&#12434;&#21033;&#29992;
+&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;
+</p></dd><dt><span class="term">SMB Server</span></dt><dd><p>
+<a class="indexterm" name="id2687878"></a>
+<a class="indexterm" name="id2687885"></a>
+<code class="filename">pam_smb_auth.so</code> &#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;&#12458;&#12522;&#12472;&#12490;&#12523;&#12398; MS Windows
+&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#35469;&#35388;&#12398;&#12383;&#12417;&#12398;&#12484;&#12540;&#12523;&#12391;&#12354;&#12427;&#12290;Winbind &#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12522;&#12522;&#12540;&#12473;
+&#12373;&#12428;&#12390;&#12356;&#12427;&#29694;&#22312;&#12289;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12377;&#12391;&#12395;&#22810;&#23569;&#21476;&#33261;&#12367;&#12394;&#12387;&#12390;&#12375;&#12414;&#12387;&#12390;&#12356;&#12427;&#12290;
+</p></dd><dt><span class="term">Winbind</span></dt><dd><p>
+<a class="indexterm" name="id2687916"></a>
+<a class="indexterm" name="id2687923"></a>
+<a class="indexterm" name="id2687930"></a>
+<a class="indexterm" name="id2687937"></a>
+<code class="filename">pam_winbind.so</code> &#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;Samba &#12399; MS Windows &#12398;
+&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12540;&#12363;&#12425;&#12398;&#35469;&#35388;&#24773;&#22577;&#12434;&#21462;&#24471;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;PAM &#12364;&#26377;&#21177;&#12394;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#23550;&#12375;&#12390;&#35469;&#35388;&#12373;&#12428;&#12383;&#12518;&#12540;&#12470;&#12408;&#12398;
+&#12450;&#12463;&#12475;&#12473;&#27177;&#12434;&#19982;&#12360;&#12427;&#12398;&#12364;&#31777;&#21336;&#12395;&#12394;&#12427;&#12290;
+</p></dd><dt><span class="term">RADIUS</span></dt><dd><p>
+<a class="indexterm" name="id2687970"></a>
+PAM RADIUS (Remote Access Dial-In User Service) &#12392;&#21628;&#12400;&#12428;&#12427;&#35469;&#35388;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12354;&#12427;&#12290;
+&#12411;&#12392;&#12435;&#12393;&#12398;&#12465;&#12540;&#12473;&#12391;&#12399;&#12289;&#31649;&#29702;&#32773;&#12364;&#12371;&#12398;&#12484;&#12540;&#12523;&#12398;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12434;&#25345;&#12387;&#12390;&#12365;&#12390;&#33258;&#20998;&#33258;&#36523;&#12391;
+&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12434;&#34892;&#12358;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;RADIUS &#12503;&#12525;&#12488;&#12467;&#12523;&#12399;&#22810;&#12367;&#12398;&#12523;&#12540;&#12479;&#12420;&#12479;&#12540;&#12511;&#12490;&#12523;
+&#12469;&#12540;&#12496;&#12391;&#20351;&#12431;&#12428;&#12390;&#12356;&#12427;&#12503;&#12525;&#12488;&#12467;&#12523;&#12391;&#12354;&#12427;&#12290;
+</p></dd></dl></div><p>
+<a class="indexterm" name="id2687997"></a>
+<a class="indexterm" name="id2688004"></a>
+&#19978;&#35352;&#12398;&#12358;&#12385;&#12289;<code class="filename">pam_smbpasswd.so</code> &#12392; <code class="filename">pam_winbind.so</code>
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;Samba &#33258;&#36523;&#12364;&#25552;&#20379;&#12377;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2688029"></a>
+<a class="indexterm" name="id2688036"></a>
+<a class="indexterm" name="id2688043"></a>
+<a class="indexterm" name="id2688051"></a>
+&#12356;&#12387;&#12383;&#12435;&#12371;&#12428;&#12425;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#35373;&#23450;&#12375;&#12390;&#12375;&#12414;&#12360;&#12400;&#12289;&#24195;&#31684;&#22258;&#12395;&#12414;&#12383;&#12364;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;
+&#24111;&#22495;&#12420; PAM &#12434;&#21033;&#29992;&#12375;&#12383;&#21177;&#29575;&#30340;&#12394;&#35469;&#35388;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#12424;&#12358;&#12394;&#20998;&#25955; Samba &#12489;&#12513;&#12452;&#12531;
+&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12398;&#21033;&#29992;&#12395;&#12362;&#12356;&#12390;&#12418;&#12289;&#39640;&#12356;&#26580;&#36575;&#24615;&#12434;&#24471;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;&#12388;&#12414;&#12426;&#12289;&#21336;&#19968;&#12398;
+&#12518;&#12540;&#12470;&#12450;&#12459;&#12454;&#12531;&#12488;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#20351;&#12387;&#12390;&#12289;&#20013;&#22830;&#38598;&#20013;&#30340;&#12394;&#31649;&#29702;&#12420;&#20445;&#23432;&#12398;&#34892;&#12365;&#23626;&#12356;&#12383;
+&#20998;&#25955;&#35469;&#35388;&#12434;&#23455;&#29694;&#12391;&#12365;&#12427;&#12398;&#12391;&#12354;&#12427;&#12290;
+</p></div><div class="sect1" title="&#25216;&#34899;&#30340;&#12394;&#35696;&#35542;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2688070"></a>&#25216;&#34899;&#30340;&#12394;&#35696;&#35542;</h2></div></div></div><p>
+<a class="indexterm" name="id2688078"></a>
+<a class="indexterm" name="id2688084"></a>
+<a class="indexterm" name="id2688092"></a>
+<a class="indexterm" name="id2688099"></a>
+&#12471;&#12473;&#12486;&#12512;&#31649;&#29702;&#32773;&#12364;&#33258;&#20998;&#12398;&#12471;&#12473;&#12486;&#12512;&#19978;&#12398;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#12450;&#12463;&#12475;&#12473;&#27177;&#12434;&#20184;&#19982;&#12377;&#12427;&#38555;&#12289;
+PAM &#12399;&#12363;&#12394;&#12426;&#26580;&#36575;&#12395;&#35373;&#23450;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#35373;&#35336;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;PAM &#12395;&#12424;&#12387;&#12390;&#21046;&#24481;&#12373;&#12428;&#12427;
+&#12471;&#12473;&#12486;&#12512;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12398;&#12383;&#12417;&#12398;&#12525;&#12540;&#12459;&#12523;&#35373;&#23450;&#12395;&#12399;&#12289;&#21336;&#19968;&#12501;&#12449;&#12452;&#12523; 
+<code class="filename">/etc/pam.conf</code> &#12392; <code class="filename">/etc/pam.d/</code>
+&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12540;&#12398;&#65298;&#12388;&#12364;&#12354;&#12427;&#12290;
+</p><div class="sect2" title="PAM &#35373;&#23450;&#12398;&#12383;&#12417;&#12398;&#25991;&#27861;"><div class="titlepage"><div><div><h3 class="title"><a name="id2688130"></a>PAM &#35373;&#23450;&#12398;&#12383;&#12417;&#12398;&#25991;&#27861;</h3></div></div></div><p>
+<a class="indexterm" name="id2688139"></a>
+<a class="indexterm" name="id2688146"></a>
+&#12371;&#12398;&#31456;&#12391;&#12399;&#12289;&#12371;&#12428;&#12425;&#12398;&#12501;&#12449;&#12452;&#12523;&#12391;&#35352;&#36848;&#12377;&#12427;&#12456;&#12531;&#12488;&#12522;&#12395;&#38306;&#12377;&#12427;&#27491;&#12375;&#12356;&#25991;&#27861;&#12289;&#12362;&#12424;&#12403;
+&#19968;&#33324;&#30340;&#12394;&#12458;&#12503;&#12471;&#12519;&#12531;&#12395;&#12388;&#12356;&#12390;&#35299;&#35500;&#12377;&#12427;&#12290;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12395;&#12362;&#12369;&#12427; PAM &#29305;&#26377;&#12398;
+&#12488;&#12540;&#12463;&#12531;&#12391;&#12399;&#12289;&#22823;&#25991;&#23383;&#23567;&#25991;&#23383;&#12398;&#21306;&#21029;&#12434;&#34892;&#12431;&#12394;&#12356;&#12290;&#12383;&#12384;&#12375;&#12289;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#12497;&#12473;
+&#12395;&#12388;&#12356;&#12390;&#12399;&#22823;&#25991;&#23383;&#23567;&#25991;&#23383;&#12434;&#21306;&#21029;&#12377;&#12427;&#12290;&#12394;&#12380;&#12394;&#12425;&#12289;&#12371;&#12428;&#12425;&#12399;&#12501;&#12449;&#12452;&#12523;&#12398;&#21517;&#21069;&#12434;
+&#31034;&#12377;&#12418;&#12398;&#12391;&#12354;&#12426;&#12289;&#22823;&#25991;&#23383;&#23567;&#25991;&#23383;&#12434;&#21306;&#21029;&#12377;&#12427;&#12424;&#12358;&#12394;&#19968;&#33324;&#30340;&#12394;&#12501;&#12449;&#12452;&#12523;&#12471;&#12473;&#12486;&#12512;
+&#12398;&#24615;&#36074;&#12395;&#24433;&#38911;&#12434;&#21463;&#12369;&#12427;&#12363;&#12425;&#12391;&#12354;&#12427;&#12290;&#19982;&#12360;&#12425;&#12428;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#28193;&#12377;&#12383;&#12417;&#12398;
+&#24341;&#25968;&#12364;&#22823;&#25991;&#23383;&#23567;&#25991;&#23383;&#12434;&#21306;&#21029;&#12377;&#12427;&#12363;&#12393;&#12358;&#12363;&#12399;&#12289;&#12381;&#12428;&#12382;&#12428;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#35215;&#23450;
+&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+</p><p>
+&#24460;&#36848;&#12398;&#35373;&#23450;&#34892;&#12395;&#21152;&#12360;&#12289;&#12471;&#12473;&#12486;&#12512;&#31649;&#29702;&#32773;&#12398;&#20415;&#23452;&#12398;&#12383;&#12417;&#12395;&#65298;&#12388;&#12398;&#29305;&#27530;&#25991;&#23383;&#12364;&#12354;&#12427;&#65306;
+<span class="quote">&#8220;<span class="quote">#</span>&#8221;</span> &#12363;&#12425;&#34892;&#26411;&#12414;&#12391;&#12399;&#12467;&#12513;&#12531;&#12488;&#12392;&#12415;&#12394;&#12373;&#12428;&#12427;&#12290;&#12414;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;
+&#25351;&#23450;&#12377;&#12427;&#34892;&#12395;&#12388;&#12356;&#12390;&#12399; <span class="quote">&#8220;<span class="quote">\</span>&#8221;</span> &#12391;&#25913;&#34892;&#12434;&#12456;&#12473;&#12465;&#12540;&#12503;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;
+&#27425;&#12398;&#34892;&#12395;&#12414;&#12383;&#12364;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2688202"></a>
+<a class="indexterm" name="id2688209"></a>
+PAM &#12398;&#35469;&#35388;&#12514;&#12472;&#12517;&#12540;&#12523;&#65288;&#12480;&#12452;&#12490;&#12511;&#12483;&#12463;&#12522;&#12531;&#12463;&#12373;&#12428;&#12383;&#12521;&#12452;&#12502;&#12521;&#12522;&#12501;&#12449;&#12452;&#12523;&#65289;&#12364;
+&#26082;&#23450;&#20516;&#12398;&#20301;&#32622;&#12395;&#12354;&#12427;&#22580;&#21512;&#12399;&#12289;&#12381;&#12398;&#12497;&#12473;&#12434;&#26126;&#31034;&#12377;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;&#12290;Linux &#12398;&#22580;&#21512;&#12289;
+&#26082;&#23450;&#20516;&#12398;&#20301;&#32622;&#12399; <code class="filename">/lib/security</code> &#12392;&#12394;&#12427;&#12290;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;
+&#26082;&#23450;&#20516;&#20301;&#32622;&#20197;&#22806;&#12395;&#12354;&#12427;&#22580;&#21512;&#12399;
+</p><pre class="programlisting">
+auth  required  /other_path/pam_strange_module.so
+</pre><p>
+&#12398;&#12424;&#12358;&#12395;&#12497;&#12473;&#12434;&#26126;&#31034;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+</p><div class="sect3" title="/etc/pam.d &#12395;&#12354;&#12427;&#12456;&#12531;&#12488;&#12522;&#12540;&#12398;&#27083;&#36896;"><div class="titlepage"><div><div><h4 class="title"><a name="id2688242"></a><code class="filename">/etc/pam.d</code> &#12395;&#12354;&#12427;&#12456;&#12531;&#12488;&#12522;&#12540;&#12398;&#27083;&#36896;</h4></div></div></div><p>
+&#12371;&#12398;&#12475;&#12463;&#12471;&#12519;&#12531;&#12398;&#27531;&#12426;&#12398;&#37096;&#20998;&#12399;&#12289;Linux-PAM &#12503;&#12525;&#12472;&#12455;&#12463;&#12488;&#12398;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12363;&#12425;
+&#12398;&#24341;&#29992;&#12391;&#12354;&#12427;&#12290;PAM &#12395;&#38306;&#12377;&#12427;&#35443;&#32048;&#12399;
+<a class="ulink" href="http://ftp.kernel.org/pub/linux/libs/pam/" target="_top">the Official Linux-PAM home page</a>
+&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+</p><p>
+<a class="indexterm" name="id2688271"></a>
+<code class="filename">/etc/pam.conf</code> &#12501;&#12449;&#12452;&#12523;&#20013;&#12398;&#19968;&#33324;&#30340;&#12394;&#35373;&#23450;&#34892;&#12399;&#12289;
+&#20197;&#19979;&#12398;&#26360;&#24335;&#12391;&#35352;&#36848;&#12377;&#12427;&#65306;
+</p><pre class="programlisting">
+&#12469;&#12540;&#12499;&#12473;&#21517;  &#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;  &#21046;&#24481;&#12501;&#12521;&#12464;  &#12514;&#12472;&#12517;&#12540;&#12523;&#12497;&#12473;  &#24341;&#25968;
+</pre><p>
+</p><p>
+&#12371;&#12428;&#12425;&#21508;&#12488;&#12540;&#12463;&#12531;&#12398;&#24847;&#21619;&#12395;&#12388;&#12356;&#12390;&#35299;&#35500;&#12377;&#12427;&#12290;Linux-PAM &#12434;&#27083;&#25104;&#12377;&#12427;&#12383;&#12417;&#12398;2&#30058;&#30446;
+&#12398;&#12420;&#12426;&#26041;&#65288;&#26368;&#36817;&#12399;&#12416;&#12375;&#12429;&#12371;&#12385;&#12425;&#12398;&#26041;&#12364;&#22810;&#12356;&#12424;&#12358;&#12384;&#12364;&#65289;&#12399;&#12289;
+<code class="filename">/etc/pam.d/</code> &#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12540;&#12398;&#20013;&#36523;&#12434;&#20171;&#12377;&#12427;&#12392;&#12356;&#12358;&#26041;&#27861;
+&#12391;&#12354;&#12427;&#12290;&#12381;&#12428;&#12382;&#12428;&#12398;&#12488;&#12540;&#12463;&#12531;&#12398;&#24847;&#21619;&#12377;&#12427;&#12392;&#12371;&#12429;&#12434;&#35299;&#35500;&#12375;&#12383;&#24460;&#12289;&#12371;&#12398;&#26041;&#27861;&#12395;&#12388;&#12356;&#12390;
+&#36848;&#12409;&#12427;&#12371;&#12392;&#12395;&#12377;&#12427;&#12290;
+</p><div class="variablelist"><dl><dt><span class="term">&#12469;&#12540;&#12499;&#12473;&#21517;</span></dt><dd><p>
+<a class="indexterm" name="id2688329"></a>
+<a class="indexterm" name="id2688336"></a>
+<a class="indexterm" name="id2688342"></a>
+&#12371;&#12398;&#12456;&#12531;&#12488;&#12522;&#12395;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12427;&#12469;&#12540;&#12499;&#12473;&#12398;&#21517;&#21069;&#12290;<code class="literal">ftpd</code>, 
+<code class="literal">rlogind</code>, <code class="literal">su</code> &#12398;&#12424;&#12358;&#12395;&#12289;&#12469;&#12540;&#12499;&#12473;&#21517;&#12399;
+&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#12388;&#12369;&#12425;&#12428;&#12383;&#20253;&#32113;&#30340;&#12394;&#21517;&#21069;&#12391;&#12354;&#12427;&#12371;&#12392;&#12364;&#22810;&#12356;&#12290;
+</p><p>
+&#26082;&#23450;&#20516;&#12398;&#35469;&#35388;&#12513;&#12459;&#12491;&#12474;&#12512;&#12434;&#23450;&#32681;&#12377;&#12427;&#12383;&#12417;&#12395;&#20104;&#32004;&#12373;&#12428;&#12390;&#12356;&#12427;&#12289;&#29305;&#21029;&#12394;&#21517;&#21069;&#12418;&#12354;&#12427;&#12290;
+&#12371;&#12428;&#12399; <em class="parameter"><code>OTHER</code></em> &#12392;&#21628;&#12400;&#12428;&#12427;&#12364;&#12289;&#22823;&#25991;&#23383;&#23567;&#25991;&#23383;&#12399;&#22266;&#23450;&#12373;&#12428;&#12390;
+&#12356;&#12394;&#12356;&#12290;&#21517;&#21069;&#20184;&#12365;&#12469;&#12540;&#12499;&#12473;&#12395;&#29305;&#21270;&#12375;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12354;&#12427;&#22580;&#21512;&#12289;
+<em class="parameter"><code>OTHER</code></em>&#12456;&#12531;&#12488;&#12522;&#12540;&#12399;&#28961;&#35222;&#12373;&#12428;&#12427;&#20107;&#12395;&#27880;&#24847;&#12290;
+		</p></dd><dt><span class="term">&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;</span></dt><dd><p>
+&#65288;&#29694;&#26178;&#28857;&#12391;&#12399;&#65289;&#20197;&#19979;&#12398;&#36890;&#12426;4&#12388;&#12398;&#12479;&#12452;&#12503;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12354;&#12427;&#12290;
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<a class="indexterm" name="id2688418"></a>
+<a class="indexterm" name="id2688425"></a>
+<em class="parameter"><code>auth:</code></em> &#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12399;&#12289;&#12518;&#12540;&#12470;&#12434;&#35469;&#35388;
+&#12377;&#12427;&#12395;&#12354;&#12383;&#12387;&#12390;&#65298;&#12388;&#12398;&#20596;&#38754;&#12364;&#12354;&#12427;&#12290;&#12414;&#12378;&#12289;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#23550;&#12375;&#12390;
+&#12497;&#12473;&#12527;&#12540;&#12489;&#21839;&#12356;&#21512;&#12431;&#12379;&#12398;&#25351;&#31034;&#12434;&#34892;&#12358;&#12363;&#12289;&#12414;&#12383;&#12399;&#21029;&#12398;&#25163;&#27573;&#12434;&#20351;&#12387;&#12390;&#12289;&#25805;&#20316;
+&#12375;&#12390;&#12356;&#12427;&#12518;&#12540;&#12470;&#12364;&#35504;&#12394;&#12398;&#12363;&#12434;&#29305;&#23450;&#12377;&#12427;&#12290;&#27425;&#12395;&#12289;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12381;&#12398;
+&#36039;&#26684;&#35469;&#23450;&#12363;&#12425;&#25215;&#35469;&#12392;&#12356;&#12358;&#24615;&#36074;&#12434;&#36890;&#12375;&#12390;(<code class="filename">/etc/groups</code> 
+&#12501;&#12449;&#12452;&#12523;&#12392;&#12399;&#29420;&#31435;&#12375;&#12383;&#24418;&#12391;)&#12464;&#12523;&#12540;&#12503;&#12398;&#20250;&#21729;&#36039;&#26684;&#12420;&#12381;&#12398;&#20182;&#12398;&#29305;&#27177;&#12395;&#38306;&#12377;&#12427;
+&#35377;&#21487;&#12434;&#19982;&#12360;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+			</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2688463"></a>
+<a class="indexterm" name="id2688469"></a>
+<em class="parameter"><code>account:</code></em> &#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;&#35469;&#35388;&#12434;&#12505;&#12540;&#12473;&#12392;&#12375;&#12394;&#12356;
+&#12450;&#12459;&#12454;&#12531;&#12488;&#31649;&#29702;&#12434;&#34892;&#12358;&#12290;&#12424;&#12367;&#12354;&#12427;&#21033;&#29992;&#27861;&#12392;&#12375;&#12390;&#12399;&#12289;&#21033;&#29992;&#26178;&#38291;&#24111;&#12289;&#29694;&#26178;&#28857;&#12391;&#21033;&#29992;
+&#21487;&#33021;&#12394;&#12471;&#12473;&#12486;&#12512;&#12522;&#12477;&#12540;&#12473;&#65288;&#26368;&#22823;&#12518;&#12540;&#12470;&#25968;&#65289;&#12289;&#12414;&#12383;&#12399;&#12518;&#12540;&#12470;&#12364;&#12525;&#12464;&#12452;&#12531;&#12375;&#12383;&#22580;&#25152;
+&#12394;&#12393;&#12434;&#12505;&#12540;&#12473;&#12392;&#12375;&#12383;&#12289;&#12469;&#12540;&#12499;&#12473;&#12408;&#12398;&#12450;&#12463;&#12475;&#12473;&#12398;&#21046;&#38480;&#12420;&#35377;&#21487;&#12364;&#25369;&#12370;&#12425;&#12428;&#12427;&#12290;
+&#12383;&#12392;&#12360;&#12400; <span class="quote">&#8220;<span class="quote">root</span>&#8221;</span> &#12525;&#12464;&#12452;&#12531;&#12398;&#35377;&#21487;&#12399;&#12289;&#12467;&#12531;&#12477;&#12540;&#12523;&#12363;&#12425;&#12398;&#12415;&#12395;&#21046;&#38480;
+&#12373;&#12428;&#12390;&#12356;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;
+			</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2688504"></a>
+<em class="parameter"><code>session:</code></em> &#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;&#20027;&#12395;&#23550;&#35937;&#12398;&#12518;&#12540;&#12470;&#12364;
+&#12469;&#12540;&#12499;&#12473;&#12434;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12427;&#21069;&#24460;&#12395;&#34892;&#12431;&#12428;&#12427;&#12409;&#12365;&#12371;&#12392;&#12395;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12427;&#12290;
+&#12383;&#12392;&#12360;&#12400;&#12381;&#12398;&#12518;&#12540;&#12470;&#12395;&#38306;&#12377;&#12427;&#20309;&#12425;&#12363;&#12398;&#12487;&#12540;&#12479;&#20132;&#25563;&#12434;&#12377;&#12427;&#38555;&#12398;&#12458;&#12540;&#12503;&#12531;/&#12463;&#12525;&#12540;&#12474;
+&#24773;&#22577;&#12398;&#12525;&#12464;&#12434;&#21462;&#12387;&#12383;&#12426;&#12289;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#12510;&#12454;&#12531;&#12488;&#12377;&#12427;&#12371;&#12392;&#12394;&#12393;&#12364;&#25369;&#12370;&#12425;&#12428;&#12427;&#12290;
+</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2688531"></a>
+<em class="parameter"><code>password:</code></em> &#12371;&#12398;&#26368;&#24460;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12399;&#12289;&#12381;&#12398;&#12518;&#12540;&#12470;&#12395;
+&#38306;&#36899;&#12377;&#12427;&#35469;&#35388;&#12488;&#12540;&#12463;&#12531;&#12434;&#26356;&#26032;&#12377;&#12427;&#12383;&#12417;&#12395;&#24517;&#35201;&#12394;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#20856;&#22411;&#30340;&#12395;&#12399;&#12289;
+<span class="quote">&#8220;<span class="quote">&#12481;&#12515;&#12524;&#12531;&#12472;/&#12524;&#12473;&#12509;&#12531;&#12473;</span>&#8221;</span> &#35469;&#35388;&#12434;&#34892;&#12358;
+<em class="parameter"><code>(auth)</code></em> &#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12364;&#12354;&#12427;&#12290;
+</p></li></ul></div></dd><dt><span class="term">&#21046;&#24481;&#12501;&#12521;&#12464;</span></dt><dd><p>&#21046;&#24481;&#12501;&#12521;&#12464;&#12399;&#12289;&#38306;&#36899;&#12377;&#12427;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#25104;&#21151;&#65295;&#22833;&#25943;&#12395;&#23550;&#12375;&#12390; PAM
+&#12521;&#12452;&#12502;&#12521;&#12522;&#12364;&#12393;&#12358;&#23550;&#24540;&#12377;&#12427;&#12398;&#12363;&#12434;&#25351;&#31034;&#12377;&#12427;&#12398;&#12395;&#20351;&#12431;&#12428;&#12427;&#12290;PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#32676;&#12399;
+&#12473;&#12479;&#12483;&#12463;&#21270;(&#21516;&#12376;&#12479;&#12452;&#12503;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#32676;&#12434;&#27425;&#12293;&#12395;&#37325;&#12397;&#12427;&#12371;&#12392;)&#12391;&#12365;&#12427;&#12398;&#12391;&#12289;
+&#21046;&#24481;&#12501;&#12521;&#12464;&#12364;&#12381;&#12428;&#12382;&#12428;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#30456;&#23550;&#30340;&#12394;&#37325;&#35201;&#24230;&#12434;&#27770;&#23450;&#12377;&#12427;&#12290;
+&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12399; <code class="filename">/etc/pam.conf</code> &#12501;&#12449;&#12452;&#12523;&#12395;&#12354;&#12427;
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#12388;&#12356;&#12390;&#12289;&#20491;&#12293;&#12398;&#25104;&#21151;&#12420;&#22833;&#25943;&#12395;&#24433;&#38911;&#12373;&#12428;&#12394;&#12356;&#12290;&#12381;&#12398;&#20195;&#12431;&#12426;&#12289;
+Linux-PAM &#12521;&#12452;&#12502;&#12521;&#12522;&#12363;&#12425;&#12398;&#25104;&#21151;&#12420;&#22833;&#25943;&#12398;&#24540;&#31572;&#12398;&#12469;&#12510;&#12522;&#12434;&#21463;&#12369;&#21462;&#12427;&#12290;
+&#12371;&#12428;&#12425;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;<code class="filename">/etc/pam.conf</code> &#12395;&#35352;&#36848;
+&#12373;&#12428;&#12390;&#12356;&#12427;&#38918;&#12395;&#23455;&#34892;&#12373;&#12428;&#12427;&#12290;&#12388;&#12414;&#12426;&#21069;&#12398;&#26041;&#12395;&#12354;&#12427;&#12456;&#12531;&#12488;&#12522;&#12399;&#24460;&#12429;&#12398;&#26041;&#12398;
+&#12418;&#12398;&#12424;&#12426;&#20808;&#12395;&#23455;&#34892;&#12373;&#12428;&#12427;&#12290;Linux-PAM v0.60 &#12398;&#22580;&#21512;&#12289;&#21046;&#24481;&#12501;&#12521;&#12464;&#12399;&#65298;&#12388;&#12398;
+&#25991;&#27861;&#12398;&#12358;&#12385;&#12398;&#12356;&#12378;&#12428;&#12363;&#12391;&#23450;&#32681;&#12391;&#12365;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2688618"></a>
+<a class="indexterm" name="id2688625"></a>
+<a class="indexterm" name="id2688632"></a>
+<a class="indexterm" name="id2688639"></a>
+&#21046;&#24481;&#12501;&#12521;&#12464;&#12395;&#12388;&#12356;&#12390;&#12398;&#12471;&#12531;&#12503;&#12523;&#12394;(&#12363;&#12388;&#24467;&#26469;&#12398;)&#25991;&#27861;&#12391;&#12399;&#12289;&#29305;&#23450;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;
+&#12398;&#25104;&#21151;&#12420;&#22833;&#25943;&#12395;&#12388;&#12356;&#12390;&#12289;&#12381;&#12428;&#12425;&#12434;&#36890;&#30693;&#12377;&#12427;&#12383;&#12417;&#12398;&#37325;&#22823;&#24230;&#12434;&#21336;&#19968;&#12398;&#12461;&#12540;&#12527;&#12540;&#12489;&#12391;
+&#25351;&#23450;&#12377;&#12427;&#12290;&#12461;&#12540;&#12527;&#12540;&#12489;&#12395;&#12399; <em class="parameter"><code>required</code></em>, 
+<em class="parameter"><code>requisite</code></em>, <em class="parameter"><code>sufficient</code></em>, 
+<em class="parameter"><code>optional</code></em> &#12398;4&#31278;&#39006;&#12354;&#12427;&#12290;
+	</p><p>
+		Linux-PAM &#12521;&#12452;&#12502;&#12521;&#12522;&#12391;&#12399;&#20197;&#19979;&#12398;&#26041;&#24335;&#12391;&#12371;&#12428;&#12425;&#12398;&#12461;&#12540;&#12527;&#12540;&#12489;&#12434;
+		&#35299;&#37320;&#12377;&#12427;&#12290;
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<em class="parameter"><code>required:</code></em>&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#27231;&#33021;&#12364;&#25104;&#21151;&#12377;&#12427;&#12383;&#12417;&#12395;&#12399;
+&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#25104;&#21151;&#12377;&#12427;&#12371;&#12392;&#12364;&#24517;&#38920;&#12391;&#12354;&#12427;&#12290;&#12383;&#12384;&#12375;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#22833;&#25943;
+&#12375;&#12383;&#22580;&#21512;&#12391;&#12418;&#12289;(&#21516;&#12376;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12434;&#25345;&#12388;)&#27531;&#12426;&#12398;&#12377;&#12409;&#12390;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;
+&#23455;&#34892;&#12364;&#23436;&#20102;&#12377;&#12427;&#12414;&#12391;&#12399;&#12289;&#22833;&#25943;&#12375;&#12383;&#12371;&#12392;&#12399;&#12518;&#12540;&#12470;&#12395;&#12399;&#36890;&#30693;&#12373;&#12428;&#12394;&#12356;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>requisite:</code></em> required &#12392;&#20284;&#12390;&#12356;&#12427;&#12364;&#12289;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;
+&#12364;&#22833;&#25943;&#12434;&#36820;&#12375;&#12383;&#12392;&#12365;&#21046;&#24481;&#12364;&#30452;&#25509;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#25147;&#12373;&#12428;&#12427;&#12392;&#12371;&#12429;&#12364;&#30064;&#12394;&#12427;&#12290;
+&#12381;&#12398;&#25147;&#12426;&#20516;&#12399;&#12289;&#22833;&#25943;&#12375;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#12358;&#12385;&#26368;&#21021;&#12395; required &#12418;&#12375;&#12367;&#12399; requisite 
+&#25351;&#23450;&#12373;&#12428;&#12390;&#12356;&#12383;&#12418;&#12398;&#12395;&#38306;&#36899;&#20184;&#12369;&#12425;&#12428;&#12427;&#12290;&#23433;&#20840;&#12391;&#12394;&#12356;&#23186;&#20307;&#12434;&#36890;&#12375;&#12390;&#12518;&#12540;&#12470;&#12364;
+&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#20837;&#21147;&#12377;&#12427;&#12424;&#12358;&#12394;&#21487;&#33021;&#24615;&#12364;&#12354;&#12427;&#22580;&#21512;&#12289;&#12371;&#12398;&#12501;&#12521;&#12464;&#12399;&#12381;&#12398;&#29366;&#27841;&#12434;&#25490;&#38500;
+&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#12360;&#12427;&#12290;&#12381;&#12398;&#12424;&#12358;&#12394;&#21487;&#33021;&#24615;&#12364;&#27531;&#12387;&#12390;&#12356;&#12427;&#12392;&#12289;&#12471;&#12473;&#12486;&#12512;&#19978;&#12398;&#26377;&#21177;&#12394;
+&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#24773;&#22577;&#12434;&#25915;&#25731;&#32773;&#12395;&#30693;&#12425;&#12379;&#12390;&#12375;&#12414;&#12358;&#12424;&#12358;&#12394;&#12371;&#12392;&#12395;&#12388;&#12394;&#12364;&#12426;&#12363;&#12397;&#12394;&#12356;&#12290;
+&#12371;&#12398;&#12424;&#12358;&#12394;&#21487;&#33021;&#24615;&#12364;&#12354;&#12427;&#12392;&#12289;&#20849;&#29992;&#12507;&#12473;&#12488;&#29872;&#22659;&#12391;&#24910;&#37325;&#12395;&#25201;&#12358;&#12409;&#12365;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;
+&#20844;&#38283;&#12375;&#12390;&#12375;&#12414;&#12358;&#12424;&#12358;&#12394;&#12422;&#12422;&#12375;&#12365;&#29872;&#22659;&#12395;&#12362;&#12356;&#12390;&#12289;&#19968;&#26041;&#30340;&#12395;&#19981;&#21033;&#12395;&#12394;&#12427;&#12384;&#12429;&#12358;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>sufficient:</code></em> &#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#25104;&#21151;&#12377;&#12427;&#12392;&#12289;Linux-PAM 
+&#12521;&#12452;&#12502;&#12521;&#12522;&#12364;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12395;&#12388;&#12356;&#12390;&#12381;&#12398;&#30446;&#30340;&#12434;&#36948;&#25104;&#12375;&#12383;&#12418;&#12398;&#12392;&#12377;&#12427;&#12398;&#12395;
+<em class="parameter"><code>sufficient</code></em>(&#21313;&#20998;&#12391;&#12354;&#12427;)&#12392;&#12415;&#12394;&#12373;&#12428;&#12427;&#12290;
+&#12371;&#12428;&#12414;&#12391;&#12395;&#35201;&#27714;&#12373;&#12428;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#12358;&#12385;&#22833;&#25943;&#12375;&#12383;&#12418;&#12398;&#12364;&#12394;&#12356;&#22580;&#21512;&#12289;&#12371;&#12398;&#12479;&#12452;&#12503;&#12395;
+&#38306;&#12375;&#12390;<span class="quote">&#8220;<span class="quote">&#12473;&#12479;&#12483;&#12463;&#12373;&#12428;&#12383;</span>&#8221;</span>&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;&#12371;&#12428;&#20197;&#19978;&#36215;&#21205;&#12373;&#12428;&#12394;&#12356;
+(&#12371;&#12398;&#22580;&#21512;&#12289;&#12371;&#12398;&#24460;&#12395;&#32154;&#12367;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#36215;&#21205;&#12373;&#12428;&#12394;&#12356;)&#12290;
+&#12383;&#12384;&#12375;&#12289;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#22833;&#25943;&#12375;&#12390;&#12418;&#12289;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12524;&#12505;&#12523;&#12391;&#25104;&#21151;&#12375;&#12383;
+&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#12388;&#12356;&#12390;&#12399;&#33268;&#21629;&#30340;&#12456;&#12521;&#12540;&#12392;&#12399;&#12415;&#12394;&#12373;&#12428;&#12394;&#12356;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>optional:</code></em> &#12371;&#12398;&#21046;&#24481;&#12501;&#12521;&#12464;&#12399;&#12289;&#12381;&#12398;&#21517;&#21069;&#12364;&#31034;&#12375;&#12390;
+&#12356;&#12427;&#12424;&#12358;&#12395;&#12289;&#12381;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#25104;&#21151;/&#22833;&#25943;&#12364;&#12289;&#12381;&#12398;&#12518;&#12540;&#12470;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;
+&#12364;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12391;&#12365;&#12427;&#12363;&#12393;&#12358;&#12363;&#12434;&#27770;&#12417;&#12427;&#12418;&#12398;&#12391;&#12399;&#12394;&#12356;&#12371;&#12392;&#12434;&#31034;&#12377;&#12290;&#19968;&#33324;&#12395;&#12289;
+&#12381;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#20840;&#20307;&#12364;&#25104;&#21151;&#12363;&#22833;&#25943;&#12363;&#12434;&#27770;&#23450;&#12377;&#12427;&#38555;&#12289;Linux-PAM 
+&#12399;&#12371;&#12398;&#12424;&#12358;&#12394;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#32771;&#24942;&#12375;&#12394;&#12356;&#12290;&#12375;&#12363;&#12375;&#12394;&#12364;&#12425;&#12289;&#12381;&#12428;&#20197;&#21069;&#12418;&#12375;&#12367;&#12399;
+&#12381;&#12428;&#20197;&#38477;&#12398;&#12393;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12418;&#26126;&#30906;&#12395;&#25104;&#21151;&#12363;&#22833;&#25943;&#12363;&#12434;&#31034;&#12373;&#12394;&#12356;&#22580;&#21512;&#12289;&#12371;&#12398;
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12408;&#12398;&#24540;&#31572;&#12398;&#24615;&#36074;&#12434;&#27770;&#12417;&#12427;&#12371;&#12392;&#12364;&#12354;&#12427;&#12290;
+&#24460;&#32773;&#12398;&#12402;&#12392;&#12388;&#12398;&#20363;&#12392;&#12375;&#12390;&#12289;&#20182;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364; PAM_IGNORE &#12398;&#12424;&#12358;&#12394;&#12418;&#12398;&#12434;
+&#36820;&#12375;&#12383;&#22580;&#21512;&#12364;&#25369;&#12370;&#12425;&#12428;&#12427;&#12290;
+			</p></li></ul></div><p>
+&#12518;&#12540;&#12470;&#12434;&#35469;&#35388;&#12377;&#12427;&#26041;&#27861;&#12395;&#12388;&#12356;&#12390;&#12289;&#12381;&#12398;&#25991;&#27861;&#12364;&#35079;&#38609;&#12395;(&#26032;&#12375;&#12367;)&#12394;&#12428;&#12400;
+&#12394;&#12427;&#12411;&#12393;&#12289;&#31649;&#29702;&#32773;&#12399;&#12424;&#12426;&#35443;&#12375;&#12367;&#35352;&#36848;&#12375;&#12289;&#12424;&#12426;&#32048;&#12363;&#12367;&#21046;&#24481;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;
+&#12394;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#12371;&#12398;&#21046;&#24481;&#12501;&#12521;&#12464;&#12398;&#26360;&#24335;&#12399;&#12289;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;
+<em class="parameter"><code>&#20516;=&#12450;&#12463;&#12471;&#12519;&#12531;</code></em> &#12488;&#12540;&#12463;&#12531;&#12398;&#20006;&#12403;&#12364;
+&#22823;&#25324;&#24359;&#12391;&#21306;&#20999;&#12425;&#12428;&#12383;&#12418;&#12398;&#12391;&#12354;&#12427;:
+		</p><pre class="programlisting">
+[&#20516;1=&#12450;&#12463;&#12471;&#12519;&#12531;1 &#20516;2=&#12450;&#12463;&#12471;&#12519;&#12531;2 ...]
+</pre><p>
+&#12371;&#12371;&#12391;&#12289;<em class="parameter"><code>&#20516;1</code></em> &#12399;&#20197;&#19979;&#12398;&#25147;&#12426;&#20516;&#12398;&#12356;&#12378;&#12428;&#12363;&#12391;&#12354;&#12427;:
+</p><pre class="screen">
+<em class="parameter"><code>success; open_err; symbol_err; service_err; system_err; buf_err;</code></em>
+<em class="parameter"><code>perm_denied; auth_err; cred_insufficient; authinfo_unavail;</code></em>
+<em class="parameter"><code>user_unknown; maxtries; new_authtok_reqd; acct_expired; session_err;</code></em>
+<em class="parameter"><code>cred_unavail; cred_expired; cred_err; no_module_data; conv_err;</code></em>
+<em class="parameter"><code>authtok_err; authtok_recover_err; authtok_lock_busy;</code></em>
+<em class="parameter"><code>authtok_disable_aging; try_again; ignore; abort; authtok_expired;</code></em>
+<em class="parameter"><code>module_unknown; bad_item;</code></em> &#12392; <em class="parameter"><code>default</code></em>.
+</pre><p>
+</p><p>
+&#26368;&#24460;&#12398;<em class="parameter"><code>default</code></em>&#12399;&#12289;&#26126;&#31034;&#30340;&#12395;&#23450;&#32681;&#12373;&#12428;&#12394;&#12356;&#25147;&#12426;&#20516;&#12395;&#23550;&#12377;&#12427;
+&#21205;&#20316;&#12434;&#35215;&#23450;&#12377;&#12427;&#12398;&#12395;&#20351;&#12360;&#12427;&#12290;
+		</p><p>
+<em class="parameter"><code>&#12450;&#12463;&#12471;&#12519;&#12531;1</code></em> &#12395;&#12399;&#27491;&#12398;&#25972;&#25968;&#12363;&#12414;&#12383;&#12399;&#20197;&#19979;&#12398;&#12488;&#12540;&#12463;&#12531;
+&#12398;&#12356;&#12378;&#12428;&#12363;&#12434;&#25351;&#23450;&#12377;&#12427;:
+<em class="parameter"><code>ignore</code></em>; <em class="parameter"><code>ok</code></em>; <em class="parameter"><code>done</code></em>;
+<em class="parameter"><code>bad</code></em>; <em class="parameter"><code>die</code></em>; <em class="parameter"><code>reset</code></em>.
+&#27491;&#12398;&#25972;&#25968; J &#12364;&#12450;&#12463;&#12471;&#12519;&#12531;&#12392;&#12375;&#12390;&#25351;&#23450;&#12373;&#12428;&#12383;&#22580;&#21512;&#12289;&#29694;&#22312;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12479;&#12452;&#12503;&#12395;&#12388;&#12356;&#12390;
+&#32154;&#12367; J &#20491;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12473;&#12461;&#12483;&#12503;&#12377;&#12427;&#12290;&#12371;&#12398;&#26041;&#27861;&#12395;&#12424;&#12426;&#12289;&#31649;&#29702;&#32773;&#12399;&#30064;&#12394;&#12387;&#12383;&#23455;&#34892;
+&#12497;&#12473;&#12434;&#25345;&#12388;&#22810;&#12367;&#12398;&#12473;&#12479;&#12483;&#12463;&#12373;&#12428;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12289;&#36969;&#24230;&#12395;&#27927;&#32244;&#12373;&#12428;&#12383;&#26041;&#27861;&#12391;&#32068;&#12415;&#21512;&#12431;&#12379;&#12427;
+&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;&#20491;&#12293;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#21453;&#24540;&#12395;&#12424;&#12387;&#12390;&#12289;&#12393;&#12398;&#12497;&#12473;&#12395;&#12354;&#12427;&#12418;&#12398;&#12364;&#36969;&#29992;&#12373;&#12428;&#12427;&#12363;&#12364;
+&#27770;&#23450;&#12373;&#12428;&#12427;&#12290;
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<em class="parameter"><code>ignore:</code></em> &#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#12395;&#23550;&#12375;&#12390;&#20351;&#12431;&#12428;&#12427;&#12392;&#12289;&#12381;&#12398;
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#25147;&#12426;&#20516;&#12399;&#12289;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#21463;&#12369;&#21462;&#12427;&#12522;&#12479;&#12540;&#12531;&#12467;&#12540;&#12489;&#12395;&#12399;&#24433;&#38911;&#12375;&#12394;&#12356;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>bad:</code></em> &#12371;&#12398;&#12450;&#12463;&#12471;&#12519;&#12531;&#12364;&#25351;&#23450;&#12373;&#12428;&#12427;&#12392;&#12289;&#25147;&#12426;&#20516;&#12399;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;
+&#22833;&#25943;&#12434;&#34920;&#12375;&#12390;&#12356;&#12427;&#12392;&#12415;&#12394;&#12373;&#12428;&#12427;&#12290;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#12473;&#12479;&#12483;&#12463;&#12398;&#20013;&#12391;&#26368;&#21021;&#12395;&#22833;&#25943;&#12377;&#12427;&#12392;&#12289;
+&#12381;&#12398;&#25147;&#12426;&#20516;&#12399;&#12473;&#12479;&#12483;&#12463;&#20840;&#20307;&#12398;&#20516;&#12392;&#12375;&#12390;&#20351;&#12431;&#12428;&#12427;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>die:</code></em> bad &#12392;&#21516;&#12376;&#12384;&#12364;&#12289;&#12373;&#12425;&#12395;&#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#12364;&#32066;&#20102;
+&#12375;&#12390;&#21363;&#26178;&#12395; PAM &#12364;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#32080;&#26524;&#12434;&#36820;&#12377;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>ok:</code></em> &#12371;&#12398;&#25147;&#12426;&#20516;&#12434;&#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#20840;&#20307;&#12398;&#25147;&#12426;&#20516;
+&#12392;&#12375;&#12390;&#30452;&#25509;&#36820;&#12377;&#12409;&#12365;&#12384;&#12392;&#31649;&#29702;&#32773;&#12364;&#32771;&#12360;&#12390;&#12356;&#12427;&#12371;&#12392;&#12434; PAM &#12395;&#25945;&#12360;&#12427;&#12290;&#12388;&#12414;&#12426;&#12289;
+&#12371;&#12398;&#12473;&#12479;&#12483;&#12463;&#12398;&#30452;&#21069;&#12398;&#29366;&#24907;&#12364;&#25147;&#12426;&#20516; PAM_SUCCESS &#12434;&#36820;&#12377;&#12371;&#12392;&#12395;&#12394;&#12387;&#12390;&#12356;&#12383;
+&#22580;&#21512;&#12399;&#12289;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#25147;&#12426;&#20516;&#12364;&#12371;&#12398;&#20516;&#12434;&#19978;&#26360;&#12365;&#12377;&#12427;&#12290;&#12418;&#12375;&#12473;&#12479;&#12483;&#12463;&#12398;&#30452;&#21069;&#12398;
+&#29366;&#24907;&#12364;&#29305;&#23450;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#22833;&#25943;&#12434;&#34920;&#12377;&#20309;&#12425;&#12363;&#12398;&#20516;&#12434;&#20445;&#25345;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;&#12399;&#12289;
+&#12371;&#12398; <em class="parameter"><code>ok</code></em>&#20516;&#12399;&#12381;&#12398;&#20516;&#12434;&#19978;&#26360;&#12365;&#12375;&#12394;&#12356;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>done:</code></em> <em class="parameter"><code>ok</code></em> &#12392;&#21516;&#12376;&#12384;&#12364;&#12289;
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#12434;&#32066;&#20102;&#12373;&#12379;&#12390; PAM &#12398;&#21046;&#24481;&#12434;&#21363;&#26178;&#12395;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;
+&#25147;&#12377;&#12392;&#12356;&#12358;&#21103;&#20316;&#29992;&#12364;&#12354;&#12427;&#12392;&#12371;&#12429;&#12364;&#30064;&#12394;&#12427;&#12290;
+                        </p></li><li class="listitem"><p>
+<em class="parameter"><code>reset:</code></em> &#12514;&#12472;&#12517;&#12540;&#12523;&#12473;&#12479;&#12483;&#12463;&#12398;&#29366;&#24907;&#12434;&#20445;&#25345;&#12377;&#12427;&#12513;&#12514;&#12522;
+&#12434;&#12463;&#12522;&#12450;&#12375;&#12289;&#27425;&#12398;&#12473;&#12479;&#12483;&#12463;&#12514;&#12472;&#12517;&#12540;&#12523;&#12363;&#12425;&#23455;&#34892;&#12434;&#20877;&#38283;&#12377;&#12427;&#12290;
+			</p></li></ul></div><p>
+<em class="parameter"><code>required</code></em>; <em class="parameter"><code>requisite</code></em>;
+<em class="parameter"><code>sufficient</code></em>; <em class="parameter"><code>optional</code></em>
+&#12399;&#12381;&#12428;&#12382;&#12428; [...] &#12392;&#12356;&#12358;&#27083;&#25991;&#12434;&#12418;&#12388;&#12392;&#12356;&#12358;&#24847;&#21619;&#12391;&#12399;&#21516;&#31561;&#12398;&#12289;&#20197;&#19979;&#12398;&#34920;&#29694;&#12434;
+&#20633;&#12360;&#12390;&#12356;&#12427;&#65306;
+		</p><p>
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<em class="parameter"><code>required</code></em> &#12399;
+<em class="parameter"><code>[success=ok new_authtok_reqd=ok ignore=ignore default=bad]</code></em>
+&#12392;&#21516;&#31561;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>requisite</code></em> &#12399;
+<em class="parameter"><code>[success=ok new_authtok_reqd=ok ignore=ignore default=die]</code></em>
+&#12392;&#21516;&#31561;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>sufficient</code></em> &#12399;
+<em class="parameter"><code>[success=done  new_authtok_reqd=done  default=ignore]</code></em>
+&#12392;&#21516;&#31561;&#12290;
+			</p></li><li class="listitem"><p>
+<em class="parameter"><code>optional</code></em> &#12399;
+<em class="parameter"><code>[success=ok new_authtok_reqd=ok default=ignore]</code></em>
+&#12392;&#21516;&#31561;&#12391;&#12354;&#12427;&#12290;
+			</p></li></ul></div><p>
+		</p><p>
+&#12371;&#12398;&#26032;&#12375;&#12356;&#26360;&#24335;&#12364;&#25345;&#12388;&#12497;&#12527;&#12540;&#12398;&#24863;&#35302;&#12434;&#12388;&#12363;&#12416;&#12383;&#12417;&#12395;&#12289;&#12371;&#12428;&#12391;&#20309;&#12364;&#12391;&#12365;&#12427;
+&#12398;&#12363;&#12434;&#20307;&#39443;&#12375;&#12390;&#12415;&#12427;&#12392;&#12424;&#12356;&#12384;&#12429;&#12358;&#12290;Linux-PAM-0.63 &#12391;&#12399;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12539;
+&#12503;&#12521;&#12464;&#12452;&#12531;&#12539;&#12456;&#12540;&#12472;&#12455;&#12531;&#12488;&#12398;&#27010;&#24565;&#12364;&#23566;&#20837;&#12373;&#12428;&#12383;&#12290;&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;PAM &#12391;&#12399;
+&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12539;&#12469;&#12540;&#12496;&#12539;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#23550;&#12375;&#12390;&#12289;&#12488;&#12521;&#12531;&#12473;&#12509;&#12540;&#12488;&#12539;
+&#12503;&#12525;&#12488;&#12467;&#12523;&#12398;&#32153;&#25215;&#12434;&#21033;&#29992;&#12375;&#12383;&#12510;&#12471;&#12531;&#38291;&#12398;&#35469;&#35388;&#12434;&#21487;&#33021;&#12395;&#12375;&#12390;&#12356;&#12427;&#12290;
+<em class="parameter"><code>[ ... value=action ... ]</code></em> &#12392;&#12356;&#12358;&#21046;&#24481;&#29992;&#27083;&#25991;
+&#12395;&#12424;&#12426;&#12289;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#12381;&#12428;&#12395;&#28310;&#25312;&#12377;&#12427;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12395;&#23550;&#12375;&#12390;
+&#12496;&#12452;&#12490;&#12522;&#12539;&#12503;&#12525;&#12531;&#12503;&#12488;&#12398;&#12469;&#12509;&#12540;&#12488;&#12434;&#27083;&#25104;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#12290;&#12383;&#12384;&#12375;
+&#12524;&#12460;&#12471;&#12540;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12398;&#22580;&#21512;&#12399;&#26580;&#36575;&#12395;&#20195;&#26367;&#35469;&#35388;&#12514;&#12540;&#12489;&#12395;&#12501;&#12455;&#12452;&#12523;
+&#12458;&#12540;&#12496;&#12540;&#12391;&#12365;&#12427;&#12290;
+		</p></dd><dt><span class="term">module-path</span></dt><dd><p>
+&#21205;&#30340;&#12525;&#12540;&#12480;&#12502;&#12523;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12501;&#12449;&#12452;&#12523;&#12398;&#12497;&#12473;&#21517; - &#24046;&#12375;&#26367;&#12360;&#21487;&#33021;&#12394;
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12381;&#12398;&#12418;&#12398;&#12290;&#12514;&#12472;&#12517;&#12540;&#12523;&#12497;&#12473;&#12398;&#26368;&#21021;&#12398;&#25991;&#23383;&#12364;
+<span class="quote">&#8220;<span class="quote">/</span>&#8221;</span> &#12398;&#22580;&#21512;&#12289;&#12381;&#12428;&#12399;&#32118;&#23550;&#12497;&#12473;&#12391;&#12354;&#12427;&#12392;&#12415;&#12394;&#12373;&#12428;&#12427;&#12290;
+&#12381;&#12358;&#12391;&#12394;&#12356;&#22580;&#21512;&#12289;&#19982;&#12360;&#12425;&#12428;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#12497;&#12473;&#12399;&#26082;&#23450;&#20516;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;
+&#12497;&#12473;&#12391;&#12354;&#12427; <code class="filename">/lib/security</code> &#12398;&#24460;&#12429;&#12395;&#20184;&#21152;&#12373;&#12428;&#12427;
+(&#12383;&#12384;&#12375;&#21069;&#36848;&#12398;&#27880;&#24847;&#20107;&#38917;&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;)&#12290;
+		</p><p>
+&#24341;&#25968;&#12399;&#12289;&#36215;&#21205;&#26178;&#12395;&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#28193;&#12373;&#12428;&#12427;&#12488;&#12540;&#12463;&#12531;&#12398;&#12522;&#12473;&#12488;&#12391;&#12354;&#12426;&#12289;&#20856;&#22411;&#30340;&#12394;
+Linux &#12398;&#12471;&#12455;&#12523;&#12467;&#12510;&#12531;&#12489;&#12408;&#12398;&#24341;&#25968;&#12392;&#21516;&#27096;&#12391;&#12354;&#12427;&#12290;&#19968;&#33324;&#30340;&#12395;&#12289;&#26377;&#21177;&#12394;&#24341;&#25968;&#12399;
+&#12458;&#12503;&#12471;&#12519;&#12531;&#12391;&#12354;&#12426;&#12289;&#19982;&#12360;&#12425;&#12428;&#12383;&#12514;&#12472;&#12517;&#12540;&#12523;&#22266;&#26377;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12371;&#12392;&#12364;&#22810;&#12356;&#12290;
+&#28961;&#21177;&#12394;&#24341;&#25968;&#12399;&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#12424;&#12387;&#12390;&#28961;&#35222;&#12373;&#12428;&#12427;&#12290;&#12375;&#12363;&#12375;&#12394;&#12364;&#12425;&#12289;&#28961;&#21177;&#12394;&#24341;&#25968;&#12395;
+&#20986;&#20250;&#12387;&#12383;&#22580;&#21512;&#12289;&#12381;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399; syslog(3) &#12395;&#23550;&#12375;&#12390;&#12456;&#12521;&#12540;&#12513;&#12483;&#12475;&#12540;&#12472;&#12434;
+&#20986;&#21147;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;&#20849;&#36890;&#30340;&#12394;&#12458;&#12503;&#12471;&#12519;&#12531;&#12395;&#12388;&#12356;&#12390;&#12399;&#27425;&#12398;&#31680;&#12434;
+&#21442;&#29031;&#12375;&#12390;&#27442;&#12375;&#12356;&#12290;
+		</p><p>
+&#24341;&#25968;&#12398;&#20013;&#12395;&#31354;&#30333;&#12434;&#21547;&#12417;&#12427;&#22580;&#21512;&#12399;&#24341;&#25968;&#20840;&#20307;&#12434;&#22823;&#25324;&#24359; [] &#12391;&#25324;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12290;
+&#27425;&#12395;&#20363;&#12434;&#31034;&#12377;:
+		</p><pre class="programlisting">
+squid auth required pam_mysql.so user=passwd_query passwd=mada \
+db=eminence [query=select user_name from internet_service where \
+user_name=<span class="quote">&#8220;<span class="quote">%u</span>&#8221;</span> and password=PASSWORD(<span class="quote">&#8220;<span class="quote">%p</span>&#8221;</span>) and service=<span class="quote">&#8220;<span class="quote">web_proxy</span>&#8221;</span>]
+</pre><p>
+&#12371;&#12398;&#26360;&#24335;&#12434;&#20351;&#12358;&#22580;&#21512;&#12399;&#25991;&#23383;&#21015;&#12398;&#20013;&#12395; <span class="quote">&#8220;<span class="quote">[</span>&#8221;</span> &#25991;&#23383;&#12434;&#21547;&#12435;&#12391;&#12418;&#12424;&#12356;&#12290;
+&#12414;&#12383;&#25991;&#23383;&#21015;&#12398;&#20013;&#12395; <span class="quote">&#8220;<span class="quote">]</span>&#8221;</span> &#25991;&#23383;&#12434;&#21547;&#12417;&#12427;&#22580;&#21512;&#12399;&#12289;&#24341;&#25968;&#12398;&#35299;&#26512;&#12364;
+&#27491;&#12375;&#12367;&#34892;&#12360;&#12427;&#12424;&#12358;&#12395; <span class="quote">&#8220;<span class="quote">\[</span>&#8221;</span> &#12434;&#20351;&#12358;&#12409;&#12365;&#12391;&#12354;&#12427;&#12290;&#12377;&#12394;&#12431;&#12385;&#20197;&#19979;&#12398;
+&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;
+		</p><pre class="programlisting">
+[..[..\]..]    --&gt;   ..[..]..
+</pre><p>
+&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12398;&#20013;&#12391;&#12402;&#12392;&#12388;&#12391;&#12418;&#26360;&#24335;&#12364;&#27491;&#12375;&#12367;&#12394;&#12356;&#34892;&#12364;&#12354;&#12428;&#12400;&#12289;(&#12456;&#12521;&#12540;&#12364;
+&#36215;&#12371;&#12387;&#12390;)&#35469;&#35388;&#20966;&#29702;&#12399;&#22833;&#25943;&#12377;&#12427;&#12392;&#24605;&#12387;&#12383;&#26041;&#12364;&#12424;&#12356;&#12290;&#23550;&#24540;&#12377;&#12427;&#12456;&#12521;&#12540;&#12399;
+syslog(3) &#12408;&#12398;&#21628;&#12403;&#20986;&#12375;&#12434;&#36890;&#12375;&#12390;&#12471;&#12473;&#12486;&#12512;&#12398;&#12525;&#12464;&#12501;&#12449;&#12452;&#12523;&#12395;&#26360;&#12365;&#36796;&#12414;&#12428;&#12427;&#12290;
+		</p></dd></dl></div></div></div><div class="sect2" title="&#12471;&#12473;&#12486;&#12512;&#35373;&#23450;&#12398;&#20363;"><div class="titlepage"><div><div><h3 class="title"><a name="id2689384"></a>&#12471;&#12473;&#12486;&#12512;&#35373;&#23450;&#12398;&#20363;</h3></div></div></div><p>
+&#20197;&#19979;&#12399;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523; <code class="filename">/etc/pam.d/login</code>&#12398;&#20363;&#12391;&#12354;&#12427;&#12290;
+&#12371;&#12398;&#20363;&#12391;&#12399;&#12377;&#12409;&#12390;&#12398;&#12458;&#12503;&#12471;&#12519;&#12531;&#12364;&#12467;&#12513;&#12531;&#12488;&#29366;&#24907;&#12434;&#12399;&#12378;&#12373;&#12428;&#12390;(=&#26377;&#21177;&#12395;&#12394;&#12387;&#12390;)&#12362;&#12426;&#12289;
+&#12362;&#12381;&#12425;&#12367;&#12371;&#12398;&#12414;&#12414;&#12391;&#12399;&#20351;&#12356;&#29289;&#12395;&#12394;&#12425;&#12394;&#12356;&#12384;&#12429;&#12358;&#12290;&#12392;&#12356;&#12358;&#12398;&#12399;&#12289;&#12525;&#12464;&#12452;&#12531;&#12503;&#12525;&#12475;&#12473;
+&#12364;&#25104;&#21151;&#12377;&#12427;&#12414;&#12391;&#12395;&#22810;&#12367;&#12398;&#26465;&#20214;&#12364;&#31309;&#12415;&#37325;&#12394;&#12387;&#12390;&#12356;&#12427;&#12363;&#12425;&#12391;&#12354;&#12427;&#12290;
+<code class="filename">pam_pwdb.so</code> &#12398;&#21628;&#12403;&#20986;&#12375;&#12434;&#38500;&#12365;&#12289;&#21407;&#21063;&#30340;&#12395;&#12399;&#12377;&#12409;&#12390;&#12398;
+&#26465;&#20214;&#12434;&#12467;&#12513;&#12531;&#12488;&#12450;&#12454;&#12488;&#12375;&#12390;&#28961;&#21177;&#12395;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+</p><div class="sect3" title="PAM: &#12458;&#12522;&#12472;&#12490;&#12523;&#12398;&#12525;&#12464;&#12452;&#12531;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2689421"></a>PAM: &#12458;&#12522;&#12472;&#12490;&#12523;&#12398;&#12525;&#12464;&#12452;&#12531;&#35373;&#23450;</h4></div></div></div><p>
+	</p><pre class="programlisting">
+#%PAM-1.0
+# The PAM configuration file for the <span class="quote">&#8220;<span class="quote">login</span>&#8221;</span> service
+#
+auth         required    pam_securetty.so
+auth         required    pam_nologin.so
+# auth       required    pam_dialup.so
+# auth       optional    pam_mail.so
+auth         required    pam_pwdb.so shadow md5
+# account    requisite   pam_time.so
+account      required    pam_pwdb.so
+session      required    pam_pwdb.so
+# session    optional    pam_lastlog.so
+# password   required    pam_cracklib.so retry=3
+password     required    pam_pwdb.so shadow md5
+</pre><p>
+</p></div><div class="sect3" title="PAM: pam_smbpass &#12434;&#20351;&#12387;&#12383;&#12525;&#12464;&#12452;&#12531;"><div class="titlepage"><div><div><h4 class="title"><a name="id2689450"></a>PAM: <code class="filename">pam_smbpass</code> &#12434;&#20351;&#12387;&#12383;&#12525;&#12464;&#12452;&#12531;</h4></div></div></div><p>
+PAM &#12391;&#12399;&#20132;&#25563;&#24335;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#21033;&#29992;&#12391;&#12365;&#12427;&#12290;&#12469;&#12531;&#12503;&#12523;&#12471;&#12473;&#12486;&#12512;&#12391;&#12399;
+&#20197;&#19979;&#12398;&#12418;&#12398;&#12364;&#21033;&#29992;&#21487;&#33021;:
+</p><p><code class="prompt">$</code><strong class="userinput"><code>/bin/ls /lib/security</code></strong>
+</p><pre class="programlisting">
+pam_access.so    pam_ftp.so          pam_limits.so     
+pam_ncp_auth.so  pam_rhosts_auth.so  pam_stress.so     
+pam_cracklib.so  pam_group.so        pam_listfile.so   
+pam_nologin.so   pam_rootok.so       pam_tally.so      
+pam_deny.so      pam_issue.so        pam_mail.so       
+pam_permit.so    pam_securetty.so    pam_time.so       
+pam_dialup.so    pam_lastlog.so      pam_mkhomedir.so  
+pam_pwdb.so      pam_shells.so       pam_unix.so       
+pam_env.so       pam_ldap.so         pam_motd.so       
+pam_radius.so    pam_smbpass.so      pam_unix_acct.so  
+pam_wheel.so     pam_unix_auth.so    pam_unix_passwd.so
+pam_userdb.so    pam_warn.so         pam_unix_session.so
+</pre><p>
+&#20197;&#19979;&#12398;&#12525;&#12464;&#12452;&#12531;&#12503;&#12525;&#12464;&#12521;&#12512;&#12398;&#20363;&#12391;&#12399;&#12289;&#12471;&#12473;&#12486;&#12512;&#12497;&#12473;&#12527;&#12540;&#12489;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;
+(<code class="filename">/etc/passwd</code>,
+<code class="filename">/etc/shadow</code>, <code class="filename">/etc/group</code>) 
+&#12434;&#20351;&#12358; <code class="filename">pam_pwdb.so</code> &#12434;
+<code class="filename">pam_smbpass.so</code> &#12391;&#32622;&#12365;&#25563;&#12360;&#12390;&#12356;&#12427;&#12290;
+&#24460;&#32773;&#12391;&#12399; Microsoft MD4 &#26263;&#21495;&#21270;&#12497;&#12473;&#12527;&#12540;&#12489;&#12495;&#12483;&#12471;&#12517;&#12434;&#21547;&#12416; Samba 
+&#12398;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#20351;&#12358;&#12290;&#12371;&#12398;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12399;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427; UNIX/Linux 
+&#12471;&#12473;&#12486;&#12512;&#12398;&#23455;&#35013;&#12395;&#12424;&#12426;
+<code class="filename">/usr/local/samba/private/smbpasswd</code>, 
+<code class="filename">/etc/samba/smbpasswd</code>,
+<code class="filename">/etc/samba.d/smbpasswd</code>
+&#12398;&#12356;&#12378;&#12428;&#12363;&#12395;&#26684;&#32013;&#12373;&#12428;&#12427;&#12290;<code class="filename">pam_smbpass.so</code> 
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12399; Samba 2.2.1 &#20197;&#38477;&#12391;&#25552;&#20379;&#12373;&#12428;&#12427;&#12290;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;
+&#12467;&#12531;&#12497;&#12452;&#12523;&#12375;&#12383;&#12356;&#22580;&#21512;&#12399;&#12289;Samba &#12398; <code class="literal">configure</code> 
+&#12473;&#12463;&#12522;&#12503;&#12488;&#23455;&#34892;&#26178;&#12395; <code class="option">--with-pam_smbpass</code> 
+&#12458;&#12503;&#12471;&#12519;&#12531;&#12434;&#25351;&#23450;&#12377;&#12427;&#12290;<code class="filename">pam_smbpass</code> 
+&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#38306;&#12377;&#12427;&#35443;&#32048;&#12395;&#12388;&#12356;&#12390;&#12399; Samba &#12477;&#12540;&#12473;&#12398;&#37197;&#24067;&#29289;&#12398;
+<code class="filename">source/pam_smbpass</code> &#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#12354;&#12427;
+&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12434;&#21442;&#29031;&#12375;&#12390;&#27442;&#12375;&#12356;&#12290;
+</p><p>
+	</p><pre class="programlisting">
+#%PAM-1.0
+# The PAM configuration file for the <span class="quote">&#8220;<span class="quote">login</span>&#8221;</span> service
+#
+auth        required    pam_smbpass.so nodelay
+account     required    pam_smbpass.so nodelay
+session     required    pam_smbpass.so nodelay
+password    required    pam_smbpass.so nodelay
+</pre><p>
+&#20197;&#19979;&#12395;&#12289;&#12354;&#12427; Linux &#12471;&#12473;&#12486;&#12512;&#12395;&#12362;&#12369;&#12427; PAM &#12398;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12434;&#31034;&#12377;&#12290;
+&#26082;&#23450;&#20516;&#12398;&#35373;&#23450;&#12391;&#12399; <code class="filename">pam_pwdb.so</code> &#12434;&#20351;&#12358;&#12290;
+</p><p>
+	</p><pre class="programlisting">
+#%PAM-1.0
+# The PAM configuration file for the <span class="quote">&#8220;<span class="quote">samba</span>&#8221;</span> service
+#
+auth       required     pam_pwdb.so nullok nodelay shadow audit
+account    required     pam_pwdb.so audit nodelay
+session    required     pam_pwdb.so nodelay
+password   required     pam_pwdb.so shadow md5
+</pre><p>
+&#20197;&#19979;&#12398;&#20363;&#12391;&#12399;&#12289;&#22522;&#26412;&#30340;&#12394; Samba &#35469;&#35388;&#12391;&#12354;&#12387;&#12390;&#12418;
+<code class="literal">smbpasswd</code> &#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#20351;&#12358;&#12424;&#12358;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#12290;
+&#12371;&#12398;&#12424;&#12358;&#12394;&#35373;&#23450;&#12434;&#34892;&#12387;&#12383;&#22580;&#21512;&#12289;<code class="literal">passwd</code> &#12503;&#12525;&#12464;&#12521;&#12512;&#12395;
+&#23550;&#12375;&#12390;&#12418;&#24433;&#38911;&#12434;&#21450;&#12412;&#12377;&#12290;&#12388;&#12414;&#12426;&#12289;<code class="literal">smbpasswd</code> &#12398;
+&#12497;&#12473;&#12527;&#12540;&#12489;&#12434; <code class="literal">passwd</code> &#12467;&#12510;&#12531;&#12489;&#12391;&#22793;&#26356;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;:
+</p><p>
+		</p><pre class="programlisting">
+#%PAM-1.0
+# The PAM configuration file for the <span class="quote">&#8220;<span class="quote">samba</span>&#8221;</span> service
+#
+auth       required     pam_smbpass.so nodelay
+account    required     pam_pwdb.so audit nodelay
+session    required     pam_pwdb.so nodelay
+password   required     pam_smbpass.so nodelay smbconf=/etc/samba.d/smb.conf
+</pre><p>
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+PAM &#12391;&#12399;&#38542;&#23652;&#30340;&#12394;(&#12473;&#12479;&#12483;&#12463;&#12373;&#12428;&#12383;)&#35469;&#35388;&#12398;&#20181;&#32068;&#12415;&#12434;&#25552;&#20379;&#12375;&#12390;&#12356;&#12427;&#12290;
+&#12383;&#12392;&#12360;&#12400;&#12289;&#12354;&#12427; PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#21463;&#12369;&#21462;&#12387;&#12383;&#24773;&#22577;&#12434;&#12289;PAM &#12473;&#12479;&#12483;&#12463;&#12398;
+&#27425;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#28193;&#12377;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;PAM &#12395;&#38306;&#12377;&#12427;&#29305;&#23450;&#12398;&#27231;&#33021;&#12398;&#35443;&#32048;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;
+&#12362;&#20351;&#12356;&#12398;&#12471;&#12473;&#12486;&#12512;&#12395;&#29305;&#21270;&#12375;&#12383;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12434;&#21442;&#29031;&#12375;&#12390;&#27442;&#12375;&#12356;&#12290;
+&#12373;&#12425;&#12395;&#12356;&#12367;&#12388;&#12363;&#12398; Lunux &#12398;&#23455;&#35013;&#12391;&#12399;&#12289;&#12377;&#12409;&#12390;&#12398;&#35469;&#35388;&#12434;&#20013;&#24515;&#12392;&#12394;&#12427;&#21336;&#19968;&#12398;&#12501;&#12449;&#12452;&#12523;&#12391;
+&#35373;&#23450;&#12391;&#12365;&#12427; <code class="filename">pam_stack.so</code> &#12392;&#21628;&#12400;&#12428;&#12427;&#12514;&#12472;&#12517;&#12540;&#12523;&#12364;
+&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+<code class="filename">pam_stack.so</code> &#26041;&#24335;&#12399;&#31649;&#29702;&#32773;&#12398;&#25163;&#38291;&#12434;&#36605;&#28187;
+&#12375;&#12390;&#12367;&#12428;&#12427;&#12398;&#12391;&#12289;&#29105;&#24515;&#12394;&#12501;&#12449;&#12531;&#12418;&#12356;&#12427;&#12290;
+&#12418;&#12387;&#12392;&#12418;&#12289;&#29872;&#22659;&#12395;&#12424;&#12387;&#12390;&#12418;&#12356;&#12429;&#12435;&#12394;&#21839;&#38988;&#12364;&#12354;&#12427;&#12431;&#12369;&#12391;&#12354;&#12426;&#12289;&#21069;&#36848;&#12398;&#12393;&#12398;&#26041;&#24335;&#12434;
+&#21462;&#12427;&#12395;&#12375;&#12390;&#12418;&#12381;&#12428;&#12382;&#12428;&#12398;&#12488;&#12524;&#12540;&#12489;&#12458;&#12501;&#12364;&#12354;&#12427;&#12290;&#12424;&#12426;&#26377;&#30410;&#12394;&#24773;&#22577;&#12434;&#25506;&#12377;&#12383;&#12417;&#12395;&#12289;
+PAM &#12398;&#12489;&#12461;&#12517;&#12513;&#12531;&#12488;&#12434;&#12354;&#12383;&#12387;&#12390;&#12415;&#12427;&#12398;&#12418;&#12424;&#12356;&#12384;&#12429;&#12358;&#12290;
+</p></div></div></div><div class="sect2" title="smb.conf &#12398; PAM &#35373;&#23450;"><div class="titlepage"><div><div><h3 class="title"><a name="id2689752"></a><code class="filename">smb.conf</code> &#12398; PAM &#35373;&#23450;</h3></div></div></div><p>
+<a class="link" href="smb.conf.5.html#OBEYPAMRESTRICTIONS" target="_top">obey pam restrictions</a> &#12392;&#21628;&#12400;&#12428;&#12427; <code class="filename">smb.conf</code> 
+&#12398;&#12458;&#12503;&#12471;&#12519;&#12531;&#12364;&#12354;&#12427;&#12290;&#12371;&#12398;&#12458;&#12503;&#12471;&#12519;&#12531;&#12395;&#38306;&#12377;&#12427; SWAT &#12398;&#12504;&#12523;&#12503;&#12434;&#20197;&#19979;&#12395;&#31034;&#12377;&#65306;
+</p><div class="blockquote"><blockquote class="blockquote"><p>
+Samba &#12364; PAM &#12469;&#12509;&#12540;&#12488; (<code class="option">--with-pam</code>) &#20184;&#12365;&#12391;&#12467;&#12531;&#12497;&#12452;&#12523;
+&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;Samba &#12364; PAM &#12398; account &#12362;&#12424;&#12403; session &#31649;&#29702;
+&#12487;&#12451;&#12524;&#12463;&#12486;&#12451;&#12502;&#12395;&#24467;&#12358;&#12363;&#12393;&#12358;&#12363;&#12434;&#12371;&#12398;&#12497;&#12521;&#12513;&#12540;&#12479;&#12391; &#21046;&#24481;&#12391;&#12365;&#12427;&#12290;
+PAM &#12434;&#20351;&#12358;&#12364;&#35469;&#35388;&#12399;&#24179;&#25991;&#12398;&#12415;&#12391;&#12289;&#12363;&#12388;&#12393;&#12398; account/session &#31649;&#29702;&#12418;
+&#28961;&#35222;&#12377;&#12427;&#12392;&#12356;&#12358;&#12398;&#12364;&#26082;&#23450;&#20516;&#12398;&#21205;&#20316;&#12391;&#12354;&#12427;&#12290;
+<a class="link" href="smb.conf.5.html#ENCRYPTPASSWORDS" target="_top">encrypt passwords = yes</a>
+&#12398;&#22580;&#21512;&#12289;Samba &#12399;&#24120;&#12395;&#35469;&#35388;&#12395;&#12388;&#12356;&#12390;&#12399; PAM &#12434;&#28961;&#35222;&#12377;&#12427;&#12290;&#12381;&#12398;&#29702;&#30001;&#12399;&#12289;
+SMB &#12497;&#12473;&#12527;&#12540;&#12489;&#26263;&#21495;&#12434;&#20351;&#12358;&#22580;&#21512;&#12395;&#24517;&#35201;&#12394;&#12481;&#12515;&#12524;&#12531;&#12472;&#65295;&#12524;&#12473;&#12509;&#12531;&#12473;&#26041;&#24335;&#12398;
+&#35469;&#35388;&#12513;&#12459;&#12491;&#12474;&#12512;&#12434; PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12364; &#12469;&#12509;&#12540;&#12488;&#12375;&#12390;&#12356;&#12394;&#12356;&#12363;&#12425;&#12391;&#12354;&#12427;&#12290;
+</p><p>&#26082;&#23450;&#20516;:<a class="link" href="smb.conf.5.html#OBEYPAMRESTRICTIONS" target="_top">obey pam restrictions = no</a></p></blockquote></div></div><div class="sect2" title="winbindd.so&#12434;&#20351;&#12387;&#12383;&#36960;&#38548; CIFS &#35469;&#35388;"><div class="titlepage"><div><div><h3 class="title"><a name="id2689847"></a><code class="filename">winbindd.so</code>&#12434;&#20351;&#12387;&#12383;&#36960;&#38548; CIFS &#35469;&#35388;</h3></div></div></div><p>
+&#12393;&#12435;&#12394; OS &#12391;&#12354;&#12387;&#12390;&#12418;&#12289;&#12381;&#12398; OS &#33258;&#36523;&#12364;&#12450;&#12463;&#12475;&#12473;&#21487;&#33021;&#12394;&#12518;&#12540;&#12470;&#35388;&#26126;&#24773;&#22577;&#12364;
+(&#12393;&#12371;&#12363;&#12425;&#12363;)&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12427;&#12371;&#12392;&#12434;&#21069;&#25552;&#12392;&#12375;&#12390;&#12356;&#12427;&#12290;UNIX &#12391;&#12399;&#12518;&#12540;&#12470;
+&#35672;&#21029;&#23376;(UID)&#12384;&#12369;&#12391;&#12394;&#12367;&#12464;&#12523;&#12540;&#12503;&#35672;&#21029;&#23376;(GID)&#12418;&#24517;&#35201;&#12392;&#12394;&#12427;&#12290;&#12371;&#12428;&#12425;&#12399;&#12356;&#12378;&#12428;&#12418;
+&#21336;&#32020;&#12394;&#25972;&#25968;&#20516;&#12391;&#12354;&#12426;&#12289;<code class="filename">/etc/passwd</code> &#12392;&#12356;&#12387;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;
+&#12496;&#12483;&#12463;&#12456;&#12531;&#12489;&#12424;&#12426;&#21462;&#24471;&#12377;&#12427;&#12290;
+</p><p>
+Windows NT &#12469;&#12540;&#12496;&#12391;&#12399;&#12289;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12399;&#30456;&#23550;ID(RID)&#12395;&#21106;&#12426;&#24403;&#12390;
+&#12425;&#12428;&#12390;&#12356;&#12427;&#12290;&#12371;&#12428;&#12425;&#12399;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12364;&#20316;&#12425;&#12428;&#12427;&#38555;&#12289;&#12489;&#12513;&#12452;&#12531;&#27598;&#12395;
+&#19968;&#24847;&#12392;&#12394;&#12427;&#12290;Windows NT &#12398;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12434; UNIX &#12398;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;
+&#12395;&#22793;&#25563;&#12377;&#12427;&#12383;&#12417;&#12395;&#12399;&#12289;RID &#12392; UNIX &#12398;&#12518;&#12540;&#12470;/&#12464;&#12523;&#12540;&#12503;&#12398; ID &#12434;
+&#12510;&#12483;&#12500;&#12531;&#12464;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;&#12371;&#12428;&#12364; winbind &#12364;&#34892;&#12358;&#20181;&#20107;&#12398;&#12402;&#12392;&#12388;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+winbind &#12398;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12399;&#12469;&#12540;&#12496;&#12363;&#12425;&#35299;&#27770;&#35201;&#27714;&#12364;&#20986;&#12373;&#12428;&#12289;&#12518;&#12540;&#12470;&#12392;
+&#12464;&#12523;&#12540;&#12503;&#12398; ID &#12364;&#25351;&#23450;&#12373;&#12428;&#12383;&#31684;&#22258;&#20869;&#12391;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12427;&#12290;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12364;
+&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#21015;&#25369;&#12377;&#12427;&#12467;&#12510;&#12531;&#12489;&#12434;&#23455;&#34892;&#12377;&#12427;&#12392;&#12289;&#12377;&#12368;&#12395;&#26082;&#23384;&#12398;&#20840;
+&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12364;&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12289;&#21106;&#12426;&#24403;&#12390;&#20966;&#29702;&#12364;&#20808;&#30528;&#38918;&#12395;&#34892;&#12431;&#12428;&#12427;&#12290;
+&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12383; UNIX ID &#12399; Samba &#12398; lock &#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#37197;&#19979;&#12398;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;
+&#12501;&#12449;&#12452;&#12523;&#12395;&#20445;&#25345;&#12373;&#12428;&#12390;&#35352;&#25014;&#12373;&#12428;&#12427;&#12290;
+</p><p>
+&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;&#30446;&#20808;&#12364;&#21033;&#12367;&#31649;&#29702;&#32773;&#12394;&#12425;&#12289;<code class="filename">pam_smbpass.so</code> &#12420;
+<code class="literal">winbindd</code> &#12392;&#12289;<em class="parameter"><code>ldap</code></em> &#12398;&#12424;&#12358;&#12394;
+&#20998;&#25955;&#22411;&#12398; <a class="link" href="smb.conf.5.html#PASSDBBACKEND" target="_top">passdb backend</a> &#12392;&#12398;
+&#32068;&#12415;&#21512;&#12431;&#12379;&#12395;&#12424;&#12426;&#12289;(Linux &#12398;&#12424;&#12358;&#12394;)PAM &#12434;&#24847;&#35672;&#12375;&#12383;&#12503;&#12525;&#12464;&#12521;&#12512;&#12420;
+&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12363;&#12425;&#12418;&#20351;&#12358;&#12371;&#12392;&#12398;&#12391;&#12365;&#12427;&#12289;&#20013;&#22830;&#38598;&#27177;&#22411;&#12391;&#31649;&#29702;&#12373;&#12428;&#12383;&#20998;&#25955;&#22411;&#12398;
+&#12518;&#12540;&#12470;/&#12497;&#12473;&#12527;&#12540;&#12489;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12364;&#20351;&#12360;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12392;&#12356;&#12358;&#12371;&#12392;&#12364;&#29702;&#35299;
+&#12391;&#12365;&#12427;&#12384;&#12429;&#12358;&#12290;&#12371;&#12398;&#12362;&#33203;&#31435;&#12390;&#12395;&#12424;&#12426;&#12289;&#24195;&#31684;&#22258;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#35469;&#35388;&#12398;&#12488;&#12521;&#12501;&#12451;&#12483;&#12463;
+&#12364;&#21066;&#28187;&#12391;&#12365;&#12427;&#12392;&#12356;&#12358;&#38480;&#12426;&#12395;&#12362;&#12356;&#12390;&#12399;&#12289;&#12510;&#12452;&#12463;&#12525;&#12477;&#12501;&#12488;&#12398;Active Directory Service
+(ADS)&#12395;&#27604;&#36611;&#12375;&#12390;&#12289;&#29305;&#12395;&#24375;&#21147;&#12394;&#20778;&#20301;&#24615;&#12434;&#25345;&#12390;&#12427;&#12290;
+</p><div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+UNIX &#12398; ID &#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12395;&#23550;&#24540;&#12377;&#12427; RID &#12399;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;
+&#12364;&#26684;&#32013;&#12373;&#12428;&#12390;&#12356;&#12427;&#12501;&#12449;&#12452;&#12523;&#12395;&#12398;&#12415;&#23384;&#22312;&#12375;&#12289;<code class="literal">winbindd</code> 
+&#12395;&#12424;&#12387;&#12390;&#26684;&#32013;&#12373;&#12428;&#12427;&#12290;&#12371;&#12398;&#12501;&#12449;&#12452;&#12523;&#12364;&#21066;&#38500;&#12373;&#12428;&#12390;&#12356;&#12383;&#12426;&#22730;&#12428;&#12390;&#12356;&#12383;&#12426;&#12377;&#12427;&#22580;&#21512;&#12289;
+<code class="literal">winbindd</code> &#12399;&#12393;&#12398;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12364; Windows NT
+&#12398;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12398; RID &#12392;&#23550;&#24540;&#12377;&#12427;&#12398;&#12363;&#12434;&#27770;&#23450;&#12391;&#12365;&#12394;&#12367;&#12394;&#12427;&#12290;
+</p></div></div><div class="sect2" title="pam_smbpass.so &#12434;&#20351;&#12387;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21516;&#26399;"><div class="titlepage"><div><div><h3 class="title"><a name="id2689982"></a><code class="filename">pam_smbpass.so</code> &#12434;&#20351;&#12387;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21516;&#26399;</h3></div></div></div><p>
+<code class="filename">pam_smbpass</code> &#12399; PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#12402;&#12392;&#12388;&#12391;&#12354;&#12426;&#12289;
+&#12471;&#12473;&#12486;&#12512;&#19978;&#12391; <code class="filename">smbpasswd</code> (Samba&#12398;&#12497;&#12473;&#12527;&#12540;&#12489;)
+&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12392; UNIX &#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#12501;&#12449;&#12452;&#12523;&#12392;&#12398;&#21516;&#26399;&#12434;&#21462;&#12427;&#12383;&#12417;&#12395;
+&#20351;&#12431;&#12428;&#12427;&#12290;PAM &#12399; Solaris, HPUX, Linux &#12394;&#12393;&#12398; UNIX &#12458;&#12506;&#12524;&#12540;&#12486;&#12451;&#12531;&#12464;&#12471;&#12473;&#12486;&#12512;
+&#19978;&#12391;&#12469;&#12509;&#12540;&#12488;&#12373;&#12428;&#12390;&#12356;&#12427; API &#12391;&#12354;&#12426;&#12289;&#35469;&#35388;&#12513;&#12459;&#12491;&#12474;&#12512;&#12395;&#23550;&#12377;&#12427;&#27161;&#28310;&#30340;&#12394;
+&#12452;&#12531;&#12479;&#12540;&#12501;&#12455;&#12540;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;
+</p><p>
+&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12525;&#12540;&#12459;&#12523;&#12395;&#12354;&#12427; <code class="filename">smbpasswd</code> &#12518;&#12540;&#12470;
+&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#20351;&#12387;&#12390;&#35469;&#35388;&#12377;&#12427;&#12290;&#12522;&#12514;&#12540;&#12488;&#12398; SMB &#12469;&#12540;&#12496;&#12391;&#35469;&#35388;&#12375;&#12383;&#12426;&#12289;
+&#12471;&#12473;&#12486;&#12512;&#19978;&#12398; SUID root &#12373;&#12428;&#12383;&#12496;&#12452;&#12490;&#12522;&#12398;&#23384;&#22312;&#12434;&#35519;&#12409;&#12383;&#12356;&#12392;&#12356;&#12358;&#21521;&#12365;&#12395;&#12399;&#12289;
+<code class="filename">pam_winbind</code> &#12398;&#26041;&#12434;&#20351;&#12358;&#12371;&#12392;&#12434;&#12362;&#21223;&#12417;&#12377;&#12427;&#12290;
+</p><p>
+&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#35469;&#35672;&#12373;&#12428;&#12427;&#12458;&#12503;&#12471;&#12519;&#12531;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;
+<a class="link" href="pam.html#smbpassoptions" title="Table�28.1.�pam_smbpass&#12391;&#35469;&#35672;&#12373;&#12428;&#12427;&#12458;&#12503;&#12471;&#12519;&#12531;">&#27425;&#12398;&#12486;&#12540;&#12502;&#12523;</a>&#12434;&#21442;&#29031;&#12375;&#12390;&#27442;&#12375;&#12356;&#12290;
+</p><div class="table"><a name="smbpassoptions"></a><p class="title"><b>Table�28.1.�<em class="parameter"><code>pam_smbpass</code></em>&#12391;&#35469;&#35672;&#12373;&#12428;&#12427;&#12458;&#12503;&#12471;&#12519;&#12531;
+	</b></p><div class="table-contents"><table summary="pam_smbpass&#12391;&#35469;&#35672;&#12373;&#12428;&#12427;&#12458;&#12503;&#12471;&#12519;&#12531;
+	" border="1"><colgroup><col align="left"><col align="justify"></colgroup><tbody><tr><td align="left">debug</td><td align="justify">
+&#12424;&#12426;&#22810;&#12367;&#12398;&#12487;&#12496;&#12483;&#12464;&#24773;&#22577;&#12434;&#20986;&#21147;&#12377;&#12427;</td></tr><tr><td align="left">audit</td><td align="justify">
+debug&#12392;&#20284;&#12390;&#12356;&#12427;&#12364;&#12289;&#35469;&#35672;&#12391;&#12365;&#12394;&#12356;&#12518;&#12540;&#12470;&#21517;&#12418;&#34920;&#31034;&#12377;&#12427;</td></tr><tr><td align="left">use_first_pass</td><td align="justify">
+&#12518;&#12540;&#12470;&#12395;&#12497;&#12473;&#12527;&#12540;&#12489;&#20837;&#21147;&#12434;&#27714;&#12417;&#12394;&#12356;&#12290;
+&#12497;&#12473;&#12527;&#12540;&#12489;&#12399; PAM_ &#38917;&#30446;&#12363;&#12425;&#25345;&#12387;&#12390;&#12367;&#12427;</td></tr><tr><td align="left">try_first_pass</td><td align="justify">
+&#30452;&#21069;&#12398; PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12363;&#12425;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21462;&#24471;&#12434;&#35430;&#12415;&#12427;&#12290;
+&#21462;&#24471;&#12391;&#12365;&#12394;&#12369;&#12428;&#12400;&#12518;&#12540;&#12470;&#12363;&#12425;&#12398;&#20837;&#21147;&#12434;&#27714;&#12417;&#12427;&#12290;</td></tr><tr><td align="left">use_authtok</td><td align="justify">
+try_first_pass &#12395;&#20284;&#12390;&#12356;&#12427;&#12364;&#12289;
+(&#12497;&#12473;&#12527;&#12540;&#12489;&#12514;&#12472;&#12517;&#12540;&#12523;&#12384;&#12369;&#12434;&#12473;&#12479;&#12483;&#12463;&#12373;&#12379;&#12427;&#12383;&#12417;&#12398;)
+&#26032;&#12375;&#12356; PAM_AUTHTOK &#12364;&#20107;&#21069;&#12395;&#12475;&#12483;&#12488;&#12373;&#12428;&#12390;&#12356;&#12394;&#12369;&#12428;&#12400;&#12302;&#22833;&#25943;&#12377;&#12427;&#12303;
+</td></tr><tr><td align="left">not_set_pass</td><td align="justify">
+&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#20351;&#12431;&#12428;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#20182;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12395;&#27969;&#29992;&#12373;&#12379;&#12394;&#12356;
+</td></tr><tr><td align="left">nodelay</td><td align="justify">
+&#35469;&#35388;&#12398;&#22833;&#25943;&#12414;&#12391;&#12395;&#26368;&#22823;1&#31186;&#12398;&#36933;&#24310;&#12434;&#25375;&#12414;&#12394;&#12356;</td></tr><tr><td align="left">nullok</td><td align="justify">
+&#12497;&#12473;&#12527;&#12540;&#12489;&#12394;&#12375;&#12434;&#35469;&#12417;&#12427;</td></tr><tr><td align="left">nonull</td><td align="justify">
+&#12497;&#12473;&#12527;&#12540;&#12489;&#12394;&#12375;&#12434;&#35469;&#12417;&#12394;&#12356;&#12290;&#12371;&#12428;&#12399; Samba &#12398;&#35373;&#23450;&#12395;&#20778;&#20808;&#12377;&#12427;&#12290;
+</td></tr><tr><td align="left">migrate</td><td align="justify">
+<span class="quote">&#8220;<span class="quote">auth</span>&#8221;</span> &#12467;&#12531;&#12486;&#12461;&#12473;&#12488;&#12391;&#12398;&#12415;&#24847;&#21619;&#12434;&#25345;&#12388;&#12290;
+&#25104;&#21151;&#12375;&#12383;&#35469;&#35388;&#12391;&#20351;&#12431;&#12428;&#12383;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#20351;&#12387;&#12390; smbpasswd &#12501;&#12449;&#12452;&#12523;&#12434;&#26356;&#26032;&#12377;&#12427;&#12290;
+</td></tr><tr><td align="left">smbconf=<em class="replaceable"><code>&#12501;&#12449;&#12452;&#12523;&#21517;</code></em></td><td align="justify"><code class="filename">smb.conf</code> &#12501;&#12449;&#12452;&#12523;&#12408;&#12398;&#21029;&#12398;&#12497;&#12473;&#12434;&#25351;&#23450;&#12377;&#12427;</td></tr></tbody></table></div></div><p><br class="table-break">
+</p><p>
+Linux &#12398; <code class="filename">/etc/pam.d/</code> &#24418;&#24335;&#12398;&#12501;&#12449;&#12452;&#12523;&#27083;&#36896;&#12391;
+<code class="filename">pam_smbpass.so</code> &#12434;&#20351;&#12358;&#12392;&#12365;&#12398;&#20363;&#12434;&#20197;&#19979;&#12395;&#31034;&#12377;&#12290;
+&#12371;&#12398;&#12484;&#12540;&#12523;&#12434;&#21029;&#12398;&#12503;&#12521;&#12483;&#12488;&#12501;&#12457;&#12540;&#12512;&#12395;&#23455;&#35013;&#12375;&#12383;&#12356;&#12392;&#24605;&#12387;&#12390;&#12356;&#12427;&#26041;&#12399;&#12289;
+&#36969;&#24403;&#12395;&#35501;&#12415;&#26367;&#12360;&#12390;&#12415;&#12390;&#12411;&#12375;&#12356;&#12290;
+</p><div class="sect3" title="&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21516;&#26399;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2690245"></a>&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#21516;&#26399;&#35373;&#23450;</h4></div></div></div><p>
+&#20197;&#19979;&#12398; PAM &#35373;&#23450;&#20363;&#12391;&#12399;&#12289;<code class="filename">/etc/passwd (/etc/shadow)</code> 
+&#12364;&#22793;&#26356;&#12373;&#12428;&#12383;&#12392;&#12365;&#12395;&#12289;pam_smbpass &#12434;&#21033;&#29992;&#12375;&#12390;
+<code class="filename">private/smbpasswd</code>&#12364;&#36899;&#21205;&#12375;&#12390;&#22793;&#26356;&#12373;&#12428;&#12427;&#12424;&#12358;&#12395;&#12375;&#12390;&#12356;&#12427;&#12290;
+&#12371;&#12428;&#12399;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#26377;&#21177;&#26399;&#38480;&#12364;&#20999;&#12428;&#12383;&#12392;&#12365;&#12395;(<code class="literal">ssh</code>&#12398;&#12424;&#12358;&#12394;)
+&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#22793;&#26356;&#12377;&#12427;&#12424;&#12358;&#12394;&#22580;&#21512;&#12395;&#20415;&#21033;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+	</p><pre class="programlisting">
+#%PAM-1.0
+# password-sync
+#
+auth       requisite    pam_nologin.so
+auth       required     pam_unix.so
+account    required     pam_unix.so
+password   requisite    pam_cracklib.so retry=3
+password   requisite    pam_unix.so shadow md5 use_authtok try_first_pass
+password   required     pam_smbpass.so nullok use_authtok try_first_pass
+session    required     pam_unix.so
+</pre></div><div class="sect3" title="&#12497;&#12473;&#12527;&#12540;&#12489;&#31227;&#34892;&#12398;&#12383;&#12417;&#12398;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2690294"></a>&#12497;&#12473;&#12527;&#12540;&#12489;&#31227;&#34892;&#12398;&#12383;&#12417;&#12398;&#35373;&#23450;</h4></div></div></div><p>
+&#20197;&#19979;&#12399; <code class="filename">pam_smbpass</code> &#12434;&#20351;&#12387;&#12390;&#24179;&#25991;&#12363;&#12425;
+Samba &#29992;&#12398;&#26263;&#21495;&#21270;&#12497;&#12473;&#12527;&#12540;&#12489;&#12395;&#31227;&#34892;&#12377;&#12427;&#12383;&#12417;&#12398; PAM &#35373;&#23450;&#12391;&#12354;&#12427;&#12290;
+&#20182;&#12398;&#12513;&#12477;&#12483;&#12489;&#12392;&#36949;&#12356;&#12289;&#12371;&#12398;&#26041;&#27861;&#12394;&#12425;&#19968;&#24230;&#12418; Samba &#12398;&#20849;&#26377;&#12395;&#25509;&#32154;
+&#12375;&#12383;&#12371;&#12392;&#12364;&#12394;&#12367;&#12390;&#12418;&#20351;&#12360;&#12427;:&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#31227;&#34892;&#12377;&#12428;&#12400;&#12289;&#12518;&#12540;&#12470;&#12364;
+<code class="literal">ftp</code> &#12391;&#25509;&#32154;&#12375;&#12383;&#12426;&#12289;<code class="literal">ssh</code>
+&#12391;&#12525;&#12464;&#12452;&#12531;&#12375;&#12390;&#12513;&#12540;&#12523;&#12434;&#21462;&#12426;&#20986;&#12375;&#12383;&#12426;&#12377;&#12427;&#22580;&#21512;&#12394;&#12393;&#12395;&#12418;&#20351;&#12360;&#12427;&#12290;
+</p><p>
+	</p><pre class="programlisting">
+#%PAM-1.0
+# password-migration
+#
+auth       requisite   pam_nologin.so
+# pam_smbpass is called IF pam_unix succeeds.
+auth       requisite   pam_unix.so
+auth       optional    pam_smbpass.so migrate
+account    required    pam_unix.so
+password   requisite   pam_cracklib.so retry=3
+password   requisite   pam_unix.so shadow md5 use_authtok try_first_pass
+password   optional    pam_smbpass.so nullok use_authtok try_first_pass
+session    required    pam_unix.so
+</pre></div><div class="sect3" title="&#24467;&#26469;&#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2690351"></a>&#24467;&#26469;&#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#35373;&#23450;</h4></div></div></div><p>
+&#20197;&#19979;&#12398;&#20363;&#12399;&#12289;&#24467;&#26469;&#12398; <code class="filename">smbpasswd</code> &#21033;&#29992;&#26178;&#12398;&#12383;&#12417;&#12398;
+PAM &#35373;&#23450;&#12391;&#12354;&#12427;&#12290;<code class="filename">private/smbpasswd</code> &#20840;&#20307;&#12364;
+&#25237;&#20837;&#12373;&#12428;&#12289;SMB &#12497;&#12473;&#12527;&#12540;&#12489;&#12364;&#23384;&#22312;&#12375;&#12394;&#12363;&#12387;&#12383;&#12426; UNIX &#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#12392;
+&#21512;&#33268;&#12375;&#12394;&#12356;&#22580;&#21512;&#12399;&#12456;&#12521;&#12540;&#12392;&#35211;&#12394;&#12373;&#12428;&#12427;&#12290;
+</p><p>
+</p><pre class="programlisting">
+#%PAM-1.0
+# password-mature
+#
+auth       requisite    pam_nologin.so
+auth       required     pam_unix.so
+account    required     pam_unix.so
+password   requisite    pam_cracklib.so retry=3
+password   requisite    pam_unix.so shadow md5 use_authtok try_first_pass
+password   required     pam_smbpass.so use_authtok use_first_pass
+session    required     pam_unix.so
+</pre></div><div class="sect3" title="Kerberos&#12497;&#12473;&#12527;&#12540;&#12489;&#32113;&#21512;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2690395"></a>Kerberos&#12497;&#12473;&#12527;&#12540;&#12489;&#32113;&#21512;&#35373;&#23450;</h4></div></div></div><p>
+&#20197;&#19979;&#12398; PAM &#35373;&#23450;&#20363;&#12399;&#12289;<em class="parameter"><code>pam_krb5</code></em> &#12392;&#12356;&#12387;&#12375;&#12423;&#12395;
+&#20351;&#12431;&#12428;&#12427; <em class="parameter"><code>pam_smbpass</code></em> &#12434;&#31034;&#12375;&#12390;&#12356;&#12427;&#12290;
+&#12371;&#12428;&#12399; Samba PDC &#19978;&#12391;&#12289;&#12363;&#12388;&#12381;&#12428;&#12364;kerberos realm&#12398;&#12513;&#12531;&#12496;&#12391;
+&#12354;&#12427;&#22580;&#21512;&#12395;&#26377;&#29992;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+		</p><pre class="programlisting">
+#%PAM-1.0
+# kdc-pdc
+#
+auth       requisite   pam_nologin.so
+auth       requisite   pam_krb5.so
+auth       optional    pam_smbpass.so migrate
+account    required    pam_krb5.so
+password   requisite   pam_cracklib.so retry=3
+password   optional    pam_smbpass.so nullok use_authtok try_first_pass
+password   required    pam_krb5.so use_authtok try_first_pass
+session    required    pam_krb5.so
+</pre></div></div></div><div class="sect1" title="&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2690447"></a>&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;</h2></div></div></div><p>
+PAM &#12399;&#21106;&#12392;&#25201;&#12356;&#12389;&#12425;&#12367;&#12289;&#35373;&#23450;&#12456;&#12521;&#12540;&#12434;&#24341;&#12365;&#36215;&#12371;&#12375;&#12420;&#12377;&#12356;&#12290;&#20197;&#19979;&#12395;
+Samba &#12398;&#12513;&#12540;&#12522;&#12531;&#12464;&#12522;&#12473;&#12488;&#12391;&#35211;&#12363;&#12369;&#12383;&#12356;&#12367;&#12388;&#12363;&#12398;&#12465;&#12540;&#12473;&#12434;&#32057;&#20171;&#12377;&#12427;&#12290;
+</p><div class="sect2" title="pam_winbind &#12398;&#21839;&#38988;"><div class="titlepage"><div><div><h3 class="title"><a name="id2690462"></a>pam_winbind &#12398;&#21839;&#38988;</h3></div></div></div><p>
+&#12354;&#12427;&#12518;&#12540;&#12470;&#12363;&#12425;<span class="emphasis"><em>PAM &#12398;&#35373;&#23450;&#12391;&#20197;&#19979;&#12398;&#21839;&#38988;&#12364;&#36215;&#12371;&#12387;&#12383;</em></span>
+&#12392;&#12398;&#22577;&#21578;&#12364;&#12354;&#12387;&#12383;:
+	</p><p>
+</p><pre class="programlisting">
+auth required /lib/security/pam_securetty.so
+auth sufficient /lib/security/pam_winbind.so
+auth sufficient /lib/security/pam_unix.so use_first_pass nullok
+auth required /lib/security/pam_stack.so service=system-auth
+auth required /lib/security/pam_nologin.so
+account required /lib/security/pam_stack.so service=system-auth
+account required /lib/security/pam_winbind.so
+password required /lib/security/pam_stack.so service=system-auth
+</pre><p>
+</p><p>
+	<span class="emphasis"><em>
+[ctrl][alt][F1]&#12391;&#26032;&#12375;&#12367;&#12467;&#12531;&#12477;&#12540;&#12523;&#12434;&#38283;&#12367;&#12392;&#12289;&#31169;&#12398; ID 
+<span class="quote">&#8220;<span class="quote">pitie</span>&#8221;</span> &#12391;&#12399;&#12525;&#12464;&#12452;&#12531;&#12391;&#12365;&#12394;&#12356;&#12290;&#12518;&#12540;&#12470; 
+<span class="quote">&#8220;<span class="quote">scienceu\pitie</span>&#8221;</span> &#12391;&#12420;&#12387;&#12390;&#12415;&#12383;&#12364;&#12289;&#12381;&#12428;&#12391;&#12418;&#12384;&#12417;&#12384;&#12387;&#12383;&#12290;
+</em></span>
+	</p><p>
+&#12371;&#12398;&#21839;&#38988;&#12399;
+<em class="parameter"><code>pam_stack.so service=system-auth</code></em>&#12364;&#12354;&#12427;
+&#26178;&#12395;&#30330;&#29983;&#12377;&#12427;&#12290;&#12371;&#12398;&#12501;&#12449;&#12452;&#12523;&#12395;&#20837;&#12387;&#12390;&#12356;&#12427;&#22810;&#12367;&#12398;&#35373;&#23450;&#12395;&#12399;&#12289;
+&#12377;&#12391;&#12395;&#23455;&#34892;&#20013;&#12418;&#12398;&#12364;&#20108;&#37325;&#12395;&#20837;&#12387;&#12390;&#12356;&#12427;&#12371;&#12392;&#12364;&#12424;&#12367;&#12354;&#12427;&#12290;
+<em class="parameter"><code>auth</code></em> &#12392; <em class="parameter"><code>account</code></em>
+&#12363;&#12425; <em class="parameter"><code>pam_stack</code></em> &#12398;&#34892;&#12434;&#12467;&#12513;&#12531;&#12488;&#12450;&#12454;&#12488;
+&#12375;&#12383;&#12425;&#12393;&#12358;&#12394;&#12427;&#12363;&#12420;&#12387;&#12390;&#12415;&#12390;&#12367;&#12428;&#12290;&#12381;&#12428;&#12391;&#21205;&#12367;&#12394;&#12425;&#12289;
+<code class="filename">/etc/pam.d/system-auth</code> &#12501;&#12449;&#12452;&#12523;&#12434;&#35211;&#12390;&#12289;
+&#12381;&#12398;&#20013;&#12391;&#26412;&#24403;&#12395;&#24517;&#35201;&#12394;&#34892;&#12384;&#12369;&#12434; <code class="filename">/etc/pam.d/login</code>
+&#12501;&#12449;&#12452;&#12523;&#12395;&#12467;&#12500;&#12540;&#12377;&#12428;&#12400;&#12356;&#12356;&#12290;&#21029;&#12398;&#12420;&#12426;&#26041;&#12392;&#12375;&#12390;&#12289;&#12418;&#12375;&#12377;&#12409;&#12390;&#12398;
+&#12469;&#12540;&#12499;&#12473;&#12391; winbind &#12434;&#21205;&#12363;&#12375;&#12390;&#12418;&#12356;&#12356;&#12394;&#12425;&#12289;
+<code class="filename">/etc/pam.d/system-auth</code> &#12395; winbind &#22266;&#26377;&#12398;
+&#35373;&#23450;&#12434;&#36861;&#21152;&#12375;&#12390;&#12418;&#12356;&#12356;&#12290;
+	</p></div><div class="sect2" title="Winbind &#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12390;&#12367;&#12428;&#12394;&#12356;"><div class="titlepage"><div><div><h3 class="title"><a name="id2690577"></a>Winbind &#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12390;&#12367;&#12428;&#12394;&#12356;</h3></div></div></div><p>
+	<span class="quote">&#8220;<span class="quote">
+&#20693;&#12398; <code class="filename">smb.conf</code> &#12399;&#27491;&#12375;&#12367;&#35373;&#23450;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+<a class="link" href="smb.conf.5.html#IDMAPUID" target="_top">idmap uid = 12000</a> &#12392;
+<a class="link" href="smb.conf.5.html#IDMAPGID" target="_top">idmap gid = 3000-3500</a>
+&#12434;&#25351;&#23450;&#12375;&#12390;&#12356;&#12427;&#12375; <code class="literal">winbind</code> &#12418;&#21205;&#12356;&#12390;&#12356;&#12427;&#12290;
+&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12399;&#12385;&#12419;&#12435;&#12392;&#21205;&#12356;&#12390;&#12356;&#12427;&#12290;
+	</span>&#8221;</span>
+	</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -u</code></strong>
+MIDEARTH\maryo
+MIDEARTH\jackb
+MIDEARTH\ameds
+...
+MIDEARTH\root
+
+<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -g</code></strong>
+MIDEARTH\Domain Users
+MIDEARTH\Domain Admins
+MIDEARTH\Domain Guests
+...
+MIDEARTH\Accounts
+
+<code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong>
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/bin/bash
+...
+maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
+</pre><p>
+	<span class="quote">&#8220;<span class="quote">
+&#12375;&#12363;&#12375;&#12289;&#12371;&#12398;&#12467;&#12510;&#12531;&#12489;&#12364;&#22833;&#25943;&#12377;&#12427;:
+	</span>&#8221;</span>
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>chown maryo a_file</code></strong>
+chown: 'maryo': invalid user
+</pre><p>
+	<span class="quote">&#8220;<span class="quote">&#19968;&#20307;&#12393;&#12358;&#12394;&#12387;&#12390;&#12435;&#12398;&#65311;&#20309;&#12363;&#38291;&#36949;&#12387;&#12390;&#12427;&#65311;</span>&#8221;</span>
+	</p><p>
+&#21517;&#21069;&#12461;&#12515;&#12483;&#12471;&#12517;&#12487;&#12540;&#12514;&#12531;&#12391;&#12354;&#12427; <code class="literal">nscd</code> &#12364;&#21205;&#12356;&#12390;&#12427;
+&#12435;&#12376;&#12419;&#12394;&#12356;&#12363;&#12394;&#65311;&#12381;&#12356;&#12388;&#12434;&#32066;&#12431;&#12425;&#12379;&#12390;&#12289;&#36215;&#21205;&#12375;&#12394;&#12356;&#12424;&#12358;&#12395;&#12375;&#12390;&#12367;&#12428;&#12290;
+&#12381;&#12428;&#12391;&#12358;&#12414;&#12367;&#12356;&#12367;&#12392;&#24605;&#12358;&#12424;&#12290;
+	</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ProfileMgmt.html">Prev</a>�</td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right">�<a accesskey="n" href="integrate-ms-networks.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter�27.�&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#12503;&#12525;&#12501;&#12449;&#12452;&#12523;&#12398;&#31649;&#29702;�</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">�Chapter�29.�Microsoft Windows &#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12408;&#12398;Samba&#12398;&#32113;&#21512;</td></tr></table></div></body></html>

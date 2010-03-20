@@ -1,1 +1,1068 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 24. Winbind: ドメインアカウントの使用</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="公式のSamba 3.2.x HOWTOとリファレンスガイド"><link rel="up" href="optional.html" title="Part III. 詳細な設定方法"><link rel="prev" href="VFS.html" title="Chapter 23. スタッカブルVFSモジュール"><link rel="next" href="AdvancedNetworkManagement.html" title="Chapter 25. 詳細なネットワーク管理"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 24. Winbind: ドメインアカウントの使用</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="VFS.html">Prev</a> </td><th width="60%" align="center">Part III. 詳細な設定方法</th><td width="20%" align="right"> <a accesskey="n" href="AdvancedNetworkManagement.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter 24. Winbind: ドメインアカウントの使用"><div class="titlepage"><div><div><h2 class="title"><a name="winbind"></a>Chapter 24. Winbind: ドメインアカウントの使用</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Tim</span> <span class="surname">Potter</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:tpot@linuxcare.com.au">tpot@linuxcare.com.au</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Andrew</span> <span class="surname">Tridgell</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:tridge@samba.org">tridge@samba.org</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Naag</span> <span class="surname">Mummaneni</span></h3><span class="contrib">Notes for Solaris</span> <div class="affiliation"><div class="address"><p><code class="email"><<a class="email" href="mailto:getnag@rediffmail.com">getnag@rediffmail.com</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="surname">Trostel</span></h3><div class="affiliation"><span class="orgname">SNAP<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jtrostel@snapserver.com">jtrostel@snapserver.com</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Jelmer</span> <span class="othername">R.</span> <span class="surname">Vernooij</span></h3><div class="affiliation"><span class="orgname">The Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jelmer@samba.org">jelmer@samba.org</a>></code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>></code></p></div></div></div></div><div><p class="pubdate">June 15, 2005</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="winbind.html#id2673134">機能と利便性</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2673507">はじめに</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2673624">Winbindが提供するもの</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2673811">対象となるユーザ</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2673866">外部のSIDの取り扱い</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2674023">Winbindの動き方</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2674080">Microsoft Remote Procedure Calls</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674184">Microsoft Active Directoryサービス</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674239">Name Service Switch</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674521">Pluggable Authentication Modules</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674709">ユーザとグループIDの割り当て</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674811">結果のキャッシュ保存</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2674887">インストールと設定</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2674893">はじめに</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2675024">用件</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2675196">テスト</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2677830">結論</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2677884">よくあるエラー</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2677945">NSCDの問題に関する警告</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2677984">Winbindがユーザとグループを解決しない</a></span></dt></dl></dd></dl></div><div class="sect1" title="機能と利便性"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673134"></a>機能と利便性</h2></div></div></div><p><a class="indexterm" name="id2673142"></a><a class="indexterm" name="id2673148"></a>	UNIXとMicrosoft Windows NTを統合化されたログオンで統合することは、長い間	異機種間コンピューティング環境において<span class="quote">“<span class="quote">聖杯</span>”</span>と考えられてきた。	</p><p><a class="indexterm" name="id2673168"></a><a class="indexterm" name="id2673175"></a><a class="indexterm" name="id2673182"></a><a class="indexterm" name="id2673190"></a>	もう一つ、この機能がなければ、UNIXとMicrosoft Windowsネットワークの相互運用性が	著しく限定されるというものがある。UNIXシステム全般に渡ってファイル共有を	可能にし、ドメインユーザとグループの所有者を整合性のある形で割り当てられる	機構がなければならない。	</p><p><a class="indexterm" name="id2673210"></a><a class="indexterm" name="id2673219"></a><a class="indexterm" name="id2673226"></a><a class="indexterm" name="id2673233"></a>	<span class="emphasis"><em>winbind</em></span>は、Sambaシステム中で、統一されたログオンの	問題を解決するコンポーネントである。Winbind は、Microsoft RPC コール、	Pluggable Authentication Modules (PAM)、Name Service SwitchのUNIXの実装を	使用して、Windows NTのドメインユーザがUNIXマシン上のUNIXユーザとして動作	できるようにする。この章は、Winbindシステムについて、その機能、設定の仕方、	及び内部的にどのように動いているのかを説明する。	</p><p>	Winbind は、三つの別々の機能を提供する。	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><a class="indexterm" name="id2673272"></a><a class="indexterm" name="id2673279"></a>		ユーザの本人確認情報の認証(PAM経由)。これは、Windows NT4ドメインか		(Sambaドメインも含む)Active Directoryドメインからユーザとグループ		アカウントを使ってUNIX/Linuxシステムにログオンすることを可能にする。		</p></li><li class="listitem"><p><a class="indexterm" name="id2673300"></a><a class="indexterm" name="id2673307"></a>		IDの解決(NSS経由)。これは、winbindが使われなかった時の既定値である。		</p></li><li class="listitem"><p><a class="indexterm" name="id2673321"></a><a class="indexterm" name="id2673328"></a><a class="indexterm" name="id2673334"></a><a class="indexterm" name="id2673341"></a><a class="indexterm" name="id2673348"></a><a class="indexterm" name="id2673354"></a>		Winbindは、winbind_idmap.tdbと呼ばれるデータベースを維持し、その中に、		UNIX UID/GIDとNT SID間のマッピング情報を格納する。このマッピングは、		ローカルUID/GIDを持たないユーザまたはグループにのみ使用する。		idmap uid/gid の範囲から割り当てられ、NTのSIDにマッピングされた		UID/GIDが格納される。<em class="parameter"><code>idmap backend</code></em>が		<code class="constant">ldap:ldap://hostname[:389]</code>に指定されている場合、		ローカルのマッピングを使用する代わりに、Winbindは、この情報をLDAP		データベースから取得する。		</p></li></ul></div><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>	<a class="indexterm" name="id2673390"></a>	<a class="indexterm" name="id2673397"></a><a class="indexterm" name="id2673407"></a><a class="indexterm" name="id2673413"></a><a class="indexterm" name="id2673420"></a><a class="indexterm" name="id2673427"></a>	もしも<code class="literal">winbindd</code>が実行中ではないとき、smbd	(<code class="literal">winbindd</code>を呼び出す方)は、代替手段として純粋にローカルな	<code class="filename">/etc/passwd</code>と<code class="filename">/etc/group</code>からの情報を	使用することにし、動的マッピングは使用しない。OSでNSSが有効になっている場合、	ユーザとグループ情報の解決はNSS経由で行われる。	</p></div><div class="figure"><a name="winbind_idmap"></a><p class="title"><b>Figure 24.1. Winbind Idmap</b></p><div class="figure-contents"><div class="mediaobject"><img src="images/idmap_winbind_no_loop.png" width="243" alt="Winbind Idmap"></div></div></div><br class="figure-break"></div><div class="sect1" title="はじめに"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673507"></a>はじめに</h2></div></div></div><p>UNIXとMicrosoft Windows NTでは、ユーザ及びグループ情報の見せ方のモデルも、	それを実行するために使用している技術も異なるのは周知の事実である。これが、	二つのシステムを統合して、満足の行く運用をすることを困難にしてきた。	</p><p><a class="indexterm" name="id2673529"></a><a class="indexterm" name="id2673536"></a>	これに対してよく行われる解決策は、UNIXとWindowsの両システム上に全く同名の	ユーザアカウントを作成し、Sambaを使用して、両システム間のファイルサービスと	印刷サービスを提供するというやり方であった。ただし、この解決策は、双方の	マシンにユーザを追加したり削除したりする作業が面倒でパスワードも2セット	持たなければならず、その両方がUNIXとWindowsシステム間の同期のずれの問題に	つながり、ユーザの混乱を招くという、完璧には程遠いものである。</p><p>UNIX マシンのための統一されたログオンという問題を、次のように三つの	構成要素に分けることができる:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Windows NTのユーザ及びグループ情報を取得する。		</p></li><li class="listitem"><p>Windows NT ユーザを認証する。		</p></li><li class="listitem"><p>Windows NT ユーザのためにパスワードを変更する。		</p></li></ul></div><p><a class="indexterm" name="id2673598"></a><a class="indexterm" name="id2673605"></a>	理想的には、統一されたログオンという問題の解決方法は、UNIXマシン上に情報を複製する	ことなく、上記の問題を全て満足させ、しかも、 ユーザやグループ情報をどちらの	システムで維持しても、システム管理者の仕事を増やさないというものであってほしい。	Winbind システムは、統一されたログオンという問題の三つの構成要素を簡単に優雅に	こなすソリューションを提供するものである。	problem.</p></div><div class="sect1" title="Winbindが提供するもの"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673624"></a>Winbindが提供するもの</h2></div></div></div><p><a class="indexterm" name="id2673633"></a><a class="indexterm" name="id2673640"></a><a class="indexterm" name="id2673647"></a><a class="indexterm" name="id2673655"></a>	Winbindは、UNIXとWindows NTのアカウント管理を、UNIXマシンがNTドメインの完全な	メンバになることを可能にすることによって統一する。一旦これを行えば、UNIX	マシンは、NTユーザやグループをあたかも<span class="quote">“<span class="quote">ネイティブな</span>”</span>UNIXユーザや	グループであるかのように見ることができるようなり、UNIXのみの環境でNIS+を使用	するのとほぼ同様に、NTドメインを使用することができるようになる。</p><p><a class="indexterm" name="id2673685"></a><a class="indexterm" name="id2673692"></a><a class="indexterm" name="id2673700"></a><a class="indexterm" name="id2673706"></a>	その結果、UNIX マシン上のプログラムのいずれかが、OSにユーザ名やグループ名の検索を	依頼すると、指定されたドメインを担当する NT のドメインコントローラにその検索を	依頼することにより、問い合わせは解決する。Winbind は低レベル(Cライブラリ内の	NSS名前解決モジュール経由)でOSに繋がるので、NT ドメインコントローラへの上記の	リダイレクションは、完全に透過である。</p><p><a class="indexterm" name="id2673727"></a><a class="indexterm" name="id2673734"></a>	UNIXマシンのユーザは、<span class="quote">“<span class="quote">ネイティブの</span>”</span>UNIX名を使用するのと同様に、	NTユーザー名とグループ名を使用することができる。ユーザはファイルをchownして、	NTドメインユーザの所有に変えることもでき、UNIXマシンにログインしてドメイン	ユーザとしてUNIXのX Window Systemセッションを実行することもできる。</p><p><a class="indexterm" name="id2673759"></a>	Winbindが使用されていることが明らかにわかるところは、ユーザ及びグループの名前が	<code class="constant">DOMAIN\user</code>と<code class="constant">DOMAIN\group</code>の形を取ると	いう点だけである。これは、Winbind が、信頼関係のあるドメインに参照するの特定の	検索について、ドメインコントローラへのリダイレクト決めるために必要である。</p><p><a class="indexterm" name="id2673785"></a><a class="indexterm" name="id2673792"></a>	さらに、Winbind は、PAMシステムのhookとしての認証サービスを提供し、NTドメインを	経由して、PAM対応のあらゆるアプリケーションに対して認証を行う。この機能は、一カ所	(ドメインコントローラ上)に全てのパスワードが格納されるため、システム間の	パスワード同期の問題を解消する。</p><div class="sect2" title="対象となるユーザ"><div class="titlepage"><div><div><h3 class="title"><a name="id2673811"></a>対象となるユーザ</h3></div></div></div><p><a class="indexterm" name="id2673819"></a>		NTベースのドメイン基盤がすでにあり、それにUNIX ワークステーションか		サーバを組み入れたいという要望のある組織がWinbindの対象となる。Winbind		より、このような組織は別個のアカウント基盤を管理する必要なく、UNIX		ワークステーションを展開することができる。これは、NTベースの組織にUNIX		ワークステーションを展開するための間接費を大幅に軽減する。</p><p><a class="indexterm" name="id2673839"></a><a class="indexterm" name="id2673846"></a>		Winbind のもう一つの興味深い使用方法は、UNIXベースの装置の中心部分に		使用することである。Microsoftベースのネットワークにファイルサービスと		印刷サービスを提供する装置は、Winbindを使用することで、ドメインに		シームレスに統合される。</p></div><div class="sect2" title="外部のSIDの取り扱い"><div class="titlepage"><div><div><h3 class="title"><a name="id2673866"></a>外部のSIDの取り扱い</h3></div></div></div><p><a class="indexterm" name="id2673874"></a>	<span class="emphasis"><em>外部のSID(foreign SID)</em></span>という単語は、特定の環境に依存しない	反応としてしばしば見受けられる。以下はSambaメーリングリスト上で起きたやりとりを	書化したものである。これは、winbindの使用に関連してしばしば現れる混乱の良い例で	ある。	</p><p><a class="indexterm" name="id2673898"></a>	事実:Winbindはローカルドメインの一部でないワークステーションを使うユーザを	扱う必要がある。	</p><p><a class="indexterm" name="id2673913"></a>	対応:<span class="quote">“<span class="quote">なぜ?私はwinbindなしで長い間ドメインに所属していないワークステーション	をSambaとともに使っている。winbindは他のSamba/Windows PDCによって制御される	ドメイン中のメンバサーバとしてのSamba用ではないかと思う。</span>”</span>	</p><p><a class="indexterm" name="id2673931"></a><a class="indexterm" name="id2673937"></a><a class="indexterm" name="id2673944"></a>	もしも、SambaサーバがローカルSambaドメイン以外のドメインからアクセスされる	か、もしも、ローカルドメインメンバでないマシンからアクセスされる場合、winbindは	Sambaドメインのメンバであるユーザから分離された外部のユーザの識別情報を保持する	めの割り当てられた領域からUIDとGIDを割り当てる。	</p><p><a class="indexterm" name="id2673964"></a><a class="indexterm" name="id2673971"></a><a class="indexterm" name="id2673978"></a><a class="indexterm" name="id2673985"></a>	これは、winbindは、ドメインメンバとドメイン非メンバのワークステーションがある、	単一のSambaPDCがローカルネットワーク上にある場合に甚だしく有用である。もしも、	winbindが使われないと、ドメインのメンバでないWindowsワークステーション上の	georgeというユーザはPDCとして動作しているSambaサーバのアカウントデータベース	中のgeorgeと呼ばれるユーザのファイルにアクセスできる。winbindが使われると、	既定値の状態は、ローカルユーザのgeorgeがDOMAIN\georgeというアカウントとして	扱われ、外部(ドメインのメンバでない)アカウントは、おのおの別のSIDを持つために	MACHINE\georgeとして扱われる。	</p></div></div><div class="sect1" title="Winbindの動き方"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2674023"></a>Winbindの動き方</h2></div></div></div><p><a class="indexterm" name="id2674031"></a><a class="indexterm" name="id2674038"></a><a class="indexterm" name="id2674045"></a><a class="indexterm" name="id2674052"></a>	Winbindシステムは、クライアント/サーバアーキテクチャを想定し設計されたもので	ある。長時間走り続ける<code class="literal">winbindd</code>デーモンがUNIXドメイン	ソケット上でリクエストが来るのを待つ。これらのリクエストは、NSS及びPAM	クライアントにより生成され、順番に処理される。</p><p>Winbind を実装するのに使用されている技術を以下に詳述する。</p><div class="sect2" title="Microsoft Remote Procedure Calls"><div class="titlepage"><div><div><h3 class="title"><a name="id2674080"></a>Microsoft Remote Procedure Calls</h3></div></div></div><p><a class="indexterm" name="id2674088"></a><a class="indexterm" name="id2674098"></a><a class="indexterm" name="id2674104"></a><a class="indexterm" name="id2674111"></a><a class="indexterm" name="id2674118"></a>		過去数年間、Sambaチームの多くのメンバが、Microsoftリモートプロシージャ		コール(MSRPC)システムの各側面を解明しようと努力してきた。このシステムは、		リモート管理、ユーザ認証、印刷スプーリングを含むWindows NTマシン間の		ネットワーク関連操作の大半に使用されている。当初、Sambaへのプライマリ		ドメインコントローラ(PDC)機能の実装を支援するために 着手した作業で		あったが、結果としてそれ以外の目的に使用できる一連のコードを得ることが		できた。		</p><p><a class="indexterm" name="id2674150"></a><a class="indexterm" name="id2674157"></a><a class="indexterm" name="id2674164"></a>		winbind はドメインユーザとグループを列挙し、個々のユーザやグループの詳細		情報を取得するために、各種のMSRPC コールを使用する。他のMSRPC コールは、		NTドメインユーザを認証し、ユーザのパスワードを変更するために使用できる。		Windows PDCに、直接ユーザ及びグループ情報を問い合わせることで、Winbindは、		NTのアカウント情報をUNIXユーザ名とグループ名にマッピングする。		</p></div><div class="sect2" title="Microsoft Active Directoryサービス"><div class="titlepage"><div><div><h3 class="title"><a name="id2674184"></a>Microsoft Active Directoryサービス</h3></div></div></div><p><a class="indexterm" name="id2674193"></a><a class="indexterm" name="id2674200"></a><a class="indexterm" name="id2674206"></a><a class="indexterm" name="id2674213"></a>		2001年後半より、SambaはNT4のRPC サービスではなく、<span class="quote">“<span class="quote">ネイティブモード</span>”</span>		のプロトコルを使用して、Microsoft Windows 2000とやり取りする機能を持つ		ようになった。LDAP及びKerberosを使用し、winbindを走らせている ドメイン		メンバは、Windows 200xクライアントの世界で行われるのと全く同じように、		ユーザとグループを列挙でき、そうすることによってより効率的で効果的な		winbind の実装を提供する。		</p></div><div class="sect2" title="Name Service Switch"><div class="titlepage"><div><div><h3 class="title"><a name="id2674239"></a>Name Service Switch</h3></div></div></div><p><a class="indexterm" name="id2674247"></a><a class="indexterm" name="id2674253"></a><a class="indexterm" name="id2674261"></a><a class="indexterm" name="id2674268"></a>		Name Service SwitchまたはNSSは、多くのUNIX OSに存在する機能である。		これは、ホスト名、メールの別名、ユーザ情報などのシステム情報を、異なる		ソースから解決することを可能にする。例えば、スタンドアロンのUNIXワーク		ステーションは、ローカルのファイルシステムに格納されている一連のフラット		ファイルからシステム情報を解決できる。ネットワークに繋がったワーク		ステーションは、最初にローカルファイルからシステム情報を解決しようとし、		次にユーザ情報についてNISデータベースに問い合わせるか、あるいは、ホスト名		情報についてDNS サーバに聞くことができる。</p><p><a class="indexterm" name="id2674305"></a><a class="indexterm" name="id2674312"></a><a class="indexterm" name="id2674318"></a><a class="indexterm" name="id2674325"></a><a class="indexterm" name="id2674332"></a>		UNIXユーザ名とグループの解決の際、NSSのAPIは、winbind が自分をシステム		情報のソースとして見せることを可能にする。winbindは、このインタフェースと		MSRPCコールを使用して、Windows NTサーバから取得した情報を使用して、		アカウント列挙の新しいソースを提供する。標準のUNIXライブラリコールを		利用して、winbind を走らせているUNIXマシン上でユーザとグループを列挙させ、		NTドメインのみならず、信頼関係のあるいずれのドメインでもその全ユーザと		グループを、あたかも、ローカルユーザやグループのように見ることができる。		</p><p><a class="indexterm" name="id2674368"></a><a class="indexterm" name="id2674374"></a><a class="indexterm" name="id2674381"></a>		NSSの基本制御ファイルは<code class="filename">/etc/nsswitch.conf</code>である。		UNIXアプリケーションが検索を行うと、Cライブラリは要求されたサービス		タイプに一致する列を<code class="filename">/etc/nsswitch.conf</code>の中で探す。		例えば、ユーザ名またはグループ名の検索の場合、<span class="quote">“<span class="quote">passwd</span>”</span>の		サービスタイプが使用される。設定の中のこの列が、そのサービスのどの		実装が、どういう順番で試行されるべきか指定している。もし、passwdの		設定列が以下のようになっている場合:</p><pre class="screen">passwd: files example</pre><p><a class="indexterm" name="id2674419"></a><a class="indexterm" name="id2674426"></a><a class="indexterm" name="id2674433"></a>		Cライブラリは、最初に<code class="filename">/lib/libnss_files.so</code>と呼ばれる		モジュールをロードし、次に<code class="filename">/lib/libnss_example.so</code>		モジュールをロードする。Cライブラリはこれらのモジュールを順番に動的		ロードし、モジュール内の解決機能を呼んでリクエストを解決しようとする。		要求が解決されると、Cライブラリ は、その結果をアプリケーションに返す。		</p><p><a class="indexterm" name="id2674468"></a><a class="indexterm" name="id2674475"></a><a class="indexterm" name="id2674482"></a>		このNSSインタフェースは、OSへのフックのための、Winbindへの簡単なしくみを		提供する。必要な手続きは、<code class="filename">/lib/</code>の中に		<code class="filename">libnss_winbind.so</code>を書き、次に適切な場所で		 <code class="filename">/etc/nsswitch.conf</code>に<span class="quote">“<span class="quote">winbind</span>”</span>を追加		するだけである。これで、Cライブラリは、Winbindを呼んでユーザ名や		グループ名を解決できるようになる。		</p></div><div class="sect2" title="Pluggable Authentication Modules"><div class="titlepage"><div><div><h3 class="title"><a name="id2674521"></a>Pluggable Authentication Modules</h3></div></div></div><p><a class="indexterm" name="id2674529"></a><a class="indexterm" name="id2674536"></a><a class="indexterm" name="id2674543"></a><a class="indexterm" name="id2674549"></a>		PAMは、認証と認証技術を抽象化するものである。PAMモジュールを使用すると、		異なるシステムアプリケーション用にそれぞれ異なる認証方法を指定でき、		しかも、これらのアプリーケーションを再コンパイルする必要はない。		PAM はまた、特別なポリシーを認証に実装するためにも有用である。例えば、		システム管理者は、ローカルなパスワードファイルに格納されたユーザからは		コンソールログインのみを許可し、NISデータベースから解決されるユーザに		ついては、ネットワーク経由のログインを許可することができる。		</p><p><a class="indexterm" name="id2674584"></a><a class="indexterm" name="id2674591"></a><a class="indexterm" name="id2674598"></a><a class="indexterm" name="id2674605"></a><a class="indexterm" name="id2674612"></a>		Winbind は、認証管理とパスワード管理のPAMインタフェースを使用して、		Windows NTユーザをUNIXシステムに統合する。これにより、 Windows NT		ユーザはUNIXマシンにログインでき、適切なPDCの認証を受けることが		できるようになる。このようなユーザはパスワードの変更もできる上、		その変更内容をPDCに直に反映させることができる。		</p><p><a class="indexterm" name="id2674632"></a><a class="indexterm" name="id2674639"></a><a class="indexterm" name="id2674645"></a><a class="indexterm" name="id2674652"></a>		PAMは、認証を必要とするサービスごとに、<code class="filename">/etc/pam.d/</code>の		ディレクトリに管理ファイルを設けて設定する。アプリケーションが認証要求を		出すと、Cライブラリ内のPAMコードが、認証を行うために、どのモジュールを		どの順番でロードするべきかを決定するためにこの管理ファイルを検索する。		このインタフェースにより、Winbindに新しい認証サービスを追加することが		簡単になる。必要な手順は、<code class="filename">/lib/security/</code>に		<code class="filename">pam_winbind.so</code>モジュールをコピーすることと、		Winbind 経由の認証を可能にするために、関連するサービスのPAM管理ファイルを		更新することである。詳細は、		<a class="link" href="pam.html" title="Chapter 28. PAM ベースの分散型認証">PAMベースの分散型認証</a>のPAMの説明を参照のこと。		</p></div><div class="sect2" title="ユーザとグループIDの割り当て"><div class="titlepage"><div><div><h3 class="title"><a name="id2674709"></a>ユーザとグループIDの割り当て</h3></div></div></div><p><a class="indexterm" name="id2674717"></a><a class="indexterm" name="id2674724"></a><a class="indexterm" name="id2674730"></a>		Windows NT/200xでユーザまたはグループが作成されると、数字で構成される		相対ID(RID)を割り当てられる。これは、UNIXとは幾分異なる。UNIXでは、		ユーザIDに使用される数字の範囲と、グループIDに使用される数字の範囲が		別々になっている。RIDをUNIXのIDに変換する、またはその逆を行うのが		Winbindの仕事である。Winbindを設定する際、UNIXユーザIDのスペースの		一部とUNIX グループIDのスペースの一部を、Windows NTのユーザと		グループを格納する場所である。Windows NTユーザが最初に解決されるとき、		上記の範囲の中から次の空き番号をUNIX上のIDとして割り当てる。この		同じプロセスがWindows NTグループに対しても適用される。こうして一定の		時間が経つと、全てのWindows NTユーザとグループはWinbindにより、対応		するUNIXユーザIDとグループIDへマッピングされることになる。		</p><p><a class="indexterm" name="id2674772"></a><a class="indexterm" name="id2674780"></a><a class="indexterm" name="id2674786"></a><a class="indexterm" name="id2674793"></a>		このマッピングの結果は、tdbのデータベース内のIDマッピングデータベースに		一貫して格納されていく。これにより、RIDが一貫した方法でUNIXのIDに		マッピングされていくことを確保している。		</p></div><div class="sect2" title="結果のキャッシュ保存"><div class="titlepage"><div><div><h3 class="title"><a name="id2674811"></a>結果のキャッシュ保存</h3></div></div></div><p><a class="indexterm" name="id2674819"></a><a class="indexterm" name="id2674825"></a><a class="indexterm" name="id2674832"></a><a class="indexterm" name="id2674839"></a><a class="indexterm" name="id2674846"></a>		Active Directoryシステムは、数多くのユーザ名やグループ名の検索を発行		する。 これらの検索に係るネットワークの負担を軽減するため、Winbindは、		NTドメインコントローラから供給されるSAM シーケンス番号に基づいて、		キャッシュに保存する。PDCから返されたユーザ情報やグループ情報は、		同じくPDCから返されたシーケンス番号と一緒に、Winbindによってキャッシュに		保存される。ユーザ情報やグループ情報が変更される度に、Windows NTは		シーケンス番号を増やす。キャッシュに保存されたエントリが満了になる		ときに、シーケンス番号をPDC からリクエストし、キャッシュのエントリの		シーケンス番号と比較する。番号が一致しないときは、キャッシュに保存された		情報を捨て、PDCから直接更新情報をもらうように更新を行う。		</p></div></div><div class="sect1" title="インストールと設定"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2674887"></a>インストールと設定</h2></div></div></div><div class="sect2" title="はじめに"><div class="titlepage"><div><div><h3 class="title"><a name="id2674893"></a>はじめに</h3></div></div></div><p><a class="indexterm" name="id2674901"></a><a class="indexterm" name="id2674908"></a><a class="indexterm" name="id2674914"></a>この節では、Winbindを入手して使えるようにするまでの手順を説明する。WinbindはNTまたはWindows 200xの PDCを通して、Windowsのドメインユーザにtelnetやftpのような通常のサービスと、Sambaの各種サービスのためのアクセス制御と認証管理の機能を提供することができる。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>	<span class="emphasis"><em>どうして、これをやるべきなのか?</em></span>	</p><p><a class="indexterm" name="id2674946"></a><a class="indexterm" name="id2674953"></a><a class="indexterm" name="id2674960"></a><a class="indexterm" name="id2674967"></a>これにより、Samba管理者がドメインメンバの認証のために、Windows NT/200x PDCの認証機構を頼れるようになる。Windows NT/200xユーザは、Sambaサーバ上に別のアカウントを持つ必要がなくなる。	</p></li><li class="listitem"><p>	<span class="emphasis"><em>この文書は誰が読むべきものか?</em></span>	</p><p><a class="indexterm" name="id2674996"></a><a class="indexterm" name="id2675003"></a>この文書はシステム管理者のためのものである。この文書は、Sambaをファイルサーバ上に実装する予定であり、既存のWindows NT/200xユーザを、PDCからSambaサーバへ(比較的簡単に)統合したい場合のものである。	</p></li></ul></div></div><div class="sect2" title="用件"><div class="titlepage"><div><div><h3 class="title"><a name="id2675024"></a>用件</h3></div></div></div><p><a class="indexterm" name="id2675031"></a><a class="indexterm" name="id2675038"></a><a class="indexterm" name="id2675045"></a>現在使用しているSamba設定ファイルがあるなら、<span class="emphasis"><em>バックアップを取ること!</em></span>。使用中のシステムが既にPAMを使用しているなら、<span class="emphasis"><em><code class="filename">/etc/pam.d</code>ディレクトリの内容をバックアップすること!</em></span>。起動ディスクをまだ作成していないのなら<span class="emphasis"><em>今すぐに作ること!</em></span>。</p><p><a class="indexterm" name="id2675078"></a><a class="indexterm" name="id2675085"></a><a class="indexterm" name="id2675092"></a>PAM設定ファイルを間違って修正すると、使用中のマシンにログインするのがほとんど不可能になってしまうことがある。このため、うまくいかない時にはマシンをシングルユーザモードで立ち上げ、<code class="filename">/etc/pam.d</code>を元の状態に戻せるようにすること。</p><p><a class="indexterm" name="id2675118"></a><a class="indexterm" name="id2675125"></a>Samba-3の最新バージョンには、正常に機能する winbindd daemonが含まれている。ソースコードをダウンロードする手順については、 <a class="ulink" href="http://samba.org/" target="_top">Samba Webページ</a>か最寄のSamba ミラーサイトにある説明を参照のこと。</p><p><a class="indexterm" name="id2675149"></a><a class="indexterm" name="id2675156"></a><a class="indexterm" name="id2675163"></a><a class="indexterm" name="id2675169"></a>ドメインユーザがSambaの共有やファイルにアクセスできるようにし、また使用するマシンが提供するその他のサービスにもアクセスできるようにするには、PAMを使用するマシン上で正しく設定しなければならない。Winbindモジュールをコンパイルするには、PAM開発ライブラリをインストールすべきである。<a class="ulink" href="http://www.kernel.org/pub/linux/libs/pam/" target="_top">PAMのウェブサイト</a>を参照のこと。</p></div><div class="sect2" title="テスト"><div class="titlepage"><div><div><h3 class="title"><a name="id2675196"></a>テスト</h3></div></div></div><p><a class="indexterm" name="id2675204"></a><a class="indexterm" name="id2675211"></a><a class="indexterm" name="id2675218"></a><a class="indexterm" name="id2675224"></a><a class="indexterm" name="id2675231"></a>開始する前に、使用しているサーバ上で走っている全てのSamba関連のデーモンを止めておくことを推奨する。動いているかもしれない<span class="application">smbd</span>、<span class="application">nmbd</span>、及び<span class="application">winbindd</span>の全プロセスを停止する。PAMを使用するには、PAMを認識するサービスが使用するPAMモジュール、複数のPAMライブラリ、及びPAMのための<code class="filename">/usr/doc</code>と<code class="filename">/usr/man</code>のエントリを含む、<code class="filename">/etc/pam.d</code>のディレクトリ構造を提供する、標準PAM パッケージを持っていることを確認する。WinbindをSamba内で構築する際、pam-devel パッケージをインストールしていると、よりうまくいく。このパッケージには、PAMを認識するアプリケーションをコンパイルするのに必要なヘッダファイルが含まれる。</p><div class="sect3" title="nsswitch.confとWinbindライブラリをLinuxとSolaris上で設定する"><div class="titlepage"><div><div><h4 class="title"><a name="id2675297"></a><code class="filename">nsswitch.conf</code>とWinbindライブラリをLinuxとSolaris上で設定する</h4></div></div></div><p><a class="indexterm" name="id2675311"></a><a class="indexterm" name="id2675317"></a><a class="indexterm" name="id2675324"></a><a class="indexterm" name="id2675331"></a>PAMは、最新世代のUNIX/Linuxシステムの標準コンポーネントである。しかし、残念ながらPAM対応のSambaを構築するのに必要な<code class="filename">pam-devel</code>ライブラリをインストールしているシステムは数が限られている。また、Samba-3はWinbindファイルを使用中のシステム上の正しい位置に自動インストールするかもしれない。そこでこれ以上先に進む前に、以下に説明する設定が本当に必要かどうか確認すること。もしかしたら、<code class="filename">/etc/nsswitch.conf</code>の設定だけで済むかもしれない。</p><p><span class="application">winbindd</span> daemonをnsswitch経由で走らせるために必要なライブラリを正しい場所にコピーしなければならない:</p><p><a class="indexterm" name="id2675385"></a></p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>cp ../samba/source/nsswitch/libnss_winbind.so /lib</code></strong></pre><p></p><p>また、以下のシンボリック・リンクを作成することが必要である:</p><p><code class="prompt">root# </code> <strong class="userinput"><code>ln -s /lib/libnss_winbind.so /lib/libnss_winbind.so.2</code></strong></p><p>さらに、Sun Solarisの場合は以下が必要である:<a class="indexterm" name="id2675435"></a></p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/libnss_winbind.so.1</code></strong><code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/nss_winbind.so.1</code></strong><code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/nss_winbind.so.2</code></strong></pre><p></p><p><a class="indexterm" name="id2675485"></a>次に、rootになって、<span class="application">winbindd</span> daemonからユーザやグループのエントリが見えるように、<code class="filename">/etc/nsswitch.conf</code>を編集する。たとえば<code class="filename">/etc/nsswitch.conf</code>ファイルを以下のように編集する:</p><pre class="programlisting">passwd:     files winbindshadow:     filesgroup:      files winbind</pre><p><a class="indexterm" name="id2675524"></a><a class="indexterm" name="id2675531"></a><a class="indexterm" name="id2675538"></a><a class="indexterm" name="id2675545"></a><a class="indexterm" name="id2675552"></a><code class="literal">winbindd</code> daemonが必要とするライブラリは、次回システムが再起動するとき、自動的に<code class="literal">ldconfig</code>のキャッシュに入るが、手動で以下を行う方が早い(それに、再起動する必要もない):</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>/sbin/ldconfig -v | grep winbind</code></strong></pre><p>これにより、winbinddが<code class="filename">libnss_winbind</code>を使える状態になり、dynamic link loaderによって使われる現在の検索パスを返す。<code class="literal">ldconfig</code>コマンドの出力に<code class="literal">grep</code>フィルタを適用することで、このライブラリが本当にdynamic link loaderによって認識されるかの確証を確認できる。</p><p><a class="indexterm" name="id2675619"></a><a class="indexterm" name="id2675626"></a><a class="indexterm" name="id2675633"></a><a class="indexterm" name="id2675640"></a><a class="indexterm" name="id2675647"></a>Sun Solarisのダイナミックリンクローダ管理ツールは<code class="literal">crle</code>と呼ばれる。このツールは元々のOS環境の一部として提供されていないライブラリファイルを含むディレクトリを検索するよう指示するために必要である。以下の例は、ダイナミックリンクローダの検索パスに、どのようにして<code class="filename">/usr/local/lib</code>ディレクトリを追加するために使うかを示す:</p><pre class="screen"><code class="prompt">root# </code> crle -u -l /usr/lib:/usr/local/lib</pre><p>引数なしで実行した場合、<code class="literal">crle</code>は現在のダイナミックリンクローダの設定を表示する。それは以下の通り:</p><pre class="screen"><code class="prompt">root# </code> crleConfiguration file [version 4]: /var/ld/ld.config  Default Library Path (ELF):   /lib:/usr/lib:/usr/local/lib  Trusted Directories (ELF):    /lib/secure:/usr/lib/secure  (system default)Command line:  crle -c /var/ld/ld.config -l /lib:/usr/lib:/usr/local/lib</pre><p>これから、<code class="filename">/usr/local/lib</code>ディレクトリは、オブジェクトモジュールの依存関係を満足させるために、ダイナミックリンクライブラリの検索中に含まれていることがわかる。</p></div><div class="sect3" title="AIXにおけるNSS Winbind"><div class="titlepage"><div><div><h4 class="title"><a name="id2675729"></a>AIXにおけるNSS Winbind</h4></div></div></div><p>(この節はAIXを動作させている人にのみ関係する。)</p><p><a class="indexterm" name="id2675743"></a><a class="indexterm" name="id2675750"></a><a class="indexterm" name="id2675756"></a><a class="indexterm" name="id2675763"></a><a class="indexterm" name="id2675770"></a><a class="indexterm" name="id2675778"></a>Winbind AIX識別モジュールは、Sambaソースのnsswitchディレクトリ内に <code class="filename">libnss_winbind.so</code>として構築される。このファイルは、<code class="filename">/usr/lib/security</code>にコピーでき、AIXの名前変換から、WINBINDという名前にするべきであると指示してくる。次の節では、以下のようにして、</p><pre class="programlisting">WINBIND:        program = /usr/lib/security/WINBIND        options = authonly</pre><p><code class="filename">/usr/lib/security/methods.cfg</code>が追加できるようなる。このモジュールは識別のみサポートするが、標準のWinbind PAMモジュールを認証に使用して成功した例が報告されている。ローダブルな認証モジュール設定の際には、システムにログオンできない状態になってしまうこともあり得るので、慎重に行なうこと。AIX認証モジュールAPIに関する詳細情報は、AIXのための、<a class="ulink" href="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/kernextc/sec_load_mod.htm" target="_top">Loadable Authentication Module Programming Interface</a>で記述されている、<span class="quote">“<span class="quote">Kernel Extensions and Device Support Programming Concepts for AIX</span>”</span>という文書にある。モジュールの管理に関するさらなる情報は、<a class="ulink" href="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixbman/baseadmn/iandaadmin.htm" target="_top">SystemManagement Guide: Operating System and Devices</a>にある。</p></div><div class="sect3" title="smb.confの設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2675858"></a>smb.confの設定</h4></div></div></div><p><a class="indexterm" name="id2675866"></a><a class="indexterm" name="id2675873"></a><a class="indexterm" name="id2675880"></a><span class="application">winbindd</span>の動作を制御するために、<code class="filename">smb.conf</code>ファイルにいくつかのパラメータを設定する必要がある。これについては、<a class="citerefentry" href="winbindd.8.html"><span class="citerefentry"><span class="refentrytitle">winbindd</span>(8)</span></a>マニュアルページに、より詳細に説明されている。以下の<a class="link" href="winbind.html#winbindcfg" title="Example 24.1. Winbind設定のためのsmb.conf">Winbind設定のためのsmb.conf</a>による<code class="filename">smb.conf</code>は、[global]セクションの中の必要なエントリーも含むように変更したものである。</p><div class="example"><a name="winbindcfg"></a><p class="title"><b>Example 24.1. Winbind設定のためのsmb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td># DOMAIN\username のように、ドメインとユーザ名を '\'を挟んで分ける。</td></tr><tr><td><a class="indexterm" name="id2675958"></a><em class="parameter"><code>winbind separator = \</code></em></td></tr><tr><td># ドメインユーザには、10000から20000のUIDを使用する。</td></tr><tr><td><a class="indexterm" name="id2675976"></a><em class="parameter"><code>idmap uid = 10000-20000</code></em></td></tr><tr><td># ドメイングループには、10000から20000のGIDを使用する。</td></tr><tr><td><a class="indexterm" name="id2675994"></a><em class="parameter"><code>idmap gid = 10000-20000</code></em></td></tr><tr><td># winbindユーザとグループの列挙を可能にする。</td></tr><tr><td><a class="indexterm" name="id2676011"></a><em class="parameter"><code>winbind enum users = yes</code></em></td></tr><tr><td><a class="indexterm" name="id2676023"></a><em class="parameter"><code>winbind enum groups = yes</code></em></td></tr><tr><td># winbind ユーザに本当のシェルを与える(telnetアクセスを持つ場合のみ必要)</td></tr><tr><td><a class="indexterm" name="id2676041"></a><em class="parameter"><code>template homedir = /home/winnt/%D/%U</code></em></td></tr><tr><td><a class="indexterm" name="id2676053"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr></table></div></div><br class="example-break"></div><div class="sect3" title="SambaサーバをPDCドメインに参加させる"><div class="titlepage"><div><div><h4 class="title"><a name="id2676067"></a>SambaサーバをPDCドメインに参加させる</h4></div></div></div><p><a class="indexterm" name="id2676077"></a><a class="indexterm" name="id2676084"></a><a class="indexterm" name="id2676090"></a>ドメインセキュリティに関与するすべてのマシンはドメインのメンバであるべきである。これはPDCとすべてのBDCにも適用される。</p><p><a class="indexterm" name="id2676106"></a><a class="indexterm" name="id2676113"></a><a class="indexterm" name="id2676120"></a><a class="indexterm" name="id2676131"></a><a class="indexterm" name="id2676138"></a><a class="indexterm" name="id2676144"></a><a class="indexterm" name="id2676152"></a><a class="indexterm" name="id2676158"></a><a class="indexterm" name="id2676165"></a>ドメインへの参加手続きは、<code class="literal">net rpc join</code>コマンドを使って行う。この手続きは、MS DCE RPC経由で登録された(通常はPDC)ドメインコントローラと通信を行う。これは、もちろん、<code class="literal">smbd</code>プロセスが対象のドメインコントローラ上で動作していなければならないということである。それ自身のドメインに参加できるように、一時的にPDCとしてSambaを起動することは、そのために必要である。</p><p><a class="indexterm" name="id2676196"></a><a class="indexterm" name="id2676202"></a><a class="indexterm" name="id2676209"></a><em class="replaceable"><code>PDC</code></em>という名前のPDCで、ドメイン中で管理者権限を持つドメインユーザが<em class="replaceable"><code>Administrator</code></em>である時、以下のコマンドを入力し、Sambaサーバをドメインに参加させる。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p><a class="indexterm" name="id2676231"></a><a class="indexterm" name="id2676238"></a><a class="indexterm" name="id2676245"></a><a class="indexterm" name="id2676252"></a>ドメインにマシンを参加させる前に、対象のドメインコントローラ(通常はPDC)でSambaが動作しているかを確認し、ポート137/udp, 135/tcp, 139/tcp, と 445/tcpが開いているかを確認する(もしもPDCがSambaかWindows Server 2Kxの場合)。</p></div><p><a class="indexterm" name="id2676272"></a><code class="literal">net rpc join</code>機能の使用方法は以下の通り:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/net rpc join -S PDC -U Administrator</code></strong></pre><p>このコマンドへの正しい解答は、<span class="quote">“<span class="quote">Joined the domain<em class="replaceable"><code>DOMAIN</code></em></span>”</span>である。ここで、<em class="replaceable"><code>DOMAIN</code></em>は対象のドメイン名である。</p></div><div class="sect3" title="winbindddaemonの開始とテスト"><div class="titlepage"><div><div><h4 class="title"><a name="id2676322"></a><code class="literal">winbindd</code>daemonの開始とテスト</h4></div></div></div><p><a class="indexterm" name="id2676335"></a><a class="indexterm" name="id2676342"></a><a class="indexterm" name="id2676349"></a>最終的には、Sambaのその他の部分が立ち上がるときに、自動的にwinbindd daemonを呼び出すように、Sambaの起動スクリプトを変更したいと思うかもしれないが、Winbind部分だけを最初にテストしておくことは可能である。Winbind のサービスを立ち上げるには、以下のコマンドをrootとして入力する:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/sbin/winbindd</code></strong></pre><p><code class="literal">winbindd</code>実行ファイルの位置への適切なパスを使用すること。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p><a class="indexterm" name="id2676394"></a><a class="indexterm" name="id2676401"></a>上記は、<code class="filename">/usr/local/samba</code>のディレクトリツリーの中にSamba をインストールしたと仮定している。使用するシステム上で<code class="literal">winbindd</code>が別の所にある場合は、Sambaファイルの位置を探す必要がある。</p></div><p><a class="indexterm" name="id2676427"></a><a class="indexterm" name="id2676434"></a>心配性な人の場合、daemonが本当に動いているかは以下で確認出来る。</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>ps -ae | grep winbindd</code></strong></pre><p></p><p><a class="indexterm" name="id2676463"></a>このコマンドは、daemonが動いているなら、以下のような結果を返してくるはずである。</p><pre class="screen">3025 ?        00:00:00 winbindd</pre><p></p><p><a class="indexterm" name="id2676484"></a><a class="indexterm" name="id2676490"></a>次に、本当のテスト用に、PDC上にあるユーザ情報を取得する:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/wbinfo -u</code></strong></pre><p>これは、PDC上のWindowsユーザ情報に入っているユーザの一覧をエコーバックするはずである。例えば、以下のような結果が表示される:</p><pre class="screen">CEO\AdministratorCEO\burdellCEO\GuestCEO\jt-adCEO\krbtgtCEO\TsInternetUser</pre><p>もちろん、ドメイン名は<span class="quote">“<span class="quote">CEO</span>”</span>で、<a class="link" href="smb.conf.5.html#WINBINDSEPARATOR" target="_top">winbind separator</a>は<span class="quote">“<span class="quote">\</span>”</span>である。</p><p><a class="indexterm" name="id2676555"></a><a class="indexterm" name="id2676562"></a>同様にPDCからグループ情報を取得することができる:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/wbinfo -g</code></strong>CEO\Domain AdminsCEO\Domain UsersCEO\Domain GuestsCEO\Domain ComputersCEO\Domain ControllersCEO\Cert PublishersCEO\Schema AdminsCEO\Enterprise AdminsCEO\Group Policy Creator Owners</pre><p><a class="indexterm" name="id2676593"></a><a class="indexterm" name="id2676600"></a><a class="indexterm" name="id2676606"></a><a class="indexterm" name="id2676613"></a><a class="indexterm" name="id2676619"></a><a class="indexterm" name="id2676626"></a><a class="indexterm" name="id2676633"></a>ここで、<code class="literal">getent</code>コマンドを使用して、ローカルとPDCの両方からユーザとグループの統合された一覧を表示させることができる。以下のコマンドを入力する:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong></pre><p><code class="filename">/etc/passwd</code>のような、ドメインユーザの新しいUID、GID、ホームディレクトリ及び既定値のシェルが表示される一覧が出てくるはずである。</p><p>グループについても同様に以下のコマンドを実行できる:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>getent group</code></strong></pre><p></p></div><div class="sect3" title="init.d起動スクリプトの修正"><div class="titlepage"><div><div><h4 class="title"><a name="id2676699"></a>init.d起動スクリプトの修正</h4></div></div></div><div class="sect4" title="Linux"><div class="titlepage"><div><div><h5 class="title"><a name="id2676706"></a>Linux</h5></div></div></div><p><a class="indexterm" name="id2676713"></a><a class="indexterm" name="id2676720"></a><a class="indexterm" name="id2676727"></a><a class="indexterm" name="id2676734"></a><a class="indexterm" name="id2676741"></a><a class="indexterm" name="id2676748"></a><span class="application">winbindd</span> daemonは<span class="application">smbd</span>と<span class="application">nmbd</span> daemonが動き出してから起動する必要がある。これを行うには起動スクリプトを書き換える。それは、Red Hat Linuxでは<code class="filename">/etc/init.d/samba</code>にあり、Debian Linuxでは<code class="filename">/etc/init.d/samba</code>にある。これらのdaemonを正しい順序で走らせるためのコマンドをスクリプトに加える。たとえば、起動スクリプトの例としては、<span class="application">smbd</span>, <span class="application">nmbd</span>, と <span class="application">winbindd</span>を直接<code class="filename">/usr/local/samba/bin</code>ディレクトリから起動する。このスクリプト中の<code class="literal">start</code>関数は以下の通り:</p><pre class="programlisting">start() {        KIND="SMB"        echo -n $"Starting $KIND services: "        daemon /usr/local/samba/bin/smbd $SMBDOPTIONS        RETVAL=$?        echo        KIND="NMB"        echo -n $"Starting $KIND services: "        daemon /usr/local/samba/bin/nmbd $NMBDOPTIONS        RETVAL2=$?        echo        KIND="Winbind"        echo -n $"Starting $KIND services: "        daemon /usr/local/samba/sbin/winbindd        RETVAL3=$?        echo        [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 -a $RETVAL3 -eq 0 ] && \		touch /var/lock/subsys/smb || RETVAL=1        return $RETVAL}</pre><p>winbindd をデュアル・デーモン・モードで走らせたい場合は、上記例の中の:</p><pre class="programlisting">        daemon /usr/local/samba/sbin/winbindd</pre><p>の列を、以下に変える:</p><pre class="programlisting">        daemon /usr/local/samba/sbin/winbindd -D</pre><p>.</p><p><code class="literal">stop</code>関数は、サービスを停止するために以下のように起動に対応するエントリを持つ:</p><pre class="programlisting">stop() {        KIND="SMB"        echo -n $"Shutting down $KIND services: "        killproc smbd        RETVAL=$?        echo        KIND="NMB"        echo -n $"Shutting down $KIND services: "        killproc nmbd        RETVAL2=$?        echo        KIND="Winbind"        echo -n $"Shutting down $KIND services: "        killproc winbindd        RETVAL3=$?        [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 -a $RETVAL3 -eq 0 ] && \		 rm -f /var/lock/subsys/smb        echo ""        return $RETVAL}</pre></div><div class="sect4" title="Solaris"><div class="titlepage"><div><div><h5 class="title"><a name="id2676902"></a>Solaris</h5></div></div></div><p>WinbindはSolaris 9では動作しない。 see <a class="link" href="Portability.html#winbind-solaris9" title="Solaris9上の Winbind">Solaris 9でのWinbind</a>の節を参照のこと。for details.</p><p><a class="indexterm" name="id2676925"></a><a class="indexterm" name="id2676931"></a><a class="indexterm" name="id2676938"></a><a class="indexterm" name="id2676946"></a><a class="indexterm" name="id2676952"></a><a class="indexterm" name="id2676959"></a>Solarisでは、<code class="filename">/etc/init.d/samba.server</code>起動スクリプトを変更する必要がある。また、通常は smbd と nmbdのみを起動するが、winbinddも起動すべきである。Sambaが<code class="filename">/usr/local/samba/bin</code>にインストールされている場合、このファイルには以下のようなものを含むことが出来る:</p><p>	</p><pre class="programlisting">	##	## samba.server	##	if [ ! -d /usr/bin ]	then                    # /usr がマウントされていない		exit	fi	killproc() {            # 名前指定でプロセスを停止		pid=`/usr/bin/ps -e |		     /usr/bin/grep -w $1 |		     /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`		[ "$pid" != "" ] && kill $pid	}	# Sambaサーバに必要な起動/停止プロセス	case "$1" in	'start')	#	# 使用環境(パス、ワークグループ、ホスト)に合わせて以下を編集すること	#	echo Starting SMBD	   /usr/local/samba/bin/smbd -D -s \		/usr/local/samba/smb.conf	echo Starting NMBD	   /usr/local/samba/bin/nmbd -D -l \		/usr/local/samba/var/log -s /usr/local/samba/smb.conf	echo Starting Winbind Daemon	   /usr/local/samba/sbin/winbindd	   ;;	'stop')	   killproc nmbd	   killproc smbd	   killproc winbindd	   ;;	*)	   echo "Usage: /etc/init.d/samba.server { start | stop }"	   ;;	esac</pre><p>繰り返すが、Winbindをデュアルdaemonモードで動かしたい場合、上記の:</p><pre class="programlisting">/usr/local/samba/sbin/winbindd</pre><p>の部分を、下記に変える:</p><pre class="programlisting">/usr/local/samba/sbin/winbindd -D</pre><p></p></div><div class="sect4" title="再起動"><div class="titlepage"><div><div><h5 class="title"><a name="id2677044"></a>再起動</h5></div></div></div><p><a class="indexterm" name="id2677052"></a><a class="indexterm" name="id2677059"></a>この時点で<span class="application">smbd</span>, <span class="application">nmbd</span>, と <span class="application">winbindd</span> daemonを再起動すると、まるでローカルユーザであるかのように、Sambaサーバにドメインメンバとして接続できるはずである。</p></div></div><div class="sect3" title="WinbindとPAMの設定"><div class="titlepage"><div><div><h4 class="title"><a name="id2677093"></a>WinbindとPAMの設定</h4></div></div></div><p><a class="indexterm" name="id2677101"></a><a class="indexterm" name="id2677108"></a><a class="indexterm" name="id2677115"></a><a class="indexterm" name="id2677122"></a>ここまで来たということは、<code class="literal">winbindd</code>とSambaが一緒に動作している状態になったと言うことである。Winbindを使用して、他のサービスに認証を提供できるようにしたい場合は、この先を読み進めること。PAMの設定ファイルを、この手順の中で変更する必要が出てくる(現在使っている<code class="filename">/etc/pam.d</code>ファイルのバックアップを取っていないならば、今行うこと)。</p><p><a class="indexterm" name="id2677157"></a><a class="indexterm" name="id2677164"></a><a class="indexterm" name="id2677171"></a><a class="indexterm" name="id2677178"></a><a class="indexterm" name="id2677185"></a><a class="indexterm" name="id2677191"></a>他のサービスでwinbinddを使用するためのPAM モジュールが必要になる。このモジュールは、以下のコマンドで、<code class="filename">../source</code>ディレクトリから<code class="filename">../source/nsswitch</code>ディレクトリにコンパイルされる:</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>make nsswitch/pam_winbind.so</code></strong></pre><p><code class="filename">pam_winbind.so</code>ファイルは、他のPAMセキュリティモジュールのある場所にコピーしなければならない。Red Hat システムでは、<code class="filename">/lib/security</code>というディレクトリである。Solaris では、PAMセキュリティモジュールは、<code class="filename">/usr/lib/security</code>に入る。</p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>cp ../samba/source/nsswitch/pam_winbind.so /lib/security</code></strong></pre><p></p><div class="sect4" title="Linux/FreeBSD固有のPAM設定"><div class="titlepage"><div><div><h5 class="title"><a name="id2677275"></a>Linux/FreeBSD固有のPAM設定</h5></div></div></div><p><a class="indexterm" name="id2677283"></a><code class="filename">/etc/pam.d/samba</code>ファイルは変更する必要がない。このファイルはそのまま残す:</p><pre class="programlisting">auth    required  /lib/security/pam_stack.so service=system-authaccount required  /lib/security/pam_stack.so service=system-auth</pre><p><a class="indexterm" name="id2677308"></a><a class="indexterm" name="id2677315"></a><a class="indexterm" name="id2677322"></a><a class="indexterm" name="id2677328"></a><a class="indexterm" name="id2677335"></a><a class="indexterm" name="id2677343"></a><a class="indexterm" name="id2677350"></a><a class="indexterm" name="id2677357"></a><a class="indexterm" name="id2677364"></a>Winbindを認証サービスに使用できるように手を加えたその他のサービスは、コンソール上の通常ログイン(またはターミナルセッション)、telnetログイン、それにftpサービスである。これらのサービスを有効にするには、まず、<code class="filename">/etc/xinetd.d</code>(または<code class="filename">/etc/inetd.conf</code>)の中のエントリを変更する必要があるかも知れない。Red Hat Linux 7.1以降のバージョンは、新しい xinetd.d 構造を使用しており、この場合、<code class="filename">/etc/xinetd.d/telnet</code>と<code class="filename">/etc/xinetd.d/wu-ftp</code>の中の文字列を</p><pre class="programlisting">	enable = no</pre><p>から</p><pre class="programlisting">	enable = yes</pre><p>に変更する必要がある。</p><p><a class="indexterm" name="id2677430"></a><a class="indexterm" name="id2677437"></a><a class="indexterm" name="id2677445"></a>ftpサービスを動作させるためには、既にサーバ上に存在するドメインユーザのために、個別にディレクトリを用意するか、ホームディレクトリを全ドメインユーザ用の汎用ディレクトリに変更する必要がある。これらは、<code class="filename">smb.conf</code>の<a class="link" href="smb.conf.5.html#TEMPLATEHOMEDIR" target="_top">template homedir</a>グローバルエントリで簡単に設定できる。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p><a class="indexterm" name="id2677488"></a><a class="link" href="smb.conf.5.html#TEMPLATEHOMEDIR" target="_top">template homedir</a>中のディレクトリは、自動的には生成されない!pam_mkhomedirか、あらかじめ当該ユーザに対してディレクトリを作成しておくようにして、固有のホームディレクトリを使ってUNIXにログインできるようにすること。</p></div><p><a class="indexterm" name="id2677514"></a><a class="indexterm" name="id2677521"></a><a class="indexterm" name="id2677528"></a><code class="filename">/etc/pam.d/ftp</code>ファイルは、<code class="filename">/etc/pam.d/samba</code>ファイルと似たような形で、Winbindのftpアクセスを許可するように変更できる。変更後の<code class="filename">/etc/pam.d/ftp</code>ファイルは以下の通り:</p><pre class="programlisting">auth       required     /lib/security/pam_listfile.so item=user sense=deny \	 file=/etc/ftpusers onerr=succeedauth       sufficient   /lib/security/pam_winbind.soauth       required     /lib/security/pam_stack.so service=system-authauth       required     /lib/security/pam_shells.soaccount    sufficient   /lib/security/pam_winbind.soaccount    required     /lib/security/pam_stack.so service=system-authsession    required     /lib/security/pam_stack.so service=system-auth</pre><p><a class="indexterm" name="id2677573"></a><code class="filename">/etc/pam.d/login</code>ファイルもほぼ同様に変更できる。以下のようになる:</p><pre class="programlisting">auth       required     /lib/security/pam_securetty.soauth       sufficient   /lib/security/pam_winbind.soauth       sufficient   /lib/security/pam_unix.so use_first_passauth       required     /lib/security/pam_stack.so service=system-authauth       required     /lib/security/pam_nologin.soaccount    sufficient   /lib/security/pam_winbind.soaccount    required     /lib/security/pam_stack.so service=system-authpassword   required     /lib/security/pam_stack.so service=system-authsession    required     /lib/security/pam_stack.so service=system-authsession    optional     /lib/security/pam_console.so</pre><p><a class="indexterm" name="id2677603"></a><a class="indexterm" name="id2677610"></a><a class="indexterm" name="id2677617"></a>この場合、前述のように</p><pre class="programlisting">auth sufficient /lib/security/pam_winbind.so</pre><p>を追加するが、それに加え</p><pre class="programlisting">required pam_securetty.so</pre><p>を加えることにより、ネットワーク上からのrootのログインを不許可とした。また、</p><pre class="programlisting">sufficient /lib/security/pam_unix.so use_first_pass</pre><p>行を<code class="literal">winbind.so</code>行の後に加え、パスワードからのプロンプトが二重表示される問題を解消した。</p></div><div class="sect4" title="Solaris固有の設定"><div class="titlepage"><div><div><h5 class="title"><a name="id2677660"></a>Solaris固有の設定</h5></div></div></div><p><a class="indexterm" name="id2677668"></a><a class="indexterm" name="id2677675"></a><code class="filename">/etc/pam.conf</code>の変更が必要である。ドメインユーザがローカルにもtelnetでもログオンできるように変更する。以下が変更内容である。<code class="filename">pam.conf</code>を要件に沿ってカスタマイズしてもよいが、最悪の場合、システムがほとんど起動不能になることがあるので、変更内容に十分自信がある場合のみ変更すること。</p><pre class="programlisting">##ident "@(#)pam.conf 1.14 99/09/16 SMI"## Copyright (c) 1996-1999, Sun Microsystems, Inc.# All Rights Reserved.## PAMの設定## 認証管理#login   auth required   /usr/lib/security/pam_winbind.sologin auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_passlogin auth required  /usr/lib/security/$ISA/pam_dial_auth.so.1 try_first_pass#rlogin  auth sufficient /usr/lib/security/pam_winbind.sorlogin  auth sufficient /usr/lib/security/$ISA/pam_rhosts_auth.so.1rlogin auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass#dtlogin auth sufficient /usr/lib/security/pam_winbind.sodtlogin auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass#rsh auth required /usr/lib/security/$ISA/pam_rhosts_auth.so.1other   auth sufficient /usr/lib/security/pam_winbind.soother auth required /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass## アカウント管理#login   account sufficient      /usr/lib/security/pam_winbind.sologin account requisite /usr/lib/security/$ISA/pam_roles.so.1login account required /usr/lib/security/$ISA/pam_unix.so.1#dtlogin account sufficient      /usr/lib/security/pam_winbind.sodtlogin account requisite /usr/lib/security/$ISA/pam_roles.so.1dtlogin account required /usr/lib/security/$ISA/pam_unix.so.1#other   account sufficient      /usr/lib/security/pam_winbind.soother account requisite /usr/lib/security/$ISA/pam_roles.so.1other account required /usr/lib/security/$ISA/pam_unix.so.1## セッション管理#other session required /usr/lib/security/$ISA/pam_unix.so.1## パスワード管理##other   password sufficient     /usr/lib/security/pam_winbind.soother password required /usr/lib/security/$ISA/pam_unix.so.1dtsession auth required /usr/lib/security/$ISA/pam_unix.so.1## Kerberos V5 認証のサポート(Kerberosを使用するにはアンコメントすること)##rlogin auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass#login auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass#dtlogin auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass#other auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass#dtlogin account optional /usr/lib/security/$ISA/pam_krb5.so.1#other account optional /usr/lib/security/$ISA/pam_krb5.so.1#other session optional /usr/lib/security/$ISA/pam_krb5.so.1#other password optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass</pre><p><a class="indexterm" name="id2677795"></a>さらに、<code class="filename">winbind.so</code>行の後に<em class="parameter"><code>try_first_pass</code></em>行を追加することで、パスワードからのプロンプトが二重表示される問題を解消する。</p><p>Sambaを再起動して、pam.confで設定したアプリケーションから接続してみる。</p></div></div></div></div><div class="sect1" title="結論"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2677830"></a>結論</h2></div></div></div><p><a class="indexterm" name="id2677838"></a><a class="indexterm" name="id2677845"></a><a class="indexterm" name="id2677851"></a><a class="indexterm" name="id2677858"></a><a class="indexterm" name="id2677865"></a>Winbindシステムは、NSSとPAM及び適切なMicrosoft RPCコールを使用することで、UNIXシステム上のMicrosoft Windows NTドメインユーザのシームレスな統合を可能にした。その結果、UNIXとNTの混在するネットワークを運用する管理コストの大幅削減が実現さた。</p></div><div class="sect1" title="よくあるエラー"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2677884"></a>よくあるエラー</h2></div></div></div><p>	Winbindは、現在のリリース版には、幾つかの制約があり、これは将来の リリースで克服していきたいと考えている:	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>		Winbindは、現行では、他のOSへの移植は可能だが、Linux、Solaris、AIX、		及びIRIXのOSでのみ使用可能である。このような移植を実現するには、移植先の		OSのCライブラリが、NSSとPAMシステムをサポートしていることが要件となる。		NSSとPAMがUNIXベンダの間でサポートを得るようになってきたので、この二つの		サポートは以前より一般的に見られるようになった。		</p></li><li class="listitem"><p>		Windows NT RIDからUNIX IDへのマッピングは、 アルゴリズムで決められる		のではなく、マッピングされていないユーザとグループをWinbindが目にした		順番に番号を振っていく。そのため、RIDとUNIX IDのマッピング情報を持つ		ファイルが不良になったり壊れたりした場合、前と同じマッピングを再現		することは難しいかもしれない。		</p></li><li class="listitem"><p>		現行では、Winbind PAMのモジュールは、Windows NTユーザに対して設定される		ワークステーションのログオン時間などの制約を考慮しておらず、PDC が強制		するものと想定している。		</p></li></ul></div><div class="sect2" title="NSCDの問題に関する警告"><div class="titlepage"><div><div><h3 class="title"><a name="id2677945"></a>NSCDの問題に関する警告</h3></div></div></div><div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>	いかなる状況でも<code class="literal">winbindd</code>が動作しているシステム上で	<code class="literal">nscd</code>を動かさないこと。	</p></div><p>	もしも<code class="literal">nscd</code>がUNIX/Linuxシステム上で動いている時、NSSWITCHが	正しく設定されていても、ファイルとディレクトリの管理のために、ドメインユーザと	グループを解決することはできない。	</p></div><div class="sect2" title="Winbindがユーザとグループを解決しない"><div class="titlepage"><div><div><h3 class="title"><a name="id2677984"></a>Winbindがユーザとグループを解決しない</h3></div></div></div><p><span class="quote">“<span class="quote">	<code class="filename">smb.conf</code>ファイルは正しく設定した。	<a class="link" href="smb.conf.5.html#IDMAPUID" target="_top">idmap uid = 12000</a>と	<a class="link" href="smb.conf.5.html#IDMAPGID" target="_top">idmap gid = 3000-3500</a>を設定し、	<code class="literal">winbind</code>を走らせている。以下を行うとすべてうまく行く。	</span>”</span></p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>wbinfo -u</code></strong>MIDEARTH\maryoMIDEARTH\jackbMIDEARTH\ameds...MIDEARTH\root<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -g</code></strong>MIDEARTH\Domain UsersMIDEARTH\Domain AdminsMIDEARTH\Domain Guests...MIDEARTH\Accounts<code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong>root:x:0:0:root:/root:/bin/bashbin:x:1:1:bin:/bin:/bin/bash...maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false</pre><p><span class="quote">“<span class="quote">ところが、以下のコマンドは失敗する:</span>”</span></p><pre class="screen"><code class="prompt">root# </code><strong class="userinput"><code>chown maryo a_file</code></strong>chown: `maryo': invalid user</pre><p><span class="quote">“<span class="quote">気が変になりそうなのだが何がいけないのだろう?</span>”</span></p><p>前記の問題と同じである。使用しているシステムは、恐らく<code class="literal">nscd</code>を動作させているのだろう。システムを再起動ではなく一旦シャットダウンすれば、その後では、問題は解消しているだろう。</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="VFS.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="AdvancedNetworkManagement.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 23. スタッカブルVFSモジュール </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 25. 詳細なネットワーク管理</td></tr></table></div></body></html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="&#20844;&#24335;&#12398;Samba 3.2.x HOWTO&#12392;&#12522;&#12501;&#12449;&#12524;&#12531;&#12473;&#12460;&#12452;&#12489;"><link rel="up" href="optional.html" title="Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;"><link rel="prev" href="VFS.html" title="Chapter�23.�&#12473;&#12479;&#12483;&#12459;&#12502;&#12523;VFS&#12514;&#12472;&#12517;&#12540;&#12523;"><link rel="next" href="AdvancedNetworkManagement.html" title="Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="VFS.html">Prev</a>�</td><th width="60%" align="center">Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;</th><td width="20%" align="right">�<a accesskey="n" href="AdvancedNetworkManagement.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;"><div class="titlepage"><div><div><h2 class="title"><a name="winbind"></a>Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Tim</span> <span class="surname">Potter</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:tpot@linuxcare.com.au">tpot@linuxcare.com.au</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Andrew</span> <span class="surname">Tridgell</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:tridge@samba.org">tridge@samba.org</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Naag</span> <span class="surname">Mummaneni</span></h3><span class="contrib">Notes for Solaris</span>�<div class="affiliation"><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:getnag@rediffmail.com">getnag@rediffmail.com</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="surname">Trostel</span></h3><div class="affiliation"><span class="orgname">SNAP<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jtrostel@snapserver.com">jtrostel@snapserver.com</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">Jelmer</span> <span class="othername">R.</span> <span class="surname">Vernooij</span></h3><div class="affiliation"><span class="orgname">The Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jelmer@samba.org">jelmer@samba.org</a>&gt;</code></p></div></div></div></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>&gt;</code></p></div></div></div></div><div><p class="pubdate">June 15, 2005</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="winbind.html#id2673379">&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2673753">&#12399;&#12376;&#12417;&#12395;</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2673870">Winbind&#12364;&#25552;&#20379;&#12377;&#12427;&#12418;&#12398;</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2674056">&#23550;&#35937;&#12392;&#12394;&#12427;&#12518;&#12540;&#12470;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674111">&#22806;&#37096;&#12398;SID&#12398;&#21462;&#12426;&#25201;&#12356;</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2674268">Winbind&#12398;&#21205;&#12365;&#26041;</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2674325">Microsoft Remote Procedure Calls</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674429">Microsoft Active Directory&#12469;&#12540;&#12499;&#12473;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674484">Name Service Switch</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674766">Pluggable Authentication Modules</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2674954">&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;ID&#12398;&#21106;&#12426;&#24403;&#12390;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2675056">&#32080;&#26524;&#12398;&#12461;&#12515;&#12483;&#12471;&#12517;&#20445;&#23384;</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2675132">&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12392;&#35373;&#23450;</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2675138">&#12399;&#12376;&#12417;&#12395;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2675269">&#29992;&#20214;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2675442">&#12486;&#12473;&#12488;</a></span></dt></dl></dd><dt><span class="sect1"><a href="winbind.html#id2678076">&#32080;&#35542;</a></span></dt><dt><span class="sect1"><a href="winbind.html#id2678130">&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;</a></span></dt><dd><dl><dt><span class="sect2"><a href="winbind.html#id2678190">NSCD&#12398;&#21839;&#38988;&#12395;&#38306;&#12377;&#12427;&#35686;&#21578;</a></span></dt><dt><span class="sect2"><a href="winbind.html#id2678230">Winbind&#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12394;&#12356;</a></span></dt></dl></dd></dl></div><div class="sect1" title="&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673379"></a>&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;</h2></div></div></div><p>
+<a class="indexterm" name="id2673387"></a>
+<a class="indexterm" name="id2673394"></a>
+	UNIX&#12392;Microsoft Windows NT&#12434;&#32113;&#21512;&#21270;&#12373;&#12428;&#12383;&#12525;&#12464;&#12458;&#12531;&#12391;&#32113;&#21512;&#12377;&#12427;&#12371;&#12392;&#12399;&#12289;&#38263;&#12356;&#38291;
+	&#30064;&#27231;&#31278;&#38291;&#12467;&#12531;&#12500;&#12517;&#12540;&#12486;&#12451;&#12531;&#12464;&#29872;&#22659;&#12395;&#12362;&#12356;&#12390;<span class="quote">&#8220;<span class="quote">&#32854;&#26479;</span>&#8221;</span>&#12392;&#32771;&#12360;&#12425;&#12428;&#12390;&#12365;&#12383;&#12290;
+	</p><p>
+<a class="indexterm" name="id2673414"></a>
+<a class="indexterm" name="id2673421"></a>
+<a class="indexterm" name="id2673428"></a>
+<a class="indexterm" name="id2673435"></a>
+	&#12418;&#12358;&#19968;&#12388;&#12289;&#12371;&#12398;&#27231;&#33021;&#12364;&#12394;&#12369;&#12428;&#12400;&#12289;UNIX&#12392;Microsoft Windows&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12398;&#30456;&#20114;&#36939;&#29992;&#24615;&#12364;
+	&#33879;&#12375;&#12367;&#38480;&#23450;&#12373;&#12428;&#12427;&#12392;&#12356;&#12358;&#12418;&#12398;&#12364;&#12354;&#12427;&#12290;UNIX&#12471;&#12473;&#12486;&#12512;&#20840;&#33324;&#12395;&#28193;&#12387;&#12390;&#12501;&#12449;&#12452;&#12523;&#20849;&#26377;&#12434;
+	&#21487;&#33021;&#12395;&#12375;&#12289;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#25152;&#26377;&#32773;&#12434;&#25972;&#21512;&#24615;&#12398;&#12354;&#12427;&#24418;&#12391;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12427;
+	&#27231;&#27083;&#12364;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;
+	</p><p>
+<a class="indexterm" name="id2673456"></a>
+<a class="indexterm" name="id2673465"></a>
+<a class="indexterm" name="id2673472"></a>
+<a class="indexterm" name="id2673478"></a>
+	<span class="emphasis"><em>winbind</em></span>&#12399;&#12289;Samba&#12471;&#12473;&#12486;&#12512;&#20013;&#12391;&#12289;&#32113;&#19968;&#12373;&#12428;&#12383;&#12525;&#12464;&#12458;&#12531;&#12398;
+	&#21839;&#38988;&#12434;&#35299;&#27770;&#12377;&#12427;&#12467;&#12531;&#12509;&#12540;&#12493;&#12531;&#12488;&#12391;&#12354;&#12427;&#12290;Winbind &#12399;&#12289;Microsoft RPC &#12467;&#12540;&#12523;&#12289;
+	Pluggable Authentication Modules (PAM)&#12289;Name Service Switch&#12398;UNIX&#12398;&#23455;&#35013;&#12434;
+	&#20351;&#29992;&#12375;&#12390;&#12289;Windows NT&#12398;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12364;UNIX&#12510;&#12471;&#12531;&#19978;&#12398;UNIX&#12518;&#12540;&#12470;&#12392;&#12375;&#12390;&#21205;&#20316;
+	&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12290;&#12371;&#12398;&#31456;&#12399;&#12289;Winbind&#12471;&#12473;&#12486;&#12512;&#12395;&#12388;&#12356;&#12390;&#12289;&#12381;&#12398;&#27231;&#33021;&#12289;&#35373;&#23450;&#12398;&#20181;&#26041;&#12289;
+	&#21450;&#12403;&#20869;&#37096;&#30340;&#12395;&#12393;&#12398;&#12424;&#12358;&#12395;&#21205;&#12356;&#12390;&#12356;&#12427;&#12398;&#12363;&#12434;&#35500;&#26126;&#12377;&#12427;&#12290;
+	</p><p>
+	Winbind &#12399;&#12289;&#19977;&#12388;&#12398;&#21029;&#12293;&#12398;&#27231;&#33021;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<a class="indexterm" name="id2673518"></a>
+<a class="indexterm" name="id2673524"></a>
+		&#12518;&#12540;&#12470;&#12398;&#26412;&#20154;&#30906;&#35469;&#24773;&#22577;&#12398;&#35469;&#35388;(PAM&#32076;&#30001;)&#12290;&#12371;&#12428;&#12399;&#12289;Windows NT4&#12489;&#12513;&#12452;&#12531;&#12363;
+		(Samba&#12489;&#12513;&#12452;&#12531;&#12418;&#21547;&#12416;)Active Directory&#12489;&#12513;&#12452;&#12531;&#12363;&#12425;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;
+		&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#20351;&#12387;&#12390;UNIX/Linux&#12471;&#12473;&#12486;&#12512;&#12395;&#12525;&#12464;&#12458;&#12531;&#12377;&#12427;&#12371;&#12392;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2673545"></a>
+<a class="indexterm" name="id2673552"></a>
+		ID&#12398;&#35299;&#27770;(NSS&#32076;&#30001;)&#12290;&#12371;&#12428;&#12399;&#12289;winbind&#12364;&#20351;&#12431;&#12428;&#12394;&#12363;&#12387;&#12383;&#26178;&#12398;&#26082;&#23450;&#20516;&#12391;&#12354;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2673567"></a>
+<a class="indexterm" name="id2673573"></a>
+<a class="indexterm" name="id2673580"></a>
+<a class="indexterm" name="id2673586"></a>
+<a class="indexterm" name="id2673593"></a>
+<a class="indexterm" name="id2673600"></a>
+		Winbind&#12399;&#12289;winbind_idmap.tdb&#12392;&#21628;&#12400;&#12428;&#12427;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#32173;&#25345;&#12375;&#12289;&#12381;&#12398;&#20013;&#12395;&#12289;
+		UNIX UID/GID&#12392;NT SID&#38291;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#24773;&#22577;&#12434;&#26684;&#32013;&#12377;&#12427;&#12290;&#12371;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12399;&#12289;
+		&#12525;&#12540;&#12459;&#12523;UID/GID&#12434;&#25345;&#12383;&#12394;&#12356;&#12518;&#12540;&#12470;&#12414;&#12383;&#12399;&#12464;&#12523;&#12540;&#12503;&#12395;&#12398;&#12415;&#20351;&#29992;&#12377;&#12427;&#12290;
+		idmap uid/gid &#12398;&#31684;&#22258;&#12363;&#12425;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12289;NT&#12398;SID&#12395;&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12383;
+		UID/GID&#12364;&#26684;&#32013;&#12373;&#12428;&#12427;&#12290;<em class="parameter"><code>idmap backend</code></em>&#12364;
+		<code class="constant">ldap:ldap://hostname[:389]</code>&#12395;&#25351;&#23450;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;
+		&#12525;&#12540;&#12459;&#12523;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12434;&#20351;&#29992;&#12377;&#12427;&#20195;&#12431;&#12426;&#12395;&#12289;Winbind&#12399;&#12289;&#12371;&#12398;&#24773;&#22577;&#12434;LDAP
+		&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12363;&#12425;&#21462;&#24471;&#12377;&#12427;&#12290;
+		</p></li></ul></div><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+	<a class="indexterm" name="id2673636"></a>
+	<a class="indexterm" name="id2673642"></a>
+<a class="indexterm" name="id2673652"></a>
+<a class="indexterm" name="id2673659"></a>
+<a class="indexterm" name="id2673666"></a>
+<a class="indexterm" name="id2673672"></a>
+	&#12418;&#12375;&#12418;<code class="literal">winbindd</code>&#12364;&#23455;&#34892;&#20013;&#12391;&#12399;&#12394;&#12356;&#12392;&#12365;&#12289;smbd
+	(<code class="literal">winbindd</code>&#12434;&#21628;&#12403;&#20986;&#12377;&#26041;)&#12399;&#12289;&#20195;&#26367;&#25163;&#27573;&#12392;&#12375;&#12390;&#32020;&#31883;&#12395;&#12525;&#12540;&#12459;&#12523;&#12394;
+	<code class="filename">/etc/passwd</code>&#12392;<code class="filename">/etc/group</code>&#12363;&#12425;&#12398;&#24773;&#22577;&#12434;
+	&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12395;&#12375;&#12289;&#21205;&#30340;&#12510;&#12483;&#12500;&#12531;&#12464;&#12399;&#20351;&#29992;&#12375;&#12394;&#12356;&#12290;OS&#12391;NSS&#12364;&#26377;&#21177;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;
+	&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12398;&#35299;&#27770;&#12399;NSS&#32076;&#30001;&#12391;&#34892;&#12431;&#12428;&#12427;&#12290;
+	</p></div><div class="figure"><a name="winbind_idmap"></a><p class="title"><b>Figure�24.1.�Winbind Idmap</b></p><div class="figure-contents"><div class="mediaobject"><img src="images/idmap_winbind_no_loop.png" width="243" alt="Winbind Idmap"></div></div></div><br class="figure-break"></div><div class="sect1" title="&#12399;&#12376;&#12417;&#12395;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673753"></a>&#12399;&#12376;&#12417;&#12395;</h2></div></div></div><p>UNIX&#12392;Microsoft Windows NT&#12391;&#12399;&#12289;&#12518;&#12540;&#12470;&#21450;&#12403;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12398;&#35211;&#12379;&#26041;&#12398;&#12514;&#12487;&#12523;&#12418;&#12289;
+	&#12381;&#12428;&#12434;&#23455;&#34892;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;&#25216;&#34899;&#12418;&#30064;&#12394;&#12427;&#12398;&#12399;&#21608;&#30693;&#12398;&#20107;&#23455;&#12391;&#12354;&#12427;&#12290;&#12371;&#12428;&#12364;&#12289;
+	&#20108;&#12388;&#12398;&#12471;&#12473;&#12486;&#12512;&#12434;&#32113;&#21512;&#12375;&#12390;&#12289;&#28288;&#36275;&#12398;&#34892;&#12367;&#36939;&#29992;&#12434;&#12377;&#12427;&#12371;&#12392;&#12434;&#22256;&#38627;&#12395;&#12375;&#12390;&#12365;&#12383;&#12290;
+	</p><p>
+<a class="indexterm" name="id2673774"></a>
+<a class="indexterm" name="id2673781"></a>
+	&#12371;&#12428;&#12395;&#23550;&#12375;&#12390;&#12424;&#12367;&#34892;&#12431;&#12428;&#12427;&#35299;&#27770;&#31574;&#12399;&#12289;UNIX&#12392;Windows&#12398;&#20001;&#12471;&#12473;&#12486;&#12512;&#19978;&#12395;&#20840;&#12367;&#21516;&#21517;&#12398;
+	&#12518;&#12540;&#12470;&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#20316;&#25104;&#12375;&#12289;Samba&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;&#20001;&#12471;&#12473;&#12486;&#12512;&#38291;&#12398;&#12501;&#12449;&#12452;&#12523;&#12469;&#12540;&#12499;&#12473;&#12392;
+	&#21360;&#21047;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#12392;&#12356;&#12358;&#12420;&#12426;&#26041;&#12391;&#12354;&#12387;&#12383;&#12290;&#12383;&#12384;&#12375;&#12289;&#12371;&#12398;&#35299;&#27770;&#31574;&#12399;&#12289;&#21452;&#26041;&#12398;
+	&#12510;&#12471;&#12531;&#12395;&#12518;&#12540;&#12470;&#12434;&#36861;&#21152;&#12375;&#12383;&#12426;&#21066;&#38500;&#12375;&#12383;&#12426;&#12377;&#12427;&#20316;&#26989;&#12364;&#38754;&#20498;&#12391;&#12497;&#12473;&#12527;&#12540;&#12489;&#12418;2&#12475;&#12483;&#12488;
+	&#25345;&#12383;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12378;&#12289;&#12381;&#12398;&#20001;&#26041;&#12364;UNIX&#12392;Windows&#12471;&#12473;&#12486;&#12512;&#38291;&#12398;&#21516;&#26399;&#12398;&#12378;&#12428;&#12398;&#21839;&#38988;&#12395;
+	&#12388;&#12394;&#12364;&#12426;&#12289;&#12518;&#12540;&#12470;&#12398;&#28151;&#20081;&#12434;&#25307;&#12367;&#12392;&#12356;&#12358;&#12289;&#23436;&#29863;&#12395;&#12399;&#31243;&#36960;&#12356;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;</p><p>UNIX &#12510;&#12471;&#12531;&#12398;&#12383;&#12417;&#12398;&#32113;&#19968;&#12373;&#12428;&#12383;&#12525;&#12464;&#12458;&#12531;&#12392;&#12356;&#12358;&#21839;&#38988;&#12434;&#12289;&#27425;&#12398;&#12424;&#12358;&#12395;&#19977;&#12388;&#12398;
+	&#27083;&#25104;&#35201;&#32032;&#12395;&#20998;&#12369;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Windows NT&#12398;&#12518;&#12540;&#12470;&#21450;&#12403;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>Windows NT &#12518;&#12540;&#12470;&#12434;&#35469;&#35388;&#12377;&#12427;&#12290;
+		</p></li><li class="listitem"><p>Windows NT &#12518;&#12540;&#12470;&#12398;&#12383;&#12417;&#12395;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#22793;&#26356;&#12377;&#12427;&#12290;
+		</p></li></ul></div><p>
+<a class="indexterm" name="id2673843"></a>
+<a class="indexterm" name="id2673850"></a>
+	&#29702;&#24819;&#30340;&#12395;&#12399;&#12289;&#32113;&#19968;&#12373;&#12428;&#12383;&#12525;&#12464;&#12458;&#12531;&#12392;&#12356;&#12358;&#21839;&#38988;&#12398;&#35299;&#27770;&#26041;&#27861;&#12399;&#12289;UNIX&#12510;&#12471;&#12531;&#19978;&#12395;&#24773;&#22577;&#12434;&#35079;&#35069;&#12377;&#12427;
+	&#12371;&#12392;&#12394;&#12367;&#12289;&#19978;&#35352;&#12398;&#21839;&#38988;&#12434;&#20840;&#12390;&#28288;&#36275;&#12373;&#12379;&#12289;&#12375;&#12363;&#12418;&#12289; &#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12434;&#12393;&#12385;&#12425;&#12398;
+	&#12471;&#12473;&#12486;&#12512;&#12391;&#32173;&#25345;&#12375;&#12390;&#12418;&#12289;&#12471;&#12473;&#12486;&#12512;&#31649;&#29702;&#32773;&#12398;&#20181;&#20107;&#12434;&#22679;&#12420;&#12373;&#12394;&#12356;&#12392;&#12356;&#12358;&#12418;&#12398;&#12391;&#12354;&#12387;&#12390;&#12411;&#12375;&#12356;&#12290;
+	Winbind &#12471;&#12473;&#12486;&#12512;&#12399;&#12289;&#32113;&#19968;&#12373;&#12428;&#12383;&#12525;&#12464;&#12458;&#12531;&#12392;&#12356;&#12358;&#21839;&#38988;&#12398;&#19977;&#12388;&#12398;&#27083;&#25104;&#35201;&#32032;&#12434;&#31777;&#21336;&#12395;&#20778;&#38597;&#12395;
+	&#12371;&#12394;&#12377;&#12477;&#12522;&#12517;&#12540;&#12471;&#12519;&#12531;&#12434;&#25552;&#20379;&#12377;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+	problem.</p></div><div class="sect1" title="Winbind&#12364;&#25552;&#20379;&#12377;&#12427;&#12418;&#12398;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2673870"></a>Winbind&#12364;&#25552;&#20379;&#12377;&#12427;&#12418;&#12398;</h2></div></div></div><p>
+<a class="indexterm" name="id2673878"></a>
+<a class="indexterm" name="id2673886"></a>
+<a class="indexterm" name="id2673893"></a>
+<a class="indexterm" name="id2673900"></a>
+	Winbind&#12399;&#12289;UNIX&#12392;Windows NT&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#31649;&#29702;&#12434;&#12289;UNIX&#12510;&#12471;&#12531;&#12364;NT&#12489;&#12513;&#12452;&#12531;&#12398;&#23436;&#20840;&#12394;
+	&#12513;&#12531;&#12496;&#12395;&#12394;&#12427;&#12371;&#12392;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12371;&#12392;&#12395;&#12424;&#12387;&#12390;&#32113;&#19968;&#12377;&#12427;&#12290;&#19968;&#26086;&#12371;&#12428;&#12434;&#34892;&#12360;&#12400;&#12289;UNIX
+	&#12510;&#12471;&#12531;&#12399;&#12289;NT&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12434;&#12354;&#12383;&#12363;&#12418;<span class="quote">&#8220;<span class="quote">&#12493;&#12452;&#12486;&#12451;&#12502;&#12394;</span>&#8221;</span>UNIX&#12518;&#12540;&#12470;&#12420;
+	&#12464;&#12523;&#12540;&#12503;&#12391;&#12354;&#12427;&#12363;&#12398;&#12424;&#12358;&#12395;&#35211;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12424;&#12358;&#12394;&#12426;&#12289;UNIX&#12398;&#12415;&#12398;&#29872;&#22659;&#12391;NIS+&#12434;&#20351;&#29992;
+	&#12377;&#12427;&#12398;&#12392;&#12411;&#12412;&#21516;&#27096;&#12395;&#12289;NT&#12489;&#12513;&#12452;&#12531;&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2673931"></a>
+<a class="indexterm" name="id2673938"></a>
+<a class="indexterm" name="id2673945"></a>
+<a class="indexterm" name="id2673952"></a>
+	&#12381;&#12398;&#32080;&#26524;&#12289;UNIX &#12510;&#12471;&#12531;&#19978;&#12398;&#12503;&#12525;&#12464;&#12521;&#12512;&#12398;&#12356;&#12378;&#12428;&#12363;&#12364;&#12289;OS&#12395;&#12518;&#12540;&#12470;&#21517;&#12420;&#12464;&#12523;&#12540;&#12503;&#21517;&#12398;&#26908;&#32034;&#12434;
+	&#20381;&#38972;&#12377;&#12427;&#12392;&#12289;&#25351;&#23450;&#12373;&#12428;&#12383;&#12489;&#12513;&#12452;&#12531;&#12434;&#25285;&#24403;&#12377;&#12427; NT &#12398;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12395;&#12381;&#12398;&#26908;&#32034;&#12434;
+	&#20381;&#38972;&#12377;&#12427;&#12371;&#12392;&#12395;&#12424;&#12426;&#12289;&#21839;&#12356;&#21512;&#12431;&#12379;&#12399;&#35299;&#27770;&#12377;&#12427;&#12290;Winbind &#12399;&#20302;&#12524;&#12505;&#12523;(C&#12521;&#12452;&#12502;&#12521;&#12522;&#20869;&#12398;
+	NSS&#21517;&#21069;&#35299;&#27770;&#12514;&#12472;&#12517;&#12540;&#12523;&#32076;&#30001;)&#12391;OS&#12395;&#32331;&#12364;&#12427;&#12398;&#12391;&#12289;NT &#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12408;&#12398;&#19978;&#35352;&#12398;
+	&#12522;&#12480;&#12452;&#12524;&#12463;&#12471;&#12519;&#12531;&#12399;&#12289;&#23436;&#20840;&#12395;&#36879;&#36942;&#12391;&#12354;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2673972"></a>
+<a class="indexterm" name="id2673979"></a>
+	UNIX&#12510;&#12471;&#12531;&#12398;&#12518;&#12540;&#12470;&#12399;&#12289;<span class="quote">&#8220;<span class="quote">&#12493;&#12452;&#12486;&#12451;&#12502;&#12398;</span>&#8221;</span>UNIX&#21517;&#12434;&#20351;&#29992;&#12377;&#12427;&#12398;&#12392;&#21516;&#27096;&#12395;&#12289;
+	NT&#12518;&#12540;&#12470;&#12540;&#21517;&#12392;&#12464;&#12523;&#12540;&#12503;&#21517;&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;&#12518;&#12540;&#12470;&#12399;&#12501;&#12449;&#12452;&#12523;&#12434;chown&#12375;&#12390;&#12289;
+	NT&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12398;&#25152;&#26377;&#12395;&#22793;&#12360;&#12427;&#12371;&#12392;&#12418;&#12391;&#12365;&#12289;UNIX&#12510;&#12471;&#12531;&#12395;&#12525;&#12464;&#12452;&#12531;&#12375;&#12390;&#12489;&#12513;&#12452;&#12531;
+	&#12518;&#12540;&#12470;&#12392;&#12375;&#12390;UNIX&#12398;X Window System&#12475;&#12483;&#12471;&#12519;&#12531;&#12434;&#23455;&#34892;&#12377;&#12427;&#12371;&#12392;&#12418;&#12391;&#12365;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2674004"></a>
+	Winbind&#12364;&#20351;&#29992;&#12373;&#12428;&#12390;&#12356;&#12427;&#12371;&#12392;&#12364;&#26126;&#12425;&#12363;&#12395;&#12431;&#12363;&#12427;&#12392;&#12371;&#12429;&#12399;&#12289;&#12518;&#12540;&#12470;&#21450;&#12403;&#12464;&#12523;&#12540;&#12503;&#12398;&#21517;&#21069;&#12364;
+	<code class="constant">DOMAIN\user</code>&#12392;<code class="constant">DOMAIN\group</code>&#12398;&#24418;&#12434;&#21462;&#12427;&#12392;
+	&#12356;&#12358;&#28857;&#12384;&#12369;&#12391;&#12354;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;Winbind &#12364;&#12289;&#20449;&#38972;&#38306;&#20418;&#12398;&#12354;&#12427;&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#29031;&#12377;&#12427;&#12398;&#29305;&#23450;&#12398;
+	&#26908;&#32034;&#12395;&#12388;&#12356;&#12390;&#12289;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12408;&#12398;&#12522;&#12480;&#12452;&#12524;&#12463;&#12488;&#27770;&#12417;&#12427;&#12383;&#12417;&#12395;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2674031"></a>
+<a class="indexterm" name="id2674038"></a>
+	&#12373;&#12425;&#12395;&#12289;Winbind &#12399;&#12289;PAM&#12471;&#12473;&#12486;&#12512;&#12398;hook&#12392;&#12375;&#12390;&#12398;&#35469;&#35388;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12375;&#12289;NT&#12489;&#12513;&#12452;&#12531;&#12434;
+	&#32076;&#30001;&#12375;&#12390;&#12289;PAM&#23550;&#24540;&#12398;&#12354;&#12425;&#12422;&#12427;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#23550;&#12375;&#12390;&#35469;&#35388;&#12434;&#34892;&#12358;&#12290;&#12371;&#12398;&#27231;&#33021;&#12399;&#12289;&#19968;&#12459;&#25152;
+	(&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#19978;)&#12395;&#20840;&#12390;&#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#12364;&#26684;&#32013;&#12373;&#12428;&#12427;&#12383;&#12417;&#12289;&#12471;&#12473;&#12486;&#12512;&#38291;&#12398;
+	&#12497;&#12473;&#12527;&#12540;&#12489;&#21516;&#26399;&#12398;&#21839;&#38988;&#12434;&#35299;&#28040;&#12377;&#12427;&#12290;</p><div class="sect2" title="&#23550;&#35937;&#12392;&#12394;&#12427;&#12518;&#12540;&#12470;"><div class="titlepage"><div><div><h3 class="title"><a name="id2674056"></a>&#23550;&#35937;&#12392;&#12394;&#12427;&#12518;&#12540;&#12470;</h3></div></div></div><p>
+<a class="indexterm" name="id2674064"></a>
+		NT&#12505;&#12540;&#12473;&#12398;&#12489;&#12513;&#12452;&#12531;&#22522;&#30436;&#12364;&#12377;&#12391;&#12395;&#12354;&#12426;&#12289;&#12381;&#12428;&#12395;UNIX &#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12363;
+		&#12469;&#12540;&#12496;&#12434;&#32068;&#12415;&#20837;&#12428;&#12383;&#12356;&#12392;&#12356;&#12358;&#35201;&#26395;&#12398;&#12354;&#12427;&#32068;&#32340;&#12364;Winbind&#12398;&#23550;&#35937;&#12392;&#12394;&#12427;&#12290;Winbind
+		&#12424;&#12426;&#12289;&#12371;&#12398;&#12424;&#12358;&#12394;&#32068;&#32340;&#12399;&#21029;&#20491;&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#22522;&#30436;&#12434;&#31649;&#29702;&#12377;&#12427;&#24517;&#35201;&#12394;&#12367;&#12289;UNIX
+		&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12434;&#23637;&#38283;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;NT&#12505;&#12540;&#12473;&#12398;&#32068;&#32340;&#12395;UNIX
+		&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12434;&#23637;&#38283;&#12377;&#12427;&#12383;&#12417;&#12398;&#38291;&#25509;&#36027;&#12434;&#22823;&#24133;&#12395;&#36605;&#28187;&#12377;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2674085"></a>
+<a class="indexterm" name="id2674092"></a>
+		Winbind &#12398;&#12418;&#12358;&#19968;&#12388;&#12398;&#33288;&#21619;&#28145;&#12356;&#20351;&#29992;&#26041;&#27861;&#12399;&#12289;UNIX&#12505;&#12540;&#12473;&#12398;&#35013;&#32622;&#12398;&#20013;&#24515;&#37096;&#20998;&#12395;
+		&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;Microsoft&#12505;&#12540;&#12473;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12395;&#12501;&#12449;&#12452;&#12523;&#12469;&#12540;&#12499;&#12473;&#12392;
+		&#21360;&#21047;&#12469;&#12540;&#12499;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#35013;&#32622;&#12399;&#12289;Winbind&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#12489;&#12513;&#12452;&#12531;&#12395;
+		&#12471;&#12540;&#12512;&#12524;&#12473;&#12395;&#32113;&#21512;&#12373;&#12428;&#12427;&#12290;</p></div><div class="sect2" title="&#22806;&#37096;&#12398;SID&#12398;&#21462;&#12426;&#25201;&#12356;"><div class="titlepage"><div><div><h3 class="title"><a name="id2674111"></a>&#22806;&#37096;&#12398;SID&#12398;&#21462;&#12426;&#25201;&#12356;</h3></div></div></div><p>
+<a class="indexterm" name="id2674119"></a>
+	<span class="emphasis"><em>&#22806;&#37096;&#12398;SID(foreign SID)</em></span>&#12392;&#12356;&#12358;&#21336;&#35486;&#12399;&#12289;&#29305;&#23450;&#12398;&#29872;&#22659;&#12395;&#20381;&#23384;&#12375;&#12394;&#12356;
+	&#21453;&#24540;&#12392;&#12375;&#12390;&#12375;&#12400;&#12375;&#12400;&#35211;&#21463;&#12369;&#12425;&#12428;&#12427;&#12290;&#20197;&#19979;&#12399;Samba&#12513;&#12540;&#12522;&#12531;&#12464;&#12522;&#12473;&#12488;&#19978;&#12391;&#36215;&#12365;&#12383;&#12420;&#12426;&#12392;&#12426;&#12434;
+	&#26360;&#21270;&#12375;&#12383;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;winbind&#12398;&#20351;&#29992;&#12395;&#38306;&#36899;&#12375;&#12390;&#12375;&#12400;&#12375;&#12400;&#29694;&#12428;&#12427;&#28151;&#20081;&#12398;&#33391;&#12356;&#20363;&#12391;
+	&#12354;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2674143"></a>
+	&#20107;&#23455;:Winbind&#12399;&#12525;&#12540;&#12459;&#12523;&#12489;&#12513;&#12452;&#12531;&#12398;&#19968;&#37096;&#12391;&#12394;&#12356;&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12434;&#20351;&#12358;&#12518;&#12540;&#12470;&#12434;
+	&#25201;&#12358;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2674158"></a>
+	&#23550;&#24540;:<span class="quote">&#8220;<span class="quote">&#12394;&#12380;?&#31169;&#12399;winbind&#12394;&#12375;&#12391;&#38263;&#12356;&#38291;&#12489;&#12513;&#12452;&#12531;&#12395;&#25152;&#23646;&#12375;&#12390;&#12356;&#12394;&#12356;&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;
+	&#12434;Samba&#12392;&#12392;&#12418;&#12395;&#20351;&#12387;&#12390;&#12356;&#12427;&#12290;winbind&#12399;&#20182;&#12398;Samba/Windows PDC&#12395;&#12424;&#12387;&#12390;&#21046;&#24481;&#12373;&#12428;&#12427;
+	&#12489;&#12513;&#12452;&#12531;&#20013;&#12398;&#12513;&#12531;&#12496;&#12469;&#12540;&#12496;&#12392;&#12375;&#12390;&#12398;Samba&#29992;&#12391;&#12399;&#12394;&#12356;&#12363;&#12392;&#24605;&#12358;&#12290;</span>&#8221;</span>
+	</p><p>
+<a class="indexterm" name="id2674176"></a>
+<a class="indexterm" name="id2674183"></a>
+<a class="indexterm" name="id2674189"></a>
+	&#12418;&#12375;&#12418;&#12289;Samba&#12469;&#12540;&#12496;&#12364;&#12525;&#12540;&#12459;&#12523;Samba&#12489;&#12513;&#12452;&#12531;&#20197;&#22806;&#12398;&#12489;&#12513;&#12452;&#12531;&#12363;&#12425;&#12450;&#12463;&#12475;&#12473;&#12373;&#12428;&#12427;
+	&#12363;&#12289;&#12418;&#12375;&#12418;&#12289;&#12525;&#12540;&#12459;&#12523;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12391;&#12394;&#12356;&#12510;&#12471;&#12531;&#12363;&#12425;&#12450;&#12463;&#12475;&#12473;&#12373;&#12428;&#12427;&#22580;&#21512;&#12289;winbind&#12399;
+	Samba&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12354;&#12427;&#12518;&#12540;&#12470;&#12363;&#12425;&#20998;&#38626;&#12373;&#12428;&#12383;&#22806;&#37096;&#12398;&#12518;&#12540;&#12470;&#12398;&#35672;&#21029;&#24773;&#22577;&#12434;&#20445;&#25345;&#12377;&#12427;
+	&#12417;&#12398;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12383;&#38936;&#22495;&#12363;&#12425;UID&#12392;GID&#12434;&#21106;&#12426;&#24403;&#12390;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2674210"></a>
+<a class="indexterm" name="id2674216"></a>
+<a class="indexterm" name="id2674223"></a>
+<a class="indexterm" name="id2674230"></a>
+	&#12371;&#12428;&#12399;&#12289;winbind&#12399;&#12289;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12392;&#12489;&#12513;&#12452;&#12531;&#38750;&#12513;&#12531;&#12496;&#12398;&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12364;&#12354;&#12427;&#12289;
+	&#21336;&#19968;&#12398;SambaPDC&#12364;&#12525;&#12540;&#12459;&#12523;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#19978;&#12395;&#12354;&#12427;&#22580;&#21512;&#12395;&#29978;&#12384;&#12375;&#12367;&#26377;&#29992;&#12391;&#12354;&#12427;&#12290;&#12418;&#12375;&#12418;&#12289;
+	winbind&#12364;&#20351;&#12431;&#12428;&#12394;&#12356;&#12392;&#12289;&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12394;&#12356;Windows&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#19978;&#12398;
+	george&#12392;&#12356;&#12358;&#12518;&#12540;&#12470;&#12399;PDC&#12392;&#12375;&#12390;&#21205;&#20316;&#12375;&#12390;&#12356;&#12427;Samba&#12469;&#12540;&#12496;&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;
+	&#20013;&#12398;george&#12392;&#21628;&#12400;&#12428;&#12427;&#12518;&#12540;&#12470;&#12398;&#12501;&#12449;&#12452;&#12523;&#12395;&#12450;&#12463;&#12475;&#12473;&#12391;&#12365;&#12427;&#12290;winbind&#12364;&#20351;&#12431;&#12428;&#12427;&#12392;&#12289;
+	&#26082;&#23450;&#20516;&#12398;&#29366;&#24907;&#12399;&#12289;&#12525;&#12540;&#12459;&#12523;&#12518;&#12540;&#12470;&#12398;george&#12364;DOMAIN\george&#12392;&#12356;&#12358;&#12450;&#12459;&#12454;&#12531;&#12488;&#12392;&#12375;&#12390;
+	&#25201;&#12431;&#12428;&#12289;&#22806;&#37096;(&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12394;&#12356;)&#12450;&#12459;&#12454;&#12531;&#12488;&#12399;&#12289;&#12362;&#12398;&#12362;&#12398;&#21029;&#12398;SID&#12434;&#25345;&#12388;&#12383;&#12417;&#12395;
+	MACHINE\george&#12392;&#12375;&#12390;&#25201;&#12431;&#12428;&#12427;&#12290;
+	</p></div></div><div class="sect1" title="Winbind&#12398;&#21205;&#12365;&#26041;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2674268"></a>Winbind&#12398;&#21205;&#12365;&#26041;</h2></div></div></div><p>
+<a class="indexterm" name="id2674276"></a>
+<a class="indexterm" name="id2674283"></a>
+<a class="indexterm" name="id2674291"></a>
+<a class="indexterm" name="id2674297"></a>
+	Winbind&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;/&#12469;&#12540;&#12496;&#12450;&#12540;&#12461;&#12486;&#12463;&#12481;&#12515;&#12434;&#24819;&#23450;&#12375;&#35373;&#35336;&#12373;&#12428;&#12383;&#12418;&#12398;&#12391;
+	&#12354;&#12427;&#12290;&#38263;&#26178;&#38291;&#36208;&#12426;&#32154;&#12369;&#12427;<code class="literal">winbindd</code>&#12487;&#12540;&#12514;&#12531;&#12364;UNIX&#12489;&#12513;&#12452;&#12531;
+	&#12477;&#12465;&#12483;&#12488;&#19978;&#12391;&#12522;&#12463;&#12456;&#12473;&#12488;&#12364;&#26469;&#12427;&#12398;&#12434;&#24453;&#12388;&#12290;&#12371;&#12428;&#12425;&#12398;&#12522;&#12463;&#12456;&#12473;&#12488;&#12399;&#12289;NSS&#21450;&#12403;PAM
+	&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12395;&#12424;&#12426;&#29983;&#25104;&#12373;&#12428;&#12289;&#38918;&#30058;&#12395;&#20966;&#29702;&#12373;&#12428;&#12427;&#12290;</p><p>Winbind &#12434;&#23455;&#35013;&#12377;&#12427;&#12398;&#12395;&#20351;&#29992;&#12373;&#12428;&#12390;&#12356;&#12427;&#25216;&#34899;&#12434;&#20197;&#19979;&#12395;&#35443;&#36848;&#12377;&#12427;&#12290;</p><div class="sect2" title="Microsoft Remote Procedure Calls"><div class="titlepage"><div><div><h3 class="title"><a name="id2674325"></a>Microsoft Remote Procedure Calls</h3></div></div></div><p>
+<a class="indexterm" name="id2674334"></a>
+<a class="indexterm" name="id2674343"></a>
+<a class="indexterm" name="id2674350"></a>
+<a class="indexterm" name="id2674357"></a>
+<a class="indexterm" name="id2674364"></a>
+		&#36942;&#21435;&#25968;&#24180;&#38291;&#12289;Samba&#12481;&#12540;&#12512;&#12398;&#22810;&#12367;&#12398;&#12513;&#12531;&#12496;&#12364;&#12289;Microsoft&#12522;&#12514;&#12540;&#12488;&#12503;&#12525;&#12471;&#12540;&#12472;&#12515;
+		&#12467;&#12540;&#12523;(MSRPC)&#12471;&#12473;&#12486;&#12512;&#12398;&#21508;&#20596;&#38754;&#12434;&#35299;&#26126;&#12375;&#12424;&#12358;&#12392;&#21162;&#21147;&#12375;&#12390;&#12365;&#12383;&#12290;&#12371;&#12398;&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;
+		&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;&#12289;&#12518;&#12540;&#12470;&#35469;&#35388;&#12289;&#21360;&#21047;&#12473;&#12503;&#12540;&#12522;&#12531;&#12464;&#12434;&#21547;&#12416;Windows NT&#12510;&#12471;&#12531;&#38291;&#12398;
+		&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#38306;&#36899;&#25805;&#20316;&#12398;&#22823;&#21322;&#12395;&#20351;&#29992;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;&#24403;&#21021;&#12289;Samba&#12408;&#12398;&#12503;&#12521;&#12452;&#12510;&#12522;
+		&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;(PDC)&#27231;&#33021;&#12398;&#23455;&#35013;&#12434;&#25903;&#25588;&#12377;&#12427;&#12383;&#12417;&#12395; &#30528;&#25163;&#12375;&#12383;&#20316;&#26989;&#12391;
+		&#12354;&#12387;&#12383;&#12364;&#12289;&#32080;&#26524;&#12392;&#12375;&#12390;&#12381;&#12428;&#20197;&#22806;&#12398;&#30446;&#30340;&#12395;&#20351;&#29992;&#12391;&#12365;&#12427;&#19968;&#36899;&#12398;&#12467;&#12540;&#12489;&#12434;&#24471;&#12427;&#12371;&#12392;&#12364;
+		&#12391;&#12365;&#12383;&#12290;
+		</p><p>
+<a class="indexterm" name="id2674395"></a>
+<a class="indexterm" name="id2674402"></a>
+<a class="indexterm" name="id2674409"></a>
+		winbind &#12399;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#21015;&#25369;&#12375;&#12289;&#20491;&#12293;&#12398;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12398;&#35443;&#32048;
+		&#24773;&#22577;&#12434;&#21462;&#24471;&#12377;&#12427;&#12383;&#12417;&#12395;&#12289;&#21508;&#31278;&#12398;MSRPC &#12467;&#12540;&#12523;&#12434;&#20351;&#29992;&#12377;&#12427;&#12290;&#20182;&#12398;MSRPC &#12467;&#12540;&#12523;&#12399;&#12289;
+		NT&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12434;&#35469;&#35388;&#12375;&#12289;&#12518;&#12540;&#12470;&#12398;&#12497;&#12473;&#12527;&#12540;&#12489;&#12434;&#22793;&#26356;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#29992;&#12391;&#12365;&#12427;&#12290;
+		Windows PDC&#12395;&#12289;&#30452;&#25509;&#12518;&#12540;&#12470;&#21450;&#12403;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12434;&#21839;&#12356;&#21512;&#12431;&#12379;&#12427;&#12371;&#12392;&#12391;&#12289;Winbind&#12399;&#12289;
+		NT&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#24773;&#22577;&#12434;UNIX&#12518;&#12540;&#12470;&#21517;&#12392;&#12464;&#12523;&#12540;&#12503;&#21517;&#12395;&#12510;&#12483;&#12500;&#12531;&#12464;&#12377;&#12427;&#12290;
+		</p></div><div class="sect2" title="Microsoft Active Directory&#12469;&#12540;&#12499;&#12473;"><div class="titlepage"><div><div><h3 class="title"><a name="id2674429"></a>Microsoft Active Directory&#12469;&#12540;&#12499;&#12473;</h3></div></div></div><p>
+<a class="indexterm" name="id2674438"></a>
+<a class="indexterm" name="id2674445"></a>
+<a class="indexterm" name="id2674452"></a>
+<a class="indexterm" name="id2674459"></a>
+		2001&#24180;&#24460;&#21322;&#12424;&#12426;&#12289;Samba&#12399;NT4&#12398;RPC &#12469;&#12540;&#12499;&#12473;&#12391;&#12399;&#12394;&#12367;&#12289;<span class="quote">&#8220;<span class="quote">&#12493;&#12452;&#12486;&#12451;&#12502;&#12514;&#12540;&#12489;</span>&#8221;</span>
+		&#12398;&#12503;&#12525;&#12488;&#12467;&#12523;&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;Microsoft Windows 2000&#12392;&#12420;&#12426;&#21462;&#12426;&#12377;&#12427;&#27231;&#33021;&#12434;&#25345;&#12388;
+		&#12424;&#12358;&#12395;&#12394;&#12387;&#12383;&#12290;LDAP&#21450;&#12403;Kerberos&#12434;&#20351;&#29992;&#12375;&#12289;winbind&#12434;&#36208;&#12425;&#12379;&#12390;&#12356;&#12427; &#12489;&#12513;&#12452;&#12531;
+		&#12513;&#12531;&#12496;&#12399;&#12289;Windows 200x&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12398;&#19990;&#30028;&#12391;&#34892;&#12431;&#12428;&#12427;&#12398;&#12392;&#20840;&#12367;&#21516;&#12376;&#12424;&#12358;&#12395;&#12289;
+		&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#21015;&#25369;&#12391;&#12365;&#12289;&#12381;&#12358;&#12377;&#12427;&#12371;&#12392;&#12395;&#12424;&#12387;&#12390;&#12424;&#12426;&#21177;&#29575;&#30340;&#12391;&#21177;&#26524;&#30340;&#12394;
+		winbind &#12398;&#23455;&#35013;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;
+		</p></div><div class="sect2" title="Name Service Switch"><div class="titlepage"><div><div><h3 class="title"><a name="id2674484"></a>Name Service Switch</h3></div></div></div><p>
+<a class="indexterm" name="id2674492"></a>
+<a class="indexterm" name="id2674499"></a>
+<a class="indexterm" name="id2674506"></a>
+<a class="indexterm" name="id2674513"></a>
+		Name Service Switch&#12414;&#12383;&#12399;NSS&#12399;&#12289;&#22810;&#12367;&#12398;UNIX OS&#12395;&#23384;&#22312;&#12377;&#12427;&#27231;&#33021;&#12391;&#12354;&#12427;&#12290;
+		&#12371;&#12428;&#12399;&#12289;&#12507;&#12473;&#12488;&#21517;&#12289;&#12513;&#12540;&#12523;&#12398;&#21029;&#21517;&#12289;&#12518;&#12540;&#12470;&#24773;&#22577;&#12394;&#12393;&#12398;&#12471;&#12473;&#12486;&#12512;&#24773;&#22577;&#12434;&#12289;&#30064;&#12394;&#12427;
+		&#12477;&#12540;&#12473;&#12363;&#12425;&#35299;&#27770;&#12377;&#12427;&#12371;&#12392;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12290;&#20363;&#12360;&#12400;&#12289;&#12473;&#12479;&#12531;&#12489;&#12450;&#12525;&#12531;&#12398;UNIX&#12527;&#12540;&#12463;
+		&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12399;&#12289;&#12525;&#12540;&#12459;&#12523;&#12398;&#12501;&#12449;&#12452;&#12523;&#12471;&#12473;&#12486;&#12512;&#12395;&#26684;&#32013;&#12373;&#12428;&#12390;&#12356;&#12427;&#19968;&#36899;&#12398;&#12501;&#12521;&#12483;&#12488;
+		&#12501;&#12449;&#12452;&#12523;&#12363;&#12425;&#12471;&#12473;&#12486;&#12512;&#24773;&#22577;&#12434;&#35299;&#27770;&#12391;&#12365;&#12427;&#12290;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12395;&#32331;&#12364;&#12387;&#12383;&#12527;&#12540;&#12463;
+		&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12399;&#12289;&#26368;&#21021;&#12395;&#12525;&#12540;&#12459;&#12523;&#12501;&#12449;&#12452;&#12523;&#12363;&#12425;&#12471;&#12473;&#12486;&#12512;&#24773;&#22577;&#12434;&#35299;&#27770;&#12375;&#12424;&#12358;&#12392;&#12375;&#12289;
+		&#27425;&#12395;&#12518;&#12540;&#12470;&#24773;&#22577;&#12395;&#12388;&#12356;&#12390;NIS&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12395;&#21839;&#12356;&#21512;&#12431;&#12379;&#12427;&#12363;&#12289;&#12354;&#12427;&#12356;&#12399;&#12289;&#12507;&#12473;&#12488;&#21517;
+		&#24773;&#22577;&#12395;&#12388;&#12356;&#12390;DNS &#12469;&#12540;&#12496;&#12395;&#32862;&#12367;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2674550"></a>
+<a class="indexterm" name="id2674557"></a>
+<a class="indexterm" name="id2674564"></a>
+<a class="indexterm" name="id2674571"></a>
+<a class="indexterm" name="id2674578"></a>
+		UNIX&#12518;&#12540;&#12470;&#21517;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#35299;&#27770;&#12398;&#38555;&#12289;NSS&#12398;API&#12399;&#12289;winbind &#12364;&#33258;&#20998;&#12434;&#12471;&#12473;&#12486;&#12512;
+		&#24773;&#22577;&#12398;&#12477;&#12540;&#12473;&#12392;&#12375;&#12390;&#35211;&#12379;&#12427;&#12371;&#12392;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12290;winbind&#12399;&#12289;&#12371;&#12398;&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12392;
+		MSRPC&#12467;&#12540;&#12523;&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;Windows NT&#12469;&#12540;&#12496;&#12363;&#12425;&#21462;&#24471;&#12375;&#12383;&#24773;&#22577;&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;
+		&#12450;&#12459;&#12454;&#12531;&#12488;&#21015;&#25369;&#12398;&#26032;&#12375;&#12356;&#12477;&#12540;&#12473;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;&#27161;&#28310;&#12398;UNIX&#12521;&#12452;&#12502;&#12521;&#12522;&#12467;&#12540;&#12523;&#12434;
+		&#21033;&#29992;&#12375;&#12390;&#12289;winbind &#12434;&#36208;&#12425;&#12379;&#12390;&#12356;&#12427;UNIX&#12510;&#12471;&#12531;&#19978;&#12391;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#21015;&#25369;&#12373;&#12379;&#12289;
+		NT&#12489;&#12513;&#12452;&#12531;&#12398;&#12415;&#12394;&#12425;&#12378;&#12289;&#20449;&#38972;&#38306;&#20418;&#12398;&#12354;&#12427;&#12356;&#12378;&#12428;&#12398;&#12489;&#12513;&#12452;&#12531;&#12391;&#12418;&#12381;&#12398;&#20840;&#12518;&#12540;&#12470;&#12392;
+		&#12464;&#12523;&#12540;&#12503;&#12434;&#12289;&#12354;&#12383;&#12363;&#12418;&#12289;&#12525;&#12540;&#12459;&#12523;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12398;&#12424;&#12358;&#12395;&#35211;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+		</p><p>
+<a class="indexterm" name="id2674613"></a>
+<a class="indexterm" name="id2674620"></a>
+<a class="indexterm" name="id2674627"></a>
+		NSS&#12398;&#22522;&#26412;&#21046;&#24481;&#12501;&#12449;&#12452;&#12523;&#12399;<code class="filename">/etc/nsswitch.conf</code>&#12391;&#12354;&#12427;&#12290;
+		UNIX&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#26908;&#32034;&#12434;&#34892;&#12358;&#12392;&#12289;C&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#35201;&#27714;&#12373;&#12428;&#12383;&#12469;&#12540;&#12499;&#12473;
+		&#12479;&#12452;&#12503;&#12395;&#19968;&#33268;&#12377;&#12427;&#21015;&#12434;<code class="filename">/etc/nsswitch.conf</code>&#12398;&#20013;&#12391;&#25506;&#12377;&#12290;
+		&#20363;&#12360;&#12400;&#12289;&#12518;&#12540;&#12470;&#21517;&#12414;&#12383;&#12399;&#12464;&#12523;&#12540;&#12503;&#21517;&#12398;&#26908;&#32034;&#12398;&#22580;&#21512;&#12289;<span class="quote">&#8220;<span class="quote">passwd</span>&#8221;</span>&#12398;
+		&#12469;&#12540;&#12499;&#12473;&#12479;&#12452;&#12503;&#12364;&#20351;&#29992;&#12373;&#12428;&#12427;&#12290;&#35373;&#23450;&#12398;&#20013;&#12398;&#12371;&#12398;&#21015;&#12364;&#12289;&#12381;&#12398;&#12469;&#12540;&#12499;&#12473;&#12398;&#12393;&#12398;
+		&#23455;&#35013;&#12364;&#12289;&#12393;&#12358;&#12356;&#12358;&#38918;&#30058;&#12391;&#35430;&#34892;&#12373;&#12428;&#12427;&#12409;&#12365;&#12363;&#25351;&#23450;&#12375;&#12390;&#12356;&#12427;&#12290;&#12418;&#12375;&#12289;passwd&#12398;
+		&#35373;&#23450;&#21015;&#12364;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#22580;&#21512;:
+</p><pre class="screen">
+passwd: files example
+</pre><p>
+<a class="indexterm" name="id2674665"></a>
+<a class="indexterm" name="id2674672"></a>
+<a class="indexterm" name="id2674679"></a>
+		C&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#12289;&#26368;&#21021;&#12395;<code class="filename">/lib/libnss_files.so</code>&#12392;&#21628;&#12400;&#12428;&#12427;
+		&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12525;&#12540;&#12489;&#12375;&#12289;&#27425;&#12395;<code class="filename">/lib/libnss_example.so</code>
+		&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12525;&#12540;&#12489;&#12377;&#12427;&#12290;C&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#12371;&#12428;&#12425;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#38918;&#30058;&#12395;&#21205;&#30340;
+		&#12525;&#12540;&#12489;&#12375;&#12289;&#12514;&#12472;&#12517;&#12540;&#12523;&#20869;&#12398;&#35299;&#27770;&#27231;&#33021;&#12434;&#21628;&#12435;&#12391;&#12522;&#12463;&#12456;&#12473;&#12488;&#12434;&#35299;&#27770;&#12375;&#12424;&#12358;&#12392;&#12377;&#12427;&#12290;
+		&#35201;&#27714;&#12364;&#35299;&#27770;&#12373;&#12428;&#12427;&#12392;&#12289;C&#12521;&#12452;&#12502;&#12521;&#12522; &#12399;&#12289;&#12381;&#12398;&#32080;&#26524;&#12434;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12395;&#36820;&#12377;&#12290;
+		</p><p>
+<a class="indexterm" name="id2674714"></a>
+<a class="indexterm" name="id2674720"></a>
+<a class="indexterm" name="id2674727"></a>
+		&#12371;&#12398;NSS&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12399;&#12289;OS&#12408;&#12398;&#12501;&#12483;&#12463;&#12398;&#12383;&#12417;&#12398;&#12289;Winbind&#12408;&#12398;&#31777;&#21336;&#12394;&#12375;&#12367;&#12415;&#12434;
+		&#25552;&#20379;&#12377;&#12427;&#12290;&#24517;&#35201;&#12394;&#25163;&#32154;&#12365;&#12399;&#12289;<code class="filename">/lib/</code>&#12398;&#20013;&#12395;
+		<code class="filename">libnss_winbind.so</code>&#12434;&#26360;&#12365;&#12289;&#27425;&#12395;&#36969;&#20999;&#12394;&#22580;&#25152;&#12391;
+		 <code class="filename">/etc/nsswitch.conf</code>&#12395;<span class="quote">&#8220;<span class="quote">winbind</span>&#8221;</span>&#12434;&#36861;&#21152;
+		&#12377;&#12427;&#12384;&#12369;&#12391;&#12354;&#12427;&#12290;&#12371;&#12428;&#12391;&#12289;C&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#12289;Winbind&#12434;&#21628;&#12435;&#12391;&#12518;&#12540;&#12470;&#21517;&#12420;
+		&#12464;&#12523;&#12540;&#12503;&#21517;&#12434;&#35299;&#27770;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;
+		</p></div><div class="sect2" title="Pluggable Authentication Modules"><div class="titlepage"><div><div><h3 class="title"><a name="id2674766"></a>Pluggable Authentication Modules</h3></div></div></div><p>
+<a class="indexterm" name="id2674775"></a>
+<a class="indexterm" name="id2674781"></a>
+<a class="indexterm" name="id2674788"></a>
+<a class="indexterm" name="id2674795"></a>
+		PAM&#12399;&#12289;&#35469;&#35388;&#12392;&#35469;&#35388;&#25216;&#34899;&#12434;&#25277;&#35937;&#21270;&#12377;&#12427;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;PAM&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#20351;&#29992;&#12377;&#12427;&#12392;&#12289;
+		&#30064;&#12394;&#12427;&#12471;&#12473;&#12486;&#12512;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#29992;&#12395;&#12381;&#12428;&#12382;&#12428;&#30064;&#12394;&#12427;&#35469;&#35388;&#26041;&#27861;&#12434;&#25351;&#23450;&#12391;&#12365;&#12289;
+		&#12375;&#12363;&#12418;&#12289;&#12371;&#12428;&#12425;&#12398;&#12450;&#12503;&#12522;&#12540;&#12465;&#12540;&#12471;&#12519;&#12531;&#12434;&#20877;&#12467;&#12531;&#12497;&#12452;&#12523;&#12377;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;&#12290;
+		PAM &#12399;&#12414;&#12383;&#12289;&#29305;&#21029;&#12394;&#12509;&#12522;&#12471;&#12540;&#12434;&#35469;&#35388;&#12395;&#23455;&#35013;&#12377;&#12427;&#12383;&#12417;&#12395;&#12418;&#26377;&#29992;&#12391;&#12354;&#12427;&#12290;&#20363;&#12360;&#12400;&#12289;
+		&#12471;&#12473;&#12486;&#12512;&#31649;&#29702;&#32773;&#12399;&#12289;&#12525;&#12540;&#12459;&#12523;&#12394;&#12497;&#12473;&#12527;&#12540;&#12489;&#12501;&#12449;&#12452;&#12523;&#12395;&#26684;&#32013;&#12373;&#12428;&#12383;&#12518;&#12540;&#12470;&#12363;&#12425;&#12399;
+		&#12467;&#12531;&#12477;&#12540;&#12523;&#12525;&#12464;&#12452;&#12531;&#12398;&#12415;&#12434;&#35377;&#21487;&#12375;&#12289;NIS&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12363;&#12425;&#35299;&#27770;&#12373;&#12428;&#12427;&#12518;&#12540;&#12470;&#12395;
+		&#12388;&#12356;&#12390;&#12399;&#12289;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#32076;&#30001;&#12398;&#12525;&#12464;&#12452;&#12531;&#12434;&#35377;&#21487;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+		</p><p>
+<a class="indexterm" name="id2674830"></a>
+<a class="indexterm" name="id2674836"></a>
+<a class="indexterm" name="id2674843"></a>
+<a class="indexterm" name="id2674850"></a>
+<a class="indexterm" name="id2674857"></a>
+		Winbind &#12399;&#12289;&#35469;&#35388;&#31649;&#29702;&#12392;&#12497;&#12473;&#12527;&#12540;&#12489;&#31649;&#29702;&#12398;PAM&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;
+		Windows NT&#12518;&#12540;&#12470;&#12434;UNIX&#12471;&#12473;&#12486;&#12512;&#12395;&#32113;&#21512;&#12377;&#12427;&#12290;&#12371;&#12428;&#12395;&#12424;&#12426;&#12289; Windows NT
+		&#12518;&#12540;&#12470;&#12399;UNIX&#12510;&#12471;&#12531;&#12395;&#12525;&#12464;&#12452;&#12531;&#12391;&#12365;&#12289;&#36969;&#20999;&#12394;PDC&#12398;&#35469;&#35388;&#12434;&#21463;&#12369;&#12427;&#12371;&#12392;&#12364;
+		&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;&#12371;&#12398;&#12424;&#12358;&#12394;&#12518;&#12540;&#12470;&#12399;&#12497;&#12473;&#12527;&#12540;&#12489;&#12398;&#22793;&#26356;&#12418;&#12391;&#12365;&#12427;&#19978;&#12289;
+		&#12381;&#12398;&#22793;&#26356;&#20869;&#23481;&#12434;PDC&#12395;&#30452;&#12395;&#21453;&#26144;&#12373;&#12379;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+		</p><p>
+<a class="indexterm" name="id2674878"></a>
+<a class="indexterm" name="id2674884"></a>
+<a class="indexterm" name="id2674891"></a>
+<a class="indexterm" name="id2674898"></a>
+		PAM&#12399;&#12289;&#35469;&#35388;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12469;&#12540;&#12499;&#12473;&#12372;&#12392;&#12395;&#12289;<code class="filename">/etc/pam.d/</code>&#12398;
+		&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#31649;&#29702;&#12501;&#12449;&#12452;&#12523;&#12434;&#35373;&#12369;&#12390;&#35373;&#23450;&#12377;&#12427;&#12290;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#35469;&#35388;&#35201;&#27714;&#12434;
+		&#20986;&#12377;&#12392;&#12289;C&#12521;&#12452;&#12502;&#12521;&#12522;&#20869;&#12398;PAM&#12467;&#12540;&#12489;&#12364;&#12289;&#35469;&#35388;&#12434;&#34892;&#12358;&#12383;&#12417;&#12395;&#12289;&#12393;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;
+		&#12393;&#12398;&#38918;&#30058;&#12391;&#12525;&#12540;&#12489;&#12377;&#12427;&#12409;&#12365;&#12363;&#12434;&#27770;&#23450;&#12377;&#12427;&#12383;&#12417;&#12395;&#12371;&#12398;&#31649;&#29702;&#12501;&#12449;&#12452;&#12523;&#12434;&#26908;&#32034;&#12377;&#12427;&#12290;
+		&#12371;&#12398;&#12452;&#12531;&#12479;&#12501;&#12455;&#12540;&#12473;&#12395;&#12424;&#12426;&#12289;Winbind&#12395;&#26032;&#12375;&#12356;&#35469;&#35388;&#12469;&#12540;&#12499;&#12473;&#12434;&#36861;&#21152;&#12377;&#12427;&#12371;&#12392;&#12364;
+		&#31777;&#21336;&#12395;&#12394;&#12427;&#12290;&#24517;&#35201;&#12394;&#25163;&#38918;&#12399;&#12289;<code class="filename">/lib/security/</code>&#12395;
+		<code class="filename">pam_winbind.so</code>&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12467;&#12500;&#12540;&#12377;&#12427;&#12371;&#12392;&#12392;&#12289;
+		Winbind &#32076;&#30001;&#12398;&#35469;&#35388;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12383;&#12417;&#12395;&#12289;&#38306;&#36899;&#12377;&#12427;&#12469;&#12540;&#12499;&#12473;&#12398;PAM&#31649;&#29702;&#12501;&#12449;&#12452;&#12523;&#12434;
+		&#26356;&#26032;&#12377;&#12427;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;&#35443;&#32048;&#12399;&#12289;
+		<a class="link" href="pam.html" title="Chapter�28.�PAM &#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;">PAM&#12505;&#12540;&#12473;&#12398;&#20998;&#25955;&#22411;&#35469;&#35388;</a>&#12398;PAM&#12398;&#35500;&#26126;&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+		</p></div><div class="sect2" title="&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;ID&#12398;&#21106;&#12426;&#24403;&#12390;"><div class="titlepage"><div><div><h3 class="title"><a name="id2674954"></a>&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;ID&#12398;&#21106;&#12426;&#24403;&#12390;</h3></div></div></div><p>
+<a class="indexterm" name="id2674963"></a>
+<a class="indexterm" name="id2674969"></a>
+<a class="indexterm" name="id2674976"></a>
+		Windows NT/200x&#12391;&#12518;&#12540;&#12470;&#12414;&#12383;&#12399;&#12464;&#12523;&#12540;&#12503;&#12364;&#20316;&#25104;&#12373;&#12428;&#12427;&#12392;&#12289;&#25968;&#23383;&#12391;&#27083;&#25104;&#12373;&#12428;&#12427;
+		&#30456;&#23550;ID(RID)&#12434;&#21106;&#12426;&#24403;&#12390;&#12425;&#12428;&#12427;&#12290;&#12371;&#12428;&#12399;&#12289;UNIX&#12392;&#12399;&#24190;&#20998;&#30064;&#12394;&#12427;&#12290;UNIX&#12391;&#12399;&#12289;
+		&#12518;&#12540;&#12470;ID&#12395;&#20351;&#29992;&#12373;&#12428;&#12427;&#25968;&#23383;&#12398;&#31684;&#22258;&#12392;&#12289;&#12464;&#12523;&#12540;&#12503;ID&#12395;&#20351;&#29992;&#12373;&#12428;&#12427;&#25968;&#23383;&#12398;&#31684;&#22258;&#12364;
+		&#21029;&#12293;&#12395;&#12394;&#12387;&#12390;&#12356;&#12427;&#12290;RID&#12434;UNIX&#12398;ID&#12395;&#22793;&#25563;&#12377;&#12427;&#12289;&#12414;&#12383;&#12399;&#12381;&#12398;&#36870;&#12434;&#34892;&#12358;&#12398;&#12364;
+		Winbind&#12398;&#20181;&#20107;&#12391;&#12354;&#12427;&#12290;Winbind&#12434;&#35373;&#23450;&#12377;&#12427;&#38555;&#12289;UNIX&#12518;&#12540;&#12470;ID&#12398;&#12473;&#12506;&#12540;&#12473;&#12398;
+		&#19968;&#37096;&#12392;UNIX &#12464;&#12523;&#12540;&#12503;ID&#12398;&#12473;&#12506;&#12540;&#12473;&#12398;&#19968;&#37096;&#12434;&#12289;Windows NT&#12398;&#12518;&#12540;&#12470;&#12392;
+		&#12464;&#12523;&#12540;&#12503;&#12434;&#26684;&#32013;&#12377;&#12427;&#22580;&#25152;&#12391;&#12354;&#12427;&#12290;Windows NT&#12518;&#12540;&#12470;&#12364;&#26368;&#21021;&#12395;&#35299;&#27770;&#12373;&#12428;&#12427;&#12392;&#12365;&#12289;
+		&#19978;&#35352;&#12398;&#31684;&#22258;&#12398;&#20013;&#12363;&#12425;&#27425;&#12398;&#31354;&#12365;&#30058;&#21495;&#12434;UNIX&#19978;&#12398;ID&#12392;&#12375;&#12390;&#21106;&#12426;&#24403;&#12390;&#12427;&#12290;&#12371;&#12398;
+		&#21516;&#12376;&#12503;&#12525;&#12475;&#12473;&#12364;Windows NT&#12464;&#12523;&#12540;&#12503;&#12395;&#23550;&#12375;&#12390;&#12418;&#36969;&#29992;&#12373;&#12428;&#12427;&#12290;&#12371;&#12358;&#12375;&#12390;&#19968;&#23450;&#12398;
+		&#26178;&#38291;&#12364;&#32076;&#12388;&#12392;&#12289;&#20840;&#12390;&#12398;Windows NT&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12399;Winbind&#12395;&#12424;&#12426;&#12289;&#23550;&#24540;
+		&#12377;&#12427;UNIX&#12518;&#12540;&#12470;ID&#12392;&#12464;&#12523;&#12540;&#12503;ID&#12408;&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12427;&#12371;&#12392;&#12395;&#12394;&#12427;&#12290;
+		</p><p>
+<a class="indexterm" name="id2675017"></a>
+<a class="indexterm" name="id2675025"></a>
+<a class="indexterm" name="id2675032"></a>
+<a class="indexterm" name="id2675038"></a>
+		&#12371;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12398;&#32080;&#26524;&#12399;&#12289;tdb&#12398;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#20869;&#12398;ID&#12510;&#12483;&#12500;&#12531;&#12464;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12395;
+		&#19968;&#36011;&#12375;&#12390;&#26684;&#32013;&#12373;&#12428;&#12390;&#12356;&#12367;&#12290;&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;RID&#12364;&#19968;&#36011;&#12375;&#12383;&#26041;&#27861;&#12391;UNIX&#12398;ID&#12395;
+		&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12390;&#12356;&#12367;&#12371;&#12392;&#12434;&#30906;&#20445;&#12375;&#12390;&#12356;&#12427;&#12290;
+		</p></div><div class="sect2" title="&#32080;&#26524;&#12398;&#12461;&#12515;&#12483;&#12471;&#12517;&#20445;&#23384;"><div class="titlepage"><div><div><h3 class="title"><a name="id2675056"></a>&#32080;&#26524;&#12398;&#12461;&#12515;&#12483;&#12471;&#12517;&#20445;&#23384;</h3></div></div></div><p>
+<a class="indexterm" name="id2675064"></a>
+<a class="indexterm" name="id2675071"></a>
+<a class="indexterm" name="id2675078"></a>
+<a class="indexterm" name="id2675085"></a>
+<a class="indexterm" name="id2675091"></a>
+		Active Directory&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;&#25968;&#22810;&#12367;&#12398;&#12518;&#12540;&#12470;&#21517;&#12420;&#12464;&#12523;&#12540;&#12503;&#21517;&#12398;&#26908;&#32034;&#12434;&#30330;&#34892;
+		&#12377;&#12427;&#12290; &#12371;&#12428;&#12425;&#12398;&#26908;&#32034;&#12395;&#20418;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12398;&#36000;&#25285;&#12434;&#36605;&#28187;&#12377;&#12427;&#12383;&#12417;&#12289;Winbind&#12399;&#12289;
+		NT&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12363;&#12425;&#20379;&#32102;&#12373;&#12428;&#12427;SAM &#12471;&#12540;&#12465;&#12531;&#12473;&#30058;&#21495;&#12395;&#22522;&#12389;&#12356;&#12390;&#12289;
+		&#12461;&#12515;&#12483;&#12471;&#12517;&#12395;&#20445;&#23384;&#12377;&#12427;&#12290;PDC&#12363;&#12425;&#36820;&#12373;&#12428;&#12383;&#12518;&#12540;&#12470;&#24773;&#22577;&#12420;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12399;&#12289;
+		&#21516;&#12376;&#12367;PDC&#12363;&#12425;&#36820;&#12373;&#12428;&#12383;&#12471;&#12540;&#12465;&#12531;&#12473;&#30058;&#21495;&#12392;&#19968;&#32210;&#12395;&#12289;Winbind&#12395;&#12424;&#12387;&#12390;&#12461;&#12515;&#12483;&#12471;&#12517;&#12395;
+		&#20445;&#23384;&#12373;&#12428;&#12427;&#12290;&#12518;&#12540;&#12470;&#24773;&#22577;&#12420;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12364;&#22793;&#26356;&#12373;&#12428;&#12427;&#24230;&#12395;&#12289;Windows NT&#12399;
+		&#12471;&#12540;&#12465;&#12531;&#12473;&#30058;&#21495;&#12434;&#22679;&#12420;&#12377;&#12290;&#12461;&#12515;&#12483;&#12471;&#12517;&#12395;&#20445;&#23384;&#12373;&#12428;&#12383;&#12456;&#12531;&#12488;&#12522;&#12364;&#28288;&#20102;&#12395;&#12394;&#12427;
+		&#12392;&#12365;&#12395;&#12289;&#12471;&#12540;&#12465;&#12531;&#12473;&#30058;&#21495;&#12434;PDC &#12363;&#12425;&#12522;&#12463;&#12456;&#12473;&#12488;&#12375;&#12289;&#12461;&#12515;&#12483;&#12471;&#12517;&#12398;&#12456;&#12531;&#12488;&#12522;&#12398;
+		&#12471;&#12540;&#12465;&#12531;&#12473;&#30058;&#21495;&#12392;&#27604;&#36611;&#12377;&#12427;&#12290;&#30058;&#21495;&#12364;&#19968;&#33268;&#12375;&#12394;&#12356;&#12392;&#12365;&#12399;&#12289;&#12461;&#12515;&#12483;&#12471;&#12517;&#12395;&#20445;&#23384;&#12373;&#12428;&#12383;
+		&#24773;&#22577;&#12434;&#25448;&#12390;&#12289;PDC&#12363;&#12425;&#30452;&#25509;&#26356;&#26032;&#24773;&#22577;&#12434;&#12418;&#12425;&#12358;&#12424;&#12358;&#12395;&#26356;&#26032;&#12434;&#34892;&#12358;&#12290;
+		</p></div></div><div class="sect1" title="&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12392;&#35373;&#23450;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2675132"></a>&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12392;&#35373;&#23450;</h2></div></div></div><div class="sect2" title="&#12399;&#12376;&#12417;&#12395;"><div class="titlepage"><div><div><h3 class="title"><a name="id2675138"></a>&#12399;&#12376;&#12417;&#12395;</h3></div></div></div><p>
+<a class="indexterm" name="id2675146"></a>
+<a class="indexterm" name="id2675153"></a>
+<a class="indexterm" name="id2675160"></a>
+&#12371;&#12398;&#31680;&#12391;&#12399;&#12289;Winbind&#12434;&#20837;&#25163;&#12375;&#12390;&#20351;&#12360;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12414;&#12391;&#12398;&#25163;&#38918;&#12434;&#35500;&#26126;&#12377;&#12427;&#12290;Winbind&#12399;NT&#12414;&#12383;&#12399;
+Windows 200x&#12398; PDC&#12434;&#36890;&#12375;&#12390;&#12289;Windows&#12398;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12395;telnet&#12420;ftp&#12398;&#12424;&#12358;&#12394;&#36890;&#24120;&#12398;&#12469;&#12540;&#12499;&#12473;
+&#12392;&#12289;Samba&#12398;&#21508;&#31278;&#12469;&#12540;&#12499;&#12473;&#12398;&#12383;&#12417;&#12398;&#12450;&#12463;&#12475;&#12473;&#21046;&#24481;&#12392;&#35469;&#35388;&#31649;&#29702;&#12398;&#27231;&#33021;&#12434;&#25552;&#20379;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+	<span class="emphasis"><em>&#12393;&#12358;&#12375;&#12390;&#12289;&#12371;&#12428;&#12434;&#12420;&#12427;&#12409;&#12365;&#12394;&#12398;&#12363;?</em></span>
+	</p><p>
+<a class="indexterm" name="id2675192"></a>
+<a class="indexterm" name="id2675199"></a>
+<a class="indexterm" name="id2675206"></a>
+<a class="indexterm" name="id2675213"></a>
+&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;Samba&#31649;&#29702;&#32773;&#12364;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12398;&#35469;&#35388;&#12398;&#12383;&#12417;&#12395;&#12289;Windows NT/200x PDC&#12398;&#35469;&#35388;&#27231;&#27083;&#12434;
+&#38972;&#12428;&#12427;&#12424;&#12358;&#12395;&#12394;&#12427;&#12290;Windows NT/200x&#12518;&#12540;&#12470;&#12399;&#12289;Samba&#12469;&#12540;&#12496;&#19978;&#12395;&#21029;&#12398;&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#25345;&#12388;&#24517;&#35201;&#12364;
+&#12394;&#12367;&#12394;&#12427;&#12290;
+	</p></li><li class="listitem"><p>
+	<span class="emphasis"><em>&#12371;&#12398;&#25991;&#26360;&#12399;&#35504;&#12364;&#35501;&#12416;&#12409;&#12365;&#12418;&#12398;&#12363;?</em></span>
+	</p><p>
+<a class="indexterm" name="id2675242"></a>
+<a class="indexterm" name="id2675248"></a>
+&#12371;&#12398;&#25991;&#26360;&#12399;&#12471;&#12473;&#12486;&#12512;&#31649;&#29702;&#32773;&#12398;&#12383;&#12417;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#12371;&#12398;&#25991;&#26360;&#12399;&#12289;Samba&#12434;&#12501;&#12449;&#12452;&#12523;&#12469;&#12540;&#12496;&#19978;&#12395;&#23455;&#35013;&#12377;&#12427;
+&#20104;&#23450;&#12391;&#12354;&#12426;&#12289;&#26082;&#23384;&#12398;Windows NT/200x&#12518;&#12540;&#12470;&#12434;&#12289;PDC&#12363;&#12425;Samba&#12469;&#12540;&#12496;&#12408;(&#27604;&#36611;&#30340;&#31777;&#21336;&#12395;)&#32113;&#21512;&#12375;&#12383;&#12356;
+&#22580;&#21512;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+	</p></li></ul></div></div><div class="sect2" title="&#29992;&#20214;"><div class="titlepage"><div><div><h3 class="title"><a name="id2675269"></a>&#29992;&#20214;</h3></div></div></div><p>
+<a class="indexterm" name="id2675277"></a>
+<a class="indexterm" name="id2675283"></a>
+<a class="indexterm" name="id2675290"></a>
+&#29694;&#22312;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;Samba&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12364;&#12354;&#12427;&#12394;&#12425;&#12289;<span class="emphasis"><em>&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12434;&#21462;&#12427;&#12371;&#12392;!</em></span>&#12290;
+&#20351;&#29992;&#20013;&#12398;&#12471;&#12473;&#12486;&#12512;&#12364;&#26082;&#12395;PAM&#12434;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;&#12394;&#12425;&#12289;<span class="emphasis"><em>
+<code class="filename">/etc/pam.d</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12398;&#20869;&#23481;&#12434;&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12377;&#12427;&#12371;&#12392;!</em></span>&#12290;
+&#36215;&#21205;&#12487;&#12451;&#12473;&#12463;&#12434;&#12414;&#12384;&#20316;&#25104;&#12375;&#12390;&#12356;&#12394;&#12356;&#12398;&#12394;&#12425;<span class="emphasis"><em>&#20170;&#12377;&#12368;&#12395;&#20316;&#12427;&#12371;&#12392;!</em></span>&#12290;
+</p><p>
+<a class="indexterm" name="id2675324"></a>
+<a class="indexterm" name="id2675331"></a>
+<a class="indexterm" name="id2675337"></a>
+PAM&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12434;&#38291;&#36949;&#12387;&#12390;&#20462;&#27491;&#12377;&#12427;&#12392;&#12289;&#20351;&#29992;&#20013;&#12398;&#12510;&#12471;&#12531;&#12395;&#12525;&#12464;&#12452;&#12531;&#12377;&#12427;&#12398;&#12364;&#12411;&#12392;&#12435;&#12393;&#19981;&#21487;&#33021;&#12395;
+&#12394;&#12387;&#12390;&#12375;&#12414;&#12358;&#12371;&#12392;&#12364;&#12354;&#12427;&#12290;&#12371;&#12398;&#12383;&#12417;&#12289;&#12358;&#12414;&#12367;&#12356;&#12363;&#12394;&#12356;&#26178;&#12395;&#12399;&#12510;&#12471;&#12531;&#12434;&#12471;&#12531;&#12464;&#12523;&#12518;&#12540;&#12470;&#12514;&#12540;&#12489;&#12391;
+&#31435;&#12385;&#19978;&#12370;&#12289;<code class="filename">/etc/pam.d</code>&#12434;&#20803;&#12398;&#29366;&#24907;&#12395;&#25147;&#12379;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12371;&#12392;&#12290;
+</p><p>
+<a class="indexterm" name="id2675364"></a>
+<a class="indexterm" name="id2675371"></a>
+Samba-3&#12398;&#26368;&#26032;&#12496;&#12540;&#12472;&#12519;&#12531;&#12395;&#12399;&#12289;&#27491;&#24120;&#12395;&#27231;&#33021;&#12377;&#12427; winbindd daemon&#12364;&#21547;&#12414;&#12428;&#12390;&#12356;&#12427;&#12290;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12434;
+&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12377;&#12427;&#25163;&#38918;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289; <a class="ulink" href="http://samba.org/" target="_top">Samba Web&#12506;&#12540;&#12472;</a>&#12363;
+&#26368;&#23492;&#12398;Samba &#12511;&#12521;&#12540;&#12469;&#12452;&#12488;&#12395;&#12354;&#12427;&#35500;&#26126;&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+</p><p>
+<a class="indexterm" name="id2675394"></a>
+<a class="indexterm" name="id2675401"></a>
+<a class="indexterm" name="id2675408"></a>
+<a class="indexterm" name="id2675415"></a>
+&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12364;Samba&#12398;&#20849;&#26377;&#12420;&#12501;&#12449;&#12452;&#12523;&#12395;&#12450;&#12463;&#12475;&#12473;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12375;&#12289;&#12414;&#12383;&#20351;&#29992;&#12377;&#12427;&#12510;&#12471;&#12531;&#12364;
+&#25552;&#20379;&#12377;&#12427;&#12381;&#12398;&#20182;&#12398;&#12469;&#12540;&#12499;&#12473;&#12395;&#12418;&#12450;&#12463;&#12475;&#12473;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12395;&#12399;&#12289;PAM&#12434;&#20351;&#29992;&#12377;&#12427;&#12510;&#12471;&#12531;&#19978;&#12391;&#27491;&#12375;&#12367;
+&#35373;&#23450;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;Winbind&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#12467;&#12531;&#12497;&#12452;&#12523;&#12377;&#12427;&#12395;&#12399;&#12289;PAM&#38283;&#30330;&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;
+&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12409;&#12365;&#12391;&#12354;&#12427;&#12290;
+<a class="ulink" href="http://www.kernel.org/pub/linux/libs/pam/" target="_top">PAM&#12398;&#12454;&#12455;&#12502;&#12469;&#12452;&#12488;</a>&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+</p></div><div class="sect2" title="&#12486;&#12473;&#12488;"><div class="titlepage"><div><div><h3 class="title"><a name="id2675442"></a>&#12486;&#12473;&#12488;</h3></div></div></div><p>
+<a class="indexterm" name="id2675450"></a>
+<a class="indexterm" name="id2675456"></a>
+<a class="indexterm" name="id2675463"></a>
+<a class="indexterm" name="id2675470"></a>
+<a class="indexterm" name="id2675477"></a>
+&#38283;&#22987;&#12377;&#12427;&#21069;&#12395;&#12289;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;&#12469;&#12540;&#12496;&#19978;&#12391;&#36208;&#12387;&#12390;&#12356;&#12427;&#20840;&#12390;&#12398;Samba&#38306;&#36899;&#12398;&#12487;&#12540;&#12514;&#12531;&#12434;&#27490;&#12417;&#12390;&#12362;&#12367;&#12371;&#12392;&#12434;
+&#25512;&#22888;&#12377;&#12427;&#12290;&#21205;&#12356;&#12390;&#12356;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;<span class="application">smbd</span>&#12289;<span class="application">nmbd</span>&#12289;&#21450;&#12403;<span class="application">winbindd</span>&#12398;&#20840;&#12503;&#12525;&#12475;&#12473;&#12434;&#20572;&#27490;&#12377;&#12427;&#12290;
+PAM&#12434;&#20351;&#29992;&#12377;&#12427;&#12395;&#12399;&#12289;PAM&#12434;&#35469;&#35672;&#12377;&#12427;&#12469;&#12540;&#12499;&#12473;&#12364;&#20351;&#29992;&#12377;&#12427;PAM&#12514;&#12472;&#12517;&#12540;&#12523;&#12289;&#35079;&#25968;&#12398;PAM&#12521;&#12452;&#12502;&#12521;&#12522;&#12289;&#21450;&#12403;
+PAM&#12398;&#12383;&#12417;&#12398;<code class="filename">/usr/doc</code>&#12392;<code class="filename">/usr/man</code>&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#21547;&#12416;&#12289;
+<code class="filename">/etc/pam.d</code>&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#27083;&#36896;&#12434;&#25552;&#20379;&#12377;&#12427;&#12289;&#27161;&#28310;PAM &#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#25345;&#12387;&#12390;
+&#12356;&#12427;&#12371;&#12392;&#12434;&#30906;&#35469;&#12377;&#12427;&#12290;Winbind&#12434;Samba&#20869;&#12391;&#27083;&#31689;&#12377;&#12427;&#38555;&#12289;pam-devel &#12497;&#12483;&#12465;&#12540;&#12472;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12390;
+&#12356;&#12427;&#12392;&#12289;&#12424;&#12426;&#12358;&#12414;&#12367;&#12356;&#12367;&#12290;&#12371;&#12398;&#12497;&#12483;&#12465;&#12540;&#12472;&#12395;&#12399;&#12289;PAM&#12434;&#35469;&#35672;&#12377;&#12427;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12434;&#12467;&#12531;&#12497;&#12452;&#12523;&#12377;&#12427;
+&#12398;&#12395;&#24517;&#35201;&#12394;&#12504;&#12483;&#12480;&#12501;&#12449;&#12452;&#12523;&#12364;&#21547;&#12414;&#12428;&#12427;&#12290;
+</p><div class="sect3" title="nsswitch.conf&#12392;Winbind&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;Linux&#12392;Solaris&#19978;&#12391;&#35373;&#23450;&#12377;&#12427;"><div class="titlepage"><div><div><h4 class="title"><a name="id2675543"></a><code class="filename">nsswitch.conf</code>&#12392;Winbind&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;Linux&#12392;Solaris&#19978;&#12391;&#35373;&#23450;&#12377;&#12427;</h4></div></div></div><p>
+<a class="indexterm" name="id2675556"></a>
+<a class="indexterm" name="id2675563"></a>
+<a class="indexterm" name="id2675570"></a>
+<a class="indexterm" name="id2675576"></a>
+PAM&#12399;&#12289;&#26368;&#26032;&#19990;&#20195;&#12398;UNIX/Linux&#12471;&#12473;&#12486;&#12512;&#12398;&#27161;&#28310;&#12467;&#12531;&#12509;&#12540;&#12493;&#12531;&#12488;&#12391;&#12354;&#12427;&#12290;&#12375;&#12363;&#12375;&#12289;&#27531;&#24565;&#12394;&#12364;&#12425;
+PAM&#23550;&#24540;&#12398;Samba&#12434;&#27083;&#31689;&#12377;&#12427;&#12398;&#12395;&#24517;&#35201;&#12394;<code class="filename">pam-devel</code>&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;
+&#12375;&#12390;&#12356;&#12427;&#12471;&#12473;&#12486;&#12512;&#12399;&#25968;&#12364;&#38480;&#12425;&#12428;&#12390;&#12356;&#12427;&#12290;&#12414;&#12383;&#12289;Samba-3&#12399;Winbind&#12501;&#12449;&#12452;&#12523;&#12434;&#20351;&#29992;&#20013;&#12398;&#12471;&#12473;&#12486;&#12512;&#19978;&#12398;
+&#27491;&#12375;&#12356;&#20301;&#32622;&#12395;&#33258;&#21205;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;&#12381;&#12371;&#12391;&#12371;&#12428;&#20197;&#19978;&#20808;&#12395;&#36914;&#12416;&#21069;&#12395;&#12289;&#20197;&#19979;&#12395;&#35500;&#26126;&#12377;&#12427;
+&#35373;&#23450;&#12364;&#26412;&#24403;&#12395;&#24517;&#35201;&#12363;&#12393;&#12358;&#12363;&#30906;&#35469;&#12377;&#12427;&#12371;&#12392;&#12290;&#12418;&#12375;&#12363;&#12375;&#12383;&#12425;&#12289;
+<code class="filename">/etc/nsswitch.conf</code>&#12398;&#35373;&#23450;&#12384;&#12369;&#12391;&#28168;&#12416;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;
+</p><p>
+<span class="application">winbindd</span> daemon&#12434;nsswitch&#32076;&#30001;&#12391;&#36208;&#12425;&#12379;&#12427;&#12383;&#12417;&#12395;&#24517;&#35201;&#12394;&#12521;&#12452;&#12502;&#12521;&#12522;&#12434;&#27491;&#12375;&#12356;&#22580;&#25152;&#12395;&#12467;&#12500;&#12540;
+&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;:
+</p><p>
+<a class="indexterm" name="id2675631"></a>
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>cp ../samba/source/nsswitch/libnss_winbind.so /lib</code></strong>
+</pre><p>
+</p><p>
+&#12414;&#12383;&#12289;&#20197;&#19979;&#12398;&#12471;&#12531;&#12508;&#12522;&#12483;&#12463;&#12539;&#12522;&#12531;&#12463;&#12434;&#20316;&#25104;&#12377;&#12427;&#12371;&#12392;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;:
+</p><p>
+<code class="prompt">root# </code> <strong class="userinput"><code>ln -s /lib/libnss_winbind.so /lib/libnss_winbind.so.2</code></strong>
+</p><p>&#12373;&#12425;&#12395;&#12289;Sun Solaris&#12398;&#22580;&#21512;&#12399;&#20197;&#19979;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;:
+<a class="indexterm" name="id2675681"></a>
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/libnss_winbind.so.1</code></strong>
+<code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/nss_winbind.so.1</code></strong>
+<code class="prompt">root# </code><strong class="userinput"><code>ln -s /usr/lib/libnss_winbind.so /usr/lib/nss_winbind.so.2</code></strong>
+</pre><p>
+</p><p>
+<a class="indexterm" name="id2675730"></a>
+&#27425;&#12395;&#12289;root&#12395;&#12394;&#12387;&#12390;&#12289;<span class="application">winbindd</span> daemon&#12363;&#12425;&#12518;&#12540;&#12470;&#12420;&#12464;&#12523;&#12540;&#12503;&#12398;&#12456;&#12531;&#12488;&#12522;&#12364;&#35211;&#12360;&#12427;&#12424;&#12358;&#12395;&#12289;
+<code class="filename">/etc/nsswitch.conf</code>&#12434;&#32232;&#38598;&#12377;&#12427;&#12290;&#12383;&#12392;&#12360;&#12400;<code class="filename">/etc/nsswitch.conf</code>
+&#12501;&#12449;&#12452;&#12523;&#12434;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#32232;&#38598;&#12377;&#12427;:
+</p><pre class="programlisting">
+passwd:     files winbind
+shadow:     files
+group:      files winbind
+</pre><p>
+<a class="indexterm" name="id2675770"></a>
+<a class="indexterm" name="id2675776"></a>
+<a class="indexterm" name="id2675783"></a>
+<a class="indexterm" name="id2675790"></a>
+<a class="indexterm" name="id2675797"></a>
+<code class="literal">winbindd</code> daemon&#12364;&#24517;&#35201;&#12392;&#12377;&#12427;&#12521;&#12452;&#12502;&#12521;&#12522;&#12399;&#12289;&#27425;&#22238;&#12471;&#12473;&#12486;&#12512;&#12364;&#20877;&#36215;&#21205;&#12377;&#12427;
+&#12392;&#12365;&#12289;&#33258;&#21205;&#30340;&#12395;<code class="literal">ldconfig</code>&#12398;&#12461;&#12515;&#12483;&#12471;&#12517;&#12395;&#20837;&#12427;&#12364;&#12289;&#25163;&#21205;&#12391;&#20197;&#19979;&#12434;&#34892;&#12358;&#26041;&#12364;
+&#26089;&#12356;(&#12381;&#12428;&#12395;&#12289;&#20877;&#36215;&#21205;&#12377;&#12427;&#24517;&#35201;&#12418;&#12394;&#12356;):
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>/sbin/ldconfig -v | grep winbind</code></strong>
+</pre><p>
+&#12371;&#12428;&#12395;&#12424;&#12426;&#12289;winbindd&#12364;<code class="filename">libnss_winbind</code>&#12434;&#20351;&#12360;&#12427;&#29366;&#24907;&#12395;&#12394;&#12426;&#12289;
+dynamic link loader&#12395;&#12424;&#12387;&#12390;&#20351;&#12431;&#12428;&#12427;&#29694;&#22312;&#12398;&#26908;&#32034;&#12497;&#12473;&#12434;&#36820;&#12377;&#12290;<code class="literal">ldconfig</code>
+&#12467;&#12510;&#12531;&#12489;&#12398;&#20986;&#21147;&#12395;<code class="literal">grep</code>&#12501;&#12451;&#12523;&#12479;&#12434;&#36969;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#12371;&#12398;&#12521;&#12452;&#12502;&#12521;&#12522;&#12364;
+&#26412;&#24403;&#12395;dynamic link loader&#12395;&#12424;&#12387;&#12390;&#35469;&#35672;&#12373;&#12428;&#12427;&#12363;&#12398;&#30906;&#35388;&#12434;&#30906;&#35469;&#12391;&#12365;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2675865"></a>
+<a class="indexterm" name="id2675872"></a>
+<a class="indexterm" name="id2675878"></a>
+<a class="indexterm" name="id2675885"></a>
+<a class="indexterm" name="id2675892"></a>
+Sun Solaris&#12398;&#12480;&#12452;&#12490;&#12511;&#12483;&#12463;&#12522;&#12531;&#12463;&#12525;&#12540;&#12480;&#31649;&#29702;&#12484;&#12540;&#12523;&#12399;<code class="literal">crle</code>&#12392;&#21628;&#12400;&#12428;&#12427;&#12290;
+&#12371;&#12398;&#12484;&#12540;&#12523;&#12399;&#20803;&#12293;&#12398;OS&#29872;&#22659;&#12398;&#19968;&#37096;&#12392;&#12375;&#12390;&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12394;&#12356;&#12521;&#12452;&#12502;&#12521;&#12522;&#12501;&#12449;&#12452;&#12523;&#12434;&#21547;&#12416;
+&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#26908;&#32034;&#12377;&#12427;&#12424;&#12358;&#25351;&#31034;&#12377;&#12427;&#12383;&#12417;&#12395;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;&#20197;&#19979;&#12398;&#20363;&#12399;&#12289;&#12480;&#12452;&#12490;&#12511;&#12483;&#12463;&#12522;&#12531;&#12463;
+&#12525;&#12540;&#12480;&#12398;&#26908;&#32034;&#12497;&#12473;&#12395;&#12289;&#12393;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;<code class="filename">/usr/local/lib</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;
+&#36861;&#21152;&#12377;&#12427;&#12383;&#12417;&#12395;&#20351;&#12358;&#12363;&#12434;&#31034;&#12377;:
+</p><pre class="screen">
+<code class="prompt">root# </code> crle -u -l /usr/lib:/usr/local/lib
+</pre><p>
+&#24341;&#25968;&#12394;&#12375;&#12391;&#23455;&#34892;&#12375;&#12383;&#22580;&#21512;&#12289;<code class="literal">crle</code>&#12399;&#29694;&#22312;&#12398;&#12480;&#12452;&#12490;&#12511;&#12483;&#12463;&#12522;&#12531;&#12463;&#12525;&#12540;&#12480;&#12398;
+&#35373;&#23450;&#12434;&#34920;&#31034;&#12377;&#12427;&#12290;&#12381;&#12428;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+</p><pre class="screen">
+<code class="prompt">root# </code> crle
+
+Configuration file [version 4]: /var/ld/ld.config
+  Default Library Path (ELF):   /lib:/usr/lib:/usr/local/lib
+  Trusted Directories (ELF):    /lib/secure:/usr/lib/secure  (system default)
+
+Command line:
+  crle -c /var/ld/ld.config -l /lib:/usr/lib:/usr/local/lib
+</pre><p>
+&#12371;&#12428;&#12363;&#12425;&#12289;<code class="filename">/usr/local/lib</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12399;&#12289;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;
+&#20381;&#23384;&#38306;&#20418;&#12434;&#28288;&#36275;&#12373;&#12379;&#12427;&#12383;&#12417;&#12395;&#12289;&#12480;&#12452;&#12490;&#12511;&#12483;&#12463;&#12522;&#12531;&#12463;&#12521;&#12452;&#12502;&#12521;&#12522;&#12398;&#26908;&#32034;&#20013;&#12395;&#21547;&#12414;&#12428;&#12390;&#12356;&#12427;&#12371;&#12392;&#12364;
+&#12431;&#12363;&#12427;&#12290;
+</p></div><div class="sect3" title="AIX&#12395;&#12362;&#12369;&#12427;NSS Winbind"><div class="titlepage"><div><div><h4 class="title"><a name="id2675974"></a>AIX&#12395;&#12362;&#12369;&#12427;NSS Winbind</h4></div></div></div><p>(&#12371;&#12398;&#31680;&#12399;AIX&#12434;&#21205;&#20316;&#12373;&#12379;&#12390;&#12356;&#12427;&#20154;&#12395;&#12398;&#12415;&#38306;&#20418;&#12377;&#12427;&#12290;)</p><p>
+<a class="indexterm" name="id2675988"></a>
+<a class="indexterm" name="id2675995"></a>
+<a class="indexterm" name="id2676002"></a>
+<a class="indexterm" name="id2676009"></a>
+<a class="indexterm" name="id2676016"></a>
+<a class="indexterm" name="id2676023"></a>
+Winbind AIX&#35672;&#21029;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;Samba&#12477;&#12540;&#12473;&#12398;nsswitch&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#20869;&#12395; 
+<code class="filename">libnss_winbind.so</code>&#12392;&#12375;&#12390;&#27083;&#31689;&#12373;&#12428;&#12427;&#12290;&#12371;&#12398;&#12501;&#12449;&#12452;&#12523;&#12399;&#12289;
+<code class="filename">/usr/lib/security</code>&#12395;&#12467;&#12500;&#12540;&#12391;&#12365;&#12289;AIX&#12398;&#21517;&#21069;&#22793;&#25563;&#12363;&#12425;&#12289;WINBIND
+&#12392;&#12356;&#12358;&#21517;&#21069;&#12395;&#12377;&#12427;&#12409;&#12365;&#12391;&#12354;&#12427;&#12392;&#25351;&#31034;&#12375;&#12390;&#12367;&#12427;&#12290;&#27425;&#12398;&#31680;&#12391;&#12399;&#12289;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;&#12289;
+</p><pre class="programlisting">
+WINBIND:
+        program = /usr/lib/security/WINBIND
+        options = authonly
+</pre><p>
+<code class="filename">/usr/lib/security/methods.cfg</code>&#12364;&#36861;&#21152;&#12391;&#12365;&#12427;&#12424;&#12358;&#12394;&#12427;&#12290;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;
+&#35672;&#21029;&#12398;&#12415;&#12469;&#12509;&#12540;&#12488;&#12377;&#12427;&#12364;&#12289;&#27161;&#28310;&#12398;Winbind PAM&#12514;&#12472;&#12517;&#12540;&#12523;&#12434;&#35469;&#35388;&#12395;&#20351;&#29992;&#12375;&#12390;&#25104;&#21151;&#12375;&#12383;&#20363;&#12364;&#22577;&#21578;&#12373;&#12428;&#12390;
+&#12356;&#12427;&#12290;&#12525;&#12540;&#12480;&#12502;&#12523;&#12394;&#35469;&#35388;&#12514;&#12472;&#12517;&#12540;&#12523;&#35373;&#23450;&#12398;&#38555;&#12395;&#12399;&#12289;&#12471;&#12473;&#12486;&#12512;&#12395;&#12525;&#12464;&#12458;&#12531;&#12391;&#12365;&#12394;&#12356;&#29366;&#24907;&#12395;&#12394;&#12387;&#12390;
+&#12375;&#12414;&#12358;&#12371;&#12392;&#12418;&#12354;&#12426;&#24471;&#12427;&#12398;&#12391;&#12289;&#24910;&#37325;&#12395;&#34892;&#12394;&#12358;&#12371;&#12392;&#12290;AIX&#35469;&#35388;&#12514;&#12472;&#12517;&#12540;&#12523;API&#12395;&#38306;&#12377;&#12427;&#35443;&#32048;&#24773;&#22577;&#12399;&#12289;
+AIX&#12398;&#12383;&#12417;&#12398;&#12289;
+<a class="ulink" href="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/kernextc/sec_load_mod.htm" target="_top">
+Loadable Authentication Module Programming Interface</a>&#12391;&#35352;&#36848;&#12373;&#12428;&#12390;&#12356;&#12427;&#12289;
+<span class="quote">&#8220;<span class="quote">Kernel Extensions and Device Support Programming Concepts for AIX</span>&#8221;</span>
+&#12392;&#12356;&#12358;&#25991;&#26360;&#12395;&#12354;&#12427;&#12290;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#31649;&#29702;&#12395;&#38306;&#12377;&#12427;&#12373;&#12425;&#12394;&#12427;&#24773;&#22577;&#12399;&#12289;
+<a class="ulink" href="http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixbman/baseadmn/iandaadmin.htm" target="_top">System
+Management Guide: Operating System and Devices</a>&#12395;&#12354;&#12427;&#12290;
+</p></div><div class="sect3" title="smb.conf&#12398;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2676104"></a>smb.conf&#12398;&#35373;&#23450;</h4></div></div></div><p>
+<a class="indexterm" name="id2676112"></a>
+<a class="indexterm" name="id2676119"></a>
+<a class="indexterm" name="id2676125"></a>
+<span class="application">winbindd</span>&#12398;&#21205;&#20316;&#12434;&#21046;&#24481;&#12377;&#12427;&#12383;&#12417;&#12395;&#12289;<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12395;&#12356;&#12367;&#12388;&#12363;&#12398;&#12497;&#12521;&#12513;&#12540;&#12479;&#12434;&#35373;&#23450;&#12377;&#12427;&#24517;&#35201;&#12364;
+&#12354;&#12427;&#12290;&#12371;&#12428;&#12395;&#12388;&#12356;&#12390;&#12399;&#12289;<a class="citerefentry" href="winbindd.8.html"><span class="citerefentry"><span class="refentrytitle">winbindd</span>(8)</span></a>&#12510;&#12491;&#12517;&#12450;&#12523;&#12506;&#12540;&#12472;&#12395;&#12289;&#12424;&#12426;&#35443;&#32048;&#12395;&#35500;&#26126;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+&#20197;&#19979;&#12398;<a class="link" href="winbind.html#winbindcfg" title="Example�24.1.�Winbind&#35373;&#23450;&#12398;&#12383;&#12417;&#12398;smb.conf">Winbind&#35373;&#23450;&#12398;&#12383;&#12417;&#12398;smb.conf</a>&#12395;&#12424;&#12427;<code class="filename">smb.conf</code>&#12399;&#12289;
+[global]&#12475;&#12463;&#12471;&#12519;&#12531;&#12398;&#20013;&#12398;&#24517;&#35201;&#12394;&#12456;&#12531;&#12488;&#12522;&#12540;&#12418;&#21547;&#12416;&#12424;&#12358;&#12395;&#22793;&#26356;&#12375;&#12383;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+</p><div class="example"><a name="winbindcfg"></a><p class="title"><b>Example�24.1.�Winbind&#35373;&#23450;&#12398;&#12383;&#12417;&#12398;smb.conf</b></p><div class="example-contents"><table border="0" summary="Simple list" class="simplelist"><tr><td> </td></tr><tr><td><em class="parameter"><code>[global]</code></em></td></tr><tr><td># DOMAIN\username &#12398;&#12424;&#12358;&#12395;&#12289;&#12489;&#12513;&#12452;&#12531;&#12392;&#12518;&#12540;&#12470;&#21517;&#12434; '\'&#12434;&#25375;&#12435;&#12391;&#20998;&#12369;&#12427;&#12290;</td></tr><tr><td><a class="indexterm" name="id2676204"></a><em class="parameter"><code>winbind separator = \</code></em></td></tr><tr><td># &#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12395;&#12399;&#12289;10000&#12363;&#12425;20000&#12398;UID&#12434;&#20351;&#29992;&#12377;&#12427;&#12290;</td></tr><tr><td><a class="indexterm" name="id2676222"></a><em class="parameter"><code>idmap uid = 10000-20000</code></em></td></tr><tr><td># &#12489;&#12513;&#12452;&#12531;&#12464;&#12523;&#12540;&#12503;&#12395;&#12399;&#12289;10000&#12363;&#12425;20000&#12398;GID&#12434;&#20351;&#29992;&#12377;&#12427;&#12290;</td></tr><tr><td><a class="indexterm" name="id2676239"></a><em class="parameter"><code>idmap gid = 10000-20000</code></em></td></tr><tr><td># winbind&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12398;&#21015;&#25369;&#12434;&#21487;&#33021;&#12395;&#12377;&#12427;&#12290;</td></tr><tr><td><a class="indexterm" name="id2676256"></a><em class="parameter"><code>winbind enum users = yes</code></em></td></tr><tr><td><a class="indexterm" name="id2676268"></a><em class="parameter"><code>winbind enum groups = yes</code></em></td></tr><tr><td># winbind &#12518;&#12540;&#12470;&#12395;&#26412;&#24403;&#12398;&#12471;&#12455;&#12523;&#12434;&#19982;&#12360;&#12427;(telnet&#12450;&#12463;&#12475;&#12473;&#12434;&#25345;&#12388;&#22580;&#21512;&#12398;&#12415;&#24517;&#35201;)</td></tr><tr><td><a class="indexterm" name="id2676287"></a><em class="parameter"><code>template homedir = /home/winnt/%D/%U</code></em></td></tr><tr><td><a class="indexterm" name="id2676299"></a><em class="parameter"><code>template shell = /bin/bash</code></em></td></tr></table></div></div><br class="example-break"></div><div class="sect3" title="Samba&#12469;&#12540;&#12496;&#12434;PDC&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12373;&#12379;&#12427;"><div class="titlepage"><div><div><h4 class="title"><a name="id2676313"></a>Samba&#12469;&#12540;&#12496;&#12434;PDC&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12373;&#12379;&#12427;</h4></div></div></div><p>
+<a class="indexterm" name="id2676322"></a>
+<a class="indexterm" name="id2676329"></a>
+<a class="indexterm" name="id2676336"></a>
+&#12489;&#12513;&#12452;&#12531;&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12395;&#38306;&#19982;&#12377;&#12427;&#12377;&#12409;&#12390;&#12398;&#12510;&#12471;&#12531;&#12399;&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12391;&#12354;&#12427;&#12409;&#12365;&#12391;&#12354;&#12427;&#12290;
+&#12371;&#12428;&#12399;PDC&#12392;&#12377;&#12409;&#12390;&#12398;BDC&#12395;&#12418;&#36969;&#29992;&#12373;&#12428;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2676351"></a>
+<a class="indexterm" name="id2676358"></a>
+<a class="indexterm" name="id2676366"></a>
+<a class="indexterm" name="id2676377"></a>
+<a class="indexterm" name="id2676383"></a>
+<a class="indexterm" name="id2676390"></a>
+<a class="indexterm" name="id2676397"></a>
+<a class="indexterm" name="id2676404"></a>
+<a class="indexterm" name="id2676411"></a>
+&#12489;&#12513;&#12452;&#12531;&#12408;&#12398;&#21442;&#21152;&#25163;&#32154;&#12365;&#12399;&#12289;<code class="literal">net rpc join</code>&#12467;&#12510;&#12531;&#12489;&#12434;&#20351;&#12387;&#12390;&#34892;&#12358;&#12290;&#12371;&#12398;
+&#25163;&#32154;&#12365;&#12399;&#12289;MS DCE RPC&#32076;&#30001;&#12391;&#30331;&#37682;&#12373;&#12428;&#12383;(&#36890;&#24120;&#12399;PDC)&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#12392;&#36890;&#20449;&#12434;&#34892;&#12358;&#12290;&#12371;&#12428;&#12399;&#12289;
+&#12418;&#12385;&#12429;&#12435;&#12289;<code class="literal">smbd</code>&#12503;&#12525;&#12475;&#12473;&#12364;&#23550;&#35937;&#12398;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;&#19978;&#12391;&#21205;&#20316;
+&#12375;&#12390;&#12356;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12392;&#12356;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;&#12381;&#12428;&#33258;&#36523;&#12398;&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12289;&#19968;&#26178;&#30340;&#12395;
+PDC&#12392;&#12375;&#12390;Samba&#12434;&#36215;&#21205;&#12377;&#12427;&#12371;&#12392;&#12399;&#12289;&#12381;&#12398;&#12383;&#12417;&#12395;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2676441"></a>
+<a class="indexterm" name="id2676448"></a>
+<a class="indexterm" name="id2676455"></a>
+<em class="replaceable"><code>PDC</code></em>&#12392;&#12356;&#12358;&#21517;&#21069;&#12398;PDC&#12391;&#12289;&#12489;&#12513;&#12452;&#12531;&#20013;&#12391;&#31649;&#29702;&#32773;&#27177;&#38480;&#12434;&#25345;&#12388;&#12489;&#12513;&#12452;&#12531;
+&#12518;&#12540;&#12470;&#12364;<em class="replaceable"><code>Administrator</code></em>&#12391;&#12354;&#12427;&#26178;&#12289;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;&#20837;&#21147;&#12375;&#12289;
+Samba&#12469;&#12540;&#12496;&#12434;&#12489;&#12513;&#12452;&#12531;&#12395;&#21442;&#21152;&#12373;&#12379;&#12427;&#12290;
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+<a class="indexterm" name="id2676476"></a>
+<a class="indexterm" name="id2676484"></a>
+<a class="indexterm" name="id2676490"></a>
+<a class="indexterm" name="id2676497"></a>
+&#12489;&#12513;&#12452;&#12531;&#12395;&#12510;&#12471;&#12531;&#12434;&#21442;&#21152;&#12373;&#12379;&#12427;&#21069;&#12395;&#12289;&#23550;&#35937;&#12398;&#12489;&#12513;&#12452;&#12531;&#12467;&#12531;&#12488;&#12525;&#12540;&#12521;(&#36890;&#24120;&#12399;PDC)&#12391;Samba&#12364;
+&#21205;&#20316;&#12375;&#12390;&#12356;&#12427;&#12363;&#12434;&#30906;&#35469;&#12375;&#12289;&#12509;&#12540;&#12488;137/udp, 135/tcp, 139/tcp, &#12392; 445/tcp&#12364;&#38283;&#12356;&#12390;&#12356;&#12427;&#12363;&#12434;
+&#30906;&#35469;&#12377;&#12427;(&#12418;&#12375;&#12418;PDC&#12364;Samba&#12363;Windows Server 2Kx&#12398;&#22580;&#21512;)&#12290;
+</p></div><p>
+<a class="indexterm" name="id2676517"></a>
+<code class="literal">net rpc join</code>&#27231;&#33021;&#12398;&#20351;&#29992;&#26041;&#27861;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/net rpc join -S PDC -U Administrator</code></strong>
+</pre><p>
+&#12371;&#12398;&#12467;&#12510;&#12531;&#12489;&#12408;&#12398;&#27491;&#12375;&#12356;&#35299;&#31572;&#12399;&#12289;<span class="quote">&#8220;<span class="quote">Joined the domain<em class="replaceable"><code>DOMAIN</code></em></span>&#8221;</span>
+&#12391;&#12354;&#12427;&#12290;&#12371;&#12371;&#12391;&#12289;<em class="replaceable"><code>DOMAIN</code></em>&#12399;&#23550;&#35937;&#12398;&#12489;&#12513;&#12452;&#12531;&#21517;&#12391;&#12354;&#12427;&#12290;
+</p></div><div class="sect3" title="winbindddaemon&#12398;&#38283;&#22987;&#12392;&#12486;&#12473;&#12488;"><div class="titlepage"><div><div><h4 class="title"><a name="id2676567"></a><code class="literal">winbindd</code>daemon&#12398;&#38283;&#22987;&#12392;&#12486;&#12473;&#12488;</h4></div></div></div><p>
+<a class="indexterm" name="id2676580"></a>
+<a class="indexterm" name="id2676587"></a>
+<a class="indexterm" name="id2676594"></a>
+&#26368;&#32066;&#30340;&#12395;&#12399;&#12289;Samba&#12398;&#12381;&#12398;&#20182;&#12398;&#37096;&#20998;&#12364;&#31435;&#12385;&#19978;&#12364;&#12427;&#12392;&#12365;&#12395;&#12289;&#33258;&#21205;&#30340;&#12395;winbindd daemon&#12434;&#21628;&#12403;&#20986;&#12377;
+&#12424;&#12358;&#12395;&#12289;Samba&#12398;&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#22793;&#26356;&#12375;&#12383;&#12356;&#12392;&#24605;&#12358;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12364;&#12289;Winbind&#37096;&#20998;&#12384;&#12369;&#12434;&#26368;&#21021;&#12395;
+&#12486;&#12473;&#12488;&#12375;&#12390;&#12362;&#12367;&#12371;&#12392;&#12399;&#21487;&#33021;&#12391;&#12354;&#12427;&#12290;Winbind &#12398;&#12469;&#12540;&#12499;&#12473;&#12434;&#31435;&#12385;&#19978;&#12370;&#12427;&#12395;&#12399;&#12289;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;
+root&#12392;&#12375;&#12390;&#20837;&#21147;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/sbin/winbindd</code></strong>
+</pre><p>
+<code class="literal">winbindd</code>&#23455;&#34892;&#12501;&#12449;&#12452;&#12523;&#12398;&#20301;&#32622;&#12408;&#12398;&#36969;&#20999;&#12394;&#12497;&#12473;&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12290;
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+<a class="indexterm" name="id2676639"></a>
+<a class="indexterm" name="id2676646"></a>
+&#19978;&#35352;&#12399;&#12289;<code class="filename">/usr/local/samba</code>&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12484;&#12522;&#12540;&#12398;&#20013;&#12395;Samba &#12434;
+&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12375;&#12383;&#12392;&#20206;&#23450;&#12375;&#12390;&#12356;&#12427;&#12290;&#20351;&#29992;&#12377;&#12427;&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;<code class="literal">winbindd</code>&#12364;&#21029;&#12398;
+&#25152;&#12395;&#12354;&#12427;&#22580;&#21512;&#12399;&#12289;Samba&#12501;&#12449;&#12452;&#12523;&#12398;&#20301;&#32622;&#12434;&#25506;&#12377;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;
+</p></div><p>
+<a class="indexterm" name="id2676672"></a>
+<a class="indexterm" name="id2676679"></a>
+&#24515;&#37197;&#24615;&#12394;&#20154;&#12398;&#22580;&#21512;&#12289;daemon&#12364;&#26412;&#24403;&#12395;&#21205;&#12356;&#12390;&#12356;&#12427;&#12363;&#12399;&#20197;&#19979;&#12391;&#30906;&#35469;&#20986;&#26469;&#12427;&#12290;
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>ps -ae | grep winbindd</code></strong>
+</pre><p>
+</p><p>
+<a class="indexterm" name="id2676709"></a>
+&#12371;&#12398;&#12467;&#12510;&#12531;&#12489;&#12399;&#12289;daemon&#12364;&#21205;&#12356;&#12390;&#12356;&#12427;&#12394;&#12425;&#12289;&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#32080;&#26524;&#12434;&#36820;&#12375;&#12390;&#12367;&#12427;&#12399;&#12378;&#12391;&#12354;&#12427;&#12290;
+</p><pre class="screen">
+3025 ?        00:00:00 winbindd
+</pre><p>
+</p><p>
+<a class="indexterm" name="id2676729"></a>
+<a class="indexterm" name="id2676736"></a>
+&#27425;&#12395;&#12289;&#26412;&#24403;&#12398;&#12486;&#12473;&#12488;&#29992;&#12395;&#12289;PDC&#19978;&#12395;&#12354;&#12427;&#12518;&#12540;&#12470;&#24773;&#22577;&#12434;&#21462;&#24471;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/wbinfo -u</code></strong>
+</pre><p>
+&#12371;&#12428;&#12399;&#12289;PDC&#19978;&#12398;Windows&#12518;&#12540;&#12470;&#24773;&#22577;&#12395;&#20837;&#12387;&#12390;&#12356;&#12427;&#12518;&#12540;&#12470;&#12398;&#19968;&#35239;&#12434;&#12456;&#12467;&#12540;&#12496;&#12483;&#12463;&#12377;&#12427;&#12399;&#12378;&#12391;&#12354;&#12427;&#12290;
+&#20363;&#12360;&#12400;&#12289;&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#32080;&#26524;&#12364;&#34920;&#31034;&#12373;&#12428;&#12427;:
+</p><pre class="screen">
+CEO\Administrator
+CEO\burdell
+CEO\Guest
+CEO\jt-ad
+CEO\krbtgt
+CEO\TsInternetUser
+</pre><p>
+&#12418;&#12385;&#12429;&#12435;&#12289;&#12489;&#12513;&#12452;&#12531;&#21517;&#12399;<span class="quote">&#8220;<span class="quote">CEO</span>&#8221;</span>&#12391;&#12289;<a class="link" href="smb.conf.5.html#WINBINDSEPARATOR" target="_top">winbind separator</a>&#12399;
+<span class="quote">&#8220;<span class="quote">\</span>&#8221;</span>&#12391;&#12354;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2676801"></a>
+<a class="indexterm" name="id2676807"></a>
+&#21516;&#27096;&#12395;PDC&#12363;&#12425;&#12464;&#12523;&#12540;&#12503;&#24773;&#22577;&#12434;&#21462;&#24471;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>/usr/local/samba/bin/wbinfo -g</code></strong>
+CEO\Domain Admins
+CEO\Domain Users
+CEO\Domain Guests
+CEO\Domain Computers
+CEO\Domain Controllers
+CEO\Cert Publishers
+CEO\Schema Admins
+CEO\Enterprise Admins
+CEO\Group Policy Creator Owners
+</pre><p>
+<a class="indexterm" name="id2676838"></a>
+<a class="indexterm" name="id2676845"></a>
+<a class="indexterm" name="id2676852"></a>
+<a class="indexterm" name="id2676858"></a>
+<a class="indexterm" name="id2676865"></a>
+<a class="indexterm" name="id2676871"></a>
+<a class="indexterm" name="id2676878"></a>
+&#12371;&#12371;&#12391;&#12289;<code class="literal">getent</code>&#12467;&#12510;&#12531;&#12489;&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;&#12525;&#12540;&#12459;&#12523;&#12392;PDC&#12398;&#20001;&#26041;&#12363;&#12425;&#12518;&#12540;&#12470;&#12392;
+&#12464;&#12523;&#12540;&#12503;&#12398;&#32113;&#21512;&#12373;&#12428;&#12383;&#19968;&#35239;&#12434;&#34920;&#31034;&#12373;&#12379;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12427;&#12290;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;&#20837;&#21147;&#12377;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong>
+</pre><p>
+<code class="filename">/etc/passwd</code>&#12398;&#12424;&#12358;&#12394;&#12289;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12398;&#26032;&#12375;&#12356;UID&#12289;GID&#12289;
+&#12507;&#12540;&#12512;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#21450;&#12403;&#26082;&#23450;&#20516;&#12398;&#12471;&#12455;&#12523;&#12364;&#34920;&#31034;&#12373;&#12428;&#12427;&#19968;&#35239;&#12364;&#20986;&#12390;&#12367;&#12427;&#12399;&#12378;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+&#12464;&#12523;&#12540;&#12503;&#12395;&#12388;&#12356;&#12390;&#12418;&#21516;&#27096;&#12395;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;&#23455;&#34892;&#12391;&#12365;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>getent group</code></strong>
+</pre><p>
+</p></div><div class="sect3" title="init.d&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20462;&#27491;"><div class="titlepage"><div><div><h4 class="title"><a name="id2676944"></a>init.d&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20462;&#27491;</h4></div></div></div><div class="sect4" title="Linux"><div class="titlepage"><div><div><h5 class="title"><a name="id2676951"></a>Linux</h5></div></div></div><p>
+<a class="indexterm" name="id2676959"></a>
+<a class="indexterm" name="id2676966"></a>
+<a class="indexterm" name="id2676972"></a>
+<a class="indexterm" name="id2676979"></a>
+<a class="indexterm" name="id2676986"></a>
+<a class="indexterm" name="id2676993"></a>
+<span class="application">winbindd</span> daemon&#12399;<span class="application">smbd</span>&#12392;<span class="application">nmbd</span> daemon&#12364;&#21205;&#12365;&#20986;&#12375;&#12390;&#12363;&#12425;&#36215;&#21205;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;&#12371;&#12428;&#12434;
+&#34892;&#12358;&#12395;&#12399;&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#26360;&#12365;&#25563;&#12360;&#12427;&#12290;&#12381;&#12428;&#12399;&#12289;Red Hat Linux&#12391;&#12399;
+<code class="filename">/etc/init.d/samba</code>&#12395;&#12354;&#12426;&#12289;Debian Linux&#12391;&#12399;
+<code class="filename">/etc/init.d/samba</code>&#12395;&#12354;&#12427;&#12290;&#12371;&#12428;&#12425;&#12398;daemon&#12434;&#27491;&#12375;&#12356;&#38918;&#24207;&#12391;&#36208;&#12425;&#12379;&#12427;
+&#12383;&#12417;&#12398;&#12467;&#12510;&#12531;&#12489;&#12434;&#12473;&#12463;&#12522;&#12503;&#12488;&#12395;&#21152;&#12360;&#12427;&#12290;&#12383;&#12392;&#12360;&#12400;&#12289;&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20363;&#12392;&#12375;&#12390;&#12399;&#12289;
+<span class="application">smbd</span>, <span class="application">nmbd</span>, &#12392; <span class="application">winbindd</span>&#12434;&#30452;&#25509;<code class="filename">/usr/local/samba/bin</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;
+&#12363;&#12425;&#36215;&#21205;&#12377;&#12427;&#12290;&#12371;&#12398;&#12473;&#12463;&#12522;&#12503;&#12488;&#20013;&#12398;<code class="literal">start</code>&#38306;&#25968;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+</p><pre class="programlisting">
+start() {
+        KIND="SMB"
+        echo -n $"Starting $KIND services: "
+        daemon /usr/local/samba/bin/smbd $SMBDOPTIONS
+        RETVAL=$?
+        echo
+        KIND="NMB"
+        echo -n $"Starting $KIND services: "
+        daemon /usr/local/samba/bin/nmbd $NMBDOPTIONS
+        RETVAL2=$?
+        echo
+        KIND="Winbind"
+        echo -n $"Starting $KIND services: "
+        daemon /usr/local/samba/sbin/winbindd
+        RETVAL3=$?
+        echo
+        [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 -a $RETVAL3 -eq 0 ] &amp;&amp; \
+		touch /var/lock/subsys/smb || RETVAL=1
+        return $RETVAL
+}
+</pre><p>winbindd &#12434;&#12487;&#12517;&#12450;&#12523;&#12539;&#12487;&#12540;&#12514;&#12531;&#12539;&#12514;&#12540;&#12489;&#12391;&#36208;&#12425;&#12379;&#12383;&#12356;&#22580;&#21512;&#12399;&#12289;&#19978;&#35352;&#20363;&#12398;&#20013;&#12398;:
+</p><pre class="programlisting">
+        daemon /usr/local/samba/sbin/winbindd
+</pre><p>
+
+&#12398;&#21015;&#12434;&#12289;&#20197;&#19979;&#12395;&#22793;&#12360;&#12427;:
+
+</p><pre class="programlisting">
+        daemon /usr/local/samba/sbin/winbindd -D
+</pre><p>.
+</p><p>
+<code class="literal">stop</code>&#38306;&#25968;&#12399;&#12289;&#12469;&#12540;&#12499;&#12473;&#12434;&#20572;&#27490;&#12377;&#12427;&#12383;&#12417;&#12395;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#36215;&#21205;&#12395;&#23550;&#24540;&#12377;&#12427;&#12456;&#12531;&#12488;&#12522;&#12434;&#25345;&#12388;:
+</p><pre class="programlisting">
+stop() {
+        KIND="SMB"
+        echo -n $"Shutting down $KIND services: "
+        killproc smbd
+        RETVAL=$?
+        echo
+        KIND="NMB"
+        echo -n $"Shutting down $KIND services: "
+        killproc nmbd
+        RETVAL2=$?
+        echo
+        KIND="Winbind"
+        echo -n $"Shutting down $KIND services: "
+        killproc winbindd
+        RETVAL3=$?
+        [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 -a $RETVAL3 -eq 0 ] &amp;&amp; \
+		 rm -f /var/lock/subsys/smb
+        echo ""
+        return $RETVAL
+}
+</pre></div><div class="sect4" title="Solaris"><div class="titlepage"><div><div><h5 class="title"><a name="id2677147"></a>Solaris</h5></div></div></div><p>
+Winbind&#12399;Solaris 9&#12391;&#12399;&#21205;&#20316;&#12375;&#12394;&#12356;&#12290; see <a class="link" href="Portability.html#winbind-solaris9" title="Solaris9&#19978;&#12398; Winbind">Solaris 9&#12391;&#12398;Winbind</a>&#12398;&#31680;&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+for details.
+</p><p>
+<a class="indexterm" name="id2677170"></a>
+<a class="indexterm" name="id2677177"></a>
+<a class="indexterm" name="id2677184"></a>
+<a class="indexterm" name="id2677191"></a>
+<a class="indexterm" name="id2677198"></a>
+<a class="indexterm" name="id2677205"></a>
+Solaris&#12391;&#12399;&#12289;<code class="filename">/etc/init.d/samba.server</code>&#36215;&#21205;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;
+&#12354;&#12427;&#12290;&#12414;&#12383;&#12289;&#36890;&#24120;&#12399; smbd &#12392; nmbd&#12398;&#12415;&#12434;&#36215;&#21205;&#12377;&#12427;&#12364;&#12289;winbindd&#12418;&#36215;&#21205;&#12377;&#12409;&#12365;&#12391;&#12354;&#12427;&#12290;Samba&#12364;
+<code class="filename">/usr/local/samba/bin</code>&#12395;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12373;&#12428;&#12390;&#12356;&#12427;&#22580;&#21512;&#12289;&#12371;&#12398;&#12501;&#12449;&#12452;&#12523;&#12395;&#12399;
+&#20197;&#19979;&#12398;&#12424;&#12358;&#12394;&#12418;&#12398;&#12434;&#21547;&#12416;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;:
+</p><p>
+	</p><pre class="programlisting">
+	##
+	## samba.server
+	##
+
+	if [ ! -d /usr/bin ]
+	then                    # /usr &#12364;&#12510;&#12454;&#12531;&#12488;&#12373;&#12428;&#12390;&#12356;&#12394;&#12356;
+		exit
+	fi
+
+	killproc() {            # &#21517;&#21069;&#25351;&#23450;&#12391;&#12503;&#12525;&#12475;&#12473;&#12434;&#20572;&#27490;
+		pid=`/usr/bin/ps -e |
+		     /usr/bin/grep -w $1 |
+		     /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+		[ "$pid" != "" ] &amp;&amp; kill $pid
+	}
+
+	# Samba&#12469;&#12540;&#12496;&#12395;&#24517;&#35201;&#12394;&#36215;&#21205;/&#20572;&#27490;&#12503;&#12525;&#12475;&#12473;
+
+	case "$1" in
+
+	'start')
+	#
+	# &#20351;&#29992;&#29872;&#22659;(&#12497;&#12473;&#12289;&#12527;&#12540;&#12463;&#12464;&#12523;&#12540;&#12503;&#12289;&#12507;&#12473;&#12488;)&#12395;&#21512;&#12431;&#12379;&#12390;&#20197;&#19979;&#12434;&#32232;&#38598;&#12377;&#12427;&#12371;&#12392;
+	#
+	echo Starting SMBD
+	   /usr/local/samba/bin/smbd -D -s \
+		/usr/local/samba/smb.conf
+
+	echo Starting NMBD
+	   /usr/local/samba/bin/nmbd -D -l \
+		/usr/local/samba/var/log -s /usr/local/samba/smb.conf
+
+	echo Starting Winbind Daemon
+	   /usr/local/samba/sbin/winbindd
+	   ;;
+
+	'stop')
+	   killproc nmbd
+	   killproc smbd
+	   killproc winbindd
+	   ;;
+
+	*)
+	   echo "Usage: /etc/init.d/samba.server { start | stop }"
+	   ;;
+	esac
+</pre><p>
+&#32368;&#12426;&#36820;&#12377;&#12364;&#12289;Winbind&#12434;&#12487;&#12517;&#12450;&#12523;daemon&#12514;&#12540;&#12489;&#12391;&#21205;&#12363;&#12375;&#12383;&#12356;&#22580;&#21512;&#12289;&#19978;&#35352;&#12398;:
+</p><pre class="programlisting">
+/usr/local/samba/sbin/winbindd
+</pre><p>
+&#12398;&#37096;&#20998;&#12434;&#12289;&#19979;&#35352;&#12395;&#22793;&#12360;&#12427;:
+</p><pre class="programlisting">
+/usr/local/samba/sbin/winbindd -D
+</pre><p>
+</p></div><div class="sect4" title="&#20877;&#36215;&#21205;"><div class="titlepage"><div><div><h5 class="title"><a name="id2677290"></a>&#20877;&#36215;&#21205;</h5></div></div></div><p>
+<a class="indexterm" name="id2677298"></a>
+<a class="indexterm" name="id2677304"></a>
+&#12371;&#12398;&#26178;&#28857;&#12391;<span class="application">smbd</span>, <span class="application">nmbd</span>, &#12392; <span class="application">winbindd</span> daemon&#12434;&#20877;&#36215;&#21205;&#12377;&#12427;&#12392;&#12289;&#12414;&#12427;&#12391;&#12525;&#12540;&#12459;&#12523;&#12518;&#12540;&#12470;&#12391;
+&#12354;&#12427;&#12363;&#12398;&#12424;&#12358;&#12395;&#12289;Samba&#12469;&#12540;&#12496;&#12395;&#12489;&#12513;&#12452;&#12531;&#12513;&#12531;&#12496;&#12392;&#12375;&#12390;&#25509;&#32154;&#12391;&#12365;&#12427;&#12399;&#12378;&#12391;&#12354;&#12427;&#12290;
+</p></div></div><div class="sect3" title="Winbind&#12392;PAM&#12398;&#35373;&#23450;"><div class="titlepage"><div><div><h4 class="title"><a name="id2677338"></a>Winbind&#12392;PAM&#12398;&#35373;&#23450;</h4></div></div></div><p>
+<a class="indexterm" name="id2677347"></a>
+<a class="indexterm" name="id2677354"></a>
+<a class="indexterm" name="id2677361"></a>
+<a class="indexterm" name="id2677367"></a>
+&#12371;&#12371;&#12414;&#12391;&#26469;&#12383;&#12392;&#12356;&#12358;&#12371;&#12392;&#12399;&#12289;<code class="literal">winbindd</code>&#12392;Samba&#12364;&#19968;&#32210;&#12395;&#21205;&#20316;&#12375;&#12390;&#12356;&#12427;&#29366;&#24907;&#12395;
+&#12394;&#12387;&#12383;&#12392;&#35328;&#12358;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;Winbind&#12434;&#20351;&#29992;&#12375;&#12390;&#12289;&#20182;&#12398;&#12469;&#12540;&#12499;&#12473;&#12395;&#35469;&#35388;&#12434;&#25552;&#20379;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12375;&#12383;&#12356;
+&#22580;&#21512;&#12399;&#12289;&#12371;&#12398;&#20808;&#12434;&#35501;&#12415;&#36914;&#12417;&#12427;&#12371;&#12392;&#12290;PAM&#12398;&#35373;&#23450;&#12501;&#12449;&#12452;&#12523;&#12434;&#12289;&#12371;&#12398;&#25163;&#38918;&#12398;&#20013;&#12391;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;&#20986;&#12390;
+&#12367;&#12427;(&#29694;&#22312;&#20351;&#12387;&#12390;&#12356;&#12427;<code class="filename">/etc/pam.d</code>&#12501;&#12449;&#12452;&#12523;&#12398;&#12496;&#12483;&#12463;&#12450;&#12483;&#12503;&#12434;&#21462;&#12387;&#12390;&#12356;&#12394;&#12356;
+&#12394;&#12425;&#12400;&#12289;&#20170;&#34892;&#12358;&#12371;&#12392;)&#12290;
+</p><p>
+<a class="indexterm" name="id2677403"></a>
+<a class="indexterm" name="id2677409"></a>
+<a class="indexterm" name="id2677416"></a>
+<a class="indexterm" name="id2677423"></a>
+<a class="indexterm" name="id2677430"></a>
+<a class="indexterm" name="id2677437"></a>
+&#20182;&#12398;&#12469;&#12540;&#12499;&#12473;&#12391;winbindd&#12434;&#20351;&#29992;&#12377;&#12427;&#12383;&#12417;&#12398;PAM &#12514;&#12472;&#12517;&#12540;&#12523;&#12364;&#24517;&#35201;&#12395;&#12394;&#12427;&#12290;&#12371;&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;
+&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12391;&#12289;<code class="filename">../source</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12363;&#12425;
+<code class="filename">../source/nsswitch</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;&#12467;&#12531;&#12497;&#12452;&#12523;&#12373;&#12428;&#12427;:
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>make nsswitch/pam_winbind.so</code></strong>
+</pre><p>
+<code class="filename">pam_winbind.so</code>&#12501;&#12449;&#12452;&#12523;&#12399;&#12289;&#20182;&#12398;PAM&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12514;&#12472;&#12517;&#12540;&#12523;&#12398;&#12354;&#12427;
+&#22580;&#25152;&#12395;&#12467;&#12500;&#12540;&#12375;&#12394;&#12369;&#12428;&#12400;&#12394;&#12425;&#12394;&#12356;&#12290;Red Hat &#12471;&#12473;&#12486;&#12512;&#12391;&#12399;&#12289;<code class="filename">/lib/security</code>
+&#12392;&#12356;&#12358;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12391;&#12354;&#12427;&#12290;Solaris &#12391;&#12399;&#12289;PAM&#12475;&#12461;&#12517;&#12522;&#12486;&#12451;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;
+<code class="filename">/usr/lib/security</code>&#12395;&#20837;&#12427;&#12290;
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>cp ../samba/source/nsswitch/pam_winbind.so /lib/security</code></strong>
+</pre><p>
+</p><div class="sect4" title="Linux/FreeBSD&#22266;&#26377;&#12398;PAM&#35373;&#23450;"><div class="titlepage"><div><div><h5 class="title"><a name="id2677520"></a>Linux/FreeBSD&#22266;&#26377;&#12398;PAM&#35373;&#23450;</h5></div></div></div><p>
+<a class="indexterm" name="id2677529"></a>
+<code class="filename">/etc/pam.d/samba</code>&#12501;&#12449;&#12452;&#12523;&#12399;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;&#12394;&#12356;&#12290;&#12371;&#12398;&#12501;&#12449;&#12452;&#12523;&#12399;&#12381;&#12398;&#12414;&#12414;&#27531;&#12377;:
+</p><pre class="programlisting">
+auth    required  /lib/security/pam_stack.so service=system-auth
+account required  /lib/security/pam_stack.so service=system-auth
+</pre><p>
+<a class="indexterm" name="id2677553"></a>
+<a class="indexterm" name="id2677560"></a>
+<a class="indexterm" name="id2677567"></a>
+<a class="indexterm" name="id2677574"></a>
+<a class="indexterm" name="id2677581"></a>
+<a class="indexterm" name="id2677588"></a>
+<a class="indexterm" name="id2677595"></a>
+<a class="indexterm" name="id2677602"></a>
+<a class="indexterm" name="id2677609"></a>
+Winbind&#12434;&#35469;&#35388;&#12469;&#12540;&#12499;&#12473;&#12395;&#20351;&#29992;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#25163;&#12434;&#21152;&#12360;&#12383;&#12381;&#12398;&#20182;&#12398;&#12469;&#12540;&#12499;&#12473;&#12399;&#12289;&#12467;&#12531;&#12477;&#12540;&#12523;&#19978;&#12398;&#36890;&#24120;
+&#12525;&#12464;&#12452;&#12531;(&#12414;&#12383;&#12399;&#12479;&#12540;&#12511;&#12490;&#12523;&#12475;&#12483;&#12471;&#12519;&#12531;)&#12289;telnet&#12525;&#12464;&#12452;&#12531;&#12289;&#12381;&#12428;&#12395;ftp&#12469;&#12540;&#12499;&#12473;&#12391;&#12354;&#12427;&#12290;&#12371;&#12428;&#12425;&#12398;
+&#12469;&#12540;&#12499;&#12473;&#12434;&#26377;&#21177;&#12395;&#12377;&#12427;&#12395;&#12399;&#12289;&#12414;&#12378;&#12289;<code class="filename">/etc/xinetd.d</code>(&#12414;&#12383;&#12399;
+<code class="filename">/etc/inetd.conf</code>)&#12398;&#20013;&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12363;&#12418;&#30693;&#12428;&#12394;&#12356;&#12290;
+Red Hat Linux 7.1&#20197;&#38477;&#12398;&#12496;&#12540;&#12472;&#12519;&#12531;&#12399;&#12289;&#26032;&#12375;&#12356; xinetd.d &#27083;&#36896;&#12434;&#20351;&#29992;&#12375;&#12390;&#12362;&#12426;&#12289;&#12371;&#12398;&#22580;&#21512;&#12289;
+<code class="filename">/etc/xinetd.d/telnet</code>&#12392;<code class="filename">/etc/xinetd.d/wu-ftp</code>
+&#12398;&#20013;&#12398;&#25991;&#23383;&#21015;&#12434;
+</p><pre class="programlisting">
+	enable = no
+</pre><p>
+&#12363;&#12425;
+</p><pre class="programlisting">
+	enable = yes
+</pre><p>
+&#12395;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;</p><p>
+<a class="indexterm" name="id2677675"></a>
+<a class="indexterm" name="id2677683"></a>
+<a class="indexterm" name="id2677690"></a>
+ftp&#12469;&#12540;&#12499;&#12473;&#12434;&#21205;&#20316;&#12373;&#12379;&#12427;&#12383;&#12417;&#12395;&#12399;&#12289;&#26082;&#12395;&#12469;&#12540;&#12496;&#19978;&#12395;&#23384;&#22312;&#12377;&#12427;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12398;&#12383;&#12417;&#12395;&#12289;&#20491;&#21029;&#12395;
+&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#29992;&#24847;&#12377;&#12427;&#12363;&#12289;&#12507;&#12540;&#12512;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#20840;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#29992;&#12398;&#27726;&#29992;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12395;
+&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;&#12371;&#12428;&#12425;&#12399;&#12289;<code class="filename">smb.conf</code>&#12398;<a class="link" href="smb.conf.5.html#TEMPLATEHOMEDIR" target="_top">template homedir</a>
+&#12464;&#12525;&#12540;&#12496;&#12523;&#12456;&#12531;&#12488;&#12522;&#12391;&#31777;&#21336;&#12395;&#35373;&#23450;&#12391;&#12365;&#12427;&#12290;
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+<a class="indexterm" name="id2677734"></a>
+<a class="link" href="smb.conf.5.html#TEMPLATEHOMEDIR" target="_top">template homedir</a>&#20013;&#12398;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12399;&#12289;&#33258;&#21205;&#30340;&#12395;&#12399;&#29983;&#25104;&#12373;&#12428;&#12394;&#12356;!
+pam_mkhomedir&#12363;&#12289;&#12354;&#12425;&#12363;&#12376;&#12417;&#24403;&#35442;&#12518;&#12540;&#12470;&#12395;&#23550;&#12375;&#12390;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#20316;&#25104;&#12375;&#12390;&#12362;&#12367;&#12424;&#12358;&#12395;&#12375;&#12390;&#12289;
+&#22266;&#26377;&#12398;&#12507;&#12540;&#12512;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#20351;&#12387;&#12390;UNIX&#12395;&#12525;&#12464;&#12452;&#12531;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12371;&#12392;&#12290;
+</p></div><p>
+<a class="indexterm" name="id2677760"></a>
+<a class="indexterm" name="id2677767"></a>
+<a class="indexterm" name="id2677773"></a>
+<code class="filename">/etc/pam.d/ftp</code>&#12501;&#12449;&#12452;&#12523;&#12399;&#12289;<code class="filename">/etc/pam.d/samba</code>
+&#12501;&#12449;&#12452;&#12523;&#12392;&#20284;&#12383;&#12424;&#12358;&#12394;&#24418;&#12391;&#12289;Winbind&#12398;ftp&#12450;&#12463;&#12475;&#12473;&#12434;&#35377;&#21487;&#12377;&#12427;&#12424;&#12358;&#12395;&#22793;&#26356;&#12391;&#12365;&#12427;&#12290;&#22793;&#26356;&#24460;&#12398;
+<code class="filename">/etc/pam.d/ftp</code>&#12501;&#12449;&#12452;&#12523;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+</p><pre class="programlisting">
+auth       required     /lib/security/pam_listfile.so item=user sense=deny \
+	 file=/etc/ftpusers onerr=succeed
+auth       sufficient   /lib/security/pam_winbind.so
+auth       required     /lib/security/pam_stack.so service=system-auth
+auth       required     /lib/security/pam_shells.so
+account    sufficient   /lib/security/pam_winbind.so
+account    required     /lib/security/pam_stack.so service=system-auth
+session    required     /lib/security/pam_stack.so service=system-auth
+</pre><p>
+<a class="indexterm" name="id2677819"></a>
+<code class="filename">/etc/pam.d/login</code>&#12501;&#12449;&#12452;&#12523;&#12418;&#12411;&#12412;&#21516;&#27096;&#12395;&#22793;&#26356;&#12391;&#12365;&#12427;&#12290;&#20197;&#19979;&#12398;&#12424;&#12358;&#12395;&#12394;&#12427;:
+</p><pre class="programlisting">
+auth       required     /lib/security/pam_securetty.so
+auth       sufficient   /lib/security/pam_winbind.so
+auth       sufficient   /lib/security/pam_unix.so use_first_pass
+auth       required     /lib/security/pam_stack.so service=system-auth
+auth       required     /lib/security/pam_nologin.so
+account    sufficient   /lib/security/pam_winbind.so
+account    required     /lib/security/pam_stack.so service=system-auth
+password   required     /lib/security/pam_stack.so service=system-auth
+session    required     /lib/security/pam_stack.so service=system-auth
+session    optional     /lib/security/pam_console.so
+</pre><p>
+<a class="indexterm" name="id2677849"></a>
+<a class="indexterm" name="id2677855"></a>
+<a class="indexterm" name="id2677862"></a>
+&#12371;&#12398;&#22580;&#21512;&#12289;&#21069;&#36848;&#12398;&#12424;&#12358;&#12395;
+</p><pre class="programlisting">auth sufficient /lib/security/pam_winbind.so</pre><p>
+&#12434;&#36861;&#21152;&#12377;&#12427;&#12364;&#12289;&#12381;&#12428;&#12395;&#21152;&#12360;
+</p><pre class="programlisting">required pam_securetty.so</pre><p>
+&#12434;&#21152;&#12360;&#12427;&#12371;&#12392;&#12395;&#12424;&#12426;&#12289;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#19978;&#12363;&#12425;&#12398;root&#12398;&#12525;&#12464;&#12452;&#12531;&#12434;&#19981;&#35377;&#21487;&#12392;&#12375;&#12383;&#12290;&#12414;&#12383;&#12289;
+</p><pre class="programlisting">sufficient /lib/security/pam_unix.so use_first_pass</pre><p>
+&#34892;&#12434;<code class="literal">winbind.so</code>&#34892;&#12398;&#24460;&#12395;&#21152;&#12360;&#12289;&#12497;&#12473;&#12527;&#12540;&#12489;&#12363;&#12425;&#12398;&#12503;&#12525;&#12531;&#12503;&#12488;&#12364;&#20108;&#37325;&#34920;&#31034;&#12373;&#12428;&#12427;
+&#21839;&#38988;&#12434;&#35299;&#28040;&#12375;&#12383;&#12290;
+</p></div><div class="sect4" title="Solaris&#22266;&#26377;&#12398;&#35373;&#23450;"><div class="titlepage"><div><div><h5 class="title"><a name="id2677905"></a>Solaris&#22266;&#26377;&#12398;&#35373;&#23450;</h5></div></div></div><p>
+<a class="indexterm" name="id2677914"></a>
+<a class="indexterm" name="id2677920"></a>
+<code class="filename">/etc/pam.conf</code>&#12398;&#22793;&#26356;&#12364;&#24517;&#35201;&#12391;&#12354;&#12427;&#12290;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12364;&#12525;&#12540;&#12459;&#12523;&#12395;&#12418;
+telnet&#12391;&#12418;&#12525;&#12464;&#12458;&#12531;&#12391;&#12365;&#12427;&#12424;&#12358;&#12395;&#22793;&#26356;&#12377;&#12427;&#12290;&#20197;&#19979;&#12364;&#22793;&#26356;&#20869;&#23481;&#12391;&#12354;&#12427;&#12290;<code class="filename">pam.conf</code>
+&#12434;&#35201;&#20214;&#12395;&#27839;&#12387;&#12390;&#12459;&#12473;&#12479;&#12510;&#12452;&#12474;&#12375;&#12390;&#12418;&#12424;&#12356;&#12364;&#12289;&#26368;&#24746;&#12398;&#22580;&#21512;&#12289;&#12471;&#12473;&#12486;&#12512;&#12364;&#12411;&#12392;&#12435;&#12393;&#36215;&#21205;&#19981;&#33021;&#12395;&#12394;&#12427;&#12371;&#12392;&#12364;
+&#12354;&#12427;&#12398;&#12391;&#12289;&#22793;&#26356;&#20869;&#23481;&#12395;&#21313;&#20998;&#33258;&#20449;&#12364;&#12354;&#12427;&#22580;&#21512;&#12398;&#12415;&#22793;&#26356;&#12377;&#12427;&#12371;&#12392;&#12290;
+</p><pre class="programlisting">
+#
+#ident "@(#)pam.conf 1.14 99/09/16 SMI"
+#
+# Copyright (c) 1996-1999, Sun Microsystems, Inc.
+# All Rights Reserved.
+#
+# PAM&#12398;&#35373;&#23450;
+#
+# &#35469;&#35388;&#31649;&#29702;
+#
+login   auth required   /usr/lib/security/pam_winbind.so
+login auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
+login auth required  /usr/lib/security/$ISA/pam_dial_auth.so.1 try_first_pass
+#
+rlogin  auth sufficient /usr/lib/security/pam_winbind.so
+rlogin  auth sufficient /usr/lib/security/$ISA/pam_rhosts_auth.so.1
+rlogin auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
+#
+dtlogin auth sufficient /usr/lib/security/pam_winbind.so
+dtlogin auth required  /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
+#
+rsh auth required /usr/lib/security/$ISA/pam_rhosts_auth.so.1
+other   auth sufficient /usr/lib/security/pam_winbind.so
+other auth required /usr/lib/security/$ISA/pam_unix.so.1 try_first_pass
+#
+# &#12450;&#12459;&#12454;&#12531;&#12488;&#31649;&#29702;
+#
+login   account sufficient      /usr/lib/security/pam_winbind.so
+login account requisite /usr/lib/security/$ISA/pam_roles.so.1
+login account required /usr/lib/security/$ISA/pam_unix.so.1
+#
+dtlogin account sufficient      /usr/lib/security/pam_winbind.so
+dtlogin account requisite /usr/lib/security/$ISA/pam_roles.so.1
+dtlogin account required /usr/lib/security/$ISA/pam_unix.so.1
+#
+other   account sufficient      /usr/lib/security/pam_winbind.so
+other account requisite /usr/lib/security/$ISA/pam_roles.so.1
+other account required /usr/lib/security/$ISA/pam_unix.so.1
+#
+# &#12475;&#12483;&#12471;&#12519;&#12531;&#31649;&#29702;
+#
+other session required /usr/lib/security/$ISA/pam_unix.so.1
+#
+# &#12497;&#12473;&#12527;&#12540;&#12489;&#31649;&#29702;
+#
+#other   password sufficient     /usr/lib/security/pam_winbind.so
+other password required /usr/lib/security/$ISA/pam_unix.so.1
+dtsession auth required /usr/lib/security/$ISA/pam_unix.so.1
+#
+# Kerberos V5 &#35469;&#35388;&#12398;&#12469;&#12509;&#12540;&#12488;(Kerberos&#12434;&#20351;&#29992;&#12377;&#12427;&#12395;&#12399;&#12450;&#12531;&#12467;&#12513;&#12531;&#12488;&#12377;&#12427;&#12371;&#12392;)
+#
+#rlogin auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
+#login auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
+#dtlogin auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
+#other auth optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
+#dtlogin account optional /usr/lib/security/$ISA/pam_krb5.so.1
+#other account optional /usr/lib/security/$ISA/pam_krb5.so.1
+#other session optional /usr/lib/security/$ISA/pam_krb5.so.1
+#other password optional /usr/lib/security/$ISA/pam_krb5.so.1 try_first_pass
+</pre><p>
+<a class="indexterm" name="id2678040"></a>
+&#12373;&#12425;&#12395;&#12289;<code class="filename">winbind.so</code>&#34892;&#12398;&#24460;&#12395;<em class="parameter"><code>try_first_pass</code></em>
+&#34892;&#12434;&#36861;&#21152;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#12497;&#12473;&#12527;&#12540;&#12489;&#12363;&#12425;&#12398;&#12503;&#12525;&#12531;&#12503;&#12488;&#12364;&#20108;&#37325;&#34920;&#31034;&#12373;&#12428;&#12427;&#21839;&#38988;&#12434;&#35299;&#28040;&#12377;&#12427;&#12290;
+</p><p>
+Samba&#12434;&#20877;&#36215;&#21205;&#12375;&#12390;&#12289;pam.conf&#12391;&#35373;&#23450;&#12375;&#12383;&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12363;&#12425;&#25509;&#32154;&#12375;&#12390;&#12415;&#12427;&#12290;
+</p></div></div></div></div><div class="sect1" title="&#32080;&#35542;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678076"></a>&#32080;&#35542;</h2></div></div></div><p>
+<a class="indexterm" name="id2678083"></a>
+<a class="indexterm" name="id2678090"></a>
+<a class="indexterm" name="id2678097"></a>
+<a class="indexterm" name="id2678103"></a>
+<a class="indexterm" name="id2678110"></a>
+Winbind&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;NSS&#12392;PAM&#21450;&#12403;&#36969;&#20999;&#12394;Microsoft RPC&#12467;&#12540;&#12523;&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;UNIX&#12471;&#12473;&#12486;&#12512;
+&#19978;&#12398;Microsoft Windows NT&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12398;&#12471;&#12540;&#12512;&#12524;&#12473;&#12394;&#32113;&#21512;&#12434;&#21487;&#33021;&#12395;&#12375;&#12383;&#12290;&#12381;&#12398;&#32080;&#26524;&#12289;UNIX&#12392;
+NT&#12398;&#28151;&#22312;&#12377;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12434;&#36939;&#29992;&#12377;&#12427;&#31649;&#29702;&#12467;&#12473;&#12488;&#12398;&#22823;&#24133;&#21066;&#28187;&#12364;&#23455;&#29694;&#12373;&#12383;&#12290;
+</p></div><div class="sect1" title="&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678130"></a>&#12424;&#12367;&#12354;&#12427;&#12456;&#12521;&#12540;</h2></div></div></div><p>
+	Winbind&#12399;&#12289;&#29694;&#22312;&#12398;&#12522;&#12522;&#12540;&#12473;&#29256;&#12395;&#12399;&#12289;&#24190;&#12388;&#12363;&#12398;&#21046;&#32004;&#12364;&#12354;&#12426;&#12289;&#12371;&#12428;&#12399;&#23558;&#26469;&#12398; &#12522;&#12522;&#12540;&#12473;&#12391;&#20811;&#26381;&#12375;&#12390;&#12356;&#12365;&#12383;&#12356;&#12392;&#32771;&#12360;&#12390;&#12356;&#12427;:
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+		Winbind&#12399;&#12289;&#29694;&#34892;&#12391;&#12399;&#12289;&#20182;&#12398;OS&#12408;&#12398;&#31227;&#26893;&#12399;&#21487;&#33021;&#12384;&#12364;&#12289;Linux&#12289;Solaris&#12289;AIX&#12289;
+		&#21450;&#12403;IRIX&#12398;OS&#12391;&#12398;&#12415;&#20351;&#29992;&#21487;&#33021;&#12391;&#12354;&#12427;&#12290;&#12371;&#12398;&#12424;&#12358;&#12394;&#31227;&#26893;&#12434;&#23455;&#29694;&#12377;&#12427;&#12395;&#12399;&#12289;&#31227;&#26893;&#20808;&#12398;
+		OS&#12398;C&#12521;&#12452;&#12502;&#12521;&#12522;&#12364;&#12289;NSS&#12392;PAM&#12471;&#12473;&#12486;&#12512;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12390;&#12356;&#12427;&#12371;&#12392;&#12364;&#35201;&#20214;&#12392;&#12394;&#12427;&#12290;
+		NSS&#12392;PAM&#12364;UNIX&#12505;&#12531;&#12480;&#12398;&#38291;&#12391;&#12469;&#12509;&#12540;&#12488;&#12434;&#24471;&#12427;&#12424;&#12358;&#12395;&#12394;&#12387;&#12390;&#12365;&#12383;&#12398;&#12391;&#12289;&#12371;&#12398;&#20108;&#12388;&#12398;
+		&#12469;&#12509;&#12540;&#12488;&#12399;&#20197;&#21069;&#12424;&#12426;&#19968;&#33324;&#30340;&#12395;&#35211;&#12425;&#12428;&#12427;&#12424;&#12358;&#12395;&#12394;&#12387;&#12383;&#12290;
+		</p></li><li class="listitem"><p>
+		Windows NT RID&#12363;&#12425;UNIX ID&#12408;&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#12399;&#12289; &#12450;&#12523;&#12468;&#12522;&#12474;&#12512;&#12391;&#27770;&#12417;&#12425;&#12428;&#12427;
+		&#12398;&#12391;&#12399;&#12394;&#12367;&#12289;&#12510;&#12483;&#12500;&#12531;&#12464;&#12373;&#12428;&#12390;&#12356;&#12394;&#12356;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;Winbind&#12364;&#30446;&#12395;&#12375;&#12383;
+		&#38918;&#30058;&#12395;&#30058;&#21495;&#12434;&#25391;&#12387;&#12390;&#12356;&#12367;&#12290;&#12381;&#12398;&#12383;&#12417;&#12289;RID&#12392;UNIX ID&#12398;&#12510;&#12483;&#12500;&#12531;&#12464;&#24773;&#22577;&#12434;&#25345;&#12388;
+		&#12501;&#12449;&#12452;&#12523;&#12364;&#19981;&#33391;&#12395;&#12394;&#12387;&#12383;&#12426;&#22730;&#12428;&#12383;&#12426;&#12375;&#12383;&#22580;&#21512;&#12289;&#21069;&#12392;&#21516;&#12376;&#12510;&#12483;&#12500;&#12531;&#12464;&#12434;&#20877;&#29694;
+		&#12377;&#12427;&#12371;&#12392;&#12399;&#38627;&#12375;&#12356;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;
+		</p></li><li class="listitem"><p>
+		&#29694;&#34892;&#12391;&#12399;&#12289;Winbind PAM&#12398;&#12514;&#12472;&#12517;&#12540;&#12523;&#12399;&#12289;Windows NT&#12518;&#12540;&#12470;&#12395;&#23550;&#12375;&#12390;&#35373;&#23450;&#12373;&#12428;&#12427;
+		&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12398;&#12525;&#12464;&#12458;&#12531;&#26178;&#38291;&#12394;&#12393;&#12398;&#21046;&#32004;&#12434;&#32771;&#24942;&#12375;&#12390;&#12362;&#12425;&#12378;&#12289;PDC &#12364;&#24375;&#21046;
+		&#12377;&#12427;&#12418;&#12398;&#12392;&#24819;&#23450;&#12375;&#12390;&#12356;&#12427;&#12290;
+		</p></li></ul></div><div class="sect2" title="NSCD&#12398;&#21839;&#38988;&#12395;&#38306;&#12377;&#12427;&#35686;&#21578;"><div class="titlepage"><div><div><h3 class="title"><a name="id2678190"></a>NSCD&#12398;&#21839;&#38988;&#12395;&#38306;&#12377;&#12427;&#35686;&#21578;</h3></div></div></div><div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+	&#12356;&#12363;&#12394;&#12427;&#29366;&#27841;&#12391;&#12418;<code class="literal">winbindd</code>&#12364;&#21205;&#20316;&#12375;&#12390;&#12356;&#12427;&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;
+	<code class="literal">nscd</code>&#12434;&#21205;&#12363;&#12373;&#12394;&#12356;&#12371;&#12392;&#12290;
+	</p></div><p>
+	&#12418;&#12375;&#12418;<code class="literal">nscd</code>&#12364;UNIX/Linux&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;&#21205;&#12356;&#12390;&#12356;&#12427;&#26178;&#12289;NSSWITCH&#12364;
+	&#27491;&#12375;&#12367;&#35373;&#23450;&#12373;&#12428;&#12390;&#12356;&#12390;&#12418;&#12289;&#12501;&#12449;&#12452;&#12523;&#12392;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12398;&#31649;&#29702;&#12398;&#12383;&#12417;&#12395;&#12289;&#12489;&#12513;&#12452;&#12531;&#12518;&#12540;&#12470;&#12392;
+	&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12377;&#12427;&#12371;&#12392;&#12399;&#12391;&#12365;&#12394;&#12356;&#12290;
+	</p></div><div class="sect2" title="Winbind&#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12394;&#12356;"><div class="titlepage"><div><div><h3 class="title"><a name="id2678230"></a>Winbind&#12364;&#12518;&#12540;&#12470;&#12392;&#12464;&#12523;&#12540;&#12503;&#12434;&#35299;&#27770;&#12375;&#12394;&#12356;</h3></div></div></div><p><span class="quote">&#8220;<span class="quote">
+	<code class="filename">smb.conf</code>&#12501;&#12449;&#12452;&#12523;&#12399;&#27491;&#12375;&#12367;&#35373;&#23450;&#12375;&#12383;&#12290;
+	<a class="link" href="smb.conf.5.html#IDMAPUID" target="_top">idmap uid = 12000</a>&#12392;
+	<a class="link" href="smb.conf.5.html#IDMAPGID" target="_top">idmap gid = 3000-3500</a>&#12434;&#35373;&#23450;&#12375;&#12289;
+	<code class="literal">winbind</code>&#12434;&#36208;&#12425;&#12379;&#12390;&#12356;&#12427;&#12290;&#20197;&#19979;&#12434;&#34892;&#12358;&#12392;&#12377;&#12409;&#12390;&#12358;&#12414;&#12367;&#34892;&#12367;&#12290;
+	</span>&#8221;</span></p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -u</code></strong>
+MIDEARTH\maryo
+MIDEARTH\jackb
+MIDEARTH\ameds
+...
+MIDEARTH\root
+
+<code class="prompt">root# </code><strong class="userinput"><code>wbinfo -g</code></strong>
+MIDEARTH\Domain Users
+MIDEARTH\Domain Admins
+MIDEARTH\Domain Guests
+...
+MIDEARTH\Accounts
+
+<code class="prompt">root# </code><strong class="userinput"><code>getent passwd</code></strong>
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/bin/bash
+...
+maryo:x:15000:15003:Mary Orville:/home/MIDEARTH/maryo:/bin/false
+</pre><p><span class="quote">&#8220;<span class="quote">
+&#12392;&#12371;&#12429;&#12364;&#12289;&#20197;&#19979;&#12398;&#12467;&#12510;&#12531;&#12489;&#12399;&#22833;&#25943;&#12377;&#12427;:
+</span>&#8221;</span>
+</p><pre class="screen">
+<code class="prompt">root# </code><strong class="userinput"><code>chown maryo a_file</code></strong>
+chown: `maryo': invalid user
+</pre><p>
+<span class="quote">&#8220;<span class="quote">
+&#27671;&#12364;&#22793;&#12395;&#12394;&#12426;&#12381;&#12358;&#12394;&#12398;&#12384;&#12364;&#20309;&#12364;&#12356;&#12369;&#12394;&#12356;&#12398;&#12384;&#12429;&#12358;?
+</span>&#8221;</span></p><p>
+&#21069;&#35352;&#12398;&#21839;&#38988;&#12392;&#21516;&#12376;&#12391;&#12354;&#12427;&#12290;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;&#12471;&#12473;&#12486;&#12512;&#12399;&#12289;&#24656;&#12425;&#12367;<code class="literal">nscd</code>&#12434;&#21205;&#20316;&#12373;&#12379;&#12390;
+&#12356;&#12427;&#12398;&#12384;&#12429;&#12358;&#12290;&#12471;&#12473;&#12486;&#12512;&#12434;&#20877;&#36215;&#21205;&#12391;&#12399;&#12394;&#12367;&#19968;&#26086;&#12471;&#12515;&#12483;&#12488;&#12480;&#12454;&#12531;&#12377;&#12428;&#12400;&#12289;&#12381;&#12398;&#24460;&#12391;&#12399;&#12289;&#21839;&#38988;&#12399;&#35299;&#28040;&#12375;&#12390;
+&#12356;&#12427;&#12384;&#12429;&#12358;&#12290;
+</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="VFS.html">Prev</a>�</td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right">�<a accesskey="n" href="AdvancedNetworkManagement.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter�23.�&#12473;&#12479;&#12483;&#12459;&#12502;&#12523;VFS&#12514;&#12472;&#12517;&#12540;&#12523;�</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">�Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;</td></tr></table></div></body></html>

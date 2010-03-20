@@ -1,1 +1,324 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 25. 詳細なネットワーク管理</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="公式のSamba 3.2.x HOWTOとリファレンスガイド"><link rel="up" href="optional.html" title="Part III. 詳細な設定方法"><link rel="prev" href="winbind.html" title="Chapter 24. Winbind: ドメインアカウントの使用"><link rel="next" href="PolicyMgmt.html" title="Chapter 26. システムとアカウントポリシー"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 25. 詳細なネットワーク管理</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="winbind.html">Prev</a> </td><th width="60%" align="center">Part III. 詳細な設定方法</th><td width="20%" align="right"> <a accesskey="n" href="PolicyMgmt.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter 25. 詳細なネットワーク管理"><div class="titlepage"><div><div><h2 class="title"><a name="AdvancedNetworkManagement"></a>Chapter 25. 詳細なネットワーク管理</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email"><<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>></code></p></div></div></div></div><div><p class="pubdate">June 15 2005</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678186">機能と利便性</a></span></dt><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678229">リモートサーバ管理</a></span></dt><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678378">リモートデスクトップ管理</a></span></dt><dd><dl><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2678412">NoMachine.Comによるリモート管理</a></span></dt><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2678871">ThinLincを使うリモート管理</a></span></dt></dl></dd><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2679080">ネットワークログオンスクリプトの魔法</a></span></dt><dd><dl><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2679319">ユーザの干渉なしにプリンタを追加する</a></span></dt><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2679366">ログオン接続の制限</a></span></dt></dl></dd></dl></div><p><a class="indexterm" name="id2678168"></a>この章では、ネットワークリソースアクセス制御を改善するためと、ユーザ環境を自動化するためと、使用時の作業をより簡単にすることをしたいと思っているネットワーク管理者のためのとても重要な周辺機器についての問題を記述する。</p><div class="sect1" title="機能と利便性"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678186"></a>機能と利便性</h2></div></div></div><p>しばしば、作業中のネットワーク環境とより理解しているものの違いは、すべてをより協調させる<span class="emphasis"><em>小分け</em></span>の観点で最もよく測れる。すべてのネットワークソリューションの重要な部分は、リモートからMicrosoft Windowsワークステーションを管理すること、リモートでSambaサーバにアクセスすること、より信頼出来るネットワーク操作の場面において手助けとなる他の保守作業と同様の、カスタマイズしたログオンスクリプトを提供することである。</p><p>この章では、それらの各領域についての情報を提供する。それらはここにあり、他の章にはなく、そのため、参照が容易である。</p></div><div class="sect1" title="リモートサーバ管理"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678229"></a>リモートサーバ管理</h2></div></div></div><p><span class="quote">“<span class="quote">どのようにしてユーザマネージャとサーバマネージャを手に入れたらよいのか?</span>”</span></p><p><a class="indexterm" name="id2678243"></a><a class="indexterm" name="id2678250"></a><a class="indexterm" name="id2678257"></a><span class="application">NT4 サーバ</span>を購入する必要がないので、どのようにしてユーザマネージャとサーバマネージャを手に入れたらよいのか?</p><p><a class="indexterm" name="id2678276"></a><a class="indexterm" name="id2678282"></a>Microsoftは、<span class="application">Windows 9x/Me</span>システム上でインストールするための、<code class="filename">Nexus.exe</code>と呼ばれるバージョンのツールを配布している。ツールセットには、以下が含まれている:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>サーバマネージャ</p></li><li class="listitem"><p>ドメイン用のユーザマネージャ</p></li><li class="listitem"><p>イベントビューワ</p></li></ul></div><p>Microsoftの<a class="ulink" href="ftp://ftp.microsoft.com/Softlib/MSLFILES/NEXUS.EXE" target="_top">Nexus</a>から書庫ファイルをダウンロードする。</p><p><a class="indexterm" name="id2678339"></a><a class="indexterm" name="id2678346"></a><a class="indexterm" name="id2678354"></a>ドメインとサーバマネージャ用の、<span class="application">Windows NT 4.0</span>バージョン用のユーザマネージャは、Microsoftの<a class="ulink" href="ftp://ftp.microsoft.com/Softlib/MSLFILES/SRVTOOLS.EXE" target="_top">via ftp</a>にある。</p></div><div class="sect1" title="リモートデスクトップ管理"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678378"></a>リモートデスクトップ管理</h2></div></div></div><p><a class="indexterm" name="id2678387"></a><a class="indexterm" name="id2678394"></a>自由に使えるものから、費用がかかるものまでの間で、数多くのリモートデスクトップ管理ソリューションが存在する。黙ってみていてはいけない。最も費用がかかるソリューションはえてして最も効果的なものである。どの場合も、使用しているネットワーク環境で、どれが最も良いツールかを、自分で結論づける必要がある。</p><div class="sect2" title="NoMachine.Comによるリモート管理"><div class="titlepage"><div><div><h3 class="title"><a name="id2678412"></a>NoMachine.Comによるリモート管理</h3></div></div></div><p>	<a class="indexterm" name="id2678421"></a>	以下の情報はSambaメーリングリストに、2003年4月3日 23:33:50(UTC+00:00)に投稿	されたものである。以下は若干修正(プライバシーの理由で投稿者の詳細を省略)して	ある。完全な答えは、削除したいくつかのコメントを考慮して再構成してある。	</p><p><span class="quote">“<span class="quote"><a class="indexterm" name="id2678443"></a>		PDCとしてネットワーク上で動いている、優れたなLinux/Sambaサーバがある。		これに、ユーザが外部からシステムにログイン出来るようにして、家や他の		国からデスクトップ状態を使えるようにする、リモートデスクトップ機能を		追加したい。		</span>”</span></p><p><span class="quote">“<span class="quote"><a class="indexterm" name="id2678465"></a><a class="indexterm" name="id2678473"></a><a class="indexterm" name="id2678479"></a><a class="indexterm" name="id2678486"></a>		これを達成する方法はあるだろうか?Windowsターミナルサーバが必要だろうか?		それを設定する必要があり、それはドメインのメンバか、BDCあるいはPDCになる		のだろうか?コンピュータがドメイン中にいる場合でも、Microsoft Windows XPを		リモートログインにするようなhackはあるだろうか?		</span>”</span></p><p>		提供された回答:		<a class="ulink" href="http://www.nomachine.com/" target="_top">NoMachine</a>から		提供されている新しい<span class="quote">“<span class="quote">NX</span>”</span>ソフトウェアを申し込む。		</p><p><a class="indexterm" name="id2678524"></a><a class="indexterm" name="id2678531"></a><a class="indexterm" name="id2678538"></a>	これは、VNC/RFBとrdesktop/RDBをその中に取り込んでいる、簡単に使える、	リモートXプロトコルを実装しているが、今まで使ったことがあるかもしれない	他のものよりもパフォーマンスがよい。	</p><p><a class="indexterm" name="id2678557"></a>	リモートXは別に新しいものではないが、これが成し遂げたものは、遅いmodem/ISDN	接続上でも十分に使えるくらいのスピードを出す、新しい圧縮方法とキャッシング	技術である。	</p><p><a class="indexterm" name="id2678575"></a><a class="indexterm" name="id2678582"></a><a class="indexterm" name="id2678589"></a><a class="indexterm" name="id2678596"></a>	イタリアで(公開の)Red Hatマシンに対して、負荷の高いインターネット接続で、	KDE konquerorのサムネイルプレビューを有効にして、<span class="quote">“<span class="quote">マウスを載せると</span>”</span>	その時点でポップアップするようにしてテストしてみた。その内側(リモートX)の	セッションで、Windows XPマシンへののrdesktopセッションを起動した。パフォーマンスを	測ってみたところ、最初に631750ポイントというスコアが出た。	</p><p><a class="indexterm" name="id2678624"></a><a class="indexterm" name="id2678631"></a><a class="indexterm" name="id2678638"></a><a class="indexterm" name="id2678644"></a>	NXは、TightVNC, rdesktopやromete Xという、その時点までに使っていた他の	<span class="quote">“<span class="quote">純粋な</span>”</span>接続方法のどれよりも、ローカルLANよりも良いパフォーマンスを	出す。2つのノードを直接クロス接続するよりも速い。	</p><p><a class="indexterm" name="id2678664"></a><a class="indexterm" name="id2678671"></a><a class="indexterm" name="id2678678"></a>	リモートXアプリケーションから手元のマシンに対して、音を再生することも出来、	(イタリアにあるKDEセッションで動いている)NXウィンドウからMozillaメールソフトに	<span class="quote">“<span class="quote">コピーアンドペーストを</span>”</span>する事も出来た。このソフトはとてもよく	動いている!	</p><p>	リモートコンピューティングに一時的な興味のみあるどなたにも、	<a class="ulink" href="http://www.nomachine.com/testdrive.php" target="_top">NX</a>を使って	見る事をお勧めする。	</p><p>	無料で使えるクライアントソフトウェアをダウンロードし(Red Hat、SuSE、Debianと	Windows用がある)、起動し5分間使える(この時testdrive.nomachine.com上に実際の	UNIXアカウントを割り当てるために、アカウントデータを送る必要がある)。	</p><p>	計画されている要点では、クラスタのノードとしてNXアプリケーションサーバを	動かせるようになり、単にNXセッションをローカルに起動し、透過的に	アプリケーションを動かせる(アプリケーションが他のNXノードで動いていたとしても、	同じウィンドウで表示されるために、最初のログインで使われていたのと同じように	動く。また、フルスクリーンでも動作でき、そのすぐにリモートログインしていることを	全く忘れてしまうだろう)。	</p><p><a class="indexterm" name="id2678744"></a>	最後に最も良いことを:すべての主要な圧縮とキャッシュ技術はGPLのもとでリリース	され、何かに組み込もうと思う人誰にもそのソースコードが公開されている!これらの	技術はちゃんと動くが、コマンドラインのみから起動する(そして、完全に動作する	リモートXセッションを起動し動かすために使うにはとても不便である)。	</p><p>	質問に対する回答は以下の通り:	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>		ターミナルサーバをインストールする必要はない。XPはRDPのサポートを内蔵している。		</p></li><li class="listitem"><p>		NXはCitrixよりも安価であり対抗できうる性能があり、おそらくより速い。		</p></li><li class="listitem"><p>		XPをハックする必要はない。それはちゃんと動く。		</p></li><li class="listitem"><p>		透過的にリモートからXPマシンにログイン出来(そして、ドメインに対する認証が		必要だとしても、接続時に何かを変更する必要はない)。		</p></li><li class="listitem"><p>		NXの主要な技術はすべてオープンソースでGPLでリリースされている。		(とても不便だが)無料で、コマンドラインで使う事が出来るが、お金を出せば、		便利な(商用の)NX GUIフロントエンドを買うことが出来る。		</p></li><li class="listitem"><p><a class="indexterm" name="id2678824"></a><a class="indexterm" name="id2678831"></a><a class="indexterm" name="id2678837"></a><a class="indexterm" name="id2678844"></a><a class="indexterm" name="id2678851"></a>		そのようなフロントエンドに対する、OSS/Free Softwareでの実装に、NoMachineは		自分自身に対する競合を意味しているのにもかかわらず、力を貸し、手助けを		している(このような主旨を、LTSP、KDEとGNOME開発メーリングリストにも表明		している)。		</p></li></ul></div></div><div class="sect2" title="ThinLincを使うリモート管理"><div class="titlepage"><div><div><h3 class="title"><a name="id2678871"></a>ThinLincを使うリモート管理</h3></div></div></div><p>	リモートアクセスに対する他の解は、Cendioによる<span class="emphasis"><em>ThinLinc</em></span>である。	</p><p><a class="indexterm" name="id2678890"></a><a class="indexterm" name="id2678896"></a><a class="indexterm" name="id2678903"></a><a class="indexterm" name="id2678910"></a><a class="indexterm" name="id2678917"></a><a class="indexterm" name="id2678924"></a><a class="indexterm" name="id2678930"></a><a class="indexterm" name="id2678937"></a>	ThxnLincは、LinuxとSolarisベースで使える、SSH、TightVNC、NFSとPulseAudioのような	標準プロトコルをベースとしたターミナルサーバである。	</p><p><a class="indexterm" name="id2678953"></a><a class="indexterm" name="id2678960"></a>	ThinLincは、LAN環境において組織におけるシンクライアント運用にも、狭帯域においても	使えるリモートから仕事をする人がセキュアなリモートアクセスを行うのにも使える。	ThinLincは、単一の同時アクセスするユーザに対して自由に使える。	</p><p><a class="indexterm" name="id2678980"></a><a class="indexterm" name="id2678987"></a><a class="indexterm" name="id2678995"></a>	プロダクトはWindowsターミナルサーバかCitrix環境のフロントエンドとしても、	Windows XPマシンのフロントエンドとしても使え、sshプロトコル経由で接続時の安全性を	確保している。クライアントはLinux(数多くのシンクライアント端末と同様すべてのLinux	ディストリビューションをサポート)とWindows用がある。JavaベースのWebクライアントも	提供されている。	</p><p>	ThinLincはCendioのデモシステムに接続することで評価が出来る。下記を参照。	<a class="ulink" href="http://www.cendio.com" target="_top">Cendio's</a> web サイト	<a class="ulink" href="http://www.cendio.com/testdrive" target="_top">testdrive</a> センタ。	</p><p>	Cendiaは以下を含む、いくつかのオープンソースプロジェクトにおける主要な貢献者である。	<a class="ulink" href="http://www.tightvnc.com" target="_top">TightVNC</a>,	<a class="ulink" href="http://pulseaudio.org" target="_top">PulseAudio</a> , unfsd,	<a class="ulink" href="http://www.python.org" target="_top">Python</a> と	<a class="ulink" href="http://www.rdesktop.org" target="_top">rdesktop</a>.	</p></div></div><div class="sect1" title="ネットワークログオンスクリプトの魔法"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2679080"></a>ネットワークログオンスクリプトの魔法</h2></div></div></div><p>固有のネットワーク設定環境を作成するための、いくつかの機会がある。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>ログオンスクリプトなし。</p></li><li class="listitem"><p>すべてのユーザに適用される、単純な汎用ログオンスクリプト。</p></li><li class="listitem"><p>ユーザ単位あるいはグループ単位の属性に適用する条件付きログオンスクリプトの使用。</p></li><li class="listitem"><p>固有のログオンスクリプトを作るための、NETLOGON共有に対する	アクセス上の、Sambaのpreexecとpostexec機能を使用し、それを実行。</p></li><li class="listitem"><p>kixStartのようなツールのユーザ。</p></li></ul></div><p>Sambaソースコードの中には2つのログオンスクリプト生成/実行ツールが含まれている。<code class="filename">examples</code>ディレクトリの<code class="filename">genlogon</code>と<code class="filename">ntlogon</code>サブディレクトリを参照。</p><p>以下のリストはgenlogonディレクトリからのものである。</p><p><a class="indexterm" name="id2679160"></a>これは、<code class="filename">genlogon.pl</code>ファイルである:</p><pre class="programlisting">	#!/usr/bin/perl	#	# genlogon.pl	#	# Perl script to generate user logon scripts on the fly, when users	# connect from a Windows client. This script should be called from 	# smb.conf with the %U, %G and %L parameters. I.e:	#	#       root preexec = genlogon.pl %U %G %L	#	# The script generated will perform	# the following:	#	# 1. Log the user connection to /var/log/samba/netlogon.log	# 2. Set the PC's time to the Linux server time (which is maintained	#    daily to the National Institute of Standards Atomic clock on the	#    internet.	# 3. Connect the user's home drive to H: (H for Home).	# 4. Connect common drives that everyone uses.	# 5. Connect group-specific drives for certain user groups.	# 6. Connect user-specific drives for certain users.	# 7. Connect network printers.	# Log client connection	#($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);	open LOG, ">>/var/log/samba/netlogon.log";	print LOG "$mon/$mday/$year $hour:$min:$sec";	print LOG " - User $ARGV[0] logged into $ARGV[1]\n";	close LOG;	# Start generating logon script	open LOGON, ">/shared/netlogon/$ARGV[0].bat";	print LOGON "\@ECHO OFF\r\n";	# Connect shares just use by Software Development group	if ($ARGV[1] eq "SOFTDEV" || $ARGV[0] eq "softdev")	{		print LOGON "NET USE M: \\\\$ARGV[2]\\SOURCE\r\n";	}	# Connect shares just use by Technical Support staff	if ($ARGV[1] eq "SUPPORT" || $ARGV[0] eq "support")	{		print LOGON "NET USE S: \\\\$ARGV[2]\\SUPPORT\r\n";	}	# Connect shares just used by Administration staff	If ($ARGV[1] eq "ADMIN" || $ARGV[0] eq "admin")	{		print LOGON "NET USE L: \\\\$ARGV[2]\\ADMIN\r\n";		print LOGON "NET USE K: \\\\$ARGV[2]\\MKTING\r\n";	}	# Now connect Printers. We handle just two or three users a little	# differently, because they are the exceptions that have desktop	# printers on LPT1: - all other user's go to the LaserJet on the	# server.	if ($ARGV[0] eq 'jim'	    || $ARGV[0] eq 'yvonne')	{		print LOGON "NET USE LPT2: \\\\$ARGV[2]\\LJET3\r\n";		print LOGON "NET USE LPT3: \\\\$ARGV[2]\\FAXQ\r\n";	}	else	{		print LOGON "NET USE LPT1: \\\\$ARGV[2]\\LJET3\r\n";		print LOGON "NET USE LPT3: \\\\$ARGV[2]\\FAXQ\r\n";	}	# All done! Close the output file.	close LOGON;</pre><p></p><p>これらは、より精巧か、有用なログイン処理システムがそれらのサイトを確認する事を期待している:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><a class="ulink" href="http://www.craigelachie.org/rhacer/ntlogon" target="_top">http://www.craigelachie.org/rhacer/ntlogon</a></p></li><li class="listitem"><p><a class="ulink" href="http://www.kixtart.org" target="_top">http://www.kixtart.org</a></p></li></ul></div><div class="sect2" title="ユーザの干渉なしにプリンタを追加する"><div class="titlepage"><div><div><h3 class="title"><a name="id2679319"></a>ユーザの干渉なしにプリンタを追加する</h3></div></div></div><p><a class="indexterm" name="id2679327"></a>プリンタは以下を使用することで、ログオンスクリプト処理中に自動的に追加することが出来る:</p><pre class="screen"><code class="prompt">C:\> </code><strong class="userinput"><code>rundll32 printui.dll,PrintUIEntry /?</code></strong></pre><p><a class="ulink" href="http://support.microsoft.com/kb/189105/ja" target="_top">ユーザーによる操作なしで Windowsにプリンタを追加する方法</a>を参照のこと。</p></div><div class="sect2" title="ログオン接続の制限"><div class="titlepage"><div><div><h3 class="title"><a name="id2679366"></a>ログオン接続の制限</h3></div></div></div><p>	  時々、Samba共有リソースへの同時接続の数を制限することが必要な場合がある。	  たとえば、ユーザ毎に1つのネットワークログインのみを、サイトが許可したいような	  場合である。	</p><p>	  Sambaの<em class="parameter"><code>preexec script</code></em>パラメータはユーザ単位に1つの接続	  のみを許可するのに使える。この方法は完全に安全性があるわけではなく、副作用が	  あるかもしれない。以下の寄贈された方法はより良い解を誰かに思いつかさせて、	  提供を促すかもしれない。	</p><p>	  これは、Windowsクライアントが、実際にそうである間、共有をもう使っていないと	  見える場合に、自動再接続機能を使って、アイドル状態の接続を切ってしまうことが	  出来るという理由で完全な解ではない。そうだったとしても、これは、	  <em class="parameter"><code>preexec script</code></em>パラメータの使用の原理的なデモである。	</p><p>	  以下の共有設定は<a class="link" href="AdvancedNetworkManagement.html#Tpees" title="Example 25.1. Script to Enforce Single Resource Logon">“Script to Enforce Single Resource Logon”</a>中で示されるスクリプトの使用をデモする。</p><pre class="programlisting">[myshare]	...	preexec script = /sbin/PermitSingleLogon.sh	preexec close = Yes	...</pre><p>	</p><div class="example"><a name="Tpees"></a><p class="title"><b>Example 25.1. Script to Enforce Single Resource Logon</b></p><div class="example-contents"><pre class="screen">#!/bin/bashIFS="-"RESULT=$(smbstatus -S -u $1 2> /dev/null | awk 'NF \        > 6 {print $1}' | sort | uniq -d)if [ "X${RESULT}" == X  ]; then  exit 0else  exit 1fi</pre></div></div><br class="example-break"></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="winbind.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="PolicyMgmt.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 24. Winbind: ドメインアカウントの使用 </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 26. システムとアカウントポリシー</td></tr></table></div></body></html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;</title><link rel="stylesheet" href="../samba.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="&#20844;&#24335;&#12398;Samba 3.2.x HOWTO&#12392;&#12522;&#12501;&#12449;&#12524;&#12531;&#12473;&#12460;&#12452;&#12489;"><link rel="up" href="optional.html" title="Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;"><link rel="prev" href="winbind.html" title="Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;"><link rel="next" href="PolicyMgmt.html" title="Chapter�26.�&#12471;&#12473;&#12486;&#12512;&#12392;&#12450;&#12459;&#12454;&#12531;&#12488;&#12509;&#12522;&#12471;&#12540;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="winbind.html">Prev</a>�</td><th width="60%" align="center">Part�III.�&#35443;&#32048;&#12394;&#35373;&#23450;&#26041;&#27861;</th><td width="20%" align="right">�<a accesskey="n" href="PolicyMgmt.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;"><div class="titlepage"><div><div><h2 class="title"><a name="AdvancedNetworkManagement"></a>Chapter�25.�&#35443;&#32048;&#12394;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;</h2></div><div><div class="author"><h3 class="author"><span class="firstname">John</span> <span class="othername">H.</span> <span class="surname">Terpstra</span></h3><div class="affiliation"><span class="orgname">Samba Team<br></span><div class="address"><p><code class="email">&lt;<a class="email" href="mailto:jht@samba.org">jht@samba.org</a>&gt;</code></p></div></div></div></div><div><p class="pubdate">June 15 2005</p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678432">&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;</a></span></dt><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678474">&#12522;&#12514;&#12540;&#12488;&#12469;&#12540;&#12496;&#31649;&#29702;</a></span></dt><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2678624">&#12522;&#12514;&#12540;&#12488;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#31649;&#29702;</a></span></dt><dd><dl><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2678658">NoMachine.Com&#12395;&#12424;&#12427;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;</a></span></dt><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2679117">ThinLinc&#12434;&#20351;&#12358;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;</a></span></dt></dl></dd><dt><span class="sect1"><a href="AdvancedNetworkManagement.html#id2679325">&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#39764;&#27861;</a></span></dt><dd><dl><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2679564">&#12518;&#12540;&#12470;&#12398;&#24178;&#28169;&#12394;&#12375;&#12395;&#12503;&#12522;&#12531;&#12479;&#12434;&#36861;&#21152;&#12377;&#12427;</a></span></dt><dt><span class="sect2"><a href="AdvancedNetworkManagement.html#id2679611">&#12525;&#12464;&#12458;&#12531;&#25509;&#32154;&#12398;&#21046;&#38480;</a></span></dt></dl></dd></dl></div><p>
+<a class="indexterm" name="id2678413"></a>
+&#12371;&#12398;&#31456;&#12391;&#12399;&#12289;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12522;&#12477;&#12540;&#12473;&#12450;&#12463;&#12475;&#12473;&#21046;&#24481;&#12434;&#25913;&#21892;&#12377;&#12427;&#12383;&#12417;&#12392;&#12289;&#12518;&#12540;&#12470;&#29872;&#22659;&#12434;&#33258;&#21205;&#21270;&#12377;&#12427;
+&#12383;&#12417;&#12392;&#12289;&#20351;&#29992;&#26178;&#12398;&#20316;&#26989;&#12434;&#12424;&#12426;&#31777;&#21336;&#12395;&#12377;&#12427;&#12371;&#12392;&#12434;&#12375;&#12383;&#12356;&#12392;&#24605;&#12387;&#12390;&#12356;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#31649;&#29702;&#32773;&#12398;&#12383;&#12417;&#12398;
+&#12392;&#12390;&#12418;&#37325;&#35201;&#12394;&#21608;&#36794;&#27231;&#22120;&#12395;&#12388;&#12356;&#12390;&#12398;&#21839;&#38988;&#12434;&#35352;&#36848;&#12377;&#12427;&#12290;
+</p><div class="sect1" title="&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678432"></a>&#27231;&#33021;&#12392;&#21033;&#20415;&#24615;</h2></div></div></div><p>
+&#12375;&#12400;&#12375;&#12400;&#12289;&#20316;&#26989;&#20013;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#29872;&#22659;&#12392;&#12424;&#12426;&#29702;&#35299;&#12375;&#12390;&#12356;&#12427;&#12418;&#12398;&#12398;&#36949;&#12356;&#12399;&#12289;&#12377;&#12409;&#12390;&#12434;&#12424;&#12426;&#21332;&#35519;&#12373;&#12379;&#12427;
+<span class="emphasis"><em>&#23567;&#20998;&#12369;</em></span>&#12398;&#35251;&#28857;&#12391;&#26368;&#12418;&#12424;&#12367;&#28204;&#12428;&#12427;&#12290;&#12377;&#12409;&#12390;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12477;&#12522;&#12517;&#12540;&#12471;&#12519;&#12531;&#12398;
+&#37325;&#35201;&#12394;&#37096;&#20998;&#12399;&#12289;&#12522;&#12514;&#12540;&#12488;&#12363;&#12425;Microsoft Windows&#12527;&#12540;&#12463;&#12473;&#12486;&#12540;&#12471;&#12519;&#12531;&#12434;&#31649;&#29702;&#12377;&#12427;&#12371;&#12392;&#12289;&#12522;&#12514;&#12540;&#12488;&#12391;
+Samba&#12469;&#12540;&#12496;&#12395;&#12450;&#12463;&#12475;&#12473;&#12377;&#12427;&#12371;&#12392;&#12289;&#12424;&#12426;&#20449;&#38972;&#20986;&#26469;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#25805;&#20316;&#12398;&#22580;&#38754;&#12395;&#12362;&#12356;&#12390;&#25163;&#21161;&#12369;&#12392;&#12394;&#12427;
+&#20182;&#12398;&#20445;&#23432;&#20316;&#26989;&#12392;&#21516;&#27096;&#12398;&#12289;&#12459;&#12473;&#12479;&#12510;&#12452;&#12474;&#12375;&#12383;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#25552;&#20379;&#12377;&#12427;&#12371;&#12392;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+&#12371;&#12398;&#31456;&#12391;&#12399;&#12289;&#12381;&#12428;&#12425;&#12398;&#21508;&#38936;&#22495;&#12395;&#12388;&#12356;&#12390;&#12398;&#24773;&#22577;&#12434;&#25552;&#20379;&#12377;&#12427;&#12290;&#12381;&#12428;&#12425;&#12399;&#12371;&#12371;&#12395;&#12354;&#12426;&#12289;&#20182;&#12398;&#31456;&#12395;&#12399;&#12394;&#12367;&#12289;
+&#12381;&#12398;&#12383;&#12417;&#12289;&#21442;&#29031;&#12364;&#23481;&#26131;&#12391;&#12354;&#12427;&#12290;
+</p></div><div class="sect1" title="&#12522;&#12514;&#12540;&#12488;&#12469;&#12540;&#12496;&#31649;&#29702;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678474"></a>&#12522;&#12514;&#12540;&#12488;&#12469;&#12540;&#12496;&#31649;&#29702;</h2></div></div></div><p><span class="quote">&#8220;<span class="quote">&#12393;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;&#12518;&#12540;&#12470;&#12510;&#12493;&#12540;&#12472;&#12515;&#12392;&#12469;&#12540;&#12496;&#12510;&#12493;&#12540;&#12472;&#12515;&#12434;&#25163;&#12395;&#20837;&#12428;&#12383;&#12425;&#12424;&#12356;&#12398;&#12363;?</span>&#8221;</span></p><p>
+<a class="indexterm" name="id2678488"></a>
+<a class="indexterm" name="id2678495"></a>
+<a class="indexterm" name="id2678502"></a>
+<span class="application">NT4 &#12469;&#12540;&#12496;</span>&#12434;&#36092;&#20837;&#12377;&#12427;&#24517;&#35201;&#12364;&#12394;&#12356;&#12398;&#12391;&#12289;&#12393;&#12398;&#12424;&#12358;&#12395;&#12375;&#12390;&#12518;&#12540;&#12470;
+&#12510;&#12493;&#12540;&#12472;&#12515;&#12392;&#12469;&#12540;&#12496;&#12510;&#12493;&#12540;&#12472;&#12515;&#12434;&#25163;&#12395;&#20837;&#12428;&#12383;&#12425;&#12424;&#12356;&#12398;&#12363;?
+</p><p>
+<a class="indexterm" name="id2678521"></a>
+<a class="indexterm" name="id2678528"></a>
+Microsoft&#12399;&#12289;<span class="application">Windows 9x/Me</span>&#12471;&#12473;&#12486;&#12512;&#19978;&#12391;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#12383;&#12417;&#12398;&#12289;
+<code class="filename">Nexus.exe</code>&#12392;&#21628;&#12400;&#12428;&#12427;&#12496;&#12540;&#12472;&#12519;&#12531;&#12398;&#12484;&#12540;&#12523;&#12434;&#37197;&#24067;&#12375;&#12390;&#12356;&#12427;&#12290;&#12484;&#12540;&#12523;&#12475;&#12483;&#12488;
+&#12395;&#12399;&#12289;&#20197;&#19979;&#12364;&#21547;&#12414;&#12428;&#12390;&#12356;&#12427;:
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>&#12469;&#12540;&#12496;&#12510;&#12493;&#12540;&#12472;&#12515;</p></li><li class="listitem"><p>&#12489;&#12513;&#12452;&#12531;&#29992;&#12398;&#12518;&#12540;&#12470;&#12510;&#12493;&#12540;&#12472;&#12515;</p></li><li class="listitem"><p>&#12452;&#12505;&#12531;&#12488;&#12499;&#12517;&#12540;&#12527;</p></li></ul></div><p>
+Microsoft&#12398;
+<a class="ulink" href="ftp://ftp.microsoft.com/Softlib/MSLFILES/NEXUS.EXE" target="_top">Nexus</a>
+&#12363;&#12425;&#26360;&#24235;&#12501;&#12449;&#12452;&#12523;&#12434;&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12377;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2678585"></a>
+<a class="indexterm" name="id2678592"></a>
+<a class="indexterm" name="id2678599"></a>
+&#12489;&#12513;&#12452;&#12531;&#12392;&#12469;&#12540;&#12496;&#12510;&#12493;&#12540;&#12472;&#12515;&#29992;&#12398;&#12289;<span class="application">Windows NT 4.0</span>&#12496;&#12540;&#12472;&#12519;&#12531;&#29992;&#12398;
+&#12518;&#12540;&#12470;&#12510;&#12493;&#12540;&#12472;&#12515;&#12399;&#12289;Microsoft&#12398;
+<a class="ulink" href="ftp://ftp.microsoft.com/Softlib/MSLFILES/SRVTOOLS.EXE" target="_top">via ftp</a>&#12395;&#12354;&#12427;&#12290;
+</p></div><div class="sect1" title="&#12522;&#12514;&#12540;&#12488;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#31649;&#29702;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2678624"></a>&#12522;&#12514;&#12540;&#12488;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#31649;&#29702;</h2></div></div></div><p>
+<a class="indexterm" name="id2678632"></a>
+<a class="indexterm" name="id2678640"></a>
+&#33258;&#30001;&#12395;&#20351;&#12360;&#12427;&#12418;&#12398;&#12363;&#12425;&#12289;&#36027;&#29992;&#12364;&#12363;&#12363;&#12427;&#12418;&#12398;&#12414;&#12391;&#12398;&#38291;&#12391;&#12289;&#25968;&#22810;&#12367;&#12398;&#12522;&#12514;&#12540;&#12488;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#31649;&#29702;
+&#12477;&#12522;&#12517;&#12540;&#12471;&#12519;&#12531;&#12364;&#23384;&#22312;&#12377;&#12427;&#12290;&#40665;&#12387;&#12390;&#12415;&#12390;&#12356;&#12390;&#12399;&#12356;&#12369;&#12394;&#12356;&#12290;&#26368;&#12418;&#36027;&#29992;&#12364;&#12363;&#12363;&#12427;&#12477;&#12522;&#12517;&#12540;&#12471;&#12519;&#12531;&#12399;
+&#12360;&#12390;&#12375;&#12390;&#26368;&#12418;&#21177;&#26524;&#30340;&#12394;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#12393;&#12398;&#22580;&#21512;&#12418;&#12289;&#20351;&#29992;&#12375;&#12390;&#12356;&#12427;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#29872;&#22659;&#12391;&#12289;&#12393;&#12428;&#12364;
+&#26368;&#12418;&#33391;&#12356;&#12484;&#12540;&#12523;&#12363;&#12434;&#12289;&#33258;&#20998;&#12391;&#32080;&#35542;&#12389;&#12369;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;&#12290;
+</p><div class="sect2" title="NoMachine.Com&#12395;&#12424;&#12427;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;"><div class="titlepage"><div><div><h3 class="title"><a name="id2678658"></a>NoMachine.Com&#12395;&#12424;&#12427;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;</h3></div></div></div><p>
+	<a class="indexterm" name="id2678667"></a>
+	&#20197;&#19979;&#12398;&#24773;&#22577;&#12399;Samba&#12513;&#12540;&#12522;&#12531;&#12464;&#12522;&#12473;&#12488;&#12395;&#12289;2003&#24180;4&#26376;3&#26085; 23:33:50(UTC+00:00)&#12395;&#25237;&#31295;
+	&#12373;&#12428;&#12383;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;&#20197;&#19979;&#12399;&#33509;&#24178;&#20462;&#27491;(&#12503;&#12521;&#12452;&#12496;&#12471;&#12540;&#12398;&#29702;&#30001;&#12391;&#25237;&#31295;&#32773;&#12398;&#35443;&#32048;&#12434;&#30465;&#30053;)&#12375;&#12390;
+	&#12354;&#12427;&#12290;&#23436;&#20840;&#12394;&#31572;&#12360;&#12399;&#12289;&#21066;&#38500;&#12375;&#12383;&#12356;&#12367;&#12388;&#12363;&#12398;&#12467;&#12513;&#12531;&#12488;&#12434;&#32771;&#24942;&#12375;&#12390;&#20877;&#27083;&#25104;&#12375;&#12390;&#12354;&#12427;&#12290;
+	</p><p><span class="quote">&#8220;<span class="quote">
+<a class="indexterm" name="id2678688"></a>
+		PDC&#12392;&#12375;&#12390;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#19978;&#12391;&#21205;&#12356;&#12390;&#12356;&#12427;&#12289;&#20778;&#12428;&#12383;&#12394;Linux/Samba&#12469;&#12540;&#12496;&#12364;&#12354;&#12427;&#12290;
+		&#12371;&#12428;&#12395;&#12289;&#12518;&#12540;&#12470;&#12364;&#22806;&#37096;&#12363;&#12425;&#12471;&#12473;&#12486;&#12512;&#12395;&#12525;&#12464;&#12452;&#12531;&#20986;&#26469;&#12427;&#12424;&#12358;&#12395;&#12375;&#12390;&#12289;&#23478;&#12420;&#20182;&#12398;
+		&#22269;&#12363;&#12425;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#29366;&#24907;&#12434;&#20351;&#12360;&#12427;&#12424;&#12358;&#12395;&#12377;&#12427;&#12289;&#12522;&#12514;&#12540;&#12488;&#12487;&#12473;&#12463;&#12488;&#12483;&#12503;&#27231;&#33021;&#12434;
+		&#36861;&#21152;&#12375;&#12383;&#12356;&#12290;
+		</span>&#8221;</span></p><p><span class="quote">&#8220;<span class="quote">
+<a class="indexterm" name="id2678710"></a>
+<a class="indexterm" name="id2678718"></a>
+<a class="indexterm" name="id2678725"></a>
+<a class="indexterm" name="id2678731"></a>
+		&#12371;&#12428;&#12434;&#36948;&#25104;&#12377;&#12427;&#26041;&#27861;&#12399;&#12354;&#12427;&#12384;&#12429;&#12358;&#12363;?Windows&#12479;&#12540;&#12511;&#12490;&#12523;&#12469;&#12540;&#12496;&#12364;&#24517;&#35201;&#12384;&#12429;&#12358;&#12363;?
+		&#12381;&#12428;&#12434;&#35373;&#23450;&#12377;&#12427;&#24517;&#35201;&#12364;&#12354;&#12426;&#12289;&#12381;&#12428;&#12399;&#12489;&#12513;&#12452;&#12531;&#12398;&#12513;&#12531;&#12496;&#12363;&#12289;BDC&#12354;&#12427;&#12356;&#12399;PDC&#12395;&#12394;&#12427;
+		&#12398;&#12384;&#12429;&#12358;&#12363;?&#12467;&#12531;&#12500;&#12517;&#12540;&#12479;&#12364;&#12489;&#12513;&#12452;&#12531;&#20013;&#12395;&#12356;&#12427;&#22580;&#21512;&#12391;&#12418;&#12289;Microsoft Windows XP&#12434;
+		&#12522;&#12514;&#12540;&#12488;&#12525;&#12464;&#12452;&#12531;&#12395;&#12377;&#12427;&#12424;&#12358;&#12394;hack&#12399;&#12354;&#12427;&#12384;&#12429;&#12358;&#12363;?
+		</span>&#8221;</span></p><p>
+		&#25552;&#20379;&#12373;&#12428;&#12383;&#22238;&#31572;:
+		<a class="ulink" href="http://www.nomachine.com/" target="_top">NoMachine</a>&#12363;&#12425;
+		&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12427;&#26032;&#12375;&#12356;<span class="quote">&#8220;<span class="quote">NX</span>&#8221;</span>&#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12434;&#30003;&#12375;&#36796;&#12416;&#12290;
+		</p><p>
+<a class="indexterm" name="id2678769"></a>
+<a class="indexterm" name="id2678776"></a>
+<a class="indexterm" name="id2678783"></a>
+	&#12371;&#12428;&#12399;&#12289;VNC/RFB&#12392;rdesktop/RDB&#12434;&#12381;&#12398;&#20013;&#12395;&#21462;&#12426;&#36796;&#12435;&#12391;&#12356;&#12427;&#12289;&#31777;&#21336;&#12395;&#20351;&#12360;&#12427;&#12289;
+	&#12522;&#12514;&#12540;&#12488;X&#12503;&#12525;&#12488;&#12467;&#12523;&#12434;&#23455;&#35013;&#12375;&#12390;&#12356;&#12427;&#12364;&#12289;&#20170;&#12414;&#12391;&#20351;&#12387;&#12383;&#12371;&#12392;&#12364;&#12354;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;
+	&#20182;&#12398;&#12418;&#12398;&#12424;&#12426;&#12418;&#12497;&#12501;&#12457;&#12540;&#12510;&#12531;&#12473;&#12364;&#12424;&#12356;&#12290;
+	</p><p>
+<a class="indexterm" name="id2678802"></a>
+	&#12522;&#12514;&#12540;&#12488;X&#12399;&#21029;&#12395;&#26032;&#12375;&#12356;&#12418;&#12398;&#12391;&#12399;&#12394;&#12356;&#12364;&#12289;&#12371;&#12428;&#12364;&#25104;&#12375;&#36930;&#12370;&#12383;&#12418;&#12398;&#12399;&#12289;&#36933;&#12356;modem/ISDN
+	&#25509;&#32154;&#19978;&#12391;&#12418;&#21313;&#20998;&#12395;&#20351;&#12360;&#12427;&#12367;&#12425;&#12356;&#12398;&#12473;&#12500;&#12540;&#12489;&#12434;&#20986;&#12377;&#12289;&#26032;&#12375;&#12356;&#22311;&#32302;&#26041;&#27861;&#12392;&#12461;&#12515;&#12483;&#12471;&#12531;&#12464;
+	&#25216;&#34899;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2678820"></a>
+<a class="indexterm" name="id2678827"></a>
+<a class="indexterm" name="id2678834"></a>
+<a class="indexterm" name="id2678841"></a>
+	&#12452;&#12479;&#12522;&#12450;&#12391;(&#20844;&#38283;&#12398;)Red Hat&#12510;&#12471;&#12531;&#12395;&#23550;&#12375;&#12390;&#12289;&#36000;&#33655;&#12398;&#39640;&#12356;&#12452;&#12531;&#12479;&#12540;&#12493;&#12483;&#12488;&#25509;&#32154;&#12391;&#12289;
+	KDE konqueror&#12398;&#12469;&#12512;&#12493;&#12452;&#12523;&#12503;&#12524;&#12499;&#12517;&#12540;&#12434;&#26377;&#21177;&#12395;&#12375;&#12390;&#12289;<span class="quote">&#8220;<span class="quote">&#12510;&#12454;&#12473;&#12434;&#36617;&#12379;&#12427;&#12392;</span>&#8221;</span>
+	&#12381;&#12398;&#26178;&#28857;&#12391;&#12509;&#12483;&#12503;&#12450;&#12483;&#12503;&#12377;&#12427;&#12424;&#12358;&#12395;&#12375;&#12390;&#12486;&#12473;&#12488;&#12375;&#12390;&#12415;&#12383;&#12290;&#12381;&#12398;&#20869;&#20596;(&#12522;&#12514;&#12540;&#12488;X)&#12398;
+	&#12475;&#12483;&#12471;&#12519;&#12531;&#12391;&#12289;Windows XP&#12510;&#12471;&#12531;&#12408;&#12398;&#12398;rdesktop&#12475;&#12483;&#12471;&#12519;&#12531;&#12434;&#36215;&#21205;&#12375;&#12383;&#12290;&#12497;&#12501;&#12457;&#12540;&#12510;&#12531;&#12473;&#12434;
+	&#28204;&#12387;&#12390;&#12415;&#12383;&#12392;&#12371;&#12429;&#12289;&#26368;&#21021;&#12395;631750&#12509;&#12452;&#12531;&#12488;&#12392;&#12356;&#12358;&#12473;&#12467;&#12450;&#12364;&#20986;&#12383;&#12290;
+	</p><p>
+<a class="indexterm" name="id2678870"></a>
+<a class="indexterm" name="id2678876"></a>
+<a class="indexterm" name="id2678883"></a>
+<a class="indexterm" name="id2678890"></a>
+	NX&#12399;&#12289;TightVNC, rdesktop&#12420;romete X&#12392;&#12356;&#12358;&#12289;&#12381;&#12398;&#26178;&#28857;&#12414;&#12391;&#12395;&#20351;&#12387;&#12390;&#12356;&#12383;&#20182;&#12398;
+	<span class="quote">&#8220;<span class="quote">&#32020;&#31883;&#12394;</span>&#8221;</span>&#25509;&#32154;&#26041;&#27861;&#12398;&#12393;&#12428;&#12424;&#12426;&#12418;&#12289;&#12525;&#12540;&#12459;&#12523;LAN&#12424;&#12426;&#12418;&#33391;&#12356;&#12497;&#12501;&#12457;&#12540;&#12510;&#12531;&#12473;&#12434;
+	&#20986;&#12377;&#12290;2&#12388;&#12398;&#12494;&#12540;&#12489;&#12434;&#30452;&#25509;&#12463;&#12525;&#12473;&#25509;&#32154;&#12377;&#12427;&#12424;&#12426;&#12418;&#36895;&#12356;&#12290;
+	</p><p>
+<a class="indexterm" name="id2678910"></a>
+<a class="indexterm" name="id2678916"></a>
+<a class="indexterm" name="id2678924"></a>
+	&#12522;&#12514;&#12540;&#12488;X&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12363;&#12425;&#25163;&#20803;&#12398;&#12510;&#12471;&#12531;&#12395;&#23550;&#12375;&#12390;&#12289;&#38899;&#12434;&#20877;&#29983;&#12377;&#12427;&#12371;&#12392;&#12418;&#20986;&#26469;&#12289;
+	(&#12452;&#12479;&#12522;&#12450;&#12395;&#12354;&#12427;KDE&#12475;&#12483;&#12471;&#12519;&#12531;&#12391;&#21205;&#12356;&#12390;&#12356;&#12427;)NX&#12454;&#12451;&#12531;&#12489;&#12454;&#12363;&#12425;Mozilla&#12513;&#12540;&#12523;&#12477;&#12501;&#12488;&#12395;
+	<span class="quote">&#8220;<span class="quote">&#12467;&#12500;&#12540;&#12450;&#12531;&#12489;&#12506;&#12540;&#12473;&#12488;&#12434;</span>&#8221;</span>&#12377;&#12427;&#20107;&#12418;&#20986;&#26469;&#12383;&#12290;&#12371;&#12398;&#12477;&#12501;&#12488;&#12399;&#12392;&#12390;&#12418;&#12424;&#12367;
+	&#21205;&#12356;&#12390;&#12356;&#12427;!
+	</p><p>
+	&#12522;&#12514;&#12540;&#12488;&#12467;&#12531;&#12500;&#12517;&#12540;&#12486;&#12451;&#12531;&#12464;&#12395;&#19968;&#26178;&#30340;&#12394;&#33288;&#21619;&#12398;&#12415;&#12354;&#12427;&#12393;&#12394;&#12383;&#12395;&#12418;&#12289;
+	<a class="ulink" href="http://www.nomachine.com/testdrive.php" target="_top">NX</a>&#12434;&#20351;&#12387;&#12390;
+	&#35211;&#12427;&#20107;&#12434;&#12362;&#21223;&#12417;&#12377;&#12427;&#12290;
+	</p><p>
+	&#28961;&#26009;&#12391;&#20351;&#12360;&#12427;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12434;&#12480;&#12454;&#12531;&#12525;&#12540;&#12489;&#12375;(Red Hat&#12289;SuSE&#12289;Debian&#12392;
+	Windows&#29992;&#12364;&#12354;&#12427;)&#12289;&#36215;&#21205;&#12375;5&#20998;&#38291;&#20351;&#12360;&#12427;(&#12371;&#12398;&#26178;testdrive.nomachine.com&#19978;&#12395;&#23455;&#38555;&#12398;
+	UNIX&#12450;&#12459;&#12454;&#12531;&#12488;&#12434;&#21106;&#12426;&#24403;&#12390;&#12427;&#12383;&#12417;&#12395;&#12289;&#12450;&#12459;&#12454;&#12531;&#12488;&#12487;&#12540;&#12479;&#12434;&#36865;&#12427;&#24517;&#35201;&#12364;&#12354;&#12427;)&#12290;
+	</p><p>
+	&#35336;&#30011;&#12373;&#12428;&#12390;&#12356;&#12427;&#35201;&#28857;&#12391;&#12399;&#12289;&#12463;&#12521;&#12473;&#12479;&#12398;&#12494;&#12540;&#12489;&#12392;&#12375;&#12390;NX&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12469;&#12540;&#12496;&#12434;
+	&#21205;&#12363;&#12379;&#12427;&#12424;&#12358;&#12395;&#12394;&#12426;&#12289;&#21336;&#12395;NX&#12475;&#12483;&#12471;&#12519;&#12531;&#12434;&#12525;&#12540;&#12459;&#12523;&#12395;&#36215;&#21205;&#12375;&#12289;&#36879;&#36942;&#30340;&#12395;
+	&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12434;&#21205;&#12363;&#12379;&#12427;(&#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12364;&#20182;&#12398;NX&#12494;&#12540;&#12489;&#12391;&#21205;&#12356;&#12390;&#12356;&#12383;&#12392;&#12375;&#12390;&#12418;&#12289;
+	&#21516;&#12376;&#12454;&#12451;&#12531;&#12489;&#12454;&#12391;&#34920;&#31034;&#12373;&#12428;&#12427;&#12383;&#12417;&#12395;&#12289;&#26368;&#21021;&#12398;&#12525;&#12464;&#12452;&#12531;&#12391;&#20351;&#12431;&#12428;&#12390;&#12356;&#12383;&#12398;&#12392;&#21516;&#12376;&#12424;&#12358;&#12395;
+	&#21205;&#12367;&#12290;&#12414;&#12383;&#12289;&#12501;&#12523;&#12473;&#12463;&#12522;&#12540;&#12531;&#12391;&#12418;&#21205;&#20316;&#12391;&#12365;&#12289;&#12381;&#12398;&#12377;&#12368;&#12395;&#12522;&#12514;&#12540;&#12488;&#12525;&#12464;&#12452;&#12531;&#12375;&#12390;&#12356;&#12427;&#12371;&#12392;&#12434;
+	&#20840;&#12367;&#24536;&#12428;&#12390;&#12375;&#12414;&#12358;&#12384;&#12429;&#12358;)&#12290;
+	</p><p>
+<a class="indexterm" name="id2678990"></a>
+	&#26368;&#24460;&#12395;&#26368;&#12418;&#33391;&#12356;&#12371;&#12392;&#12434;:&#12377;&#12409;&#12390;&#12398;&#20027;&#35201;&#12394;&#22311;&#32302;&#12392;&#12461;&#12515;&#12483;&#12471;&#12517;&#25216;&#34899;&#12399;GPL&#12398;&#12418;&#12392;&#12391;&#12522;&#12522;&#12540;&#12473;
+	&#12373;&#12428;&#12289;&#20309;&#12363;&#12395;&#32068;&#12415;&#36796;&#12418;&#12358;&#12392;&#24605;&#12358;&#20154;&#35504;&#12395;&#12418;&#12381;&#12398;&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12364;&#20844;&#38283;&#12373;&#12428;&#12390;&#12356;&#12427;!&#12371;&#12428;&#12425;&#12398;
+	&#25216;&#34899;&#12399;&#12385;&#12419;&#12435;&#12392;&#21205;&#12367;&#12364;&#12289;&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12398;&#12415;&#12363;&#12425;&#36215;&#21205;&#12377;&#12427;(&#12381;&#12375;&#12390;&#12289;&#23436;&#20840;&#12395;&#21205;&#20316;&#12377;&#12427;
+	&#12522;&#12514;&#12540;&#12488;X&#12475;&#12483;&#12471;&#12519;&#12531;&#12434;&#36215;&#21205;&#12375;&#21205;&#12363;&#12377;&#12383;&#12417;&#12395;&#20351;&#12358;&#12395;&#12399;&#12392;&#12390;&#12418;&#19981;&#20415;&#12391;&#12354;&#12427;)&#12290;
+	</p><p>
+	&#36074;&#21839;&#12395;&#23550;&#12377;&#12427;&#22238;&#31572;&#12399;&#20197;&#19979;&#12398;&#36890;&#12426;:
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+		&#12479;&#12540;&#12511;&#12490;&#12523;&#12469;&#12540;&#12496;&#12434;&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;&#12377;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;&#12290;XP&#12399;RDP&#12398;&#12469;&#12509;&#12540;&#12488;&#12434;&#20869;&#34101;&#12375;&#12390;&#12356;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+		NX&#12399;Citrix&#12424;&#12426;&#12418;&#23433;&#20385;&#12391;&#12354;&#12426;&#23550;&#25239;&#12391;&#12365;&#12358;&#12427;&#24615;&#33021;&#12364;&#12354;&#12426;&#12289;&#12362;&#12381;&#12425;&#12367;&#12424;&#12426;&#36895;&#12356;&#12290;
+		</p></li><li class="listitem"><p>
+		XP&#12434;&#12495;&#12483;&#12463;&#12377;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;&#12290;&#12381;&#12428;&#12399;&#12385;&#12419;&#12435;&#12392;&#21205;&#12367;&#12290;
+		</p></li><li class="listitem"><p>
+		&#36879;&#36942;&#30340;&#12395;&#12522;&#12514;&#12540;&#12488;&#12363;&#12425;XP&#12510;&#12471;&#12531;&#12395;&#12525;&#12464;&#12452;&#12531;&#20986;&#26469;(&#12381;&#12375;&#12390;&#12289;&#12489;&#12513;&#12452;&#12531;&#12395;&#23550;&#12377;&#12427;&#35469;&#35388;&#12364;
+		&#24517;&#35201;&#12384;&#12392;&#12375;&#12390;&#12418;&#12289;&#25509;&#32154;&#26178;&#12395;&#20309;&#12363;&#12434;&#22793;&#26356;&#12377;&#12427;&#24517;&#35201;&#12399;&#12394;&#12356;)&#12290;
+		</p></li><li class="listitem"><p>
+		NX&#12398;&#20027;&#35201;&#12394;&#25216;&#34899;&#12399;&#12377;&#12409;&#12390;&#12458;&#12540;&#12503;&#12531;&#12477;&#12540;&#12473;&#12391;GPL&#12391;&#12522;&#12522;&#12540;&#12473;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+		(&#12392;&#12390;&#12418;&#19981;&#20415;&#12384;&#12364;)&#28961;&#26009;&#12391;&#12289;&#12467;&#12510;&#12531;&#12489;&#12521;&#12452;&#12531;&#12391;&#20351;&#12358;&#20107;&#12364;&#20986;&#26469;&#12427;&#12364;&#12289;&#12362;&#37329;&#12434;&#20986;&#12379;&#12400;&#12289;
+		&#20415;&#21033;&#12394;(&#21830;&#29992;&#12398;)NX GUI&#12501;&#12525;&#12531;&#12488;&#12456;&#12531;&#12489;&#12434;&#36023;&#12358;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;&#12290;
+		</p></li><li class="listitem"><p>
+<a class="indexterm" name="id2679070"></a>
+<a class="indexterm" name="id2679076"></a>
+<a class="indexterm" name="id2679083"></a>
+<a class="indexterm" name="id2679090"></a>
+<a class="indexterm" name="id2679096"></a>
+		&#12381;&#12398;&#12424;&#12358;&#12394;&#12501;&#12525;&#12531;&#12488;&#12456;&#12531;&#12489;&#12395;&#23550;&#12377;&#12427;&#12289;OSS/Free Software&#12391;&#12398;&#23455;&#35013;&#12395;&#12289;NoMachine&#12399;
+		&#33258;&#20998;&#33258;&#36523;&#12395;&#23550;&#12377;&#12427;&#31478;&#21512;&#12434;&#24847;&#21619;&#12375;&#12390;&#12356;&#12427;&#12398;&#12395;&#12418;&#12363;&#12363;&#12431;&#12425;&#12378;&#12289;&#21147;&#12434;&#36024;&#12375;&#12289;&#25163;&#21161;&#12369;&#12434;
+		&#12375;&#12390;&#12356;&#12427;(&#12371;&#12398;&#12424;&#12358;&#12394;&#20027;&#26088;&#12434;&#12289;LTSP&#12289;KDE&#12392;GNOME&#38283;&#30330;&#12513;&#12540;&#12522;&#12531;&#12464;&#12522;&#12473;&#12488;&#12395;&#12418;&#34920;&#26126;
+		&#12375;&#12390;&#12356;&#12427;)&#12290;
+		</p></li></ul></div></div><div class="sect2" title="ThinLinc&#12434;&#20351;&#12358;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;"><div class="titlepage"><div><div><h3 class="title"><a name="id2679117"></a>ThinLinc&#12434;&#20351;&#12358;&#12522;&#12514;&#12540;&#12488;&#31649;&#29702;</h3></div></div></div><p>
+	&#12522;&#12514;&#12540;&#12488;&#12450;&#12463;&#12475;&#12473;&#12395;&#23550;&#12377;&#12427;&#20182;&#12398;&#35299;&#12399;&#12289;Cendio&#12395;&#12424;&#12427;<span class="emphasis"><em>ThinLinc</em></span>&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2679135"></a>
+<a class="indexterm" name="id2679142"></a>
+<a class="indexterm" name="id2679149"></a>
+<a class="indexterm" name="id2679156"></a>
+<a class="indexterm" name="id2679162"></a>
+<a class="indexterm" name="id2679169"></a>
+<a class="indexterm" name="id2679176"></a>
+<a class="indexterm" name="id2679182"></a>
+	ThxnLinc&#12399;&#12289;Linux&#12392;Solaris&#12505;&#12540;&#12473;&#12391;&#20351;&#12360;&#12427;&#12289;SSH&#12289;TightVNC&#12289;NFS&#12392;PulseAudio&#12398;&#12424;&#12358;&#12394;
+	&#27161;&#28310;&#12503;&#12525;&#12488;&#12467;&#12523;&#12434;&#12505;&#12540;&#12473;&#12392;&#12375;&#12383;&#12479;&#12540;&#12511;&#12490;&#12523;&#12469;&#12540;&#12496;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2679199"></a>
+<a class="indexterm" name="id2679205"></a>
+	ThinLinc&#12399;&#12289;LAN&#29872;&#22659;&#12395;&#12362;&#12356;&#12390;&#32068;&#32340;&#12395;&#12362;&#12369;&#12427;&#12471;&#12531;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#36939;&#29992;&#12395;&#12418;&#12289;&#29421;&#24111;&#22495;&#12395;&#12362;&#12356;&#12390;&#12418;
+	&#20351;&#12360;&#12427;&#12522;&#12514;&#12540;&#12488;&#12363;&#12425;&#20181;&#20107;&#12434;&#12377;&#12427;&#20154;&#12364;&#12475;&#12461;&#12517;&#12450;&#12394;&#12522;&#12514;&#12540;&#12488;&#12450;&#12463;&#12475;&#12473;&#12434;&#34892;&#12358;&#12398;&#12395;&#12418;&#20351;&#12360;&#12427;&#12290;
+	ThinLinc&#12399;&#12289;&#21336;&#19968;&#12398;&#21516;&#26178;&#12450;&#12463;&#12475;&#12473;&#12377;&#12427;&#12518;&#12540;&#12470;&#12395;&#23550;&#12375;&#12390;&#33258;&#30001;&#12395;&#20351;&#12360;&#12427;&#12290;
+	</p><p>
+<a class="indexterm" name="id2679226"></a>
+<a class="indexterm" name="id2679233"></a>
+<a class="indexterm" name="id2679240"></a>
+	&#12503;&#12525;&#12480;&#12463;&#12488;&#12399;Windows&#12479;&#12540;&#12511;&#12490;&#12523;&#12469;&#12540;&#12496;&#12363;Citrix&#29872;&#22659;&#12398;&#12501;&#12525;&#12531;&#12488;&#12456;&#12531;&#12489;&#12392;&#12375;&#12390;&#12418;&#12289;
+	Windows XP&#12510;&#12471;&#12531;&#12398;&#12501;&#12525;&#12531;&#12488;&#12456;&#12531;&#12489;&#12392;&#12375;&#12390;&#12418;&#20351;&#12360;&#12289;ssh&#12503;&#12525;&#12488;&#12467;&#12523;&#32076;&#30001;&#12391;&#25509;&#32154;&#26178;&#12398;&#23433;&#20840;&#24615;&#12434;
+	&#30906;&#20445;&#12375;&#12390;&#12356;&#12427;&#12290;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12399;Linux(&#25968;&#22810;&#12367;&#12398;&#12471;&#12531;&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#31471;&#26411;&#12392;&#21516;&#27096;&#12377;&#12409;&#12390;&#12398;Linux
+	&#12487;&#12451;&#12473;&#12488;&#12522;&#12499;&#12517;&#12540;&#12471;&#12519;&#12531;&#12434;&#12469;&#12509;&#12540;&#12488;)&#12392;Windows&#29992;&#12364;&#12354;&#12427;&#12290;Java&#12505;&#12540;&#12473;&#12398;Web&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12418;
+	&#25552;&#20379;&#12373;&#12428;&#12390;&#12356;&#12427;&#12290;
+	</p><p>
+	ThinLinc&#12399;Cendio&#12398;&#12487;&#12514;&#12471;&#12473;&#12486;&#12512;&#12395;&#25509;&#32154;&#12377;&#12427;&#12371;&#12392;&#12391;&#35413;&#20385;&#12364;&#20986;&#26469;&#12427;&#12290;&#19979;&#35352;&#12434;&#21442;&#29031;&#12290;
+	<a class="ulink" href="http://www.cendio.com" target="_top">Cendio's</a> web &#12469;&#12452;&#12488;
+	<a class="ulink" href="http://www.cendio.com/testdrive" target="_top">testdrive</a> &#12475;&#12531;&#12479;&#12290;
+	</p><p>
+	Cendia&#12399;&#20197;&#19979;&#12434;&#21547;&#12416;&#12289;&#12356;&#12367;&#12388;&#12363;&#12398;&#12458;&#12540;&#12503;&#12531;&#12477;&#12540;&#12473;&#12503;&#12525;&#12472;&#12455;&#12463;&#12488;&#12395;&#12362;&#12369;&#12427;&#20027;&#35201;&#12394;&#36002;&#29486;&#32773;&#12391;&#12354;&#12427;&#12290;
+	<a class="ulink" href="http://www.tightvnc.com" target="_top">TightVNC</a>,
+	<a class="ulink" href="http://pulseaudio.org" target="_top">PulseAudio</a> , unfsd,
+	<a class="ulink" href="http://www.python.org" target="_top">Python</a> &#12392;
+	<a class="ulink" href="http://www.rdesktop.org" target="_top">rdesktop</a>.
+	</p></div></div><div class="sect1" title="&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#39764;&#27861;"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2679325"></a>&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#39764;&#27861;</h2></div></div></div><p>
+&#22266;&#26377;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#35373;&#23450;&#29872;&#22659;&#12434;&#20316;&#25104;&#12377;&#12427;&#12383;&#12417;&#12398;&#12289;&#12356;&#12367;&#12388;&#12363;&#12398;&#27231;&#20250;&#12364;&#12354;&#12427;&#12290;
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12394;&#12375;&#12290;</p></li><li class="listitem"><p>&#12377;&#12409;&#12390;&#12398;&#12518;&#12540;&#12470;&#12395;&#36969;&#29992;&#12373;&#12428;&#12427;&#12289;&#21336;&#32020;&#12394;&#27726;&#29992;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12290;</p></li><li class="listitem"><p>&#12518;&#12540;&#12470;&#21336;&#20301;&#12354;&#12427;&#12356;&#12399;&#12464;&#12523;&#12540;&#12503;&#21336;&#20301;&#12398;&#23646;&#24615;&#12395;&#36969;&#29992;&#12377;&#12427;&#26465;&#20214;&#20184;&#12365;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20351;&#29992;&#12290;</p></li><li class="listitem"><p>&#22266;&#26377;&#12398;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#12434;&#20316;&#12427;&#12383;&#12417;&#12398;&#12289;NETLOGON&#20849;&#26377;&#12395;&#23550;&#12377;&#12427;
+	&#12450;&#12463;&#12475;&#12473;&#19978;&#12398;&#12289;Samba&#12398;preexec&#12392;postexec&#27231;&#33021;&#12434;&#20351;&#29992;&#12375;&#12289;&#12381;&#12428;&#12434;&#23455;&#34892;&#12290;</p></li><li class="listitem"><p>kixStart&#12398;&#12424;&#12358;&#12394;&#12484;&#12540;&#12523;&#12398;&#12518;&#12540;&#12470;&#12290;</p></li></ul></div><p>
+Samba&#12477;&#12540;&#12473;&#12467;&#12540;&#12489;&#12398;&#20013;&#12395;&#12399;2&#12388;&#12398;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#29983;&#25104;/&#23455;&#34892;&#12484;&#12540;&#12523;&#12364;&#21547;&#12414;&#12428;&#12390;&#12356;&#12427;&#12290;
+<code class="filename">examples</code>&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12398;<code class="filename">genlogon</code>&#12392;
+<code class="filename">ntlogon</code>&#12469;&#12502;&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12434;&#21442;&#29031;&#12290;
+</p><p>
+&#20197;&#19979;&#12398;&#12522;&#12473;&#12488;&#12399;genlogon&#12487;&#12451;&#12524;&#12463;&#12488;&#12522;&#12363;&#12425;&#12398;&#12418;&#12398;&#12391;&#12354;&#12427;&#12290;
+</p><p>
+<a class="indexterm" name="id2679406"></a>
+&#12371;&#12428;&#12399;&#12289;<code class="filename">genlogon.pl</code>&#12501;&#12449;&#12452;&#12523;&#12391;&#12354;&#12427;:
+
+</p><pre class="programlisting">
+	#!/usr/bin/perl
+	#
+	# genlogon.pl
+	#
+	# Perl script to generate user logon scripts on the fly, when users
+	# connect from a Windows client. This script should be called from 
+	# smb.conf with the %U, %G and %L parameters. I.e:
+	#
+	#       root preexec = genlogon.pl %U %G %L
+	#
+	# The script generated will perform
+	# the following:
+	#
+	# 1. Log the user connection to /var/log/samba/netlogon.log
+	# 2. Set the PC's time to the Linux server time (which is maintained
+	#    daily to the National Institute of Standards Atomic clock on the
+	#    internet.
+	# 3. Connect the user's home drive to H: (H for Home).
+	# 4. Connect common drives that everyone uses.
+	# 5. Connect group-specific drives for certain user groups.
+	# 6. Connect user-specific drives for certain users.
+	# 7. Connect network printers.
+
+	# Log client connection
+	#($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	open LOG, "&gt;&gt;/var/log/samba/netlogon.log";
+	print LOG "$mon/$mday/$year $hour:$min:$sec";
+	print LOG " - User $ARGV[0] logged into $ARGV[1]\n";
+	close LOG;
+
+	# Start generating logon script
+	open LOGON, "&gt;/shared/netlogon/$ARGV[0].bat";
+	print LOGON "\@ECHO OFF\r\n";
+
+	# Connect shares just use by Software Development group
+	if ($ARGV[1] eq "SOFTDEV" || $ARGV[0] eq "softdev")
+	{
+		print LOGON "NET USE M: \\\\$ARGV[2]\\SOURCE\r\n";
+	}
+
+	# Connect shares just use by Technical Support staff
+	if ($ARGV[1] eq "SUPPORT" || $ARGV[0] eq "support")
+	{
+		print LOGON "NET USE S: \\\\$ARGV[2]\\SUPPORT\r\n";
+	}
+
+	# Connect shares just used by Administration staff
+	If ($ARGV[1] eq "ADMIN" || $ARGV[0] eq "admin")
+	{
+		print LOGON "NET USE L: \\\\$ARGV[2]\\ADMIN\r\n";
+		print LOGON "NET USE K: \\\\$ARGV[2]\\MKTING\r\n";
+	}
+
+	# Now connect Printers. We handle just two or three users a little
+	# differently, because they are the exceptions that have desktop
+	# printers on LPT1: - all other user's go to the LaserJet on the
+	# server.
+	if ($ARGV[0] eq 'jim'
+	    || $ARGV[0] eq 'yvonne')
+	{
+		print LOGON "NET USE LPT2: \\\\$ARGV[2]\\LJET3\r\n";
+		print LOGON "NET USE LPT3: \\\\$ARGV[2]\\FAXQ\r\n";
+	}
+	else
+	{
+		print LOGON "NET USE LPT1: \\\\$ARGV[2]\\LJET3\r\n";
+		print LOGON "NET USE LPT3: \\\\$ARGV[2]\\FAXQ\r\n";
+	}
+
+	# All done! Close the output file.
+	close LOGON;
+</pre><p>
+</p><p>
+&#12371;&#12428;&#12425;&#12399;&#12289;&#12424;&#12426;&#31934;&#24039;&#12363;&#12289;&#26377;&#29992;&#12394;&#12525;&#12464;&#12452;&#12531;&#20966;&#29702;&#12471;&#12473;&#12486;&#12512;&#12364;&#12381;&#12428;&#12425;&#12398;&#12469;&#12452;&#12488;&#12434;&#30906;&#35469;&#12377;&#12427;&#20107;&#12434;&#26399;&#24453;&#12375;&#12390;&#12356;&#12427;:
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><a class="ulink" href="http://www.craigelachie.org/rhacer/ntlogon" target="_top">http://www.craigelachie.org/rhacer/ntlogon</a></p></li><li class="listitem"><p><a class="ulink" href="http://www.kixtart.org" target="_top">http://www.kixtart.org</a></p></li></ul></div><div class="sect2" title="&#12518;&#12540;&#12470;&#12398;&#24178;&#28169;&#12394;&#12375;&#12395;&#12503;&#12522;&#12531;&#12479;&#12434;&#36861;&#21152;&#12377;&#12427;"><div class="titlepage"><div><div><h3 class="title"><a name="id2679564"></a>&#12518;&#12540;&#12470;&#12398;&#24178;&#28169;&#12394;&#12375;&#12395;&#12503;&#12522;&#12531;&#12479;&#12434;&#36861;&#21152;&#12377;&#12427;</h3></div></div></div><p>
+<a class="indexterm" name="id2679573"></a>
+&#12503;&#12522;&#12531;&#12479;&#12399;&#20197;&#19979;&#12434;&#20351;&#29992;&#12377;&#12427;&#12371;&#12392;&#12391;&#12289;&#12525;&#12464;&#12458;&#12531;&#12473;&#12463;&#12522;&#12503;&#12488;&#20966;&#29702;&#20013;&#12395;&#33258;&#21205;&#30340;&#12395;&#36861;&#21152;&#12377;&#12427;&#12371;&#12392;&#12364;&#20986;&#26469;&#12427;:
+</p><pre class="screen">
+<code class="prompt">C:\&gt; </code><strong class="userinput"><code>rundll32 printui.dll,PrintUIEntry /?</code></strong>
+</pre><p>
+
+<a class="ulink" href="http://support.microsoft.com/kb/189105/ja" target="_top">&#12518;&#12540;&#12470;&#12540;&#12395;&#12424;&#12427;&#25805;&#20316;&#12394;&#12375;&#12391; Windows&#12395;&#12503;&#12522;&#12531;&#12479;&#12434;&#36861;&#21152;&#12377;&#12427;&#26041;&#27861;</a>
+&#12434;&#21442;&#29031;&#12398;&#12371;&#12392;&#12290;
+</p></div><div class="sect2" title="&#12525;&#12464;&#12458;&#12531;&#25509;&#32154;&#12398;&#21046;&#38480;"><div class="titlepage"><div><div><h3 class="title"><a name="id2679611"></a>&#12525;&#12464;&#12458;&#12531;&#25509;&#32154;&#12398;&#21046;&#38480;</h3></div></div></div><p>
+	  &#26178;&#12293;&#12289;Samba&#20849;&#26377;&#12522;&#12477;&#12540;&#12473;&#12408;&#12398;&#21516;&#26178;&#25509;&#32154;&#12398;&#25968;&#12434;&#21046;&#38480;&#12377;&#12427;&#12371;&#12392;&#12364;&#24517;&#35201;&#12394;&#22580;&#21512;&#12364;&#12354;&#12427;&#12290;
+	  &#12383;&#12392;&#12360;&#12400;&#12289;&#12518;&#12540;&#12470;&#27598;&#12395;1&#12388;&#12398;&#12493;&#12483;&#12488;&#12527;&#12540;&#12463;&#12525;&#12464;&#12452;&#12531;&#12398;&#12415;&#12434;&#12289;&#12469;&#12452;&#12488;&#12364;&#35377;&#21487;&#12375;&#12383;&#12356;&#12424;&#12358;&#12394;
+	  &#22580;&#21512;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+	  Samba&#12398;<em class="parameter"><code>preexec script</code></em>&#12497;&#12521;&#12513;&#12540;&#12479;&#12399;&#12518;&#12540;&#12470;&#21336;&#20301;&#12395;1&#12388;&#12398;&#25509;&#32154;
+	  &#12398;&#12415;&#12434;&#35377;&#21487;&#12377;&#12427;&#12398;&#12395;&#20351;&#12360;&#12427;&#12290;&#12371;&#12398;&#26041;&#27861;&#12399;&#23436;&#20840;&#12395;&#23433;&#20840;&#24615;&#12364;&#12354;&#12427;&#12431;&#12369;&#12391;&#12399;&#12394;&#12367;&#12289;&#21103;&#20316;&#29992;&#12364;
+	  &#12354;&#12427;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;&#20197;&#19979;&#12398;&#23492;&#36104;&#12373;&#12428;&#12383;&#26041;&#27861;&#12399;&#12424;&#12426;&#33391;&#12356;&#35299;&#12434;&#35504;&#12363;&#12395;&#24605;&#12356;&#12388;&#12363;&#12373;&#12379;&#12390;&#12289;
+	  &#25552;&#20379;&#12434;&#20419;&#12377;&#12363;&#12418;&#12375;&#12428;&#12394;&#12356;&#12290;
+	</p><p>
+	  &#12371;&#12428;&#12399;&#12289;Windows&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;&#12364;&#12289;&#23455;&#38555;&#12395;&#12381;&#12358;&#12391;&#12354;&#12427;&#38291;&#12289;&#20849;&#26377;&#12434;&#12418;&#12358;&#20351;&#12387;&#12390;&#12356;&#12394;&#12356;&#12392;
+	  &#35211;&#12360;&#12427;&#22580;&#21512;&#12395;&#12289;&#33258;&#21205;&#20877;&#25509;&#32154;&#27231;&#33021;&#12434;&#20351;&#12387;&#12390;&#12289;&#12450;&#12452;&#12489;&#12523;&#29366;&#24907;&#12398;&#25509;&#32154;&#12434;&#20999;&#12387;&#12390;&#12375;&#12414;&#12358;&#12371;&#12392;&#12364;
+	  &#20986;&#26469;&#12427;&#12392;&#12356;&#12358;&#29702;&#30001;&#12391;&#23436;&#20840;&#12394;&#35299;&#12391;&#12399;&#12394;&#12356;&#12290;&#12381;&#12358;&#12384;&#12387;&#12383;&#12392;&#12375;&#12390;&#12418;&#12289;&#12371;&#12428;&#12399;&#12289;
+	  <em class="parameter"><code>preexec script</code></em>&#12497;&#12521;&#12513;&#12540;&#12479;&#12398;&#20351;&#29992;&#12398;&#21407;&#29702;&#30340;&#12394;&#12487;&#12514;&#12391;&#12354;&#12427;&#12290;
+	</p><p>
+	  &#20197;&#19979;&#12398;&#20849;&#26377;&#35373;&#23450;&#12399;<a class="link" href="AdvancedNetworkManagement.html#Tpees" title="Example�25.1.�Script to Enforce Single Resource Logon">&#8220;Script to Enforce Single Resource Logon&#8221;</a>&#20013;&#12391;&#31034;&#12373;&#12428;&#12427;&#12473;&#12463;&#12522;&#12503;&#12488;&#12398;&#20351;&#29992;&#12434;&#12487;&#12514;&#12377;&#12427;&#12290;
+</p><pre class="programlisting">
+[myshare]
+	...
+	preexec script = /sbin/PermitSingleLogon.sh
+	preexec close = Yes
+	...
+</pre><p>
+	</p><div class="example"><a name="Tpees"></a><p class="title"><b>Example�25.1.�Script to Enforce Single Resource Logon</b></p><div class="example-contents"><pre class="screen">
+#!/bin/bash
+
+IFS="-"
+RESULT=$(smbstatus -S -u $1 2&gt; /dev/null | awk 'NF \
+        &gt; 6 {print $1}' | sort | uniq -d)
+
+if [ "X${RESULT}" == X  ]; then
+  exit 0
+else
+  exit 1
+fi
+</pre></div></div><br class="example-break"></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="winbind.html">Prev</a>�</td><td width="20%" align="center"><a accesskey="u" href="optional.html">Up</a></td><td width="40%" align="right">�<a accesskey="n" href="PolicyMgmt.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter�24.�Winbind: &#12489;&#12513;&#12452;&#12531;&#12450;&#12459;&#12454;&#12531;&#12488;&#12398;&#20351;&#29992;�</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">�Chapter�26.�&#12471;&#12473;&#12486;&#12512;&#12392;&#12450;&#12459;&#12454;&#12531;&#12488;&#12509;&#12522;&#12471;&#12540;</td></tr></table></div></body></html>

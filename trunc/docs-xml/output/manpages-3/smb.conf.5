@@ -2,12 +2,12 @@
 .\"     Title: smb.conf
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 01/08/2010
+.\"      Date: 03/20/2010
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.4
 .\"  Language: English
 .\"
-.TH "SMB\&.CONF" "5" "01/08/2010" "Samba 3\&.4" "ファイルフォーマットと変換"
+.TH "SMB\&.CONF" "5" "03/20/2010" "Samba 3\&.4" "ファイルフォーマットと変換"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -1244,11 +1244,9 @@ aio write behind (S)
 .\" aio write behind
 .PP
 .RS 4
-If Samba has been built with asynchronous I/O support, Samba will not wait until write requests are finished before returning the result to the client for files listed in this parameter\&. Instead, Samba will immediately return that the write request has been finished successfully, no matter if the operation will succeed or not\&. This might speed up clients without aio support, but is really dangerous, because data could be lost and files could be damaged\&.
+もしも、Sambaが非同期I/Oをサポートするように構築された場合、 このパラメータで示されたファイルに対して、クライアントに対する 結果を返す前に、 Sambaは書き込み要求が完了するまで待たない。その代わり、実際の操作が 成功するか否かに関係なく、Sambaは書き込み要求が正常に終わったと、即座に 結果を返す。これはaioサポートがないクライアントのスピードを向上させるかも しれないが、データが亡失し、ファイルが壊れるという観点で、これはとても 危険である。
 .sp
-The syntax is identical to the
-\m[blue]\fBveto files\fR\m[]
-parameter\&.
+文法は、\m[blue]\fBveto files\fR\m[]と同一である。
 .sp
 既定値:
 \fI\fIaio write behind\fR\fR\fI = \fR\fI\fR\fI \fR
@@ -1565,14 +1563,13 @@ cache directory (G)
 .\" cache directory
 .PP
 .RS 4
-Usually, most of the TDB files are stored in the
-\fIlock directory\fR\&. Since Samba 3\&.4\&.0, it is possible to differentiate between TDB files with persistent data and TDB files with non\-persistent data using the
-\fIstate directory\fR
-and the
-\fIcache directory\fR
-options\&.
+通常、TDBファイルのほとんどは、
+\fIlock directory\fR
+中に格納される。Samba 3\&.4\&.0から、
+\fIstate directory\fRと
+\fIcache directory\fRオプションを使って、 恒常的なデータを持つTDBファイルと、一時的なデータを持つTDBファイルの間で 異なる設定が可能となった。
 .sp
-This option specifies the directory where TDB files containing non\-persistent data will be stored\&.
+このオプションは、一時的なデータを保持するTDBファイルを億ディレクトリ を指定する。
 .sp
 既定値:
 \fI\fIcache directory\fR\fR\fI = \fR\fI${prefix}/var/locks\fR\fI \fR
@@ -1960,6 +1957,18 @@ copy (S)
 \fI\fIcopy\fR\fR\fI = \fR\fIotherservice\fR\fI \fR
 .RE
 
+create krb5 conf (G)
+.\" create krb5 conf
+.PP
+.RS 4
+このパラメータをnoにすると、winbindが 固有の krb5\&.confを作成することを防止する。krb5ライブラリがADのサイトを 認識せず、そのため、可能性のある任意のドメインコントローラから対象として 外すことがとても多いという理由で、winbindは通常これを行う。winbindは サイトを認識し、固有のkrb5\&.confファイルを作成することにより、 krb5ライブラリがローカルのDCを使うようにする。
+.sp
+winbindがこれを行うことを防止することは、winbindが知ることの出来ない、 システム上にある、システムのkrb5\&.conf中に特別なオプションを追加しなければ ならない場合に必要かもしれない。
+.sp
+既定値:
+\fI\fIcreate krb5 conf\fR\fR\fI = \fR\fIyes\fR\fI \fR
+.RE
+
 create mode
 .\" create mode
 .PP
@@ -2029,6 +2038,23 @@ clustering=yes
 \fI\fIctdbd socket\fR\fR\fI = \fR\fI/tmp/ctdb\&.socket\fR\fI \fR
 .RE
 
+ctdb timeout (G)
+.\" ctdb timeout
+.PP
+.RS 4
+このパラメータはSambaとctdb間での接続のタイムアウト時間を秒単位で指定する。 これはSambaをクラスタリングがサポート出来るようにコンパイルし、
+\fIclustering=yes\fRを設定した場合にのみ有効である。
+.sp
+クラスタブロック内に何らかのものがある場合、ブロック状態に追加しようと するときに、ctdbをとても長い時間待つことがたまにある。うまく動作するクラスタ 環境においては、これは決して発生しないが、ちょっとした問題があるかもしれない とてもたくさんのコンポーネントがクラスタ中にはある。クラスタ間で何かを転送 するために、長いサービス時間がかかる、負荷の高いクラスタ上では有効かもしれない という理由で、この値の正しい落とし所を選択するのはとてもトリッキーである。 この値を小さくしすぎると、クラスタが提供するサービスをデグレードする事になり、 長くしすぎると、クラスタそれ自身を、何らかの重大な障害から、長い時間リカバリ できなくなるかもしれない。
+.sp
+もしも、このパラメータを設定する場合、これはsmb\&.conf中に存在する必要があるが、 レジストリに接続するのにctdbが必要であるという理由で、レジストリ設定中 (通常はクラスタ上)に配置するのは好ましくないことに注意。
+.sp
+\fIctdb timeout\fRをnに設定することは、クラスタのパニック による応答に、どのプロセスもn秒以上待たないということになる。既定値として強く 推奨する0に設定(既定値)すると、Sambaはそれを永久にブロックする。
+.sp
+既定値:
+\fI\fIctdb timeout\fR\fR\fI = \fR\fI0\fR\fI \fR
+.RE
+
 cups connection timeout (G)
 .\" cups connection timeout
 .PP
@@ -2043,6 +2069,23 @@ cups connection timeout (G)
 .sp
 例:
 \fI\fIcups connection timeout\fR\fR\fI = \fR\fI60\fR\fI \fR
+.RE
+
+cups encrypt (G)
+.\" cups encrypt
+.PP
+.RS 4
+このパラメータは、もしも\m[blue]\fBprinting\fR\m[]が
+\fBcups\fRで、もしもCUPSが1\&.0\&.xよりも新しいものを 使っている場合にのみ適用可能である。これは、SambaがCUPSサーバと通信する時に、 暗号化を使うべきか否かを定義する。取り得る値は
+\fIauto\fR,
+\fIyes\fR
+と
+\fIno\fRである。
+.sp
+autoに設定した場合、各CUPS接続のセットアップ時にTLSのハンドシェークを試みる。 もしもそれが失敗した場合、暗号化なし操作に切り替える。
+.sp
+既定値:
+\fI\fIcups encrypt\fR\fR\fI = \fR\fI"no"\fR\fI \fR
 .RE
 
 cups options (S)
@@ -2143,7 +2186,7 @@ debug hires timestamp (G)
 が有効になっている必要があることに注意。
 .sp
 既定値:
-\fI\fIdebug hires timestamp\fR\fR\fI = \fR\fIno\fR\fI \fR
+\fI\fIdebug hires timestamp\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 debug pid (G)
@@ -2591,7 +2634,7 @@ directory name cache size (S)
 .\" directory name cache size
 .PP
 .RS 4
-This parameter specifies the the size of the directory name cache\&. It will be needed to turn this off for *BSD systems\&.
+このパラメータは、ディレクトリネームキャッシュのサイズを指定する。 これは*BSDシステムではoffにする必要がある。
 .sp
 既定値:
 \fI\fIdirectory name cache size\fR\fR\fI = \fR\fI100\fR\fI \fR
@@ -2797,7 +2840,7 @@ dos filemode (S)
 .\" dos filemode
 .PP
 .RS 4
-Samba のデフォルトの動作では、 ファイルやディレクトリの所有者のみがアクセス権を変更できるという、UNIX的な仕様になっている。 しかし、この仕様が DOS/Windows のユーザを混乱させてしまうことも多い。 このパラメータを有効にすることによって、 (何らかの手段によって)ファイルに書き込み権のあるユーザは、パーミッション(ACLを含む)の変更もできるようになる。 ファイルの所有グループに所属しているユーザは、 グループに対して読み込み権限しか与えられていない場合は パーミッションの変更を行なうことができないことに注意。 ファイルやディレクトリの所有者を変更することも可能である。
+Samba の既定の動作では、ファイルやディレクトリの所有者のみが アクセス権を変更できるという、UNIX的な仕様になっている。しかし、この仕様が DOS/Windows のユーザを混乱させてしまうことも多い。このパラメータを有効に することによって、(何らかの手段によって)ファイルに書き込み権のあるユーザは、 パーミッション(ACLを含む)の変更もできるようになる。ファイルの所有グループに 所属しているユーザは、グループに対して読み込み権限しか与えられていない場合は パーミッションの変更を行なうことができないことに注意。ファイルやディレクトリの 所有者を変更することも可能である。 ネイティブなWindowsデータをメタデータとして格納する、VFSモジュールacl_xattrか acl_tdbは、ロードされるどのような共有に対しても、WindowsのACLを正しく エミュレートするために、このオプションを自動的にオンにする事が要求される ことに注意。
 .sp
 既定値:
 \fI\fIdos filemode\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -2821,13 +2864,7 @@ dos filetimes (S)
 .\" dos filetimes
 .PP
 .RS 4
-DOS や Windows では、 ファイルに書き込み権のあるユーザが、ファイルのタイムスタンプを変更することが可能である。 POSIX の仕様では、ファイルの所有者か root のみがタイムスタンプを変更できる。 Samba のデフォルトは、POSIX 仕様に準拠しており、
-smbd
-の実効ユーザがファイルの所有者でないとき、タイムスタンプの変更を禁止する。 このオプションを
-\fByes\fR
-にセットすると、 DOS の仕様に準じて動作するようになるため、
-\fBsmbd\fR(8)
-は DOS の要求に従ってタイムスタンプを変更できるようになる。 Microsoft Office 2000 以降で行なわれた変更に対応するため、 Samba 3\&.0\&.14 以降では既定値が「no」から「yes」に変更された。 このパラメータが「yes」になっていない場合、ファイルが複数のユーザ間で共用されていると、 Microsoft Excel はファイルが他のユーザによって変更されたという警告のダイアログボックスを表示してしまう。
+DOS や Windows では、ファイルに書き込み権のあるユーザが、 ファイルのタイムスタンプを変更することが可能である。POSIXの仕様では、 ファイルの所有者かrootのみがタイムスタンプを変更できる。Sambaの既定値は、DOSの 仕様をエミュレートし、smbdの実効ユーザが、 ファイルの所有者でなくても、タイムスタンプの変更を可能にする。 Microsoft Office 2000 以降で行なわれた変更に対応するため、Samba 3\&.0\&.14 以降では 既定値が「no」から「yes」に変更された。このパラメータが「yes」になっていない 場合、ファイルが複数のユーザ間で共用されていると、Microsoft Excel はファイルが 他のユーザによって変更されたという警告のダイアログボックスを表示してしまう。
 .sp
 既定値:
 \fI\fIdos filetimes\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -2859,8 +2896,7 @@ enable core files (G)
 .\" enable core files
 .PP
 .RS 4
-This parameter specifies whether core dumps should be written on internal exits\&. Normally set to
-\fByes\fR\&. You should never need to change this\&.
+このパラメータは、コアダンプが内部出口(internal exits)に書かれるように 指定する。通常これは\fByes\fRに設定する。 決してこれを変更してはならない。
 .sp
 既定値:
 \fI\fIenable core files\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -2889,8 +2925,7 @@ enable spoolss (G)
 .\" enable spoolss
 .PP
 .RS 4
-Inverted synonym for
-\m[blue]\fBdisable spoolss\fR\m[]\&.
+\m[blue]\fBdisable spoolss\fR\m[]の逆の意味を持つ別名。
 .sp
 既定値:
 \fI\fIenable spoolss\fR\fR\fI = \fR\fIyes\fR\fI \fR
@@ -3951,7 +3986,7 @@ inherit acls (S)
 .\" inherit acls
 .PP
 .RS 4
-このパラメータは、 親ディレクトリにデフォルト ACL が設定されており、 サブディレクトリの作成時に、その ACL の設定を引き継がせたい場合に用いられる。 デフォルトでは ディレクトリ作成時に設定されるモードが用いられる。 このオプションを有効にすると、モードが 0777 となり、 ディレクトリのデフォルト ACL を確実に継承できるようになる。
+このパラメータは、 親ディレクトリに既定値のACLが設定されており、サブディレクトリの作成時に、 その ACL の設定を引き継がせたい場合に用いられる。既定値ではディレクトリ作成時に 設定されるモードが用いられる。このオプションを有効にすると、モードが 0777 となり、 ディレクトリの既定値のACLを確実に継承できるようになる。 ネイティブなWindowsデータをメタデータとして格納する、VFSモジュールacl_xattrか acl_tdbは、ロードされるどのような共有に対しても、WindowsのACLを正しく エミュレートするために、このオプションを自動的にオンにする事が要求される ことに注意。
 .sp
 既定値:
 \fI\fIinherit acls\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -4252,9 +4287,11 @@ lanman auth (G)
 .PP
 .RS 4
 このパラメータは、\fBsmbd\fR(8)
-が LANMAN パスワードハッシュを使用した認証を行なうか否かを制御する。 無効にした場合、 NT パスワードハッシュを利用するクライアント (Windows NT/2000クライアント、smbclientなど。しかし Windows 95/98 や MS\-DOS クライアントは含まない)のみがSambaホストに接続できる。
+が LANMAN パスワードハッシュを使用した 認証を行なうか否かを制御する。無効にした場合、 NT パスワードハッシュを利用する クライアント(Windows NT/2000クライアント、smbclientなど。しかし Windows 95/98や MS\-DOS クライアントは含まない)のみがSambaホストに接続できる。
 .sp
-LANMAN 暗号化レスポンスは簡単に解読することが可能である。 これは大文字と小文字を区別しないことや、使用しているアルゴリズムなどに起因する。 Windows 95/98 や MS\-DOS クライアントが存在しない場合は、このオプションを無効にした方ががよいだろう。
+LANMAN 暗号化レスポンスは簡単に解読することが可能である。これは大文字と小文字を 区別しないことや、使用しているアルゴリズムなどに起因する。Windows 95/98 や MS\-DOS クライアントが存在しない場合は、このオプションを無効にした方ががよいだろう。
+.sp
+このパラメータがnoに設定された場合、これは、次のパスワードの 変更時にSambaのpassdb中のsambaLMPasswordを空白にする動作も行う。この結果、 lanmanクライアントは、あとでlanman auth を再度有効に下としても認証出来なくなる。
 .sp
 encypt passwords
 オプションとは異なり、このパラメータはクライアントの挙動を制御するものではなく、 LANMAN レスポンスは以前としてネットワーク上を送信される。 Samba のクライアント (smbclient など) で LANMAN レスポンスを無効にするには
@@ -4263,7 +4300,7 @@ client lanman auth
 .sp
 このパラメータと
 ntlm auth
-の両方を無効にした場合、 NTLMv2 によるログインのみが可能となる。 クライアントのすべてが NTLMv2 をサポートしているわけではなく、ほとんどのクライアントでは NTLMv2 を使用するために明示的な設定を行なう必要がある。
+の両方を無効にした場合、 NTLMv2 によるログインのみが可能となる。 クライアントのすべてが NTLMv2 をサポートしているわけではなく、ほとんどのクライアント では NTLMv2 を使用するために明示的な設定を行なう必要がある。
 .sp
 既定値:
 \fI\fIlanman auth\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -4363,6 +4400,38 @@ ldap delete dn (G)
 .sp
 既定値:
 \fI\fIldap delete dn\fR\fR\fI = \fR\fIno\fR\fI \fR
+.RE
+
+ldap deref (G)
+.\" ldap deref
+.PP
+.RS 4
+このオプションは、Sambaが、LDAPライブラリに、ある alias dereferencing方法を 使う事を指定するかどうかを制御する。この既定値は\fIauto\fR
+であり、これは、ldapクライアントライブラリの既定値の設定がそのまま保持される 事を意味する。これ以外に取り得る値は、
+\fInever\fR,
+\fIfinding\fR,
+\fIsearching\fR
+と
+\fIalways\fRである。 より詳細な情報は、使用しているLDAPのマニュアルで探してみること。
+.sp
+既定値:
+\fI\fIldap deref\fR\fR\fI = \fR\fIauto\fR\fI \fR
+.sp
+例:
+\fI\fIldap deref\fR\fR\fI = \fR\fIsearching\fR\fI \fR
+.RE
+
+ldap follow referral (G)
+.\" ldap follow referral
+.PP
+.RS 4
+このオプションは、LDAPデータベース中でエントリを検索する時に、 LDAP referralを利用するかどうかを制御する。取り得る値は、 referral機能の利用を有効にする場合は、\fIon\fR、 これを無効にする場合は、\fIoff\fR、 libldapの既定値の設定を使う場合は\fIauto\fRである。 libldapによるrefarral機能の仕様の有無は、ldap\&.conf(5)中に記述がある、 REFERRALSパラメータによって、/etc/openldap/ldap\&.confにおいて 設定される。
+.sp
+既定値:
+\fI\fIldap follow referral\fR\fR\fI = \fR\fIauto\fR\fI \fR
+.sp
+例:
+\fI\fIldap follow referral\fR\fR\fI = \fR\fIoff\fR\fI \fR
 .RE
 
 ldap group suffix (G)
@@ -4876,7 +4945,7 @@ lock spin time (G)
 .\" lock spin time
 .PP
 .RS 4
-smbd が一度失敗したロックを再度獲得しようとする際の待ち時間を、 マイクロ秒単位で指定する。 このパラメータの既定値は、 Samba 3\&.0\&.23 において 10 から 200 に変更された。 関連する
+smbd が一度失敗したロックを再度獲得しようとする際の待ち時間を、 ミリ秒単位で指定する。 このパラメータの既定値は、 Samba 3\&.0\&.23 において 10 から 200 に変更された。 関連する
 \m[blue]\fBlock spin count\fR\m[]
 パラメータは Samba 3\&.0\&.24 以降では使用されない。 このパラメータの値を変更する必要はないであろう。
 .sp
@@ -5587,7 +5656,7 @@ mangled names (S)
 \m[blue]\fBname mangling\fR\m[]
 セクションを参照のこと。
 .sp
-短縮が行なわれる場合のアルゴリズムは以下の通りである(訳注:以下は hash アルゴリズムの場合):
+短縮が行なわれる場合の手法は以下の通りである(訳注:以下は hash アルゴリズムの場合):
 .sp
 .RS 4
 .ie n \{\
@@ -5722,24 +5791,24 @@ map hidden (S)
 \fI既定値なし\fR
 .RE
 
-map read only (S)
-.\" map read only
+map readonly (S)
+.\" map readonly
 .PP
 .RS 4
-このパラメータは、DOS の読みとり専用属性を UNIX のファイルシステムに対応付ける方法を制御する。
+このパラメータは、DOS の読み取り専用属性を UNIX のファイルシステムに対応付ける方法を制御する。
 .sp
-このパラメータには 3 とおりの値を指定することが可能である。これにより、
+このパラメータには 3通りの値を指定することが可能である。これにより、
 \m[blue]\fBstore dos attributes\fR\m[]
 が
 \fBNo\fR、もしくは拡張属性が存在しない環境において、
 \fBsmbd\fR(8)
-がファイルの読みとり専用属性を表示する方法を制御することが可能である。
+がファイルの読み取り専用属性を表示する方法を制御することが可能である。
 \m[blue]\fBstore dos attributes\fR\m[]
 が
 \fByes\fR
 の場合、このパラメータは\fI無視される\fR。 これは Samba 3\&.0\&.21 で新設されたパラメータである。
 .sp
-3 とおりの値を以下に示す:
+3 通りの値を以下に示す:
 .sp
 .RS 4
 .ie n \{\
@@ -5751,7 +5820,7 @@ map read only (S)
 .\}
 
 \fBYes\fR
-\- 読みとり専用の DOS 属性は、UNIX のパーミッションビットにおけるユーザ、すなわち所有者の書き込み権ビットに反転した形で対応付けられる。 所有者の書き込み権ビットが設定されていない場合、ファイルには読みとり専用属性が付加されているものとみなされる。もしも、読み取り専用のDOS属性が設定されてた場合、 グループとその他の書き込み権ビットはゼロに設定される。ACL中の書き込みビットはSambaによって無視される。もしも、読み取り専用のDOS属性が設定されていなかった場合、Sambaは単にそれの所有者の書き込みビットを設定する。
+\- 読み取り専用の DOS 属性は、UNIX のパーミッションビットにおけるユーザ、すなわち所有者の書き込み権ビットに反転した形で対応付けられる。 所有者の書き込み権ビットが設定されていない場合、ファイルには読み取り専用属性が付加されているものとみなされる。もしも、読み取り専用のDOS属性が設定されてた場合、 グループとその他の書き込み権ビットはゼロに設定される。ACL中の書き込みビットはSambaによって無視される。もしも、読み取り専用のDOS属性が設定されていなかった場合、Sambaは単にそれの所有者の書き込みビットを設定する。
 .RE
 .sp
 .RS 4
@@ -5764,8 +5833,8 @@ map read only (S)
 .\}
 
 \fBPermissions\fR
-\- 読みとり専用の DOS 属性は、接続しているユーザに対する有効なパーミッションに対応付けられる。 これは、\fBsmbd\fR(8)
-が UNIX のパーミッションおよび (存在していれば) POSIX の ACL を読みとることにより確認される。 接続しているユーザにファイルを編集するパーミッションがない場合、ファイルには読みとり専用属性が付加されているものとみなされる。
+\- 読み取り専用の DOS 属性は、接続しているユーザに対する有効なパーミッションに対応付けられる。 これは、\fBsmbd\fR(8)
+が UNIX のパーミッションおよび (存在していれば) POSIX の ACL を読みとることにより確認される。 接続しているユーザにファイルを編集するパーミッションがない場合、ファイルには読み取り専用属性が付加されているものとみなされる。
 .RE
 .sp
 .RS 4
@@ -5778,13 +5847,13 @@ map read only (S)
 .\}
 
 \fBNo\fR
-\- 読みとり専用 DOS 属性は、パーミッションに対応付けられず、
+\- 読み取り専用 DOS 属性は、パーミッションに対応付けられず、
 \m[blue]\fBstore dos attributes\fR\m[]
 パラメータによってのみ付与される。 これは、マウント中の CD を共有する場合にも便利かも知れない。
 .sp
 .RE
 既定値:
-\fI\fImap read only\fR\fR\fI = \fR\fIyes\fR\fI \fR
+\fI\fImap readonly\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 map system (S)
@@ -5981,12 +6050,12 @@ max open files (G)
 .RS 4
 このパラメータにより、ある
 \fBsmbd\fR(8)
-プロセスが1つのクライアントに対して同時に開くことのできるファイル数の上限値が設定される。 Samba は、オープンされていないファイルごとにわずか 1 ビットしか消費しないので、このパラメータの既定値は、非常に大きな値 (10000) に設定されている。
+プロセスが1つのクライアントに対して同時に 開くことのできるファイル数の上限値が設定される。 Samba は、オープンされていない ファイルごとにわずか 1 ビットしか消費しないので、この値はとても大きな値 (16404) に設定することができる。16404より小さな値に設定すると、Sambaはその旨を 警告し、Windows 7が、有効である、オープンしているファイルハンドルの数に依存 するので、最低値の16404に戻す。
 .sp
-オープンするファイルの数の制限は、通常このパラメータではなく UNIX におけるプロセス毎のファイルディスクリプタの上限値によって制限される。そのため、この値を変更する必要はないであろう。
+オープンするファイルの数の制限は、通常このパラメータではなく UNIX における プロセス毎のファイルディスクリプタの上限値によって制限される。そのため、 この値を変更する必要はないであろう。
 .sp
 既定値:
-\fI\fImax open files\fR\fR\fI = \fR\fI10000\fR\fI \fR
+\fI\fImax open files\fR\fR\fI = \fR\fI16404\fR\fI \fR
 .RE
 
 max print jobs (S)
@@ -6074,6 +6143,17 @@ max protocol (G)
 .IP \(bu 2.3
 .\}
 \fBNT1\fR: 最も新しいプロトコルであり、 Windows NT が利用する。CIFSと呼ばれることもある。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBSMB2\fR: SMBプロトコルの再実装。Windows Vista 以降で使用される。SambaでのSMB2の実装は現在実験的である!
 .sp
 .RE
 通常、SMB プロトコルによりネゴシエーションを経て適切なプロトコルが選択されるため、 このオプションを設定すべきではない。
@@ -6514,6 +6594,17 @@ Samba のログオンサーバが実際のホームディレクトリを提供�
 \fI\fInis homedir\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
+nmbd bind explicit broadcast (G)
+.\" nmbd bind explicit broadcast
+.PP
+.RS 4
+このオプションは\fBnmbd\fR(8)に、ローカルサブネットの ブロードキャストアドレスに、明示的にバインドすることを行わせる。これは、
+\m[blue]\fBsocket address\fR\m[]オプションと組み合わせた場合に、 nmbdが正しく動くようにするのに必要である。このオプションをnoにする 必要はない。
+.sp
+既定値:
+\fI\fInmbd bind explicit broadcast\fR\fR\fI = \fR\fIyes\fR\fI \fR
+.RE
+
 nt acl support (S)
 .\" nt acl support
 .PP
@@ -6686,11 +6777,7 @@ oplocks (S)
 .RS 4
 この真偽値オプションは、 共有内のファイルオープンが要求された際に oplock (opportunistic lock = 便宜的ロック) を行なうかどうかを
 smbd
-に指示する。 oplock により、Samba サーバ上のファイルアクセス速度を劇的に改善(およそ 30% 以上)することができる。 oplock により、クライアントは、積極的にファイルをローカルにキャッシュするようになるが、 信頼性の低いネットワーク環境の場合などに、これを無効にしたいと考えることもあるだろう (Windows NT サーバにおける既定値は有効である)。 これ以上の情報については、 Samba の
-docs/
-ディレクトリにある
-Speed\&.txt
-を参照のこと(訳注:現在は存在していないファイルである)。
+に指示する。 oplock により、Samba サーバ上のファイルアクセス速度を劇的に改善(およそ 30% 以上)することができる。 oplock により、クライアントは、積極的にファイルをローカルにキャッシュするようになるが、 信頼性の低いネットワーク環境の場合などに、これを無効にしたいと考えることもあるだろう (Windows NT サーバにおける既定値は有効である)。
 .sp
 oplock は共有内のファイル単位で無効にすることも可能である。
 \m[blue]\fBveto oplock files\fR\m[]
@@ -7602,9 +7689,7 @@ printing (S)
 /
 \fBCUPS\fRの9種類である。
 .sp
-To see what the defaults are for the other print commands when using the various options use the
-\fBtestparm\fR(1)
-program\&.
+種々のオプションを使うとき、他の print command の既定値が何であるかを確認する ためには、\fBtestparm\fR(1)プログラムを使う。
 .sp
 このオプションを設定した際に、関連する印刷コマンドの 既定値がどのように設定されるかを確認する際は、
 \fBtestparm\fR(1)プログラムを使用すること。
@@ -8754,9 +8839,9 @@ shutdown script (G)
 .nf
 #!/bin/bash
 		
-$time=0
-let "time/60"
-let "time++"
+time=$2
+let time="${time} / 60"
+let time="${time} + 1"
 
 /sbin/shutdown $3 $4 +$time $1 &
 
@@ -9015,14 +9100,12 @@ state directory (G)
 .\" state directory
 .PP
 .RS 4
-Usually, most of the TDB files are stored in the
-\fIlock directory\fR\&. Since Samba 3\&.4\&.0, it is possible to differentiate between TDB files with persistent data and TDB files with non\-persistent data using the
-\fIstate directory\fR
-and the
-\fIcache directory\fR
-options\&.
+通常TDBファイルは\fIlock directory\fR
+に格納される。Samba 3\&.4\&.0から、
+\fIstate directory\fRと
+\fIcache directory\fRオプションを使うことで、 持続的データを持つTDBファイルと持続的データを持たないTDBファイルとを 区別することが出来る。
 .sp
-This option specifies the directory where TDB files containing persistent data will be stored\&.
+このオプションは、持続的なデータを含むTDBファイルを格納する ディレクトリを指定する。
 .sp
 既定値:
 \fI\fIstate directory\fR\fR\fI = \fR\fI${prefix}/var/locks\fR\fI \fR
@@ -9041,7 +9124,7 @@ store dos attributes (S)
 パラメータにより制御される) UNIX のパーミッションビットからのマッピングを行なう前に、 ファイルシステムの拡張属性から読み取ろうとする。 このパラメータが設定されると、DOS のファイル属性は、UNIX ファイルシステム上で、各ファイルやディレクトリ毎に割り当てられた拡張属性の領域に格納される。 これ以外のマッピング機構が動作しないようにするため、
 \m[blue]\fBmap hidden\fR\m[]、
 \m[blue]\fBmap system\fR\m[]、\m[blue]\fBmap archive\fR\m[]、\m[blue]\fBmap readonly\fR\m[]
-といったパラメータは無効にする必要がある。 このパラメータは DOS のファイル属性を「user\&.DOSATTRIB」という名前の拡張属性に、文字列として書き込む。 この拡張属性は、クライアントの拡張属性に関するリクエストからは明示的に隠蔽されている。 Linux において拡張属性を有効にするには、 Linux カーネルで拡張属性がコンパイルされており、 ファイルシステムが user_xattr オプションをつけてマウントされている必要がある。
+といったパラメータは無効にする必要がある。 このパラメータは DOS のファイル属性を「user\&.DOSATTRIB」という名前の拡張属性に、 文字列として書き込む。この拡張属性は、クライアントの拡張属性に関するリクエスト からは明示的に隠蔽されている。Linux において拡張属性を有効にするには、Linux カーネルで拡張属性がコンパイルされており、ファイルシステムが user_xattr オプションをつけてマウントされている必要がある。 Samba 3\&.5\&.0以降では、「user\&.DOSATTRIB」という名前の拡張属性はDOSの属性と 同じように、ファイルの作成時刻を格納するように拡張された。これは後方互換であり、 Samba 3\&.5\&.0とそれ以降のもので作成されたファイルは、それ以前のバージョンのSamba により、引き続きこの拡張属性からDOSのファイル属性を読めるようにしている。しかし、 ここに格納されたファイル作成時刻は読む事が出来ない。通常のファイルシステム メタデータから分離して作成時刻を格納することは、POSIXファイルシステムのトップ レベルにおいて、NTFSセマンティクスを正確に再現することが、Sambaに出来るようになる。
 .sp
 既定値:
 \fI\fIstore dos attributes\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -9053,15 +9136,11 @@ strict allocate (S)
 .RS 4
 この真偽値パラメータは、サーバ上のディスク領域の割当を制御するものである。 このパラメータが
 \fByes\fR
-の場合、 サーバは、ファイルが拡張されただけでは実際のディスク領域を割り当てない UNIX 流の動作をやめ、 ファイルがあるサイズで作成されたり、拡張されたりした際に、 実際にディスク領域を割り当てる Windows 流の動作を行なうようになる。 これは、Samba がスパースファイルを作成しなくなることを意味する。 これにより、システムによっては処理が遅くなる。
+の場合、 サーバは、ファイルが拡張されただけでは実際のディスク領域を割り当てない UNIX 流の動作をやめ、 ファイルがあるサイズで作成されたり、拡張されたりした際に、 実際にディスク領域を割り当てる Windows 流の動作を行なうようになる。 これは、Samba がスパースファイルを作成しなくなることを意味する。 これにより、システムによっては処理が遅くなる。100MB超のような大きな ファイルを扱っている場合、クライアントがタイムアウトになってしまうような 問題に遭遇するかもしれない。
 .sp
-strict allocate が
-\fBno\fR
-の場合、 サーバは、ファイルの拡張時にスパースファイルを作成する。
+エクステントベースのファイルシステムを使っている場合、 大量の空間を迅速に割り当てることがSambaで出来る、未書き込みのエクステントを 使う事が出来、strict allocateによって引き起こされた何らかのタイムアウト 問題が発生しなくなるだろう。strict allocateを使っているとき、 quotaを使っている場合は、quotaからのより的確なメッセージが得られるだろう。 この設定を有効にすることによる、その他の利点は、ファイルの断片化を 減少する助けになるということである。
 .sp
-このパラメータを
-\fByes\fR
-にすると、 ディスククオータによるディスク領域の制限を行なっているシステムで、 クォータ超過メッセージを出力する際には便利である。
+ファイルシステム上での注目する点を提供するために、この設定は、 現時点でよいオプションであるかもしれない:Linux上でのXFS、ext4、btrfs、 ocfs2と、AIX上でのjfsは、未書き込みのエクステントをサポートする。 それらをサポートしないファイルシステム上では、事前割当は、おそらく、 パフォーマンスが低下する負荷のかかる操作であり、巨大なファイルを作成 するときにクライアントがタイムアウトになる危険性がある。例は、 Ext3、ZFS、HFS+とその他のものであり、それらのファイルシステム上で この設定を有効にするときには気をつけること。
 .sp
 既定値:
 \fI\fIstrict allocate\fR\fR\fI = \fR\fIno\fR\fI \fR
@@ -10313,9 +10392,9 @@ wtmp directory (G)
 .RS 4
 このパラメータは、 Sambaが
 \-\-with\-utmp
-オプションで configure され、コンパイルされた時にのみに有効である。 このパラメータは、 Sambaサーバへの接続を記録する wtmp または wtmpx ファイル (UNIXシステムに依存)が存在するディレクトリを指定する。 utmp directory との違いは、ユーザ情報がユーザのログオフ後も記録され続ける点である。
+オプションで configure され、コンパイルされた時にのみに有効である。 このパラメータは、Sambaサーバへの接続を記録する wtmp または wtmpx ファイル (UNIXシステムに依存)が存在するディレクトリを指定する。 utmp directory との違いは、ユーザ情報がユーザのログオフ後も記録され続ける点である。
 .sp
-デフォルトではこの値は設定されない。 この場合、システムが利用している utmp ファイルが使われる (Linux の場合、通常
+既定値ではこの値は設定されない。 この場合、システムが利用している utmp ファイルが使われる (Linux の場合、通常
 /var/run/wtmp
 にある)。
 .sp
@@ -10361,11 +10440,11 @@ wtmp directory (G)
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\&.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\&.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\&.0 における DocBook XML 4\&.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\&.4\&.4 対応のものである。
+このマニュアルページは Samba 3\&.5\&.1 対応のものである。
 .PP
 Samba 3\&.0\&.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-Samba 3\&.2\&.4\-3\&.4\&.4 対応の翻訳は、
+Samba 3\&.2\&.4\-3\&.5\&.1 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP
