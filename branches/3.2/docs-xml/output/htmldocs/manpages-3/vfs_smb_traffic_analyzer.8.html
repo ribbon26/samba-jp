@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html><head><title>vfs_smb_traffic_analyzer</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_smb_traffic_analyzer"><a name="vfs_smb_traffic_analyzer.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_smb_traffic_analyzer — ヘルパアプリケーションに対して、ソケット経由でのSamba VFS読み出し
-	  書き込み操作のログを取る</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = smb_traffic_analyzer</code></p></div></div><div class="refsect1" title="説明"><a name="id2528769"/><h2>説明</h2><p>このVFSモジュールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p><code class="literal">vfs_smb_traffic_analyzer</code> VFSモジュールは、
+	  書き込み操作のログを取る</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = smb_traffic_analyzer</code></p></div></div><div class="refsect1" title="説明"><a name="id2528762"/><h2>説明</h2><p>このVFSモジュールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p><code class="literal">vfs_smb_traffic_analyzer</code> VFSモジュールは、
 	  Sambaサーバ上のクライアント書き込みと読み出し操作のログを取り、
 	  このデータを、SQLデータベースに送る、ヘルパプログラムに対して
 	  ソケット上で送信する。ヘルパプログラムの詳細な情報は、
@@ -17,7 +17,7 @@
 
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">BYTES</code> - VFS操作のバイト単位の長さ</p></li><li class="listitem"><p><code class="literal">USER</code> - 操作を開始したユーザ</p></li><li class="listitem"><p><code class="literal">DOMAIN</code> - ユーザのドメイン</p></li><li class="listitem"><p><code class="literal">READ/WRITE</code> - "W"なら書き込み操作、"R"なら読み出し操作</p></li><li class="listitem"><p><code class="literal">SHARE</code> - VFS操作が行われた共有の名前</p></li><li class="listitem"><p><code class="literal">FILENAME</code> - VFS操作によって使われたファイルの名前</p></li><li class="listitem"><p><code class="literal">TIMESTAMP</code> - VFS操作が行われたことを示す "yyyy-mm-dd hh-mm-ss.ms" での時間</p></li></ul></div><p>
 
-	</p><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="オプション"><a name="id2489432"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">smb_traffic_analyzer:mode = STRING</span></dt><dd><p>もしも、STRINGが "unix_domain_socket" に一致するならば、モジュール
+	</p><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="オプション"><a name="id2489424"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">smb_traffic_analyzer:mode = STRING</span></dt><dd><p>もしも、STRINGが "unix_domain_socket" に一致するならば、モジュール
 		  は/var/tmp/stadsocketに位置するunixドメインソケットを使い、もしも、
 		  STRINGにそのほかの文字列か、未定義ならば、モジュールは、データの転送
 		  のためにインターネットドメインソケットを使う。</p></dd><dt><span class="term">smb_traffic_analyzer:host = STRING</span></dt><dd><p>モジュールはホスト名がSTRINGという名前のシステムにデータを送る。</p></dd><dt><span class="term">smb_traffic_analyzer:port = STRING</span></dt><dd><p>モジュールはSTRING中で指定されたTCPポートにデータを送る。</p></dd><dt><span class="term">smb_traffic_analyzer:anonymize_prefix = STRING</span></dt><dd><p>モジュールは、STRINGで与えられたプレフィックスと単純なハッシュ値で
@@ -26,7 +26,7 @@
 		追加のハッシュ値を生成しないで、smb_traffic_analyzer:anonymize_prefix
 		オプションによって与えられる文字列でユーザ名を置き換える。これは
 		任意の転送データが単一のユーザにマッピングされることを意味し、
-		ユーザに関連するデータの全体的な匿名化を導く。</p></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2489541"/><h2>使用例</h2><p>unixドメインソケットを使い、共有"example_share"上でモジュールを走らせる</p><pre class="programlisting">
+		ユーザに関連するデータの全体的な匿名化を導く。</p></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2489533"/><h2>使用例</h2><p>unixドメインソケットを使い、共有"example_share"上でモジュールを走らせる</p><pre class="programlisting">
 	<em class="parameter"><code>[example_share]</code></em>
 	<a class="link" href="smb.conf.5.html#PATH" target="_top">path = /data/example</a>
 	<a class="link" href="smb.conf.5.html#VFSOBJECTS" target="_top">vfs objects = smb_traffic_analyzer</a>
@@ -49,11 +49,11 @@
 	<a class="link" href="smb.conf.5.html#SMB_TRAFFIC_ANALYZER:HOST" target="_top">smb_traffic_analyzer:host = examplehost</a>
 	<a class="link" href="smb.conf.5.html#SMB_TRAFFIC_ANALYZER:PORT" target="_top">smb_traffic_analyzer:port = 3491</a>
 	<a class="link" href="smb.conf.5.html#SMB_TRAFFIC_ANALYZER:ANONYMIZE_PREFIX" target="_top">smb_traffic_analyzer:anonymize_prefix = User</a>
-	</pre></div><div class="refsect1" title="バージョン"><a name="id2487509"/><h2>バージョン</h2><p>このマニュアルページはSamba3.2.0用のものである。
-	</p></div><div class="refsect1" title="著者"><a name="id2487520"/><h2>著者</h2><p>オリジナルのバージョンのVFSモジュールとヘルパツールは、
+	</pre></div><div class="refsect1" title="バージョン"><a name="id2487498"/><h2>バージョン</h2><p>このマニュアルページはSamba3.2.0用のものである。
+	</p></div><div class="refsect1" title="著者"><a name="id2487509"/><h2>著者</h2><p>オリジナルのバージョンのVFSモジュールとヘルパツールは、
 	Holger Hetterichによって作成された。</p><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team に
 	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
-	として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2487544"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.14-3.2.15  対応のものである。</p><p>このドキュメントの Samba 3.2.15-3.2.15 対応の翻訳は
+	として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2487532"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.14-3.2.15  対応のものである。</p><p>このドキュメントの Samba 3.2.15-3.2.15 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>太田俊哉 (ribbon@samba.gr.jp)</p></li></ul></div><p>	
         によって行なわれた。</p></div></div></body></html>

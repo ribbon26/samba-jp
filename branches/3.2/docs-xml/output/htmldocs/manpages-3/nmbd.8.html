@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html><head><title>nmbd</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="nmbd"><a name="nmbd.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>nmbd — NetBIOS over TCP/IP クライアントへの
-	NetBIOS ネームサーバ機能の提供</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">nmbd</code> [-D] [-F] [-S] [-a] [-i] [-o] [-h] [-V] [-d &lt;debug level&gt;] [-H &lt;lmhosts file&gt;] [-l &lt;log directory&gt;] [-p &lt;port number&gt;] [-s &lt;configuration file&gt;]</p></div></div><div class="refsect1" title="説明"><a name="id2489232"/><h2>説明</h2><p>このプログラムは
+	NetBIOS ネームサーバ機能の提供</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">nmbd</code> [-D] [-F] [-S] [-a] [-i] [-o] [-h] [-V] [-d &lt;debug level&gt;] [-H &lt;lmhosts file&gt;] [-l &lt;log directory&gt;] [-p &lt;port number&gt;] [-s &lt;configuration file&gt;]</p></div></div><div class="refsect1" title="説明"><a name="id2489215"/><h2>説明</h2><p>このプログラムは
 	<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p><code class="literal">nmbd</code>
 	は、Windows95/98/Me、 Windows NT、Windows XP
 	や LanManager クライアントなどの SMB/CIFS クライアントによる
@@ -26,7 +26,7 @@
 	またクライアントからの名前の問い合わせに応答することができるということである。
 	</p><p>さらに <code class="literal">nmbd</code> は、WINS proxy として動作でき、
 	WINS サーバに対して WINS プロトコルで交信することができないクライアントからの、
-	ブロードキャスト要求を中継することができる。 </p></div><div class="refsect1" title="オプション"><a name="id2489599"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-D</span></dt><dd><p>このパラメータが指定されると、<code class="literal">nmbd</code> はデーモンとして動作する。
+	ブロードキャスト要求を中継することができる。 </p></div><div class="refsect1" title="オプション"><a name="id2489585"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-D</span></dt><dd><p>このパラメータが指定されると、<code class="literal">nmbd</code> はデーモンとして動作する。
 		すなわち、自分自身を分離してバックグラウンドで動作し、適切なポートのリクエストを処理する。 
 		既定では、<code class="literal">nmbd</code> はデーモンとして動作しない。
 		推奨しないが、nmbd は <code class="literal">inetd</code> からのメタ・デーモンとしても動作可能である。 
@@ -52,7 +52,7 @@
 		このパラメータにより、コマンドラインから起動した際に暗黙的にデーモンモードとなることが抑止される。
 		また、<code class="constant">-S</code> パラメータが指定されていたとしても、
 		<code class="literal">nmbd</code> は標準出力にログを出力する。
-		</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>Print a summary of command line options.
+		</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
 </p></dd><dt><span class="term">-H &lt;filename&gt;</span></dt><dd><p>NetBIOS lmhosts ファイルの指定。lmhosts ファイルは、
 		NetBIOS 名と IP アドレスの組で構成されるリストである。 
 		これは、nmbd サーバによってロードされ、任意の NetBIOS 名を解決する問い合わせのために、
@@ -72,22 +72,20 @@
 		<code class="filename">/etc/samba/lmhosts</code> である。
 
 		このファイルの内容の詳細は、
-		<a class="citerefentry" href="lmhosts.5.html"><span class="citerefentry"><span class="refentrytitle">lmhosts</span>(5)</span></a> マニュアルページを参照のこと。</p></dd><dt><span class="term">-V|--version</span></dt><dd><p>Prints the program version number.
-</p></dd><dt><span class="term">-s|--configfile &lt;configuration file&gt;</span></dt><dd><p>The file specified contains the 
-configuration details required by the server.  The 
-information in this file includes server-specific
-information such as what printcap file to use, as well 
-as descriptions of all the services that the server is 
-to provide. See <code class="filename">smb.conf</code> for more information.
-The default configuration file name is determined at 
-compile time.</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>Base directory name for log/debug files. The extension
-<code class="constant">".progname"</code> will be appended (e.g. log.smbclient, 
-log.smbd, etc...). The log file is never removed by the client.
+		<a class="citerefentry" href="lmhosts.5.html"><span class="citerefentry"><span class="refentrytitle">lmhosts</span>(5)</span></a> マニュアルページを参照のこと。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+</p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
+指定する。このファイルには、サーバーが提供するサービスに関する記述や、
+どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+<code class="filename">smb.conf</code> を参照のこと。設定ファイルの名前の既定値は、コンパイル時
+に決定される。
+</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>ログ/デバッグファイルのファイル名。拡張子として
+<code class="constant">".progname"</code> が追加される(例えば log.smbclient,
+log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
 </p></dd><dt><span class="term">-p &lt;UDP port number&gt;</span></dt><dd><p>UDP ポート番号には正の整数を指定する。
 		このオプションは、<code class="literal">nmbd</code> が名前問い合わせに返答する、
 		既定値の UDP ポート番号(通常は137)を変更する。
 		あなたがどんな場面でも助けを必要としない専門家でない限り、
-		このオプションを使用してはならない! </p></dd></dl></div></div><div class="refsect1" title="関連ファイル"><a name="id2487634"/><h2>関連ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/inetd.conf</code></span></dt><dd><p>サーバが <code class="literal">inetd</code>
+		このオプションを使用してはならない! </p></dd></dl></div></div><div class="refsect1" title="関連ファイル"><a name="id2487625"/><h2>関連ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/inetd.conf</code></span></dt><dd><p>サーバが <code class="literal">inetd</code>
 		メタ・デーモン経由で動作しているならば、このファイルは
 		メタ・デーモンのための適切な起動情報を含む必要がある。
 		</p></dd><dt><span class="term"><code class="filename">/etc/rc</code></span></dt><dd><p>(またはシステムが使う初期化スクリプト)</p><p>サーバをデーモンとして起動させるならば、
@@ -117,7 +115,7 @@ log.smbd, etc...). The log file is never removed by the client.
 		<code class="literal">nmbd</code> は、Samba がインストールされた場所の下に作成される
 		<code class="filename">var/locks</code> ディレクトリ中の
 		<code class="filename">browse.dat</code> ファイルにブラウジングのデータベースを格納する。
-		</p></dd></dl></div></div><div class="refsect1" title="シグナル"><a name="id2487865"/><h2>シグナル</h2><p><code class="literal">nmbd</code> プロセスをシャットダウンするために、
+		</p></dd></dl></div></div><div class="refsect1" title="シグナル"><a name="id2487855"/><h2>シグナル</h2><p><code class="literal">nmbd</code> プロセスをシャットダウンするために、
 	SIGKILL(-9) を使用した場合、
 	名前データベースが整合性の崩れた状態で残ってしまう可能性があるため、
 	最後の手段として以外には <span class="emphasis"><em>決して</em></span>推奨しない。
@@ -131,7 +129,7 @@ log.smbd, etc...). The log file is never removed by the client.
 	nmbd のデバッグ・ログ・レベルを上げたり下げたりできる
 	(SIGUSR[1|2] シグナルは Samba 2.2 からもはや使用されていない)。
 	これにより、通常は低いログ・レベルで動作させた状態で、
-	一時的な問題を診断することができる。</p></div><div class="refsect1" title="バージョン"><a name="id2538426"/><h2>バージョン</h2><p>この man ページは、Samba システムのバージョン 3 用になっている。</p></div><div class="refsect1" title="関連項目"><a name="id2538437"/><h2>関連項目</h2><p>
+	一時的な問題を診断することができる。</p></div><div class="refsect1" title="バージョン"><a name="id2538425"/><h2>バージョン</h2><p>この man ページは、Samba システムのバージョン 3 用になっている。</p></div><div class="refsect1" title="関連項目"><a name="id2538436"/><h2>関連項目</h2><p>
 	<a class="citerefentry" href="inetd.8.html"><span class="citerefentry"><span class="refentrytitle">inetd</span>(8)</span></a>、
 	<a class="citerefentry" href="smbd.8.html"><span class="citerefentry"><span class="refentrytitle">smbd</span>(8)</span></a>、
 	<a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>、
@@ -141,7 +139,7 @@ log.smbd, etc...). The log file is never removed by the client.
 	Internet RFC の <code class="filename">rfc1001.txt</code>、<code class="filename">rfc1002.txt</code>。
 	その他 CIFS(以前のSMB)の仕様を以下のWebページにあるリンクから入手できる:
 	<a class="ulink" href="http://samba.org/cifs/" target="_top">
-	http://samba.org/cifs/</a> 。</p></div><div class="refsect1" title="著者"><a name="id2538505"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	http://samba.org/cifs/</a> 。</p></div><div class="refsect1" title="著者"><a name="id2538504"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
 	開発されているような方法でのオープンソースプロジェクトである
 	Samba Team によって開発されている。</p><p>オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。
@@ -151,6 +149,6 @@ log.smbd, etc...). The log file is never removed by the client.
 	で変換され、Jeremy Allison によって Samba 2.0 リリースのために更新された。
 	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。
 	Samba 3.0 のための DocBook XML 4.2 形式への変換は
-	Alexander Bokovoy が行った。</p></div><div class="refsect1" title="日本語訳"><a name="id2538547"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
+	Alexander Bokovoy が行った。</p></div><div class="refsect1" title="日本語訳"><a name="id2538545"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>たかはしもとのぶ (monyo@samba.gr.jp)</p></li><li class="listitem"><p>はせがわ ようすけ</p></li><li class="listitem"><p>ちかましゅうへい</p></li></ul></div><p>	
         によって行なわれた。</p><p>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</p><p>Samba 3.2.4-3.2.15 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</p></div></div></body></html>

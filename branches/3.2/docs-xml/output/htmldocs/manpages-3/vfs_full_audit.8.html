@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html><head><title>vfs_full_audit</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_full_audit"><a name="vfs_full_audit.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_full_audit — Samba VFS　の動作をsystem logに記録する</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = full_audit</code></p></div></div><div class="refsect1" title="説明"><a name="id2528762"/><h2>説明</h2><p>このVFSモジュールは
+<html><head><title>vfs_full_audit</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_full_audit"><a name="vfs_full_audit.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_full_audit — Samba VFS　の動作をsystem logに記録する</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = full_audit</code></p></div></div><div class="refsect1" title="説明"><a name="id2528763"/><h2>説明</h2><p>このVFSモジュールは
 	<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である.</p><p><code class="literal">vfs_full_audit</code>VFSモジュールは指定したクライアントの
 	動きを<a class="citerefentry" href="syslog.3.html"><span class="citerefentry"><span class="refentrytitle">syslog</span>(3)</span></a>でシステムログに記録する。
 	</p><p><code class="literal">vfs_full_audit</code>
@@ -13,7 +13,7 @@
 	記録フォーマットは
 	</p><pre class="programlisting">
 		smbd_audit: PREFIX|OPERATION|RESULT|FILE
-	</pre><p>各フィールドは:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">PREFIX</code> - full_audit:prefix文字と、可変長の解説</p></li><li class="listitem"><p><code class="literal">OPERATION</code> - VFSの名称</p></li><li class="listitem"><p><code class="literal">RESULT</code> - 動作が成功したか、失敗したか</p></li><li class="listitem"><p><code class="literal">FILE</code> - 動作が行われたファイルやディレクトリの名称</p></li></ul></div><p>このモジュールはスタッカブルである。</p></div><div class="refsect1" title="オプション"><a name="id2487379"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">vfs_full_audit:prefix = STRING</span></dt><dd><p>STRINGで監査メッセージを結合する。STRINGは
+	</pre><p>各フィールドは:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">PREFIX</code> - full_audit:prefix文字と、可変長の解説</p></li><li class="listitem"><p><code class="literal">OPERATION</code> - VFSの名称</p></li><li class="listitem"><p><code class="literal">RESULT</code> - 動作が成功したか、失敗したか</p></li><li class="listitem"><p><code class="literal">FILE</code> - 動作が行われたファイルやディレクトリの名称</p></li></ul></div><p>このモジュールはスタッカブルである。</p></div><div class="refsect1" title="オプション"><a name="id2487376"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">vfs_full_audit:prefix = STRING</span></dt><dd><p>STRINGで監査メッセージを結合する。STRINGは
 		<a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>に記載された指定を置き換える
 		初期値は"%u|%I". </p></dd><dt><span class="term">vfs_full_audit:success = LIST</span></dt><dd><p>LISTはVFSオペレーションのリストで、動作が成功したときに記録を残すものを表す。
 		オペレーションは上に示したリストにある名前で指定する。
@@ -24,7 +24,7 @@
 
                 </p></dd><dt><span class="term">full_audit:priority = PRIORITY</span></dt><dd><p>
                 <a class="citerefentry" href="syslog.3.html"><span class="citerefentry"><span class="refentrytitle">syslog</span>(3)</span></a>のpriorityを指定する
-                </p></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2487496"/><h2>使用例</h2><p>[records]共有の中のファイルやディレクトリをオープンしたときにログを残す。
+                </p></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2487493"/><h2>使用例</h2><p>[records]共有の中のファイルやディレクトリをオープンしたときにログを残す。
 	その際、LOCAL7ファシリティーと、ALERTプライオリティーを使用し、
 	ユーザー名とIPアドレスも記録する:</p><pre class="programlisting">
         <em class="parameter"><code>[records]</code></em>
@@ -35,10 +35,10 @@
 	<a class="link" href="smb.conf.5.html#FULL_AUDIT:FAILURE" target="_top">full_audit:failure = all</a>
 	<a class="link" href="smb.conf.5.html#FULL_AUDIT:FACILITY" target="_top">full_audit:facility = LOCAL7</a>
 	<a class="link" href="smb.conf.5.html#FULL_AUDIT:PRIORITY" target="_top">full_audit:priority = ALERT</a>
-</pre></div><div class="refsect1" title="バージョン"><a name="id2487704"/><h2>バージョン</h2><p>このヘルプはSambaシステム　3.0.25に対応している
-	</p></div><div class="refsect1" title="著者"><a name="id2487715"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+</pre></div><div class="refsect1" title="バージョン"><a name="id2487702"/><h2>バージョン</h2><p>このヘルプはSambaシステム　3.0.25に対応している
+	</p></div><div class="refsect1" title="著者"><a name="id2487713"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team に
 	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
-	として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2487730"/><h2>日本語訳</h2><p>このドキュメントは、Samba 3.0.25-3.2.4-3.2.15対応のものである。</p><p>このドキュメントの翻訳は
+	として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2487727"/><h2>日本語訳</h2><p>このドキュメントは、Samba 3.0.25-3.2.4-3.2.15対応のものである。</p><p>このドキュメントの翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>平田祥司 (shouji@microft.co.jp)</p></li></ul></div><p>	
         によって行なわれた。</p></div></div></body></html>

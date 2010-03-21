@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html><head><title>pdbedit</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="pdbedit"><a name="pdbedit.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>pdbedit — SAM データベース (Samba ユーザのデータベース) を管理する</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">pdbedit</code> [-L] [-v] [-w] [-u username] [-f fullname] [-h homedir] [-D drive] [-S script] [-p profile] [-a] [-t, --password-from-stdin] [-m] [-r] [-x] [-i passdb-backend] [-e passdb-backend] [-b passdb-backend] [-g] [-d debuglevel] [-s configfile] [-P account-policy] [-C value] [-c account-control] [-y]</p></div></div><div class="refsect1" title="説明"><a name="id2489441"/><h2>説明</h2><p>このツールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p>pdbedit プログラムは SAM
+<html><head><title>pdbedit</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="pdbedit"><a name="pdbedit.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>pdbedit — SAM データベース (Samba ユーザのデータベース) を管理する</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">pdbedit</code> [-L] [-v] [-w] [-u username] [-f fullname] [-h homedir] [-D drive] [-S script] [-p profile] [-a] [-t, --password-from-stdin] [-m] [-r] [-x] [-i passdb-backend] [-e passdb-backend] [-b passdb-backend] [-g] [-d debuglevel] [-s configfile] [-P account-policy] [-C value] [-c account-control] [-y]</p></div></div><div class="refsect1" title="説明"><a name="id2489428"/><h2>説明</h2><p>このツールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p>pdbedit プログラムは SAM
 	データベース内に保持されるユーザアカウントを管理するために利用され、
 	root だけが実行できる。</p><p>pdbedit ツールは、 passdb モジュールのインターフェイス経由で操作を行なうことで、
 	実際に利用するユーザーデータベースの種類
@@ -10,7 +10,7 @@
 	ユーザーアカウントの削除、
 	ユーザーアカウントの変更、
 	ユーザーアカウントの一覧表示、
-	ユーザーアカウントの取り込みの 5 種類がある。</p></div><div class="refsect1" title="オプション"><a name="id2489495"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-L</span></dt><dd><p>
+	ユーザーアカウントの取り込みの 5 種類がある。</p></div><div class="refsect1" title="オプション"><a name="id2489483"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-L</span></dt><dd><p>
 		データベースのすべてのユーザーアカウントを一覧表示する。
 		ユーザー名と UID の組み合わせが「:」で区切られて一覧表示される。</p><p>例: <code class="literal">pdbedit -L</code></p><pre class="programlisting">
 sorce:500:Simo Sorce
@@ -147,34 +147,27 @@ account policy value for bad lockout attempt is now 3
 		<em class="parameter"><code>-i in-backend -e out-backend</code></em>
 		オプションはユーザーデータベースではなく、
 		アカウントポリシーに対して適用される。</p><p>このオプションにより、
-		アカウントポリシーをデフォルトの TDB から LDAP ディレクトリサーバなどのパスワードデータベースに移行することが可能となる。</p><p>例: <code class="literal">pdbedit -y -i tdbsam: -e ldapsam:ldap://my.ldap.host</code></p></dd><dt><span class="term">-h|--help</span></dt><dd><p>Print a summary of command line options.
-</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> is an integer 
-from 0 to 10. The default value if this parameter is 
-not specified is 0.</p><p>The higher this value, the more detail will be 
-logged to the log files about the activities of the 
-server. At level 0, only critical errors and serious 
-warnings will be logged. Level 1 is a reasonable level for
-day-to-day running - it generates a small amount of 
-information about operations carried out.</p><p>Levels above 1 will generate considerable 
-amounts of log data, and should only be used when 
-investigating a problem. Levels above 3 are designed for 
-use only by developers and generate HUGE amounts of log
-data, most of which is extremely cryptic.</p><p>Note that specifying this parameter here will 
-override the <a class="link" href="smb.conf.5.html#" target="_top"/> parameter
-in the <code class="filename">smb.conf</code> file.</p></dd><dt><span class="term">-V|--version</span></dt><dd><p>Prints the program version number.
-</p></dd><dt><span class="term">-s|--configfile &lt;configuration file&gt;</span></dt><dd><p>The file specified contains the 
-configuration details required by the server.  The 
-information in this file includes server-specific
-information such as what printcap file to use, as well 
-as descriptions of all the services that the server is 
-to provide. See <code class="filename">smb.conf</code> for more information.
-The default configuration file name is determined at 
-compile time.</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>Base directory name for log/debug files. The extension
-<code class="constant">".progname"</code> will be appended (e.g. log.smbclient, 
-log.smbd, etc...). The log file is never removed by the client.
-</p></dd></dl></div></div><div class="refsect1" title="注意"><a name="id2538725"/><h2>注意</h2><p>このコマンドは root だけが利用できる。</p></div><div class="refsect1" title="バージョン"><a name="id2538736"/><h2>バージョン</h2><p>このマニュアルページは、Samba バージョン 3 用に記述されている。</p></div><div class="refsect1" title="関連項目"><a name="id2538747"/><h2>関連項目</h2><p><a class="citerefentry" href="smbpasswd.5.html"><span class="citerefentry"><span class="refentrytitle">smbpasswd</span>(5)</span></a>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a></p></div><div class="refsect1" title="著者"><a name="id2538769"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+		アカウントポリシーをデフォルトの TDB から LDAP ディレクトリサーバなどのパスワードデータベースに移行することが可能となる。</p><p>例: <code class="literal">pdbedit -y -i tdbsam: -e ldapsam:ldap://my.ldap.host</code></p></dd><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
+</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> は0から10までの整数値である。
+既定値の値は、パラメータが設定されていなければ0である。</p><p>この値を大きくするほど、サーバの動作に関するより詳細な情報が
+ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告
+のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況
+に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
+使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
+おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
+指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+</p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
+指定する。このファイルには、サーバーが提供するサービスに関する記述や、
+どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+<code class="filename">smb.conf</code> を参照のこと。設定ファイルの名前の既定値は、コンパイル時
+に決定される。
+</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>ログ/デバッグファイルのファイル名。拡張子として
+<code class="constant">".progname"</code> が追加される(例えば log.smbclient,
+log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
+</p></dd></dl></div></div><div class="refsect1" title="注意"><a name="id2538744"/><h2>注意</h2><p>このコマンドは root だけが利用できる。</p></div><div class="refsect1" title="バージョン"><a name="id2538755"/><h2>バージョン</h2><p>このマニュアルページは、Samba バージョン 3 用に記述されている。</p></div><div class="refsect1" title="関連項目"><a name="id2538766"/><h2>関連項目</h2><p><a class="citerefentry" href="smbpasswd.5.html"><span class="citerefentry"><span class="refentrytitle">smbpasswd</span>(5)</span></a>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a></p></div><div class="refsect1" title="著者"><a name="id2538788"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作られた。 Samba は現在、Linux
 	カーネルが開発されているような方法でのオープンソースプロジェクトである
-	Samba Team によって開発されている。</p><p>pdbedit のマニュアルページは Simo Sorce と Jelmer Vernooij によって作られた。</p></div><div class="refsect1" title="日本語訳"><a name="id2538796"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
+	Samba Team によって開発されている。</p><p>pdbedit のマニュアルページは Simo Sorce と Jelmer Vernooij によって作られた。</p></div><div class="refsect1" title="日本語訳"><a name="id2538815"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.23 - Samba 3.0.24  対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
 たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</p><p>このドキュメントの Samba 3.2.4-3.2.15 対応の翻訳は
 太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</p></div></div></body></html>
