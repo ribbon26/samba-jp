@@ -103,42 +103,39 @@ UNIX配下ではutime()システムコールは、たとえファイルがすべ
 <title>パスワード</title>
 
 <para>
-Many SMB clients uppercase passwords before sending them. I have no
-idea why they do this. Interestingly WfWg uppercases the password only
-if the server is running a protocol greater than COREPLUS, so
-obviously it isn't just the data entry routines that are to blame.
+多くのSMBクライアントは送信前にパスワードを大文字にする。なぜそうなっているかの理由は
+知らない。興味深いことに、WfWgは、COREPLUSよりもレベルが高いプロトコルで動いている時のみ
+パスワードを大文字にするので、データ入力ルーチンに責がないのは明白である。
 </para>
 
 <para>
-Unix passwords are case sensitive. So if users use mixed case
-passwords they are in trouble.
+UNIXパスワードは大文字小文字を認識する。そのため、もしもユーザが大文字小文字を混ぜた
+パスワードを使う場合には問題が生じる。
 </para>
 
 <para>
-Samba can try to cope with this by either using the "password level"
-option which causes Samba to try the offered password with up to the
-specified number of case changes, or by using the "password server"
-option which allows Samba to do its validation via another machine
-(typically a WinNT server).
+Sambaは、大文字小文字を、指定された値まで変更しつつ、提供されたパスワードをSambaに
+試行させる、"password level"オプションを使うか、他のマシン(通常Windows NTサーバ)
+経由でこの検証をSambaに行わせることが出来る、"password server"オプションを使うことに
+よって、対処することが出来る。
 </para>
 
 <para>
-Samba supports the password encryption method used by SMB
-clients. Note that the use of password encryption in Microsoft
-networking leads to password hashes that are "plain text equivalent".
-This means that it is *VERY* important to ensure that the Samba
-smbpasswd file containing these password hashes is only readable
-by the root user. See the documentation ENCRYPTION.txt for more
-details.
+SambaはSMBクライアントによって提供されるパスワード暗号化方法をサポートする。
+Microsoftネットワークにおける暗号化パスワードの使用は、"平文と同等の"
+パスワードハッシュを提供することと同等であることに注意。これは、それらの
+パスワードハッシュを含むSambaのsmbpasswdファイルは、rootのみ読み出し可能に
+すべきであることが*とても重要*であることを意味する。詳細は
+ENCRYPTION.txtを参照のこと。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Locking</title>
+<title>ファイルのロック</title>
 <para>
-Since samba 2.2, samba supports other types of locking as well. This 
-section is outdated.
+Samba 2.2以降、Sambaは他のロック方法をうまくサポートしている。この節は
+時代遅れである。
 </para>
 
 <para>
