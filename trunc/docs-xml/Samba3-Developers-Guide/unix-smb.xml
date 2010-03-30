@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="unix-smb">
 <chapterinfo>
@@ -8,108 +8,99 @@
 	<pubdate>April 1995</pubdate>
 </chapterinfo>
 
-<title>NetBIOS in a Unix World</title>
+<title>UNIX領域におけるNetBIOS</title>
 
 <sect1>
-<title>Introduction</title>
+<title>概要</title>
 <para>
-This is a short document that describes some of the issues that
-confront a SMB implementation on unix, and how Samba copes with
-them. They may help people who are looking at unix&lt;-&gt;PC
-interoperability.
+これは、UNIX上でのSMB実装で直面するいくつかの問題について記述し、Sambaがどのように
+それらを実装したかを説明した短い文書である。これらはUNIX&lt;-&gt;PC間の相互運用を
+調べる人の手助けになるかもしれない。
 </para>
 
 <para>
-It was written to help out a person who was writing a paper on unix to
-PC connectivity.
+PCへの接続機能を、UNIX上で実装している人の手助けとなるように書かれた。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Usernames</title>
+<title>ユーザ名</title>
 <para>
-The SMB protocol has only a loose username concept. Early SMB
-protocols (such as CORE and COREPLUS) have no username concept at
-all. Even in later protocols clients often attempt operations
-(particularly printer operations) without first validating a username
-on the server.
+SMBプロトコルはおおざっぱなユーザ名の概念しか持っていない。初期のSMBプロトコル
+(たとえばCOREとCOREPLUS)では、まったくユーザ名の概念がなかった。そのあとの
+プロトコルでもクライアントはしばしば(特にプリンタの操作において)、サーバ上で
+最初にユーザ名を検証しないで運用をしていた。
 </para>
 
 <para>
-Unix security is based around username/password pairs. A unix box
-should not allow clients to do any substantive operation without some
-sort of validation. 
+UNIXのセキュリティは、ユーザ名/パスワードペアを基本としている。UNIXマシンは
+ある種の認証なしには、どのような実質的な操作もクライアントには許可しない。
 </para>
 
 <para>
-The problem mostly manifests itself when the unix server is in "share
-level" security mode. This is the default mode as the alternative
-"user level" security mode usually forces a client to connect to the
-server as the same user for each connected share, which is
-inconvenient in many sites.
+UNIXサーバが"共有レベル"でのセキュリティモードになっていたときに、主に問題が
+発生する。これは多くのサイトで不評である、各接続済の共有に対して同じユーザとして
+クライアントがサーバに接続する事を通常強制する、"ユーザレベル"セキュリティモードの
+代替となる既定値のモードである。
 </para>
 
 <para>
-In "share level" security the client normally gives a username in the
-"session setup" protocol, but does not supply an accompanying
-password. The client then connects to resources using the "tree
-connect" protocol, and supplies a password. The problem is that the
-user on the PC types the username and the password in different
-contexts, unaware that they need to go together to give access to the
-server. The username is normally the one the user typed in when they
-"logged onto" the PC (this assumes Windows for Workgroups). The
-password is the one they chose when connecting to the disk or printer.
+"共有レベル"セキュリティでは、クライアントは通常"session setup"プロトコル中に
+おいて、ユーザ名を提供するが、対応するパスワードは提供しない。クライアントは
+次に"tree connect"プロトコルを使ってリソースに接続し、パスワードを提供する。
+問題は、PC上のユーザは異なった場面でユーザ名とパスワードを入力することであり、
+サーバにアクセスする時に、両方を一緒にする必要があることを知らないということである。
+ユーザ名は通常PCに"ログオン"するときに入力する(これはWindows for Workgroupを
+仮定している)。パスワードはディスクやプリンタに接続するときに選択する。
 </para>
 
 <para>
-The user often chooses a totally different username for their login as
-for the drive connection. Often they also want to access different
-drives as different usernames. The unix server needs some way of
-divining the correct username to combine with each password.
+ユーザは、しばしばドライブの接続のためのログオンに、全く異なったユーザ名を選ぶ。
+しばしば、異なったドライブに異なったユーザ名でアクセスすることも望む。UNIX
+サーバは各パスワードに結びつけるための正しいユーザ名を何らかの方法で見極める
+必要がある。
 </para>
 
 <para>
-Samba tries to avoid this problem using several methods. These succeed
-in the vast majority of cases. The methods include username maps, the
-service%user syntax, the saving of session setup usernames for later
-validation and the derivation of the username from the service name
-(either directly or via the user= option).
+Sambaはこの問題をいくつかの方法を使って防ごうとする。それらは大変多くの場合、
+成功する。その方法にはusername map、service%userという書式、後の認証のために
+session setupのユーザ名を保持してサービス名からユーザ名を判断する(directoryか
+user=オプション経由で)などがある。
 </para>
 
 </sect1>
 
 <sect1>
-<title>File Ownership</title>
+<title>ファイルの所有権</title>
 
 <para>
-The commonly used SMB protocols have no way of saying "you can't do
-that because you don't own the file". They have, in fact, no concept
-of file ownership at all.
+通常使われるSMBプロトコルは、"ファイルを所有していないのでその操作はできません"
+という事を通知する方法を持っていない。要するに、全くファイルの所有権という概念が
+ないのである。
 </para>
 
 <para>
-This brings up all sorts of interesting problems. For example, when
-you copy a file to a unix drive, and the file is world writeable but
-owned by another user the file will transfer correctly but will
-receive the wrong date. This is because the utime() call under unix
-only succeeds for the owner of the file, or root, even if the file is
-world writeable. For security reasons Samba does all file operations
-as the validated user, not root, so the utime() fails. This can stuff
-up shared development diectories as programs like "make" will not get
-file time comparisons right.
+これは、ある種の興味深い問題を引き起こす。たとえば、UNIXマシンにファイルをコピー
+し、ファイルは誰でも書き込み可能(world writeable)だが、他のユーザで所有されている
+場合、ファイルは正しく転送されるが、間違った日付を受け取ることになる。これは、
+UNIX配下ではutime()システムコールは、たとえファイルがすべてのユーザに対して
+書き込み可能だったとしても、ファイルの所有者かrootでのみ成功するという理由による。
+セキュリティ上の理由により、Sambaはすべてのファイル操作を認証したユーザの権限で
+行い、rootでは行わないので、utime()が失敗する。これは"make"のようなプログラムが
+ファイルの時間を正しく取れないということで、共有された開発ディレクトリが不整合になる
+可能性がある。
 </para>
 
 <para>
-There are several possible solutions to this problem, including
-username mapping, and forcing a specific username for particular
-shares.
+この問題に対するいくつかの解決方法があり、その中には、ユーザ名のマップと
+特定の共有に対して特定のユーザ名を強制する方法などがある。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Passwords</title>
+<title>パスワード</title>
 
 <para>
 Many SMB clients uppercase passwords before sending them. I have no
