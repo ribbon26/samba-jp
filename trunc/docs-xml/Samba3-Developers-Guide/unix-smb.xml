@@ -204,38 +204,36 @@ UNIXは同等の概念を持っていない。これを実装するため、Samb
 <sect1>
 <title>Trapdoor UID</title>
 <para>
-A SMB session can run with several uids on the one socket. This
-happens when a user connects to two shares with different
-usernames. To cope with this the unix server needs to switch uids
-within the one process. On some unixes (such as SCO) this is not
-possible. This means that on those unixes the client is restricted to
-a single uid.
+SMBセッションは、1つのソケット上でいくつかのUIDを使って動作することが出来る。これは、
+ユーザが、異なったユーザ名で2つの共有に接続するときに起きる。これに対処するために、
+UNIXサーバは1つのプロセス内でUIDを切り替える必要がある。ある種のUNIX(たとえばSCO)では、
+このようなことが出来ない。これは、そのようなUNIXでは、クライアントは単一のUIDでの処理に
+制限されることを意味する。
 </para>
 
 <para>
-Note that you can also get the "trapdoor uid" message for other
-reasons. Please see the FAQ for details.
+その他の理由により、"trapdoor uid"メッセージも受け取る事があり得ることに注意。
+詳細はFAQを参照のこと。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Port numbers</title>
+<title>ポート番号</title>
 <para>
-There is a convention that clients on sockets use high "unprivileged"
-port numbers (>1000) and connect to servers on low "privilegedg" port
-numbers. This is enforced in Unix as non-root users can't open a
-socket for listening on port numbers less than 1000.
+ソケット上のクライアントは、ポート番号が大きな値(>1000)の"非特権"ポート番号を使い、
+サーバへの接続は小さな値の"特権"ポートを使うという慣習がある。これは、UNIX上では、
+1000よりも小さなポート番号上で、非rootなユーザが、リッスンのためにポートを
+開けないようにさせている。
 </para>
 
 <para>
-Most PC based SMB clients (such as WfWg and WinNT) don't follow this
-convention completely. The main culprit is the netbios nameserving on
-udp port 137. Name query requests come from a source port of 137. This
-is a problem when you combine it with the common firewalling technique
-of not allowing incoming packets on low port numbers. This means that
-these clients can't query a netbios nameserver on the other side of a
-low port based firewall.
+ほとんどのPCベースのSMBクライアント(たとえばWfWgとWinNT)はこの習慣を完全に守っていない。
+主犯はUDPのポート137でのNetBIOSの名前解決である。名前問い合わせ要求はソースポート137
+から来る。これは、小さな(低位の)ポート番号で入ってくるパケットを許可しないよくある
+ファイアウォールの設定を使うときに問題になる。これは、それらクライアントは、低位の
+ポートベースのファイアウォールの反対側にあるNetBIOSネームサーバに問い合わせできないことを
+意味する。
 </para>
 
 <para>
