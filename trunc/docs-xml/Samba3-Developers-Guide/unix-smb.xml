@@ -139,6 +139,9 @@ Samba 2.2以降、Sambaは他のロック方法をうまくサポートしてい
 </para>
 
 <para>
+DOS/Windows環境におけるロック呼び出しはunix上でのものよりも機能が豊富である。これは、
+SMBのロックを実装するために、fcntl()ベースの標準UNIXロック呼び出しを使うことを選択する
+(Sambaのような)UNIXサーバは、多少間に合わせで作る必要があるということである。
 The locking calls available under a DOS/Windows environment are much
 richer than those available in unix. This means a unix server (like
 Samba) choosing to use the standard fcntl() based unix locking calls
@@ -146,17 +149,17 @@ to implement SMB locking has to improvise a bit.
 </para>
 
 <para>
-One major problem is that dos locks can be in a 32 bit (unsigned)
-range. Unix locking calls are 32 bits, but are signed, giving only a 31
-bit range. Unfortunately OLE2 clients use the top bit to select a
-locking range used for OLE semaphores.
+大きな1つの問題は、DOSのロックは32ビット(符号なし)の幅で行えると言うことである。
+UNIXのロック呼び出しは32ビットだが、符号着きであり、31ビット幅しかない。
+不幸にも、OLE2クライアントはOLEセマフォのためにロック幅を選択するためにトップ
+ビットを使う。
 </para>
 
 <para>
-To work around this problem Samba compresses the 32 bit range into 31
-bits by appropriate bit shifting. This seems to work but is not
-ideal. In a future version a separate SMB lockd may be added to cope
-with the problem.
+この問題に対応するために、Sambaは、適切なビットシフト操作を行うことによって、
+32ビット幅を31ビット幅に圧縮する。これは動作するように見えるが、理想的ではない。
+将来のバージョンでは、この問題に対処するために、分離されたSMBロックが追加される
+かもしれない。
 </para>
 
 <para>
