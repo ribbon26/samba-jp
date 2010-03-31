@@ -163,49 +163,46 @@ UNIXのロック呼び出しは32ビットだが、符号着きであり、31ビ
 </para>
 
 <para>
-It also doesn't help that many unix lockd daemons are very buggy and
-crash at the slightest provocation. They normally go mostly unused in
-a unix environment because few unix programs use byte range
-locking. The stress of huge numbers of lock requests from dos/windows
-clients can kill the daemon on some systems.
+多くのUNIXロックデーモンは結構バグがあり、些細なことによってクラッシュすることも
+足を引っ張っている。通常、ごくわずかのUNIXプログラムしかバイトレンジロックを使わない
+という理由で、UNIX環境では、これらは通常ほとんど使われない。DOS/Windowsからクライアント
+からの非常に大量のロック要求の負荷は、ある種のシステムにおいてはデーモンを終了して
+しまう。
 </para>
 
 <para>
-The second major problem is the "opportunistic locking" requested by
-some clients. If a client requests opportunistic locking then it is
-asking the server to notify it if anyone else tries to do something on
-the same file, at which time the client will say if it is willing to
-give up its lock. Unix has no simple way of implementing
-opportunistic locking, and currently Samba has no support for it.
+2番目の大きな問題は、ある種のクライアントから要求される"便宜的ロック(opportunistic locking)"
+である。もしもクライアントが便宜的ロックを要求した場合、同じファイル上に、他の誰かが
+何らかの操作を行おうとしているならば、クライアントがそのロックを開放することを
+告げる時、そのことを通知するためにサーバに要求する。UNIXは便宜的ロックを簡単に実装する
+すべがなく、現在のSambaはそれをサポートしていない(訳注:古い)。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Deny Modes</title>
+<title>拒否モード</title>
 
 <para>
-When a SMB client opens a file it asks for a particular "deny mode" to
-be placed on the file. These modes (DENY_NONE, DENY_READ, DENY_WRITE,
-DENY_ALL, DENY_FCB and DENY_DOS) specify what actions should be
-allowed by anyone else who tries to use the file at the same time. If
-DENY_READ is placed on the file, for example, then any attempt to open
-the file for reading should fail.
+SMBクライアントがファイルをオープンするとき、ファイル上に設定されている特定の
+"拒否モード"について問い合わせをする。それらのモード(DENY_NONE, DENY_READ, DENY_WRITE,
+DENY_ALL, DENY_FCB と DENY_DOS)は、他の誰かが同じ時に同じファイルを使うときに許可
+すべき動作を指定する。たとえば、もしもDENY_READがファイル上に設定されている場合、
+読み取りのためのファイルへのオープン操作は失敗する。
 </para>
 
 <para>
-Unix has no equivalent notion. To implement this Samba uses either lock
-files based on the files inode and placed in a separate lock
-directory or a shared memory implementation. The lock file method 
-is clumsy and consumes processing and file resources,
-the shared memory implementation is vastly prefered and is turned on
-by default for those systems that support it.
+UNIXは同等の概念を持っていない。これを実装するため、Sambaはファイルのinodeをベースとする
+ファイルのロックと、ロックディレクトリを分離するか、あるいは、共有メモリ実装を使う。
+ファイルロックによる方式は、あまりかっこよくなく、処理のコストがかかりファイルリソースを
+消費するが、共有メモリ実装は非常に好ましく(訳注:preferedはミススペル)、それをサポートする
+システムでは既定値で有効となっている。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Trapdoor UIDs</title>
+<title>Trapdoor UID</title>
 <para>
 A SMB session can run with several uids on the one socket. This
 happens when a user connects to two shares with different
