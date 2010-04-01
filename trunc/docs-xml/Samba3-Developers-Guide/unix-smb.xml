@@ -237,67 +237,58 @@ UNIXサーバは1つのプロセス内でUIDを切り替える必要がある。
 </para>
 
 <para>
-The problem is more severe with netbios node status queries. I've
-found that WfWg, Win95 and WinNT3.5 all respond to netbios node status
-queries on port 137 no matter what the source port was in the
-request. This works between machines that are both using port 137, but
-it means it's not possible for a unix user to do a node status request
-to any of these OSes unless they are running as root. The answer comes
-back, but it goes to port 137 which the unix user can't listen
-on. Interestingly WinNT3.1 got this right - it sends node status
-responses back to the source port in the request.
+NetBIOSノードステータスの問い合わせにおいては問題はより深刻である。WfWg、Win95と
+WinNT3.5のすべてが、要求元のソースポートが何であっても、ポート137上でNetBIOS
+ノードステータスを返す。これは両者ともポート137を使うマシン間では動作するが、
+UNIXユーザが、その種のOSでrootとして動作していない限り、ノードステータスを処理
+出来ないことを意味する。答えに戻ると、ポート137はUNIXユーザがリッスンできない。
+興味深いことに、WindowsNT3.1ではこれが出来る。これは、要求中のソースポートに
+ノードステータスを返信する。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Protocol Complexity</title>
+<title>プロトコルの複雑さ</title>
 <para>
-There are many "protocol levels" in the SMB protocol. It seems that
-each time new functionality was added to a Microsoft operating system,
-they added the equivalent functions in a new protocol level of the SMB
-protocol to "externalise" the new capabilities.
+SMBプロトコルには数多くの"プロトコルレベル"がある。MicrosoftのOSに新しい機能が追加された
+たびごとに、新しい能力を"具現化"するために、SMBプロトコルの新しいプロトコルレベル中に
+同等の機能を追加しているように見える。
 </para>
 
 <para>
-This means the protocol is very "rich", offering many ways of doing
-each file operation. This means SMB servers need to be complex and
-large. It also means it is very difficult to make them bug free. It is
-not just Samba that suffers from this problem, other servers such as
-WinNT don't support every variation of every call and it has almost
-certainly been a headache for MS developers to support the myriad of
-SMB calls that are available.
+これは、プロトコルは非常に"肥大化していて"、各ファイル操作に対して種々の方法を提供
+していることを意味する。これは、SMBサーバが複雑で肥大化してしまうことを意味する。
+また、サーバのバグをなくすことがとても困難であることも意味する。この問題で苦しむのは
+Sambaだけではなく、すべての呼び出しのすべての相違をサポートしないWindowsNTのような、
+他のサーバでもありえ、有効な無数のSMB呼び出しをサポートするためにMicrosoftの開発者に
+とっては全く持って頭痛の元である。
 </para>
 
 <para>
-There are about 65 "top level" operations in the SMB protocol (things
-like SMBread and SMBwrite). Some of these include hundreds of
-sub-functions (SMBtrans has at least 120 sub-functions, like
-DosPrintQAdd and NetSessionEnum). All of them take several options
-that can change the way they work. Many take dozens of possible
-"information levels" that change the structures that need to be
-returned. Samba supports all but 2 of the "top level" functions. It
-supports only 8 (so far) of the SMBtrans sub-functions. Even NT
-doesn't support them all.
+65種類もの(たとえばSMBreadとSMBwrite)のような"最上位の"操作がSMBプロトコル中にある。
+それらのいくつかは数百ものサブ機能を含んでいる(SMBtransは少なくとも120の
+サブ機能を含み、たとえばそれらはDosPrintQAdd と NetSessionEnum)。それらのすべては
+その動作を変えるいくつかのオプションが指定できる。多くは、結果を返すのに必要と
+される、構造体を変更する"情報レベル"が何十種類もありえる。Sambaは2つの"最上位の"
+機能を除いてすべてをサポートする。それは、SMBtransサブ機能の8つのみ(これまでの所)
+をサポートする。NTでさえ、全部をサポートしない。
 </para>
 
 <para>
-Samba currently supports up to the "NT LM 0.12" protocol, which is the
-one preferred by Win95 and WinNT3.5. Luckily this protocol level has a
-"capabilities" field which specifies which super-duper new-fangled
-options the server suports. This helps to make the implementation of
-this protocol level much easier.
+Sambaは現在Windows95とWindowsNT3.5によって提供されている"NT LM 0.12"プロトコルまでを
+サポートしている。幸運なことにこのプロトコルレベルは、サーバがサポートする、
+とびきりの、新規なオプションを指定する"capabilities"フィールドを持っている。
+これは、このプロトコルレベルの実装をより容易にすることを手助けしている。
 </para>
 
 <para>
-There is also a problem with the SMB specications. SMB is a X/Open
-spec, but the X/Open book is far from ideal, and fails to cover many
-important issues, leaving much to the imagination. Microsoft recently
-renamed the SMB protocol CIFS (Common Internet File System) and have 
-published new specifications. These are far superior to the old 
-X/Open documents but there are still undocumented calls and features. 
-This specification is actively being worked on by a CIFS developers 
-mailing list hosted by Microsft.
+また、SMBの仕様による問題もある。SMBはX/Openの仕様であるが、X/Openの書籍は理想的
+からほど遠く、多くの重要な項目が欠落していて、多くを推測しなければならない。
+Microsoftは最近SMBプロトコルをCIFS(Common Internet File System)と改名し、
+新しい仕様を公開した。それは古いX/Openのドキュメントと比べると、とても優れているが、
+引き続き文書化されていない呼び出しと機能が残っている。この仕様は、Microsoftによって
+提供されているCIFS開発者メーリングリストによって活発に作業されている。
 </para>
 </sect1>
 </chapter>
