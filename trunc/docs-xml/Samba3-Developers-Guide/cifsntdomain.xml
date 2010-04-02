@@ -166,37 +166,31 @@ S-1-5-123-456-789-123-456である。ここで、5はサブバージョンでも
 <listitem><para>
 参照する文字バッファが文字を含むなら、文書化されていないバッファポインタは0以外で
 なければならない。それが正確に何であるかは不明である。0x0000 0002は、バッファが
-存在することを指示するためのトリックを行っているように見える。
-any undocumented buffer pointers must be non-zero if the string buffer it
-refers to contains characters.  exactly what value they should be is unknown.
-0x0000 0002 seems to do the trick to indicate that the buffer exists.  a
-NULL buffer pointer indicates that the string buffer is of zero length.
-If the buffer pointer is NULL, then it is suspected that the structure it
-refers to is NOT put into (or taken out of) the SMB data stream.  This is
-empirically derived from, for example, the LSA SAM Logon response packet,
-where if the buffer pointer is NULL, the user information is not inserted
-into the data stream.  Exactly what happens with an array of buffer pointers
-is not known, although an educated guess can be made.
+存在することを指示するためのトリックを行っているように見える。もしも、バッファ
+ポインタがNULLの場合、構造体が参照するものはSMBデータストリームへ(あるいは から)
+置かれない。これは、経験的に得られたものであり、例えば、バッファポインタがNULLの、
+LSA SAMログオンレスポンスパケットのユーザ情報はデータストリーム中には挿入されない。
+いろいろと推測することは出来るが、バッファポインタの配列が正確になんなのかは
+未知である。
 </para></listitem>
 
 <listitem><para>
-an array of structures (a container) appears to have a count and a pointer.
-if the count is zero, the pointer is also zero.  no further data is put
-into or taken out of the SMB data stream.  if the count is non-zero, then
-the pointer is also non-zero.  immediately following the pointer is the
-count again, followed by an array of container sub-structures.  the count
-appears a third time after the last sub-structure.
+構造体(コンテナ)の配列は、カウンタとポインタを持つように見える。もしもカウンタが
+ゼロならば、ポインタもゼロである。SMBデータストリームにさらなるデータは存在しない。
+もしも、カウンタがゼロでない場合、ポインタもゼロではない。ポインタの直後には
+また、コンテナのサブ構造体の配列が続くカウンタが来る。カウンタは最後のサブ構造体
+の後に3回目のカウンタが来る。
 </para></listitem>
 </orderedlist>
 
 </sect2>
 
 <sect2>
-<title>Enumerations</title>
+<title>列挙</title>
 
 <sect3>
-<title>MSRPC Header type</title>
-<para>command number in the msrpc packet header</para>
+<title>MSRPCヘッダタイプ</title>
+<para>msrpcパケットヘッダ中のコマンド番号</para>
 
 <variablelist>
 <varlistentry>
@@ -219,9 +213,9 @@ appears a third time after the last sub-structure.
 </sect3>
 
 <sect3>
-<title>MSRPC Packet info</title>
+<title>MSRPC パケット情報</title>
 
-<para>The meaning of these flags is undocumented</para>
+<para>これらのフラグの意味は文書化されていない</para>
 
 <variablelist>
 <varlistentry>
@@ -263,26 +257,26 @@ appears a third time after the last sub-structure.
 </sect2>
 
 <sect2>
-<title>Structures</title>
+<title>構造体</title>
 
 <sect3><title>VOID *</title>
-<para>sizeof VOID* is 32 bits.</para>
+<para>sizeof VOID* は 32ビットである。</para>
 </sect3>
 
 <sect3><title>char</title>
-<para>sizeof char is 8 bits.</para>
+<para>sizeof char は8 ビットである。</para>
 </sect3>
 
 <sect3><title>UTIME</title>
-<para>UTIME is 32 bits, indicating time in seconds since 01jan1970.  documented in cifs6.txt (section 3.5 page, page 30).</para>
+<para>UTIME は 32 ビットであり、1980年1月1日からの秒数を示す。cifs6.txtで説明がある (section 3.5 page, page 30)。</para>
 </sect3>
 
 <sect3><title>NTTIME</title>
-<para>NTTIME is 64 bits.  documented in cifs6.txt (section 3.5 page, page 30).</para>
+<para>NTTIME は 64 ビットである。cifs6.txtで説明がある (section 3.5 page, page 30)。</para>
 </sect3>
 
 <sect3>
-<title>DOM_SID (domain SID structure)</title>
+<title>DOM_SID (domain SID 構造体)</title>
 
 <variablelist>
 
