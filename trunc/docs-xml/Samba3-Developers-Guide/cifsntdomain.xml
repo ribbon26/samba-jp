@@ -82,39 +82,39 @@ NETLOGON中で完全なデバッグを有効にする。これは以下のよう
 </emphasis></para>
 
 <para>
-Bear in mind that each packet over-the-wire will have its origin in an
-API call.  Therefore, there are likely to be structures, enumerations
-and defines that are usefully documented elsewhere.
+ネットワーク上の各パケットはAPI呼び出しにおいて固有のオリジンを持っていることを
+心にとめておくこと。そのため、その定義がほかの所で便利に文書化されている、
+構造体や列挙型かもしれない。
 </para>
 
 <para>
-This document is by no means complete or authoritative.  Missing sections
-include, but are not limited to:
+この文書は、決して完全でも正式でもない。以下のようものだけではなく、
+抜けているところがある:
 </para>
 
 
 <orderedlist>
 
-<listitem><para>Mappings of RIDs to usernames (and vice-versa).</para></listitem>
+<listitem><para>ユーザ名からRID(やその他(へのマッピング。</para></listitem>
 
-<listitem><para>What a User ID is and what a Group ID is.</para></listitem>
+<listitem><para>ユーザIDとグループIDが何であるかということ。</para></listitem>
 
-<listitem><para>The exact meaning/definition of various magic constants or enumerations.</para></listitem>
+<listitem><para>種々の、特定の定数または列挙型の正確な意味と定義。</para></listitem>
 
-<listitem><para>The reply error code and use of that error code when a
-workstation becomes a member of a domain (to be described later).  
-Failure to return this error code will make the workstation report 
-that it is already a member of the domain.</para></listitem>
+<listitem><para>ワークステーションがドメインのメンバになるときの、返されるエラーコードと
+エラーコードの使用法(後で説明)。失敗時に返されるエラーコードは、ワークステーション上で
+すでにドメインのメンバになっているという表示を行わせる。
+</para></listitem>
 
-<listitem><para>the cryptographic side of the NetrServerPasswordSet command, 
-which would allow the workstation to change its password.  This password is
-used to generate the long-term session key.  [It is possible to reject this
-command, and keep the default workstation password].</para></listitem>
+<listitem><para>ワークステーションにそのパスワードを変更させることが出来るようにする、
+NetrServerPasswordSetコマンドの暗号化の側面。このパスワードは長期でのセッションキー
+を生成するのに使われる[このコマンドを拒否するのも可能で、その場合は既定値の
+ワークステーションパスワードを保持する]。</para></listitem>
 
 </orderedlist>
 
 <sect2>
-<title>Sources</title>
+<title>ソース</title>
 
 <simplelist>
 <member>cket Traces from Netmonitor (Service Pack 1 and above)</member>
@@ -126,7 +126,7 @@ command, and keep the default workstation password].</para></listitem>
 </sect2>
 
 <sect2>
-<title>Credits</title>
+<title>クレジット</title>
 
 <simplelist> 
 <member>Paul Ashton: loads of work with Net Monitor; understanding the NT authentication system; reference implementation of the NT domain support on which this document is originally based.</member>
@@ -140,29 +140,33 @@ command, and keep the default workstation password].</para></listitem>
 </sect1>
 
 <sect1>
-<title>Notes and Structures</title>
+<title>注意事項と構造</title>
 
 <sect2>
-<title>Notes</title>
+<title>注意事項</title>
 
 <orderedlist>
 <listitem><para>
-In the SMB Transact pipes, some "Structures", described here, appear to be
-4-byte aligned with the SMB header, at their start.  Exactly which
-"Structures" need aligning is not precisely known or documented.
+SMBトランザクションパイプ中で、いくつかの"構造体"がここで説明されていて、
+開始時に4バイト境界で整列されたSMBヘッダがある。正確に"構造体"を整列させる
+必要性は、正確には知られても、文書化されてもいない。
 </para></listitem>
 
 <listitem><para>
-In the UDP NTLOGON Mailslots, some "Structures", described here, appear to be
-2-byte aligned with the start of the mailslot, at their start.
+UDP NETLOGON Mailslot中で、いくつかの"構造体"がここで説明されていて、開始時に、
+mailslotの先頭に2バイト境界で整列されている。
 </para></listitem>
 
 <listitem><para>
+Domain SIDはS-revision-version-auth1-auth2...authNという形式である。たとえば、
 Domain SID is of the format S-revision-version-auth1-auth2...authN.
-e.g S-1-5-123-456-789-123-456.  the 5 could be a sub-revision.
+S-1-5-123-456-789-123-456である。ここで、5はサブバージョンでもありえる。
 </para></listitem>
 
 <listitem><para>
+参照する文字バッファが文字を含むなら、文書化されていないバッファポインタは0以外で
+なければならない。それが正確に何であるかは不明である。0x0000 0002は、バッファが
+存在することを指示するためのトリックを行っているように見える。
 any undocumented buffer pointers must be non-zero if the string buffer it
 refers to contains characters.  exactly what value they should be is unknown.
 0x0000 0002 seems to do the trick to indicate that the buffer exists.  a
