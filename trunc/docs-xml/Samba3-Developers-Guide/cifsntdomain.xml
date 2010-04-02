@@ -32,32 +32,29 @@
 </para>
 
 <para>
-It should be possible to select a domain instead of a workgroup (in the NT
-workstation's TCP/IP settings) and after the obligatory reboot, type in a
-username, password, select a domain and successfully log in.  I would
-appreciate any feedback on your experiences with this process, and any
-comments, corrections and additions to this document.
+(NTワークステーションのTCP/IP設定中で)ワークグループの代わりにドメインを選択することは
+可能であり、必須である再起動後に、ユーザ名とパスワードを入力し、ドメインを選択すれば
+正しくログオンできる。この文書に対する、上記作業の経験からの、何らかのフィードバック
+、何らかのコメント、修正と追加事項は歓迎する。
 </para>
 
 <para>
-The packets described here can be easily derived from (and are probably
-better understood using) Netmon.exe.  You will need to use the version
-of Netmon that matches your system, in order to correctly decode the
-NETLOGON, lsarpc and srvsvc Transact pipes.  This document is derived from
-NT Service Pack 1 and its corresponding version of Netmon.  It is intended
-that an annotated packet trace be produced, which will likely be more
-instructive than this document.
+ここで説明するパケットはNetmon.exeによって簡単に(そしておそらくそれを使うことでより
+よく理解でき)得られる。NETLOGON、lsarpcとsrvsvcトランザクションパイプを正しくデコード
+するために、使用しているシステムに一致するNetmonのバージョンを使う必要がある。
+この文書は、NTサービスパック1の、それに適合したバージョンのNetmonから得られている。
+これは、この文書よりもより有益であろう、注釈付きのパケットトレースが生成されることを
+目的としている。
 </para>
 
 <para>
-Also needed, to fully implement NT Domain Login Services, is the 
-document describing the cryptographic part of the NT authentication.
-This document is available from comp.protocols.smb; from the ntsecurity.net
-digest and from the samba digest, amongst other sources.
+また、NTドメインログオンサービスを完全に実装するため、NTの認証の暗号化部分を
+説明する文書も必要である。この文書は comp.protocols.smbから公開されている、
+ntsecurity.net のからの要約とsamba digestからとその他のソースからのものを使っている。
 </para>
 
 <para>
-A copy is available from:
+コピーは以下にある:
 </para>
 
 <para><ulink url="http://ntbugtraq.rc.on.ca/SCRIPTS/WA.EXE?A2=ind9708;L=ntbugtraq;O=A;P=2935">http://ntbugtraq.rc.on.ca/SCRIPTS/WA.EXE?A2=ind9708;L=ntbugtraq;O=A;P=2935</ulink></para>
@@ -65,24 +62,24 @@ A copy is available from:
 <para><ulink url="http://mailhost.cb1.com/~lkcl/crypt.html">http://mailhost.cb1.com/~lkcl/crypt.html</ulink></para>
 
 <para>
-A c-code implementation, provided by <ulink url="mailto:linus@incolumitas.se">Linus Nordberg</ulink>
-of this protocol is available from:
+<ulink url="mailto:linus@incolumitas.se">Linus Nordberg</ulink>による、
+このプロトコルに関するC言語での実装は、以下にある:
 </para>
 
 <para><ulink url="http://samba.org/cgi-bin/mfs/01/digest/1997/97aug/0391.html">http://samba.org/cgi-bin/mfs/01/digest/1997/97aug/0391.html</ulink></para>
 <para><ulink url="http://mailhost.cb1.com/~lkcl/crypt.txt">http://mailhost.cb1.com/~lkcl/crypt.txt</ulink></para>
 
 <para>
-Also used to provide debugging information is the Check Build version of
-NT workstation, and enabling full debugging in NETLOGON.  This is
-achieved by setting the following REG_SZ registry key to 0x1ffffff:
+デバッグ情報の提供のためにはNT workstationのCheck Buildバージョンも必要であり、
+NETLOGON中で完全なデバッグを有効にする。これは以下のようにして、REG_SZ
+レジストリーキーを 0x1ffffff に設定することで行える:
 </para>
 
 <para><filename>HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters</filename></para>
 
-<para><emphasis>Incorrect direct editing of the registry can cause your
-machine to fail. Then again, so can incorrect implementation of this 
-protocol. See "Liability:" above.</emphasis></para>
+<para><emphasis>不正にレジストリを編集すると、使用しているマシンを動作不能にさせる
+事になる。このプロトコルの不正な実装になる。上記の"Liability:"を参照のこと。
+</emphasis></para>
 
 <para>
 Bear in mind that each packet over-the-wire will have its origin in an
