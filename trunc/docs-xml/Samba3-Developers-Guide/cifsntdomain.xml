@@ -1230,23 +1230,25 @@ UNICODE文字列ヘッダとUNICODE文字列自身との間で競合がある。
 <title>MSRPC パイプ</title>
 
 <para>
-The MSRPC is conducted over an SMB Transact Pipe with a name of 
-<filename>\PIPE\</filename>.  You must first obtain a 16 bit file handle, by
-sending a SMBopenX with the pipe name <filename>\PIPE\srvsvc</filename> for
-example.  You can then perform an SMB Trans,
-and must carry out an SMBclose on the file handle once you are finished.
+MSRPCは<filename>\PIPE\</filename>という名前のSMBトランザクションパイプ上で行われる。
+たとえば、パイプ名<filename>\PIPE\srvsvc</filename>でSMBopenXを送信することで、
+まず初めに16ビットのファイルハンドルを得ておかねばならない。そうすると次に
+SMB Transを実行でき、処理が終了したら、ファイルハンドル上でSMBCloseを送る必要がある。
 </para>
 
 <para>
-Trans Requests must be sent with two setup UINT16s, no UINT16 params (none
-known about), and UINT8 data parameters sufficient to contain the MSRPC
-header, and MSRPC data.  The first UINT16 setup parameter must be either
-0x0026 to indicate an RPC, or 0x0001 to indicate Set Named Pipe Handle
-state.  The second UINT16 parameter must be the file handle for the pipe,
-obtained above.
+Trans Requestは(これについては知られていないが)1つのUINT16ではなく2つのUINT16
+セットアップパラメータと、MSRPCヘッダを含むために十分なUINT8データパラメータと
+MSRPCデータを送る必要がある。最初のUINT16セットアップパラメータはRPCを指定するために
+0x0026か、Set Named Pipe Handle Stateを指示するために、0x0001のどちらかでなければ
+ならない。2番目のUINT16パラメータは、上記で得られた、パイプ用のファイルハンドルで
+なければならない。
 </para>
 
 <para>
+Trans Request中の、0x0026 (RPC pipe)であるAPIコマンド用のデータセクションは、RPCデータが
+後に来るRPCヘッダである。0x0001のAPIコマンド(Set Named Pipe Handle state)のための
+データセクションは、2バイトである。その2バイトの中に現れるものは、0x00 0x43のみである。
 The Data section for an API Command of 0x0026 (RPC pipe) in the Trans
 Request is the RPC Header, followed by the RPC Data.  The Data section for
 an API Command of 0x0001 (Set Named Pipe Handle state) is two bytes.  The
@@ -1254,8 +1256,8 @@ only value seen for these two bytes is 0x00 0x43.
 </para>
 
 <para>
-MSRPC Responses are sent as response data inside standard SMB Trans
-responses, with the MSRPC Header, MSRPC Data and MSRPC tail.
+MSRPC ResponseはMSPRCヘッダ、MSRPCデータとMSRPCフッタ(訳注:tail)がある、標準
+SMB Transレスポンス内で、レスポンスデータとして送信される。
 </para>
 
 <para>
