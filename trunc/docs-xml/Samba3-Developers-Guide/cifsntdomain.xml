@@ -1261,6 +1261,9 @@ SMB Transレスポンス内で、レスポンスデータとして送信され�
 </para>
 
 <para>
+Trans Requestが少なくとも2バイト境界(おそらく4バイト)に配置される必要があるだろうと
+いうことは、推測される。これは、SMBに対して標準的な慣習である。また、MSRPCヘッダと
+MSRPCデータの間での4バイト単位境界を含む、MSRPCヘッダの4バイト単位境界とは独立している。
 It is suspected that the Trans Requests will need to be at least 2-byte
 aligned (probably 4-byte).  This is standard practice for SMBs.  It is also
 independent of the observed 4-byte alignments with the start of the MSRPC
@@ -1269,20 +1272,19 @@ MSRPC data.
 </para>
 
 <para>
-First, an SMBtconX connection is made to the IPC$ share.  The connection
-must be made using encrypted passwords, not clear-text.  Then, an SMBopenX
-is made on the pipe.  Then, a Set Named Pipe Handle State must be sent,
-after which the pipe is ready to accept API commands.  Lastly, and SMBclose
-is sent.
+最初に、IPC$共有に対してSMBtconX接続が行われる。コネクションは、平文ではなく、
+暗号化したパスワードを使って行わなければならない。次に、SMBOpenXがパイプ上で行われる。
+次に、Set Named Pipe Handle Stateが、APCコマンドを受け取れるようにパイプがなった後に
+送られる必要がある。最後に、SMBcloseが送られる。
 </para>
 
 <para>
-To be resolved:
+解決されること:
 </para>
 
 <para>
-lkcl/01nov97 there appear to be two additional bytes after the null-terminated \PIPE\ name for the RPC pipe.  Values seen so far are
-listed below:</para>
+lkcl/01nov97において、RPCパイプのためのNULL文字で終端している\PIPE\名の後に2バイトが
+存在するように見える。今のところ分かっている値は以下の通り:</para>
 
 <para><programlisting>
         initial SMBopenX request:         RPC API command 0x26 params:
@@ -1293,17 +1295,17 @@ listed below:</para>
 </sect2>
 
 <sect2>
-<title>Header</title>
+<title>ヘッダ</title>
 
-<para>[section to be rewritten, following receipt of work by Duncan Stansfield]</para>
+<para>[Duncan Stansfieldによる作業を受け取った後、この節は書き直される予定]</para>
 
-<para>Interesting note: if you set packed data representation to 0x0100 0000
-then all 4-byte and 2-byte word ordering is turned around!</para>
+<para>興味深い注意:もしも、パックされたデータを0x0100 0000と設定した場合、
+すべての4バイトと2バイトワードの順番は逆転する!</para>
 
-<para>The start of each of the NTLSA and NETLOGON named pipes begins with:</para>
+<para>NTLSAとNETLOGON名前付きパイプのおのおのの開始は、以下で始まる:</para>
 
 <segmentedlist>
-<segtitle>offset</segtitle><segtitle>Variable type</segtitle><segtitle>Variable data</segtitle>
+<segtitle>オフセット</segtitle><segtitle>変数タイプ</segtitle><segtitle>変数のデータ</segtitle>
 <seglistitem><seg>00</seg><seg>UINT8</seg><seg>5 - RPC major version</seg></seglistitem>
 <seglistitem><seg>01</seg><seg>UINT8</seg><seg>0 - RPC minor version</seg></seglistitem>
 <seglistitem><seg>02</seg><seg>UINT8</seg><seg>2 - RPC response packet</seg></seglistitem>
@@ -1320,7 +1322,7 @@ then all 4-byte and 2-byte word ordering is turned around!</para>
 </segmentedlist>
 
 <sect3>
-<title>RPC_Packet for request, response, bind and bind acknowledgement</title>
+<title>要求、レスポンス、バインドとバインド承認に対するRPC_Packet</title>
 
 <variablelist>
 <varlistentry>
@@ -1356,9 +1358,10 @@ then all 4-byte and 2-byte word ordering is turned around!</para>
 </sect3>
 
 <sect3>
-<title>Interface identification</title>
+<title>インタフェース識別</title>
 
-<para>the interfaces are numbered. as yet I haven't seen more than one interface used on the same pipe name srvsvc</para>
+<para>インタフェースには番号が付けられている。同じパイプ名srvsvc上で1つより多い
+インタフェースを使う場面にはまだ出会ったことがない。</para>
 
 <para><programlisting>
 abstract (0x4B324FC8, 0x01D31670, 0x475A7812, 0x88E16EBF, 0x00000003)
@@ -1385,7 +1388,8 @@ transfer (0x8A885D04, 0x11C91CEB, 0x0008E89F, 0x6048102B, 0x00000002)
 <sect3>
 <title>RPC_ReqBind RW</title>
 
-<para>the remainder of the packet after the header if "type" was Bind in the response header, "type" should be BindAck</para>
+<para>"タイプ"がレスポンスヘッダのBINDであった場合、ヘッダの後のパケットの残りの
+"タイプ"は、BindAckであるべきである。</para>
 
 <variablelist>
 <varlistentry>
