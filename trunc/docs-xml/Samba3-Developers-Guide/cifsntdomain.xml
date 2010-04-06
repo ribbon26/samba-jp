@@ -1590,7 +1590,7 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </varlistentry>
 </variablelist>
 
-<para><emphasis>Note:	The RPC_Packet fraglength member in both the Bind Request and Bind Acknowledgment must contain the length of the entire RPC data, including the RPC_Packet header.</emphasis></para>
+<para><emphasis>注意: バインド要求とバインド承認の両方におけるRPC_Packet fraglength  メンバは、RPC_Packet headerを含めて、RPCデータ全体の長さを含まなければならない。</emphasis></para>
 
 <para>Request:</para>
 
@@ -1608,21 +1608,21 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </sect2>
 
 <sect2>
-<title>NTLSA Transact Named Pipe</title>
+<title>NTLSA トランザクション名前付きパイプ</title>
 
-<para>The sequence of actions taken on this pipe are:</para>
+<para>このパイプ上で取られる動作の順番は以下の通り:</para>
 
 <simplelist>
-<member>Establish a connection to the IPC$ share (SMBtconX).  use encrypted passwords.</member>
-<member>Open an RPC Pipe with the name "\\PIPE\\lsarpc".  Store the file handle.</member>
-<member>Using the file handle, send a Set Named Pipe Handle state to 0x4300.</member>
-<member>Send an LSA Open Policy request.  Store the Policy Handle.</member>
-<member>Using the Policy Handle, send LSA Query Info Policy requests, etc.</member>
-<member>Using the Policy Handle, send an LSA Close.</member>
-<member>Close the IPC$ share.</member>
+<member>IPC$ share (SMBtconX)への接続を確立する。暗号化パスワードを使用。</member>
+<member>"\\PIPE\\lsarpc"という名前でRPCパイプを開く。ファイルハンドルを格納する。</member>
+<member>ファイルハンドルを使い、Named Pipe Handle stateを0x4300に設定する。</member>
+<member>LSA Open Policy要求を送る。ポリシーハンドルを格納する。</member>
+<member>ポリシーハンドルを使い、LSA Query Info Policy要求などを送る。</member>
+<member>ポリシーハンドルを使い、LSA Closeを送る。</member>
+<member>IPC$共有をクローズする。</member>
 </simplelist>
 
-<para>Defines for this pipe, identifying the query are:</para>
+<para>このパイプの定義のための、問い合わせの識別子は以下の通り:</para>
 <variablelist>
 <varlistentry>
 	<term>LSA Open Policy:</term>
@@ -1657,9 +1657,9 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </sect2>
 
 <sect2>
-<title>LSA Open Policy</title>
+<title>LSAオープンポリシー</title>
 
-<para><emphasis>Note:	The policy handle can be anything you like.</emphasis></para>
+<para><emphasis>注意:	ポリシーハンドルはどんな好みのものでもあり得る。</emphasis></para>
 
 <sect3>
 <title>Request</title>
@@ -1686,7 +1686,7 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 
@@ -1707,12 +1707,12 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </sect2>
 
 <sect2>
-<title>LSA Query Info Policy</title>
+<title>LSA Query Info ポリシー</title>
 
-<para><emphasis>Note:	The info class in response must be the same as that in the request.</emphasis></para>
+<para><emphasis>注意:	レスポンス中のinfo classはリクエスト中のものと同じである必要がある。</emphasis></para>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <variablelist>
 <varlistentry>
@@ -1726,7 +1726,7 @@ RPCバインドは、あるRPCパイプ(例えば\PIPE\lsarpc)と"transfer synta
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
@@ -1756,17 +1756,17 @@ return    0 - indicates success
 </sect2>
 
 <sect2>
-<title>LSA Enumerate Trusted Domains</title>
+<title>LSA がエミュレートする信頼するドメイン</title>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <para>no extra data</para>
 
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
@@ -1794,14 +1794,14 @@ return    0 - indicates success
 <title>LSA Open Secret</title>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <para>no extra data</para>
 
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
@@ -1836,7 +1836,7 @@ return    0 - indicates success
 <title>LSA Close</title>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <variablelist>
 <varlistentry>
@@ -1848,7 +1848,7 @@ return    0 - indicates success
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
