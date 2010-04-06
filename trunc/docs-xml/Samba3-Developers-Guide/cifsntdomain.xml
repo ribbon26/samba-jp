@@ -1864,10 +1864,10 @@ return    0 - indicates success
 <sect2>
 <title>LSA Lookup SIDS</title>
 
-<para><emphasis>Note:	num_entries in response must be same as num_entries in request.</emphasis></para>
+<para><emphasis>注意:	レスポンス中のnum_entriesはリクエスト中のnum_entriesと同じでなければならない。</emphasis></para>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <variablelist>
 <varlistentry>
@@ -1899,7 +1899,7 @@ return    0 - indicates success
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
@@ -1929,12 +1929,12 @@ return    0 - indicates success
 </sect2>
 
 <sect2>
-<title>LSA Lookup Names</title>
+<title>LSA ルックアップ名</title>
 
-<para><emphasis>Note:	num_entries in response must be same as num_entries in request.</emphasis></para>
+<para><emphasis>注意:	レスポンス中のnum_entriesはリクエスト中のnum_entriesと同じでなければならない。</emphasis></para>
 
 <sect3>
-<title>Request</title>
+<title>リクエスト</title>
 
 <variablelist>
 <varlistentry>
@@ -1970,7 +1970,7 @@ return    0 - indicates success
 </sect3>
 
 <sect3>
-<title>Response</title>
+<title>レスポンス</title>
 
 <variablelist>
 <varlistentry>
@@ -2000,23 +2000,25 @@ return    0 - indicates success
 </sect1>
 
 <sect1>
-<title>NETLOGON rpc Transact Named Pipe</title>
+<title>NETLOGON rpc トランザクション名前付きパイプ</title>
 
-<para>The sequence of actions taken on this pipe are:</para>
+<para>このパイプ上の動作の順番は以下の通り:</para>
 
 <simplelist>
-<member>tablish a connection to the IPC$ share (SMBtconX).  use encrypted passwords.</member>
-<member>en an RPC Pipe with the name "\\PIPE\\NETLOGON".  Store the file handle.</member>
-<member>ing the file handle, send a Set Named Pipe Handle state to 0x4300.</member>
-<member>eate Client Challenge. Send LSA Request Challenge.  Store Server Challenge.</member>
-<member>lculate Session Key.  Send an LSA Auth 2 Challenge.  Store Auth2 Challenge.</member>
-<member>lc/Verify Client Creds.  Send LSA Srv PW Set.  Calc/Verify Server Creds.</member>
-<member>lc/Verify Client Creds.  Send LSA SAM Logon .  Calc/Verify Server Creds.</member>
-<member>lc/Verify Client Creds.  Send LSA SAM Logoff.  Calc/Verify Server Creds.</member>
-<member>ose the IPC$ share.</member>
+<member>IPC$ 共有 (SMBtconX)に対して接続を確立する。暗号化パスワードを使用。</member>
+<member>"\\PIPE\\NETLOGON"という名前でRPCパイプを開く。ファイルハンドルを格納する。</member>
+<member>ファイルハンドルを使い、Named Pipe Handle stateを0x4300に設定する。</member>
+<member>クライアント用のチャレンジデータを作成する。LSA Request Challengeを送信する。Server Challengeを格納する。</member>
+<member>セッションキーを計算する。LSA Auth 2 Challengeを送信する。Auth2 Challengeを格納する。</member>
+<member>Client Credsを計算して検証する。LSA Srv PW Setを送信する。Server Credsを計算、検証する。</member>
+<member>Client Credsを計算して検証する。LSA Srv Logonを送信する。Server Credsを計算、検証する。</member>
+<member>Client Credsを計算して検証する。LSA Srv Logoffを送信する。Server Credsを計算、検証する。</member>
+<member>IPC$共有をクローズする。</member>
+
+
 </simplelist>
 
-<para>Defines for this pipe, identifying the query are</para>
+<para>このパイプの定義のための、問い合わせ識別子は以下の通り</para>
 
 <variablelist>
 <varlistentry>
