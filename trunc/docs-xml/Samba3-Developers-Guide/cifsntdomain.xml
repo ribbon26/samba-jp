@@ -2754,38 +2754,37 @@ C: Rc = Cred(Ks,Rc+Tc+1)
 </para>
 
 <para>
-None of the returned user info such as logon script, profile path and
-SIDs *appear* to be protected by anything other than the TCP checksum.
+ログオンスクリプト、プロファイルパスと、SIDのような戻り情報は、TCPチェックサム以外の
+何かによって保護されるように見えない。
 </para>
 
 <para>
-The server time stamps appear to be ignored.
+サーバのタイムスタンプは無視されるように見える。
 </para>
 
 <para>
-The client sends a ReturnAuthenticator in the SamLogon request which I
-can't find a use for.  However its time is used as the timestamp
-returned by the server.
+クライアントは、それに対する使用法が分からない、SamLogonリクエスト中で
+ReturnAuthenticatorを送る。しかし、その時間はサーバによって戻されるタイムスタンプ
+として使われる。
 </para>
 
 <para>
-The password OWFs should NOT be sent over the network reversibly
-encrypted. They should be sent using ARC4(Ks,md4(owf)) with the server
-computing the same function using the owf values in the SAM.
+パスワードのOMFは解読できる暗号でネットワーク上に送信すべきでない。SAM中のowf値を
+使う同じ機能でサーバが計算するARC4(Ks,md4(owf))を使って送るべきである。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>SIDs and RIDs</title>
+<title>SIDとRID</title>
 
 <para>
-SIDs and RIDs are well documented elsewhere.
+SIDとRIDはどこかで詳細に説明がある。
 </para>
 
 <para>
-A SID is an NT Security ID (see DOM_SID structure).  They are of the form:
+SIDはNTセキュリティID(DOM_SID構造参照)である。これらは以下の形式を取る:
 </para>
 
 <simplelist>
@@ -2794,15 +2793,15 @@ A SID is an NT Security ID (see DOM_SID structure).  They are of the form:
 </simplelist>
 
 <para>
-currently, the SID revision is 1.
-The Sub-Authorities are known as Relative IDs (RIDs).
+現在、SIDのリビジョンは1である。
+Sub-Authoritiesは相対ID(RID)として知られている。
 </para>
 
 <sect2>
-<title>Well-known SIDs</title>
+<title>よく知られているSID</title>
 
 <sect3>
-<title>Universal well-known SIDs</title>
+<title>ユニバーサルによる知られているSID</title>
 
 <variablelist>
 <varlistentry>
@@ -2842,7 +2841,7 @@ The Sub-Authorities are known as Relative IDs (RIDs).
 </sect3>
 
 <sect3>
-<title>NT well-known SIDs</title>
+<title>NTにおけるよく知られているSID</title>
 
 <variablelist>
 <varlistentry>
@@ -2897,16 +2896,18 @@ The Sub-Authorities are known as Relative IDs (RIDs).
 </sect2>
 
 <sect2>
-<title>Well-known RIDS</title>
+<title>よく知られているRID</title>
 
 <para>
+RIDはsub-authorityであり、SIDの一部か、グループRIDの場合は、DOM_GID構造の一部であり、
+USER_INFO_1構造ではLSA SAMログオンレスポンスの中である。
 A RID is a sub-authority value, as part of either a SID, or in the case
 of Group RIDs, part of the DOM_GID structure, in the USER_INFO_1
 structure, in the LSA SAM Logon response.
 </para>
 
 <sect3>
-<title>Well-known RID users</title>
+<title>よく知られたRIDユーザ</title>
 
 <segmentedlist>
 <segtitle>Groupname</segtitle>
@@ -2919,7 +2920,7 @@ structure, in the LSA SAM Logon response.
 </sect3>
 
 <sect3>
-<title>Well-known RID groups</title>
+<title>よく知られたRIDグループ</title>
 
 <segmentedlist>
 <segtitle>Groupname</segtitle>
@@ -2933,7 +2934,7 @@ structure, in the LSA SAM Logon response.
 </sect3>
 
 <sect3>
-<title>Well-known RID aliases</title>
+<title>よく知られたRID別名</title>
 
 <segmentedlist>
 <segtitle>Groupname</segtitle>
