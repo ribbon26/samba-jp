@@ -55,56 +55,54 @@ Samba Teamは、非常に汚いSMBとCIFSプロトコルによって押しつけ
 </para>
 
 <para>
-The longer versions is that there are very good reasons for not making
-smbd multi-threaded.  Multi-threading would actually make Samba much
-slower, less scalable, less portable and much less robust. The fact
-that we use a separate process for each connection is one of Samba's
-biggest advantages.
+より長い期間において、smbdをマルチスレッドにしない、とても良い理由が存在している。
+マルチスレッドはSambaをより遅くし、スケーラビリティを減少させ、移植性をなくし、
+とても不安定にさせる。実際、各接続に対して独立したプロセスを使用していて、それは
+Sambaの最も大きな利点の1つである。
 </para>
 
 </sect1>
 
 <sect1>
-<title>Threading smbd</title>
+<title>smbdのスレッド化</title>
 
 <para>
-A few problems that would arise from a threaded smbd are:
+スレッド化したsmbdから発生するいくつかの問題は以下の通り:
 </para>
 
 <orderedlist>
 <listitem><para>
-	It's not only to create threads instead of processes, but you
-	must care about all variables if they have to be thread specific
-	(currently they would be global).
+    プロセスの代わりにスレッドを作成するだけでなく、スレッド固有で存在しなければならない
+    場合、すべての変数について管理を行わなければならない(現在それらはグローバルである)。
 </para></listitem>
 
 <listitem><para>
-	if one thread dies (eg. a seg fault) then all threads die. We can
-	immediately throw robustness out the window.
+    もしもある1つのスレッドが異常終了すると(例えば、セグメンテーションフォルト)、
+    すべてのスレッドが異常終了する。信頼性を損ねることになる。
 </para></listitem>
 
 <listitem><para>
-	many of the system calls we make are blocking. Non-blocking
-	equivalents of many calls are either not available or are awkward (and
-	slow) to use. So while we block in one thread all clients are
-	waiting. Imagine if one share is a slow NFS filesystem and the others 
-	are fast, we will end up slowing all clients to the speed of NFS.
+    使用している多くのシステムコールがブロックしている。多くのシステムコールで
+    ブロックしないか同等のことをするものは、用意されていないか、うまく使えない
+    (そして遅い)。そのため、ある1つのスレッドでブロックしている間は、すべての
+    クライアントは待たされることになる。ある共有が遅いNFSファイルシステムで、
+    その他が早いものだと仮定してみた場合、すべてのクライアントが、NFSのスピードに
+    抑制されてしまう。
 </para></listitem>
 
 <listitem><para>
-	you can't run as a different uid in different threads. This means
-	we would have to switch uid/gid on _every_ SMB packet. It would be
-	horrendously slow.
+    異なったスレッド中で異なったuidとして動作できない。これは、すべてのSMBパケット上で
+    uid/gidをスイッチしなければならないと言うことを意味する。それはとてつもなく遅い。
 </para></listitem>
 
 <listitem><para>
-	the per process file descriptor limit would mean that we could only
-	support a limited number of clients.
+    プロセスあたりのファイルディスクリプタ制限は、制限されたクライアントの数のみを
+    サポートできることを意味する。
 </para></listitem>
 
 <listitem><para>
-	we couldn't use the system locking calls as the locking context of
-	fcntl() is a process, not a thread.
+    プロセスに対してfcntl()のコンテキストでロッキングを行うようにスレッドに対して
+    システムロッキングを使うことが出来ない。
 </para></listitem>
 
 </orderedlist>
@@ -112,7 +110,7 @@ A few problems that would arise from a threaded smbd are:
 </sect1>
 
 <sect1>
-<title>Threading nmbd</title>
+<title>nmbdのスレッド化</title>
 
 <para>
 This would be ideal, but gets sunk by portability requirements.
