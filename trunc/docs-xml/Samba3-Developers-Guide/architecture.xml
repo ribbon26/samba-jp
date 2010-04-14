@@ -113,44 +113,43 @@ Sambaの最も大きな利点の1つである。
 <title>nmbdのスレッド化</title>
 
 <para>
-This would be ideal, but gets sunk by portability requirements.
+これは理想ではあるが、ポータビリティの要求により実現するのは難しい。
 </para>
 
 <para>
-Andrew tried to write a test threads library for nmbd that used only
-ansi-C constructs (using setjmp and longjmp). Unfortunately some OSes
-defeat this by restricting longjmp to calling addresses that are
-shallower than the current address on the stack (apparently AIX does
-this). This makes a truly portable threads library impossible. So to
-support all our current platforms we would have to code nmbd both with
-and without threads, and as the real aim of threads is to make the
-code clearer we would not have gained anything. (it is a myth that
-threads make things faster. threading is like recursion, it can make
-things clear but the same thing can always be done faster by some
-other method)
+Andrew はANSI-Cの範囲のみを使って(setjmpとlongjmpを使って)nmbd用のテスト用
+スレッドライブラリを加工とした。残念なことに、いくつかのOSでは、スタック上の
+現在のアドレスよりも浅い位置のアドレスを呼び出すためにlongjmpを制限することに
+よって、うまくいかなかった(見たところでは、AIXがそうである)。これは、真に
+ポータブルなスレッドライブラリを不可能にしている。そのため、現在対応している
+すべてのプラットフォームに対して、nmbdのコードをスレッドあり、なしの両方用意
+しなければならず、スレッドの本来の目的はコードをきれいにすることであるが、
+それを得られない(スレッドが物事を早くするというのは神話である。スレッドは
+再帰のようなものであり、物事をきれいにするが、他の何らかの方法によって、いつでも
+それはもっと早くすることもできる)。
 </para>
 
 <para>
-Chris tried to spec out a general design that would abstract threading
-vs separate processes (vs other methods?) and make them accessible
-through some general API. This doesn't work because of the data
-sharing requirements of the protocol (packets in the future depending
-on packets now, etc.) At least, the code would work but would be very
-clumsy, and besides the fork() type model would never work on Unix. (Is there an OS that it would work on, for nmbd?)
+Chrisは、スレッド対独立したプロセス(対他の方法?)を要約する汎用的なデザインを設計
+しようとし、いくつかの汎用APCを通して、それらをアクセス可能にした。これは、
+プロトコルによるデータ共有要求(現在のパケットに将来のパケットが依存するなど)という
+理由でうまく動かなかった。少なくとも、コードは動いたが、非常にぎこちなく、
+その上、fork()タイプモデルは、UNIX上では決して動かなかった(nmbdに対して、
+それが動くOSはあるのだろうか?)。
 </para>
 
 <para>
-A fork() is cheap, but not nearly cheap enough to do on every UDP
-packet that arrives. Having a pool of processes is possible but is
-nasty to program cleanly due to the enormous amount of shared data (in
-complex structures) between the processes. We can't rely on each
-platform having a shared memory system.
+fork()は安っぽいが、受信したすべてのUDPパケット上で処理を行うのに、十分
+安っぽいわけではない。プロセスのプールを持つことは可能であるが、プロセス間で、
+(複雑な構造体中で)共有された巨大な量のデータのために、プログラムをきれいにする
+ことは、ひどく難しい。各プラットフォームが共有メモリシステムを持つ事を
+あてにすることは出来ない。
 </para>
 
 </sect1>
 
 <sect1>
-<title>nbmd Design</title>
+<title>nbmdのデザイン</title>
 
 <para>
 Originally Andrew used recursion to simulate a multi-threaded
