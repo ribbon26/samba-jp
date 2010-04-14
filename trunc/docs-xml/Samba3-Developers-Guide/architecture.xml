@@ -20,39 +20,38 @@ Samba Teamは、非常に汚いSMBとCIFSプロトコルによって押しつけ
 </para>
 
 <para>
-It also tries to answer some of the frequently asked questions such as:
+また、以下のようなよく聞かれる質問のいくつかに答えようともしている:
 </para>
 
 <orderedlist>
 <listitem><para>
-	Is Samba secure when running on Unix? The xyz platform?
-	What about the root priveliges issue?
+    UNIX上で動かすときにSambaは安全か?xyzプラットフォームでは?
+    root特権についての問題は?
 </para></listitem>
 
-<listitem><para>Pros and cons of multithreading in various parts of Samba</para></listitem>
+<listitem><para>Sambaのいくつかの部分中でのマルチスレッドの賛否</para></listitem>
 
-<listitem><para>Why not have a separate process for name resolution, WINS, and browsing?</para></listitem>
+<listitem><para>なぜ、名前解決、WINSとブラウジングに関して分離されたプロセスがあるのか?</para></listitem>
 
 </orderedlist>
 
 </sect1>
 
 <sect1>
-<title>Multithreading and Samba</title>
+<title>マルチスレッドとSamba</title>
 
 <para>
-People sometimes tout threads as a uniformly good thing. They are very
-nice in their place but are quite inappropriate for smbd. nmbd is
-another matter, and multi-threading it would be very nice. 
+人々は時々、一様にスレッドを良いものとして推奨する。それらは推奨する人にとっては
+とても良いものであるが、smbdに取ってはまったく不適当である。nmbdは別の問題で、
+マルチスレッドそれ自身はとても良いことである。
 </para>
 
 <para>
-The short version is that smbd is not multithreaded, and alternative
-servers that take this approach under Unix (such as Syntax, at the
-time of writing) suffer tremendous performance penalties and are less
-robust. nmbd is not threaded either, but this is because it is not
-possible to do it while keeping code consistent and portable across 35
-or more platforms. (This drawback also applies to threading smbd.)
+手短に言うと、smbdはマルチスレッド化されておらず、UNIX配下での別のサーバ(例えば、
+書いている時点においてはSyntax)はこの方法を取っていて、とても大きな性能上の問題を
+抱えていて、頑丈ではない。nmbdもスレッド化されていないが、これは、35以上もの
+プラットフォームにまたがって、コードの整合性を取り、ポータブルにするということが、
+不可能だからという理由である(この欠点は同じくsmbdをスレッド化することにも当てはまる)。
 </para>
 
 <para>
