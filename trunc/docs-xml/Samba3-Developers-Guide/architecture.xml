@@ -152,28 +152,23 @@ fork()は安っぽいが、受信したすべてのUDPパケット上で処理�
 <title>nbmdのデザイン</title>
 
 <para>
-Originally Andrew used recursion to simulate a multi-threaded
-environment, which use the stack enormously and made for really
-confusing debugging sessions. Luke Leighton rewrote it to use a
-queuing system that keeps state information on each packet.  The
-first version used a single structure which was used by all the
-pending states.  As the initialisation of this structure was
-done by adding arguments, as the functionality developed, it got
-pretty messy.  So, it was replaced with a higher-order function
-and a pointer to a user-defined memory block.  This suddenly
-made things much simpler: large numbers of functions could be
-made static, and modularised.  This is the same principle as used
-in NT's kernel, and achieves the same effect as threads, but in
-a single process.
+もともと、Andrewは、途方もなくスタックを使い、全くもってデバッグ作業を混乱させる、
+マルチスレッド環境をシミュレートするための再帰を使った。Luke Leightonは各パケット上で
+ステート情報を保持する問い合わせシステムを使うように書き直した。最初のバージョンは、
+すべての待機状態ステートによって使われる単一の構造を使っていた。この構造の初期化は、
+引数を追加することで行われ、機能が開発するに従い、だんだん複雑化していった。
+そのため、より高位の関数と、ユーザが定義したメモリブロックを指定するポインタによって
+置き換えられた。これは突然物事をより簡単にした:非常に多数の関数は静的に作成され、
+モジュール化された。これはNTカーネルで使われているものと同じ原理であり、単一の
+プロセス中ではあるが、スレッドと同じような効果が成し遂げられた。
 </para>
 
 <para>
-Then Jeremy rewrote nmbd. The packet data in nmbd isn't what's on the
-wire. It's a nice format that is very amenable to processing but still
-keeps the idea of a distinct packet. See "struct packet_struct" in
-nameserv.h.  It has all the detail but none of the on-the-wire
-mess. This makes it ideal for using in disk or memory-based databases
-for browsing and WINS support. 
+次に、Jeremyはnmbdを書き直した。nmbd中のパケットデータはネットワーク上のものではない。
+この形式は、処理に対してとても従順なものであるが、まだ他のパケットの内容を保持していた。
+nameserv.h中の"struct packet_struct"を参照のこと。そこにはすべての詳細があるが、
+ネットワーク上のメッセージについては記述がない。これは、ブラウジングとWINSサポートの
+ための、ディスクかメモリベースのデータベース中で理想的に使えるようにする。
 </para>
 
 </sect1>
