@@ -268,44 +268,37 @@ nmbd_sendannounce.cからの以下の例について考えてみよう:
 <sect2>
 <title>dbgtext()</title>
 <para>
-この関数は
-This function prints debug message text to the debug file (and
-possibly to syslog) via the format buffer. The function uses a
-variable argument list just like printf() or Debug1(). The
-input is printed into a buffer using the vslprintf() function,
-and then passed to format_debug_text().
+この関数はフォーマットバッファ経由でデバッグファイル(と可能であればsyslog)に
+デバッグメッセージテキストを出力する。関数はprintf()やDebug1(0のような可変引数を取る。
+入力はvslprintf()関数を使ってバッファ中に格納され、format_debug_text()に渡される。
 
-If you use DEBUGLVL() you will probably print the body of the
-message using dbgtext(). 
+もしもDEBUGLVL()を使っているならば、おそらくdbgtext()を使ってメッセージ本体を出力
+しているだろう。
 </para>
 </sect2>
 
 <sect2>
 <title>dbghdr()</title>
 <para>
-This is the function that writes a debug message header.
-Headers are not processed via the format buffer. Also note that
-if the format buffer is not empty, a call to dbghdr() will not
-produce any output. See the comments in dbghdr() for more info.
+これは、デバッグメッセージヘッダを出力する関数である。ヘッダはフォーマットバッファ
+経由では処理されない。また、もしも、フォーマットバッファがからでない場合、dbghdr()
+の呼び出しは何らの出力も行わないことに注意。より詳細についてはdbghdr()中のコメントを
+参照。
 </para>
 
 <para>
-It is not likely that this function will be called directly. It
-is used by DEBUG() and DEBUGADD().
+この関数は直接呼ばれることはない。DEBUG()とDEBUGADD()によって使われる。
 </para>
 </sect2>
 
 <sect2>
 <title>format_debug_text()</title>
 <para>
-This is a static function in debug.c. It stores the output text
-for the body of the message in a buffer until it encounters a
-newline. When the newline character is found, the buffer is
-written to the debug file via the Debug1() function, and the
-buffer is reset. This allows us to add the indentation at the
-beginning of each line of the message body, and also ensures
-that the output is written a line at a time (which cleans up
-syslog output).
+これはdebug.c中のstaticな関数である。これは、改行が来るまで、バッファ中に
+出力テキストのメッセージ本体を格納する。改行が来た場合、Debug1()関数を使って
+デバッグファイルにバッファが書き込まれ、バッファはリセットされる。これは、
+メッセージ本体の各行の始まりのインデントを追加することが出来るようになり、
+また、(syslog出力がきれいになる)その時点で行単位に出力が書かれるようになる。
 </para>
 </sect2>
 </sect1>
