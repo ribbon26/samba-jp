@@ -184,11 +184,10 @@ DEBUG文は処理される。
 <title>DEBUGADD()マクロ</title>
 
 <para>
-In addition to the kludgey solution to the broken line problem
-described above, there is a clean solution. The DEBUGADD() macro never
-generates a header. It will append new text to the current debug
-message even if the format buffer is empty. The syntax of the
-DEBUGADD() macro is the same as that of the DEBUG() macro.
+上記で説明されている行が壊れてしまう問題への、その場しのぎの解決方法への追加として、
+もっときれいな解決方法がある。DEBUGADD()マクロは決してヘッダを生成しない。フォーマット
+バッファがからであったとしても、これは現在のデバッグメッセージに対して新しいテキストを
+追加する。DEBUGADD()マクロの文法はDEBUG()マクロのものと同じである。
 </para>
 
 <para><programlisting>
@@ -196,7 +195,7 @@ DEBUGADD() macro is the same as that of the DEBUG() macro.
     DEBUGADD( 0, ("This is the second line.\nThis is the third line.\n" ) );
 </programlisting></para>
 
-<para>Produces</para>
+<para>これは以下を生成する。</para>
 
 <para><programlisting>
     [1998/07/30 16:00:51, 0] file.c:function(512)
@@ -208,12 +207,11 @@ DEBUGADD() macro is the same as that of the DEBUG() macro.
 </sect1>
 
 <sect1>
-<title>The DEBUGLVL() Macro</title>
+<title>DEBUGLVL()マクロ</title>
 
 <para>
-One of the problems with the DEBUG() macro was that DEBUG() lines
-tended to get a bit long. Consider this example from
-nmbd_sendannounce.c:
+DEBUG()マクロにおける問題の1つは、DEBUG()行が長すぎる傾向にあると言うことである。
+nmbd_sendannounce.cからの以下の例について考えてみよう:
 </para>
 
 <para><programlisting>
@@ -222,8 +220,7 @@ nmbd_sendannounce.c:
 </programlisting></para>
 
 <para>
-One solution to this is to break it down using DEBUG() and DEBUGADD(),
-as follows:
+この問題の1つの解は、DEBUG()とDEBUGADD()を以下のように使って行を分割することである:
 </para>
 
 <para><programlisting>
@@ -234,9 +231,8 @@ as follows:
 </programlisting></para>
 
 <para>
-A similar, but arguably nicer approach is to use the DEBUGLVL() macro.
-This macro returns True if the message level is less than or equal to
-the global DEBUGLEVEL value, so:
+同様だが、もっとすてきな方法は、DEBUGLVL()マクロを使う方法である。
+このマクロは、メッセージレベルがグローバル値DEBUGLEVEL以下の場合に真を返すので:
 </para>
 
 <para><programlisting>
@@ -249,31 +245,30 @@ the global DEBUGLEVEL value, so:
     }
 </programlisting></para>
 
-<para>(The dbgtext() function is explained below.)</para>
+<para>と書ける(dbgtext()関数は以下で説明する)。</para>
 
-<para>There are a few advantages to this scheme:</para>
+<para>この方式ではいくつかの利点がある:</para>
 <orderedlist>
 <listitem><para>
-The test is performed only once.
+値の評価が1回のみ実行される。
 </para></listitem>
 <listitem><para>
-You can allocate variables off of the stack that will only be used
-within the DEBUGLVL() block.
+変数を、DEBUGLVL()ブロック内でのみ使われるスタックの外側に配置できる。
 </para></listitem>
 <listitem><para>
-Processing that is only relevant to debug output can be contained
-within the DEBUGLVL() block.
+デバッグ出力にのみ該当する処理はDEBUGLVL()ブロック内に配置できる。
 </para></listitem>
 </orderedlist>
 
 </sect1>
 
 <sect1>
-<title>New Functions</title>
+<title>新しい関数</title>
 
 <sect2>
 <title>dbgtext()</title>
 <para>
+この関数は
 This function prints debug message text to the debug file (and
 possibly to syslog) via the format buffer. The function uses a
 variable argument list just like printf() or Debug1(). The
