@@ -95,20 +95,21 @@ SGI Indyによって生成され、SGIコンパイラは__FUNCTION__マクロを
 <title>DEBUG() マクロ</title>
 
 <para>
-Use of the DEBUG() macro is unchanged. DEBUG() takes two parameters.
-The first is the message level, the second is the body of a function
-call to the Debug1() function.
+DEBUG()マクロの使用は変わっていない。DEBUG()は2つのパラメータをとる。
+最初のものはメッセージレベルであり、2番目のものはDebug1()関数を呼び出すための
+関数呼び出しの実体である。
 </para>
 
-<para>That's confusing.</para>
+<para>これは混乱させる。</para>
 
-<para>Here's an example which may help a bit. If you would write</para>
+<para>若干の手助けとなるかもしれない例は以下の通り。もしも</para>
 
 <para><programlisting>
 printf( "This is a %s message.\n", "debug" );
 </programlisting></para>
 
 <para>
+と書いて結果を標準出力に送りたいのであれば、
 to send the output to stdout, then you would write
 </para>
 
@@ -117,19 +118,18 @@ DEBUG( 0, ( "This is a %s message.\n", "debug" ) );
 </programlisting></para>
 
 <para>
-to send the output to the debug file.  All of the normal printf()
-formatting escapes work.
+と書くことで、結果はデバッグファイルに送られる。すべての通常のprintf()
+フォーマットのエスケープ処理はちゃんと動作する。
 </para>
 
 <para>
-Note that in the above example the DEBUG message level is set to 0.
-Messages at level 0 always print.  Basically, if the message level is
-less than or equal to the global value DEBUGLEVEL, then the DEBUG
-statement is processed.
+上記の例において、DEBUGメッセージレベルは0に設定されていることに注意。メッセージレベル
+0は常時出力される。基本的に、もしもメッセージレベルがグローバル値DEBUGLEVEL以下の場合、
+DEBUG文は処理される。
 </para>
 
 <para>
-The output of the above example would be something like:
+上記の例の出力は以下のようなものになる:
 </para>
 
 <para><programlisting>
@@ -138,17 +138,17 @@ The output of the above example would be something like:
 </programlisting></para>
 
 <para>
-Each call to DEBUG() creates a new header *unless* the output produced
-by the previous call to DEBUG() did not end with a '\n'. Output to the
-debug file is passed through a formatting buffer which is flushed
-every time a newline is encountered. If the buffer is not empty when
-DEBUG() is called, the new input is simply appended.
+おのおののDEBUG()呼び出しは、以前の呼び出しによって生成された出力の行末が、
+"\n"で終わっていないならば、新しいヘッダを作成する。デバッグファイルへの出力は、
+改行が来るたびごとにフラッシュされるフォーマットバッファを通して渡される。
+もしも、DEBUG()が呼ばれたときにバッファがからでなければ、新しい入力は単に
+追加される。
 </para>
 
 <para>
-...but that's really just a Kludge. It was put in place because
-DEBUG() has been used to write partial lines. Here's a simple (dumb)
-example of the kind of thing I'm talking about:
+...しかし、これは全くその場しのぎである。DEBUG()が分割された行を書き込むのに
+使われると言う理由で、適切な位置に置かれる。以下は今説明したことに関する、
+この種の簡単な例である:
 </para>
 
 <para><programlisting>
@@ -161,8 +161,8 @@ example of the kind of thing I'm talking about:
 </programlisting></para>
 
 <para>
-Without the format buffer, the output (assuming test() returned true)
-would look like this:
+フォーマッティングバッファなしでは、出力(test()がtrueを返すことを仮定)は以下のようになる:
+
 </para>
 
 <para><programlisting>
@@ -174,13 +174,14 @@ would look like this:
       .
 </programlisting></para>
 
-<para>Which isn't much use. The format buffer kludge fixes this problem.
+<para>これは使い物にはならない。フォーマットバッファというその場しのぎの方法は、
+この問題を解決する。
 </para>
 
 </sect1>
 
 <sect1>
-<title>The DEBUGADD() Macro</title>
+<title>DEBUGADD()マクロ</title>
 
 <para>
 In addition to the kludgey solution to the broken line problem
