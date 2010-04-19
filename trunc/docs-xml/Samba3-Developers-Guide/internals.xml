@@ -21,27 +21,26 @@
 </para>
 
 <para>
-In the past Samba had very ad-hoc character set handling. Scattered
-throughout the code were numerous calls which converted particular
-strings to/from DOS codepages. The problem is that there was no way of
-telling if a particular char* is in dos codepage or unix
-codepage. This led to a nightmare of code that tried to cope with
-particular cases without handlingt the general case.
+以前のバージョンのSambaは、とてもその場しのぎの文字セット処理を行っていた。点在する
+コードはDOSのコードページへ、あるいはコードページから特定の文字列を変換するのに、
+数多くの呼び出しが使われていた。問題は、特定のchar*がdosのコードページかUNIXの
+コードページかを確認するすべがないということである。これは、一般的な場合での取り扱いが
+ない、特定の場合に対応する事を試みる悪夢のようなコードになってしまう。
 </para>
 </sect1>
 
 <sect1>
-<title>The new functions</title>
+<title>新しい機能</title>
 
 <para>
-The new system works like this:
+新しいシステムは以下のように動作する:
 </para>
 
 <orderedlist>
 <listitem><para>
-	all char* strings inside Samba are "unix" strings. These are
-	multi-byte strings that are in the charset defined by the "unix
-	charset" option in smb.conf. 
+    Samba内部におけるすべてのchar*文字列は"unix"文字列である。smb.conf中の
+    "unix charset"オプションによって定義される文字セット中にはマルチバイト
+    文字列が存在する。
 </para></listitem>
 
 <listitem><para>
