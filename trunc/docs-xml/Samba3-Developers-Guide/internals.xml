@@ -84,44 +84,40 @@
 </para></listitem>
 
 <listitem><para>
-	the two main pull_ and push_ functions you need to understand are
-	pull_string and push_string. These functions take a base pointer
-	that should point at the start of the SMB packet that the string is
-	in. The functions will check the flags field in this packet to
-	automatically determine if the packet is marked as a unicode packet,
-	and they will choose whether to use unicode for this string based on
-	that flag. You may also force this decision using the STR_UNICODE or
-	STR_ASCII flags. For use in smbd/ and libsmb/ there are wrapper
-	functions clistr_ and srvstr_ that call the pull_/push_ functions
-	with the appropriate first argument.
+    理解する必要がある2つの主要なpull_とpush_関数は、pull_stringとpush_stringである。
+    これらの関数は文字列が入っているSMBパケットの開始位置をポイントすべきである、
+    ベースポインタを取る。関数は、パケットがユニコードパケットとしてマーク
+    されているかを自動的に決定するため、パケット中のフラグフィールドをチェックし、
+    このフラグに基づいて、文字列に対してユニコードを使うかどうかを決める。また、
+    STR_UNICODEかSTR_ASCIIを使うことによって、この決定を強制的に行わせてもよい。
+    smbd/とlibsmb/中での使用のために、適切な最初の引数を付けてpull_/push_関数を
+    呼び出すclistr_とsrvstr_ラッパー関数がある。
 	</para>
 	
 	<para>
-	You may also call the pull_ascii/pull_ucs2 or push_ascii/push_ucs2
-	functions if you know that a particular string is ascii or
-	unicode. There are also a number of other convenience functions in
-	charcnv.c that call the pull_/push_ functions with particularly
-	common arguments, such as pull_ascii_pstring()
+	  また、特定の文字列がASCIIかユニコードか分かっている場合、pull_ascii/
+	  pull_ucs2かpush_ascii/push_ucs2関数を呼び出しても良い。たとえば
+	  pull_ascii_pstring()のような、特定の共通の引数を持つpush_/pull_関数を
+	  呼び出すcharcnv.c中に、数多くの他の便利な関数もある。
 	</para>
 </listitem>
 
 <listitem><para>
-	The biggest thing to remember is that internal (unix) strings in Samba
-	may now contain multi-byte characters. This means you cannot assume
-	that characters are always 1 byte long. Often this means that you will
-	have to convert strings to ucs2 and back again in order to do some
-	(seemingly) simple task. For examples of how to do this see functions
-	like strchr_m(). I know this is very slow, and we will eventually
-	speed it up but right now we want this stuff correct not fast.
+    覚えておかなければならない最も大きな問題は、Samba中の内部(UNIX)文字列は、
+    マルチバイト文字を含むかもしれないということである。これは、文字が常時1バイト
+    であることを仮定できないと言うことを意味する。しばしばこれは文字列をucs2に
+    変換しなければならないということであり、いくつかの(表面上)単純な作業を行うために、
+    再度逆変換する必要があるということである。どのようにこれを行うかの例は、
+    strchr_m()関数を見ること。これはとても遅いことが分かっていて、結局、これを
+    高速化したが、現在、スピードよりも正確さを求めている。
 </para></listitem>
 
 <listitem><para>
-	all lp_ functions now return unix strings. The magic "DOS" flag on
-	parameters is gone.
+    すべてのlp_関数は現在UNIX文字列を返す。パラメータ上の特別な"DOS"フラグはなくなった。
 </para></listitem>
 
 <listitem><para>
-	all vfs functions take unix strings. Don't convert when passing to them
+    すべてのvfs関数はUNIX文字列を取る。それに渡すときに変換してはならない。
 </para></listitem>
 
 </orderedlist>
@@ -129,7 +125,7 @@
 </sect1>
 
 <sect1>
-<title>Macros in byteorder.h</title>
+<title>byteorder.h中のマクロ</title>
 
 <para>
 This section describes the macros defined in byteorder.h.  These macros 
