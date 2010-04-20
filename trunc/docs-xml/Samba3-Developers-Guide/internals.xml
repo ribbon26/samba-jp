@@ -44,46 +44,43 @@
 </para></listitem>
 
 <listitem><para>
-	there is no single fixed character set for unix strings, but any
-	character set that is used does need the following properties:
+    unix文字列用の1バイト固定文字セットは存在しないが、使われている任意の文字セットは
+    以下の性質を必要としている:
 	</para>
 	<orderedlist>
 	
 	<listitem><para>
-		must not contain NULLs except for termination
+	    行終端を除いて、NULL文字が含まれてはならない
 	</para></listitem>
 
 	<listitem><para>
-		must be 7-bit compatible with C strings, so that a constant
-		string or character in C will be byte-for-byte identical to the
-		equivalent string in the chosen character set. 
+	    Cの文字列と互換がある7ビット文字でなければならず、そのため、C用の
+	    定数文字列か文字は、選択された文字セット中で同等の文字列とバイト単位で
+	    全く同じである。
 	</para></listitem>
 	
 	<listitem><para>
-		when you uppercase or lowercase a string it does not become
-		longer than the original string
+	    文字列を大文字化あるいは小文字化した場合、もはやオリジナルの文字列と
+	    同じではなくなる。
 	</para></listitem>
 
 	<listitem><para>
-		must be able to correctly hold all characters that your client
-		will throw at it
+	    クライアントから送信されてきたすべての文字を扱えねばならない。
 	</para></listitem>
 	</orderedlist>
 	
 	<para>
-	For example, UTF-8 is fine, and most multi-byte asian character sets
-	are fine, but UCS2 could not be used for unix strings as they
-	contain nulls.
+	  例えば、UTF-8は良くできていて、ほとんどのマルチバイトのアジアの文字セットに
+	  対応するが、UCS2は、内部にNULLが含まれているため、UNIX文字列としては使うことが
+	  できない。
 	</para>
 </listitem>
 
 <listitem><para>
-	when you need to put a string into a buffer that will be sent on the
-	wire, or you need a string in a character set format that is
-	compatible with the clients character set then you need to use a
-	pull_ or push_ function. The pull_ functions pull a string from a
-	wire buffer into a (multi-byte) unix string. The push_ functions
-	push a string out to a wire buffer. 
+    ネットワーク上に送信しようとするためのバッファ中に文字列を書き込む必要がある場合、
+    あるいは、クライアントの文字セットと互換のある文字セット形式での文字列を必要とする
+    場合、pull_またはpush_関数を使う必要がある。pull_関数は送信バッファから(マルチバイト)
+    UNIX文字列中に変換する。push_関数は文字列を書き込みバッファに書く。
 </para></listitem>
 
 <listitem><para>
