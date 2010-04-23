@@ -314,40 +314,44 @@ Manager API documentation, after the "Server" and up to and including the
 </para></listitem>
 
 <listitem><para>
-An unsigned 16 bit integer which gives the size in bytes of the buffer we
-will use to receive the returned array of data structures.  Presumably this
-should be the same as mdrcnt.  This value should be set with SSVAL().
+符号なし16ビット整数値で、戻されるデータ構造体配列を受け取るために使われる
+バッファの大きさをバイト単位で与える。これはおそらくmdrcntと同じであるべきである。
+この値はSSVAL()を使って設定されるべきである。
 </para></listitem>
 
 <listitem><para>
-An ASCIIZ string describing substructures which should be returned.  If no 
-substructures apply, this string is of zero length.
+戻されるべき副構造体を説明するASCIIZ文字列。もしも副構造体が適用されなければ、
+この文字列の長さは0である。
 </para></listitem>
 
 </orderedlist>
 
 <para>
-The code in client.c always calls call_api() with no data.  It is unclear
-when a non-zero length data buffer would be sent.
+client.c中のコードは常時データなしでcall_api()を呼び出す。0以外の長さを持つデータ
+バッファがいつ送られるかは不明である。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Return value</title>
+<title>戻り値</title>
 
 <para>
-The returned parameters (pointed to by rparam), in their order of appearance
-are:</para>
+戻されるパラメータ(rparamによって指示される)の、現れる順番は以下の通り:
+</para>
 
 <orderedlist>
 
 <listitem><para>
-An unsigned 16 bit integer which contains the API function's return code. 
-This value should be read with SVAL().
+符号なし16ビット整数値で、API関数の戻りコードを含んでいる。この値はSVAL()
+を使って読まれるべきである。
 </para></listitem>
 
 <listitem><para>
+戻されたデータ中のポインタによる、調整すべき調整量。この値はSVAL()を使って読まれる
+べきである。基本的に戻されたバッファの開始アドレスは、それに追加される戻された
+ポインタ値を持ち、戻されたデータバッファ中の現在のオフセットを得るために、それから
+この値が引かれる。
 An adjustment which tells the amount by which pointers in the returned
 data should be adjusted.  This value should be read with SVAL().  Basically, 
 the address of the start of the returned data buffer should have the returned
@@ -356,21 +360,20 @@ order to obtain the currect offset into the returned data buffer.
 </para></listitem>
 
 <listitem><para>
-A count of the number of elements in the array of structures returned. 
-It is also possible that this may sometimes be the number of bytes returned.
+戻された構造体配列中の要素の数。時々、これは戻されたバイト数である可能性もある。
 </para></listitem>
 </orderedlist>
 
 <para>
-When call_api() returns, rparam points to the returned parameters.  The
-first if these is the result code.  It will be zero if the API call
-suceeded.  This value by be read with "SVAL(rparam,0)".
+calll_api()から戻ったとき、rparamは戻りパラメータを指示する。それがある場合、
+最初のものは戻り値である。API呼び出しが成功した場合、それは0である。これは、
+"SVAL(rparam,0)"として読まれる。
 </para>
 
 <para>
-The second parameter may be read as "SVAL(rparam,2)".  It is a 16 bit offset
-which indicates what the base address of the returned data buffer was when
-it was built on the server.  It should be used to correct pointer before
+2番目のパラメータは"SVAL(rparam,2)"として読むことが出来る。戻されたデータバッファの
+ベースアドレスがサーバ上で構築された時に何だったかを指示する16ビットオフセットである。
+これは使用の前にポインタを正しくするのに使われるべきである。
 use.
 </para>
 
