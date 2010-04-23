@@ -232,10 +232,10 @@ valという値に設定する。</para>
 <title>LAN Manager用Samba API</title>
 
 <para>
-This section describes the functions need to make a LAN Manager RPC call.
-This information had been obtained by examining the Samba code and the LAN
-Manager 2.0 API documentation.  It should not be considered entirely
-reliable.
+この節では、LANマネージャRPCコールを行わせるのに必要な関数について説明する。
+この情報はSambaコードの調査とLANマネージャ 2.0APIのドキュメントに依存している。
+これは完全に信頼できるものではない。
+
 </para>
 
 <para>
@@ -246,14 +246,14 @@ call_api(int prcnt, int drcnt, int mprcnt, int mdrcnt,
 </para>
 
 <para>
-This function is defined in client.c.  It uses an SMB transaction to call a
-remote api.
+この関数はclient.c内で定義されている。リモートAPIを呼び出すためにSMBトランザクションで
+使われる。
 </para>
 
 <sect2>
-<title>Parameters</title>
+<title>パラメータ</title>
 
-<para>The parameters are as follows:</para>
+<para>パラメータは以下の通り:</para>
 
 <orderedlist>
 <listitem><para>
@@ -285,29 +285,29 @@ remote api.
 </orderedlist>
 
 <para>
-These are the parameters which you ought to send, in the order of their
-appearance in the parameter block:
+パラメータブロック中で、現れる順番で送らなければならないパラメータがある:
 </para>
 
 <orderedlist>
 
 <listitem><para>
-An unsigned 16 bit integer API number.  You should set this value with
-SSVAL().  I do not know where these numbers are described.
+符号なし16ビット整数値。SSVAL()を使ってこの値を設定すべきである。この数値が
+どこで説明されているかは分からない。
 </para></listitem>
 
 <listitem><para>
-An ASCIIZ string describing the parameters to the API function as defined
-in the LAN Manager documentation.  The first parameter, which is the server
-name, is ommited.  This string is based uppon the API function as described
-in the manual, not the data which is actually passed.
+LANマネージャのドキュメント中で定義されてるようなAPI関数のためのパラメータを
+説明するASCIIZ文字列。最初のパラメータはサーバ名で、省略されている。この文字列は
+マニュアル中で説明されているようなAPI関数に基づいていて、実際に渡されるデータではない。
 </para></listitem>
 
 <listitem><para>
-An ASCIIZ string describing the data structure which ought to be returned.
+戻されるべきデータ構造を説明するASCIIZ文字列。
 </para></listitem>
 
 <listitem><para>
+関数呼び出し中で現れる任意のパラメータで、LANマネージャAPIドキュメント中の、
+"Server"の後、"uLevel"パラメータまでを含むように定義されている。
 Any parameters which appear in the function call, as defined in the LAN
 Manager API documentation, after the "Server" and up to and including the
 "uLevel" parameters.
