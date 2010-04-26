@@ -60,40 +60,39 @@ Sambaのためのコードを書こうとしているプログラマーが直面
 </para>
 
 <para>
-Following are some considerations you should use when adding new code to
-Samba.  First and foremost remember that:
+以下は、Sambaに新しいコードを追加するときに使うべきいくつかの考慮点である。
+まず最初に、そして、最も重要な、覚えておいてほしい点は以下の通り:
 </para>
 
 <para>
-Portability is a primary consideration in adding function, as is network
-compatability with de facto, existing, real world CIFS/SMB implementations.
-There are lots of platforms that Samba builds on so use caution when adding
-a call to a library function that is not invoked in existing Samba code.
-Also note that there are many quite different SMB/CIFS clients that Samba
-tries to support, not all of which follow the SNIA CIFS Technical Reference
-(or the earlier Microsoft reference documents or the X/Open book on the SMB
-Standard) perfectly.
+移植性は、デ・ファクトで、存在する、実際の世界でのCIFS/SMB実装のような、
+ネットワークの互換性が、関数を追加するときに一番考慮することである。
+Sambaがコンパイルできるプラットフォームは多数あり、存在するSambaコード中で
+起動されないライブラリ関数への呼び出しを追加するときには注意すること。
+また、数多くの異なった、SambaがサポートしようとするSMB/CIFSクライアントがあり、
+SNIA CIFS技術参照(あるいは最新のMicrosoftリファレンス文書あるいは
+SMB標準についてのX/Open書籍)を、すべてが完全に準拠していないことにも注意。
 </para>
 
 <para>
-Here are some other suggestions:
+以下はその他の助言である:
 </para>
 
 <orderedlist>
 
 <listitem><para>
-	use d_printf instead of printf for display text
-	reason: enable auto-substitution of translated language text 
+    テキスト表示のために、printfの代わりにd_printfを使う
+    理由:翻訳された言語のテキストへの置き換えを有効にする。
 </para></listitem>
 
 <listitem><para>
-	use SAFE_FREE instead of free
-	reason: reduce traps due to null pointers
+	freeの代わりに SAFE_FREEを使う
+	理由: nullポインタをトラップすることを減らす。
 </para></listitem>
 
 <listitem><para>
-	don't use bzero use memset, or ZERO_STRUCT and ZERO_STRUCTP macros
-	reason: not POSIX
+    bzeroを使わないで、memsetあるいはZERO_STRUCT と ZERO_STRUCTPマクロを使う
+	理由: これは POSIX ではない
 </para></listitem>
 
 <listitem><para>
