@@ -70,43 +70,46 @@ NTSTATUS smb_register_passdb(int version, const char *name, pdb_init_function in
 </sect2>
 
 <sect2>
-<title>Shared modules</title>
+<title>共有モジュール</title>
 
 <para>
-If a subsystem needs a certain backend, it should check if it has 
-already been registered. If the backend hasn't been registered already, 
-the subsystem should call smb_probe_module(char *subsystem, char *backend).
-This function tries to load the correct module from a certain path
-($LIBDIR/subsystem/backend.so). If the first character in 'backend' 
-is a slash, smb_probe_module() tries to load the module from the 
-absolute path specified in 'backend'.
+サブシステムが特定のバックエンドを必要とする場合、それがすでに登録されているかを
+調べるべきである。もしもバックエンドがまだ登録されていなかった場合、サブシステムは、
+smb_probe_module(char *subsystem, char *backend)を呼び出すべきである。
+この関数は、指定されたパス($LIBDIR/subsystem/backend.so)から正しいモジュールを
+ロードしようとする。もしも'backend'の最初の文字がスラッシュの場合には、
+smb_probe_module()は'backend'で指定された絶対パスからモジュールをロードしようとする。
 </para>
 
-<para>After smb_probe_module() has been executed, the subsystem 
-should check again if the module has been registered. 
+<para>smb_probe_module()の実行後、サブシステムは、モジュールがすでに登録されたか
+どうかをチェックすべきである。
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Writing modules</title>
+<title>モジュールを書く</title>
 
 <para>
-Each module has an initialisation function. For modules that are 
-included with samba this name is '<replaceable>subsystem</replaceable>_<replaceable>backend</replaceable>_init'. For external modules (that will never be built-in, but only available as a module) this name is always 'init_module'. (In the case of modules included with samba, the configure system will add a #define subsystem_backend_init() init_module()).
-The prototype for these functions is:
+書くモジュールは初期化関数をもっている。Sambaに含まれるモジュールでは、
+この名前は
+'<replaceable>subsystem</replaceable>_<replaceable>backend</replaceable>_init'
+である。(決して組み込まれないが、モジュールとしてのみ提供される)外部モジュールでは、
+この名前は常時init_module'である(モジュールがSambaに含まれる場合、
+configureシステムは#define subsystem_backend_init() init_module()を追加する)。
+これらの関数のプロトタイプは以下の通り:
 </para>
 
 <para><programlisting>
 NTSTATUS init_module(void);
 </programlisting></para>
 
-<para>This function should call one or more 
-registration functions. The function should return NT_STATUS_OK on success and  
-NT_STATUS_UNSUCCESSFUL or a more useful nt error code on failure.</para>
+<para>この関数は1回またはそれ以上登録関数を呼び出すべきである。関数は
+成功時にはNT_STATUS_OKか、NT_STATUS_UNSUCCESSFULか、失敗時に便利に使える
+nt error codeを返すべきである。</para>
 
-<para>For example, pdb_ldap_init() contains: </para>
+<para>たとえばpdb_ldap_init()は以下を含む: </para>
 
 <para><programlisting>
 NTSTATUS pdb_ldap_init(void)
