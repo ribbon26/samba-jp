@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="modules">
 <chapterinfo>
@@ -12,33 +12,33 @@
 	<pubdate> 19 March 2003 </pubdate>
 </chapterinfo>
 
-<title>Modules</title>
+<title>モジュール</title>
 
 <sect1>
-<title>Advantages</title>
+<title>利点</title>
 
 <para>
-The new modules system has the following advantages:
+新しいモジュールシステムは以下の利点を有する:
 </para>
 
 <simplelist>
-<member>Transparent loading of static and shared modules (no need 
-for a subsystem to know about modules)</member>
-<member>Simple selection between shared and static modules at configure time</member>
-<member>"preload modules" option for increasing performance for stable modules</member>
-<member>No nasty #define stuff anymore</member>
-<member>All backends are available as plugin now (including pdb_ldap and pdb_tdb)</member>
+<member>透過的な、静的および共有モジュールのローディング(サブシステムがモジュールについて
+知る必要がない)</member>
+<member>構成時に、共有および静的モジュールを簡単に選べる</member>
+<member>安定モジューのパフォーマンスを向上するための"preload modules"オプション</member>
+<member>ややこしい#define stuff anymoreが不要</member>
+<member>すべてのバックエンドがプラグインとして提供されている(pdb_ldapとpdp_tdbを含む)</member>
 </simplelist>
 </sect1>
 
 <sect1>
-<title>Loading modules</title>
+<title>モジュールのロード</title>
 
 <para>
-Some subsystems in samba use different backends. These backends can be 
-either statically linked in to samba or available as a plugin. A subsystem 
-should have a function that allows a module to register itself. For example, 
-the passdb subsystem has: 
+Samba内のいくつかのサブシステムは、異なったバックエンドを使う。それらのバックエンドは、
+Sambaに静的にリンクするか、プラグインとして提供されているかのどちらかである。
+サブシステムは、モジュールそれ自身を登録する事を許可する関数をもっている。例えば、
+passdbサブシステムでは以下の通り:
 </para>
 
 <para><programlisting>
@@ -46,17 +46,15 @@ NTSTATUS smb_register_passdb(int version, const char *name, pdb_init_function in
 </programlisting></para>
 
 <para>
-This function will be called by the initialisation function of the module to 
-register itself. 
+この関数は、モジュールそれ自身を登録するために初期化関数によって呼ばれる。
 </para>
 
 <sect2>
-<title>Static modules</title>
+<title>静的モジュール</title>
 
 <para>
-The modules system compiles a list of initialisation functions for the 
-static modules of each subsystem. This is a define. For example, 
-it is here currently (from <filename>include/config.h</filename>): 
+モジュールシステムは、各サブシステムの静的モジュールのための初期化関数の一覧に従う。
+例えば、(<filename>include/config.h</filename>から)現在は以下のようになっている:
 </para>
 
 <para><programlisting>
@@ -65,8 +63,8 @@ it is here currently (from <filename>include/config.h</filename>):
 </programlisting></para>
 
 <para>
-These functions should be called before the subsystem is used. That 
-should be done when the subsystem is initialised or first used. 
+これらの関数はサブシステムが使われる前に呼ばれるべきである。それは、
+サブシステムが初期化されるか、最初に使われるときに終了すべきである。
 </para>
 
 </sect2>
