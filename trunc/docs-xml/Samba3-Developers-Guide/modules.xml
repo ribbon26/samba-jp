@@ -22,9 +22,9 @@
 </para>
 
 <simplelist>
-<member>透過的な、静的および共有モジュールのローディング(サブシステムがモジュールについて
+<member>透過的な、静的および動的モジュールのローディング(サブシステムがモジュールについて
 知る必要がない)</member>
-<member>構成時に、共有および静的モジュールを簡単に選べる</member>
+<member>構成時に、静的および動的モジュールを簡単に選べる</member>
 <member>安定モジューのパフォーマンスを向上するための"preload modules"オプション</member>
 <member>ややこしい#define stuff anymoreが不要</member>
 <member>すべてのバックエンドがプラグインとして提供されている(pdb_ldapとpdp_tdbを含む)</member>
@@ -70,7 +70,7 @@ NTSTATUS smb_register_passdb(int version, const char *name, pdb_init_function in
 </sect2>
 
 <sect2>
-<title>共有モジュール</title>
+<title>動的モジュール</title>
 
 <para>
 サブシステムが特定のバックエンドを必要とする場合、それがすでに登録されているかを
@@ -92,7 +92,7 @@ smb_probe_module()は'backend'で指定された絶対パスからモジュー�
 <title>モジュールを書く</title>
 
 <para>
-書くモジュールは初期化関数をもっている。Sambaに含まれるモジュールでは、
+各モジュールは初期化関数をもっている。Sambaに含まれるモジュールでは、
 この名前は
 '<replaceable>subsystem</replaceable>_<replaceable>backend</replaceable>_init'
 である。(決して組み込まれないが、モジュールとしてのみ提供される)外部モジュールでは、
@@ -121,45 +121,47 @@ smb_register_passdb(PASSDB_INTERFACE_VERSION, "ldapsam_nua", pdb_init_ldapsam_nu
 </programlisting></para>
 
 <sect2>
-<title>Static/Shared selection in configure.in</title>
+<title>configure.inにおける静的/動的の選択</title>
 
 <para>
-Some macros in configure.in generate the various defines and substs that 
-are necessary for the system to work correct. All modules that should 
-be built by default have to be added to the variable 'default_modules'. 
-For example, if ldap is found, pdb_ldap is added to this variable.
+configure.in中のいくつかのマクロは、システムが正しく動くために必要な、種々の
+define文とsubstを生成する。既定値によって構築されるべきすべてのモジュールは、
+既定値で'default_modules'変数に追加されなければならない。例えば、もしもldap
+が見つかった場合、pdb_ldapはこの変数に追加される。
 </para>
 
 <para>
-On the bottom of configure.in, SMB_MODULE() should be called 
-for each module and SMB_SUBSYSTEM() for each subsystem.
+condigure.inの最下部に、各モジュールのためにSMB_MODULE()が、各サブシステム用に
+SMB_SUBSYSTEM()が呼ばれなければならない。
 </para>
 
-<para>Syntax:</para>
+<para>文法:</para>
 
 <para><programlisting>
 SMB_MODULE(<replaceable>subsystem</replaceable>_<replaceable>backend</replaceable>, <replaceable>object files</replaceable>, <replaceable>plugin name</replaceable>, <replaceable>subsystem name</replaceable>, <replaceable>static_action</replaceable>, <replaceable>shared_action</replaceable>)
 SMB_SUBSYSTEM(<replaceable>subsystem</replaceable>,<replaceable>depfile</replaceable>)
 </programlisting></para>
 
-<para>The depfile for a certain subsystem is the file that calls the 
-initialisation functions for the statically built in modules.</para>
+<para>特定のサブシステム用のdepfileは、モジュール中に静的に構築されるための
+初期化モジュールを呼び出すファイルである。</para>
 
 <para>
-<replaceable>@SUBSYSTEM_MODULES@</replaceable> in Makefile.in will 
-be replaced with the names of the plugins to build.
+Makefile.in中の<replaceable>@SUBSYSTEM_MODULES@</replaceable>
+は構築されるプラグインの名前に置き換わる。
 </para>
 
-<para>You must make sure all .c files that contain defines that can 
-be changed by ./configure are rebuilded in the 'modules_clean' make target. 
-Practically, this means all c files that contain <command>static_init_subsystem;</command> calls need to be rebuilded.
+<para>
+すべての.cファイルに対し、'modules_clean'というmakeのターゲット中に./configureが
+再構築されることで変更できるdefineを含むようにしておくこと。実際に、これは、
+<command>static_init_subsystem;</command>コールを含むすべてのcファイルは、
+再構築する必要がある。
 </para>
 
 <note>
 <para>
-There currently also is a configure.in command called SMB_MODULE_PROVIVES().
-This is used for modules that register multiple things. It should not 
-be used as probing will most likely disappear in the future.</para>
+現在、configure.in中に、SMB_MODULE_PROVIVES()と呼ばれるコマンドがある。
+これは複数のものを登録するモジュールのために使われる。これは将来なくなる予定
+なので、調査(probe)のために使うべきではない。</para>
 </note>
 
 </sect2>
