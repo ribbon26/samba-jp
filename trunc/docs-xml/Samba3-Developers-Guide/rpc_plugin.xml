@@ -48,8 +48,8 @@ smbdは次に共有ライブラリ内のinit_module関数を呼び出そうと�
 </para>
 
 <para>
-In the init_module function, the library should call 
-rpc_pipe_register_commands().  This function takes the following arguments:
+init_module関数内で、ライブラリはrpc_pipe_register_commands()を呼び出すべきである。
+この関数は以下の引数を取る:
 </para>
 
 <para><programlisting>
@@ -60,31 +60,32 @@ NTSTATUS rpc_pipe_register_commands(int version, const char *clnt, const char *s
 <variablelist>
 
 <varlistentry><term>version</term>
-<listitem><para>Version number of the RPC interface. Use the define <emphasis>SMB_RPC_INTERFACE_VERSION</emphasis> for this 
-argument.</para></listitem>
+<listitem><para>RPCインタフェースのバージョン番号。この引数に対しては、
+<emphasis>SMB_RPC_INTERFACE_VERSION</emphasis>という定義を使うこと。</para></listitem>
 </varlistentry>
 		
 <varlistentry><term>clnt</term>
-<listitem><para>the Client name of the named pipe</para></listitem>
+<listitem><para>名前付きパイプのクライアント名</para></listitem>
 </varlistentry>
 
 <varlistentry><term>srv</term>
-<listitem><para>the Server name of the named pipe</para></listitem>
+<listitem><para>名前付きパイプのサーバ名</para></listitem>
 </varlistentry>
 
 <varlistentry><term>cmds</term>
-<listitem><para>a list of api_structs that map RPC ordinal numbers to function calls</para></listitem>
+<listitem><para>RPC ordinal番号を関数呼び出しにマップするapi構造体のリスト</para></listitem>
 </varlistentry>
 
 <varlistentry><term>size</term>
-<listitem><para>the number of api_structs contained in cmds</para></listitem>
+<listitem><para>
+cmd中に含まれるapi_structsの数</para></listitem>
 </varlistentry>
 
 </variablelist>
 
 <para>
-See rpc_server/srv_reg.c and rpc_server/srv_reg_nt.c for a small example of
-how to use this library.
+どのようにこのライブラリを使うかについての小さな例については、
+rpc_server/srv_reg.c と rpc_server/srv_reg_nt.cを参照。
 </para>
 
 </sect1>
