@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="vfs">
 <chapterinfo>
@@ -17,21 +17,28 @@
 	<pubdate> 27 May 2003 </pubdate>
 </chapterinfo>
 
-<title>VFS Modules</title>
+<title>VFS モジュール</title>
 
 <sect1>
-<title>The Samba (Posix) VFS layer</title>
+<title>Samba (Posix) VFSレイヤ</title>
 
-<para>While most of Samba deployments are done using POSIX-compatible
-operating systems, there is clearly more to a file system than what is
-required by POSIX when it comes to adopting semantics of NT file
-system. Since Samba 2.2 all file-system related operations go through
-an abstraction layer for virtual file system (VFS) that is modelled
-after both POSIX and additional functions needed to transform NTFS
-semantics.
+<para>Samba開発のほとんどが、POSIX互換なOSを使っている間、
+NTファイルシステムの文法を適用する場合に、POSIXによって要求されるものよりも、
+ファイルシステムに対してのもののほうがより明確である。Samba 2.2以降、すべての
+操作に関連するファイルシステムは、NTFS文法を変換するために必要とされる追加の関数と、
+POSIXの両方でモデル化された後の仮想ファイルシステム(VFS)のための、概要レイヤ
+を通して行われる。
 </para>
 
 <para>
+この概要レイヤは、現在通常のPOSIXファイルシステムが持っているものよりもたくさんの機能を
+提供している。それらすべてが使用している特定のファイルシステムに対して実装すべきであるという
+ことは要求されない。しかし、それらの機能が有効な時、SambaはCIFSクライアントに対して
+それを公告し、それらは、それらの機能に遭遇する時、更に多くの追加機能を期待する
+ことを予測するかもしれないという事を意味するWindowsクライアントの場合、とアプリケーション
+によって使われるかもしれない。これらには、実行時にVFSモジュールを動的にロードするための
+基盤を提供することにより処理が出来ることとSambaのコアを変更なしに、この降雪を扱うことを
+許可するための実際的な理由がある。
 This abstraction layer now provides more features than a regular POSIX
 file system could fill in. It is not required that all of them should
 be implemented by your particular file system.  However, when those
