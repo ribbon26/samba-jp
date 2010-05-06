@@ -74,34 +74,31 @@ modules at run time.
 </itemizedlist>
 </para>
 
-<para>While this structure has been first applied to the VFS
-subsystem, it is now commonly used across all Samba 3 subsystems that
-support loadable modules. In fact, one module could provide a number
-of interfaces to different subsystems by exposing different
-<emphasis>operation tables</emphasis> through separate
-<emphasis>initialization functions</emphasis>.</para>
+<para>この構造がVFSサブシステムに対して最初に適用された間、ローダブルモジュールを
+サポートするすべてのSamba3サブシステムにまたがって、現在共通的に使われる。実際、ある1つの
+モジュールは異なった<emphasis>オペレーションテーブル</emphasis>を分離された
+<emphasis>初期化関数</emphasis>を通して公開することで、異なったサブシステムに対しての
+数多くのインタフェースを提供できる。</para>
 
-<para><emphasis>An initialization function</emphasis> is used to
-register module with Samba run-time. As Samba internal structures and
-API are changed over lifetime, each released version has a VFS
-interface version that is increased as VFS development progresses or
-any of underlying Samba structures are changed in binary-incompatible
-way. When VFS module is compiled in, VFS interface version of that
-Samba environment is embedded into the module's binary object and is
-checked by the Samba core upon module load. If VFS interface number
-reported by the module isn't the same Samba core knows about, version
-conflict is detected and module dropped to avoid any potential memory
-corruption when accessing (changed) Samba structures.
+<para><emphasis>初期化関数</emphasis>は、Samba動作時にモジュールを登録するのに使われる。
+Sambaの内部構造体とAPIは、日時が経つにつれ変化し、各リリースバージョンは、VFSの開発作業の
+ために増加したVFSインタフェースバージョンを持つか、任意のSambaの構造体が、バイナリ
+非互換の方式で変更される。VFSモジュールがコンパイルされるとき、Samba環境のVFS
+インタフェースバージョンはモジュールのバイナリオブジェクト中に埋め込まれ、それは
+モジュールのロード時にSambaコアによってチェックされる。もしも、モジュールによって
+通知されるVFSインタフェース番号が、Sambaコアが認識するものと一致しない場合、バージョンの
+不一致が検出され、(変更された)Samba構造体をアクセスするときに、メモリ破壊の可能性を
+防ぐために、モジュールはロードされない。
 </para>
 
-<para>Therefore, initialization function passes three parameters to the
-VFS registration function, <literal>smb_register_vfs()</literal>
+<para>それ故、初期化関数はVFS登録関数 <literal>smb_register_vfs()</literal>に
+3つのパラメータを渡す。
 <itemizedlist>
-	<listitem><para><emphasis>interface version number</emphasis>, as constant
-			<literal>SMB_VFS_INTERFACE_VERSION</literal>, </para></listitem>
-	<listitem><para><emphasis>module name</emphasis>, under which Samba core
-			will know it, and</para></listitem>
-	<listitem><para><emphasis>an operations' table</emphasis>.</para></listitem>
+	<listitem><para><emphasis>インタフェースバージョン番号</emphasis>, 
+			<literal>SMB_VFS_INTERFACE_VERSION</literal>という定数として, </para></listitem>
+	<listitem><para><emphasis>モジュール名</emphasis>, Sambaコアが認識する、そして
+			</para></listitem>
+	<listitem><para><emphasis>オペレーションテーブル</emphasis>。</para></listitem>
 </itemizedlist>
 </para>
 
