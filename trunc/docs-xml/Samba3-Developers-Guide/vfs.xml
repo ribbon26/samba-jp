@@ -102,35 +102,30 @@ Sambaの内部構造体とAPIは、日時が経つにつれ変化し、各リリ
 </itemizedlist>
 </para>
 
-<para>The <emphasis>operations' table</emphasis> defines which
-functions in the module would correspond to specific VFS operations
-and how those functions would co-operate with the rest of VFS
-subsystem. Each operation could perform in a following ways:
+<para><emphasis>オペレーションテーブル</emphasis>は、モジュール内のどの関数が、特定の
+VFS操作に対応しているかと、どのようにそれらの関数を、残りのVFSサブシステムと協調
+させるかを定義する。各オペレーションは以下の方法で実行できる:
 <itemizedlist>
-	<listitem><para><emphasis>transparent</emphasis>, meaning that while
-  operation is overriden, the module will still call a previous
-  implementation, before or after its own action. This mode is
-  indicated by the constant
-  <literal>SMB_VFS_LAYER_TRANSPARENT</literal>;</para>
+	<listitem><para><emphasis>transparent</emphasis>,これは、オペレーションが
+	    上書きされている間、その固有の動作の前後に、モジュールは引き続き以前の
+	    処理を呼び出すだろう。このモードは
+  <literal>SMB_VFS_LAYER_TRANSPARENT</literal>という定数によって指示される;</para>
   </listitem>
-  <listitem><para><emphasis>opaque</emphasis>, for the implementations that
-  are terminating sequence of actions. For example, it is used to
-  implement POSIX operation on top of non-POSIX file system or even
-  not a file system at all, like a database for a personal audio
-  collection. Use constant <literal>SMB_VFS_LAYER_OPAQUE</literal> for
-  this mode;</para></listitem>
-  <listitem><para><emphasis>splitter</emphasis>, a way when some file system
-  activity is done in addition to the transparently calling previous
-  implentation. This usually involves mangling the result of that call
-  before returning it back to the caller. This mode is selected by
-  <literal>SMB_VFS_LAYER_SPLITTER</literal> constant;</para></listitem>
-  <listitem><para><emphasis>logger</emphasis> does not change anything or
-  performs any additional VFS operations. When
-  <emphasis>logger</emphasis> module acts, information about
-  operations is logged somewhere using an external facility (or
-  Samba's own debugging tools) but not the VFS layer. In order to
-  describe this type of activity use constant
-  <literal>SMB_VFS_LAYER_LOGGER</literal>;
+  <listitem><para><emphasis>opaque</emphasis>, 一連の動作を終了させている処理用。
+      たとえば、非POSIXファイルシステム、あるいは、たとえば個人向け
+      オーディオコレクションのためのデータベースのような、全くファイルシステムでないもの
+      上でのPOSIX動作を実装するのに使われる。このモードでは、定数
+      <literal>SMB_VFS_LAYER_OPAQUE</literal>を使う。</para></listitem>
+  <listitem><para><emphasis>splitter</emphasis>, ある種のファイルシステム動作が、
+      以前の実行を透過的に呼び出すために追加される中で、終了する時の方法。これは通常、
+      それを呼び出す側に戻す前に、その呼び出しの結果をマングリングすることを伴う。
+      このモードは定数<literal>SMB_VFS_LAYER_SPLITTER</literal>を選択する。
+      </para></listitem>
+  <listitem><para><emphasis>logger</emphasis>は何も変更せず、何らの追加VFS操作も行わない。
+      <emphasis>logger</emphasis>モジュールが動作するとき、動作についての情報が
+      外部機能(あるいはSambaの固有のデバッグツール)を使ってどこかに記録されるが、
+      それはVFSレイヤではない。このタイプの動作を記述するためには
+      <literal>SMB_VFS_LAYER_LOGGER</literal>定数を使う。
   </para>
   </listitem>
   <listitem><para>On contrary, <emphasis>scanner</emphasis> module does call
