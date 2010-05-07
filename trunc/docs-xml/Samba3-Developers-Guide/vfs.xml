@@ -128,29 +128,28 @@ VFS操作に対応しているかと、どのようにそれらの関数を、�
       <literal>SMB_VFS_LAYER_LOGGER</literal>定数を使う。
   </para>
   </listitem>
-  <listitem><para>On contrary, <emphasis>scanner</emphasis> module does call
-  other VFS operations while processing the data that goes through the
-  system. This type of operation is indicated by the
-  <literal>SMB_VFS_LAYER_SCANNER</literal> constant.</para></listitem>
+  <listitem><para>正反対に、<emphasis>scanner</emphasis>モジュールは、システムに渡される
+      データを処理している間、他のVFS操作を呼び出す。このタイプの操作は、定数
+      <literal>SMB_VFS_LAYER_SCANNER</literal>によって指示される。</para></listitem>
 </itemizedlist>
 </para>
 
-<para>Fundamentally, there are three types:
-<emphasis>transparent</emphasis>, <emphasis>opaque</emphasis>, and
-<emphasis>logger</emphasis>. <emphasis>Splitter</emphasis> and
-<emphasis>scanner</emphasis> may confuse developers (and indeed they
-are confused as our experience has shown) but this separation is to
-better expose the nature of a module's actions. Most of modules
+<para>基本的に、<emphasis>transparent</emphasis>, <emphasis>opaque</emphasis>と
+<emphasis>logger</emphasis>という3つのタイプがある。<emphasis>Splitter</emphasis>と
+<emphasis>scanner</emphasis>は、開発者を混乱させるかもしれない(そして、我々の
+経験が示すように、彼らは全く混乱している)が、この分割はモジュールの動作の性質を
+よりよく提示するはずである。これまでの所、開発されたほとんどのモジュールは、
+transparentを伴いopaqueが一般的な、3つのタイプのどれかである。
+Most of modules
 developed so far are either one of those three fundamental types with
 transparent and opaque being prevalent.
 </para>
 
 <para>
-Each VFS operation has a vfs_op_type, a function pointer and a handle
-pointer in the struct vfs_ops and tree macros to make it easier to
-call the operations.  (Take a look at
-<filename>include/vfs.h</filename> and
-<filename>include/vfs_macros.h</filename>.)
+各VFS操作は、操作の呼び出しを簡単にさせるための、vfs_op_type、関数ポインタと
+vfs_ops構造体中のハンドルポインタと、treeマクロを持つ(
+<filename>include/vfs.h</filename> と
+<filename>include/vfs_macros.h</filename>を参照のこと)。
 </para>
 
 <para><programlisting>
@@ -174,7 +173,7 @@ typedef enum _vfs_op_type {
 } vfs_op_type;
 </programlisting></para>
 
-<para>This struct contains the function and handle pointers for all operations.<programlisting>
+<para>この構造体は関数とすべての操作のためのハンドルポインタを含む。<programlisting>
 struct vfs_ops {
 	struct vfs_fn_pointers {
 		...
@@ -219,8 +218,8 @@ struct vfs_ops {
 </programlisting></para>
 
 <para>
-This macros SHOULD be used to call any vfs operation.
-DO NOT ACCESS conn-&gt;vfs.ops.* directly !!!
+このマクロは任意のvfs操作を呼び出すために*使われるべきである*。
+直接conn-&gt;vfs.ops.*を呼び出しては*いけない!!!*
 <programlisting>
 ...
 	
@@ -254,7 +253,7 @@ DO NOT ACCESS conn-&gt;vfs.ops.* directly !!!
 </sect2>
 
 <sect2>
-<title>Possible VFS operation layers</title>
+<title>可能なVFS操作レイヤ</title>
 
 <para>
 These values are used by the VFS subsystem when building the conn-&gt;vfs 
