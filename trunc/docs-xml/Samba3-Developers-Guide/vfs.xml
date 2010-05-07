@@ -253,29 +253,28 @@ struct vfs_ops {
 </sect2>
 
 <sect2>
-<title>可能なVFS操作レイヤ</title>
+<title>有効なVFS操作レイヤ</title>
 
 <para>
-These values are used by the VFS subsystem when building the conn-&gt;vfs 
-and conn-&gt;vfs_opaque structs for a connection with multiple VFS modules. 
-Internally, Samba differentiates only opaque and transparent layers at this process.
-Other types are used for providing better diagnosing facilities.
+これらの値は、複数のVFSモジュールとの接続用に、conn-&gt;vfsとconn-&gt;vfs_opaque構造体を
+構築するときに、VFSサブシステムによって使われる。内部的にSambaはこのプロセスで、opaqueと
+transparentレイヤのみを区別する。他のタイプは、よりよい診断機能を提供するために使われる。
 </para>
 
 <para>
-Most modules will provide transparent layers. Opaque layer is for modules
-which implement actual file system calls (like DB-based VFS). For example,
-default POSIX VFS which is built in into Samba is an opaque VFS module.
+ほとんどのモジュールはtransparentレイヤを提供する。opaqueレイヤは、実際のファイルシステム
+コール(DBベースのVFSのような)を実装するモジュール用である。例えば、既定値の、Sambaに
+組み込まれているPOSIX VFSはopaque VFSモジュールである。
 </para>
 
 <para>    
-Other layer types (logger, splitter, scanner) were designed to provide different 
-degree of transparency and for diagnosing VFS module behaviour.
+他のレイヤタイプ(logger, splitter, scanner)は異なったtransparencyの段階を提供するためと、
+診断VFSモジュールの動作のために設計された。
 </para>
 
 <para>
-Each module can implement several layers at the same time provided that only
-one layer is used per each operation.
+各モジュールは、1つのレイヤは1つの操作毎に使われる、同じ時に提供されるいくつかの
+レイヤを実装できる。
 </para>
 
 <para><programlisting>
@@ -299,10 +298,10 @@ typedef enum _vfs_op_layer {
 </sect1>
 
 <sect1>
-<title>The Interaction between the Samba VFS subsystem and the modules</title>
+<title>Samba VFSサブシステムとモジュールの間での相互作用</title>
 
 <sect2>
-<title>Initialization and registration</title>
+<title>初期化と登録</title>
 
 <para>
 As each Samba module a VFS module should have a 
