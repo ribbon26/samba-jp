@@ -304,38 +304,39 @@ typedef enum _vfs_op_layer {
 <title>初期化と登録</title>
 
 <para>
-As each Samba module a VFS module should have a 
-<programlisting>NTSTATUS vfs_example_init(void);</programlisting> function if it's staticly linked to samba or
-<programlisting>NTSTATUS init_module(void);</programlisting> function if it's a shared module.
+各SambaモジュールはVFSモジュールで、それがSambaに静的にリンクされるならば、
+<programlisting>NTSTATUS vfs_example_init(void);</programlisting>関数か、
+共有モジュールならば、
+<programlisting>NTSTATUS init_module(void);</programlisting>関数を持つべきである。
 </para>
 
 <para>
-This should be the only non static function inside the module.
-Global variables should also be static!
+これは、モジュール内部の静的でない関数のみがそうすべきである。グローバル
+変数は同様に静的であるべきである!
 </para>
 
 <para>
-The module should register its functions via the
+モジュールはその関数を
 <programlisting>
 NTSTATUS smb_register_vfs(int version, const char *name, vfs_op_tuple *vfs_op_tuples);
-</programlisting> function.
+</programlisting>
+関数経由で登録すべきである。
 </para>
 
 <variablelist>
 
 <varlistentry><term>version</term>
-<listitem><para>should be filled with SMB_VFS_INTERFACE_VERSION</para></listitem>
+<listitem><para>はSMB_VFS_INTERFACE_VERSIONで設定されるべきである。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>name</term>
-<listitem><para>this is the name witch can be listed in the 
-<command>vfs objects</command> parameter to use this module.</para></listitem>
+<listitem><para>これは、このモジュールを使うために、<command>vfs objects</command>
+パラメータ中で一覧表示する事が出来る名前である。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>vfs_op_tuples</term>
 <listitem><para>
-this is an array of vfs_op_tuple's.
-(vfs_op_tuples is descripted in details below.)
+これは、vfs_op_tupleの配列である(vfs_op_tuplesは、詳細が以下で説明される)。
 </para></listitem>
 </varlistentry>
 
