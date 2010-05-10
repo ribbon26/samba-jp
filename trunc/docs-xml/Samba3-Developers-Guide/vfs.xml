@@ -412,35 +412,36 @@ typedef struct vfs_handle_struct {
 <variablelist>
 
 <varlistentry><term>param</term>
-<listitem><para>this is the module parameter specified in the <command>vfs objects</command> parameter.</para>
-<para>e.g. for 'vfs objects = example:test' param would be &quot;test&quot;.</para></listitem>
+<listitem><para>これは<command>vfs objects</command>パラメータ中で指定されるモジュール
+パラメータである。</para>
+<para>すなわち、'vfs objects = example:test'用パラメータは、&quot;test&quot;であろう。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>vfs_next</term>
-<listitem><para>This vfs_ops struct contains the information for calling the next module operations.
-Use the SMB_VFS_NEXT_* macros to call a next module operations and
-don't access handle-&gt;vfs_next.ops.* directly!</para></listitem>
+<listitem><para>このvfs_ops構造体には、次のモジュール操作を呼び出すための情報が含まれている。
+次のモジュール操作を呼ぶためにSMB_VFS_NEXT_*マクロを使い、直接handle-&gt;vfs_next.ops.*に
+アクセスしないこと!</para></listitem>
 </varlistentry>
 
 <varlistentry><term>conn</term>
-<listitem><para>This is a pointer back to the connection_struct to witch the handle belongs.</para></listitem>
+<listitem><para>これは、ハンドルが帰属するconnection_structに戻るためのポインタである。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>data</term>
-<listitem><para>This is a pointer for holding module private data.
-You can alloc data with connection life time on the handle-&gt;conn-&gt;mem_ctx TALLOC_CTX.
-But you can also manage the memory allocation yourself.</para></listitem>
+<listitem><para>モジュール固有データを保持するためのポインタである。
+handle-&gt;conn-&gt;mem_ctx TALLOC_CTX上で接続が有効な間、データをallocできる。
+しかし、自分自身でメモリ管理を行う必要もある。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>free_data</term>
-<listitem><para>This is a function pointer to a function that free's the module private data.
-If you talloc your private data on the TALLOC_CTX handle-&gt;conn-&gt;mem_ctx,
-you can set this function pointer to NULL.</para></listitem>
+<listitem><para>これは、モジュール固有データをフリーにする関数へのポインタである。
+TALLOC_CTX handle-&gt;conn-&gt;mem_ctx上で固有データをtallocした場合、この関数ポインタは
+NULLに設定することが出来る。</para></listitem>
 </varlistentry>
 
 </variablelist>
 
-<para>Some useful MACROS for handle private data.
+<para>固有データを扱うための、いくつかの有益なマクロ。
 </para>
 
 <programlisting>
@@ -471,7 +472,7 @@ you can set this function pointer to NULL.</para></listitem>
 }
 </programlisting>
 
-<para>How SMB_VFS_LAYER_TRANSPARENT functions can call the SMB_VFS_LAYER_OPAQUE functions.</para>
+<para>SMB_VFS_LAYER_TRANSPARENT関数がSMB_VFS_LAYER_OPAQUE関数を呼び出せる方式。</para>
 
 <para>The easiest way to do this is to use the SMB_VFS_OPAQUE_* macros.
 </para>
