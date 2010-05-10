@@ -474,7 +474,7 @@ NULLに設定することが出来る。</para></listitem>
 
 <para>SMB_VFS_LAYER_TRANSPARENT関数がSMB_VFS_LAYER_OPAQUE関数を呼び出せる方式。</para>
 
-<para>The easiest way to do this is to use the SMB_VFS_OPAQUE_* macros.
+<para>これを行う最も簡単な方法は、SMB_VFS_OPAQUE_*マクロを使うことである。
 </para>
 
 <programlisting>
@@ -507,9 +507,9 @@ NULLに設定することが出来る。</para></listitem>
 ...
 </programlisting>
 
-<para>How SMB_VFS_LAYER_TRANSPARENT functions can call the next modules functions.</para>
+<para>SMB_VFS_LAYER_TRANSPARENT関数が次のモジュール関数を呼び出せる方式。</para>
 
-<para>The easiest way to do this is to use the SMB_VFS_NEXT_* macros.
+<para>これを行う最も簡単な方法は、SMB_VFS_NEXT_*マクロを使うことである。
 </para>
 
 <programlisting>
@@ -547,41 +547,41 @@ NULLに設定することが出来る。</para></listitem>
 </sect1>
 
 <sect1>
-<title>Upgrading to the New VFS Interface</title>
+<title>新しいVFSインタフェースへのアップグレード</title>
 
 <sect2>
-<title>Upgrading from 2.2.* and 3.0alpha modules</title>
+<title>2.2.*から3.0αモジュールへのアップグレード</title>
 
 <orderedlist>
 <listitem><para>
-Add &quot;vfs_handle_struct *handle, &quot; as first parameter to all vfs operation functions.
-e.g. example_connect(connection_struct *conn, const char *service, const char *user);
+すべてのvfs操作関数に最初のパラメータとして&quot;vfs_handle_struct *handle, &quot;
+を追加する。例えば、
+example_connect(connection_struct *conn, const char *service, const char *user);
 -&gt;   example_connect(vfs_handle_struct *handle, connection_struct *conn, const char *service, const char *user);
 </para></listitem>
 
 <listitem><para>
-Replace &quot;default_vfs_ops.&quot; with &quot;smb_vfs_next_&quot;.
-e.g. default_vfs_ops.connect(conn, service, user);
+&quot;default_vfs_ops.&quot;を&quot;smb_vfs_next_&quot;で置き換える。たとえば、
+default_vfs_ops.connect(conn, service, user);
 -&gt;   smb_vfs_next_connect(conn, service, user);
 </para></listitem>
 
 <listitem><para>
-Uppercase all &quot;smb_vfs_next_*&quot; functions.
+すべての&quot;smb_vfs_next_*&quot;関数を大文字化する。たとえば、
 e.g. smb_vfs_next_connect(conn, service, user);
 -&gt;   SMB_VFS_NEXT_CONNECT(conn, service, user);
 </para></listitem>
 
 <listitem><para>
-Add &quot;handle, &quot; as first parameter to all SMB_VFS_NEXT_*() calls.
-e.g. SMB_VFS_NEXT_CONNECT(conn, service, user);
+すべてのSMB_VFS_NEXT_*()呼び出しに対して最初のパラメータとして&quot;handle, &quot;を
+追加する。たとえば、
+SMB_VFS_NEXT_CONNECT(conn, service, user);
 -&gt;   SMB_VFS_NEXT_CONNECT(handle, conn, service, user);
 </para></listitem>
 
 <listitem><para>
-(Only for 2.2.* modules) 
-Convert the old struct vfs_ops example_ops to 
-a vfs_op_tuple example_op_tuples[] array.
-e.g.
+(2.2.*モジュール用のみ) 
+古いstruct vfs_ops example_opsをvfs_op_tuple example_op_tuples[]配列に変換する。たとえば、
 <programlisting>
 struct vfs_ops example_ops = {
 	/* Disk operations */
@@ -669,12 +669,11 @@ static vfs_op_tuple example_op_tuples[] = {
 </para></listitem>
 
 <listitem><para>
-Move the example_op_tuples[] array to the end of the file. 
+example_op_tuples[]配列をファイルの最後に移動する。
 </para></listitem>
 
 <listitem><para>
-Add the init_module() function at the end of the file.
-e.g.
+ファイルの最後にinit_module()関数を追加する。たとえば、
 <programlisting>
 NTSTATUS init_module(void)
 {
@@ -684,41 +683,45 @@ NTSTATUS init_module(void)
 </para></listitem>
 
 <listitem><para>
-Check if your vfs_init() function does more then just prepare the vfs_ops structs or
-remember the struct smb_vfs_handle_struct.
+使用しているvfs_init()関数がvfs_ops構造体を準備するだけ以上か、smb_vfs_handle_struct
+構造体を記憶しているかを調べる。
 <simplelist>
-<member>If NOT you can remove the vfs_init() function.</member>
-<member>If YES decide if you want to move the code to the example_connect() operation or to the init_module(). And then remove vfs_init().
-  e.g. a debug class registration should go into init_module() and the allocation of private data should go to example_connect().</member>
+<member>もしもそうでなければ、vfs_init()関数を取り除くことが出来る。</member>
+<member>もしもそうならば、コードをexample_connect()操作に移すか、init_module()に移すかを決める。
+そして次に、vfs_init()を取り除く。たとえば、debugクラスの登録は、init_module()に行くべきで
+あり、固有データの割り当てはexample_connect()に行くべきである。</member>
 </simplelist>
 </para></listitem>
 
 <listitem><para>
-(Only for 3.0alpha* modules) 
-Check if your vfs_done() function contains needed code.
+(3.0alpha*モジュールのみ) 
+使用しているvfs_done()関数が必要とされるコードを含んでいるかを確認する。
 <simplelist>
-<member>If NOT you can remove the vfs_done() function.</member>
-<member>If YES decide if you can move the code to the example_disconnect() operation. Otherwise register a SMB_EXIT_EVENT with smb_register_exit_event(); (Described in the <link linkend="modules">modules section</link>) And then remove vfs_done(). e.g. the freeing of private data should go to example_disconnect().
+<member>もしもそうでなければ、vfs_done()関数を取り除くことが出来る。</member>
+<member>もしもそうならば、コードをexample_disconnect()操作に移動出来るかを決める。
+それ以外の場合、smb_register_exit_event()と一緒にSMB_EXIT_EVENTを登録する。たとえば、
+固有データを開放する事はexample_disconnect()に行くべきである。
 </member>
 </simplelist>
 </para></listitem>
 
 <listitem><para>
-Check if you have any global variables left.
-Decide if it wouldn't be better to have this data on a connection basis.
+何らかのグローバル変数が残っているかを確認する。
+もしもコネクションベース上にこのデータを持つ方がよいかどうかを決める。
 <simplelist>
-  <member>If NOT leave them as they are. (e.g. this could be the variable for the private debug class.)</member>
-  <member>If YES pack all this data into a struct. You can use handle-&gt;data to point to such a struct on a per connection basis.</member>
+  <member>もしもそうでない場合、存在しているものを取り去る(すなわち、固有デバッグクラス用の変数とする)。</member>
+  <member>もしもそうであれば、データすべてを構造体に入れる。接続単位ベース上でそのような構造体を
+    指定するためにhandle-&gt;dataを使うことが出来る。</member>
 </simplelist>
 
-  e.g. if you have such a struct:
+  すなわち、もしも以下ような構造体をもっているような場合:
 <programlisting>    
 struct example_privates {
 	char *some_string;
 	int db_connection;
 };
-</programlisting>	
-first way of doing it:
+</programlisting>
+これを行う最初の方法は以下の通り:
 <programlisting>
 static int example_connect(vfs_handle_struct *handle,
 	connection_struct *conn, const char *service, 
@@ -767,7 +770,7 @@ static int example_close(vfs_handle_struct *handle, files_struct *fsp, int fd)
 	return SMB_VFS_NEXT_CLOSE(handle, fsp, fd);
 }
 </programlisting>
-second way of doing it:
+これを行う次の方法は以下の通り:
 <programlisting>
 static void free_example_privates(void **datap)
 {
