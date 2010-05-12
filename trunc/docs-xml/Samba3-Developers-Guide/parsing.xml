@@ -75,13 +75,12 @@
 </para></listitem>
 
 <listitem><para>
-Internal whitespace within a parameter value is kept verbatim with 
-the exception of carriage return characters ('\r'), all of which
-are removed.
+パラメータ値内部の空白は、それらすべてが削除されるキャリッジリターン文字('\r')を除き、
+そのまま保持される。
 </para></listitem>
 
 <listitem><para>
-Leading and trailing whitespace is removed from names and values.
+名前と値の先頭およびそのあとの空白は削除される。
 </para></listitem>
 
 </orderedlist>
@@ -89,19 +88,17 @@ Leading and trailing whitespace is removed from names and values.
 </sect2>
 
 <sect2>
-<title>Handling of Line Continuation</title>
+<title>継続行の取り扱い</title>
 
 <para>
-Long section header and parameter lines may be extended across
-multiple lines by use of the backslash character ('\\').  Line
-continuation is ignored for blank and comment lines.
+流しセクションヘッダとパラメータ行は、バックスラッシュ文字('\\')を使って、
+複数の行に継続しても良い。継続行は、空白とコメント行に対しては無視される。
 </para>
 
 <para>
-If the last (non-whitespace) character within a section header or on
-a parameter line is a backslash, then the next line will be
-(logically) concatonated with the current line by the lexical
-analyzer.  For example:
+もしも、セクションヘッダ内か、パラメータ行上にある最後の(非空白)文字は、バックスラッシュ
+文字であり、次に、次の行が、構文解析ルーチンによって、(論理的に)現在の行に対して
+結合される。例は以下の通り:
 </para>
 
 <para><programlisting>
@@ -109,17 +106,16 @@ analyzer.  For example:
 	with line continuation.
 </programlisting></para>
 
-<para>Would be read as</para>
+<para>は以下と同値である</para>
 
 <para><programlisting>
     param name = parameter value string     with line continuation.
 </programlisting></para>
 
 <para>
-Note that there are five spaces following the word 'string',
-representing the one space between 'string' and '\\' in the top
-line, plus the four preceeding the word 'with' in the second line.
-(Yes, I'm counting the indentation.)
+単語'string'の後に5つの空白があり、最初の行中の'stging'と'\\'の間に1つの空白があり、
+さらに、2番目の行の'with'の前に4つの空白があることに注意(もちろん、
+インデントをカウントしている)。
 </para>
 
 <para>
