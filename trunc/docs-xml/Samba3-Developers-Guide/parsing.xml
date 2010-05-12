@@ -119,17 +119,16 @@
 </para>
 
 <para>
-Line continuation characters are ignored on blank lines and at the end
-of comments.  They are *only* recognized within section and parameter
-lines.
+継続行文字は空白行とコメントの最後では無視される。セクションとパラメータ行*のみで*
+解釈される。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Line Continuation Quirks</title>
+<title>偶然による行の結合</title>
 
-<para>Note the following example:</para>
+<para>以下の例に注意:</para>
 
 <para><programlisting>
 	param name = parameter value string \
@@ -138,15 +137,15 @@ lines.
 </programlisting></para>
 
 <para>
-The middle line is *not* parsed as a blank line because it is first
-concatonated with the top line.  The result is
+真ん中の行は、最初の行の行に結合されるため、空白行としては*処理されない*。
+結果は以下のようになる。
 </para>
 
 <para><programlisting>
 param name = parameter value string         with line continuation.
 </programlisting></para>
 
-<para>The same is true for comment lines.</para>
+<para>コメントラインに対してもこのことは成立する。</para>
 
 <para><programlisting>
 	param name = parameter value string \
@@ -154,15 +153,15 @@ param name = parameter value string         with line continuation.
     with a comment.
 </programlisting></para>
 
-<para>This becomes:</para>
+<para>これは以下のようになる:</para>
 
 <para><programlisting>
 param name = parameter value string     ; comment     with a comment.
 </programlisting></para>
 
 <para>
-On a section header line, the closing bracket (']') is considered a
-terminating character, and the rest of the line is ignored.  The lines
+セクションヘッダ行状に置いて、閉じ大括弧(']')は終端文字として考慮され、行の残りの
+部分は無視される。以下のような例
 </para>
 
 <para><programlisting>
@@ -170,7 +169,7 @@ terminating character, and the rest of the line is ignored.  The lines
     param  name  = value
 </programlisting></para>
 
-<para>are read as</para>
+<para>は下記のように解釈される。</para>
 
 <para><programlisting>
 	[section name]
@@ -181,9 +180,9 @@ terminating character, and the rest of the line is ignored.  The lines
 </sect1>
 
 <sect1>
-<title>Syntax</title>
+<title>文法</title>
 
-<para>The syntax of the smb.conf file is as follows:</para>
+<para>smb.confファイルの文法は以下のようになる:</para>
 
 <para><programlisting>
   &lt;file&gt;            :==  { &lt;section&gt; } EOF
@@ -192,41 +191,37 @@ terminating character, and the rest of the line is ignored.  The lines
   &lt;parameter line&gt;  :==  NAME '=' VALUE NL
 </programlisting></para>
 
-<para>Basically, this means that</para>
+<para>基本的に、これの意味は以下のようになる</para>
 
 <orderedlist>
 <listitem><para>
-	a file is made up of zero or more sections, and is terminated by
-	an EOF (we knew that).
+    ファイルは0個以上のセクションからなり、EOF(それを知っているので)によって
+    終端する。
 </para></listitem>
 
 <listitem><para>
-	A section is made up of a section header followed by zero or more
-	parameter lines.
+    セクションは0行以上のパラメータが続くセクションヘッダからなる。
 </para></listitem>
 
 <listitem><para>
-	A section header is identified by an opening bracket and
-	terminated by the closing bracket.  The enclosed NAME identifies
-	the section.
+    セクションヘッダは左大括弧により定義され、右大括弧により閉じる。囲まれた
+    名前がセクションを識別する。
 </para></listitem>
 
 <listitem><para>
-	A parameter line is divided into a NAME and a VALUE.  The *first*
-	equal sign on the line separates the NAME from the VALUE.  The
-	VALUE is terminated by a newline character (NL = '\n').
+    パラメータ行は名前と値に分割される。行中の*最初の*等号は、名前と値を分割する。
+    値は改行文字(NL = '\n')によって終端する。
 </para></listitem>
 
 </orderedlist>
 
 <sect2>
-<title>About params.c</title>
+<title>params.cについて</title>
 
 <para>
-The parsing of the config file is a bit unusual if you are used to
-lex, yacc, bison, etc.  Both lexical analysis (scanning) and parsing
-are performed by params.c.  Values are loaded via callbacks to
-loadparm.c.
+configファイルの解析は、もしもlex,yacc,bisonなどを使っていた場合、独特なものと
+感じるだろう。構文解析(スキャン)はparams.cによって行われる。loadparm.cにコールバック
+することでロードされる。
 </para>
 </sect2>
 </sect1>
