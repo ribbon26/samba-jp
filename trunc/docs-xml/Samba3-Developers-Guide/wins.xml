@@ -42,15 +42,16 @@
 </programlisting></para>
 
 <para>
-In the event that no TAG is defined in for a SERVER in the list, smbd assigns a default
-TAG of &quot;*&quot;.  A TAG is used to group servers of a shared NetBIOS namespace together.  Upon
-startup, nmbd will attempt to register the netbios name value with one server in each
-tagged group.
+リスト中のSERVER用にTAGが定義されていないイベント中では、smbdは&quot;*&quot;という、
+既定値のタグを割り当てる。TAGはNetBIOS名前空間を一緒に共有するサーバをグループにする
+のに使われる。起動時から、nmbdはNetBIOS名の値を、各タグづけられたグループ中に1つのサーバを
+登録しようと試みる。
 </para>
 
 <para>
-An example using tags to group WINS servers together is show here.  Note that the use of
-interface names in the tags is only by convention and is not a technical requirement.
+WINSサーバを一緒にグループ化するためのタグの使い方の例は以下にある。タグ中の
+インタフェース名の使用は、単に慣習的なものによるもので、技術的な要求ではないことに
+注意。
 </para>
 
 
@@ -60,21 +61,21 @@ interface names in the tags is only by convention and is not a technical require
 </programlisting></para>
 
 <para>
-Using this configuration, nmbd would attempt to register the server's NetBIOS name 
-with one WINS server in each group.  Because the &quot;eth0&quot; group has two servers, the 
-second server would only be used when a registration (or resolution) request to 
-the first server in that group timed out.
+この設定を使い、nmbd はサーバのNetBIOS名を、各グループ中で1つのWINSサーバに
+登録しようと試みる。&quot;eth0&quot;グループは2つのサーバを持つという理由で、
+2番目のサーバは登録(あるいは名前解決)要求が、そのグループの最初のサーバに対して
+タイムアウトになった時にのみ使われる。
 </para>
 
 <para>
-NetBIOS name resolution follows a similar pattern as name registration.  When resolving 
-a NetBIOS name via WINS, smbd and other Samba programs will attempt to query a single WINS 
-server in a tagged group until either a positive response is obtained at least once or 
-until a server from every tagged group has responded negatively to the name query request.
-If a timeout occurs when querying a specific WINS server, that server is marked as down to 
-prevent further timeouts and the next server in the WINS group is contacted.  Once marked as 
-dead, Samba will not attempt to contact that server for name registration/resolution queries 
-for a period of 10 minutes.
+NetBIOS名前解決は名前登録と同じようなパターンで処理を行う。WINS経由でNetBIOS名の
+解決を行うとき、smbdと他のSambaプログラムは、どこからか最短で肯定応答が返るまでか、
+名前問い合わせ要求に対してすべてのタグされたグループのサーバから否定応答が返るまで、
+タグされたグループ中の、単一のWINSサーバに問い合わせを試みる。もしも、特定のWINS
+サーバに対して、問い合わせのタイムアウトが発生した場合、そのサーバは、その先また
+タイムアウトが起きないようにダウンしているとマークされ、WINSグループ内の次のサーバに
+接続する。一度停止とマークされると、Sambaは10分間は名前登録/解決の問い合わせを、
+そのサーバに対して行おうとはしない。
 </para>
 
 </sect1>
