@@ -47,19 +47,17 @@
 	  ユーザのパスワード上で、MD4ハッシュを行うことから成り立っている。これはまた、
 	  可逆変換不可能な16バイトハッシュ値である。</para>
 
-	<para>When a client (LanManager, Windows for WorkGroups, Windows 
-	95 or Windows NT) wishes to mount a Samba drive (or use a Samba 
-	resource), it first requests a connection and negotiates the 
-	protocol that the client and server will use. In the reply to this 
-	request the Samba server generates and appends an 8 byte, random 
-	value - this is stored in the Samba server after the reply is sent 
-	and is known as the "challenge".  The challenge is different for 
-	every client connection.</para>
+	<para>クライアント(LanManager, Windows for WorkGroups, Windows
+          95 か Windows NT)がSambaドライブ(かSambaリソース)をマウントしようとした時、
+	  最初に接続を要求し、クライアントとサーバが使うプロトコルを調整する。
+	  この要求のリプライ中で、Sambaサーバは8バイトのランダム値を生成し添付する。
+	  これは、"チャレンジ"と呼ばれ、リプライが返ってくることに備えてSambaサーバ中に
+	  保存される。チャレンジはすべてのクライアント接続毎に異なる。</para>
 
-	<para>The client then uses the hashed password (16 byte values 
-	described above), appended with 5 null bytes, as three 56 bit 
-	DES keys, each of which is used to encrypt the challenge 8 byte 
-	value, forming a 24 byte value known as the "response".</para>
+	<para>クライアントは次にハッシュ化されたパスワード(上記で説明されている
+	  16バイト値)を使い、5つのNULL文字を追加し、3つの56ビットDESキーとし、
+	  それは、おのおのチャレンジの8バイト値を暗号化するのに使われ、"レスポンス"
+	  と呼ばれる24バイトの値に整形する。</para>
 
 	<para>In the SMB call SMBsessionsetupX (when user level security 
 	is selected) or the call SMBtconX (when share level security is 
