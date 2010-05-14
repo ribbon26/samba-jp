@@ -59,33 +59,31 @@
 	  それは、おのおのチャレンジの8バイト値を暗号化するのに使われ、"レスポンス"
 	  と呼ばれる24バイトの値に整形する。</para>
 
-	<para>In the SMB call SMBsessionsetupX (when user level security 
-	is selected) or the call SMBtconX (when share level security is 
-	selected), the 24 byte response is returned by the client to the 
-	Samba server.  For Windows NT protocol levels the above calculation 
-	is done on both hashes of the user's password and both responses are 
-	returned in the SMB call, giving two 24 byte values.</para>
+	<para>SMB呼び出しSMBsessionsetupX(ユーザレベルセキュリティが選択された場合)中か、
+	  STBtconX呼び出し(共有レベルセキュリティが選択された場合)中で、24バイトの
+	  レスポンスはクライアントによってSambaサーバに戻される。Windows NTプロトコル
+	  レベル用に、上記の計算が、ユーザのパスワードのハッシュ両方ととレスポンス両方に
+	  対して行われ、2つの24バイト値がSMB呼び出しに対して戻される。</para>
 
-	<para>The Samba server then reproduces the above calculation, using 
-	its own stored value of the 16 byte hashed password (read from the 
-	<filename>smbpasswd</filename> file - described later) and the challenge 
-	value that it kept from the negotiate protocol reply. It then checks 
-	to see if the 24 byte value it calculates matches the 24 byte value 
-	returned to it from the client.</para>
+	<para>Sambaサーバは次に上記の計算を、サーバ内に保存されている16バイトの
+	  ハッシュ化されたパスワード(後述する<filename>smbpasswd</filename>から読んで)、
+	  ネゴシエートプロトコルの返答から得たチャレンジ値を使って再度行う。それは
+	  次に、計算した24バイトの値がクライアントから返されたものと一致するかを
+	  確認する。</para>
 
-	<para>If these values match exactly, then the client knew the 
-	correct password (or the 16 byte hashed value - see security note 
-	below) and is thus allowed access. If not, then the client did not 
-	know the correct password and is denied access.</para>
+	<para>もしも、それらの値が性格に一致するならば、クライアントが正しいパスワード
+	  (か、16バイトのハッシュ化された値 - 以下のセキュリティに関する注意を参照)
+	  を使っていて、その結果アクセスは許可される。もしもそうでない場合、
+	  クライアントは正しいパスワードを使っておらず、アクセスは拒否される。</para>
 
-	<para>Note that the Samba server never knows or stores the cleartext 
-	of the user's password - just the 16 byte hashed values derived from 
-	it. Also note that the cleartext password or 16 byte hashed values 
-	are never transmitted over the network - thus increasing security.</para>
+	<para>Sambaサーバはユーザの平文パスワードを受け取ったり、格納することは
+	  決してないことに注意。それに由来する16バイトのハッシュ値のみである。また、
+	  平文パスワードまたは16バイトのハッシュ値はネットワーク上を決して流れない。
+	  そのため、セキュリティは向上する。</para>
 </sect1>
 
 <sect1>
-	<title>The smbpasswd file</title>
+	<title>smbpasswd ファイル</title>
 	<anchor id="SMBPASSWDFILEFORMAT"/>
 	<para>In order for Samba to participate in the above protocol 
 	it must be able to look up the 16 byte hashed values given a user name.
