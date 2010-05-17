@@ -85,26 +85,26 @@
 <sect1>
 	<title>smbpasswd ファイル</title>
 	<anchor id="SMBPASSWDFILEFORMAT"/>
-	<para>In order for Samba to participate in the above protocol 
-	it must be able to look up the 16 byte hashed values given a user name.
-	Unfortunately, as the UNIX password value is also a one way hash
-	function (ie. it is impossible to retrieve the cleartext of the user's
-	password given the UNIX hash of it), a separate password file
-	containing this 16 byte value must be kept. To minimise problems with
-	these two password files, getting out of sync, the UNIX <filename>
-	/etc/passwd</filename> and the <filename>smbpasswd</filename> file, 
-	a utility, <command>mksmbpasswd.sh</command>, is provided to generate
-	a smbpasswd file from a UNIX <filename>/etc/passwd</filename> file.
+	<para>Sambaが上記のプロトコルに参加するために、それがユーザ名と等価ならば、
+	  16バイトのハッシュ値を検索できる必要がある。残念ながら、UNIXパスワードの
+	  値は1方向ハッシュ関数による値なので(すなわち、UNIXのハッシュとして与えられた、
+	  ユーザの平文パスワードを検索することは不可能である)、この16バイト値を含む
+	  分離されたパスワードファイルを用意しなければならない。2つのパスワードファイルに
+	  起因する、同期ずれ問題を最小限にするために、UNIXの
+	  <filename>/etc/passwd</filename> と <filename>smbpasswd</filename>、
+	  ユーティリティ<command>mksmbpasswd.sh</command>がUNIXの
+	  <filename>/etc/passwd</filename>からsmbpasswdファイルを生成するために
+	  提供されている。
 	</para>
 
 
-	<para>To generate the smbpasswd file from your <filename>/etc/passwd
-	</filename> file use the following command:</para>
+	<para>使用している<filename>/etc/passwd</filename>ファイルからsmbpasswd
+	  ファイルを生成するために、以下のコマンドを使用する:</para>
 	
 	<para><prompt>$ </prompt><userinput>cat /etc/passwd | mksmbpasswd.sh
 	&gt; /usr/local/samba/private/smbpasswd</userinput></para>
 	
-	<para>If you are running on a system that uses NIS, use</para>
+	<para>もしも、NISを使っているシステム上ならば、以下を使用する</para>
 
 	<para><prompt>$ </prompt><userinput>ypcat passwd | mksmbpasswd.sh
 	&gt; /usr/local/samba/private/smbpasswd</userinput></para>
