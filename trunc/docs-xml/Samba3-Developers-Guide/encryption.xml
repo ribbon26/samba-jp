@@ -139,50 +139,49 @@ username:uid:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:
 	last-change-time</replaceable>セクションのみが重要であり、Sambaソースコード
 	内ではそれらのみが参照される。</para>
 
-	<para>It is <emphasis>VITALLY</emphasis> important that there by 32 
-	'X' characters between the two ':' characters in the XXX sections - 
-	the smbpasswd and Samba code will fail to validate any entries that 
-	do not have 32 characters  between ':' characters. The first XXX 
-	section is for the Lanman password hash, the second is for the 
-	Windows NT version.</para>
+	<para>XXXセクション中に、32の'X'文字の間に2つの':'文字があることが、
+	  <emphasis>特に重要</emphasis>で、smbpasswdとSambaのコードは、
+	  ':'の文字の間に32文字がない任意のエントリについては認証に失敗する。
+	  最初のXXXセクションはLanman passwordハッシュで、2番目はWindows NT
+	  用である。</para>
 
-	<para>When the password file is created all users have password entries
-	consisting of 32 'X' characters. By default this disallows any access
-	as this user. When a user has a password set, the 'X' characters change
-	to 32 ascii hexadecimal digits (0-9, A-F). These are an ascii
-	representation of the 16 byte hashed value of a user's password.</para>
+	<para>passwordファイルが生成された時、すべてのユーザは32個の'X'文字を含む
+	  パスワードエントリを持つ。既定値で、これはこのユーザに対して、何らの
+	  アクセスも許可しない。ユーザがパスワードを設定すると、'X'文字は32バイトの
+	  ASCII16進数値(0-9,A-F)に変わる。これは、ユーザのパスワードの、
+	  16バイトハッシュ値を表現したものである。</para>
 
-	<para>To set a user to have no password (not recommended), edit the file
-	using vi, and replace the first 11 characters with the ascii text
-	<constant>"NO PASSWORD"</constant> (minus the quotes).</para>
+	<para>(推奨しないが)ユーザがパスワードを持たないようにするためには、viを
+	  使ってこのファイルを編集し、最初の11文字をASCII文字列
+	  <constant>"NO PASSWORD"</constant>(引用符は勘定に入れない)に置き換える。
+	</para>
 
-	<para>For example, to clear the password for user bob, his smbpasswd file 
-	entry would look like :</para>
+	<para>たとえば、ユーザbobのパスワードをなくすには、彼のパスワードファイルの
+	  エントリを以下のようにする:</para>
 
 	<para><programlisting>
 bob:100:NO PASSWORDXXXXXXXXXXXXXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:
 	[U          ]:LCT-00000000:Bob's full name:/bobhome:/bobshell
 	</programlisting></para>
 	
-	<para>If you are allowing users to use the smbpasswd command to set 
-	their own passwords, you may want to give users NO PASSWORD initially 
-	so they do not have to enter a previous password when changing to their 
-	new password (not recommended). In order for you to allow this the
-	<command>smbpasswd</command> program must be able to connect to the 
-	<command>smbd</command> daemon as that user with no password. Enable this 
-	by adding the line :</para>
+	<para>もしも、自分自身でsmbpasswdコマンドを使ってパスワードを設定することを認めて
+	  いるならば、(推奨しないが)ユーザがパスワードを再設定する時に、以前の
+	  パスワードを入力しなくてすむよう、初期値としてユーザに NO PASSWORD を設定しても
+	  よいだろう。これを行うためには、<command>smbpasswd</command>プログラムは
+	  そのユーザがパスワードなしで動くために、<command>smbd</command>デーモンに
+	  接続できる必要がある。これを行うには以下のような設定を</para>
 
 	<para><command>null passwords = yes</command></para>
 	
-	<para>to the [global] section of the smb.conf file (this is why 
-	the above scenario is not recommended). Preferably, allocate your
-	users a default password to begin with, so you do not have
-	to enable this on your server.</para>
+	<para>smb.confファイルの[global]セクションに(これが、なぜ上記の記述が
+	  推奨されないかの理由である)記述する。出来れば、最初に各ユーザの初期パスワードを
+	  設定すれば、使用するサーバ上でこれを有効にしなくてすむ。</para>
 
-	<para><emphasis>Note : </emphasis>This file should be protected very 
-	carefully. Anyone with access to this file can (with enough knowledge of 
-	the protocols) gain access to your SMB server. The file is thus more 
-	sensitive than a normal unix <filename>/etc/passwd</filename> file.</para>
+	<para><emphasis>注意 : </emphasis>このファイルはとても注意深く保護すべきである。
+	  誰でもがこのファイルにアクセスできると言うことは、(プロトコルについて
+	  十分な知識がなくても)使用するSMBサーバへのアクセス権を得ることが出来ることに
+	  なるからである。ファイルはそのため通常のUNIX<filename>/etc/passwd</filename>
+	  ファイルよりもより機密性が高い。</para>
 </sect1>
 
 </chapter>
