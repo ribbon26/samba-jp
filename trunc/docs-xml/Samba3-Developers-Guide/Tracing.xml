@@ -31,44 +31,40 @@
 </para>
 
 <para>
-The system trace utility is called different things on different
-systems. On Linux systems its called strace. Under SunOS 4 its called
-trace. Under SVR4 style systems (including solaris) its called
-truss. Under many BSD systems its called ktrace. 
+システムトレースユーティリティは異なったシステムでは異なった名前で呼ばれる。Linux
+システム上では、straceと呼ばれる。SunOS 4では、traceと呼ばれる。SVR4ベースのシステム
+では(solarisを含む)、trussと呼ばれる。多くのBSDシステムではktraceと呼ばれる。
 </para>
 
 <para>
-The first thing you should do is read the man page for your native
-system call tracer. In the discussion below I'll assume its called
-strace as strace is the only portable system tracer (its available for
-free for many unix types) and its also got some of the nicest
-features.
+最初に行うべき事は、使用しているシステム上でのシステムコールトレースユーティリティの
+マニュアルページを読むことである。以下の議論の中で、straceのみがポータブルなシステム
+トレースユーティリティ(多くのUNIXマシンで自由に使えるものがある)で、かつ、最も良い
+ある種の機能をもっているので、これをstraceと呼ぶ。
 </para>
 
 <para>
-Next, try using strace on some simple commands. For example, <command>strace
-ls</command> or <command>strace echo hello</command>.
+次に、いくつかの簡単なコマンド上でstraceを使ってみる。例えば、
+<command>strace ls</command> か <command>strace echo hello</command>などである。
 </para>
 
 <para> 
-You'll notice that it produces a LOT of output. It is showing you the
-arguments to every system call that the program makes and the
-result. Very little happens in a program without a system call so you
-get lots of output. You'll also find that it produces a lot of
-"preamble" stuff showing the loading of shared libraries etc. Ignore
-this (unless its going wrong!)
+これが大量の出力を出すことに注意。これは、プログラムが出すすべてのシステムコールに対する
+引数とその結果を表示する。システムコールを出さないプログラムは非常に例外的で、そのため
+大量の出力が出る。共有ライブラリなどをロードする事を表示することなどの、大量の"前処理"
+を生成することにも注意。これは無視すること(それが問題にならない限り!)
 </para>
 
 <para>
-For example, the only line that really matters in the <command>strace echo
-hello</command> output is:
+例えば、<command>strace echo hello</command>中の、真に重要な行に対する出力は以下の
+通りである:
 </para>
 
 <para><programlisting>
 write(1, "hello\n", 6)                  = 6
 </programlisting></para>
 
-<para>all the rest is just setting up to run the program.</para>
+<para>残りすべてはプログラムを動かすための準備である。</para>
 
 <para>
 Ok, now you're familiar with strace. To use it on Samba you need to
