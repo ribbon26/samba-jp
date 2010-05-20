@@ -67,20 +67,21 @@ write(1, "hello\n", 6)                  = 6
 <para>残りすべてはプログラムを動かすための準備である。</para>
 
 <para>
-Ok, now you're familiar with strace. To use it on Samba you need to
-strace the running smbd daemon. The way I tend ot use it is to first
-login from my Windows PC to the Samba server, then use smbstatus to
-find which process ID that client is attached to, then as root I do
-<command>strace -p PID</command> to attach to that process. I normally redirect the
-stderr output from this command to a file for later perusal. For
-example, if I'm using a csh style shell:
+OK,これでstraceになれたはずである。これをSambaに使うためには、動作しているsmbd
+デーモンに対してstraceする必要がある。それを使うための方法は、まず最初にWindows PC
+からSambaサーバにログオンし、次に、そのクライアントが接続しているプロセスIDを、
+smbstatusを使って調べ、rootで<command>strace -p PID</command>として、そのプロセスに
+接続する。通常後で見るために、このコマンドからのstderr出力をファイルにリダイレクトする。
+例えば、もしもcsh風のシェルを使っているならば、
 </para>
 
 <para><command>strace -f -p 3872 &gt;&amp; strace.out</command></para>
 
-<para>or with a sh style shell:</para>
+<para>かあるいはsh風のシェルを使っているならば:</para>
 
 <para><command>strace -f -p 3872 > strace.out 2&gt;&amp;1</command></para>
+
+<para>とする。</para>
 
 <para>
 Note the "-f" option. This is only available on some systems, and
