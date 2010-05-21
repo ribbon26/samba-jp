@@ -84,25 +84,26 @@ smbstatusを使って調べ、rootで<command>strace -p PID</command>として�
 <para>とする。</para>
 
 <para>
-Note the "-f" option. This is only available on some systems, and
-allows you to trace not just the current process, but any children it
-forks. This is great for finding printing problems caused by the
-"print command" being wrong.
+"-f"オプションに注意。これは、いくつかのシステムのみで有効であり、現在のプロセス
+だけではなく、フォークした任意のチャイルドプロセスのトレースも取れるようにする。
+これは、"print command"がうまくいかない時に引き起こされる印刷時の問題を見つけるのに
+とても役に立つ。
 </para>
 
 <para>
+一度アタッチすると、問題を引き起こしているクライアント上でのすべての動作を見ることが
+でき、smbdが発行しているすべてのシステムコールをとらえられる。
 Once you are attached you then can do whatever it is on the client
 that is causing problems and you will capture all the system calls
 that smbd makes. 
 </para>
 
 <para>
-So how do you interpret the results? Generally I search through the
-output for strings that I know will appear when the problem
-happens. For example, if I am having touble with permissions on a file
-I would search for that files name in the strace output and look at
-the surrounding lines. Another trick is to match up file descriptor
-numbers and "follow" what happens to an open file until it is closed.
+次に、どのように結果を解釈したらよいだろうか?。一般的に、問題が発生した時に現れる
+だろうと思われる、分かっている文字列を、出力全体を通して検索する。例えば、もしも、
+ファイルに対するアクセス許可の問題があった場合、straceの出力からそのファイル名を
+検索し、その周りの行を眺めてみる。もう一つのテクニックとしては、ファイルディスクリプタの
+番号の一致を捜し、それがオープンしてクローズするまでに何があったかを"順に追っていく"。
 </para>
 
 <para>
