@@ -2,12 +2,12 @@
 .\"     Title: net
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 03/20/2010
+.\"      Date: 05/23/2010
 .\"    Manual: システム管理ツール
 .\"    Source: Samba 3.4
 .\"  Language: English
 .\"
-.TH "NET" "8" "03/20/2010" "Samba 3\&.4" "システム管理ツール"
+.TH "NET" "8" "05/23/2010" "Samba 3\&.4" "システム管理ツール"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -740,7 +740,7 @@ Samba 3\&.0\&.23 より、root 以外のユーザが「net usershare」コマン
 .PP
 ユーザ定義共有に関するコマンドを以下に示す:
 .RS 4
-net usershare add sharename path [comment] [acl] [guest_ok=[y|n]] \- ユーザ定義の共有の追加または変更
+net usershare add sharename path [comment [acl] [guest_ok=[y|n]]] \- ユーザ定義の共有の追加または変更
 .RE
 .RS 4
 net usershare delete sharename \- ユーザ定義の共有の削除
@@ -1097,6 +1097,51 @@ net dom renamecomputer \- ドメインに参加しているリモートコンピ
 例: net dom renamecomputer \-S xp \-U XP\e\eadministrator%secret newname=XPNEW account=MYDOM\e\eadministrator password=topsecret reboot\&.
 .PP
 この例では、XPという名前のコンピュータに、パスワードがsecretのローカルの Administratorとして接続し、ドメインに参加しているコンピュータの名前を、 MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、 XPNEWに変更している。変更が成功したら、コンピュータをリブートする。
+.SS "G_LOCK"
+.PP
+グローバルロックの管理
+.SS "G_LOCK DO lockname timeout command"
+.PP
+グローバルロック配下でシェルを実行する。これはいくつかのシェルコマンドが実行される 順番を定義するのに便利かもしれない。ロック情報はg_lock\&.tdb
+というファイルに格納される。CTDBが動作しているセットアップ時には、ロック情報は すべてのクラスタノードで有効である。
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fILOCKNAME\fRはグローバルロックの名前を定義する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fITIMEOUT\fRはタイムアウトを定義する。
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fICOMMAND\fRは実行するシェルコマンドを定義する。
+.SS "G_LOCK LOCKS"
+.PP
+現在存在するすべてのロック名を表示する。
+.SS "G_LOCK DUMP lockname"
+.PP
+特定のグローバルロックのロックテーブルをダンプする。
 .SS "HELP [COMMAND]"
 .PP
 指定されたコマンドの使用方法の情報を提供する。
@@ -1110,7 +1155,7 @@ net dom renamecomputer \- ドメインに参加しているリモートコンピ
 net マニュアルページは Jelmer Vernoij によって執筆された。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\&.4\&.0 \- 3\&.5\&.1 対応のものである。
+このマニュアルページは Samba 3\&.5\&.3 対応のものである。
 .PP
 このドキュメントの Samba 3\&.0\&.0 対応の翻訳は
 .sp
@@ -1140,4 +1185,4 @@ net マニュアルページは Jelmer Vernoij によって執筆された。
 .PP
 Samba 3\&.0\&.23 \- Samba 3\&.0\&.24 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-Samba 3\&.2\&.4 \- 3\&.5\&.1 対応の翻訳は、太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。
+Samba 3\&.2\&.4 \- 3\&.5\&.3 対応の翻訳は、太田俊哉 (ribbon@samba\&.gr\&.jp) によって行なわれた。
