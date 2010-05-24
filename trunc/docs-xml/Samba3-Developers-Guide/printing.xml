@@ -48,11 +48,11 @@ Sambaは7つの機能に対する関数ポインタテーブルを使う。関�
 </para>
 
 <itemizedlist>
-	<listitem><para>a generic set of functions for working with standard UNIX
-	printing subsystems</para></listitem>
+	<listitem><para>標準UNIX印刷サブシステムと共に動作するための汎用的な機能セット
+	</para></listitem>
 
-	<listitem><para>a set of CUPS specific functions (this is only enabled if
-	the CUPS libraries were located at compile time).</para></listitem>
+	<listitem><para>CUPS固有の機能セット(これはCUPSライブラリがコンパイル時に存在
+	    する場合にのみ有効となる)。</para></listitem>
 </itemizedlist>
 
 </sect1>
@@ -62,28 +62,25 @@ Sambaは7つの機能に対する関数ポインタテーブルを使う。関�
 
 <sect1>
 <title>
-Print Queue TDB's
+印刷キューTDB
 </title>
 
 
 <para>
-Samba provides periodic caching of the output from the "lpq command"
-for performance reasons.  This cache time is configurable in seconds.
-Obviously the longer the cache time the less often smbd will be
-required to exec a copy of lpq.  However, the accuracy of the print
-queue contents displayed to clients will be diminished as well.
+Sambaはパフォーマンス向上のために、"lpq command"からの出力を定期的にキャッシュする
+機能を提供する。このキャッシュ時間は秒単位で設定可能である。明らかに、キャッシュ時間が
+より長いと、それだけsmbdはlpqへのコピーを行う回数が減る。しかし、クライアントに見せる
+印刷キューの内容の正確さは、減少するだろう。
 </para>
 
 <para>
-The list of currently opened print queue TDB's can be found
-be examining the list of tdb_print_db structures ( see print_db_head
-in printing.c ). A queue TDB is opened using the wrapper function
-printing.c:get_print_db_byname().  The function ensures that smbd
-does not open more than MAX_PRINT_DBS_OPEN in an effort to prevent
-a large print server from exhausting all available file descriptors.
-If the number of open queue TDB's exceeds the MAX_PRINT_DBS_OPEN
-limit, smbd falls back to a most recently used algorithm for maintaining
-a list of open TDB's.
+現在オープンしている印刷キューTDBのリストは、tdb_print_db structuresのリストを
+調べることによって見つけることが出来る(printing.c中のprint_db_head参照)。1つのキュー
+TDBはラッパー関数printing.c:get_print_db_byname()を使うことによってオープンされる。
+関数は、すべての有効なファイルディスクリプタを使い果たしてしまうことから、大きな
+印刷サーバを防ぐための効果がある、MAX_PRINT_DBS_OPENよりも数多く開かない事をsmbdに
+行わせる。もしもキューTDBのオープン数がMAX_PRINT_DBS_OPENの制限を超過した場合、
+smbdはオープンTDBのリストを管理するためMRU(most recently used)アルゴリズムを使う。
 </para>
 
 <para>
