@@ -170,19 +170,18 @@ ID用にUNIX_JOB_STARTを追加して生成される。
 </para>
 
 <para>
-The NT_DEVICEMODE stored as part of the printjob structure is used to
-store a pointer to a non-default DeviceMode associated with the print
-job.  The pointer will be non-null when the client included a Device
-Mode in the OpenPrinterEx() call and subsequently submitted a job for
-printing on that same handle.  If the client did not include a Device
-Mode in the OpenPrinterEx() request, the nt_devmode field is NULL
-and the job has the printer's device mode associated with it by default.
+printjob構造体の一部として格納されるNT_DEVICEMODEは、印刷ジョブに関連づけられる
+非標準のDeviceModeへのポインタを格納するのに使われる。ポインタは、クライアントが
+OpenPrinterEx()呼び出し中でDevice Modeを含める時にnull以外になり、その同じハンドルで
+印刷のために引き続いてジョブを投入する。もしもクライアントがOpenPrinterEx()要求に
+対してDevice Modeを含めないのであれば、nt_devmodeフィールドはNULLであり、ジョブは
+既定値で、それに関連づけられるプリンタのデバイスモードを持つ。
 </para>
 
 <para>
-Only non-default Device Mode are stored with print jobs in the print
-queue TDB.  Otherwise, the Device Mode is obtained from the printer
-object when the client issues a GetJob(level == 2) request.
+非標準のDevice Modeのみが印刷キューTDB中にプリントジョブと一緒に格納される。それ以外は、
+Device Modeは、クライアントがGetJob(level == 2)要求を発行した時、プリンタオブジェクト
+から得られたものである。
 </para>
 
 </sect1>
@@ -192,11 +191,11 @@ object when the client issues a GetJob(level == 2) request.
 
 <sect1>
 <title>
-ChangeID and Client Caching of Printer Information
+ChangeIDとプリンタ情報のキャッシング
 </title>
 
 <para>
-[To be filled in later]
+[後日作成]
 </para>
 </sect1>
 
@@ -204,22 +203,20 @@ ChangeID and Client Caching of Printer Information
 
 <sect1>
 <title>
-Windows NT/2K Printer Change Notify
+Windows NT/2K におけるPrinter Change Notify
 </title>
 
 <para>
-When working with Windows NT+ clients, it is possible for a
-print server to use RPC to send asynchronous change notification
-events to clients for certain printer and print job attributes.
-This can be useful when the client needs to know that a new
-job has been added to the queue for a given printer or that the
-driver for a printer has been changed.  Note that this is done
-entirely orthogonal to cache updates based on a new ChangeID for
-a printer object.
+Windows NT+クライアントで動作している場合、プリンタサーバに対してRPCを使って、
+クライアントに、特定のプリンタと印刷ジョブ属性の、非同期な変更通知イベント
+を送ることが出来る。これは、クライアントが指定したプリンタに対して新しいジョブが
+キューに追加されたことか、プリンタのドライバが変更されたかを知る必要がある時に
+便利である。これは、プリンタオブジェクトのなめの新しいChangeID上をベースとした
+キャッシュ更新とは完全に無関係に行われることに注意。
 </para>
 
 <para>
-The basic set of RPC's used to implement change notification are
+変更通知を実装するために使われる基本的なRPCの使用範囲は以下の通り
 </para>
 
 <itemizedlist>
