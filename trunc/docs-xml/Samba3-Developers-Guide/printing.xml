@@ -124,35 +124,35 @@ ID用にUNIX_JOB_STARTを追加して生成される。
 </para>
 
 <para>
-When updating a print queue, smbd will perform the following
-steps ( refer to <filename>print.c:print_queue_update()</filename> ):
+印刷キューを更新する時、smbdは以下の手順を実行する
+(<filename>print.c:print_queue_update()</filename>を参照):
 </para>
 
 <orderedlist>
-	<listitem><para>Check to see if another smbd is currently in 
-	the process of updating the queue contents by checking the pid 
-	stored in <constant>LOCK/<replaceable>printer_name</replaceable></constant>.  
-	If so, then do not update the TDB.</para></listitem>
+	<listitem><para>もしも、他のsmbdが現在キューの内容を更新中かどうかを、
+	    <constant>LOCK/<replaceable>printer_name</replaceable></constant>に
+	    格納されているpidをチェックすることで調べる。もしもそうであれば、
+	    TDBの更新をしない。</para></listitem>
 	
-	<listitem><para>Lock the mutex entry in the TDB and store our own pid.
-	Check that this succeeded, else fail.</para></listitem>
+	<listitem><para>TDB中のmutexエントリをロックし、今のプロセス固有のpidを格納する。
+	    それがうまくいったかを調べ、そうでなければ失敗する。</para></listitem>
 
-	<listitem><para>Store the updated time stamp for the new cache
-	listing</para></listitem>
+	<listitem><para>新しいキャッシュ内容の表示のために、更新したタイムスタンプを
+	    格納する。</para></listitem>
 
-	<listitem><para>Retrieve the queue listing via "lpq command"</para></listitem>
+	<listitem><para>"lpq command"経由でキューの一覧を検索する。</para></listitem>
 
 	<listitem><para><programlisting>
 	foreach job in the queue
      	{
-		if the job is a UNIX job, create a new entry;
-		if the job has a Windows based jobid, then
+		ジョブがUNIXジョブならば、新しいエントリを作成する;
+		ジョブがWindowsベースのジョブIDを持つならば、
 		{
-			Lookup the record by the jobid;
-			if the lookup failed, then
-				treat it as a UNIX job;
-			else
-				update the job status only
+			ジョブIDでレコードを検索する;
+			もしも検索が失敗したら
+				それをUNIXジョブとして扱う;
+			そうでなければ
+				ジョブステータスのみを更新する
 		}
 	}</programlisting></para></listitem>
 
