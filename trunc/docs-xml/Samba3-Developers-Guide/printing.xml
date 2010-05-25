@@ -84,11 +84,9 @@ smbdはオープンTDBのリストを管理するためMRU(most recently used)�
 </para>
 
 <para>
-There are two ways in which a a print job can be entered into
-a print queue's TDB.  The first is to submit the job from a Windows
-client which will insert the job information directly into the TDB.
-The second method is to have the print job picked up by executing the
-"lpq command".
+印刷ジョブを印刷キューTDB中に投入できるための2つの方法がある。最初のものはTDB中に
+ジョブ情報を直接挿入するWindowsクライアントからジョブを投入する方法である。2番目の
+方法は存在している"lpq command"を実行することで、印刷ジョブをピックアップする方法である。
 </para>
 
 <para><programlisting>
@@ -112,18 +110,17 @@ struct printjob {
 </programlisting></para>
 
 <para>
-The current manifestation of the printjob structure contains a field
-for the UNIX job id returned from the "lpq command" and a Windows job
-ID (32-bit bounded by PRINT_MAX_JOBID).  When a print job is returned
-by the "lpq command" that does not match an existing job in the queue's
-TDB, a 32-bit job ID above the &lt;*vance doesn't know what word is missing here*&gt; is generating by adding UNIX_JOB_START to
-the id reported by lpq.
+printjob 構造体の現在の状態には、"lpq command"から戻されるUNIXジョブIDと、
+Windows ジョブID(PRINT_MAX_JOBIDによって32ビットごとに区切られる)
+のためのフィールドが含まれている。印刷ジョブが、キューTDB中に存在するジョブに
+一致しない"lpq command"によって戻された場合、上記の32ビットジョブID
+&lt;*vance doesn't know what word is missing here*&gt;がlpqによって報告される
+ID用にUNIX_JOB_STARTを追加して生成される。
 </para>
 
 <para>
-In order to match a 32-bit Windows jobid onto a 16-bit lanman print job
-id, smbd uses an in memory TDB to match the former to a number appropriate
-for old lanman clients.
+32ビットWindowsジョブIDを16ビットlanman印刷ジョブIDに一致させるために、smbdは
+古いlanmanクライアントのために、前半部分の適切な数値を一致させるためのメモリTDBを使う。
 </para>
 
 <para>
