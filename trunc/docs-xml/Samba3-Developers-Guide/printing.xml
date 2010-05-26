@@ -229,8 +229,8 @@ Windows NT+クライアントで動作している場合、プリンタサーバ
 </itemizedlist>
 
 <para>
-One additional RPC is available to a server, but is never used by the
-Windows spooler service:
+1つの追加RPCがサーバに対して有効であるが、それはWindows spoolerサービスでは決して
+使われない:
 </para>
 
 <itemizedlist>
@@ -238,26 +238,24 @@ Windows spooler service:
 </itemizedlist>
 
 <para>
-The opnum for all of these RPC's are defined in include/rpc_spoolss.h
+それらすべてのRFC用のopnumはinclude/rpc_spoolss.hで定義されている。
 </para>
 
 <para>
-Windows NT print servers use a bizarre method of sending print
-notification event to clients.  The process of registering a new change
-notification handle is as follows.  The 'C' is for client and the
-'S' is for server.  All error conditions have been eliminated.
+Windows NT印刷サーバはクライアントに印刷通知イベントを送る変わった方法を使っている。
+新しい変更通知ハンドルの登録プロセスは、以下のようになる。'C'はクライアントで、
+'S'はサーバである。すべてのエラー状態は省略されている。
 </para>
 
 <para><programlisting>
-C:	Obtain handle to printer or to the printer
-	server via the standard OpenPrinterEx() call.
-S:	Respond with a valid handle to object
+C:	標準OpenPrinterEx()呼び出しを経由して、プリンタかプリンタサーバへの
+	ハンドルを得る。
+S:	オブジェクトへの有効なハンドルを返す。
 
-C:	Send a RFFPCN request with the previously obtained
-	handle with either (a) set of flags for change events
-	to monitor, or (b) a PRINTER_NOTIFY_OPTIONS structure
-	containing the event information to monitor.  The windows
-	spooler has only been observed to use (b).
+C:	(a)モニタへの変更イベントのための1まとまりのフラグか、(b)モニタへの
+	イベント情報を含むPRINTER_NOTIFY_OPTIONS構造体のどちらかと共に、
+	以前に入手したハンドルと共にRFFPCN要求を送る。Windows spoolerは
+	(b)の使用のみを観察している。
 S:	The &lt;* another missing word*&gt; opens a new TCP session to the client (thus requiring
 	all print clients to be CIFS servers as well) and sends
 	a ReplyOpenPrinter() request to the client.
