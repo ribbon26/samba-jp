@@ -256,33 +256,29 @@ C:	(a)モニタへの変更イベントのための1まとまりのフラグか�
 	イベント情報を含むPRINTER_NOTIFY_OPTIONS構造体のどちらかと共に、
 	以前に入手したハンドルと共にRFFPCN要求を送る。Windows spoolerは
 	(b)の使用のみを観察している。
-S:	The &lt;* another missing word*&gt; opens a new TCP session to the client (thus requiring
-	all print clients to be CIFS servers as well) and sends
-	a ReplyOpenPrinter() request to the client.
-C:	The client responds with a printer handle that can be used to
-	send event notification messages.
-S:	The server replies success to the RFFPCN request.
+S:	&lt;*他の間違った単語*&gt;はクライアントに対する新しいTCPセッションを開き
+	(そのため、すべての印刷クライアントはCIFSサーバであるように要求する)、
+	クライアントに対して、ReplyOpenPrinter()要求を送信する。
+C:	クライアントは、イベント通知メッセージを送るために使われる事が出来る、
+	プリンタハンドルを返す。
+S:	サーバはRFFPCN要求に対して成功を返す。
 
-C:	The windows spooler follows the RFFPCN with a RFNPCN
-	request to fetch the current values of all monitored
-	attributes.
-S:	The server replies with an array SPOOL_NOTIFY_INFO_DATA
-	structures (contained in a SPOOL_NOTIFY_INFO structure).
+C:	Windows spoolerは、すべての、モニタしている属性の現在値を取得するために、
+	RFNPCNを使うRFFPCNをフォローする。
+S:	サーバはSPOOL_NOTIFY_INFO_DATA構造体(SPOOL_NOTIFY_INFO構造体を含む)を
+	返す。
 
-C:	If the change notification handle is ever released by the
-	client via a FCPCN request, the server sends a ReplyClosePrinter()
-	request back to the client first.  However a request of this
-	nature from the client is often an indication that the previous
-	notification event was not marshalled correctly by the server
-	or a piece of data was wrong.
-S:	The server closes the internal change notification handle
-	(POLICY_HND) and does not send any further change notification
-	events to the client for that printer or job.
+C:	もしも、変更通知ハンドルがFCPCN要求経由でクライアントにより常に開放されるならば、
+	サーバは最初にクライアントに対してReplyClosePrinter()要求を返す。しかし、
+	クライアントからのこの性質の要求は、しばしば以前の通知イベントがサーバによって、
+	正しく整理されなかったか、データの一部分が間違っていたかを示すものである。
+S:	サーバは内部の変更通知ハンドル(POLICY_HND)をクローズし、そのプリンタかジョブに
+	対する変更通知イベントは、その後クライアントに送らないようになる。
 </programlisting></para>
 
 <para>
-The current list of notification events supported by Samba can be
-found by examining the internal tables in srv_spoolss_nt.c
+Sambaによってサポートされている、現在の通知イベントのリストは、srv_spoolss_nt.c中の
+内部テーブルを捜すことで見つけることが出来る。
 </para>
 
 <itemizedlist>
