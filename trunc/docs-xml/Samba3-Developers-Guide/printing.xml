@@ -287,89 +287,78 @@ Sambaによってサポートされている、現在の通知イベントのリ
 </itemizedlist>
 
 <para>
-When an event occurs that could be monitored, smbd sends a message
-to itself about the change.  The list of events to be transmitted
-are queued by the smbd process sending the message to prevent an
-overload of TDB usage and the internal message is sent during smbd's
-idle loop (refer to printing/notify.c and the functions
-send_spoolss_notify2_msg() and print_notify_send_messages() ).
+モニタされているイベントが発生した時、smbdは変更についてそれ自身にメッセージを送る。
+送信されるイベントのリストは、目セージの送信によって、TDBの利用状態が高負荷になる
+ことを防ぐためにsmbdプロセスによってキューされ、内部メッセージは、smbdがアイドル
+状態の時に(printing/notify.cとsend_spoolss_notify2_msg()関数と
+print_notify_send_messages()関数を参照)送信される。
 </para>
 
 <para>
-The decision of whether or not the change is to be sent to connected
-clients is made by the routine which actually sends the notification.
-( refer to srv_spoolss_nt.c:recieve_notify2_message() ).
+変更状態を、接続されているクライアントに送るかどうかの決定は、実際に通知を送る
+ルーチンによって行われる(srv_spoolss_nt.c:recieve_notify2_message()を参照)。
 </para>
 
 <para>
-Because it possible to receive a listing of multiple changes for
-multiple printers, the notification events must be split into
-categories by the printer name.  This makes it possible to group
-multiple change events to be sent in a single RPC according to the
-printer handle obtained via a ReplyOpenPrinter().
+複数のプリンタの複数の変更の一覧を受け取ることが可能という理由で、通知イベントは
+プリンタ名の区分けによって分離される必要がある。これにより、ReplyOpenPrinter()経由で
+得られるプリンタハンドルによる、単一のRPCで、複数の変更イベントを送れるようになる。
 </para>
 
 <para>
-The actual change notification is performed using the RRPCN request
-RPC.  This packet contains
+実際の変更通知はRRPCN要求RPCを使って実行される。このパケットは以下を含む
 </para>
 
 
 <itemizedlist>
 	
-<listitem><para>the printer handle registered with the
-client's spooler on which the change occurred</para></listitem>
+<listitem><para>変更が起こったところのクライアントのスプーラとして登録された
+プリンタハンドル</para></listitem>
 
-<listitem><para>The change_low value which was sent as part
-of the last RFNPCN request from the client</para></listitem>
+<listitem><para>クライアントからの最後のRFNPCN要求の一部として送られる
+変更の生の値(change_low value)</para></listitem>
 
-<listitem><para>The SPOOL_NOTIFY_INFO container with the event
-information</para></listitem>
-
-</itemizedlist>
-
-<para>
-A <varname>SPOOL_NOTIFY_INFO</varname> contains:
-</para>
-
-<itemizedlist>
-
-<listitem><para>the version and flags field are predefined
-and should not be changed</para></listitem>
-
-<listitem><para>The count field is the number of entries
-in the SPOOL_NOTIFY_INFO_DATA array</para></listitem>
+<listitem><para>イベント情報を持つSPOOL_NOTIFY_INFOコンテナ</para></listitem>
 
 </itemizedlist>
 
 <para>
-The <varname>SPOOL_NOTIFY_INFO_DATA</varname> entries contain:
+<varname>SPOOL_NOTIFY_INFO</varname>は以下を含む:
 </para>
 
 <itemizedlist>
 
-<listitem><para>The type defines whether or not this event
-is for a printer or a print job</para></listitem>
+<listitem><para>バージョンとフラグ欄はあらかじめ定義され、変更すべきでない
+</para></listitem>
 
-<listitem><para>The field is the flag identifying the event</para></listitem>
+<listitem><para>count欄はSPOOL_NOTIFY_INFO_DATA配列内のエントリ数である。</para></listitem>
 
-<listitem><para>the notify_data union contains the new valuie of the
-attribute</para></listitem>
+</itemizedlist>
 
-<listitem><para>The enc_type defines the size of the structure for marshalling
-and unmarshalling</para></listitem>
+<para>
+<varname>SPOOL_NOTIFY_INFO_DATA</varname>は以下を含む:
+</para>
 
-<listitem><para>(a) the id must be 0 for a printer event on a printer handle.
-(b) the id must be the job id for an event on a printer job
-(c) the id must be the matching number of the printer index used
-in the response packet to the RFNPCN when using a print server
-handle for notification.  Samba currently uses the snum of
-the printer for this which can break if the list of services
-has been modified since the notification handle was registered.</para></listitem>
+<itemizedlist>
 
-<listitem><para>The size is either (a) the string length in UNICODE for strings,
-(b) the size in bytes of the security descriptor, or (c) 0 for
-data values.</para></listitem>
+<listitem><para>typeは、このイベントがプリンタからか、あるいは印刷ジョブからかを
+定義する</para></listitem>
+
+<listitem><para>fieldは、イベントを識別するフラグである</para></listitem>
+
+<listitem><para>notify_data unionには新しい属性値が含まれている。</para></listitem>
+
+<listitem><para>enc_typeは、整列しているかいないかの構造体の大きさを定義する。</para></listitem>
+
+<listitem><para>(a) プリンタハンドル上のプリンタイベントに対しては、idは0でなければならない。
+(b)idは、プリンタジョブ上のイベントのジョブidでなければならない。
+(c)idは、通知のためのプリントサーバハンドルを使う時にRFNPCNに対する応答パケット中で
+使われるプリンタインデックスの番号と一致しなければならない。Sambaは現在、
+もしも通知ハンドルが登録されてから、サービスのリストが、変更された場合、変わっているかも
+しれないプリンタのsnumを使う。</para></listitem>
+
+<listitem><para>サイズは(a)UNICODEでの文字列の長さか、(b)セキュリティディスクリプタの
+バイト値か(c)データ値の場合は0である。</para></listitem>
 
 </itemizedlist>
 
