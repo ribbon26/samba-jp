@@ -144,57 +144,57 @@
 	viruses</term>
 		<listitem>
 		<para>
-		If non-scanned files are hidden
-		(if scannedonly:hide_nonscanned_files = True), a fake 0 byte file
-		is shown. The filename is the original filename with the message
-		as suffix.
+		  もしも、スキャンされないファイルが隠し状態
+		  (scannedonly:hide_nonscanned_files = Trueの場合)、見かけ上
+		  0バイトのファイルが表示される。ファイル名はサフィックスとして
+		  メッセージとオリジナルのファイル名を結合したものである。
 		</para>
 		</listitem>
 	</varlistentry>
 	<varlistentry><term>scannedonly:recheck_time_open = 50</term>
 		<listitem>
 		<para>
-		If a non-scanned file is opened, the vfs module will wait
-		recheck_tries_open times for recheck_time_open milliseconds for
-		the scanning daemon to create a <filename>.scanned:</filename>
-		file. For small files that are scanned by the daemon within the
-		time (tries * time) the behavior will be just like on-access
-		scanning.
+		  スキャンされないファイルがオープンしていた場合、vfs
+		  モジュールは、<filename>.scanned:</filename>ファイルを作成するために、
+		  スキャンデーモンに対して、recheck_tries_open回、recheck_time_open
+		  ミリ秒待つ。時間内(*回再試行)にデーモンによってスキャンされる
+		  小さなファイルは、その動作がアクセス後とのスキャニングのように
+		  振る舞う。
 		</para>
 		</listitem>
 	</varlistentry>
 	<varlistentry><term>scannedonly:recheck_tries_open = 100</term>
 		<listitem>
 		<para>
-		See recheck_time_open.
+		recheck_time_openを参照。
 		</para>
 		</listitem>
 	</varlistentry>
 	<varlistentry><term>scannedonly:recheck_time_readdir = 50</term>
 		<listitem>
 		<para>
-		If a non-scanned file is in a directory listing the vfs module
-		notifies the daemon (once for all files that need scanning in
-		that directory), and waits recheck_tries_readdir times for
-		recheck_time_readdir milliseconds. Only used when
-		hide_nonscanned_files is false.
+		  もしも、スキャンされないファイルがディレクトリ一覧表示中にあるならば、
+		  vfsモジュールはデーモンに通知し(そのディレクトリ中のものは、
+		  すべてスキャンが必要と一回は通知する)、recheck_tries_readdir回
+		  recheck_time_readdirミリ秒待つ。hide_nonscanned_filesが偽の
+		  時にのみ使われる。
 		</para>
-		</listitem>
+		
 	</varlistentry>
 	<varlistentry><term>scannedonly:recheck_tries_readdir = 20</term>
 		<listitem>
 		<para>
-		See recheck_time_readdir.
+		recheck_time_readdirを参照。
 		</para>
 		</listitem>
 	</varlistentry>
 	<varlistentry><term>scannedonly:allow_nonscanned_files = False</term>
 		<listitem>
 		<para>
-		Allow access to non-scanned files. The daemon is notified,
-		however, and special files such as <filename>.scanned:</filename>
-		files. <filename>.virus:</filename> files and
-		<filename>.failed:</filename> files are not listed.
+		  スキャンされないファイルへのアクセスを認める。しかし、デーモンには
+		  通知されるが、それは<filename>.scanned:</filename>のような特別な
+		  ファイルである。<filename>.virus:</filename>ファイルと
+		  <filename>.failed:</filename>ファイルは一覧表示されない。
 		</para>
 		</listitem>
 	</varlistentry>
@@ -203,9 +203,9 @@
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>例</title>
 
-	<para>Enable anti-virus scanning:</para>
+	<para>ウィルススキャンを有効にする:</para>
 <programlisting>
         <smbconfsection name="[homes]"/>
 	<smbconfoption name="vfs objects">scannedonly</smbconfoption>
@@ -215,28 +215,37 @@
 </refsect1>
 
 <refsect1>
-	<title>CAVEATS</title>
+	<title>警告</title>
 
-	<para>This is not true on-access scanning. However, it is very fast
-	for files that have been scanned already.
+	<para>これは、オンアクセススキャンと同値でないことに注意。しかしながら、
+	  すでにスキャンされたファイルに対してはとても高速である。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.5.0 of the Samba suite.
+	<para>このマニュアルページは、バージョン 3.5.0 のSamba用である。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Scannedonly was
-	developed for Samba by Olivier Sessink. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+</refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このドキュメントは、Samba 3.5.0 - 3.5.3 対応のものである。</para>
+    <para>このドキュメントの翻訳は
+        <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.grjp)</para></listitem>
+        </itemizedlist>
+        によって行なわれた。</para>
 
 </refsect1>
 
