@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: vfs_scannedonly
-.\"    Author: [see the "AUTHOR" section]
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 05/23/2010
-.\"    Manual: System Administration tools
+.\"      Date: 06/05/2010
+.\"    Manual: システム管理ツール
 .\"    Source: Samba 3.5
 .\"  Language: English
 .\"
-.TH "VFS_SCANNEDONLY" "8" "05/23/2010" "Samba 3\&.5" "System Administration tools"
+.TH "VFS_SCANNEDONLY" "8" "06/05/2010" "Samba 3\&.5" "システム管理ツール"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -19,119 +19,104 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-vfs_scannedonly \- Ensures that only files that have been scanned for viruses are visible and accessible to the end user\&.
+vfs_scannedonly \- エンドユーザに対して、ウィルスをスキャンするファイルをのみを 見えるように、かつアクセスできるようにさせる。
 .SH "SYNOPSIS"
 .HP \w'\ 'u
 vfs objects = scannedonly
-.SH "DESCRIPTION"
+.SH "説明"
 .PP
-This VFS module is part of the
-\fBsamba\fR(8)
-suite\&.
-.PP
-The
-vfs_scannedonly
-VFS module ensures that only files that have been scanned for viruses are visible and accessible to the end user\&. If non\-scanned files are found an anti\-virus scanning daemon is notified\&. The anti\-virus scanning daemon is not part of the Samba suite\&.
-.PP
-Scannedonly comes in two parts: a samba vfs module and (one or more) daemons\&. The daemon scans files\&. If a certain file is clean, a second file is created with prefix
-\&.scanned:\&. The Samba module simply looks if such a
-\&.scanned:
-file exists, and is newer than the pertinent file\&. If this is the case, the file is shown to the user\&. If this is not the case, the file is not returned in a directory listing (configurable), and cannot be opened (configurable)\&. The Samba vfs module will notify the daemon to scan this file\&.
-.PP
-So what happens for the user in the default configuration\&. The first time a directory is listed, it shows files as \'file is being scanned for viruses, but after the first time all files are shown\&. There is a utility scannedonly_prescan that can help you to prescan all directories\&. When new files are written the daemon is notified immediately after the file is complete\&.
-.PP
-If a virus is found by the daemon, a file with a warning message is created in the directory of the user, a warning is sent to the logs, and the file is renamed to have prefix
-\&.virus:\&. Files with the
-\&.virus:
-prefix are never shown to the user and all access is denied\&.
-.PP
-This module is stackable\&.
-.SH "CONFIGURATION"
+このVFSモジュールは
+\fBsamba\fR(8)システムの一部である。
 .PP
 vfs_scannedonly
-relies on a anti\-virus scanning daemon that listens on the scannedonly socket (unix domain socket or UDP socket)\&.
-.SH "OPTIONS"
+VFS モジュールはエンドユーザに対して ウィルスチェックを行うファイルのみを、表示、アクセス可能にさせる。もしも ウィルスチェックをしないファイルが見つかった場合、ウィルススキャンデーモンは その旨通知する。ウィルススキャンデーモンはSambaの一部ではない。
+.PP
+Scanreadonlyは2つの部分からなっている。それはSamba vfsモジュールと (1つまたはそれ以上の)デーモンである。デーモンはファイルをスキャンする。もしも 特定のファイルが正常であれば、プレフィックス\&.scanned:
+というプレフィックスを持つファイルが生成される。Sambaモジュールは、単に
+\&.scanned:というファイルが存在するかと、関連する ファイルよりも新しいかを調べる。もしもその場合は、ファイルはユーザに見える ようになる。もしもそうでない場合、ファイルはディレクトリ一覧表示(設定可能) では見えない。Samba vfsモジュールはそのファイルをスキャンするようにデーモンに 通知する。
+.PP
+これが、既定値の設定でユーザに対して行われることである。最初にディレクトリ 一覧が表示された時、ファイルはウィルススキャン中のように表示されるが、 そのあとは、すべてのファイルが表示される。すべてのディレクトリをあらかじめ スキャンするために役立つscannedonly_prescanユーティリティが用意されている。 新しいファイルが作成された時、デーモンへは、ファイルへの書き込みが完了後に 引き続いて通知される。
+.PP
+もしもデーモンによって、ウィルスが発見された場合、警告メッセージを含む ファイルがユーザのディレクトリ中に作成され、警告がログに書き込まれ、ファイルは
+\&.virus:というプレフィックスを持つ名前に改名される。
+\&.virus:プレフィックスを持つファイルはユーザには決して 見えず、アクセスは拒否される。
+.PP
+このモジュールはスタック可能である。
+.SH "設定"
+.PP
+vfs_scannedonlyはscannedonlyソケット(UNIXドメイン ソケットかUDPソケット)上でリッスンするウィルススキャンデーモンに依存する。
+.SH "オプション"
 .PP
 scannedonly:domain_socket = True
 .RS 4
-Whether to use a unix domain socket or not (false reverts to use udp)
+UNIXドメインソケットを使うか否かの指定(Falseはudpを使う)
 .RE
 .PP
 scannedonly:socketname = /var/lib/scannedonly/scan
 .RS 4
-The location of the unix domain socket to connect to
+接続するUNIXドメインソケットの位置
 .RE
 .PP
 scannedonly:portnum = 2020
 .RS 4
-The udp port number to connect to
+接続するUDPポート番号
 .RE
 .PP
 scannedonly:scanhost = localhost
 .RS 4
-When using UDP the host that runs the scanning daemon (this host needs access to the files!)
+UDP使用時、スキャンデーモンが動作するホスト (このホストはファイルへのアクセスを必要とする!)
 .RE
 .PP
 scannedonly:show_special_files = True
 .RS 4
-Whether sockets, devices and fifo\'s (all not scanned for viruses) should be visible to the user
+ユーザに対して見えるべきソケット、デバイスとfifo (すべてウィルスチェックを行わない)かどうかの指定
 .RE
 .PP
 scannedonly:rm_hidden_files_on_rmdir = True
 .RS 4
-Whether files that are not visible (\&.scanned:
-files,
-\&.failed:
-files and
-\&.virus:
-files) should be deleted if the user tries to remove the directory\&. If false, the user will get the "directory is not empty" error\&.
+見せないファイル(\&.scanned:ファイル、
+\&.failed:ファイルと\&.virus:
+ファイル)は、もしもユーザがディスクから削除しようと した時に、見えないファイルを削除すべきかどうかの指定。もしも 偽ならば、ユーザは"ディレクトリが空ではありません"というエラーが 生じる。
 .RE
 .PP
 scannedonly:hide_nonscanned_files = True
 .RS 4
-If false, all non\-scanned files are visible in directory listings\&. If such files are found in a directory listing the scanning daemon is notified that scanning is required\&. Access to non\-scanned files is still denied (see scannedonly:allow_nonscanned_files)\&.
+もしも偽ならば、すべてのスキャンされないファイルはディレクトリ 一覧表示で見えるようになる。もしも、そのようなファイルが ディレクトリ一覧中に見つかった場合、スキャンデーモンに スキャンが要求されたと通知する。スキャンされないファイルへの アクセスは引き続き拒否される(scannedonly:allow_nonscanned_files を参照のこと)。
 .RE
 .PP
 scannedonly:scanning_message = is being scanned for viruses
 .RS 4
-If non\-scanned files are hidden (if scannedonly:hide_nonscanned_files = True), a fake 0 byte file is shown\&. The filename is the original filename with the message as suffix\&.
+もしも、スキャンされないファイルが隠し状態 (scannedonly:hide_nonscanned_files = Trueの場合)、見かけ上 0バイトのファイルが表示される。ファイル名はサフィックスとして メッセージとオリジナルのファイル名を結合したものである。
 .RE
 .PP
 scannedonly:recheck_time_open = 50
 .RS 4
-If a non\-scanned file is opened, the vfs module will wait recheck_tries_open times for recheck_time_open milliseconds for the scanning daemon to create a
-\&.scanned:
-file\&. For small files that are scanned by the daemon within the time (tries * time) the behavior will be just like on\-access scanning\&.
+スキャンされないファイルがオープンしていた場合、vfs モジュールは、\&.scanned:ファイルを作成するために、 スキャンデーモンに対して、recheck_tries_open回、recheck_time_open ミリ秒待つ。時間内(*回再試行)にデーモンによってスキャンされる 小さなファイルは、その動作がアクセス後とのスキャニングのように 振る舞う。
 .RE
 .PP
 scannedonly:recheck_tries_open = 100
 .RS 4
-See recheck_time_open\&.
+recheck_time_openを参照。
 .RE
 .PP
 scannedonly:recheck_time_readdir = 50
 .RS 4
-If a non\-scanned file is in a directory listing the vfs module notifies the daemon (once for all files that need scanning in that directory), and waits recheck_tries_readdir times for recheck_time_readdir milliseconds\&. Only used when hide_nonscanned_files is false\&.
+もしも、スキャンされないファイルがディレクトリ一覧表示中にあるならば、 vfsモジュールはデーモンに通知し(そのディレクトリ中のものは、 すべてスキャンが必要と一回は通知する)、recheck_tries_readdir回 recheck_time_readdirミリ秒待つ。hide_nonscanned_filesが偽の 時にのみ使われる。
 .RE
 .PP
 scannedonly:recheck_tries_readdir = 20
 .RS 4
-See recheck_time_readdir\&.
+recheck_time_readdirを参照。
 .RE
 .PP
 scannedonly:allow_nonscanned_files = False
 .RS 4
-Allow access to non\-scanned files\&. The daemon is notified, however, and special files such as
-\&.scanned:
-files\&.
-\&.virus:
-files and
-\&.failed:
-files are not listed\&.
+スキャンされないファイルへのアクセスを認める。しかし、デーモンには 通知されるが、それは\&.scanned:のような特別な ファイルである。\&.virus:ファイルと
+\&.failed:ファイルは一覧表示されない。
 .RE
-.SH "EXAMPLES"
+.SH "例"
 .PP
-Enable anti\-virus scanning:
+ウィルススキャンを有効にする:
 .sp
 .if n \{\
 .RS 4
@@ -144,12 +129,30 @@ Enable anti\-virus scanning:
 .if n \{\
 .RE
 .\}
-.SH "CAVEATS"
+.SH "警告"
 .PP
-This is not true on\-access scanning\&. However, it is very fast for files that have been scanned already\&.
-.SH "VERSION"
+これは、オンアクセススキャンと同値でないことに注意。しかしながら、 すでにスキャンされたファイルに対してはとても高速である。
+.SH "バージョン"
 .PP
-This man page is correct for version 3\&.5\&.0 of the Samba suite\&.
-.SH "AUTHOR"
+このマニュアルページは、バージョン 3\&.5\&.0 のSamba用である。
+.SH "著者"
 .PP
-The original Samba software and related utilities were created by Andrew Tridgell\&. Scannedonly was developed for Samba by Olivier Sessink\&. Samba is now developed by the Samba Team as an Open Source project similar to the way the Linux kernel is developed\&.
+オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew Tridgell によって作成された。現在 Samba は Samba Team に よって、Linuxカーネルの開発と同様のオープンソースプロジェクト として開発が行なわれている。
+.SH "日本語訳"
+.PP
+このドキュメントは、Samba 3\&.5\&.0 \- 3\&.5\&.3 対応のものである。
+.PP
+このドキュメントの翻訳は
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+太田俊哉 (ribbon@samba\&.grjp)
+.sp
+.RE
+によって行なわれた。
