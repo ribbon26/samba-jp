@@ -30,61 +30,58 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>The <command>vfs_scannedonly</command> VFS module ensures that
-	only files that have been scanned for viruses are visible and accessible
-	to the end user. If non-scanned files are found an anti-virus scanning
-	daemon is notified. The anti-virus scanning daemon is not part of the
-	Samba suite.
+	<para><command>vfs_scannedonly</command> VFS モジュールはエンドユーザに対して
+	  ウィルスチェックを行うファイルのみを、表示、アクセス可能にさせる。もしも
+	  ウィルスチェックをしないファイルが見つかった場合、ウィルススキャンデーモンは
+	  その旨通知する。ウィルススキャンデーモンはSambaの一部ではない。
 	</para>
 
-	<para>Scannedonly comes in two parts: a samba vfs module and (one or
-	more) daemons. The daemon scans files. If a certain file is clean,
-	a second file is created with prefix <filename>.scanned:</filename>.
-	The Samba module simply looks if such a <filename>.scanned:</filename>
-	file exists, and is newer than the pertinent file. If this is the case,
-	the file is shown to the user. If this is not the case, the file is not
-	returned in a directory listing (configurable), and cannot be opened
-	(configurable). The Samba vfs module will notify the daemon to scan
-	this file.
+	<para>Scanreadonlyは2つの部分からなっている。それはSamba vfsモジュールと
+	  (1つまたはそれ以上の)デーモンである。デーモンはファイルをスキャンする。もしも
+	  特定のファイルが正常であれば、プレフィックス<filename>.scanned:</filename>
+	  というプレフィックスを持つファイルが生成される。Sambaモジュールは、単に
+	  <filename>.scanned:</filename>というファイルが存在するかと、関連する
+	  ファイルよりも新しいかを調べる。もしもその場合は、ファイルはユーザに見える
+	  ようになる。もしもそうでない場合、ファイルはディレクトリ一覧表示(設定可能)
+	  では見えない。Samba vfsモジュールはそのファイルをスキャンするようにデーモンに
+	  通知する。
 	</para>
 
-	<para>So what happens for the user in the default configuration. The
-	first time a directory is listed, it shows files as 'file is being
-	scanned for viruses, but after the first time all files are shown.
-	There is a utility scannedonly_prescan that can help you to prescan
-	all directories. When new files are written the daemon is notified
-	immediately after the file is complete.
+	<para>これが、既定値の設定でユーザに対して行われることである。最初にディレクトリ
+	  一覧が表示された時、ファイルはウィルススキャン中のように表示されるが、
+	  そのあとは、すべてのファイルが表示される。すべてのディレクトリをあらかじめ
+	  スキャンするために役立つscannedonly_prescanユーティリティが用意されている。
+	  新しいファイルが作成された時、デーモンへは、ファイルへの書き込みが完了後に
+	  引き続いて通知される。
 	</para>
 
-	<para>If a virus is found by the daemon, a file with a warning message
-	is created in the directory of the user, a warning is sent to the logs,
-	and the file is renamed to have prefix <filename>.virus:</filename>.
-	Files with the <filename>.virus:</filename> prefix are never shown to
-	the user and all access is denied.
+	<para>もしもデーモンによって、ウィルスが発見された場合、警告メッセージを含む
+	  ファイルがユーザのディレクトリ中に作成され、警告がログに書き込まれ、ファイルは
+	  <filename>.virus:</filename>というプレフィックスを持つ名前に改名される。
+	  <filename>.virus:</filename>プレフィックスを持つファイルはユーザには決して
+	  見えず、アクセスは拒否される。
 	</para>
 
-	<para>This module is stackable.</para>
+	<para>このモジュールはスタック可能である。</para>
 
 </refsect1>
 
 <refsect1>
-	<title>CONFIGURATION</title>
+	<title>設定</title>
 
-	<para><command>vfs_scannedonly</command> relies on a anti-virus scanning
-	daemon that listens on the scannedonly socket (unix domain socket or UDP
-	socket).
+	<para><command>vfs_scannedonly</command>はscannedonlyソケット(UNIXドメイン
+	  ソケットかUDPソケット)上でリッスンするウィルススキャンデーモンに依存する。
 	</para>
 </refsect1>
 
 <refsect1>
-        <title>OPTIONS</title>
+        <title>オプション</title>
 
         <variablelist>
 		<varlistentry>
 		<term>scannedonly:domain_socket = True </term>
 		<listitem>
-		<para>Whether to use a unix domain socket or not (false reverts
-		to use udp)
+		<para>UNIXドメインソケットを使うか否かの指定(Falseはudpを使う)
 		</para>
 		</listitem>
 	</varlistentry>
