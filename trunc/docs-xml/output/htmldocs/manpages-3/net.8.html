@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html><head><title>net</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="net"><a name="net.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>net — Samba およびリモート CIFS サーバの管理ツール
-	</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">net</code> {&lt;ads|rap|rpc&gt;} [-h] [-w workgroup] [-W myworkgroup] [-U user] [-I ip-address] [-p port] [-n myname] [-s conffile] [-S server] [-l] [-P] [-d debuglevel] [-V] [--request-timeout seconds]</p></div></div><div class="refsect1" title="説明"><a name="id2490596"/><h2>説明</h2><p>このツールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p>Samba の net ユーティリティは Windows や DOS に存在する
+	</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">net</code> {&lt;ads|rap|rpc&gt;} [-h] [-w workgroup] [-W myworkgroup] [-U user] [-I ip-address] [-p port] [-n myname] [-s conffile] [-S server] [-l] [-P] [-d debuglevel] [-V] [--request-timeout seconds]</p></div></div><div class="refsect1" title="説明"><a name="id2490582"/><h2>説明</h2><p>このツールは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p>Samba の net ユーティリティは Windows や DOS に存在する
 	NET コマンドと同様の位置づけのものである。
 	先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。
 	ADS は Active Directory によって、RAP は従来の (Windows 9x / Windows
 	NT 3.x) クライアントによって、 RPC は Windows NT 4.0 および Windows
 	2000 によって使用されている。
 	この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。
-	すべてのコマンドがすべてのプロトコル上で使用できるわけではない。</p></div><div class="refsect1" title="オプション"><a name="id2490640"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
+	すべてのコマンドがすべてのプロトコル上で使用できるわけではない。</p></div><div class="refsect1" title="オプション"><a name="id2490626"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-h|--help</span></dt><dd><p>Print a summary of command line options.
 </p></dd><dt><span class="term">-w target-workgroup</span></dt><dd><p>
 		操作対象とするワークグループやドメインを指定する。
 		このオプションか、サーバの IP アドレスもしくは名前のいずれかは指定する必要がある。
@@ -22,15 +22,19 @@
 		</p></dd><dt><span class="term">-p port</span></dt><dd><p>
 		操作対象のサーバに接続する際に用いるポート番号 (通常 139 か 445) を指定する。
 		既定値ではまず 445 を試行し、ついで 139 を試行する。
-		</p></dd><dt><span class="term">-n &lt;primary NetBIOS name&gt;</span></dt><dd><p>Samba 自身の NetBIOS 名を指定する。このオプションは、
-<code class="filename">smb.conf</code>中の、<a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの設定に相当する。コマンドラインの指定は、
-<code class="filename">smb.conf</code> 内の設定よりも優先される。 
-</p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
-指定する。このファイルには、サーバーが提供するサービスに関する記述や、
-どの printcap ファイルを利用するかといった情報が含まれている。詳細は
-<code class="filename">smb.conf</code> を参照のこと。設定ファイルの名前の既定値は、コンパイル時
-に決定される。
-</p></dd><dt><span class="term">-S server</span></dt><dd><p>
+		</p></dd><dt><span class="term">-n|--netbiosname &lt;primary NetBIOS name&gt;</span></dt><dd><p>This option allows you to override
+the NetBIOS name that Samba uses for itself. This is identical
+to setting the <a class="link" href="smb.conf.5.html#" target="_top"/> parameter in the <code class="filename">smb.conf</code> file. 
+However, a command
+line setting will take precedence over settings in
+<code class="filename">smb.conf</code>.</p></dd><dt><span class="term">-s|--configfile &lt;configuration file&gt;</span></dt><dd><p>The file specified contains the 
+configuration details required by the server.  The 
+information in this file includes server-specific
+information such as what printcap file to use, as well 
+as descriptions of all the services that the server is 
+to provide. See <code class="filename">smb.conf</code> for more information.
+The default configuration file name is determined at 
+compile time.</p></dd><dt><span class="term">-S server</span></dt><dd><p>
 		操作対象のサーバ名を指定する。
 		このオプションか、操作対象のワークグループもしくは IP アドレスのいずれかを指定する必要がある。
 		</p></dd><dt><span class="term">-l</span></dt><dd><p>
@@ -39,24 +43,29 @@
 		ローカルサーバのコンピュータアカウントを用いて別のサーバに対する問い合わせを行なう。
 		</p></dd><dt><span class="term">--request-timeout 30</span></dt><dd><p>
 		クライアントの要求を30秒後にタイムアウトさせる。既定値は10秒。
-                </p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> は0から10までの整数値である。
-既定値の値は、パラメータが設定されていなければ0である。</p><p>この値を大きくするほど、サーバの動作に関するより詳細な情報が
-ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告
-のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況
-に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
-使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
-おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
-となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
-指定よりも優先する。</p></dd></dl></div></div><div class="refsect1" title="コマンド"><a name="id2491040"/><h2>コマンド</h2><div class="refsect2" title="CHANGESECRETPW"><a name="id2491046"/><h3>CHANGESECRETPW</h3><p>
+                </p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> is an integer 
+from 0 to 10. The default value if this parameter is 
+not specified is 0.</p><p>The higher this value, the more detail will be 
+logged to the log files about the activities of the 
+server. At level 0, only critical errors and serious 
+warnings will be logged. Level 1 is a reasonable level for
+day-to-day running - it generates a small amount of 
+information about operations carried out.</p><p>Levels above 1 will generate considerable 
+amounts of log data, and should only be used when 
+investigating a problem. Levels above 3 are designed for 
+use only by developers and generate HUGE amounts of log
+data, most of which is extremely cryptic.</p><p>Note that specifying this parameter here will 
+override the <a class="link" href="smb.conf.5.html#" target="_top"/> parameter
+in the <code class="filename">smb.conf</code> file.</p></dd></dl></div></div><div class="refsect1" title="コマンド"><a name="id2491005"/><h2>コマンド</h2><div class="refsect2" title="CHANGESECRETPW"><a name="id2491011"/><h3>CHANGESECRETPW</h3><p>
 このコマンドにより、Samba のコンピュータアカウントのパスワードを外部アプリケーションが Active Directory に格納済のものに（手動で）設定することが可能となる。
 何が行なわれるかを理解しない限り、このコマンドを用いないこと。
 このコマンドを用いるには、強制フラグ (-f) を併せて設定する必要がある。
 コマンドプロンプトのインタフェースは存在しない。
 情報は全て、コマンドラインなどを経由して標準入力経由で引き渡され、コンピュータアカウントのパスワードとして格納される。
 警告無しに以前のコンピュータアカウントのパスワードが上書きされてしまうため、このコマンドは注意して用いること。
-</p></div><div class="refsect2" title="TIME"><a name="id2491056"/><h3>TIME</h3><p><code class="literal">NET TIME</code> コマンドにより、リモートサーバの時刻を表示させたり、ローカルサーバの時刻をリモートサーバの時刻に同期させたりすることが可能となる。
-	</p><div class="refsect3" title="TIME"><a name="id2491377"/><h4>TIME</h4><p>オプションを指定しなかった場合、 <code class="literal">NET TIME</code> コマンドはリモートのサーバの時刻を表示する。
-</p></div><div class="refsect3" title="TIME SYSTEM"><a name="id2491396"/><h4>TIME SYSTEM</h4><p> リモートマシンの時刻を <code class="literal">/bin/date</code> が認識できる形式で表示する。</p></div><div class="refsect3" title="TIME SET"><a name="id2491415"/><h4>TIME SET</h4><p>ローカルサーバの日付と時刻を <code class="literal">/bin/date</code> コマンドを用いてリモートサーバの日付と時刻に設定させる。 </p></div><div class="refsect3" title="TIME ZONE"><a name="id2491433"/><h4>TIME ZONE</h4><p> リモートマシンの時間帯を GMT からの差分で時間単位で表示する。</p></div></div><div class="refsect2" title="[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN] [createcomputer=OU][options]"><a name="id2491448"/><h3>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN] [createcomputer=OU][options]</h3><p>
+</p></div><div class="refsect2" title="TIME"><a name="id2491322"/><h3>TIME</h3><p><code class="literal">NET TIME</code> コマンドにより、リモートサーバの時刻を表示させたり、ローカルサーバの時刻をリモートサーバの時刻に同期させたりすることが可能となる。
+	</p><div class="refsect3" title="TIME"><a name="id2491342"/><h4>TIME</h4><p>オプションを指定しなかった場合、 <code class="literal">NET TIME</code> コマンドはリモートのサーバの時刻を表示する。
+</p></div><div class="refsect3" title="TIME SYSTEM"><a name="id2491361"/><h4>TIME SYSTEM</h4><p> リモートマシンの時刻を <code class="literal">/bin/date</code> が認識できる形式で表示する。</p></div><div class="refsect3" title="TIME SET"><a name="id2491380"/><h4>TIME SET</h4><p>ローカルサーバの日付と時刻を <code class="literal">/bin/date</code> コマンドを用いてリモートサーバの日付と時刻に設定させる。 </p></div><div class="refsect3" title="TIME ZONE"><a name="id2491398"/><h4>TIME ZONE</h4><p> リモートマシンの時間帯を GMT からの差分で時間単位で表示する。</p></div></div><div class="refsect2" title="[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN] [createcomputer=OU][options]"><a name="id2491412"/><h3>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN] [createcomputer=OU][options]</h3><p>
 ドメインに参加する。サーバ上にコンピュータアカウントがすでに存在しており、
 [TYPE] が MEMBER の場合、マシンの参加は自動的に行なわれる
 (コンピュータアカウントがサーバマネージャで作成済の場合)。
@@ -72,91 +81,91 @@ host/netbiosname@REALMである。
 OU文字列はRDNなしで、'/'をデリミタとして、初めから最後まで読まれる。
 シェルとLDAPの両方で'\'がエスケープとして使われるため、その文字その物を
 渡すためには、二重に書くか、4重に書く必要があり、デリミタとしては扱われない。
-</p></div><div class="refsect2" title="[RPC] OLDJOIN [options]"><a name="id2491500"/><h3>[RPC] OLDJOIN [options]</h3><p>ドメインに参加する。従来の方式によるドメイン参加を行なう場合は、
+</p></div><div class="refsect2" title="[RPC] OLDJOIN [options]"><a name="id2491464"/><h3>[RPC] OLDJOIN [options]</h3><p>ドメインに参加する。従来の方式によるドメイン参加を行なう場合は、
 OLDJOIN オプションを使用すること。
-参加を行なうには、事前にサーバマネージャでコンピュータアカウントを作成しておくことが必要である。</p></div><div class="refsect2" title="[RPC|ADS] USER"><a name="id2491514"/><h3>[RPC|ADS] USER</h3><div class="refsect3" title="[RPC|ADS] USER"><a name="id2486951"/><h4>[RPC|ADS] USER</h4><p>ユーザの一覧を出力する。</p></div><div class="refsect3" title="[RPC|ADS] USER DELETE target"><a name="id2486962"/><h4>[RPC|ADS] USER DELETE <em class="replaceable"><code>target</code></em></h4><p>指定したユーザを削除する。</p></div><div class="refsect3" title="[RPC|ADS] USER INFO target"><a name="id2486974"/><h4>[RPC|ADS] USER INFO <em class="replaceable"><code>target</code></em></h4><p>指定したユーザの所属するグループ一覧を出力する。</p></div><div class="refsect3" title="[RPC|ADS] USER RENAME oldname newname"><a name="id2486988"/><h4>[RPC|ADS] USER RENAME <em class="replaceable"><code>oldname</code></em> <em class="replaceable"><code>newname</code></em></h4><p>指定したユーザの名前を変更する。</p></div><div class="refsect3" title="[RPC|ADS] USER ADD name [password] [-F user flags] [-C comment]"><a name="id2487004"/><h4>[RPC|ADS] USER ADD <em class="replaceable"><code>name</code></em> [password] [-F user flags] [-C comment]</h4><p>指定したユーザを追加する。</p></div></div><div class="refsect2" title="[RPC|ADS] GROUP"><a name="id2487020"/><h3>[RPC|ADS] GROUP</h3><div class="refsect3" title="[RPC|ADS] GROUP [misc options] [targets]"><a name="id2487026"/><h4>[RPC|ADS] GROUP [misc options] [targets]</h4><p>グループの一覧を表示する。</p></div><div class="refsect3" title="[RPC|ADS] GROUP DELETE name [その他のオプション]"><a name="id2487037"/><h4>[RPC|ADS] GROUP DELETE <em class="replaceable"><code>name</code></em> [その他のオプション]</h4><p>指定したグループを削除する。</p></div><div class="refsect3" title="[RPC|ADS] GROUP ADD name [-C comment]"><a name="id2487052"/><h4>[RPC|ADS] GROUP ADD <em class="replaceable"><code>name</code></em> [-C comment]</h4><p>指定したグループを作成する。</p></div></div><div class="refsect2" title="[RAP|RPC] SHARE"><a name="id2487068"/><h3>[RAP|RPC] SHARE</h3><div class="refsect3" title="[RAP|RPC] SHARE [その他のオプション] [targets]"><a name="id2487073"/><h4>[RAP|RPC] SHARE [その他のオプション] [targets]</h4><p>指定したサーバが公開しているすべてのリソース(ネットワーク共有)の一覧を出力する。</p></div><div class="refsect3" title="[RAP|RPC] SHARE ADD name=serverpath [-C comment] [-M maxusers] [targets]"><a name="id2487087"/><h4>[RAP|RPC] SHARE ADD <em class="replaceable"><code>name=serverpath</code></em> [-C comment] [-M maxusers] [targets]</h4><p>サーバに共有を追加する (公開を有効にする)。Maxusers 
-は共有に同時に接続できるユーザの数を指定する。</p></div><div class="refsect3" title="SHARE DELETE sharenam"><a name="id2487104"/><h4>SHARE DELETE <em class="replaceable"><code>sharenam</code></em></h4><p>指定した共有を削除する。</p></div></div><div class="refsect2" title="[RPC|RAP] FILE"><a name="id2487118"/><h3>[RPC|RAP] FILE</h3><div class="refsect3" title="[RPC|RAP] FILE"><a name="id2487124"/><h4>[RPC|RAP] FILE</h4><p>リモートサーバ上でオープンされているファイルの一覧を出力する。</p></div><div class="refsect3" title="[RPC|RAP] FILE CLOSE fileid"><a name="id2487135"/><h4>[RPC|RAP] FILE CLOSE <em class="replaceable"><code>fileid</code></em></h4><p>リモートサーバ上にある <em class="replaceable"><code>fileid</code></em> 
-で指定したファイルをクローズする。</p></div><div class="refsect3" title="[RPC|RAP] FILE INFO fileid"><a name="id2487153"/><h4>[RPC|RAP] FILE INFO <em class="replaceable"><code>fileid</code></em></h4><p>
+参加を行なうには、事前にサーバマネージャでコンピュータアカウントを作成しておくことが必要である。</p></div><div class="refsect2" title="[RPC|ADS] USER"><a name="id2491479"/><h3>[RPC|ADS] USER</h3><div class="refsect3" title="[RPC|ADS] USER"><a name="id2491485"/><h4>[RPC|ADS] USER</h4><p>ユーザの一覧を出力する。</p></div><div class="refsect3" title="[RPC|ADS] USER DELETE target"><a name="id2491496"/><h4>[RPC|ADS] USER DELETE <em class="replaceable"><code>target</code></em></h4><p>指定したユーザを削除する。</p></div><div class="refsect3" title="[RPC|ADS] USER INFO target"><a name="id2486939"/><h4>[RPC|ADS] USER INFO <em class="replaceable"><code>target</code></em></h4><p>指定したユーザの所属するグループ一覧を出力する。</p></div><div class="refsect3" title="[RPC|ADS] USER RENAME oldname newname"><a name="id2486952"/><h4>[RPC|ADS] USER RENAME <em class="replaceable"><code>oldname</code></em> <em class="replaceable"><code>newname</code></em></h4><p>指定したユーザの名前を変更する。</p></div><div class="refsect3" title="[RPC|ADS] USER ADD name [password] [-F user flags] [-C comment]"><a name="id2486968"/><h4>[RPC|ADS] USER ADD <em class="replaceable"><code>name</code></em> [password] [-F user flags] [-C comment]</h4><p>指定したユーザを追加する。</p></div></div><div class="refsect2" title="[RPC|ADS] GROUP"><a name="id2486984"/><h3>[RPC|ADS] GROUP</h3><div class="refsect3" title="[RPC|ADS] GROUP [misc options] [targets]"><a name="id2486989"/><h4>[RPC|ADS] GROUP [misc options] [targets]</h4><p>グループの一覧を表示する。</p></div><div class="refsect3" title="[RPC|ADS] GROUP DELETE name [その他のオプション]"><a name="id2487001"/><h4>[RPC|ADS] GROUP DELETE <em class="replaceable"><code>name</code></em> [その他のオプション]</h4><p>指定したグループを削除する。</p></div><div class="refsect3" title="[RPC|ADS] GROUP ADD name [-C comment]"><a name="id2487016"/><h4>[RPC|ADS] GROUP ADD <em class="replaceable"><code>name</code></em> [-C comment]</h4><p>指定したグループを作成する。</p></div></div><div class="refsect2" title="[RAP|RPC] SHARE"><a name="id2487031"/><h3>[RAP|RPC] SHARE</h3><div class="refsect3" title="[RAP|RPC] SHARE [その他のオプション] [targets]"><a name="id2487037"/><h4>[RAP|RPC] SHARE [その他のオプション] [targets]</h4><p>指定したサーバが公開しているすべてのリソース(ネットワーク共有)の一覧を出力する。</p></div><div class="refsect3" title="[RAP|RPC] SHARE ADD name=serverpath [-C comment] [-M maxusers] [targets]"><a name="id2487050"/><h4>[RAP|RPC] SHARE ADD <em class="replaceable"><code>name=serverpath</code></em> [-C comment] [-M maxusers] [targets]</h4><p>サーバに共有を追加する (公開を有効にする)。Maxusers 
+は共有に同時に接続できるユーザの数を指定する。</p></div><div class="refsect3" title="SHARE DELETE sharenam"><a name="id2487067"/><h4>SHARE DELETE <em class="replaceable"><code>sharenam</code></em></h4><p>指定した共有を削除する。</p></div></div><div class="refsect2" title="[RPC|RAP] FILE"><a name="id2487081"/><h3>[RPC|RAP] FILE</h3><div class="refsect3" title="[RPC|RAP] FILE"><a name="id2487087"/><h4>[RPC|RAP] FILE</h4><p>リモートサーバ上でオープンされているファイルの一覧を出力する。</p></div><div class="refsect3" title="[RPC|RAP] FILE CLOSE fileid"><a name="id2487099"/><h4>[RPC|RAP] FILE CLOSE <em class="replaceable"><code>fileid</code></em></h4><p>リモートサーバ上にある <em class="replaceable"><code>fileid</code></em> 
+で指定したファイルをクローズする。</p></div><div class="refsect3" title="[RPC|RAP] FILE INFO fileid"><a name="id2487116"/><h4>[RPC|RAP] FILE INFO <em class="replaceable"><code>fileid</code></em></h4><p>
 指定した <em class="replaceable"><code>fileid</code></em> のファイルの情報を出力する。
 現在表示されるのは、以下の情報である: file-id, username, lock, path, permission
-</p></div><div class="refsect3" title="[RAP|RPC] FILE USER user"><a name="id2487174"/><h4>[RAP|RPC] FILE USER <em class="replaceable"><code>user</code></em></h4><p>
+</p></div><div class="refsect3" title="[RAP|RPC] FILE USER user"><a name="id2487137"/><h4>[RAP|RPC] FILE USER <em class="replaceable"><code>user</code></em></h4><p>
 <em class="replaceable"><code>user</code></em>で指定した、オープンしているファイルを表示する。
 <code class="literal">net rap file user</code>はSambaサーバに対して動作しない事に注意。
-</p></div></div><div class="refsect2" title="SESSION"><a name="id2487199"/><h3>SESSION</h3><div class="refsect3" title="RAP SESSION"><a name="id2487204"/><h4>RAP SESSION</h4><p>オプションなしの場合、 SESSION は指定したサーバ上のすべてのアクティブな
-SMB/CIFS セッションの一覧を表示する。</p></div><div class="refsect3" title="RAP SESSION DELETE|CLOSE CLIENT_NAME"><a name="id2487217"/><h4>RAP SESSION DELETE|CLOSE <em class="replaceable"><code>CLIENT_NAME</code></em></h4><p>指定したセッションをクローズする。</p></div><div class="refsect3" title="RAP SESSION INFO CLIENT_NAME"><a name="id2487230"/><h4>RAP SESSION INFO <em class="replaceable"><code>CLIENT_NAME</code></em></h4><p>指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</p></div></div><div class="refsect2" title="RAP SERVER DOMAIN"><a name="id2487247"/><h3>RAP SERVER <em class="replaceable"><code>DOMAIN</code></em></h3><p>ドメインもしくはワークグループ内のサーバの一覧を出力する。
-デフォルトの対象はローカルドメインである。</p></div><div class="refsect2" title="RAP DOMAIN"><a name="id2487262"/><h3>RAP DOMAIN</h3><p>現在ネットワークで表示されているドメインおよびワークグループの一覧を出力する。</p></div><div class="refsect2" title="RAP PRINTQ"><a name="id2487274"/><h3>RAP PRINTQ</h3><div class="refsect3" title="RAP PRINTQ INFO QUEUE_NAME"><a name="id2487279"/><h4>RAP PRINTQ INFO <em class="replaceable"><code>QUEUE_NAME</code></em></h4><p>サーバ上の指定された印刷キューおよび印刷ジョブの一覧を出力する。
+</p></div></div><div class="refsect2" title="SESSION"><a name="id2487162"/><h3>SESSION</h3><div class="refsect3" title="RAP SESSION"><a name="id2487168"/><h4>RAP SESSION</h4><p>オプションなしの場合、 SESSION は指定したサーバ上のすべてのアクティブな
+SMB/CIFS セッションの一覧を表示する。</p></div><div class="refsect3" title="RAP SESSION DELETE|CLOSE CLIENT_NAME"><a name="id2487180"/><h4>RAP SESSION DELETE|CLOSE <em class="replaceable"><code>CLIENT_NAME</code></em></h4><p>指定したセッションをクローズする。</p></div><div class="refsect3" title="RAP SESSION INFO CLIENT_NAME"><a name="id2487193"/><h4>RAP SESSION INFO <em class="replaceable"><code>CLIENT_NAME</code></em></h4><p>指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</p></div></div><div class="refsect2" title="RAP SERVER DOMAIN"><a name="id2487210"/><h3>RAP SERVER <em class="replaceable"><code>DOMAIN</code></em></h3><p>ドメインもしくはワークグループ内のサーバの一覧を出力する。
+デフォルトの対象はローカルドメインである。</p></div><div class="refsect2" title="RAP DOMAIN"><a name="id2487225"/><h3>RAP DOMAIN</h3><p>現在ネットワークで表示されているドメインおよびワークグループの一覧を出力する。</p></div><div class="refsect2" title="RAP PRINTQ"><a name="id2487237"/><h3>RAP PRINTQ</h3><div class="refsect3" title="RAP PRINTQ INFO QUEUE_NAME"><a name="id2487243"/><h4>RAP PRINTQ INFO <em class="replaceable"><code>QUEUE_NAME</code></em></h4><p>サーバ上の指定された印刷キューおよび印刷ジョブの一覧を出力する。
 <em class="replaceable"><code>QUEUE_NAME</code></em> が省略された場合、キューの一覧が出力される。
-</p></div><div class="refsect3" title="RAP PRINTQ DELETE JOBID"><a name="id2487299"/><h4>RAP PRINTQ DELETE <em class="replaceable"><code>JOBID</code></em></h4><p>指定された ID の印刷ジョブを削除する。</p></div></div><div class="refsect2" title="RAP VALIDATE user [password]"><a name="id2487314"/><h3>RAP VALIDATE <em class="replaceable"><code>user</code></em> [<em class="replaceable"><code>password</code></em>]</h3><p>
+</p></div><div class="refsect3" title="RAP PRINTQ DELETE JOBID"><a name="id2487263"/><h4>RAP PRINTQ DELETE <em class="replaceable"><code>JOBID</code></em></h4><p>指定された ID の印刷ジョブを削除する。</p></div></div><div class="refsect2" title="RAP VALIDATE user [password]"><a name="id2487277"/><h3>RAP VALIDATE <em class="replaceable"><code>user</code></em> [<em class="replaceable"><code>password</code></em>]</h3><p>
 指定したユーザがリモートサーバにログオン可能かどうかを確認する。
 コマンドラインでパスワードが指定されなかった場合は、入力を求められる。
-</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>現在まだ未実装</p></div></div><div class="refsect2" title="RAP GROUPMEMBER"><a name="id2487342"/><h3>RAP GROUPMEMBER</h3><div class="refsect3" title="RAP GROUPMEMBER LIST GROUP"><a name="id2487348"/><h4>RAP GROUPMEMBER LIST <em class="replaceable"><code>GROUP</code></em></h4><p>指定したグループのメンバ一覧を出力する。</p></div><div class="refsect3" title="RAP GROUPMEMBER DELETE GROUP USER"><a name="id2487361"/><h4>RAP GROUPMEMBER DELETE <em class="replaceable"><code>GROUP</code></em> <em class="replaceable"><code>USER</code></em></h4><p>グループからメンバを削除する。</p></div><div class="refsect3" title="RAP GROUPMEMBER ADD GROUP USER"><a name="id2487378"/><h4>RAP GROUPMEMBER ADD <em class="replaceable"><code>GROUP</code></em> <em class="replaceable"><code>USER</code></em></h4><p>グループにメンバを追加する。</p></div></div><div class="refsect2" title="RAP ADMIN command"><a name="id2487395"/><h3>RAP ADMIN <em class="replaceable"><code>command</code></em></h3><p>指定した <em class="replaceable"><code>command</code></em> をリモートサーバ上で実行する。
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Currently NOT implemented.</p></div></div><div class="refsect2" title="RAP GROUPMEMBER"><a name="id2487306"/><h3>RAP GROUPMEMBER</h3><div class="refsect3" title="RAP GROUPMEMBER LIST GROUP"><a name="id2487311"/><h4>RAP GROUPMEMBER LIST <em class="replaceable"><code>GROUP</code></em></h4><p>指定したグループのメンバ一覧を出力する。</p></div><div class="refsect3" title="RAP GROUPMEMBER DELETE GROUP USER"><a name="id2487325"/><h4>RAP GROUPMEMBER DELETE <em class="replaceable"><code>GROUP</code></em> <em class="replaceable"><code>USER</code></em></h4><p>グループからメンバを削除する。</p></div><div class="refsect3" title="RAP GROUPMEMBER ADD GROUP USER"><a name="id2487341"/><h4>RAP GROUPMEMBER ADD <em class="replaceable"><code>GROUP</code></em> <em class="replaceable"><code>USER</code></em></h4><p>グループにメンバを追加する。</p></div></div><div class="refsect2" title="RAP ADMIN command"><a name="id2487358"/><h3>RAP ADMIN <em class="replaceable"><code>command</code></em></h3><p>指定した <em class="replaceable"><code>command</code></em> をリモートサーバ上で実行する。
 OS/2 サーバに対してのみ機能する。
-</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>現在まだ未実装</p></div></div><div class="refsect2" title="RAP SERVICE"><a name="id2487419"/><h3>RAP SERVICE</h3><div class="refsect3" title="RAP SERVICE START NAME [arguments...]"><a name="id2487424"/><h4>RAP SERVICE START <em class="replaceable"><code>NAME</code></em> [arguments...]</h4><p>リモートサーバ上の指定したサービスを起動する。現在実装されていない。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>現在まだ未実装</p></div></div><div class="refsect3" title="RAP SERVICE STOP"><a name="id2487444"/><h4>RAP SERVICE STOP</h4><p>リモートサーバ上の指定したサービスを停止する。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>現在まだ未実装</p></div></div></div><div class="refsect2" title="RAP PASSWORD USER OLDPASS NEWPASS"><a name="id2487461"/><h3>RAP PASSWORD <em class="replaceable"><code>USER</code></em> <em class="replaceable"><code>OLDPASS</code></em> <em class="replaceable"><code>NEWPASS</code></em></h3><p>
+</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Currently NOT implemented.</p></div></div><div class="refsect2" title="RAP SERVICE"><a name="id2487382"/><h3>RAP SERVICE</h3><div class="refsect3" title="RAP SERVICE START NAME [arguments...]"><a name="id2487388"/><h4>RAP SERVICE START <em class="replaceable"><code>NAME</code></em> [arguments...]</h4><p>リモートサーバ上の指定したサービスを起動する。現在実装されていない。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Currently NOT implemented.</p></div></div><div class="refsect3" title="RAP SERVICE STOP"><a name="id2487408"/><h4>RAP SERVICE STOP</h4><p>リモートサーバ上の指定したサービスを停止する。</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Currently NOT implemented.</p></div></div></div><div class="refsect2" title="RAP PASSWORD USER OLDPASS NEWPASS"><a name="id2487424"/><h3>RAP PASSWORD <em class="replaceable"><code>USER</code></em> <em class="replaceable"><code>OLDPASS</code></em> <em class="replaceable"><code>NEWPASS</code></em></h3><p>
 <em class="replaceable"><code>USER</code></em> のパスワードを <em class="replaceable"><code>OLDPASS</code></em> から <em class="replaceable"><code>NEWPASS</code></em> に変更する。
-</p></div><div class="refsect2" title="LOOKUP"><a name="id2487493"/><h3>LOOKUP</h3><div class="refsect3" title="LOOKUP HOST HOSTNAME [TYPE]"><a name="id2487498"/><h4>LOOKUP HOST <em class="replaceable"><code>HOSTNAME</code></em> [<em class="replaceable"><code>TYPE</code></em>]</h4><p>
+</p></div><div class="refsect2" title="LOOKUP"><a name="id2487456"/><h3>LOOKUP</h3><div class="refsect3" title="LOOKUP HOST HOSTNAME [TYPE]"><a name="id2487462"/><h4>LOOKUP HOST <em class="replaceable"><code>HOSTNAME</code></em> [<em class="replaceable"><code>TYPE</code></em>]</h4><p>
 指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。
 タイプの既定値は 0x20 (workstation (訳注: server の誤り)) である。
-</p></div><div class="refsect3" title="LOOKUP LDAP [DOMAIN"><a name="id2487522"/><h4>LOOKUP LDAP [<em class="replaceable"><code>DOMAIN</code></em></h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> の LDAP サーバの IP アドレスを検索する。既定値はローカルドメインが対象となる。</p></div><div class="refsect3" title="LOOKUP KDC [REALM]"><a name="id2487542"/><h4>LOOKUP KDC [<em class="replaceable"><code>REALM</code></em>]</h4><p>指定した <em class="replaceable"><code>REALM</code></em> の KDC の IP アドレスを検索する。
-既定値はローカルなレルム(realm)が対象となる。</p></div><div class="refsect3" title="LOOKUP DC [DOMAIN]"><a name="id2487563"/><h4>LOOKUP DC [<em class="replaceable"><code>DOMAIN</code></em>]</h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> のドメインコントローラの IP アドレスを検索する。
-既定値はローカルドメインが対象となる。</p></div><div class="refsect3" title="LOOKUP MASTER DOMAIN"><a name="id2487585"/><h4>LOOKUP MASTER <em class="replaceable"><code>DOMAIN</code></em></h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> もしくはワークグループのマスタブラウザの IP アドレスを検索する。
-既定値はローカルドメインが対象となる。</p></div></div><div class="refsect2" title="CACHE"><a name="id2487607"/><h3>CACHE</h3><p>Samba は「gencache」という汎用のキャッシュインタフェースを用いている。
+</p></div><div class="refsect3" title="LOOKUP LDAP [DOMAIN"><a name="id2487485"/><h4>LOOKUP LDAP [<em class="replaceable"><code>DOMAIN</code></em></h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> の LDAP サーバの IP アドレスを検索する。既定値はローカルドメインが対象となる。</p></div><div class="refsect3" title="LOOKUP KDC [REALM]"><a name="id2487505"/><h4>LOOKUP KDC [<em class="replaceable"><code>REALM</code></em>]</h4><p>指定した <em class="replaceable"><code>REALM</code></em> の KDC の IP アドレスを検索する。
+既定値はローカルなレルム(realm)が対象となる。</p></div><div class="refsect3" title="LOOKUP DC [DOMAIN]"><a name="id2487527"/><h4>LOOKUP DC [<em class="replaceable"><code>DOMAIN</code></em>]</h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> のドメインコントローラの IP アドレスを検索する。
+既定値はローカルドメインが対象となる。</p></div><div class="refsect3" title="LOOKUP MASTER DOMAIN"><a name="id2487548"/><h4>LOOKUP MASTER <em class="replaceable"><code>DOMAIN</code></em></h4><p>指定した <em class="replaceable"><code>DOMAIN</code></em> もしくはワークグループのマスタブラウザの IP アドレスを検索する。
+既定値はローカルドメインが対象となる。</p></div></div><div class="refsect2" title="CACHE"><a name="id2487571"/><h3>CACHE</h3><p>Samba は「gencache」という汎用のキャッシュインタフェースを用いている。
 これは 'NET CACHE' コマンドにより制御可能である。</p><p>タイムアウトに関するパラメータはすべて、以下のサフィックスをサポートしている:
 
 </p><table border="0" summary="Simple list" class="simplelist"><tr><td>s - 秒</td></tr><tr><td>m - 分</td></tr><tr><td>h - 時</td></tr><tr><td>d - 日</td></tr><tr><td>w - 週</td></tr></table><p>
 
-</p><div class="refsect3" title="CACHE ADD key data time-out"><a name="id2487651"/><h4>CACHE ADD <em class="replaceable"><code>key</code></em> <em class="replaceable"><code>data</code></em> <em class="replaceable"><code>time-out</code></em></h4><p>指定した key と data の組合せを time-out の期限でキャッシュに追加する。</p></div><div class="refsect3" title="CACHE DEL key"><a name="id2487672"/><h4>CACHE DEL <em class="replaceable"><code>key</code></em></h4><p>key をキャッシュから削除する。</p></div><div class="refsect3" title="CACHE SET key data time-out"><a name="id2487685"/><h4>CACHE SET <em class="replaceable"><code>key</code></em> <em class="replaceable"><code>data</code></em> <em class="replaceable"><code>time-out</code></em></h4><p>既存のキャッシュエントリの data を更新する。</p></div><div class="refsect3" title="CACHE SEARCH PATTERN"><a name="id2487705"/><h4>CACHE SEARCH <em class="replaceable"><code>PATTERN</code></em></h4><p>キャッシュデータの中から指定されたパターンを検索する。</p></div><div class="refsect3" title="CACHE LIST"><a name="id2487719"/><h4>CACHE LIST</h4><p>
+</p><div class="refsect3" title="CACHE ADD key data time-out"><a name="id2487614"/><h4>CACHE ADD <em class="replaceable"><code>key</code></em> <em class="replaceable"><code>data</code></em> <em class="replaceable"><code>time-out</code></em></h4><p>指定した key と data の組合せを time-out の期限でキャッシュに追加する。</p></div><div class="refsect3" title="CACHE DEL key"><a name="id2487635"/><h4>CACHE DEL <em class="replaceable"><code>key</code></em></h4><p>key をキャッシュから削除する。</p></div><div class="refsect3" title="CACHE SET key data time-out"><a name="id2487649"/><h4>CACHE SET <em class="replaceable"><code>key</code></em> <em class="replaceable"><code>data</code></em> <em class="replaceable"><code>time-out</code></em></h4><p>既存のキャッシュエントリの data を更新する。</p></div><div class="refsect3" title="CACHE SEARCH PATTERN"><a name="id2487669"/><h4>CACHE SEARCH <em class="replaceable"><code>PATTERN</code></em></h4><p>キャッシュデータの中から指定されたパターンを検索する。</p></div><div class="refsect3" title="CACHE LIST"><a name="id2487683"/><h4>CACHE LIST</h4><p>
 現在キャッシュに格納されているアイテムの一覧を表示する。
-</p></div><div class="refsect3" title="CACHE FLUSH"><a name="id2487732"/><h4>CACHE FLUSH</h4><p>現在キャッシュに格納されているアイテムをすべて消去する。</p></div></div><div class="refsect2" title="GETLOCALSID [DOMAIN]"><a name="id2487745"/><h3>GETLOCALSID [DOMAIN]</h3><p>指定されたドメインの SID を表示する。
-パラメータが省略された場合、ローカルサーバが所属するドメインの SID を表示する。</p></div><div class="refsect2" title="SETLOCALSID S-1-5-21-x-y-z"><a name="id2487757"/><h3>SETLOCALSID S-1-5-21-x-y-z</h3><p>ローカルサーバが所属するドメインの SID を指定した SID に設定する。</p></div><div class="refsect2" title="GETDOMAINSID"><a name="id2487769"/><h3>GETDOMAINSID</h3><p>現在のローカルサーバのSIDと現在のドメインのSIDを表示する。</p></div><div class="refsect2" title="SETDOMAINSID"><a name="id2487780"/><h3>SETDOMAINSID</h3><p>現在のドメインのSIDを設定する。</p></div><div class="refsect2" title="GROUPMAP"><a name="id2487791"/><h3>GROUPMAP</h3><p>Windows のグループ ID と UNIX のグループ ID との対応づけを行なう。
+</p></div><div class="refsect3" title="CACHE FLUSH"><a name="id2487696"/><h4>CACHE FLUSH</h4><p>現在キャッシュに格納されているアイテムをすべて消去する。</p></div></div><div class="refsect2" title="GETLOCALSID [DOMAIN]"><a name="id2487708"/><h3>GETLOCALSID [DOMAIN]</h3><p>指定されたドメインの SID を表示する。
+パラメータが省略された場合、ローカルサーバが所属するドメインの SID を表示する。</p></div><div class="refsect2" title="SETLOCALSID S-1-5-21-x-y-z"><a name="id2487721"/><h3>SETLOCALSID S-1-5-21-x-y-z</h3><p>ローカルサーバが所属するドメインの SID を指定した SID に設定する。</p></div><div class="refsect2" title="GETDOMAINSID"><a name="id2487732"/><h3>GETDOMAINSID</h3><p>現在のローカルサーバのSIDと現在のドメインのSIDを表示する。</p></div><div class="refsect2" title="SETDOMAINSID"><a name="id2487744"/><h3>SETDOMAINSID</h3><p>現在のドメインのSIDを設定する。</p></div><div class="refsect2" title="GROUPMAP"><a name="id2487755"/><h3>GROUPMAP</h3><p>Windows のグループ ID と UNIX のグループ ID との対応づけを行なう。
 共通のオプションを以下に示す:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>unixgroup - UNIX のグループ名</p></li><li class="listitem"><p>ntgroup - Windows NT のグループ名 (SID が解決可能である必要がある。)</p></li><li class="listitem"><p>rid - 符号なし 32 ビット整数</p></li><li class="listitem"><p>sid - 「S-1-...」形式の完全な SID</p></li><li class="listitem"><p>type - グループのタイプ。「domain」、「local」もしくは「builtin」のいずれか。
-</p></li><li class="listitem"><p>comment - 任意の文字列によるグループの説明</p></li></ul></div><div class="refsect3" title="GROUPMAP ADD"><a name="id2487846"/><h4>GROUPMAP ADD</h4><p>新しいグループマップのエントリを追加する:
+</p></li><li class="listitem"><p>comment - 任意の文字列によるグループの説明</p></li></ul></div><div class="refsect3" title="GROUPMAP ADD"><a name="id2487810"/><h4>GROUPMAP ADD</h4><p>新しいグループマップのエントリを追加する:
 </p><pre class="programlisting">
 net groupmap add {rid=int|sid=string} unixgroup=string \
       [type={domain|local}] [ntgroup=string] [comment=string]
 </pre><p>
-</p></div><div class="refsect3" title="GROUPMAP DELETE"><a name="id2487865"/><h4>GROUPMAP DELETE</h4><p>グループマップのエントリを削除する。
-複数のエントリがマッチした場合、最初にマッチしたエントリが削除される。</p><p>net groupmap delete {ntgroup=string|sid=SID}</p></div><div class="refsect3" title="GROUPMAP MODIFY"><a name="id2487882"/><h4>GROUPMAP MODIFY</h4><p>既存のグループマップのエントリを変更する。</p><p>
+</p></div><div class="refsect3" title="GROUPMAP DELETE"><a name="id2487829"/><h4>GROUPMAP DELETE</h4><p>グループマップのエントリを削除する。
+複数のエントリがマッチした場合、最初にマッチしたエントリが削除される。</p><p>net groupmap delete {ntgroup=string|sid=SID}</p></div><div class="refsect3" title="GROUPMAP MODIFY"><a name="id2487846"/><h4>GROUPMAP MODIFY</h4><p>既存のグループマップのエントリを変更する。</p><p>
 </p><pre class="programlisting">
 net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
        [comment=string] [type={domain|local}]
 </pre><p>
-</p></div><div class="refsect3" title="GROUPMAP LIST"><a name="id2487904"/><h4>GROUPMAP LIST</h4><p>存在しているグループマップのエントリの一覧を表示する。</p><p>net groupmap list [verbose] [ntgroup=string] [sid=SID]</p></div></div><div class="refsect2" title="MAXRID"><a name="id2487921"/><h3>MAXRID</h3><p>ローカルサーバ上で (有効な「passdb backend」パラメータにより) 現在使用可能な RID の最大値を出力する。
-</p></div><div class="refsect2" title="RPC INFO"><a name="id2487934"/><h3>RPC INFO</h3><p>リモートサーバが所属するドメインの、ドメイン名、ドメインの SID 、ユーザおよびグループ数といった情報を出力する。
-</p></div><div class="refsect2" title="[RPC|ADS] TESTJOIN"><a name="id2487946"/><h3>[RPC|ADS] TESTJOIN</h3><p>ドメインへの参加が現在可能であるかどうかを確認する。</p></div><div class="refsect2" title="[RPC|ADS] CHANGETRUSTPW"><a name="id2487958"/><h3>[RPC|ADS] CHANGETRUSTPW</h3><p>ドメイン間信頼のパスワードを強制的に変更する。</p></div><div class="refsect2" title="RPC TRUSTDOM"><a name="id2487969"/><h3>RPC TRUSTDOM</h3><div class="refsect3" title="RPC TRUSTDOM ADD DOMAIN"><a name="id2487975"/><h4>RPC TRUSTDOM ADD <em class="replaceable"><code>DOMAIN</code></em></h4><p>
+</p></div><div class="refsect3" title="GROUPMAP LIST"><a name="id2487868"/><h4>GROUPMAP LIST</h4><p>存在しているグループマップのエントリの一覧を表示する。</p><p>net groupmap list [verbose] [ntgroup=string] [sid=SID]</p></div></div><div class="refsect2" title="MAXRID"><a name="id2487885"/><h3>MAXRID</h3><p>ローカルサーバ上で (有効な「passdb backend」パラメータにより) 現在使用可能な RID の最大値を出力する。
+</p></div><div class="refsect2" title="RPC INFO"><a name="id2487897"/><h3>RPC INFO</h3><p>リモートサーバが所属するドメインの、ドメイン名、ドメインの SID 、ユーザおよびグループ数といった情報を出力する。
+</p></div><div class="refsect2" title="[RPC|ADS] TESTJOIN"><a name="id2487910"/><h3>[RPC|ADS] TESTJOIN</h3><p>ドメインへの参加が現在可能であるかどうかを確認する。</p></div><div class="refsect2" title="[RPC|ADS] CHANGETRUSTPW"><a name="id2487921"/><h3>[RPC|ADS] CHANGETRUSTPW</h3><p>ドメイン間信頼のパスワードを強制的に変更する。</p></div><div class="refsect2" title="RPC TRUSTDOM"><a name="id2487932"/><h3>RPC TRUSTDOM</h3><div class="refsect3" title="RPC TRUSTDOM ADD DOMAIN"><a name="id2487938"/><h4>RPC TRUSTDOM ADD <em class="replaceable"><code>DOMAIN</code></em></h4><p>
 <em class="replaceable"><code>DOMAIN</code></em> のドメイン間信頼アカウントをリモートサーバに追加する。
 これは実際、アカウントフラグ <code class="constant">'I'</code> (ドメイン間信頼アカウント)を伴う、
 <em class="replaceable"><code>DOMAIN$</code></em> と言う名のSambaアカウントである。
 もしも、localhostに対してコマンドが使われるならば、
 <code class="literal">smbpasswd -a -i DOMAIN</code>と同じ影響を及ぼす。
 両コマンドとも適切なUNIXアカウントを必要とする事に注意。
-</p></div><div class="refsect3" title="RPC TRUSTDOM DEL DOMAIM"><a name="id2488016"/><h4>RPC TRUSTDOM DEL <em class="replaceable"><code>DOMAIM</code></em></h4><p>
+</p></div><div class="refsect3" title="RPC TRUSTDOM DEL DOMAIM"><a name="id2487979"/><h4>RPC TRUSTDOM DEL <em class="replaceable"><code>DOMAIM</code></em></h4><p>
 <em class="replaceable"><code>DOMAIN</code></em> のドメイン間信頼アカウントをリモートサーバから削除する。
-これは、<code class="literal">smbpasswd -x DOMAIN$</code>と同じである。</p></div><div class="refsect3" title="RPC TRUSTDOM ESTABLISH DOMAIN"><a name="id2488040"/><h4>RPC TRUSTDOM ESTABLISH <em class="replaceable"><code>DOMAIN</code></em></h4><p>
+これは、<code class="literal">smbpasswd -x DOMAIN$</code>と同じである。</p></div><div class="refsect3" title="RPC TRUSTDOM ESTABLISH DOMAIN"><a name="id2488004"/><h4>RPC TRUSTDOM ESTABLISH <em class="replaceable"><code>DOMAIN</code></em></h4><p>
 信頼するドメインとの間の信頼関係を締結する。
 ドメイン間信頼アカウントが、リモートの PDC 上にすでに作成されていることが必須である。
-</p></div><div class="refsect3" title="RPC TRUSTDOM REVOKE DOMAIN"><a name="id2488059"/><h4>RPC TRUSTDOM REVOKE <em class="replaceable"><code>DOMAIN</code></em></h4><p>信頼されたドメインとの間の信頼関係を破棄する。</p></div><div class="refsect3" title="RPC TRUSTDOM LIST"><a name="id2488072"/><h4>RPC TRUSTDOM LIST</h4><p>現在のドメイン間の信頼関係を一覧表示する。</p></div><div class="refsect3" title="RPC RIGHTS"><a name="id2488084"/><h4>RPC RIGHTS</h4><p>
+</p></div><div class="refsect3" title="RPC TRUSTDOM REVOKE DOMAIN"><a name="id2488022"/><h4>RPC TRUSTDOM REVOKE <em class="replaceable"><code>DOMAIN</code></em></h4><p>信頼されたドメインとの間の信頼関係を破棄する。</p></div><div class="refsect3" title="RPC TRUSTDOM LIST"><a name="id2488036"/><h4>RPC TRUSTDOM LIST</h4><p>現在のドメイン間の信頼関係を一覧表示する。</p></div><div class="refsect3" title="RPC RIGHTS"><a name="id2488047"/><h4>RPC RIGHTS</h4><p>
 このサブコマンドは(権限として参照もされる)、 Samba のユーザー権利の割当の
 表示、管理に用いられる。現在のところ、以下の 3 つのオプションが利用できる: 
 <em class="parameter"><code>list</code></em>、 <em class="parameter"><code>grant</code></em>、
 <em class="parameter"><code>revoke</code></em>。
-Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba-HOWTO-Collection を参照のこと。</p></div></div><div class="refsect2" title="RPC ABORTSHUTDOWN"><a name="id2488122"/><h3>RPC ABORTSHUTDOWN</h3><p>リモートサーバのシャットダウンを中止する。</p></div><div class="refsect2" title="SHUTDOWN [-t timeout] [-r] [-f] [-C message]"><a name="id2488133"/><h3>SHUTDOWN [-t timeout] [-r] [-f] [-C message]</h3><p>リモートサーバをシャットダウンする。</p><div class="variablelist"><dl><dt><span class="term">-r</span></dt><dd><p>
+Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba-HOWTO-Collection を参照のこと。</p></div></div><div class="refsect2" title="RPC ABORTSHUTDOWN"><a name="id2488086"/><h3>RPC ABORTSHUTDOWN</h3><p>リモートサーバのシャットダウンを中止する。</p></div><div class="refsect2" title="SHUTDOWN [-t timeout] [-r] [-f] [-C message]"><a name="id2488097"/><h3>SHUTDOWN [-t timeout] [-r] [-f] [-C message]</h3><p>リモートサーバをシャットダウンする。</p><div class="variablelist"><dl><dt><span class="term">-r</span></dt><dd><p>
 シャットダウン後に再起動する。
 </p></dd><dt><span class="term">-f</span></dt><dd><p>
 全てのアプリケーションを強制的に終了させる。
 </p></dd><dt><span class="term">-t timeout</span></dt><dd><p>
 システムをシャットダウンさせる前のタイムアウト時間を指定する。システムに対話的ログオンしているユーザは、この期間にシャットダウンをキャンセルすることができる。
-</p></dd><dt><span class="term">-C message</span></dt><dd><p>シャットダウンの通知を行なう際に、指定したメッセージを画面上に表示する。</p></dd></dl></div></div><div class="refsect2" title="RPC SAMDUMP"><a name="id2488206"/><h3>RPC SAMDUMP</h3><p>リモートサーバの SAM データベースを表示する。
-これは PDC もしくはドメインに参加したSamba BDC 上で実行する必要がある。</p></div><div class="refsect2" title="RPC VAMPIRE"><a name="id2488219"/><h3>RPC VAMPIRE</h3><p>リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 ドメインに参加したBDC 上で、PDCに対してのみ実行することが可能である。
-</p><div class="refsect2" title="RPC VAMPIRE KEYTAB"><a name="id2488232"/><h3>RPC VAMPIRE KEYTAB</h3><p>リモートのSAMデータベースをローカルのKerberos keytabファイルにダンプする。
-</p></div><div class="refsect2" title="RPC VAMPIRE LDIF"><a name="id2488243"/><h3>RPC VAMPIRE LDIF</h3><p>リモートのSAMデータベースをローカルのLDIFファイルか標準出力にダンプする。
-</p></div></div><div class="refsect2" title="RPC GETSID"><a name="id2488256"/><h3>RPC GETSID</h3><p>ドメインの SID を取得して、ローカルの <code class="filename">secrets.tdb</code> に格納する。</p></div><div class="refsect2" title="ADS LEAVE"><a name="id2488274"/><h3>ADS LEAVE</h3><p>リモートホストを所属しているドメインから外す。</p></div><div class="refsect2" title="ADS STATUS"><a name="id2488285"/><h3>ADS STATUS</h3><p>Active Directory 環境において、ローカルマシンのコンピュータアカウントの状態を表示する。
+</p></dd><dt><span class="term">-C message</span></dt><dd><p>シャットダウンの通知を行なう際に、指定したメッセージを画面上に表示する。</p></dd></dl></div></div><div class="refsect2" title="RPC SAMDUMP"><a name="id2488169"/><h3>RPC SAMDUMP</h3><p>リモートサーバの SAM データベースを表示する。
+これは PDC もしくはドメインに参加したSamba BDC 上で実行する必要がある。</p></div><div class="refsect2" title="RPC VAMPIRE"><a name="id2488182"/><h3>RPC VAMPIRE</h3><p>リモートサーバからユーザ、エイリアス、グループをローカルサーバ上にエクスポートする。 ドメインに参加したBDC 上で、PDCに対してのみ実行することが可能である。
+</p><div class="refsect2" title="RPC VAMPIRE KEYTAB"><a name="id2488195"/><h3>RPC VAMPIRE KEYTAB</h3><p>リモートのSAMデータベースをローカルのKerberos keytabファイルにダンプする。
+</p></div><div class="refsect2" title="RPC VAMPIRE LDIF"><a name="id2488207"/><h3>RPC VAMPIRE LDIF</h3><p>リモートのSAMデータベースをローカルのLDIFファイルか標準出力にダンプする。
+</p></div></div><div class="refsect2" title="RPC GETSID"><a name="id2488220"/><h3>RPC GETSID</h3><p>ドメインの SID を取得して、ローカルの <code class="filename">secrets.tdb</code> に格納する。</p></div><div class="refsect2" title="ADS LEAVE"><a name="id2488237"/><h3>ADS LEAVE</h3><p>リモートホストを所属しているドメインから外す。</p></div><div class="refsect2" title="ADS STATUS"><a name="id2488248"/><h3>ADS STATUS</h3><p>Active Directory 環境において、ローカルマシンのコンピュータアカウントの状態を表示する。
 表示内容は、デバッグ情報のようなものであり、開発者向けのものである。
-一般のユーザは <code class="literal">NET ADS TESTJOIN</code> を使うべきである。</p></div><div class="refsect2" title="ADS PRINTER"><a name="id2539418"/><h3>ADS PRINTER</h3><div class="refsect3" title="ADS PRINTER INFO [PRINTER] [SERVER]"><a name="id2539423"/><h4>ADS PRINTER INFO [<em class="replaceable"><code>PRINTER</code></em>] [<em class="replaceable"><code>SERVER</code></em>]</h4><p>
+一般のユーザは <code class="literal">NET ADS TESTJOIN</code> を使うべきである。</p></div><div class="refsect2" title="ADS PRINTER"><a name="id2488274"/><h3>ADS PRINTER</h3><div class="refsect3" title="ADS PRINTER INFO [PRINTER] [SERVER]"><a name="id2488279"/><h4>ADS PRINTER INFO [<em class="replaceable"><code>PRINTER</code></em>] [<em class="replaceable"><code>SERVER</code></em>]</h4><p>
 <em class="replaceable"><code>SERVER</code></em> 上にある <em class="replaceable"><code>PRINTER</code></em> を検索する。
-プリンタ名の既定値は「*」であり、サーバ名の既定値はローカルホスト名である。</p></div><div class="refsect3" title="ADS PRINTER PUBLISH PRINTER"><a name="id2539450"/><h4>ADS PRINTER PUBLISH <em class="replaceable"><code>PRINTER</code></em></h4><p>指定したプリンタを Active Directory に対して公開する。</p></div><div class="refsect3" title="ADS PRINTER REMOVE PRINTER"><a name="id2539463"/><h4>ADS PRINTER REMOVE <em class="replaceable"><code>PRINTER</code></em></h4><p>指定したプリンタを Active Directory のディレクトリから削除する。</p></div></div><div class="refsect2" title="ADS SEARCH EXPRESSION ATTRIBUTES..."><a name="id2539478"/><h3>ADS SEARCH <em class="replaceable"><code>EXPRESSION</code></em> <em class="replaceable"><code>ATTRIBUTES...</code></em></h3><p>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
+プリンタ名の既定値は「*」であり、サーバ名の既定値はローカルホスト名である。</p></div><div class="refsect3" title="ADS PRINTER PUBLISH PRINTER"><a name="id2539416"/><h4>ADS PRINTER PUBLISH <em class="replaceable"><code>PRINTER</code></em></h4><p>指定したプリンタを Active Directory に対して公開する。</p></div><div class="refsect3" title="ADS PRINTER REMOVE PRINTER"><a name="id2539429"/><h4>ADS PRINTER REMOVE <em class="replaceable"><code>PRINTER</code></em></h4><p>指定したプリンタを Active Directory のディレクトリから削除する。</p></div></div><div class="refsect2" title="ADS SEARCH EXPRESSION ATTRIBUTES..."><a name="id2539444"/><h3>ADS SEARCH <em class="replaceable"><code>EXPRESSION</code></em> <em class="replaceable"><code>ATTRIBUTES...</code></em></h3><p>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
 EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。</p><p>設定例: <strong class="userinput"><code>net ads search '(objectCategory=group)' sAMAccountName</code></strong>
-</p></div><div class="refsect2" title="ADS DN DN (attributes)"><a name="id2539510"/><h3>ADS DN <em class="replaceable"><code>DN</code></em> <em class="replaceable"><code>(attributes)</code></em></h3><p>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
-DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。</p><p>設定例: <strong class="userinput"><code>net ads dn 'CN=administrator,CN=Users,DC=my,DC=domain' SAMAccountName</code></strong></p></div><div class="refsect2" title="ADS WORKGROUP"><a name="id2539541"/><h3>ADS WORKGROUP</h3><p>指定された Kerberos レルムのワークグループ名を表示する。</p></div><div class="refsect2" title="SAM CREATEBUILTINGROUP &lt;NAME&gt;"><a name="id2539552"/><h3>SAM CREATEBUILTINGROUP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="ADS DN DN (attributes)"><a name="id2539476"/><h3>ADS DN <em class="replaceable"><code>DN</code></em> <em class="replaceable"><code>(attributes)</code></em></h3><p>Active Directory のサーバに対して低レベルな LDAP 検索を行ない、その結果を表示する。
+DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。</p><p>設定例: <strong class="userinput"><code>net ads dn 'CN=administrator,CN=Users,DC=my,DC=domain' SAMAccountName</code></strong></p></div><div class="refsect2" title="ADS WORKGROUP"><a name="id2539507"/><h3>ADS WORKGROUP</h3><p>指定された Kerberos レルムのワークグループ名を表示する。</p></div><div class="refsect2" title="SAM CREATEBUILTINGROUP &lt;NAME&gt;"><a name="id2539518"/><h3>SAM CREATEBUILTINGROUP &lt;NAME&gt;</h3><p>
 BUILTINグループを(再)作成する。
 このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators,
 Users, Guests, Power Users, Account Operators, Server Operators, Print
@@ -164,76 +173,76 @@ Operators, Backup Operators, Replicator, RAS Servers, Pre-Windows 2000
 compatible Access.
 
 このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
-</p></div><div class="refsect2" title="SAM CREATELOCALGROUP &lt;NAME&gt;"><a name="id2539573"/><h3>SAM CREATELOCALGROUP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM CREATELOCALGROUP &lt;NAME&gt;"><a name="id2539539"/><h3>SAM CREATELOCALGROUP &lt;NAME&gt;</h3><p>
 ローカルグループを作成する(別名である)。
 
 このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
-</p></div><div class="refsect2" title="SAM DELETELOCALGROUP &lt;NAME&gt;"><a name="id2539593"/><h3>SAM DELETELOCALGROUP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM DELETELOCALGROUP &lt;NAME&gt;"><a name="id2539559"/><h3>SAM DELETELOCALGROUP &lt;NAME&gt;</h3><p>
 存在するローカルグループを削除する(別名である)。
 
-</p></div><div class="refsect2" title="SAM MAPUNIXGROUP &lt;NAME&gt;"><a name="id2539606"/><h3>SAM MAPUNIXGROUP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM MAPUNIXGROUP &lt;NAME&gt;"><a name="id2539572"/><h3>SAM MAPUNIXGROUP &lt;NAME&gt;</h3><p>
 同じ名前を持つドメイングループと、存在するUnixグループをマップし、Domainグループにする。
-</p></div><div class="refsect2" title="SAM UNMAPUNIXGROUP &lt;NAME&gt;"><a name="id2539621"/><h3>SAM UNMAPUNIXGROUP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM UNMAPUNIXGROUP &lt;NAME&gt;"><a name="id2539587"/><h3>SAM UNMAPUNIXGROUP &lt;NAME&gt;</h3><p>
 存在するグループマップエントリを削除する。
-</p></div><div class="refsect2" title="SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;"><a name="id2539634"/><h3>SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;"><a name="id2539600"/><h3>SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;</h3><p>
 ローカルグループへメンバを追加する。グループは名前でのみ指定でき、メンバは名前かSIDで指定出来る。
-</p></div><div class="refsect2" title="SAM DELMEM &lt;GROUP&gt; &lt;MEMBER&gt;"><a name="id2539649"/><h3>SAM DELMEM  &lt;GROUP&gt; &lt;MEMBER&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM DELMEM &lt;GROUP&gt; &lt;MEMBER&gt;"><a name="id2539615"/><h3>SAM DELMEM  &lt;GROUP&gt; &lt;MEMBER&gt;</h3><p>
 ローカルグループからメンバを削除する。グループとメンバは名前でのみ指定できる。
-</p></div><div class="refsect2" title="SAM LISTMEM &lt;GROUP&gt;"><a name="id2539664"/><h3>SAM LISTMEM &lt;GROUP&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM LISTMEM &lt;GROUP&gt;"><a name="id2539630"/><h3>SAM LISTMEM &lt;GROUP&gt;</h3><p>
 ローカルグループメンバを表示する。グループは名前で指定しなければならない。
-</p></div><div class="refsect2" title="SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]"><a name="id2539678"/><h3>SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]</h3><p>
+</p></div><div class="refsect2" title="SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]"><a name="id2539644"/><h3>SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]</h3><p>
 名前による一まとまりのアカウントを表示する。もしもverboseが指定されていたら、
 ridとdescriptionも各々のアカウントに対して提供される。
-</p></div><div class="refsect2" title="SAM RIGHTS LIST"><a name="id2539696"/><h3>SAM RIGHTS LIST</h3><p>
+</p></div><div class="refsect2" title="SAM RIGHTS LIST"><a name="id2539662"/><h3>SAM RIGHTS LIST</h3><p>
 すべての有効な権限を表示する。
-</p></div><div class="refsect2" title="SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;"><a name="id2539707"/><h3>SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;"><a name="id2539673"/><h3>SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;</h3><p>
 ユーザに対し、1つまたはそれ以上の権限を許可する。
-</p></div><div class="refsect2" title="SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;"><a name="id2539720"/><h3>SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;"><a name="id2539686"/><h3>SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;</h3><p>
 ユーザに対し、1つまたはそれ以上の権限を取り去る。
-</p></div><div class="refsect2" title="SAM SHOW &lt;NAME&gt;"><a name="id2539734"/><h3>SAM SHOW &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SHOW &lt;NAME&gt;"><a name="id2539700"/><h3>SAM SHOW &lt;NAME&gt;</h3><p>
 対応するアカウントの、完全な DOMAIN\\NAME のSIDとタイプを表示する。
-</p></div><div class="refsect2" title="SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;"><a name="id2539746"/><h3>SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;"><a name="id2539712"/><h3>SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;</h3><p>
 アカウントに対するホームディレクトリを設定する。
-</p></div><div class="refsect2" title="SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;"><a name="id2539759"/><h3>SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;"><a name="id2539725"/><h3>SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;</h3><p>
 アカウントに対するプロファイルパスを設定する。
-</p></div><div class="refsect2" title="SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;"><a name="id2539772"/><h3>SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;"><a name="id2539738"/><h3>SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;</h3><p>
 ユーザまたはグループアカウントに対するコメントを設定する。
-</p></div><div class="refsect2" title="SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;"><a name="id2539784"/><h3>SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;"><a name="id2539750"/><h3>SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;</h3><p>
 ユーザアカウントに対するフルネームを設定する。
-</p></div><div class="refsect2" title="SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;"><a name="id2539797"/><h3>SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;"><a name="id2539763"/><h3>SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;</h3><p>
 ユーザアカウントに対するログオンスクリプトを設定する。
-</p></div><div class="refsect2" title="SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;"><a name="id2539811"/><h3>SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;"><a name="id2539777"/><h3>SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;</h3><p>
 ユーザアカウントに対するホームドライブを設定する。
-</p></div><div class="refsect2" title="SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;"><a name="id2539824"/><h3>SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;"><a name="id2539790"/><h3>SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;</h3><p>
 ログイン可能なユーザアカウントをワークステーションに対して設定する。
-</p></div><div class="refsect2" title="SAM SET DISABLE &lt;NAME&gt;"><a name="id2539838"/><h3>SAM SET DISABLE &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET DISABLE &lt;NAME&gt;"><a name="id2539804"/><h3>SAM SET DISABLE &lt;NAME&gt;</h3><p>
 ユーザアカウントに対して"無効"フラグを設定する。
-</p></div><div class="refsect2" title="SAM SET PWNOTREQ &lt;NAME&gt;"><a name="id2539850"/><h3>SAM SET PWNOTREQ &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET PWNOTREQ &lt;NAME&gt;"><a name="id2539816"/><h3>SAM SET PWNOTREQ &lt;NAME&gt;</h3><p>
 ユーザアカウントに対して"パスワード不要"フラグを設定する。
-</p></div><div class="refsect2" title="SAM SET AUTOLOCK &lt;NAME&gt;"><a name="id2539863"/><h3>SAM SET AUTOLOCK &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET AUTOLOCK &lt;NAME&gt;"><a name="id2539829"/><h3>SAM SET AUTOLOCK &lt;NAME&gt;</h3><p>
 ユーザアカウントに対して"autolock"フラグを設定する。
-</p></div><div class="refsect2" title="SAM SET PWNOEXP &lt;NAME&gt;"><a name="id2539876"/><h3>SAM SET PWNOEXP &lt;NAME&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM SET PWNOEXP &lt;NAME&gt;"><a name="id2539842"/><h3>SAM SET PWNOEXP &lt;NAME&gt;</h3><p>
 ユーザアカウントに対して"無期限のパスワード"フラグを設定する。
-</p></div><div class="refsect2" title="SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]"><a name="id2539889"/><h3>SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]</h3><p>
+</p></div><div class="refsect2" title="SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]"><a name="id2539856"/><h3>SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]</h3><p>
 ユーザアカウントに対して"パスワードの変更が必要"フラグを設定する。
-</p></div><div class="refsect2" title="SAM POLICY LIST"><a name="id2539904"/><h3>SAM POLICY LIST</h3><p>
+</p></div><div class="refsect2" title="SAM POLICY LIST"><a name="id2539870"/><h3>SAM POLICY LIST</h3><p>
 有効なアカウントポリシーを表示する。
-</p></div><div class="refsect2" title="SAM POLICY SHOW &lt;account policy&gt;"><a name="id2539915"/><h3>SAM POLICY SHOW &lt;account policy&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM POLICY SHOW &lt;account policy&gt;"><a name="id2539882"/><h3>SAM POLICY SHOW &lt;account policy&gt;</h3><p>
 アカウントポリシーの値を表示する。.
-</p></div><div class="refsect2" title="SAM POLICY SET &lt;account policy&gt; &lt;value&gt;"><a name="id2539927"/><h3>SAM POLICY SET &lt;account policy&gt; &lt;value&gt;</h3><p>
+</p></div><div class="refsect2" title="SAM POLICY SET &lt;account policy&gt; &lt;value&gt;"><a name="id2539894"/><h3>SAM POLICY SET &lt;account policy&gt; &lt;value&gt;</h3><p>
 アカウントポリシーに値を設定する。
 有効な値は、 "forever", "never", "off", か数字である。
-</p></div><div class="refsect2" title="SAM PROVISION"><a name="id2539942"/><h3>SAM PROVISION</h3><p>
+</p></div><div class="refsect2" title="SAM PROVISION"><a name="id2539909"/><h3>SAM PROVISION</h3><p>
 もしも、ldapsam:editposixが設定されて、winbinddが動作中の時有効である。
 ldapのDIT上の、基本的なアカウント(Administrator)とグループ(Domain Users, Domain Admins, Domain Guests)とともに、ldap DITを 適切にpopulateする。
-</p></div><div class="refsect2" title="IDMAP DUMP &lt;local tdb file name&gt;"><a name="id2539961"/><h3>IDMAP DUMP &lt;local tdb file name&gt;</h3><p>
+</p></div><div class="refsect2" title="IDMAP DUMP &lt;local tdb file name&gt;"><a name="id2539928"/><h3>IDMAP DUMP &lt;local tdb file name&gt;</h3><p>
 指定したローカルのtdbファイル中にあるマッピングをダンプする。このコマンドは、
 idmap_tdbバックエンドによって生成されたマップのダンプにのみ有用である。
-</p></div><div class="refsect2" title="IDMAP RESTORE [input file]"><a name="id2539979"/><h3>IDMAP RESTORE [input file]</h3><p>
+</p></div><div class="refsect2" title="IDMAP RESTORE [input file]"><a name="id2539947"/><h3>IDMAP RESTORE [input file]</h3><p>
 指定したファイルか標準入力からマッピングをリストアする。
-</p></div><div class="refsect2" title="IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;"><a name="id2539992"/><h3>IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;</h3><p>
+</p></div><div class="refsect2" title="IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;"><a name="id2539959"/><h3>IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;</h3><p>
 指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバに対してバインドするユーザDNのパスワードとして使われる。
-</p></div><div class="refsect2" title="USERSHARE"><a name="id2540013"/><h3>USERSHARE</h3><p>
+</p></div><div class="refsect2" title="USERSHARE"><a name="id2539980"/><h3>USERSHARE</h3><p>
 Samba 3.0.23 より、root 以外のユーザが「net usershare」コマンドを用いてユーザ定義共有を公開する機能が追加された。
 </p><p>
 これを行なうには、まず smb.conf の [global] セクションに以下を追加する必要がある:
@@ -256,7 +265,7 @@ usershare max shares = 100
 
 </p><table border="0" summary="Simple list" class="simplelist"><tr><td>net usershare add sharename path [comment [acl] [guest_ok=[y|n]]] - ユーザ定義の共有の追加または変更</td></tr><tr><td>net usershare delete sharename - ユーザ定義の共有の削除</td></tr><tr><td>net usershare info [-l|--long] [wildcard sharename] - ユーザ定義の共有の情報の出力</td></tr><tr><td>net usershare list [-l|--long] [wildcard sharename] - ユーザ定義の共有の一覧出力</td></tr></table><p>
 
-</p><div class="refsect3" title="USERSHARE ADD sharename path [comment] [acl] [guest_ok=[y|n]]"><a name="id2540096"/><h4>USERSHARE ADD <em class="replaceable"><code>sharename</code></em> <em class="replaceable"><code>path</code></em> <em class="replaceable"><code>[comment]</code></em> <em class="replaceable"><code>[acl]</code></em> <em class="replaceable"><code>[guest_ok=[y|n]]</code></em></h4><p>
+</p><div class="refsect3" title="USERSHARE ADD sharename path [comment] [acl] [guest_ok=[y|n]]"><a name="id2540063"/><h4>USERSHARE ADD <em class="replaceable"><code>sharename</code></em> <em class="replaceable"><code>path</code></em> <em class="replaceable"><code>[comment]</code></em> <em class="replaceable"><code>[acl]</code></em> <em class="replaceable"><code>[guest_ok=[y|n]]</code></em></h4><p>
 sharename というユーザ定義共有の新規作成もしくは修正(上書き)を行なう。
 </p><p>
 「path」には、公開するディレクトリのシステム上での絶対パス名を指定する。
@@ -278,10 +287,10 @@ sharename というユーザ定義共有の新規作成もしくは修正(上書
 既存のユーザ定義共有を修正するコマンドは個別に用意されておらず、
 「net usershare add [sharename]」コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
 Samba の smbd デーモンは、接続のあったタイミングでユーザ定義共有の変更を検知するのため、変更は即座に反映される。ユーザ定義共有の追加、削除、変更により、smbd の再起動を行なう必要はない。
-</div><div class="refsect3" title="USERSHARE DELETE sharename"><a name="id2540214"/><h4>USERSHARE DELETE <em class="replaceable"><code>sharename</code></em></h4><p>
+</div><div class="refsect3" title="USERSHARE DELETE sharename"><a name="id2540181"/><h4>USERSHARE DELETE <em class="replaceable"><code>sharename</code></em></h4><p>
 指定されたユーザ定義共有を削除する。
 Samba smbd デーモンは即座にこの変更を検知するが、削除された共有にその時点で接続中のユーザが切断されることはない。
-</p></div><div class="refsect3" title="USERSHARE INFO [-l|--long] [wildcard sharename]"><a name="id2540233"/><h4>USERSHARE INFO <em class="replaceable"><code>[-l|--long]</code></em> <em class="replaceable"><code>[wildcard sharename]</code></em></h4><p>
+</p></div><div class="refsect3" title="USERSHARE INFO [-l|--long] [wildcard sharename]"><a name="id2540200"/><h4>USERSHARE INFO <em class="replaceable"><code>[-l|--long]</code></em> <em class="replaceable"><code>[wildcard sharename]</code></em></h4><p>
 指定されたパターンに合致するユーザによって所有されている、もしくは全てのユーザ定義共有の情報が表示される。
 </p><p>
 net usershare info は、実行したユーザが作成したユーザ定義共有の詳細情報を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。
@@ -296,13 +305,13 @@ usershare_acl=Everyone:F
 guest_ok=n
 
 これは、「net usershare add」コマンドで現状設定可能なユーザ定義共有の設定一覧である。
-</p></div><div class="refsect3" title="USERSHARE LIST [-l|--long] wildcard sharename"><a name="id2540280"/><h4>USERSHARE LIST <em class="replaceable"><code>[-l|--long]</code></em> <em class="replaceable"><code>wildcard sharename</code></em></h4><p>
+</p></div><div class="refsect3" title="USERSHARE LIST [-l|--long] wildcard sharename"><a name="id2540248"/><h4>USERSHARE LIST <em class="replaceable"><code>[-l|--long]</code></em> <em class="replaceable"><code>wildcard sharename</code></em></h4><p>
 実行したユーザが所有し、指定されたワイルドカードにマッチする、もしくは全てのユーザのユーザ定義共有の一覧を表示する。
 </p><p>
 net usershare list は、実行したユーザが作成したユーザ定義共有の一覧を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。
 
 「-l」もしくは「--long」オプションが指定されていた場合、他のユーザが作成したユーザ定義共有の情報も表示する。
-</p></div></div><div class="refsect2" title="CONF"><a name="id2540316"/><h3>CONF</h3><p>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
+</p></div></div><div class="refsect2" title="CONF"><a name="id2540284"/><h3>CONF</h3><p>バージョン 3.2.0から、Sambaサーバはレジストリにデータを格納することにより設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
 </p><p>
 この設定データの配布は
 <span class="emphasis"><em>smb.conf</em></span>ファイルから2つのレベルで有効にできる。
@@ -311,9 +320,9 @@ net usershare list は、実行したユーザが作成したユーザ定義共�
 レジストリのみの設定の場合は、[global]セクション中で、<a class="link" href="smb.conf.5.html#CONFIGBACKEND" target="_top">config backend = registry</a>を設定することで有効になる。
 詳細は<a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>マニュアルページを参照のこと。 </p><p>conf コマンドは以下のとおり:
 </p><table border="0" summary="Simple list" class="simplelist"><tr><td>net conf list - smb.conf風の形式で完全な設定をダンプ</td></tr><tr><td>net conf import - smb.conf形式で設定をインポート</td></tr><tr><td>net conf listshares - レジストリ共有のリスト</td></tr><tr><td>net conf drop - レジストリから全部の設定を削除</td></tr><tr><td>net conf showshare - レジストリ共有の定義を表示</td></tr><tr><td>net conf addshare - 新しいレジストリ共有を作成</td></tr><tr><td>net conf delshare - レジストリ共有を削除</td></tr><tr><td>net conf setparm - パラメータを格納</td></tr><tr><td>net conf getparm - パラメータの値を検索</td></tr><tr><td>net conf delparm - パラメータを削除</td></tr><tr><td>net conf getincludes - 共有定義のインクルードを表示</td></tr><tr><td>net conf setincludes - 共有のためのインクルードを設定</td></tr><tr><td>net conf delincludes - 共有定義からインクルードを削除</td></tr></table><p>
-</p><div class="refsect3" title="CONF LIST"><a name="id2540456"/><h4>CONF LIST</h4><p>
+</p><div class="refsect3" title="CONF LIST"><a name="id2540424"/><h4>CONF LIST</h4><p>
 smb.conf風の形式でレジストリ中にある設定データを標準出力に出力する。
-</p></div><div class="refsect3" title="CONF IMPORT [--test|-T] filename [section]"><a name="id2540470"/><h4>CONF IMPORT <em class="replaceable"><code>[--test|-T]</code></em> <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>[section]</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF IMPORT [--test|-T] filename [section]"><a name="id2540437"/><h4>CONF IMPORT <em class="replaceable"><code>[--test|-T]</code></em> <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>[section]</code></em></h4><p>
 このコマンドは、smb.conf形式で、ファイルから設定情報をインポートする。もしも、
 レジストリ中に存在するセクションが入力ファイル中に存在するならば、その内容は
 置き換えられる。入力ファイル中に対となるものがない、レジストリ中のセクションは
@@ -322,26 +331,26 @@ smb.conf風の形式でレジストリ中にある設定データを標準出力
 任意ではあるが、その、指定したセクションに対するimportコマンドの影響を避けるためにあるセクションを指定してもよい。テストモードはパラメータ"-T"をコマンド行に
 指定することで有効に出来る。テストモードでは、レジストリに対する変更は行われず、
 設定の結果が代わりに標準出力に出力される。
-</p></div><div class="refsect3" title="CONF LISTSHARES"><a name="id2540518"/><h4>CONF LISTSHARES</h4><p>
+</p></div><div class="refsect3" title="CONF LISTSHARES"><a name="id2540485"/><h4>CONF LISTSHARES</h4><p>
 レジストリ中で定義された共有名の一覧を表示する。
-</p></div><div class="refsect3" title="CONF DROP"><a name="id2540530"/><h4>CONF DROP</h4><p>
+</p></div><div class="refsect3" title="CONF DROP"><a name="id2540497"/><h4>CONF DROP</h4><p>
 レジストリから完全に設定データを削除する。
-</p></div><div class="refsect3" title="CONF SHOWSHARE sharename"><a name="id2540542"/><h4>CONF SHOWSHARE <em class="replaceable"><code>sharename</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF SHOWSHARE sharename"><a name="id2540509"/><h4>CONF SHOWSHARE <em class="replaceable"><code>sharename</code></em></h4><p>
 指定したセクションまたは共有の定義を表示する。レジストリから、global設定オプションを検索するために、"global"を共有名として指定するのは有効である。
-</p></div><div class="refsect3" title="CONF ADDSHARE sharename path [writeable={y|N} [guest_ok={y|N} [comment]]]"><a name="id2540561"/><h4>CONF ADDSHARE <em class="replaceable"><code>sharename</code></em> <em class="replaceable"><code>path</code></em> [<em class="replaceable"><code>writeable={y|N}</code></em> [<em class="replaceable"><code>guest_ok={y|N}</code></em> [<em class="replaceable"><code>comment</code></em>]]] </h4><p>レジストリ中に新しい共有定義を作成する。
+</p></div><div class="refsect3" title="CONF ADDSHARE sharename path [writeable={y|N} [guest_ok={y|N} [comment]]]"><a name="id2540528"/><h4>CONF ADDSHARE <em class="replaceable"><code>sharename</code></em> <em class="replaceable"><code>path</code></em> [<em class="replaceable"><code>writeable={y|N}</code></em> [<em class="replaceable"><code>guest_ok={y|N}</code></em> [<em class="replaceable"><code>comment</code></em>]]] </h4><p>レジストリ中に新しい共有定義を作成する。
 共有名とパス両方が必要である。共有名は"global"としては<span class="emphasis"><em>いけない</em></span> 。
 そのほか、とても一般的なオプション、"writeable", "guest ok" と "comment"
 も指定出来る。同じ結果は、一連の"net conf setparm"コマンドによって得てもよい。
-</p></div><div class="refsect3" title="CONF DELSHARE sharename"><a name="id2540599"/><h4>CONF DELSHARE <em class="replaceable"><code>sharename</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF DELSHARE sharename"><a name="id2540567"/><h4>CONF DELSHARE <em class="replaceable"><code>sharename</code></em></h4><p>
 レジストリから共有定義を削除する。
-</p></div><div class="refsect3" title="CONF SETPARM section parameter value"><a name="id2540613"/><h4>CONF SETPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em> <em class="replaceable"><code>value</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF SETPARM section parameter value"><a name="id2540580"/><h4>CONF SETPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em> <em class="replaceable"><code>value</code></em></h4><p>
 パラメータをレジストリに格納する。セクションはglobalか共有名である。
 セクションは、模試も存在しないならば、作成される。
-</p></div><div class="refsect3" title="CONF GETPARM section parameter"><a name="id2540637"/><h4>CONF GETPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF GETPARM section parameter"><a name="id2540604"/><h4>CONF GETPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em></h4><p>
 レジストリ中のパラメータを表示する。
-</p></div><div class="refsect3" title="CONF DELPARM section parameter"><a name="id2540654"/><h4>CONF DELPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF DELPARM section parameter"><a name="id2540621"/><h4>CONF DELPARM <em class="replaceable"><code>section</code></em> <em class="replaceable"><code>parameter</code></em></h4><p>
 レジストリ中のパラメータを削除する。
-</p></div><div class="refsect3" title="CONF GETINCLUDES section"><a name="id2540671"/><h4>CONF GETINCLUDES <em class="replaceable"><code>section</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF GETINCLUDES section"><a name="id2540638"/><h4>CONF GETINCLUDES <em class="replaceable"><code>section</code></em></h4><p>
 (globalまたは共有の)提供されたセクションの、includeのリストを得る。
 </p><p>
 データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメータ名が値の名前として、パラメータがレジストリに格納されるので、
@@ -355,12 +364,12 @@ smb.confテキストファイル中では、むしろメタパラメータであ
 </p><p>
 さらに、現在、レジストリ構成からファイルのみインクルード出来る。将来は、
 他のレジストリキーから設定データをインクルード出来る予定である。
-</p></div><div class="refsect3" title="CONF SETINCLUDES section [filename]+"><a name="id2540730"/><h4>CONF SETINCLUDES <em class="replaceable"><code>section</code></em> [<em class="replaceable"><code>filename</code></em>]+</h4><p>
+</p></div><div class="refsect3" title="CONF SETINCLUDES section [filename]+"><a name="id2540697"/><h4>CONF SETINCLUDES <em class="replaceable"><code>section</code></em> [<em class="replaceable"><code>filename</code></em>]+</h4><p>
 (globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。
 ファイル名は %Iのような通常のsmb.confマクロを含んでいてもよい。
-</p></div><div class="refsect3" title="CONF DELINCLUDES section"><a name="id2540754"/><h4>CONF DELINCLUDES <em class="replaceable"><code>section</code></em></h4><p>
+</p></div><div class="refsect3" title="CONF DELINCLUDES section"><a name="id2540722"/><h4>CONF DELINCLUDES <em class="replaceable"><code>section</code></em></h4><p>
 (globalか共有の)提供されたセクションからincludeリストを削除する。
-</p></div></div><div class="refsect2" title="DOM"><a name="id2540770"/><h3>DOM</h3><div class="refsect2" title="EVENTLOG"><a name="id2540772"/><h3>EVENTLOG</h3><p>Samba 3.4.3 から、net コマンドはネイティブな WIN32 イベントログファイル
+</p></div></div><div class="refsect2" title="DOM"><a name="id2540738"/><h3>DOM</h3><div class="refsect2" title="EVENTLOG"><a name="id2540740"/><h3>EVENTLOG</h3><p>Samba 3.4.3 から、net コマンドはネイティブな WIN32 イベントログファイル
 (通常 *.evt) の読み取り、ダンプ、インポート、エクスポートが可能となった。
 evt ファイルはネイティブな Windows のイベントビューワツールによって使われる。
 </p><p>
@@ -369,9 +378,9 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 行える。詳細は <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a> マニュアルページを参照のこと。
 </p><p>eventlog のサブコマンドは以下の通り:
 </p><table border="0" summary="Simple list" class="simplelist"><tr><td>net eventlog dump - イベントログファイル *.evt の内容を画面上にダンプする。</td></tr><tr><td>net eventlog import - イベントログファイル *.evt を、イベントログを保持する Samba 内部の tdb ファイルにインポートする。</td></tr><tr><td>net eventlog export - Samba内部の tdb 形式によるイベントログをイベントログファイル *.evt にエクスポートする。</td></tr></table><p>
-</p><div class="refsect3" title="EVENTLOG DUMP filename"><a name="id2540849"/><h4>EVENTLOG DUMP <em class="replaceable"><code>filename</code></em></h4><p>
+</p><div class="refsect3" title="EVENTLOG DUMP filename"><a name="id2540816"/><h4>EVENTLOG DUMP <em class="replaceable"><code>filename</code></em></h4><p>
 標準出力にイベントログファイル *.evt を出力する。
-</p></div><div class="refsect3" title="EVENTLOG IMPORT filename eventlog"><a name="id2540863"/><h4>EVENTLOG IMPORT <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>eventlog</code></em></h4><p>
+</p></div><div class="refsect3" title="EVENTLOG IMPORT filename eventlog"><a name="id2540831"/><h4>EVENTLOG IMPORT <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>eventlog</code></em></h4><p>
 <em class="replaceable"><code>filename</code></em>によって定義されたイベントログファイル *.evt 
 を、<em class="replaceable"><code>eventlog</code></em>で定義した Samba 内部の tdb 形式によるイベン
 トログファイルにインポートする。
@@ -379,7 +388,7 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 <em class="parameter"><code>eventlog list</code></em> が一部必要となる。詳細は、
 <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>
 マニュアルページを参照のこと。
-</p></div><div class="refsect3" title="EVENTLOG EXPORT filename eventlog"><a name="id2540908"/><h4>EVENTLOG EXPORT <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>eventlog</code></em></h4><p>
+</p></div><div class="refsect3" title="EVENTLOG EXPORT filename eventlog"><a name="id2540875"/><h4>EVENTLOG EXPORT <em class="replaceable"><code>filename</code></em> <em class="replaceable"><code>eventlog</code></em></h4><p>
 <em class="replaceable"><code>eventlog</code></em>で定義されている、Samba内部のtdb形式によるイベントログを
 <em class="replaceable"><code>filename</code></em>で定義されているイベントログファイル *.evt にエクスポートする。
 <em class="replaceable"><code>eventlog</code></em>はsmb.conf中で定義されている
@@ -390,7 +399,7 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 </p><p>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバか、「Administrators group」グループのメンバか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
 </p><p>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
 </p><table border="0" summary="Simple list" class="simplelist"><tr><td>net dom join - リモートでマシンをドメインに参加させる</td></tr><tr><td>net dom unjoin -リモートでマシンをドメインから削除する</td></tr><tr><td>net dom renamecomputer - ドメインに参加しているリモートコンピュータの名前を変更する。</td></tr></table><p>
-</p><div class="refsect3" title="DOM JOIN domain=DOMAIN ou=OU account=ACCOUNT password=PASSWORD reboot"><a name="id2541012"/><h4>DOM JOIN	<em class="replaceable"><code>domain=DOMAIN</code></em> <em class="replaceable"><code>ou=OU</code></em> <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
+</p><div class="refsect3" title="DOM JOIN domain=DOMAIN ou=OU account=ACCOUNT password=PASSWORD reboot"><a name="id2540979"/><h4>DOM JOIN	<em class="replaceable"><code>domain=DOMAIN</code></em> <em class="replaceable"><code>ou=OU</code></em> <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
 リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメータは以下のとおり：
 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="replaceable"><code>DOMAIN</code></em>には、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラを選択できる。その場合「\」で区切ってドメインコントローラの名前を指定する（例：MYDOM\MYDC）。<em class="replaceable"><code>DOMAIN</code></em>に空白は指定できない。
 </p></li><li class="listitem"><p><em class="replaceable"><code>OU</code></em>には、既定値ではないLDAPコンテナにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:<span class="emphasis"><em>ou=mymachines,cn=Users,dc=example,dc=com</em></span>)で指定する。この、任意のパラメータは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</p></li><li class="listitem"><p><em class="replaceable"><code>ACCOUNT</code></em>には、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
@@ -401,7 +410,7 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
 </p><p>
 この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
-</p></div><div class="refsect3" title="DOM UNJOIN account=ACCOUNT password=PASSWORD reboot"><a name="id2541145"/><h4>DOM UNJOIN <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
+</p></div><div class="refsect3" title="DOM UNJOIN account=ACCOUNT password=PASSWORD reboot"><a name="id2541112"/><h4>DOM UNJOIN <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
 ドメインからマシンを削除する。このコマンドでは次のパラメータを指定する。
 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="replaceable"><code>ACCOUNT</code></em>には、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
  </p></li><li class="listitem"><p><em class="replaceable"><code>PASSWORD</code></em>には、<em class="replaceable"><code>ACCOUNT</code></em>で指定したドメインアカウントのパスワードを指定する。
@@ -412,7 +421,7 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
 </p><p>
 この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
-</p></div><div class="refsect3" title="DOM RENAMECOMPUTER newname=NEWNAME account=ACCOUNT password=PASSWORD reboot"><a name="id2541232"/><h4>DOM RENAMECOMPUTER <em class="replaceable"><code>newname=NEWNAME</code></em> <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
+</p></div><div class="refsect3" title="DOM RENAMECOMPUTER newname=NEWNAME account=ACCOUNT password=PASSWORD reboot"><a name="id2541199"/><h4>DOM RENAMECOMPUTER <em class="replaceable"><code>newname=NEWNAME</code></em> <em class="replaceable"><code>account=ACCOUNT</code></em> <em class="replaceable"><code>password=PASSWORD</code></em> <em class="replaceable"><code>reboot</code></em></h4><p>
 ドメインに参加しているコンピュータの名前を変更する。このコマンドは以下のサブパ
 ラメータをサポートする:
 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="replaceable"><code>NEWNAME</code></em> ドメイン中の新しいマシンの名前を定義する。</p></li><li class="listitem"><p><em class="replaceable"><code>ACCOUNT</code></em> ドメイン中でマシンの名前を変
@@ -429,18 +438,18 @@ evtファイルのインポートとエクスポートは、<span class="emphasi
 Administratorとして接続し、ドメインに参加しているコンピュータの名前を、
 MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、
 XPNEWに変更している。変更が成功したら、コンピュータをリブートする。
-</p></div></div><div class="refsect2" title="G_LOCK"><a name="id2541342"/><h3>G_LOCK</h3><p>グローバルロックの管理</p><div class="refsect3" title="G_LOCK DO lockname timeout command"><a name="id2541351"/><h4>G_LOCK DO <em class="replaceable"><code>lockname</code></em> <em class="replaceable"><code>timeout</code></em> <em class="replaceable"><code>command</code></em></h4><p>
+</p></div></div><div class="refsect2" title="G_LOCK"><a name="id2541309"/><h3>G_LOCK</h3><p>グローバルロックの管理</p><div class="refsect3" title="G_LOCK DO lockname timeout command"><a name="id2541318"/><h4>G_LOCK DO <em class="replaceable"><code>lockname</code></em> <em class="replaceable"><code>timeout</code></em> <em class="replaceable"><code>command</code></em></h4><p>
 グローバルロック配下でシェルを実行する。これはいくつかのシェルコマンドが実行される
 順番を定義するのに便利かもしれない。ロック情報は<code class="filename">g_lock.tdb</code>
 というファイルに格納される。CTDBが動作しているセットアップ時には、ロック情報は
 すべてのクラスタノードで有効である。
-</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="replaceable"><code>LOCKNAME</code></em>はグローバルロックの名前を定義する。</p></li><li class="listitem"><p><em class="replaceable"><code>TIMEOUT</code></em>はタイムアウトを定義する。</p></li><li class="listitem"><p><em class="replaceable"><code>COMMAND</code></em>は実行するシェルコマンドを定義する。</p></li></ul></div></div><div class="refsect3" title="G_LOCK LOCKS"><a name="id2541412"/><h4>G_LOCK LOCKS</h4><p>
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><em class="replaceable"><code>LOCKNAME</code></em>はグローバルロックの名前を定義する。</p></li><li class="listitem"><p><em class="replaceable"><code>TIMEOUT</code></em>はタイムアウトを定義する。</p></li><li class="listitem"><p><em class="replaceable"><code>COMMAND</code></em>は実行するシェルコマンドを定義する。</p></li></ul></div></div><div class="refsect3" title="G_LOCK LOCKS"><a name="id2541379"/><h4>G_LOCK LOCKS</h4><p>
 現在存在するすべてのロック名を表示する。
-</p></div><div class="refsect3" title="G_LOCK DUMP lockname"><a name="id2541424"/><h4>G_LOCK DUMP <em class="replaceable"><code>lockname</code></em></h4><p>
+</p></div><div class="refsect3" title="G_LOCK DUMP lockname"><a name="id2541391"/><h4>G_LOCK DUMP <em class="replaceable"><code>lockname</code></em></h4><p>
 特定のグローバルロックのロックテーブルをダンプする。
-</p></div></div><div class="refsect2" title="HELP [COMMAND]"><a name="id2541439"/><h3>HELP [COMMAND]</h3><p>指定されたコマンドの使用方法の情報を提供する。</p></div></div><div class="refsect1" title="バージョン"><a name="id2541451"/><h2>バージョン</h2><p>このマニュアルページは Samba 3 用のものである。</p></div><div class="refsect1" title="著者"><a name="id2541462"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+</p></div></div><div class="refsect2" title="HELP [COMMAND]"><a name="id2541407"/><h3>HELP [COMMAND]</h3><p>指定されたコマンドの使用方法の情報を提供する。</p></div></div><div class="refsect1" title="バージョン"><a name="id2541419"/><h2>バージョン</h2><p>このマニュアルページは Samba 3 用のものである。</p></div><div class="refsect1" title="著者"><a name="id2541430"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
 	開発されているような方法でのオープンソースプロジェクトである
-	Samba Team によって開発された。</p><p>net マニュアルページは Jelmer Vernoij によって執筆された。</p></div><div class="refsect1" title="日本語訳"><a name="id2541483"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.5.3 - 3.5.4 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
+	Samba Team によって開発された。</p><p>net マニュアルページは Jelmer Vernoij によって執筆された。</p></div><div class="refsect1" title="日本語訳"><a name="id2541450"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.5.3 - 3.5.4 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>たかはし もとのぶ (monyo@samba.gr.jp)</p></li><li class="listitem"><p>山田 史朗 (shiro@miraclelinux.com)</p></li></ul></div><p>	
        によって行なわれた。</p><p>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</p><p>Samba 3.2.4 - 3.5.4 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</p></div></div></body></html>
