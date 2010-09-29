@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="install">
 <chapterinfo>
@@ -11,54 +11,51 @@
 
 </chapterinfo>
 
-<title>SAMBAのインストールとテスト方法</title>
+<title>How to Install and Test SAMBA</title>
 
 <sect1>
-	<title>Sambaの入手とインストール</title>
+	<title>Obtaining and Installing Samba</title>
 
 	<para>
-	<indexterm><primary>パッケージ</primary></indexterm>
-        Sambaのバイナリパッケージは、ほとんどのLinuxかUNIXディストリビューション
-        に含まれている。また、
-        <ulink url="http://samba.org/">the Samba home page(本家)</ulink>にも
-        いくつかのパッケージが置いてある。使用するOSに合わせたパッケージのイン
-        ストールの詳細については、OSのマニュアルを参照してほしい。
+	<indexterm><primary>packages</primary></indexterm>
+	Binary packages of Samba are included in almost any Linux or UNIX distribution. There are also some
+	packages available at <ulink url="http://samba.org/">the Samba home page</ulink>. Refer to the manual of your
+	operating system for details on installing packages for your specific operating system.
 	</para>
 
 	<para>
-	<indexterm><primary>コンパイル</primary></indexterm>
-        もしもソースからSambaをコンパイルすることが必要ならば、
-	<link linkend="compiling">Sambaのコンパイル方法</link>を参照してほしい。
+	<indexterm><primary>compile</primary></indexterm>
+	If you need to compile Samba from source, check <link linkend="compiling">How to Compile Samba</link>.
 	</para>
 
 </sect1>
 
 <sect1>
-	<title>Sambaの設定 (smb.conf)</title>
+	<title>Configuring Samba</title>
 
 	<para>
 	<indexterm><primary>/etc/samba/smb.conf</primary></indexterm>
 	<indexterm><primary>SWAT</primary></indexterm>
-        Sambaの設定は&smb.conf;ファイルに格納され、それは、通常
-	<filename>/etc/samba/smb.conf</filename> か 
-        <filename>/usr/local/samba/lib/smb.conf</filename>にある。このファイル
-        を自分自身で編集するか、あるいは、たとえば、Sambaに含まれているWebベー
-        スのインタフェースSWATのような、種々のGUIツールのどれかを使って編集する
-        ことができる。
+	Samba has two configuration methods. First method , using the &smb.conf; file, which usually resides in
+	<filename>/etc/samba/smb.conf</filename> or <filename>/usr/local/samba/lib/smb.conf</filename>.
+	You can either edit this file yourself or do it using one of the many graphical tools that
+	are available, such as the Web-based interface SWAT, that is included with Samba.<para>
+	<para>
+	Second method is registory-based configuration , which describe <parameter>config backend</parameter>
+	or <parameter>include = registory</parameter> parameter. The syntax of configuration
+	similar the description method of &smb.conf.  So We explain the syntax of &smb.conf first.
 	</para>
 
 	<sect2>
-	<title>設定ファイルの文法</title>
+	<title>Configuration File(smb.conf) Syntax</title>
 
 	<para>
-	<indexterm><primary>セクション名</primary></indexterm>
-	&smb.conf; ファイルは、昔のWindows 3.1で使われていたいろいろな
-        <filename>.ini</filename>ファイルと同じ文法を使う。おのおののファイル
-        はいくつかのセクションからなり、それらは行の先頭が大括弧
-        (<literal>[]</literal>)で囲まれた、セクション名から開始される。それぞれ
-        は0またはそれ以上の、等号(<literal>=</literal>)で分離されたキー/値ペア
-        を含む。ファイルは単なるテキストファイルなので、好みの編集ツールで開い
-        て編集できる。
+	<indexterm><primary>section name</primary></indexterm>
+	The &smb.conf; file uses the same syntax as the various old <filename>.ini</filename> files in Windows
+	3.1: Each file consists of various sections, which are started by putting the section name between brackets
+	(<literal>[]</literal>) on a new line. Each contains zero or more key/value pairs separated by an equality
+	sign (<literal>=</literal>). The file is just a plaintext file, so you can open and edit it with your favorite
+	editing tool.
 	</para>
 
 	<para>
@@ -68,15 +65,13 @@
 	<indexterm><primary>spooler.</primary></indexterm>
 	<indexterm><primary>print</primary><secondary>spooler</secondary></indexterm>
 	<indexterm><primary>spool</primary><secondary>directory</secondary></indexterm>
-        &smb.conf;ファイル中にあるおのおののセクションは、共有か、Sambaサーバ上
-        のメタサービスを記述している。<literal>[global]</literal>セクションは特
-        別であり、Sambaサーバ全体にたいして適用する設定を含む。Sambaは複数の
-        メタサービスをサポートし、おのおのは固有の機能を提供する。例えば、
-        <literal>[homes]</literal>共有は、メタサービスであり、おのおののユーザ
-        のための、個別のホーム共有を提供させる。<literal>[printers]</literal>は
-        メタサービスであり、プリントキューサポートを確立し、それは、Windows
-        クライアントから、UNIX/Linuxプリントスプーラに対してプリントジョブが
-        送られることに先立ち、中間スプールディレクトリの位置を指定する。
+	Each section in the &smb.conf; file represents either a share or a meta-service on the Samba server. The
+	section <literal>[global]</literal> is special, since it contains settings that apply to the whole Samba
+	server.  Samba supports a number of meta-services, each of which serves its own purpose. For example, the
+	<literal>[homes]</literal> share is a meta-service that causes Samba to provide a personal home share for
+	each user. The <literal>[printers]</literal> share is a meta-service that establishes print queue support
+	and that specifies the location of the intermediate spool directory into which print jobs are received
+	from Windows clients prior to being dispatched to the UNIX/Linux print spooler.
 	</para>
 
 	<para>
@@ -86,38 +81,32 @@
 <indexterm><primary>lpstat</primary></indexterm>
 <indexterm><primary>CUPS API</primary></indexterm>
 <indexterm><primary>browseable</primary></indexterm>
-	<literal>printers</literal> メタサービスは、<literal>printcap</literal>
-        ファイル中で指定されたものか、<command>lpstat</command>コマンドか
-        CUPS API経由かでのすべてのプリンタを共有プリントキューとして公開する
-        ようにする。&smb.conf;ファイル中の<literal>printers</literal>節は
-        browseable でないように設定できる。もしもbrowseableに設定すると、
-        共有として見えるようになる。これは、WindowsプリントキューとしてUNIX
-        システムプリンタを有効にするのみ反応するこのメタサービスをTmakes no
-        sense。もしも、<literal>comment</literal>パラメータが指定されるならば、
-        その値がWindowsエクスプローラのブラウズリスト中にプリンタ名の一部と
-        して表示される。
+	The <literal>printers</literal> meta-service will cause every printer that is either specified in a
+	<literal>printcap</literal> file, via the <command>lpstat</command>,  or via the CUPS API, to be
+	published as a shared print queue. The <literal>printers</literal> stanza in the &smb.conf; file can
+	be set as not browseable. If it is set to be browseable, then it will be visible as if it is a share.
+	That makes no sense given that this meta-service is responsible only for making UNIX system printers
+	available as Windows print queues. If a <literal>comment</literal> parameter is specified, the value
+	of it will be displayed as part of the printer name in Windows Explorer browse lists.
 	</para>
 
 	<para>
-	<indexterm><primary>節</primary></indexterm>
-        共有またはメタサービスを指定する&smb.conf;ファイル中のおのおののセクション
-        は節(stanza)と呼ばれる(訳注:日本ではセクションという呼び名が通用している
-        ため、以下はすべてセクションとする)。<literal>global</literal>セクション
-        は&smb.conf;ファイル中のすべての他のセクションに影響する設定を指定する。
-        設定パラメータは&smb.conf;マニュアルページに説明がある。いくつかのパラメータ
-        は<literal>global</literal>セクションのみで使われ、その他いくつかは通常の
-        共有またはメタサービスセクションでのみ使われ、いくつかは、グローバルまたは
-        共有、メタサービスセクションで使える。
+	<indexterm><primary>stanza</primary></indexterm>
+	Each section of the &smb.conf; file that specifies a share, or a meta-service, is called a stanza.
+	The <literal>global</literal> stanza specifies settings that affect all the other stanzas in the
+	&smb.conf; file. Configuration parameters are documented in the &smb.conf; man page. Some parameters
+	can be used only in the <literal>global</literal> stanza, some only in share or meta-service stanzas,
+	and some can be used globally or just within a share or meta-service stanza.
 	</para>
 
 	<para>
-	<indexterm><primary>最小の</primary><secondary>設定</secondary></indexterm>
-	<link linkend="smbconfminimal">最小のsmb.conf</link> はとても小さい&smb.conf;を含む。
-	<indexterm><primary>最小の設定</primary></indexterm>
+	<indexterm><primary>minimal</primary><secondary>configuration</secondary></indexterm>
+	<link linkend="smbconfminimal">A minimal smb.conf</link> contains a very minimal &smb.conf;.
+	<indexterm><primary>minimal configuration</primary></indexterm>
 	</para>
 
 	<example id="smbconfminimal">
-		<title>最小のsmb.conf</title>
+		<title>A minimal smb.conf</title>
 		<smbconfblock>
 
 		<smbconfsection name="[global]"/>
@@ -133,208 +122,280 @@
 	</example>
 
 </sect2>
+<sect2>
+<title>Registry-based configuration</title>
+<!-- from smb.conf.5.xml -->
+	<para>
+		Starting with Samba version 3.2.0, the capability to
+		store Samba configuration in the registry is available.
+		The configuration is stored in the registry key
+		 <emphasis><literal>HKLM\Software\Samba\smbconf</literal></emphasis>.
+		There are two levels of registry configuration:
+	</para>
 
-<sect2 id="tdbdocs">
-	<title>TDBデータベースファイルの情報</title>
+	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
+		<listitem><para>Share definitions stored in registry are used.
+		This is triggered by setting the global 
+		parameter <parameter>registry shares</parameter>
+		to <quote>yes</quote> in <emphasis>smb.conf</emphasis>.
+		</para>
+
+		<para>The registry shares are loaded not at startup but
+		on demand at runtime by <emphasis>smbd</emphasis>.
+		Shares defined in <emphasis>smb.conf</emphasis> take
+		priority over shares of the same name defined in
+		registry.</para></listitem>
+
+		<listitem>
+		<para>Global <emphasis>smb.conf</emphasis>
+		options stored in registry are used. This can be activated
+		in two different ways:</para>
+
+		<para>Firstly, a registry only configuration is triggered
+		by setting
+		<smbconfoption name="config backend">registry</smbconfoption>
+		in the [global] section of <emphasis>smb.conf</emphasis>.
+		This resets everything that has been read from config files
+		to this point and reads the content of the global configuration
+		section from the registry.
+		This is the recommended method of using registry based
+		configuration.</para>
+
+		<para>Secondly, a mixed configuration can be activated
+		by a special new meaning of the parameter
+		<smbconfoption name="include">registry</smbconfoption>
+		in the [global] section of <emphasis>smb.conf</emphasis>.
+		This reads the global options from registry with the same
+		priorities as for an include of a text file.
+		This may be especially useful in cases where an initial
+		configuration is needed to access the registry.</para>
+
+		<para>Activation of global registry options automatically
+		activates registry shares. So in the registry only case,
+		shares are loaded on demand only.</para>
+		</listitem>
+	</orderedlist>
 
 	<para>
-        この節では、Samba-3で使われるデータベースの簡単な説明を含む。
+		Note: To make registry-based configurations foolproof
+		at least to a certain extent, the use
+		of <parameter>lock directory</parameter> and
+		 <parameter>config backend</parameter>
+		inside the registry configuration has been disabled:
+		Especially by changing the
+		 <parameter>lock directory</parameter> inside the registry
+		configuration, one would create a broken setup where the daemons
+		do not see the configuration they loaded once it is active.
 	</para>
 
 	<para>
-<indexterm><primary>tdbファイルの位置</primary></indexterm>
-        Sambaが格納するtdbファイルのディレクトリの位置は、コンパイル時オプ
-        ションによって変わる。Samba-3は2つの場所にtdbファイルを格納する。
-        その位置を決める最も良い方法は、以下のコマンドを実行する:
+		The registry configuration can be accessed with
+		tools like <emphasis>regedit</emphasis> or <emphasis>net (rpc)
+		registry</emphasis> in the key
+		 <emphasis><literal>HKLM\Software\Samba\smbconf</literal></emphasis>.
+
+		More conveniently, the <emphasis>conf</emphasis> subcommand of the
+		 <citerefentry><refentrytitle>net</refentrytitle>
+		<manvolnum>8</manvolnum></citerefentry> utility
+		offers a dedicated interface to read and write the
+		registry based configuration locally, i.e. directly
+		accessing the database file, circumventing the
+		server.
+	</para>
+
+
+</sect2>
+
+<sect2 id="tdbdocs">
+	<title>TDB Database File Information</title>
+
+	<para>
+	This section contains brief descriptions of the databases that are used by Samba-3.
+	</para>
+
+	<para>
+<indexterm><primary>tdb file locations</primary></indexterm>
+	The directory in which Samba stores the tdb files is determined by compile-time directives. Samba-3 stores
+	tdb files in two locations. The best way to determine these locations is to execute the following
+	command:
 <screen>
 &rootprompt; smbd -b | grep PRIVATE_DIR
    PRIVATE_DIR: /etc/samba/private
 </screen>
-        これは、秘密のtdbファイルが<filename>/etc/samba/private</filename>
-        ディレクトリに格納されることを意味している。Samba-3はまた、より
-        ありふれたデータを含むいくつかのtdbファイルを使う。それらのファイルの
-        位置は以下を実行することで見つけられる:
+	This means that the confidential tdb files are stored in the <filename>/etc/samba/private</filename>
+	directory. Samba-3 also uses a number of tdb files that contain more mundane data. The location of
+	these files can be found by executing:
 <screen>
 &rootprompt; smbd -b | grep LOCKDIR
    LOCKDIR: /var/lib/samba
 </screen>
-        それゆえ、例の中で表示されている残りの制御ファイルは
-	<filename>/var/lib/samba</filename> ディレクトリに格納される。
+	Therefore the remaining control files will, in the example shown, be stored in the
+	<filename>/var/lib/samba</filename> directory.
 	</para>
 
 	<para>
-<indexterm><primary>tdbファイルの説明</primary></indexterm>
-        継続的に使われるtdbファイルは
-        <link linkend="tdbpermfiledesc">継続的なTDBファイルの説明一覧</link>
-        にある。すべての継続的なtdbファイルは通常バックアップすべきである。
-        tdbファイルバックアップのために<command>tdbbackup</command>ユー
-        ティリティを使うこと。すべての継続的なtdbファイルはマシンの
-        マイグレーション、アップデートとアップグレードの間保存すべきである。
+<indexterm><primary>tdb file descriptions</primary></indexterm>
+	The persistent tdb files are described in <link linkend="tdbpermfiledesc">the Persistent TDB File
+	Descriptions table</link>. All persistent tdb files should be regularly backed up. Use the
+	<command>tdbbackup</command> utility to backup the tdb files. All persistent tdb files must be
+	preserved during machine migrations, updates and upgrades.
 	</para>
 
 	<para>
-        一時的なtdbファイルはバックアップの必要性はなく、マイグレーション、
-        アップデートとアップグレードの間保存する必要もない。一時的なtdb
-        ファイルは
-        <link linkend="tdbtempfiledesc">一時的なTDBファイルの説明</link>
-        に説明がある。
+	The temporary tdb files do not need to be backed up, nor do they need to be preseved across machine
+	migrations, updates or upgrades. The temporary tdb files are described in <link linkend="tdbtempfiledesc">
+	the Temporary TDB File Descriptions</link>.
 	</para>
 
-        <table frame='all' id="tdbpermfiledesc"><title>継続的なTDBファイルの説明</title>
+        <table frame='all' id="tdbpermfiledesc"><title>Persistent TDB File Descriptions</title>
         <tgroup cols='2'>
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
 			<colspec align="left"/>
                 <thead>
                 <row>
-                        <entry align="left">名前</entry>
-                        <entry align="justify">説明</entry>
+                        <entry align="left">Name</entry>
+                        <entry align="justify">Description</entry>
                 </row>
                 </thead>
                 <tbody>
 		<row>
 			<entry>account_policy</entry>
-			<entry><para>Samba/NTアカウントポリシーの設定、パスワード満了の設定を含む。</para></entry>
+			<entry><para>Samba/NT account policy settings, includes password expiration settings.</para></entry>
 		</row>
 		<row>
 			<entry>group_mapping</entry>
-			<entry><para>Windows グループ/SID から UNIXグループへのマッピングテーブル。</para></entry>
+			<entry><para>Mapping table from Windows groups/SID to UNIX groups.</para></entry>
 		</row>
 		<row>
 			<entry>ntdrivers</entry>
-			<entry><para>プリンタ単位の、インストール済みドライバ情報を格納。</para></entry>
+			<entry><para>Stores per-printer installed driver information.</para></entry>
 		</row>
 		<row>
 			<entry>ntforms</entry>
-			<entry><para>プリンタ単位の、インストール済みフォーム情報を格納。</para></entry>
+			<entry><para>Stores per-printer installed forms information.</para></entry>
 		</row>
 		<row>
 			<entry>ntprinters</entry>
-			<entry><para>プリンタ単位の、devmode構成設定情報を格納。</para></entry>
+			<entry><para>Stores the per-printer devmode configuration settings.</para></entry>
 		</row>
 		<row>
 			<entry>passdb</entry>
 			<entry><para>
-                                tdbsamパスワードバックエンドが使われる時のみ存
-                                在。このファイルはSambaSAMAccount情報を格納する。
-                                注意:このファイルは/etc/passwdファイルからか他
-                                の代替システムソースからのユーザのPOSIXアカウント
-                                を必要とする。
+				Exists only when the tdbsam passwd backend is used. This file stores the
+				SambaSAMAccount information. Note: This file requires that user POSIX account information is
+				available from either the /etc/passwd file, or from an alternative system source.
 			</para></entry>
 		</row>
 		<row>
 			<entry>registry</entry>
 			<entry><para>
-                                winreg RPC経由で種々のデータベーステーブルをエ
-                                クスポートすることをサポートするための、読み出
-                                し専用Windowsレジストリスケルトンデータベース。
+				Read-only Samba database of a Windows registry skeleton that provides support for exporting 
+				various database tables via the winreg RPCs.
 			</para></entry>
 		</row>
 		<row>
 			<entry>secrets</entry>
 			<entry><para>
-                                このファイルはWorkgroup/Domain/Machine SID、
-                                LDAPディレクトリ更新パスワードとSambaが正常に
-                                動作するために必要な重要な環境データのさらなる
-                                集合。このファイルには、秘匿しなければならない
-                                とても機密性のある情報が含まれている。このファ
-                                イルはPRIVATE_DIRディレクトリに格納される。
+				This file stores the Workgroup/Domain/Machine SID, the LDAP directory update password, and
+				a further collection of critical environmental data that is necessary for Samba to operate
+				correctly. This file contains very sensitive information that must be protected. It is stored
+				in the PRIVATE_DIR directory.
 			</para></entry>
 		</row>
 		<row>
 			<entry>share_info</entry>
-			<entry><para>共有単位のACL情報を格納。</para></entry>
+			<entry><para>Stores per-share ACL information.</para></entry>
 		</row>
 		<row>
 			<entry>winbindd_idmap</entry>
-			<entry><para>Winbinddのローカル IDMAPデータベース。</para></entry>
+			<entry><para>Winbindd's local IDMAP database.</para></entry>
 		</row>
 		</tbody>
 	</tgroup>
 	</table>
 
-        <table frame='all' id="tdbtempfiledesc"><title>一時的なTDBファイルの説明</title>
+        <table frame='all' id="tdbtempfiledesc"><title>Temporary TDB File Descriptions</title>
         <tgroup cols='3'>
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
 			<colspec align="left"/>
                 <thead>
                 <row>
-                        <entry align="left">名前</entry>
-                        <entry align="justify">説明</entry>
-                        <entry align="center">バックアップ</entry>
+                        <entry align="left">Name</entry>
+                        <entry align="justify">Description</entry>
+                        <entry align="center">Backup</entry>
                 </row>
                 </thead>
                 <tbody>
 		<row>
 			<entry>brlock</entry>
-			<entry><para>バイトレンジロック情報。</para></entry>
+			<entry><para>Byte-range locking information.</para></entry>
 			<entry>No</entry>
 		</row>
 		<row>
 			<entry>connections</entry>
-			<entry><para>最大接続数を拡張するために使われる一時的な接続上のキャッシュ。</para></entry>
+			<entry><para>A temporary cache for current connection information used to enforce max connections.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>eventlog/*tdb</entry>
-			<entry><para>イベントログエントリのレコードほとんどの環境ではこれはシステムログのキャッシュである。</para></entry>
+			<entry><para>Records of eventlog entries. In most circumstances this is just a cache of system logs.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>gencache</entry>
-			<entry><para>WINSサーバと信頼されるドメインデータのための汎用キャッシュデータベース。</para></entry>
+			<entry><para>Generic caching database for dead WINS servers and trusted domain data.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>login_cache</entry>
-			<entry><para>ログイン情報のための一時的なキャッシュで、特に不正なパスワード試行用。</para></entry>
+			<entry><para>A temporary cache for login information, in particular bad password attempts.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>messages</entry>
-			<entry><para>smbdによって処理されるメッセージの一時的な格納用。</para></entry>
+			<entry><para>Temporary storage of messages being processed by smbd.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>netsamlogon_cache</entry>
-			<entry><para>net_samloginリクエストからのユーザnet_info_3 構造データのキャッシュ(ドメインメンバとして)。</para></entry>
+			<entry><para>Caches user net_info_3 structure data from net_samlogon requests (as a domain member).</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>perfmon/*.tdb</entry>
-			<entry><para>パフォーマンスカウンタ情報。</para></entry>
+			<entry><para>Performance counter information.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>printing/*.tdb</entry>
-			<entry><para>プリントサービス単位で作成されるlpqコマンドのキャッシュされた出力。</para></entry>
+			<entry><para>Cached output from lpq command created on a per-print-service basis.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>schannel_store</entry>
 			<entry><para>
-                                機密ファイルで、PRIVATE_DIRに格納され、接続セッ
-                                トアッププロセスの再ネゴシエーションの必要なし
-                                で再接続可能な一時的な切断が可能になるための暗
-                                号化した接続情報を含む。
+				A confidential file, stored in the PRIVATE_DIR, containing crytographic connection
+				information so that clients that have temporarily disconnected can reconnect without
+				needing to renegotiate the connection setup process.
 			</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>sessionid</entry>
-			<entry><para>種々のセッション情報とutmp処理のための一時的なキャッシュ。</para></entry>
+			<entry><para>Temporary cache for miscellaneous session information and for utmp handling.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>unexpected</entry>
-			<entry><para>どのプロセスもリッスンしていない時に受け取ったパケットを格納する。</para></entry>
+			<entry><para>Stores packets received for which no process is actively listening.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>winbindd_cache</entry>
-			<entry><para>NT4ドメインかADSから受け取ったアイデンテティ
-                        情報のキャッシュ。ユーザリストなどを含む。</para></entry>
+			<entry><para>Cache of Identity information received from an NT4 domain or from ADS. Includes user
+				lists, etc.</para></entry>
 			<entry>yes</entry>
 		</row>
 		</tbody>
@@ -344,75 +405,64 @@
 </sect2>
 
 <sect2>
-	<title>Sambaを起動する</title>
+	<title>Starting Samba</title>
 
 	<para>
 	<indexterm><primary>daemon</primary></indexterm>
-        Sambaは2つまたは3つのdaemonから構成される。daemonはバックグラウンドで動
-        作し、サービスを提供するUNIXのアプリケーションである。サービスの例としては、
-        <command>httpd</command> と呼ばれるdaemonが Apache Webサーバである。
-        Sambaの場合は、3つのdaemonがあり、そのうち2つが最低必要である。
+	Samba essentially consists of two or three daemons. A daemon is a UNIX application that runs in the background and provides services.
+	An example of a service is the Apache Web server for which the daemon is called <command>httpd</command>. In the case of Samba there
+	are three daemons, two of which are needed as a minimum.
 	</para>
 
 	<para>
-        Sambaサーバは以下のdaemonから成り立っている:
+	The Samba server is made up of the following daemons:
 	</para>
 
 	<variablelist>
 		<varlistentry><term>nmbd</term>
 			<listitem><para>
-			<indexterm><primary>smbd</primary></indexterm>
-			<indexterm><primary>samba</primary><secondary>smbdの起動</secondary></indexterm>
-                        このdaemonはすべての名前登録と名前解決要求を処理する。
-                        これはネットワークブラウジング中で必要とされる主要な
-                        伝達手段である。これは、すべてのUDPベースのプロトコル
-                        を処理する。<command>nmbd</command>daemonはSamba開始
-                        プロセスの一部分として最初にコマンドを起動すべきである。
+			<indexterm><primary>nmbd</primary></indexterm>
+			<indexterm><primary>starting samba</primary><secondary>nmbd</secondary></indexterm>
+			This daemon handles all name registration and resolution requests. It is the primary vehicle involved
+			in network browsing. It handles all UDP-based protocols. The <command>nmbd</command> daemon should
+			be the first command started as part of the Samba startup process.
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>smbd</term>
 			<listitem><para>
-			<indexterm><primary>nmbd</primary></indexterm>
-			<indexterm><primary>samba</primary><secondary>nmbdの起動</secondary></indexterm>
-                        このdaemonはファイルと印刷関係の操作のための、TCP/IP
-                        ベースのすべてのコネクションサービスを処理する。また、
-                        ローカルでの認証も管理する。これは
-                        <command>nmbd</command>の開始に引き続いて起動すべきで
-                        ある。
+			<indexterm><primary>smbd</primary></indexterm>
+			<indexterm><primary>starting samba</primary><secondary>smbd</secondary></indexterm>
+			This daemon handles all TCP/IP-based connection services for file- and print-based operations. It also
+			manages local authentication. It should be started immediately following the startup of <command>nmbd</command>.
 			</para></listitem>
 		</varlistentry>
 
 		<varlistentry><term>winbindd</term>
 			<listitem><para>
 			<indexterm><primary>winbindd</primary></indexterm>
-			<indexterm><primary>samba</primary><secondary>winbinddの起動</secondary></indexterm>
-                        このdaemonはWindows NT4またはADSドメインのメンバの時に
-                        起動すべきである。また、他のドメインとの信頼関係を結ぶ
-                        時にも必要である。<command>winbindd</command>daemonは
-                        <parameter>idmap uid</parameter>と
-                        <parameter>idmap gid</parameter>パラメータが&smb.conf;
-                        ファイル中に存在するかどうかをチェックする。もしもそれ
-                        らが見つかった場合、<command>winbindd</command>はUIDと
-                        GIDの割り当てのために指定された値を使う。もしも、パラメー
-                        タが指定されていなければ、<command>winbindd</command>
-                        は起動するが、UIDとGIDの割り当てが出来ない。
+			<indexterm><primary>starting samba</primary><secondary>winbindd</secondary></indexterm>
+			This daemon should be started when Samba is a member of a Windows NT4 or ADS domain. It is also needed when
+			Samba has trust relationships with another domain. The <command>winbindd</command> daemon will check the
+			&smb.conf; file for the presence of the <parameter>idmap uid</parameter> and <parameter>idmap gid</parameter>
+			parameters. If they are are found, <command>winbindd</command> will use the values specified for
+			for UID and GID allocation. If these parameters are not specified, <command>winbindd</command>
+			will start but it will not be able to allocate UIDs or GIDs.
 			</para></listitem>
 		</varlistentry>
 	</variablelist>
 
 	<para>
-	<indexterm><primary>process</primary><secondary>の開始</secondary></indexterm>
-        SambaがOSベンダによってパッケージ化されている時、開始プロセスは通常プラッ
-        トフォーム全体に渡って統合された固有の機能となっている。Sambaの起動の正
-        しい管理に関する特定の情報のためにOSプラットフォームの管理マニュアルを
-        参照してほしい。
+	<indexterm><primary>startup</primary><secondary>process</secondary></indexterm>
+	When Samba has been packaged by an operating system vendor, the startup process is typically a custom feature of its
+	integration into the platform as a whole. Please refer to your operating system platform administration manuals for
+	specific information pertaining to correct management of Samba startup.
 	</para>
 
 </sect2>
 	
 <sect2>
-	<title>設定の例</title>
+	<title>Example Configuration</title>
 	
 	<para>
 	<indexterm><primary>examples</primary></indexterm>
@@ -420,24 +470,21 @@
 	<indexterm><primary>distribution</primary></indexterm>
 	<indexterm><primary>tarball</primary></indexterm>
 	<indexterm><primary>package</primary></indexterm>
-        ディストリビューションtarファイル中にのソースコードのexamplesサブディレ
-        クトリ中にサンプルの設定ファイルがある。実際問題としてオプションがどの
-        ように組み合わさるかを見る事が出来るので、注意深く読むことを推奨する。
-        すべてのオプションはマニュアルページを見よ。必要があることに適用するた
-        めと、<filename>smb.conf.default</filename>ファイルを設定し始めること
-        は価値があるかもしれない。そこには多くのコメントが書いてある。
+	There are sample configuration files in the examples subdirectory in the source code distribution tarball
+	package. It is suggested you read them carefully so you can see how the options go together in practice. See
+	the man page for all the options.  It might be worthwhile to start out with the
+	<filename>smb.conf.default</filename> configuration file and adapt it to your needs. It contains plenty of comments.
 	</para>
 
 	<para>
-	<indexterm><primary>一番簡単な</primary><secondary>設定</secondary></indexterm>
-        最も簡単に使える設定ファイルは
-	<link linkend="simple-example">もう1つ別の簡単なsmb.confファイル</link>
-        中で見る事ができるようなものを含んでいる。
-	<indexterm><primary>簡単な設定</primary></indexterm>
+	<indexterm><primary>simplest</primary><secondary>configuration</secondary></indexterm>
+	The simplest useful configuration file would contain something like that shown in
+	<link linkend="simple-example">Another simple smb.conf File</link>.
+	<indexterm><primary>simple configuration</primary></indexterm>
 	</para>
 
 <example id="simple-example">
-<title>もう一つ別の簡単なsmb.confファイル</title>
+<title>Another simple smb.conf File</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
 <smbconfoption name="workgroup">&example.workgroup;</smbconfoption>
@@ -453,74 +500,66 @@
 	<indexterm><primary>account</primary></indexterm>
 	<indexterm><primary>login name</primary></indexterm>
 	<indexterm><primary>service name</primary></indexterm>
-        これは、サーバ上にアカウントを持つ誰でも、ログイン名かサービス名
-        として、<smbconfsection name="homes"/>への接続を許す。
-        (注意:Sambaが使うワークグループ名も設定する必要がある。既定値の
-        ワークグループ名はWORKGROUPである。)
+	This will allow connections by anyone with an account on the server, using either
+	their login name or <smbconfsection name="homes"/> as the service name.
+	(Note: The workgroup that Samba should appear in must also be set. The default
+	workgroup name is WORKGROUP.)
 	</para>
 	
 	<para>
 	<indexterm><primary>smbd</primary></indexterm>
-        正しい場所に&smb.conf;ファイルをきちんと置くこと。正しい場所は、
-        バイナリファイルの構築方法に依存することに注意。正しい場所を知る
-        ためには、以下の<command>smbd</command>コマンド行を実行することで
-        わかる:
+	Make sure you put the &smb.conf; file in the correct place. Note, the correct location of this file
+	depends on how the binary files were built. You can discover the correct location by executing from
+	the directory that contains the <command>smbd</command> command file:
 <screen>
 &rootprompt; smbd -b | grep smb.conf
 </screen>
 	</para>
 
 	<para>
-	<indexterm><primary>security</primary><secondary>設定</secondary></indexterm>
-	<smbconfsection name="[homes]"/>共有に対するセキュリティ設定の詳しい情報は 
-	<link linkend="securing-samba">Sambaのセキュア化</link>を参照してほしい。
+	<indexterm><primary>security</primary><secondary>settings</secondary></indexterm>
+	For more information about security settings for the <smbconfsection name="[homes]"/> share, please refer to 
+	<link linkend="securing-samba">Securing Samba</link>.
 	</para>
 
 <sect3>
-	<title><command>testparm</command>による設定ファイルの検査</title>
+	<title>Test Your Config File with <command>testparm</command></title>
 
 	<para>
 	<indexterm><primary>validate</primary></indexterm>
 	<indexterm><primary>testparm</primary></indexterm>
 	<indexterm><primary>misconfigurations</primary></indexterm>
-        &testparm;プログラムを使って&smb.conf;ファイルの内容を検査することは
-        重要である。もしもtestparmが正しく動けば、設定されたサービスの一覧を
-        表示する。もしもそうでなければ、エラーメッセージを表示する。それが
-        正しく動くようにして、動かす前にサービスが合理的であるようにすること。
-        以下のコマンドを入力する:
+	It's important to validate the contents of the &smb.conf; file using the &testparm; program.
+	If testparm runs correctly, it will list the loaded services. If not, it will give an error message.
+	Make sure it runs correctly and that the services look reasonable before proceeding. Enter the command: 
 	<screen>
 	&rootprompt; testparm /etc/samba/smb.conf
 	</screen>
-        Testparmは設定ファイルを解析し、不正な文法や不明なパラメータを報告する。
-        また、共通の設定ミスをチェックし、それが見つかれば警告を発する。
+	Testparm will parse your configuration file and report any unknown parameters or incorrect syntax.
+	It also performs a check for common misconfigurations and will issue a warning if one is found.
 	</para>
 
 	<para>
-        &smb.conf;ファイルを変更した後には必ずtestparmを実行すること!
+	Always run testparm again whenever the &smb.conf; file is changed!
 	</para>
 
 	<para>
 	<indexterm><primary>smbd</primary></indexterm>
 	<indexterm><primary>nmbd</primary></indexterm>
 	<indexterm><primary>winbindd</primary></indexterm>
-	<indexterm><primary>設定の</primary><secondary>文書</secondary></indexterm>
-        &smb.conf;ファイルは<command>smbd</command>daemonによって定期的にチェッ
-        クされ、
-        <command>nmbd</command>と<command>winbindd</command>によりそれがspawnさ
-        れる毎インスタンスごとにチェックされる。可能な限りこのファイルを小さく
-        しておくことはよいことである。多くの管理者はSamba設定を文書化すること
-        を好み、そのため、このファイルを小さくしておくことは、賢明な文書化手法
-        である。これを適用する1つの解決方法は、
-        <filename>smb.conf.master</filename>というような名前で別のファイルに、
-        すべての文書と設定を1つにまとめておくことである。
-        <command>testparm</command>ユーティリティは、以下のように、マスタの
-        設定および文書ファイルから完全に最適化された&smb.conf;ファイルを作成
-        するのに使える:
+	<indexterm><primary>configuration</primary><secondary>documentation</secondary></indexterm>
+	The &smb.conf; file is constantly checked by the Samba daemons <command>smbd</command> and every instance of
+	itself that it spawns, <command>nmbd</command> and <command>winbindd</command>. It is good practice to
+	keep this file as small as possible. Many administrators prefer to document Samba configuration settings
+	and thus the need to keep this file small goes against good documentation wisdom. One solution that may
+	be adopted is to do all documentation and configuration in a file that has another name, such as
+	<filename>smb.conf.master</filename>. The <command>testparm</command> utility can be used to generate a
+	fully optimized &smb.conf; file from this master configuration and documentation file as shown here:
 <screen>
 &rootprompt; testparm -s smb.conf.master > smb.conf
 </screen>
-        この管理手法は最小限の必要性のために&smb.conf;ファイルサイズを同じ時に
-        保つ間詳細な設定変更レコードをメンテナンスすることを可能にする。
+	This administrative method makes it possible to maintain detailed configuration change records while at
+	the same time keeping the working &smb.conf; file size to the minimum necessary.
 	</para>
 
 </sect3>
@@ -531,30 +570,27 @@
 
 	<para>
 	<indexterm><primary>swat</primary></indexterm>
-        SWATはWebベースの、Sambaの設定を行うために使うことが出来るインタフェー
-        スである。SWATはあなたのプラットフォームでSambaパッケージで有効になって
-        いないかもしれないが、分離したパッケージになっているかもしれない。もし
-        もSWATを構築することが必要ならば、編集に注意してSWATのマニュアルページ
-        を読んでソースコードからSWATを構成してインストールしてほしい。
+	SWAT is a Web-based interface that can be used to facilitate the configuration of Samba.  SWAT might not
+	be available in the Samba package that shipped with your platform, but in a separate package. If you need to build SWAT please read the SWAT man page regarding compilation, installation, and
+	configuration of SWAT from the source code.
 	</para>
 
 	<para>
-        SWATを起動するために、好みのブラウザを起動し、
-	<ulink url="http://localhost:901/" noescape="1">http://localhost:901/</ulink>
-        を指定する。
-        Sambaを動かしているコンピュータがブラウザが動いているコンピュータと異な
-        るならば、<replaceable>localhost</replaceable>の部分を置き換えること。
+	To launch SWAT, just run your favorite Web browser and point it to
+	<ulink url="http://localhost:901/" noescape="1">http://localhost:901/</ulink>.
+	Replace <replaceable>localhost</replaceable> with the name of the computer on which
+	Samba is running if that is a different computer than your browser.
 	</para>
 
 	<para>
-        SWATは任意のIP接続されたマシンからブラウザ経由で使えるが、平文でパスワー
-        ドがネットワーク上を流れ、盗聴の危険性があることに注意してほしい。
+	SWAT can be used from a browser on any IP-connected machine, but be aware that connecting from a remote
+	machine leaves your connection open to password sniffing because passwords will be sent over the wire in the clear.
 	</para>
 
 	<para>
-        SWATについての詳細な情報は、
-        <link linkend="SWAT">The Samba Web Administration Tool</link>
-        にある。
+	Please note that re-writing the configuration file using SWAT will
+	remove all comments!
+	More information about SWAT can be found in <link linkend="SWAT">The Samba Web Administration Tool</link>.
 	</para>
 
 </sect2>
@@ -562,11 +598,11 @@
 </sect1>
 
 <sect1>
-	<title>サーバ上で有効な共有の一覧表示</title>
+	<title>List Shares Available on the Server</title>
 
 	<para>
-        設定済みのSambaサーバから有効な共有の一覧を表示するには、以下の
-        コマンドを実行する:
+	To list shares that are available from the configured Samba server, execute the
+	following command:
 	</para>
 
 <para><screen>
@@ -574,37 +610,34 @@
 </screen></para>
 
 	<para>
-        サーバ上で有効の共有の一覧が表示される。もしもそうでなければ、設定が
-        どこか間違っている。この方法はたとえばWindows 2000のような、他のSMB
-        サーバの共有が有効かと言うことにも使える。
+	You should see a list of shares available on your server. If you do not, then
+	something is incorrectly configured. This method can also be used to see what shares 
+	are available on other SMB servers, such as Windows 2000.
 	</para>
 
 	<para>
-        もしも、ユーザレベルのセキュリティを選択しているならば、共有の一覧を表
-        示する前にパスワードを要求してくる。詳細は<command>smbclient</command>
-        のマニュアルページを参照のこと。コマンドラインに<option>-N</option>
-        オプションを追加することで、パスワード要求なしに共有の一覧を表示出来る。
+	If you choose user-level security, you may find that Samba requests a password
+	before it will list the shares. See the <command>smbclient</command> man page for details.
+	You can force it to list the shares without a password by adding the option
+	<option>-N</option> to the command line. 
 	</para>
 </sect1>
 
 <sect1>
-	<title>UNIXクライアントによる接続</title>
+	<title>Connect with a UNIX Client</title>
 	
 	<para>
-        以下のコマンドを入力する:
+	Enter the following command:
 <screen>
 &prompt;<userinput>smbclient <replaceable> //yourhostname/aservice</replaceable></userinput>
 </screen></para>
 	
-	<para>通常<replaceable>yourhostname</replaceable>は&smbd;が
-        インストールされたホストの名前である。
-        <replaceable>aservice</replaceable>は&smb.conf;ファイル中にある任意の
-        サービスである。&smb.conf;ファイル中の
-        <smbconfsection name="[homes]"/>セクションがあるならばusernameを試みる
-        こと。</para>
+	<para>Typically <replaceable>yourhostname</replaceable> is the name of the host on which &smbd;
+	has been installed. The <replaceable>aservice</replaceable> is any service that has been defined in the &smb.conf;
+	file. Try your username if you just have a <smbconfsection name="[homes]"/> section in the &smb.conf; file.</para>
 
-	<para>例:もしもUNIXホストが<replaceable>bambi</replaceable>で有効な
-        ログイン名が<replaceable>fred</replaceable>ならば、以下のように入力:</para>
+	<para>Example: If the UNIX host is called <replaceable>bambi</replaceable> and a valid login name
+	is <replaceable>fred</replaceable>, you would type:</para>
 
 <para><screen>
 &prompt;<userinput>smbclient //<replaceable>bambi</replaceable>/<replaceable>fred</replaceable></userinput>
@@ -612,19 +645,16 @@
 </sect1>
 
 <sect1>
-	<title>リモートのSMBクライアントからの接続</title>
+	<title>Connect from a Remote SMB Client</title>
 
 	<para>
-        Sambaがローカルで正しく動いている時には、他のクライアントからアクセスを
-        試みることが出来る。数分以内に、Sambaホストは同一のサブネット上のすべて
-        のWindowsクライアント上のマイネットワーク上(Network Neighborhood)に表示
-        される。他のクライアントからサーバをブラウズするかそれをマウントするこ
-        とを試みる。
+	Now that Samba is working correctly locally, you can try to access it from other clients. Within a few
+	minutes, the Samba host should be listed in the Network Neighborhood on all Windows clients of its subnet.
+	Try browsing the server from another client or "mounting" it.
 	</para>
 
 	<para>
-        DOS、Windows、あるいはOS/2クライアントからのマウントは以下のコマンドを
-        動かすことで行える:
+	Mounting disks from a DOS, Windows, or OS/2 client can be done by running a command such as:
 <screen>
 &dosprompt;<userinput>net use m: \\servername\service</userinput>
 </screen>
@@ -637,10 +667,9 @@
 <screen>
 &dosprompt;<userinput>net use lpt1:	\\servername\spoolservice</userinput>
 </screen>
-	<literal>spoolservice</literal>は対象のサーバ上のプリンタの名前(実際
-        にはプリントキュー)である。これは、指定されたspoolserviceが所有する
-        プリンタに送られるWinbowsクライアント上のlpt1:ポートでキャプチャされ
-        たすべてのプリントジョブを許可する。
+	The <literal>spoolservice</literal> is the name of the printer (actually the print queue) on the target
+	server. This will permit all print jobs that are captured by the lpt1: port on the Windows client to
+	be sent to the printer that owns the spoolservice that has been specified.
 	</para>
 
 <para>
@@ -648,46 +677,40 @@
 </screen></para>
 
 	<sect2>
-	<title>うまく動かない時には</title>
+	<title>What If Things Don't Work?</title>
 	
 	<para>
-	<link linkend="diagnosis">Sambaチェックリスト</link>を読んでみてもよい。
-        もしもまだ行き詰まっているならば、
-        <link linkend="problems">Sambaの問題の解析と解決</link>を参照しよう。
-        Sambaは世界中でとてもたくさん正常にインストールされている。あなたの
-        特定の問題が固有であれば、あなたの問題に誰かが遭遇し、それを克服する
-        方法を見つけていることを発見するために、インターネット上での検索を実
-        行することは生産的かもしれない。
+	You might want to read <link linkend="diagnosis">The Samba Checklist</link>.  If you are still
+	stuck, refer to <link linkend="problems">Analyzing and Solving Samba Problems</link>.  Samba has
+	been successfully installed at thousands of sites worldwide.  It is unlikely that your particular problem is
+	unique, so it might be productive to perform an Internet search to see if someone else has encountered your
+	problem and has found a way to overcome it.
 	</para>
 
 	<para>
-        もしも、Sambaを使うのが初めてで、特にWindowsかUNIX/Linuxののネット
-        ワーキング初心者ならば、<quote>Samba-3 by Example</quote>という本
-        (訳注:Sambaのドキュメントの一部にもなっている)は評価済みのネットワーク
-        環境を作るのに手助けとなるだろう。最もサイトのニーズに適合するネット
-        ワークデザインがある最初の五章から単に選び、それを展開するための
-        単純な段階的手順を取りなさい。その後、ネットワークが動き、更に改良の
-        ための機会のための知識の取得のためには、この本を再度参照しよう。
+	If you are new to Samba, and particularly if you are new to Windows networking, or to UNIX/Linux,
+	the book <quote>Samba-3 by Example</quote> will help you to create a validated network environment.
+	Simply choose from the first five chapters the network design that most closely matches site needs,
+	then follow the simple step-by-step procedure to deploy it. Later, when you have a working network
+	you may well want to refer back to this book for further insight into opportunities for improvement.
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>まだ解決しない?</title>
+	<title>Still Stuck?</title>
 
 	<para>
-        惨めなフラストレーションのストレスに対する最高のアドバイスは、クールダウ
-        ンすることである!それはそれ自身挑戦かもしれないが、怒っているか、
-        悩んでいる間、解決策を探すことは難しくなる。頭を冷やせば、探している
-        答えを見つかることにつながる。繰り返すが、すべての問題は解決策がある
-        &smbmdash;今そうすることが出来なくとも、誰かがそれを見つけるよい機会が
-        ある。それは時間、忍耐と学習で変わる。
+	The best advice under the stress of abject frustration is to cool down! That may be challenging
+	of itself, but while you are angry or annoyed your ability to seek out a solution is somewhat
+	undermined. A cool head clears the way to finding the answer you are looking for. Just remember,
+	every problem has a solution &smbmdash; there is a good chance that someone else has found it
+	even though you can't right now. That will change with time, patience and learning.
 	</para>
 
 	<para>
-        少しクールダウンしたなら、
-        <link linkend="diagnosis">the Samba Checklist</link>を、問題の原因を
-        確認するために行う事が出来る手順を確認するために参照してほしい。
+	Now that you have cooled down a bit, please refer to <link linkend="diagnosis">the Samba Checklist</link>
+	for a process that can be followed to identify the cause of your problem.
 	</para>
 
 	</sect2>
@@ -695,76 +718,70 @@
 </sect1>
 
 <sect1>
-<title>共通のエラー</title>
+<title>Common Errors</title>
 
 <para>
-以下の質問と問題はSambaメーリングリスト上で繰り返し発生するものである。
+The following questions and issues are raised repeatedly on the Samba mailing list.
 </para>
 
 <sect2>
-	<title>大量のsmbdプロセス</title>
+	<title>Large Number of smbd Processes</title>
 
 	<para>
-        Sambaの3つの中心的なプログラムは:&nmbd;, &smbd;, と &winbindd;である。
-        &nmbd;はネームサーバメッセージdaemonで、&smbd;はサーバメッセージ
-        daemonで、&winbindd;はドメインコントローラとの間での通信を処理する
-        daemonである。
+	Samba consists of three core programs: &nmbd;, &smbd;, and &winbindd;. &nmbd; is the name server message daemon,
+	&smbd; is the server message daemon, and &winbindd; is the daemon that handles communication with domain controllers.
 	</para>
 
 	<para>
-        もしもSambaがWINSサーバとして動作して<emphasis>いない</emphasis>ならば、
-        システム上には1つの&nmbd;インスタンスが動作する。もしもWINSサーバとして
-        動作するならば、2つのインスタンスがある。&smbmdash;1つはWINS要求を処理
-        する。
+	If Samba is <emphasis>not</emphasis> running as a WINS server, then there will be one single instance of
+	 &nmbd; running on your system. If it is running as a WINS server, then there will be
+	two instances &smbmdash; one to handle the WINS requests.
 	</para>
 
 	<para>
-	&smbd; はすべての接続要求を処理する。おのおののクライアントに対する
-        接続が終わると新しいプロセスがspawnする。それゆえ、クライアント接続毎
-        にたくさんのdaemonが存在する。
+	&smbd; handles all connection requests. It spawns a new process for each client
+	connection made. That is why you may see so many of them, one per client connection.
 	</para>
 
 	<para>
-	&winbindd;は1つまたは2つのdaemonで動作し、
-        <emphasis>split mode</emphasis>(2つのインスタンスの場合)かどうかによる。
+	&winbindd; will run as one or two daemons, depending on whether or not it is being
+	run in <emphasis>split mode</emphasis> (in which case there will be two instances).
 	</para>
 
 	</sect2>
 
 	<sect2>
-		<title>エラーメッセージ: open_oplock_ipc</title>
+		<title>Error Message: open_oplock_ipc</title>
 
 	<para>
-        &smbd;が起動した時にログファイル中に以下のエラーメッセージが出ることがある:
-	<quote>open_oplock_ipc: Failed to
+	An error message is observed in the log files when &smbd; is started: <quote>open_oplock_ipc: Failed to
 	get local UDP socket for address 100007f. Error was Cannot assign requested.</quote>
 	</para>
 
 	<para>
-        これは、loopbackデバイスが正しく動作していない。正しく設定し直すこと。
-        ループバックデバイスは内部(仮想の)ネットワークデバイスで、IPアドレスが
-        <emphasis>127.0.0.1</emphasis>である。システム上でどのようにloopback
-        デバイスを設定するかはOSのドキュメントを読むこと。
+	Your loopback device isn't working correctly. Make sure it is configured correctly. The loopback
+	device is an internal (virtual) network device with the IP address <emphasis>127.0.0.1</emphasis>.
+	Read your OS documentation for details on how to configure the loopback on your system.
 	</para>
 
 	</sect2>
 
 	<sect2>
-		<title><quote><errorname>ネットワーク名が見つからない</errorname></quote></title>
+		<title><quote><errorname>The network name cannot be found</errorname></quote></title>
 
 		<para>
-                このエラーは以下の設定ミスのどれかによって起きる:
+		This error can be caused by one of these misconfigurations:
 		</para>
 
 		<itemizedlist>
-			<listitem><para>&smb.conf;内で共有に対する存在しない
-                        パスを指定した。</para></listitem>
+			<listitem><para>You specified a nonexisting path
+			for the share in &smb.conf;.</para></listitem>
 
-			<listitem><para>共有にアクセスしようとするユーザが
-                        共有のパスに対する適切なアクセス権を持っていない。
-                        読み出し(r)とアクセス(x)を有効にすべき。</para></listitem>
+			<listitem><para>The user you are trying to access the share with does not 
+			have sufficient permissions to access the path for
+			the share. Both read (r) and access (x) should be possible.</para></listitem>
 
-			<listitem><para>アクセスしようとする共有が存在しない。</para></listitem>
+			<listitem><para>The share you are trying to access does not exist.</para></listitem>
 	</itemizedlist>
 
 	</sect2>
