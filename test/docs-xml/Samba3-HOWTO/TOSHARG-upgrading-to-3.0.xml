@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE chapter PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
 <chapter id="upgrading-to-3.0">
 <chapterinfo>
@@ -8,233 +8,329 @@
 	<pubdate>August 16, 2007</pubdate>
 </chapterinfo>
 
-<title>Sambaのアップデートとアップグレード</title>
+<title>Updating and Upgrading Samba</title>
 <para>
-この章では、3.xシリーズのリリースの間に行われた変更の詳細な記録を提供する。この時点で、
-このシリーズはGNU GPLバージョン2でライセンスされる3.0.xとGNU GPLバージョン3でライセンス
-される Samba 3.2.xシリーズがある。
+This chapter provides a detailed record of changes made during the 3.x series releases. At this time this
+series consists of the 3.0.x series that is under the GNU GPL version 2 license, and the Samba 3.2.x series
+that is being released under the terms of the GNU GPL version 3 license.
 </para>
 
 <sect1>
-<title>アップデート要求の要点</title>
+<title>Key Update Requirements</title>
 <para>
-Sambaは常時発展しているソフトウェアで、リリース間で明確な違いがある時もある。それらの
-変更点のいくつかは、公式のMicrosoftパッチとアップデートによるセキュリティか機能の更新の
-結果、Microsoft Windows ネットワーククライアントによって使われるプロトコルの変更の結果に
-よってもたらされる。特に、Sambaそれ自身の内部操作に影響するものについては、Sambaは
-そのような変更に追従しなければならない。
+Samba is a fluid product in which there may be significant changes between releases. Some of these changes are
+brought about as a result of changes in the protocols that are used by Microsoft Windows network clients as a
+result of security or functionality updates through official Microsoft patches and updates. Samba must track
+such changes, particularly where they affect the internal operation of Samba itself.
 </para>
 
 <para>
-使用しているSambaのバージョンに、明確に言及している、以下のどのような節をも参照して
-ほしい。一般的に、新しいリリースに適用されるすべての変更は、それ以降のリリースにも
-適用される。例えば、Samba3.0.23における変更は、3.0.25を含むそのあとすべての新しい
-リリースに適用される。Samba 3.2.xは3.2.0固有の変更が適用される前に、Samba 3.0.25から
-オリジナルが分割された。3.0.xシリーズの機能が特に無効にされていないのならば、
-3.2.xシリーズの動作は、それ以前のパターンに沿うと推測できる。
+Please refer to any notes below that make explicit mention of the version of Samba you are using. In general,
+all changes that apply to a new release will apply to follow-on releases also. For example, changes to Samba
+3.0.23 affect all releases up to an including 3.0.25 and later.  Samba 3.2.x was originaly cut from Samba
+3.0.25 before 3.2.0-specific changes were applied. Unless a 3.0.x series feature is specifically revoked, the
+behavior of the 3.2.x series can be expected to follow the earlier pattern.
 </para>
 
 <sect2>
-<title>Samba-3.0.xからSamba-3.2.0へのアップグレード</title>
+<title>Upgrading from Samba-3.0.x to Samba-3.2.0</title>
 <para>
 </para>
 </sect2>
 
 <sect2 id="oldupdatenotes">
-<title>Samba-2.xからSamba-3.0.25へのアップグレード</title>
+<title>Upgrading from Samba-2.x to Samba-3.0.25</title>
 <para>
-<indexterm><primary>Sambaの違い</primary></indexterm>
-<indexterm><primary>変更されたパラメータ</primary></indexterm>
-<indexterm><primary>簡単なガイド</primary></indexterm>
-この章では、主に、Samba-3.0.25とSamba-2.2.8a間での違いについて取り扱う。
-それは、設定パラメータが変更された点と、2.2.xから3.0.25への簡単なガイドを
-提供する。
+<indexterm><primary>Samba differences</primary></indexterm>
+<indexterm><primary>changed parameters</primary></indexterm>
+<indexterm><primary>simple guide</primary></indexterm>
+This chapter deals exclusively with the differences between Samba-3.0.25 and Samba-2.2.8a.
+It points out where configuration parameters have changed, and provides a simple guide for
+the move from 2.2.x to 3.0.25.
 </para>
 </sect2>
 
 <sect2>
-<title>お手軽移行ガイド</title>
+<title>Quick Migration Guide</title>
 
 <para>
-Samba-3.0.25の既定値の動作は、おおよそSamba-2.2.xと同じであるべきである。&smb.conf;
-ファイル中に新しいパラメータ<smbconfoption name="passdb backend"/>が定義されていない
-場合の既定値の動作は、<smbconfoption name="encrypt passwords">Yes</smbconfoption>と
-<filename>smbpasswd</filename>データベースを使う、Samba-2.2.xの既定値の動作と同じに
-なる。
+Samba-3.0.25 default behavior should be approximately the same as Samba-2.2.x.
+The default behavior when the new parameter <smbconfoption name="passdb backend"/>
+is not defined in the &smb.conf; file provides the same default behavior as Samba-2.2.x
+with <smbconfoption name="encrypt passwords">Yes</smbconfoption> and
+will use the <filename>smbpasswd</filename> database.
 </para>
 
 <para>
-<indexterm><primary>動作がほぼ同じ</primary></indexterm>
-<indexterm><primary>異なるプロトコル</primary></indexterm>
-なぜ、<emphasis>動作がおおよそSamba-2.2.xと同じであるべきである</emphasis>と言うのか?
-なぜならば、Samba-3.0.25は、結果として異なったプロトコルコードパスを取るかもしれない
-ネイティブなユニコードをサポートするような、新しいプロトコルを使うことが出来るからである。
-そのような環境における新しい動作は、古いものとは正確に同じではない。うれしいことに、
-ドメインとマシンSIDはアップグレードにおいて保存される。
+<indexterm><primary>behavior approximately same</primary></indexterm>
+<indexterm><primary>differing protocol</primary></indexterm>
+So why say that <emphasis>behavior should be approximately the same as Samba-2.2.x</emphasis>? Because
+Samba-3.0.25 can negotiate new protocols, such as support for native Unicode, that may result in
+differing protocol code paths being taken. The new behavior under such circumstances is not
+exactly the same as the old one. The good news is that the domain and machine SIDs will be
+preserved across the upgrade.
 </para>
 
 <para>
-<indexterm><primary>LDAPバックエンド</primary></indexterm>
-<indexterm><primary>データベース</primary></indexterm>
+<indexterm><primary>LDAP backend</primary></indexterm>
+<indexterm><primary>database</primary></indexterm>
 <indexterm><primary>pdbedit</primary></indexterm>
-<indexterm><primary>Samba-3互換のLDAPバックエンド</primary></indexterm>
-もしも、Samba-2.2.xがLDAPを使っていて、LDAPデータベースを更新する時間がないならば、
-&smb.conf;ファイル中で<smbconfoption name="passdb backend">ldapsam_compat</smbconfoption>
-を指定する。その他の点に関しては、動作は多かれ少なかれ同じであるべきである。
-その後、Samba-3互換のLDAPバックエンドに切り替える時間があるとき、<command>pdbedit</command>
-を使って古いLDAPデータベースを新しいものに移行することは可能である。
-<link linkend="pdbeditthing">The <emphasis>pdbedit</emphasis>コマンド</link>を参照のこと。
+<indexterm><primary>Samba-3-compatible LDAP backend</primary></indexterm>
+If the Samba-2.2.x system is using an LDAP backend, and there is no time to update the LDAP
+database, then make sure that <smbconfoption name="passdb backend">ldapsam_compat</smbconfoption>
+is specified in the &smb.conf; file. For the rest, behavior should remain more or less the same.
+At a later date, when there is time to implement a new Samba-3-compatible LDAP backend, it is possible
+to migrate the old LDAP database to the new one through use of the <command>pdbedit</command>.
+See <link linkend="pdbeditthing">The <emphasis>pdbedit</emphasis> Command</link>.
 </para>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>Samba-3.xシリーズにおける新しい機能</title>
+<title>New Features in Samba-3.x Series</title>
 <para>
 </para>
 
 <sect2>
-<title>Samba-3.2.xシリーズにおける新しい機能</title>
-<para>
+<title>New Features in Samba-3.2.x Series</title>
+
+<para><strong>Samba is now distributed under the version 3
+of the new GNU General Public License. </strong>
 </para>
+
+<para>
+The major new features are:
+</para>
+
+
+<orderedlist numeration="arabic">
+	<listitem><para>
+<indexterm><primary>File Service</primary></indexterm>
+<indexterm><primary>limit</primary></indexterm>
+	Removal of the 1024 byte limit on pathnames and 256 byte limit on
+	filename components to honor the MAX_PATH setting from the host OS.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>Registory</primary></indexterm>
+<indexterm><primary>Configuration</primary></indexterm>
+	Introduction of a registry based configuration system.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>cluster</primary></indexterm>
+	Experimental support for file serving clusters.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>IPv6</primary></indexterm>
+	Support for IPv6 in the server, and client tools and libraries.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>alternate data streams</primary></indexterm>
+	Support for storing alternate data streams in xattrs.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>Encrypted SMB transport</primary></indexterm>
+	Encrypted SMB transport in client tools and libraries, and server.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>Windows Vista</primary></indexterm>
+	Support for Vista clients authenticating via Kerberos.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>Winbind</primary></indexterm>
+<indexterm><primary>forest</primary></indexterm>
+	Full support for Windows 2003 cross-forest, transitive trusts
+	and one-way domain trusts.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>pam_winbind</primary></indexterm>
+	Support for userPrincipalName logons via pam_winbind and NSS lookups.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>LDAP</primary></indexterm>
+<indexterm><primary>Active Directory</primary></indexterm>
+<indexterm><primary>Signing</primary></indexterm>
+	Support for Active Directory LDAP Signing policy.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>Licence</primary></indexterm>
+<indexterm><primary>GPL</primary></indexterm>
+	New LGPL Winbind client library (libwbclient.so).
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>domain</primary></indexterm>
+<indexterm><primary>domain trust</primary></indexterm>
+	Support for establishing interdomain trust relationships with Windows 2008.
+	</para></listitem>
+
+	<listitem><para>
+<indexterm><primary>joining</primary></indexterm>
+	New client and server support for remotely joining and unjoining Domains.
+	</para></listitem>
+
+
+        <listitem><para>
+<indexterm><primary>joining</primary></indexterm>
+        Support for joining into Windows 2008 domains.
+        </para></listitem>
+
+</orderedlist>
+
+<para>
+Plus lots of other improvements!
+</para>
+
+
 </sect2>
 
 <sect2>
-<title>Samba-3.0.xにおける新しい機能</title>
+<title>New Features in Samba-3.0.x</title>
 
 <para>
-新機能のうち代表的なものは以下の通り:
+The major new features are:
 </para>
 
 <orderedlist numeration="arabic">
 	<listitem><para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>LDAP/Kerberos</primary></indexterm>
-	Active Directoryのサポート。このリリースはメンバサーバとしてADS realmに参加でき、
-	LDAP/Kerberosを使ってユーザの認証が出来る。
+	Active Directory support. This release is able to join an ADS realm
+	as a member server and authenticate users using LDAP/Kerberos.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>ユニコード</primary></indexterm>
-<indexterm><primary>マルチバイト文字セット</primary></indexterm>
-	ユニコードのサポート。Sambaはネットワーク上でUnicodeを使えるようになり、
-	マルチバイトとユニコード文字セットを扱うための、よりよい基盤を内部にもつ
-	ようになった。
+<indexterm><primary>Unicode</primary></indexterm>
+<indexterm><primary>multibyte character sets</primary></indexterm>
+	Unicode support. Samba will now negotiate Unicode on the wire, and
+	internally there is a much better infrastructure for multibyte
+	and Unicode character sets.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>認証システム</primary></indexterm>
-	新しい認証システム。内部の認証システムはほとんど書き換えられた。変更の多くは
-	内部的なものであるが、新しい認証システムはとても自由に設定できる。
+<indexterm><primary>authentication system</primary></indexterm>
+	New authentication system. The internal authentication system has
+	been almost completely rewritten. Most of the changes are internal,
+	but the new authoring system is also very configurable.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>名前の短縮</primary></indexterm>
-	新しい、ファイル名の短縮システム。ファイル名短縮システムは完全に書き換えられた。
-	内部データベースは、恒久的に短縮マップを格納する。
+<indexterm><primary>filename mangling</primary></indexterm>
+	New filename mangling system. The filename mangling system has been
+	completely rewritten. An internal database now stores mangling maps
+	persistently.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>netコマンド</primary></indexterm>
-        新しい<quote>net</quote>コマンド。新しい<quote>net</quote>コマンドが追加された。
-	Windows中の<quote>net</quote>コマンドと幾分似ている。結局、たくさんある他の
-	ユーティリティ(たとえばsmbpasswd)を<quote>net</quote>中のサブコマンドで
-	置き換えることを計画している。
+<indexterm><primary>net command</primary></indexterm>
+	New <quote>net</quote> command. A new <quote>net</quote> command has been added. It is
+	somewhat similar to the <quote>net</quote> command in Windows. Eventually, we
+	plan to replace a bunch of other utilities (such as smbpasswd)
+	with subcommands in <quote>net</quote>.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>status32コード</primary></indexterm>
-	Sambaはネットワーク上でNT形式のstatus32コードで通信できるようになった。
-	これはかなりエラーハンドリングを改善する。
+<indexterm><primary>status32 codes</primary></indexterm>
+	Samba now negotiates NT-style status32 codes on the wire. This
+	considerably improves error handling.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>プリンタ属性の公開</primary></indexterm>
-	よりよいWindows 200x/XP印刷サポート。Active Directory中にプリンタ属性を
-	公開することを含む。
+<indexterm><primary>printer attributes publishing</primary></indexterm>
+	Better Windows 200x/XP printing support, including publishing
+	printer attributes in Active Directory.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>RPCモジュール</primary></indexterm>
-<indexterm><primary>passdbバックエンド</primary></indexterm>
-<indexterm><primary>文字セット</primary></indexterm>
-	新しい、passdbバックエンドと文字セット用の、ローダブルRPCモジュール。
+<indexterm><primary>RPC modules</primary></indexterm>
+<indexterm><primary>passdb backends</primary></indexterm>
+<indexterm><primary>character sets</primary></indexterm>
+	New loadable RPC modules for passdb backends and character sets.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>winbinddデーモンの二重化</primary></indexterm>
-	よりパフォーマンスを改善するために、既定値で、winbinddデーモンの二重化をサポート。
+<indexterm><primary>dual-daemon winbindd</primary></indexterm>
+	New default dual-daemon winbindd support for better performance.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>移行</primary></indexterm>
-<indexterm><primary>idの移行</primary></indexterm>
+<indexterm><primary>migrating</primary></indexterm>
+<indexterm><primary>maintaining ids</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
-	Windows NT 4.0ドメインからSambaドメインへ、管理ユーザ、グループとドメインSIDの
-	移行サポート。
+	Support for migrating from a Windows NT 4.0 domain to a Samba
+	domain and maintaining user, group, and domain SIDs.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>ドメイン間の信頼</primary></indexterm>
-<indexterm><primary>ドメインコントローラ</primary></indexterm>
-	Windows NT 4.0ドメインコントローラとの信頼関係の確立のサポート。
+<indexterm><primary>trust relationships</primary></indexterm>
+<indexterm><primary>domain controllers</primary></indexterm>
+	Support for establishing trust relationships with Windows NT 4.0
+	domain controllers.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>Winbindアーキテクチャ</primary></indexterm>
-<indexterm><primary>LDAPディレクトリ</primary></indexterm>
+<indexterm><primary>Winbind architecture</primary></indexterm>
+<indexterm><primary>LDAP directory</primary></indexterm>
 <indexterm><primary>ID mapping</primary></indexterm>
-	SIDからUID/GIDマッピングをLDAPディレクトリに格納する事による、
-	分散Winbindアーキテクチャの新規サポート。
+	Initial support for a distributed Winbind architecture using
+	an LDAP directory for storing SID to UID/GID mappings.
 	</para></listitem>
 
 	<listitem><para>
-	Samba文書構造の大規模な更新。
+	Major updates to the Samba documentation tree.
 	</para></listitem>
 
 	<listitem><para>
-<indexterm><primary>SMB署名</primary></indexterm>
-<indexterm><primary>セキュリティの設定</primary></indexterm>
-	既定値のWindows 2003セキュリティ設定との互換を取るために、サーバと
-	クライアントにおけるSMB署名の完全なサポート。
+<indexterm><primary>SMB signing</primary></indexterm>
+<indexterm><primary>security settings</primary></indexterm>
+	Full support for client and server SMB signing to ensure
+	compatibility with default Windows 2003 security settings.
 	</para></listitem>
 </orderedlist>
 
 <para>
-さらに多くの改良がある!
+Plus lots of other improvements!
 </para>
 
 
 <sect3>
-<title>設定パラメータの変更</title>
+<title>Configuration Parameter Changes</title>
 
 <para>
-この節には、Samba-2.2.xシリーズからSamba-3.0.25を含むまでの&smb.conf;の変更の
-簡単な一覧がある。
+This section contains a brief listing of changes to &smb.conf; options since the Samba-2.2.x series up to and
+including Samba-3.0.25.
 </para>
 
 <para>
-新規、あるいは変更されたパラメータについての完全な説明は、smb.conf(5)のマニュアル
-ページを参照のこと。
+Please refer to the smb.conf(5) man page for complete descriptions of new or modified
+parameters.
 </para>
 
 <para>
-Sambaのアップデートあるいはアップグレードをするときはいつでも、Sambaの配布セット
-の一部である、<emphasis>WHATSNEW.txt</emphasis>というファイルを読むことを強く推奨する。
-このファイルは、Sambaの<ulink url="http://www.samba.org/samba/">webサイト</ulink>の、
-右側のカラム、Current Stable Releaseの下で、<emphasis>Release Notes</emphasis>を
-クリックして入手してもよい。
+Whenever a Samba update or upgrade is performed it is highly recommended to read the file called
+<emphasis>WHATSNEW.txt</emphasis> that is part of the Samba distribution tarball. This file may also
+be obtain on-line from the Samba <ulink url="http://www.samba.org/samba/">web site</ulink>, in
+the right column, under Current Stable Release, by clicking on <emphasis>Release Notes</emphasis>.
 </para>
 
 </sect3>
 
 <sect3>
-<title>削除されたパラメータ</title>
+<title>Removed Parameters</title>
 
-<indexterm><primary>削除されたパラメータ</primary></indexterm>
+<indexterm><primary>deleted parameters</primary></indexterm>
 <para>
-アルファベット順で、以下はSamba-2.2.xから3.0.35で削除されたパラメータの一覧である。
+In alphabetical order, these are the parameters eliminated from Samba-2.2.x through 3.0.25.
 </para>
 
 <itemizedlist>
@@ -275,20 +371,20 @@ Sambaのアップデートあるいはアップグレードをするときはい
 </sect3>
 
 <sect3>
-<title>新しいパラメータ</title>
+<title>New Parameters</title>
 
-<para>以下の新しいパラメータは、Samba 3.0.25までにリリースされたものである(機能毎にグルーピング:)</para>
+<para>The following new parameters have been released up to and including Samba 3.0.25 (grouped by function:)</para>
 
-<para>リモート管理</para>
+<para>Remote Management</para>
 
-<indexterm><primary>新しいパラメータ</primary></indexterm>
+<indexterm><primary>new parameters</primary></indexterm>
 
 <itemizedlist>
 	<listitem><para>abort shutdown script</para></listitem>
 	<listitem><para>shutdown script</para></listitem>
 </itemizedlist>
 
-<para>ユーザとグループアカウント管理</para>
+<para>User and Group Account Management</para>
 
 <itemizedlist>
 	<listitem><para>add group script</para></listitem>
@@ -303,7 +399,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>username map script</para></listitem>
 </itemizedlist>
 
-<para>認証</para>
+<para>Authentication</para>
 
 <itemizedlist>
 	<listitem><para>auth methods</para></listitem>
@@ -312,7 +408,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>realm</para></listitem>
 </itemizedlist>
 
-<para>プロトコルオプション</para>
+<para>Protocol Options</para>
 
 <itemizedlist>
 	<listitem><para>add port command</para></listitem>
@@ -338,7 +434,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>use spnego</para></listitem>
 </itemizedlist>
 
-<para>ファイルサービス</para>
+<para>File Service</para>
 
 <itemizedlist>
 	<listitem><para>allocation roundup size</para></listitem>
@@ -378,7 +474,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>vfs objects</para></listitem>
 </itemizedlist>
 
-<para>印刷</para>
+<para>Printing</para>
 
 <itemizedlist>
 	<listitem><para>cups options</para></listitem>
@@ -390,7 +486,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 </itemizedlist> 
 
 
-<para>ユニコードと文字セット</para>
+<para>Unicode and Character Sets</para>
 
 <itemizedlist>
 	<listitem><para>display charset</para></listitem>
@@ -398,7 +494,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>UNIX charset</para></listitem>
 </itemizedlist>
 
-<para>SIDからUID/GIDへのマッピング</para>
+<para>SID to UID/GID Mappings</para>
 
 <itemizedlist>
 	<listitem><para>idmap backend</para></listitem>
@@ -425,7 +521,7 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<listitem><para>ldap user suffix</para></listitem>
 </itemizedlist>
 
-<para>一般的な設定</para>
+<para>General Configuration</para>
 
 <itemizedlist>
 	<listitem><para>eventlog list</para></listitem>
@@ -437,34 +533,34 @@ Sambaのアップデートあるいはアップグレードをするときはい
 </sect3>
 
 <sect3>
-<title>変更されたパラメータ(動作が変わったもの)</title>
+<title>Modified Parameters (Changes in Behavior)</title>
 
 <itemizedlist>
-	<listitem><para>acl group control (新しい既定値は No, 廃止されるパラメータ)</para></listitem>
-	<listitem><para>change notify timeout (スコープが変更)</para></listitem>
-	<listitem><para>dos filemode (既定値で無効に)</para></listitem>
-	<listitem><para>dos filetimes (既定値で有効に)</para></listitem>
-	<listitem><para>enable asu support (既定値で無効に)</para></listitem>
-	<listitem><para>enable privileges (既定値で有効に)</para></listitem>
-	<listitem><para>encrypt passwords (既定値で有効に) </para></listitem>
-	<listitem><para>host msdfs (既定値で有効に)</para></listitem>
-	<listitem><para>mangling method (既定値でhash2を設定) </para></listitem>
+	<listitem><para>acl group control (new default is No, deprecated parameter)</para></listitem>
+	<listitem><para>change notify timeout (scope changed)</para></listitem>
+	<listitem><para>dos filemode (disabled by default)</para></listitem>
+	<listitem><para>dos filetimes (enabled by default)</para></listitem>
+	<listitem><para>enable asu support (disabled by default)</para></listitem>
+	<listitem><para>enable privileges (enabled by default)</para></listitem>
+	<listitem><para>encrypt passwords (enabled by default) </para></listitem>
+	<listitem><para>host msdfs (enabled by default)</para></listitem>
+	<listitem><para>mangling method (set to hash2 by default) </para></listitem>
 	<listitem><para>map to guest</para></listitem>
-	<listitem><para>only user (廃止)</para></listitem>
+	<listitem><para>only user (deprecated)</para></listitem>
 	<listitem><para>passwd chat</para></listitem>
 	<listitem><para>passwd program</para></listitem>
 	<listitem><para>password server</para></listitem>
-	<listitem><para>restrict anonymous (整数値)</para></listitem>
-	<listitem><para>security (新しくadsが追加)</para></listitem>
-	<listitem><para>strict locking (既定値でautoに)</para></listitem>
-	<listitem><para>winbind cache time (5分に増加)</para></listitem>
-	<listitem><para>winbind enum groups (既定値で無効に)</para></listitem>
-	<listitem><para>winbind enum users (既定値で無効に)</para></listitem>
-	<listitem><para>winbind nested groups (既定値で有効に)</para></listitem>
-	<listitem><para>winbind uid (idmap uidのために廃止に)</para></listitem>
-	<listitem><para>winbind gid (idmap gidのために廃止に)</para></listitem>
+	<listitem><para>restrict anonymous (integer value)</para></listitem>
+	<listitem><para>security (new ads value)</para></listitem>
+	<listitem><para>strict locking (auto by default)</para></listitem>
+	<listitem><para>winbind cache time (increased to 5 minutes)</para></listitem>
+	<listitem><para>winbind enum groups (disabled by default)</para></listitem>
+	<listitem><para>winbind enum users (disabled by default)</para></listitem>
+	<listitem><para>winbind nested groups (enabled by default)</para></listitem>
+	<listitem><para>winbind uid (deprecated in favor of idmap uid)</para></listitem>
+	<listitem><para>winbind gid (deprecated in favor of idmap gid)</para></listitem>
 	<listitem><para>winbindd nss info</para></listitem>
-	<listitem><para>write cache (廃止)</para></listitem>
+	<listitem><para>write cache (deprecated)</para></listitem>
 </itemizedlist>
 
 </sect3>
@@ -472,130 +568,128 @@ Sambaのアップデートあるいはアップグレードをするときはい
 </sect2>
 
 <sect2>
-<title>新しい機能</title>
+<title>New Functionality</title>
 
 	<para>
-<indexterm><primary>主要な変更</primary></indexterm>
-	Samba-2.2.xシリーズからの主要な動作の変更点は、この節に記述してある。現在の
-	Sambaリリースのサポート期間中に行われた変更に関連する詳細情報を得るためには、
-	各Sambaリリースに同梱される<filename>WHATSNEW.txt</filename>を参照してほしい。
+<indexterm><primary>major changes</primary></indexterm>
+	The major changes in behavior since that Samba-2.2.x series are documented in this section.
+	Please refer to the <filename>WHATSNEW.txt</filename> file that ships with every release of
+	Samba to obtain detailed information regarding the changes that have been made during the
+	life of the current Samba release.
 	</para>
 
 	<sect3>
-	<title>TDBデータファイル</title>
+	<title>TDB Data Files</title>
 
 <indexterm><primary>tdb data files</primary></indexterm>
 	<para>
-	<link linkend="install">インストール、第一章</link>,
-	<link linkend="tdbdocs">第一章</link>に、Samba-3データファイルに関連する、
-	その配置とサーバ移行、アップデートとアップグレードにおいて保持しなければ
-	ならない情報があるので、参照してほしい。
+	Refer to <link linkend="install">Installation, Chapter 1</link>, <link linkend="tdbdocs">Chapter 1</link>
+	for information pertaining to the Samba-3 data files, their location and the information that must be
+	preserved across server migrations, updates and upgrades.
 	</para>
 
 	<para>
-<indexterm><primary>tdbファイルのバックアップ</primary></indexterm>
-	Samba-3にアップグレードする前に、存在している${lock directory}/*tdbをバックアップ
-	する事を忘れないでほしい。もしも必要ならば、Sambaはオープンされているように
-	データベースをアップグレードする。Samba-3から2.2へのダウングレードか、
-	最新版のSamba-3より前のバージョンへの変更は、サポートされない手順である。
+<indexterm><primary>tdb file backup</primary></indexterm>
+	Please remember to back up your existing ${lock directory}/*tdb before upgrading to Samba-3. If necessary,
+	Samba will upgrade databases as they are opened. Downgrading from Samba-3 to 2.2, or reversion to an earlier
+	version of Samba-3 from a later release, is an unsupported path.
 	</para>
 
 	<para>
-<indexterm><primary>tdbファイルの説明</primary></indexterm>
-	古いSamba-2.2.xのtdbファイルは<link linkend="oldtdbfiledesc">次のテーブル</link>
-	で説明されている。
+<indexterm><primary>tdb file descriptions</primary></indexterm>
+	The old Samba-2.2.x tdb files are described in <link linkend="oldtdbfiledesc">the next table</link>.
 	</para>
 
 
-        <table frame='all' id="oldtdbfiledesc"><title>Samba-2.2.xのTDBファイルの説明</title>
+        <table frame='all' id="oldtdbfiledesc"><title>Samba-2.2.x TDB File Descriptions</title>
         <tgroup cols='3'>
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
 			<colspec align="left"/>
                 <thead>
                 <row>
-                        <entry align="left">名前</entry>
-                        <entry align="justify">説明</entry>
-                        <entry align="center">バックアップ必要?</entry>
+                        <entry align="left">Name</entry>
+                        <entry align="justify">Description</entry>
+                        <entry align="center">Backup?</entry>
                 </row>
                 </thead>
                 <tbody>
                 <row>
                         <entry>account_policy</entry>
-			<entry>ユーザポリシーの設定</entry>
+			<entry>User policy settings</entry>
 			<entry>yes</entry>
 		</row>
 		<row>
 			<entry>brlock</entry>
-			<entry>バイトレンジファイルロック情報</entry>
+			<entry>Byte-range file locking information.</entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>connections</entry>
-			<entry><para>クライアント接続情報</para></entry>
+			<entry><para>Client connection information</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>locking</entry>
-			<entry>一時ファイルロックデータ</entry>
+			<entry>Temporary file locking data.</entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>messages</entry>
-			<entry><para>smbdによって生成されたメッセージの一時的な記憶場所</para></entry>
+			<entry><para>Temporary storage of messages being processed by smbd.</para></entry>
 			<entry>no</entry>
 		</row>
        <row>
             <entry>ntdrivers</entry>
-            <entry><para>プリンタ毎のドライバ情報を格納</para></entry>
+            <entry><para>Stores per-printer driver information.</para></entry>
 			<entry>yes</entry>
         </row>
         <row>
             <entry>ntforms</entry>
-            <entry><para>プリンタ毎のフォーム情報を格納</para></entry>
+            <entry><para>Stores per-printer forms information.</para></entry>
 			<entry>yes</entry>
         </row>
         <row>
             <entry>ntprinters</entry>
-            <entry><para>プリンタ毎のdevmode設定情報を格納</para></entry>
+            <entry><para>Stores the per-printer devmode configuration settings.</para></entry>
 			<entry>yes</entry>
         </row>
 		<row>
 			<entry>printing/*.tdb</entry>
-			<entry><para>印刷サービス毎に作成されたlpqコマンドからのキャッシュされた出力</para></entry>
+			<entry><para>Cached output from lpq command created on a per-print-service basis.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 
 			<entry>registry</entry>
-			<entry><para>読み取り専用のSambaレジストリスケルトンで、winreg RPC経由で種々の
-			    データベーステーブルをエクスポートする機能を提供する。</para></entry>
+			<entry><para>Read-only Samba registry skeleton that provides support for
+				exporting various database tables via the winreg RPCs.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>sessionid</entry>
-			<entry><para>その他のセッション情報のための一時的なキャッシュ。</para></entry>
+			<entry><para>Temporary cache for miscellaneous session information.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>share_info</entry>
-			<entry>共有のACL設定。</entry>
+			<entry>Share ACL settings.</entry>
 			<entry>yes</entry>
 		</row>
 		<row>
 
 			<entry>unexpected</entry>
-			<entry><para>どのプロセスもリッスンしていないパケットの受信用。</para></entry>
+			<entry><para>Packets received for which no process was listening.</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
 			<entry>winbindd_cache</entry>
-			<entry><para>NT4かADSドメインから受信した識別情報のキャッシュ。</para></entry>
+			<entry><para>Cache of identity information received from an NT4 or an ADS domain.</para></entry>
 			<entry>yes</entry>
 		</row>
 		<row>
 			<entry>winbindd_idmap</entry>
-			<entry><para>SIDからUNIXのUID/GIDへの新しいIDマップテーブル。</para></entry>
+			<entry><para>New ID map table from SIDS to UNIX UIDs/GIDs.</para></entry>
 			<entry>yes</entry>
 		</row>
 		</tbody>
@@ -605,85 +699,81 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	</sect3>
 
 	<sect3>
-	<title>動作の変更点</title>
+	<title>Changes in Behavior</title>
 
 	<para>
-	以下の問題はSamba-2.2とSamba-3の間で、特定のインストール状態におけるSambaの動作の
-	変更点として知られている。
+	The following issues are known changes in behavior between Samba-2.2 and
+	Samba-3 that may affect certain installations of Samba.
 	</para>
 
 	<orderedlist>
 		<listitem><para>
-<indexterm><primary>Windowsドメイン</primary></indexterm>
-<indexterm><primary>getpwnam()呼び出し</primary></indexterm>
+<indexterm><primary>Windows domain</primary></indexterm>
+<indexterm><primary>getpwnam() call</primary></indexterm>
 <indexterm><primary>NT_STATUS_LOGON_FAILURE</primary></indexterm>
-		操作がWindowsドメインのメンバの場合、Samba-2.2は、もしもUIDがgetpwnam()
-		呼び出し経由で得られなかった場合、<quote>guest account</quote>に、リモート
-		DCによって認証された任意のユーザをマップする。Samba-3は、
-		<quote>NT_STATUS_LOGON_FAILURE</quote>というエラーメッセージで接続を
-		拒否する。Samba-2.2の動作を再度確立するための現時点での回避策はない。
+		When operating as a member of a Windows domain, Samba-2.2 would map any users authenticated by the remote DC
+		to the <quote>guest account</quote> if a UID could not be obtained via the getpwnam() call. Samba-3 rejects
+		the connection with the error message <quote>NT_STATUS_LOGON_FAILURE.</quote> There is no current workaround
+		to re-establish the Samba-2.2 behavior.
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>add user script</primary></indexterm>
 <indexterm><primary>add machine script</primary></indexterm>
-		Samba-2.2で制御されたドメインにマシンを追加するとき、
-		<quote>add user script</quote>はマシン信頼アカウントのUNIX識別子を
-		作成するのに使われる。Samba-3では新しい
-		<quote>add machine script</quote>という、この目的のために指定しなければ
-		ならないスクリプトを導入している。Samba-3は、
-		<quote>add machine script</quote>がない場合に、
-		<quote>add user script</quote>を使うように切り替える事はしない。
+		When adding machines to a Samba-2.2 controlled domain, the
+		<quote>add user script</quote> was used to create the UNIX identity of the
+		machine trust account. Samba-3 introduces a new <quote>add machine
+		script</quote> that must be specified for this purpose. Samba-3 will
+		not fall back to using the <quote>add user script</quote> in the absence of
+		an <quote>add machine script</quote>.
 		</para></listitem>
 	</orderedlist>
 
 	</sect3>
 
 	<sect3>
-	<title>passdbバックエンドと認証</title>
+	<title>Passdb Backends and Authentication</title>
 
 	<para>
-	Samba-3に移動するときにSamba管理者が知っておくべきいくつかの新しい変更が
-	ある。
+	There have been a few new changes that Samba administrators should be
+	aware of when moving to Samba-3.
 	</para>
 
 	<orderedlist>
 		<listitem><para>
 <indexterm><primary>encrypted passwords</primary></indexterm>
-		暗号化されたパスワードは、Windowsクライアントをそのまま使える事との
-		相互運用性を向上させるために、既定値で有効になった。これは、(a)
-		Sambaアカウントは各ユーザ毎に作成する必要があるか、(b)
-		<quote>encrypt passwords = no</quote>を明示的に &smb.conf;中で定義する
-		必要があるということである。
+		Encrypted passwords have been enabled by default in order to
+		interoperate better with out-of-the-box Windows client
+		installations. This does mean that either (a) a Samba account
+		must be created for each user, or (b) <quote>encrypt passwords = no</quote>
+		must be explicitly defined in &smb.conf;.
 		</para></listitem>
 
 		<listitem><para>
 <indexterm><primary>ADS</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-		ネイティブなWindows Kerberos 5とLDAPプロトコルを使う、Active Directory
-		ドメインとの統合のための、新しい<smbconfoption name="security">ads</smbconfoption>
-		オプションの包含。
+		Inclusion of new <smbconfoption name="security">ads</smbconfoption> option for integration
+		with an Active Directory domain using the native Windows Kerberos 5 and LDAP protocols.
 		</para></listitem>
 	</orderedlist>
 
 	<para>
-<indexterm><primary>アカウント格納バックエンド</primary></indexterm>
-	Samba-3は、認証方法を複数設定できる機能(<smbconfoption name="auth methods"/>)
-	と、アカウント格納バックエンドを複数設定できる機能(訳注:現在は無効)
-	(<smbconfoption name="passdb backend"/>)がある。詳細は、&smb.conf;マニュアル
-	ページと<link linkend="passdb">アカウント情報データベース</link>を参照して
-	ほしい。両方のパラメータが妥当な既定値を仮定している間、Sambaの動作を実際に
-	どの値が正しくさせているかを理解する必要があることはありえる。
+<indexterm><primary>account storage backends</primary></indexterm>
+	Samba-3 also includes the possibility of setting up chains of authentication methods (<smbconfoption
+	name="auth methods"/>) and account storage backends (<smbconfoption name="passdb backend"/>).  Please refer to
+	the &smb.conf; man page and <link linkend="passdb">Account Information Databases</link>, for
+	details. While both parameters assume sane default values, it is likely that you will need to understand what
+	the values actually mean in order to ensure Samba operates correctly.
 	</para>
 
 	<para>
 <indexterm><primary>pdbedit</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>net tool</primary></indexterm>
-	<command>smbpasswd</command>の特定の機能は、新しい<command>smbpasswd</command>
-	ユーティリティ、<command>net</command>ツールと新しい<command>pdbedit</command>
-	ユーティリティの間で分割された。詳細は、それぞれのマニュアルページを参照のこと。
+	Certain functions of the <command>smbpasswd</command> tool have been split between the
+	new <command>smbpasswd</command> utility, the <command>net</command> tool, and the new <command>pdbedit</command>
+	utility. See the respective man pages for details.
 	</para>
 
 	</sect3>
@@ -692,25 +782,26 @@ Sambaのアップデートあるいはアップグレードをするときはい
 	<title>LDAP</title>
 
 	<para>
-	この節では、Samba/LDAP統合に影響する新しい機能の概要を説明する。
+	This section outlines the new features effecting Samba/LDAP integration.
 	</para>
 
 		<sect4>
-		<title>新しいスキーマ</title>
+		<title>New Schema</title>
 
 		<para>
-<indexterm><primary>オブジェクトクラス</primary></indexterm>
+<indexterm><primary>object class</primary></indexterm>
 <indexterm><primary>sambaSamAccount</primary></indexterm>
 <indexterm><primary>LDIF</primary></indexterm>
-<indexterm><primary>属性</primary></indexterm>
-		新しいオブジェクトクラス(sambaSamAccount)が古いsambaAccountを置き換える
-		ために導入された。この変更は、他のベンダからの属性を破壊するのを防ぐための、
-		属性の変更を支援する。LDIFファイルを新しいスキーマに変更するための変換
-		スクリプトがexamples/LDAP/convertSambaAccountにある。
+<indexterm><primary>attributes</primary></indexterm>
+		A new object class (sambaSamAccount) has been introduced to replace
+		the old sambaAccount. This change aids in the renaming of attributes
+		to prevent clashes with attributes from other vendors. There is a
+		conversion script (examples/LDAP/convertSambaAccount) to modify an LDIF
+		file to the new schema.
 		</para>
 
 		<para>
-		例:
+		Example:
 <indexterm><primary>ldapsearch</primary></indexterm>
 		</para>
 		<para><screen>
@@ -720,15 +811,16 @@ Sambaのアップデートあるいはアップグレードをするときはい
 
 		<para>
 <indexterm><primary>net</primary><secondary>getlocalsid</secondary></indexterm>
-		&lt;DOM SID&gt;は以下を、Samba PDC上で、rootで動かすことで入手できる。
+		The &lt;DOM SID&gt; can be obtained by running
 <screen>
 &prompt;<userinput>net getlocalsid &lt;DOMAINNAME&gt;</userinput>
 </screen>
 <indexterm><primary>PDC</primary></indexterm>
+		on the Samba PDC as root.
 		</para>
 
 		<para>
-		Samba-2.x下では、ドメインSIDは以下を実行することで得られる:
+		Under Samba-2.x the domain SID can be obtained by executing:
 <indexterm><primary>smbpasswd</primary></indexterm>
 <screen>
 &prompt;<userinput>smbpasswd -S &lt;DOMAINNAME&gt;</userinput>
@@ -736,21 +828,20 @@ Sambaのアップデートあるいはアップグレードをするときはい
 		</para>
 
 		<para>
-<indexterm><primary>古いsambaAccount</primary></indexterm>
+<indexterm><primary>old sambaAccount</primary></indexterm>
 <indexterm><primary>ldapsam_compat</primary></indexterm>
-<indexterm><primary>オブジェクトクラスの定義</primary></indexterm>
+<indexterm><primary>object class declaration</primary></indexterm>
 <indexterm><primary>samba.schema</primary></indexterm>
-		古い<literal>sambaAccount</literal>スキーマは、
-		<parameter>ldapsam_compat</parameter>passdb バックエンドを指定することで
-		引き続き使っても良い。しかし、sambaAccountと関連する属性はスキーマ
-		ファイルの歴史的セクションに移動済みで、もしも必要な場合、使う前に
-		コメントアウトしなければならない。<literal>sambaAccount</literal>
-		に対するSamba-2.2オブジェクトクラスの定義は、Samba-3の
-		<filename>samba.schema</filename>ファイル中では変更されていない。
+		The old <literal>sambaAccount</literal> schema may still be used by specifying the
+		<parameter>ldapsam_compat</parameter> passdb backend. However, the sambaAccount and
+		associated attributes have been moved to the historical section of
+		the schema file and must be uncommented before use if needed.
+		The Samba-2.2 object class declaration for a <literal>sambaAccount</literal> has not changed
+		in the Samba-3 <filename>samba.schema</filename> file.
 		</para>
 
 		<para>
-		他の新しいオブジェクトクラスとそれが使うものは以下の通り:
+		Other new object classes and their uses include:
 		</para>
 
 		<itemizedlist>
@@ -761,22 +852,21 @@ Sambaのアップデートあるいはアップグレードをするときはい
 <indexterm><primary>ldap suffix</primary></indexterm>
 <indexterm><primary>ldapsam</primary></indexterm>
 <indexterm><primary>idmap</primary></indexterm>
-			<literal>sambaDomain</literal> &smbmdash;必要に応じて
-			ユーザとグループのRIDを割り当てるために使われるドメイン情報。
-			もしもidmap UID/GIDの範囲が設定され、<quote>ldapsam</quote>
-			passdbバックエンドが選択された場合、属性は
-			<quote>ldap suffix</quote>ディレクトリエントリ中に、
-			自動的に追加される。
+			<literal>sambaDomain</literal> &smbmdash; domain information used to allocate RIDs
+			for users and groups as necessary. The attributes are added
+			in <quote>ldap suffix</quote> directory entry automatically if
+			an idmap UID/GID range has been set and the <quote>ldapsam</quote>
+			passdb backend has been selected.
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>sambaGroupMapping</primary></indexterm>
 <indexterm><primary>ldap group suffix</primary></indexterm>
 <indexterm><primary>net groupmap</primary></indexterm>
-			sambaGroupMapping &smbmdash;は、posixGroupとWindowsのグループ/SID
-			との間で関連づけを行うためのオブジェクト。これらのエントリは
-			<quote>ldap group suffix</quote>中に格納され、
-			<quote>net groupmap</quote>コマンドによって管理される。
+			sambaGroupMapping &smbmdash; an object representing the
+			relationship between a posixGroup and a Windows
+			group/SID. These entries are stored in the <quote>ldap
+			group suffix</quote> and managed by the <quote>net groupmap</quote> command.
 			</para></listitem>
 
 			<listitem><para>
@@ -784,72 +874,70 @@ Sambaのアップデートあるいはアップグレードをするときはい
 <indexterm><primary>ldap idmap suffix</primary></indexterm>
 <indexterm><primary>idmap UID</primary></indexterm>
 <indexterm><primary>idmap GID</primary></indexterm>
-			<literal>sambaUNIXIdPool</literal> &smbmdash;
-			<quote>ldap idmap suffix</quote>エントリ中に自動的に作成され、
-			次に有効な<quote>idmap UID</quote>と<quote>idmap GID</quote>
-			を格納している。
+			<literal>sambaUNIXIdPool</literal> &smbmdash; created in the <quote>ldap idmap suffix</quote> entry
+			automatically and contains the next available <quote>idmap UID</quote> and
+			<quote>idmap GID</quote>.
 			</para></listitem>
 
 			<listitem><para>
 <indexterm><primary>sambaIdmapEntry</primary></indexterm>
 <indexterm><primary>idmap_ldap module</primary></indexterm>
-			<literal>sambaIdmapEntry</literal> &smbmdash;
-			SIDとUNIXのUID/GID間でのマッピングを格納するオブジェクト。
-			これらのオブジェクトは必要に応じてidmap ldapモジュールにより
-			作成される。
+			<literal>sambaIdmapEntry</literal> &smbmdash; object storing a mapping between a
+			SID and a UNIX UID/GID. These objects are created by the
+			idmap_ldap module as needed.
 			</para></listitem>
 		</itemizedlist>
 
 		</sect4>
 
 		<sect4>
-		<title>検索のための新しいサフィックス</title>
+		<title>New Suffix for Searching</title>
 
 		<para>
-<indexterm><primary>LDAPクエリ</primary></indexterm>
+<indexterm><primary>LDAP queries</primary></indexterm>
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>ldap suffix</primary></indexterm>
 <indexterm><primary>ldap user suffix</primary></indexterm>
 <indexterm><primary>ldap machine suffix</primary></indexterm>
 <indexterm><primary>ldap group suffix</primary></indexterm>
 <indexterm><primary>ldap idmap suffix</primary></indexterm>
-		以下の新しい&smb.conf;パラメータは、
-		<parameter>passdb backend = ldapsam://...</parameter>が指定された時に
-		特定のLDAPクエリを指示するのを支援するために追加された。
+		The following new &smb.conf; parameters have been added to aid in directing
+		certain LDAP queries when <parameter>passdb backend = ldapsam://...</parameter> has been
+		specified.
 		</para>
 
 		<itemizedlist>
-			<listitem><para>ldap suffix         &smbmdash; ユーザとコンピュータアカウントを検索するのに使用。</para></listitem>
-			<listitem><para>ldap user suffix    &smbmdash; ユーザアカウントを格納するのに使用。</para></listitem>
-			<listitem><para>ldap machine suffix &smbmdash; マシン信頼アカウントを格納するのに使用。</para></listitem>
-			<listitem><para>ldap group suffix   &smbmdash; posixGroup/sambaGroupMappingエントリの位置。</para></listitem>
-			<listitem><para>ldap idmap suffix   &smbmdash; sambaIdmapEntryオブジェクトの位置。</para></listitem>
+			<listitem><para>ldap suffix         &smbmdash; used to search for user and computer accounts.</para></listitem>
+			<listitem><para>ldap user suffix    &smbmdash; used to store user accounts.</para></listitem>
+			<listitem><para>ldap machine suffix &smbmdash; used to store machine trust accounts.</para></listitem>
+			<listitem><para>ldap group suffix   &smbmdash; location of posixGroup/sambaGroupMapping entries.</para></listitem>
+			<listitem><para>ldap idmap suffix   &smbmdash; location of sambaIdmapEntry objects.</para></listitem>
 		</itemizedlist>
 
 		<para>
 <indexterm><primary>ldap suffix</primary></indexterm>
-<indexterm><primary>subsuffixパラメータ</primary></indexterm>
-		もしも、<parameter>ldap suffix</parameter>が定義されていた場合、これは残りの
-		subsuffixパラメータに追加される。この場合、&smb.conf;中のサフィックスの
-		記述順序は重要である。常時、他のものよりも前に、
-		<parameter>ldap suffix</parameter>を記述すること。
+<indexterm><primary>subsuffix parameters</primary></indexterm>
+		If an <parameter>ldap suffix</parameter> is defined, it will be appended to all of the
+		remaining subsuffix parameters. In this case, the order of the suffix
+		listings in &smb.conf; is important. Always place the <parameter>ldap suffix</parameter> first
+		in the list.
 		</para>
 
 		<para>
-		Sambaの&smb.conf;解析の制限により、引用符でドメイン名を囲ってはいけない。
+		Due to a limitation in Samba's &smb.conf; parsing, you should not surround
+		the domain names with quotation marks.
 		</para>
 
 		</sect4>
 
 		<sect4>
-		<title>IdMap LDAPサポート</title>
+		<title>IdMap LDAP Support</title>
 
 		<para>
 <indexterm><primary>idmap backend</primary></indexterm>
-		Samba-3はidmapサブシステムにもLDAPバックエンドをサポートしている。以下の
-		オプションは、Sambaにidmapテーブルを、ディレクトリサーバ
-		<emphasis>onterose</emphasis>の
-		ou=Idmap,dc=quenya,dc=org部分に格納する事を指示する。
+		Samba-3 supports an LDAP backend for the idmap subsystem. The
+		following options inform Samba that the idmap table should be
+		stored on the directory server <emphasis>onterose</emphasis> in the ou=Idmap,dc=quenya,dc=org partition.
 		</para>
 
 		<smbconfblock>
@@ -863,9 +951,9 @@ Sambaのアップデートあるいはアップグレードをするときはい
 
 		<para>
 <indexterm><primary>NFS</primary></indexterm>
-		この設定では、UID/GID名前空間を複数のサーバ上で共有するWinbindの利用が
-		出来るようになり、Samba-2.2で存在していた、NFSとの相互運用の問題を
-		解決する。
+		This configuration allows Winbind installations on multiple servers to
+		share a UID/GID number space, thus avoiding the interoperability problems
+		with NFS that were present in Samba-2.2.
 		</para>
 
 		</sect4>
