@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html><head><title>vfs_gpfs</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_gpfs"><a name="vfs_gpfs.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_gpfs — acl や prealloc 機能と同様に gpfs に特化した Samba の機能拡張を行なう。</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = gpfs</code></p></div></div><div class="refsect1" title="説明"><a name="id2529777"/><h2>説明</h2><p>この VFS モジュールは
+<html><head><title>vfs_gpfs</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_gpfs"><a name="vfs_gpfs.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_gpfs — acl や prealloc 機能と同様に gpfs に特化した Samba の機能拡張を行なう。</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = gpfs</code></p></div></div><div class="refsect1" title="説明"><a name="id2528777"/><h2>説明</h2><p>この VFS モジュールは
 	<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p> <code class="literal">gpfs</code> VFS モジュールは、Samba が GPFS
 	と適切に連携する上で必要となる様々な GPFS エクステンションの
 モジュールのベースである。
@@ -14,7 +14,7 @@
 	このモジュールによる chown を禁止するには、Samba よりも下位の
 	ファイルシステム側の責任となる。
 
-	</p><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="オプション"><a name="id2490556"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">nfs4:mode = [ simple | special ]</span></dt><dd><p>
+	</p><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="オプション"><a name="id2489218"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">nfs4:mode = [ simple | special ]</span></dt><dd><p>
 		GPFS上の特別なIDの置き換えを有効/無効にする。このパラメータはどのような方法でも
 		windowsのユーザに影響を与えるべきでない。これは、Sambaに、GPFSに関連のある
 		OWNER@とGROUP@(単純なuidへのマッピング)である特別なIDを設定することのみを
@@ -28,17 +28,17 @@
 		  低下させるかもしれない事に注意して有効にすべきである。
 		</p><p>いくつかのファイルシステムでは、chown の 
 		  a) 許可 b) 拒否 が可能である。
-		  リスクについて考慮されたのが後者である。</p><p>以下はそれぞれの値に対するSambaの動作である: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">yes</code> - ファイルシステム下でサポートするようなchownを有効にする。</p></li><li class="listitem"><p><code class="literal">no (既定値)</code> - chownを無効にする</p></li></ul></div></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2490756"/><h2>使用例</h2><p>GPFS mount は以下のように、Samba経由でエクスポートできる:</p><pre class="programlisting">
+		  リスクについて考慮されたのが後者である。</p><p>以下はそれぞれの値に対するSambaの動作である: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">yes</code> - ファイルシステム下でサポートするようなchownを有効にする。</p></li><li class="listitem"><p><code class="literal">no (既定値)</code> - chownを無効にする</p></li></ul></div></dd></dl></div></div><div class="refsect1" title="使用例"><a name="id2489530"/><h2>使用例</h2><p>GPFS mount は以下のように、Samba経由でエクスポートできる:</p><pre class="programlisting">
         <em class="parameter"><code>[samba_gpfs_share]</code></em>
 	<a class="link" href="smb.conf.5.html#VFSOBJECTS" target="_top">vfs objects = gpfs</a>
 	<a class="link" href="smb.conf.5.html#PATH" target="_top">path = /test/gpfs_mount</a>
 	<a class="link" href="smb.conf.5.html#NFS4:MODE" target="_top">nfs4: mode = special</a>
 	<a class="link" href="smb.conf.5.html#NFS4:ACEDUP" target="_top">nfs4: acedup = merge</a>
-</pre></div><div class="refsect1" title="警告"><a name="id2490921"/><h2>警告</h2><p>gpfs gplライブラリは、コンパイルと実行時に<code class="literal">gpfs</code>
+</pre></div><div class="refsect1" title="警告"><a name="id2489592"/><h2>警告</h2><p>gpfs gplライブラリは、コンパイルと実行時に<code class="literal">gpfs</code>
  VFS モジュールに必要である。
-	また、このVFSモジュールは SLES 9/10 と RHEL 4.4で動作テストが行われている。</p></div><div class="refsect1" title="バージョン"><a name="id2490943"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3.0.25用(訳注:3.3?)である。</p></div><div class="refsect1" title="著者"><a name="id2490955"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	また、このVFSモジュールは SLES 9/10 と RHEL 4.4で動作テストが行われている。</p></div><div class="refsect1" title="バージョン"><a name="id2489614"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3.0.25用(訳注:3.3?)である。</p></div><div class="refsect1" title="著者"><a name="id2489626"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team に
 	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
-	として開発が行なわれている。</p><p>GPFS VFSモジュールはVolker LendeckeとIBMの開発者によって寄贈され、作成された。</p><p>このマニュアルページは、IBM FSCCチームによって作成された。</p></div><div class="refsect1" title="日本語訳"><a name="id2490981"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.4 対応のものである。</p><p>このドキュメントの Samba 3.2.4 - 3.5.4 対応の翻訳は
+	として開発が行なわれている。</p><p>GPFS VFSモジュールはVolker LendeckeとIBMの開発者によって寄贈され、作成された。</p><p>このマニュアルページは、IBM FSCCチームによって作成された。</p></div><div class="refsect1" title="日本語訳"><a name="id2487429"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>たかはしもとのぶ (monyo@samba.gr.jp)</p></li><li class="listitem"><p>太田俊哉 (ribbon@samba.gr.jp)</p></li></ul></div><p>	
         によって行なわれた。</p></div></div></body></html>

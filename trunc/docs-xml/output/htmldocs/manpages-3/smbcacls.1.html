@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html><head><title>smbcacls</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="smbcacls"><a name="smbcacls.1"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>smbcacls — Windows NT 上のファイルやディレクトリの ACL の取得や設定</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">smbcacls</code> {//server/share} {filename} [-D acls] [-M acls] [-a acls] [-S acls] [-C name] [-G name] [--numeric] [-t] [-U username] [-h] [-d]</p></div></div><div class="refsect1" title="説明"><a name="id2490567"/><h2>説明</h2><p>このツールは <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p><code class="literal">smbcacls</code> は、SMB ファイル共有内の ACL
-	(Access Control Lists) を操作するプログラムである。</p></div><div class="refsect1" title="オプション"><a name="id2490597"/><h2>オプション</h2><p><code class="literal">smbcacls</code> コマンドでは以下のオプションが
+<html><head><title>smbcacls</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="smbcacls"><a name="smbcacls.1"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>smbcacls — Windows NT 上のファイルやディレクトリの ACL の取得や設定</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">smbcacls</code> {//server/share} {filename} [-D|--delete acls] [-M|--modify acls] [-a|--add acls] [-S|--set acls] [-C|--chown name] [-G|--chgrp name] [--numeric] [-t] [-U username] [-h] [-d]</p></div></div><div class="refsect1" title="説明"><a name="id2489229"/><h2>説明</h2><p>このツールは <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>システムの一部である。</p><p><code class="literal">smbcacls</code> は、SMB ファイル共有内の ACL
+	(Access Control Lists) を操作するプログラムである。</p></div><div class="refsect1" title="オプション"><a name="id2489371"/><h2>オプション</h2><p><code class="literal">smbcacls</code> コマンドでは以下のオプションが
 	利用可能である。ACL の形式は、ACL FORMAT セクションで記述する。</p><div class="variablelist"><dl><dt><span class="term">-a acls</span></dt><dd><p>ACL リストで指定された ACL を追加する。既存の ACL
 		は変更されない。</p></dd><dt><span class="term">-M acls</span></dt><dd><p>コマンドラインで指定された ACL の mask 値
 		(パーミッション) を変更する。ACL リストに指定された ACL が存在しない場合、その ACL 毎にエラーが出力される。
@@ -25,32 +25,25 @@
 		表示させる。デフォルトでは、SID は名前に、ACE の type と mask は、
 		可読性のある文字列形式に変換される。 </p></dd><dt><span class="term">-t</span></dt><dd><p>
 		実際に処理は行わず、指定した引数の正当性を検証する。
-		</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>Print a summary of command line options.
-</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> is an integer 
-from 0 to 10. The default value if this parameter is 
-not specified is 0.</p><p>The higher this value, the more detail will be 
-logged to the log files about the activities of the 
-server. At level 0, only critical errors and serious 
-warnings will be logged. Level 1 is a reasonable level for
-day-to-day running - it generates a small amount of 
-information about operations carried out.</p><p>Levels above 1 will generate considerable 
-amounts of log data, and should only be used when 
-investigating a problem. Levels above 3 are designed for 
-use only by developers and generate HUGE amounts of log
-data, most of which is extremely cryptic.</p><p>Note that specifying this parameter here will 
-override the <a class="link" href="smb.conf.5.html#" target="_top"/> parameter
-in the <code class="filename">smb.conf</code> file.</p></dd><dt><span class="term">-V|--version</span></dt><dd><p>Prints the program version number.
-</p></dd><dt><span class="term">-s|--configfile &lt;configuration file&gt;</span></dt><dd><p>The file specified contains the 
-configuration details required by the server.  The 
-information in this file includes server-specific
-information such as what printcap file to use, as well 
-as descriptions of all the services that the server is 
-to provide. See <code class="filename">smb.conf</code> for more information.
-The default configuration file name is determined at 
-compile time.</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>Base directory name for log/debug files. The extension
-<code class="constant">".progname"</code> will be appended (e.g. log.smbclient, 
-log.smbd, etc...). The log file is never removed by the client.
-</p></dd></dl></div></div><div class="refsect1" title="ACL FORMAT"><a name="id2491027"/><h2>ACL FORMAT</h2><p>ACL の形式は、コンマか改行記号で 1 つ以上の ACL エントリを区切ったもの
+		</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
+</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> は0から10までの整数値である。
+既定値の値は、パラメータが設定されていなければ0である。</p><p>この値を大きくするほど、サーバの動作に関するより詳細な情報が
+ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告
+のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況
+に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
+使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
+おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
+指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+</p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
+指定する。このファイルには、サーバーが提供するサービスに関する記述や、
+どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+<code class="filename">smb.conf</code> を参照のこと。設定ファイルの名前の既定値は、コンパイル時
+に決定される。
+</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>ログ/デバッグファイルのファイル名。拡張子として
+<code class="constant">".progname"</code> が追加される(例えば log.smbclient,
+log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
+</p></dd></dl></div></div><div class="refsect1" title="ACL FORMAT"><a name="id2487496"/><h2>ACL FORMAT</h2><p>ACL の形式は、コンマか改行記号で 1 つ以上の ACL エントリを区切ったもの
 	である。ACL エントリは以下のいずれかの形式をとる: </p><pre class="programlisting"> 
 REVISION:&lt;revision number&gt;
 OWNER:&lt;sid or name&gt;
@@ -76,17 +69,17 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 		パーミッションと等価である。
 		</p></li><li class="listitem"><p><span class="emphasis"><em>FULL</em></span> - 'RWXDPO'
 		パーミッションと等価である。
-		</p></li></ul></div></div><div class="refsect1" title="終了ステータス"><a name="id2491236"/><h2>終了ステータス</h2><p><code class="literal">smbcacls</code> コマンドは、操作が成功したか、
+		</p></li></ul></div></div><div class="refsect1" title="終了ステータス"><a name="id2487704"/><h2>終了ステータス</h2><p><code class="literal">smbcacls</code> コマンドは、操作が成功したか、
 	その他の結果になったかに応じた戻り値を設定する。 
 	戻り値は、以下の値のいずれかになる。</p><p>操作が成功した場合、<code class="literal">smbcacls</code> は戻り値として 0
 	を返す。もし <code class="literal">smbcacls</code> が指定したサーバに接続できなかったか、
 	ACL を取得または設定する際にエラーが発生した場合、戻り値として 1 が返される。
-	コマンドライン引数の解析に失敗した場合は、戻り値として 2 が返される。</p></div><div class="refsect1" title="バージョン"><a name="id2491281"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="著者"><a name="id2491293"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	コマンドライン引数の解析に失敗した場合は、戻り値として 2 が返される。</p></div><div class="refsect1" title="バージョン"><a name="id2487750"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="著者"><a name="id2487762"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team によって、Linux
 	カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
 	</p><p><code class="literal">smbcacls</code> は Andrew Tridgell と Tim Potter
 	によって書かれた。</p><p> Samba 2.2 における DocBook 形式への変換は、Gerald Carter
 	によって行なわれた。Samba 3.0 における DocBook XML 4.2 形式への変換は、
-	Alexander Bokovoy によって行われた。</p></div><div class="refsect1" title="日本語訳"><a name="id2491329"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.0 - 3.5.4 対応のものである。</p><p>このドキュメントの Samba 3.0.0 - Samba 3.5.4 対応の翻訳は
+	Alexander Bokovoy によって行われた。</p></div><div class="refsect1" title="日本語訳"><a name="id2487798"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.0.0 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.0 - Samba 3.5.6 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>たかはしもとのぶ (monyo@samba.gr.jp)</p></li><li class="listitem"><p>山田 史朗 (shiro@miraclelinux.com)</p></li></ul></div><p>	
         によって行なわれた。</p></div></div></body></html>
