@@ -27,8 +27,8 @@
 に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
 おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
-となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
-指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code> ファイル中の、
+<a class="link" href="smb.conf.5.html#LOGLEVEL" target="_top">log level</a> パラメータの指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
 </p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
 指定する。このファイルには、サーバーが提供するサービスに関する記述や、
 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
@@ -38,14 +38,14 @@
 <code class="constant">".progname"</code> が追加される(例えば log.smbclient,
 log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
 </p></dd><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
-</p></dd></dl></div></div><div class="refsect1" title="インストール"><a name="id2487356"/><h2>インストール</h2><p>Swat は、ほとんどのディストリビューションのバイナリパッケージに
+</p></dd></dl></div></div><div class="refsect1" title="インストール"><a name="id2487358"/><h2>インストール</h2><p>Swat は、ほとんどのディストリビューションのバイナリパッケージに
 	含まれている。
 	その場合パッケージマネージャがインストールと設定を行う。
 	このセクションは一から swat をコンパイルした人のみを対象としている。
 	</p><p>SWAT をコンパイルした後、<code class="literal">make install</code>
 	を実行して <code class="literal">swat</code> バイナリといろいろなヘルプとイメージ
 	ファイルをインストールする必要がある。
-	デフォルトのインストールでは以下のものが入れられる: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>/usr/local/samba/bin/swat</p></li><li class="listitem"><p>/usr/local/samba/swat/images/*</p></li><li class="listitem"><p>/usr/local/samba/swat/help/*</p></li></ul></div><div class="refsect2" title="Inetd Installation"><a name="id2487415"/><h3>Inetd Installation</h3><p><code class="literal">inetd</code> から SWAT を起動するには、
+	デフォルトのインストールでは以下のものが入れられる: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>/usr/local/samba/bin/swat</p></li><li class="listitem"><p>/usr/local/samba/swat/images/*</p></li><li class="listitem"><p>/usr/local/samba/swat/help/*</p></li></ul></div><div class="refsect2" title="Inetd Installation"><a name="id2487417"/><h3>Inetd Installation</h3><p><code class="literal">inetd</code> から SWAT を起動するには、
 		<code class="filename">/etc/inetd.conf</code> と
 		<code class="filename">/etc/services</code> を修正する必要がある。
 		</p><p><code class="filename">/etc/services</code> には、
@@ -61,10 +61,10 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 		<code class="filename">/etc/inetd.conf</code> を編集したら、inetd に
 		HUP シグナルを送ること。それには <code class="literal">kill -1 PID</code>
 		のように入力する。
-		ここでPIDは inetd デーモンのプロセスIDを示す。</p></div></div><div class="refsect1" title="起動"><a name="id2487538"/><h2>起動</h2><p>SWAT を起動するには、 お好みのWebブラウザを起動して、
+		ここでPIDは inetd デーモンのプロセスIDを示す。</p></div></div><div class="refsect1" title="起動"><a name="id2487540"/><h2>起動</h2><p>SWAT を起動するには、 お好みのWebブラウザを起動して、
 	"http://localhost:901/" を開く。</p><p>IP 的に接続可能なマシンから SWAT を起動することも可能であるが、
 	パスワードは伝送路上を平文で送られているため、別マシンからの接続を
-	行なうとパスワードを盗聴される可能性があることに注意。</p></div><div class="refsect1" title="関連ファイル"><a name="id2487565"/><h2>関連ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/inetd.conf</code></span></dt><dd><p>このファイルには、メタデーモンのための適切な
+	行なうとパスワードを盗聴される可能性があることに注意。</p></div><div class="refsect1" title="関連ファイル"><a name="id2487566"/><h2>関連ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/inetd.conf</code></span></dt><dd><p>このファイルには、メタデーモンのための適切な
 		起動情報が含まれている。</p></dd><dt><span class="term"><code class="filename">/etc/services</code></span></dt><dd><p>このファイルには、サービス名 (例: SWAT)
 		とサービスポート (例: 901)、そのプロトコルの種類 (例: tcp)
 		のマッピングに関する情報が含まれている。
@@ -73,14 +73,14 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 		<code class="filename">/usr/samba/lib/smb.conf</code> や
 		<code class="filename">/etc/smb.conf</code> がある。
 		このファイルにはサーバがクライアントに提供する全てのサービスに
-		ついての記述がある。</p></dd></dl></div></div><div class="refsect1" title="警告"><a name="id2487653"/><h2>警告</h2><p><code class="literal">swat</code> は <a class="citerefentry" href="&#10;&#9;smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">
+		ついての記述がある。</p></dd></dl></div></div><div class="refsect1" title="警告"><a name="id2487654"/><h2>警告</h2><p><code class="literal">swat</code> は <a class="citerefentry" href="&#10;&#9;smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">
 	smb.conf</span>(5)</span></a> 
 	ファイルを書き換えてしまう。エントリは再配置され、コメントや
 	<em class="parameter"><code>include=</code></em>、<em class="parameter"><code>copy=</code></em>
 	オプションは削除されてしまう。
 	既に念入りに手をかけて作成した <code class="filename">smb.conf</code>
 	を持っている場合は、事前にバックアップしておくか、swat を使わないこと!
-	</p></div><div class="refsect1" title="バージョン"><a name="id2487702"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="関連項目"><a name="id2487713"/><h2>関連項目</h2><p><code class="literal">inetd(5)</code>, <a class="citerefentry" href="smbd.8.html"><span class="citerefentry"><span class="refentrytitle">smbd</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a></p></div><div class="refsect1" title="著者"><a name="id2487744"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	</p></div><div class="refsect1" title="バージョン"><a name="id2487703"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="関連項目"><a name="id2487714"/><h2>関連項目</h2><p><code class="literal">inetd(5)</code>, <a class="citerefentry" href="smbd.8.html"><span class="citerefentry"><span class="refentrytitle">smbd</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a></p></div><div class="refsect1" title="著者"><a name="id2487745"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、
 	Linux カーネルの開発と同様の オープンソースプロジェクトとして開発が
 	行なわれている。</p><p>オリジナルの Samba マニュアルページは Karl Auer
@@ -92,6 +92,6 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	Samba 2.2 における DocBook 形式への変換は、Gerald Carter
 	によって行なわれた。
 	Samba 3.0 における DocBook XML 4.2 への変換は Alexander Bokovoy によって行われた。
-	</p></div><div class="refsect1" title="日本語訳"><a name="id2487780"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
+	</p></div><div class="refsect1" title="日本語訳"><a name="id2487781"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>たかはし もとのぶ(monyo@samba.gr.jp)</p></li><li class="listitem"><p>山田 史朗 (shiro@miraclelinux.com)</p></li></ul></div><p>	
 	によって行なわれた。</p><p>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</p></div></div></body></html>

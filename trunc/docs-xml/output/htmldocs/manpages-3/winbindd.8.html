@@ -97,8 +97,8 @@ hosts:		files wins
 に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
 おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
-となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
-指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code> ファイル中の、
+<a class="link" href="smb.conf.5.html#LOGLEVEL" target="_top">log level</a> パラメータの指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
 </p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
 指定する。このファイルには、サーバーが提供するサービスに関する記述や、
 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
@@ -130,7 +130,7 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 		(Samba 2.2 での動作モード)。
 		<code class="literal">winbindd</code> のデフォルトの動作では、
 		期限切れのキャッシュエントリの更新を行う子プロセスが起動される。
-		</p></dd></dl></div></div><div class="refsect1" title="名前と ID の解決"><a name="id2487792"/><h2>名前と ID の解決</h2><p>
+		</p></dd></dl></div></div><div class="refsect1" title="名前と ID の解決"><a name="id2487793"/><h2>名前と ID の解決</h2><p>
 	Windows NT サーバ上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。
 	Windows NT のユーザとグループを UNIX のユーザとグループに変換するには、
 	SID とユーザ ID およびグループ ID 間のマッピングが必要となる。
@@ -148,7 +148,7 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	このファイルが削除されたり壊れたりしてしまうと
 	winbindd が、ユーザ ID やグループ ID と
 	Windows NT のユーザあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
-	</p></div><div class="refsect1" title="設定"><a name="id2487849"/><h2>設定</h2><p>
+	</p></div><div class="refsect1" title="設定"><a name="id2487850"/><h2>設定</h2><p>
 	<code class="literal">winbindd</code> デーモンの設定は、
 	<a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>
 	ファイルのパラメータで行う。
@@ -169,7 +169,7 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 		このパラメータを設定すると、ドメインコントローラから情報を
 		検索するため、LDAPの変わりにwinbindがRPCを使うことを強制
 		する。
-		</p></li></ul></div></div><div class="refsect1" title="設定例"><a name="id2538499"/><h2>設定例</h2><p>
+		</p></li></ul></div></div><div class="refsect1" title="設定例"><a name="id2538500"/><h2>設定例</h2><p>
 	ユーザとグループ名の解決と認証をドメインコントローラで行うには、
 	winbindd を以下のように設定する。
 	この設定例は、古いバージョンの Red Hat Linux で動作を確認した。
@@ -233,7 +233,7 @@ auth  required    /lib/security/pam_unix.so \
 	<code class="literal">getent passwd</code> と <code class="literal">getent group</code>
 	コマンドを実行すれば、
 	winbindd が正常に稼働していることを確認できる。
-	</p></div><div class="refsect1" title="注意"><a name="id2538729"/><h2>注意</h2><p>以下の注意点は、
+	</p></div><div class="refsect1" title="注意"><a name="id2538730"/><h2>注意</h2><p>以下の注意点は、
 	<code class="literal">winbindd</code> の設定や実行の際に有用である:
 	</p><p>
 	<code class="literal">winbindd</code>
@@ -256,7 +256,7 @@ auth  required    /lib/security/pam_unix.so \
 	Windows NT の SID と
 	UNIX のユーザ ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、
 	マッピング情報は失われてしまう。
-	</p></div><div class="refsect1" title="シグナル"><a name="id2538814"/><h2>シグナル</h2><p>
+	</p></div><div class="refsect1" title="シグナル"><a name="id2538816"/><h2>シグナル</h2><p>
 	以下のシグナルによって
 	<code class="literal">winbindd</code> デーモンを操作することが
 	可能である。
@@ -271,7 +271,7 @@ auth  required    /lib/security/pam_unix.so \
 		</p><p>
 		ログファイルは、
 		log file パラメータで指定したファイルである。
-		</p></dd></dl></div></div><div class="refsect1" title="ファイル"><a name="id2538894"/><h2>ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/nsswitch.conf(5)</code></span></dt><dd><p>ネームサービススイッチの設定ファイル。</p></dd><dt><span class="term">/tmp/.winbindd/pipe</span></dt><dd><p>
+		</p></dd></dl></div></div><div class="refsect1" title="ファイル"><a name="id2538895"/><h2>ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/nsswitch.conf(5)</code></span></dt><dd><p>ネームサービススイッチの設定ファイル。</p></dd><dt><span class="term">/tmp/.winbindd/pipe</span></dt><dd><p>
 		クライアントが
 		<code class="literal">winbindd</code>
 		と通信するための UNIX パイプ。
@@ -308,12 +308,12 @@ auth  required    /lib/security/pam_unix.so \
 		<code class="filename">/usr/local/samba/var/locks</code>
 		である。
 		</p></dd><dt><span class="term">$LOCKDIR/winbindd_cache.tdb</span></dt><dd><p>キャッシュされたユーザ/グループ情報の保管場所。
-		</p></dd></dl></div></div><div class="refsect1" title="バージョン"><a name="id2487249"/><h2>バージョン</h2><p>このマニュアルは、Samba システムのバージョン 3 に適用される。</p></div><div class="refsect1" title="参照"><a name="id2487260"/><h2>参照</h2><p><code class="filename">nsswitch.conf(5)</code>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>, <a class="citerefentry" href="wbinfo.1.html"><span class="citerefentry"><span class="refentrytitle">wbinfo</span>(1)</span></a>, <a class="citerefentry" href="ntlm_auth.8.html"><span class="citerefentry"><span class="refentrytitle">ntlm_auth</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="pam_winbind.8.html"><span class="citerefentry"><span class="refentrytitle">pam_winbind</span>(8)</span></a></p></div><div class="refsect1" title="著者"><a name="id2539275"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+		</p></dd></dl></div></div><div class="refsect1" title="バージョン"><a name="id2487249"/><h2>バージョン</h2><p>このマニュアルは、Samba システムのバージョン 3 に適用される。</p></div><div class="refsect1" title="参照"><a name="id2487260"/><h2>参照</h2><p><code class="filename">nsswitch.conf(5)</code>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>, <a class="citerefentry" href="wbinfo.1.html"><span class="citerefentry"><span class="refentrytitle">wbinfo</span>(1)</span></a>, <a class="citerefentry" href="ntlm_auth.8.html"><span class="citerefentry"><span class="refentrytitle">ntlm_auth</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="pam_winbind.8.html"><span class="citerefentry"><span class="refentrytitle">pam_winbind</span>(8)</span></a></p></div><div class="refsect1" title="著者"><a name="id2539276"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
 	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
 	</p><p><code class="literal">wbinfo</code> および <code class="literal">winbindd</code> コマンドは Tim Potter によって作成された。</p><p>
 	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。 
 	Samba 3.0 のための DocBook XML 4.2 形式の変換は Alexander Bokovoy によって行われた。
-	</p></div><div class="refsect1" title="日本語訳"><a name="id2539313"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
+	</p></div><div class="refsect1" title="日本語訳"><a name="id2539314"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
 	</p><div class="itemizedlist"><p>たかはしもとのぶ (monyo@samba.gr.jp)</p><p>さとうふみやす</p><ul class="itemizedlist" type="disc"/></div><p>	
         によって行なわれた。</p><p>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</p></div></div></body></html>

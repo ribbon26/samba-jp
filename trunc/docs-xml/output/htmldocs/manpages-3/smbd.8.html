@@ -61,8 +61,8 @@
 に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
 おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
-となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
-指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code> ファイル中の、
+<a class="link" href="smb.conf.5.html#LOGLEVEL" target="_top">log level</a> パラメータの指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
 </p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
 指定する。このファイルには、サーバーが提供するサービスに関する記述や、
 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
@@ -114,7 +114,7 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	一方、共有レベルのセキュリティではこれはスキップされることに注意。
 	また、いくつかの古い pam 設定ファイルではセッションをサポートするために
 	行の追加が必要かも知れないことにも注意。
-	</p></li></ul></div></div><div class="refsect1" title="バージョン"><a name="id2538388"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン	3用にである。</p></div><div class="refsect1" title="診断"><a name="id2538399"/><h2>診断</h2><p>サーバによって出力されたほとんどの診断は、指定されたログファイルに
+	</p></li></ul></div></div><div class="refsect1" title="バージョン"><a name="id2538389"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン	3用にである。</p></div><div class="refsect1" title="診断"><a name="id2538400"/><h2>診断</h2><p>サーバによって出力されたほとんどの診断は、指定されたログファイルに
 	記録される。ログファイルの名前はコンパイル時に指定されるが、
 	コマンドラインで変更することもできる。</p><p>利用できる診断の数と性質は、サーバで使用されるデバッグ・レベルに
 	依存する。もし問題を抱えているなら、デバッグ・レベルを 
@@ -123,9 +123,9 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	存在しているため、診断メッセージをすべて記述することを保証できない。
 	そのような場合にもっともよい方法は、ソースコードを検索
 	(grep)することであり、着目している診断メッセージを引き起こした条件を
-	探すことである。</p></div><div class="refsect1" title="TDBファイル"><a name="id2538440"/><h2>TDBファイル</h2><p>Sambaは通常<code class="filename">/var/lib/samba</code>にあるいくつかのTDB (Trivial Database) ファイルにそのデータを格納する。</p><p>
+	探すことである。</p></div><div class="refsect1" title="TDBファイル"><a name="id2538441"/><h2>TDBファイル</h2><p>Sambaは通常<code class="filename">/var/lib/samba</code>にあるいくつかのTDB (Trivial Database) ファイルにそのデータを格納する。</p><p>
 	(*) 情報はリスタートをまたがって継続する(しかし、必ずしもバックアップが重要ではない)。
-	</p><div class="variablelist"><dl><dt><span class="term">account_policy.tdb*</span></dt><dd><p>パスワードの満了期間などのような、NTアカウントポリシーの設定</p></dd><dt><span class="term">brlock.tdb</span></dt><dd><p>バイトレンジロック</p></dd><dt><span class="term">browse.dat</span></dt><dd><p>ブラウズリスト</p></dd><dt><span class="term">connections.tdb</span></dt><dd><p>共有の接続(最大コネクションの強制などに使う)</p></dd><dt><span class="term">gencache.tdb</span></dt><dd><p>汎用キャッシュdb</p></dd><dt><span class="term">group_mapping.tdb*</span></dt><dd><p>グループマッピング情報</p></dd><dt><span class="term">locking.tdb</span></dt><dd><p>共有モードとoplocks</p></dd><dt><span class="term">login_cache.tdb*</span></dt><dd><p>不正なログイン記録</p></dd><dt><span class="term">messages.tdb</span></dt><dd><p>Sambaメッセージングシステム</p></dd><dt><span class="term">netsamlogon_cache.tdb*</span></dt><dd><p>net_samlogon() 要求 (ドメインメンバとして)からのユーザ net_info_3構造体のキャッシュ </p></dd><dt><span class="term">ntdrivers.tdb*</span></dt><dd><p>インストールされたプリンタドライバ</p></dd><dt><span class="term">ntforms.tdb*</span></dt><dd><p>インストールされたプリンタのフォーム</p></dd><dt><span class="term">ntprinters.tdb*</span></dt><dd><p>インストールされたプリンタの情報</p></dd><dt><span class="term">printing/</span></dt><dd><p>キャッシュされたlpq出力のプリンとキュー毎のtdbを含むディレクトリ</p></dd><dt><span class="term">registry.tdb</span></dt><dd><p>Windowsレジストリの骨格(regedit.exe経由)</p></dd><dt><span class="term">sessionid.tdb</span></dt><dd><p>セッション情報(すなわち'utmp = yes'のサポート)</p></dd><dt><span class="term">share_info.tdb*</span></dt><dd><p>共有のacl</p></dd><dt><span class="term">winbindd_cache.tdb</span></dt><dd><p>winbinddが使うユーザリストのキャッシュなど</p></dd><dt><span class="term">winbindd_idmap.tdb*</span></dt><dd><p>winbinddが使うローカルのidmap db</p></dd><dt><span class="term">wins.dat*</span></dt><dd><p>'wins support = yes'の時のwinsデータベース</p></dd></dl></div></div><div class="refsect1" title="シグナル"><a name="id2538682"/><h2>シグナル</h2><p><code class="literal">smbd</code> に SIGHUP を送ることで、
+	</p><div class="variablelist"><dl><dt><span class="term">account_policy.tdb*</span></dt><dd><p>パスワードの満了期間などのような、NTアカウントポリシーの設定</p></dd><dt><span class="term">brlock.tdb</span></dt><dd><p>バイトレンジロック</p></dd><dt><span class="term">browse.dat</span></dt><dd><p>ブラウズリスト</p></dd><dt><span class="term">connections.tdb</span></dt><dd><p>共有の接続(最大コネクションの強制などに使う)</p></dd><dt><span class="term">gencache.tdb</span></dt><dd><p>汎用キャッシュdb</p></dd><dt><span class="term">group_mapping.tdb*</span></dt><dd><p>グループマッピング情報</p></dd><dt><span class="term">locking.tdb</span></dt><dd><p>共有モードとoplocks</p></dd><dt><span class="term">login_cache.tdb*</span></dt><dd><p>不正なログイン記録</p></dd><dt><span class="term">messages.tdb</span></dt><dd><p>Sambaメッセージングシステム</p></dd><dt><span class="term">netsamlogon_cache.tdb*</span></dt><dd><p>net_samlogon() 要求 (ドメインメンバとして)からのユーザ net_info_3構造体のキャッシュ </p></dd><dt><span class="term">ntdrivers.tdb*</span></dt><dd><p>インストールされたプリンタドライバ</p></dd><dt><span class="term">ntforms.tdb*</span></dt><dd><p>インストールされたプリンタのフォーム</p></dd><dt><span class="term">ntprinters.tdb*</span></dt><dd><p>インストールされたプリンタの情報</p></dd><dt><span class="term">printing/</span></dt><dd><p>キャッシュされたlpq出力のプリンとキュー毎のtdbを含むディレクトリ</p></dd><dt><span class="term">registry.tdb</span></dt><dd><p>Windowsレジストリの骨格(regedit.exe経由)</p></dd><dt><span class="term">sessionid.tdb</span></dt><dd><p>セッション情報(すなわち'utmp = yes'のサポート)</p></dd><dt><span class="term">share_info.tdb*</span></dt><dd><p>共有のacl</p></dd><dt><span class="term">winbindd_cache.tdb</span></dt><dd><p>winbinddが使うユーザリストのキャッシュなど</p></dd><dt><span class="term">winbindd_idmap.tdb*</span></dt><dd><p>winbinddが使うローカルのidmap db</p></dd><dt><span class="term">wins.dat*</span></dt><dd><p>'wins support = yes'の時のwinsデータベース</p></dd></dl></div></div><div class="refsect1" title="シグナル"><a name="id2538684"/><h2>シグナル</h2><p><code class="literal">smbd</code> に SIGHUP を送ることで、
 	<code class="filename">smb.conf</code> の内容を短時間の内に
 	再読み込みさせることができる。</p><p><code class="literal">smbd</code> のプロセスをシャットダウンさせるのに、
 	最後の手段として以外には <code class="literal">SIGKILL (-9)</code> は
@@ -141,10 +141,10 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	<code class="literal">smbd</code> が SMB 待ちの状態になるまで待つ必要がある。
 	select 呼び出しの前にシグナルのブロッキングを解除し、呼び出しの後で再び
 	ブロッキングすればシグナル・ハンドラを安全にすることができるが、
-	これはパフォーマンスに影響するだろう。</p></div><div class="refsect1" title="関連項目"><a name="id2538797"/><h2>関連項目</h2><p><a class="citerefentry" href="hosts_access.5.html"><span class="citerefentry"><span class="refentrytitle">hosts_access</span>(5)</span></a>, <a class="citerefentry" href="inetd.8.html"><span class="citerefentry"><span class="refentrytitle">inetd</span>(8)</span></a>, <a class="citerefentry" href="nmbd.8.html"><span class="citerefentry"><span class="refentrytitle">nmbd</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="smbclient.1.html"><span class="citerefentry"><span class="refentrytitle">smbclient</span>(1)</span></a>, <a class="citerefentry" href="testparm.1.html"><span class="citerefentry"><span class="refentrytitle">testparm</span>(1)</span></a>, <a class="citerefentry" href="testprns.1.html"><span class="citerefentry"><span class="refentrytitle">testprns</span>(1)</span></a>, and the 
+	これはパフォーマンスに影響するだろう。</p></div><div class="refsect1" title="関連項目"><a name="id2538798"/><h2>関連項目</h2><p><a class="citerefentry" href="hosts_access.5.html"><span class="citerefentry"><span class="refentrytitle">hosts_access</span>(5)</span></a>, <a class="citerefentry" href="inetd.8.html"><span class="citerefentry"><span class="refentrytitle">inetd</span>(8)</span></a>, <a class="citerefentry" href="nmbd.8.html"><span class="citerefentry"><span class="refentrytitle">nmbd</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="smbclient.1.html"><span class="citerefentry"><span class="refentrytitle">smbclient</span>(1)</span></a>, <a class="citerefentry" href="testparm.1.html"><span class="citerefentry"><span class="refentrytitle">testparm</span>(1)</span></a>, <a class="citerefentry" href="testprns.1.html"><span class="citerefentry"><span class="refentrytitle">testprns</span>(1)</span></a>, and the 
 	およびインターネット RFC の	<code class="filename">rfc1001.txt</code>, <code class="filename">rfc1002.txt</code>. 
 	加えて CIFS(以前は SMB)の仕様は以下のWebページから入手できる:
-	<a class="ulink" href="http://samba.org/cifs/" target="_top"> http://samba.org/cifs/</a>.</p></div><div class="refsect1" title="著者"><a name="id2538880"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	<a class="ulink" href="http://samba.org/cifs/" target="_top"> http://samba.org/cifs/</a>.</p></div><div class="refsect1" title="著者"><a name="id2538881"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、
 	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
 	開発されているような方法でのオープンソースプロジェクトである 
 	Samba Team によって開発されている。</p><p>オリジナルの Samba の マニュアルページは Karl Auer によって書かれた。
@@ -153,4 +153,4 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	で変換され、Jeremy Allison によって Samba 2.0 リリースのために更新された。
 	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。
 	Samba 3.0 のための DocBook XML 4.2 形式への変換は Alexander Bokovoy が行った。
-	</p></div><div class="refsect1" title="日本語訳"><a name="id2538918"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は、ちかましゅうへいによって行なわれた。</p><p>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は、太田俊哉(ribbon@samba.gr.jp)によって行なわれた。</p></div></div></body></html>
+	</p></div><div class="refsect1" title="日本語訳"><a name="id2538920"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.4 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.0.0 対応の翻訳は、ちかましゅうへいによって行なわれた。</p><p>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は、太田俊哉(ribbon@samba.gr.jp)によって行なわれた。</p></div></div></body></html>

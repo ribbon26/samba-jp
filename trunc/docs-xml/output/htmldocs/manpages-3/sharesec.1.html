@@ -17,8 +17,8 @@
 に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
 使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
 おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
-となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
-指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code> ファイル中の、
+<a class="link" href="smb.conf.5.html#LOGLEVEL" target="_top">log level</a> パラメータの指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
 </p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
 指定する。このファイルには、サーバーが提供するサービスに関する記述や、
 どの printcap ファイルを利用するかといった情報が含まれている。詳細は
@@ -27,7 +27,7 @@
 </p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>ログ/デバッグファイルのファイル名。拡張子として
 <code class="constant">".progname"</code> が追加される(例えば log.smbclient,
 log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
-</p></dd></dl></div></div><div class="refsect1" title="ACL FORMAT"><a name="id2489626"/><h2>ACL FORMAT</h2><p>ACLのフォーマットは、1つまたはそれ以上の、カンマ又は改行で分離された、ACL
+</p></dd></dl></div></div><div class="refsect1" title="ACL FORMAT"><a name="id2489628"/><h2>ACL FORMAT</h2><p>ACLのフォーマットは、1つまたはそれ以上の、カンマ又は改行で分離された、ACL
 	エントリである。1つのACLエントリは以下のうちのどれかである:</p><pre class="programlisting">
 	REVISION:&lt;revision number&gt;
 	OWNER:&lt;sid or name&gt;
@@ -53,11 +53,11 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	指定時に使用される、以下のテキスト文字列のどれか1つを使うことも出来る。
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><span class="emphasis"><em>R</em></span> - 読み取りを許可</p></li><li class="listitem"><p><span class="emphasis"><em>W</em></span> - 書き込みを許可</p></li><li class="listitem"><p><span class="emphasis"><em>X</em></span> - オブジェクトの実行を許可</p></li><li class="listitem"><p><span class="emphasis"><em>D</em></span> - オブジェクトの削除</p></li><li class="listitem"><p><span class="emphasis"><em>P</em></span> - パーミッションの変更</p></li><li class="listitem"><p><span class="emphasis"><em>O</em></span> - 所有権の取得</p></li></ul></div><p>以下の組み合わせパーミッションも指定することができる:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><span class="emphasis"><em>READ</em></span> -  'RX' と同等
 		permissions</p></li><li class="listitem"><p><span class="emphasis"><em>CHANGE</em></span> - 'RXWD' パーミッションと同等
-		</p></li><li class="listitem"><p><span class="emphasis"><em>FULL</em></span> - 'RWXDPO' パーミッションと同等</p></li></ul></div></div><div class="refsect1" title="終了ステータス"><a name="id2487573"/><h2>終了ステータス</h2><p>The <code class="literal">sharesec</code>プログラムは、操作が実行された時の成功、またはそれ以外の状態に
+		</p></li><li class="listitem"><p><span class="emphasis"><em>FULL</em></span> - 'RWXDPO' パーミッションと同等</p></li></ul></div></div><div class="refsect1" title="終了ステータス"><a name="id2487575"/><h2>終了ステータス</h2><p>The <code class="literal">sharesec</code>プログラムは、操作が実行された時の成功、またはそれ以外の状態に
 	応じて終了ステータスをセットする。終了ステータスは以下の値のうちのどれかである。</p><p>もしも操作が成功すれば、sharesecは終了ステータスを0にして戻る。もしも、
 	<code class="literal">sharesec</code>が指定されたサーバに接続できないか、ACLの設定
 	又は取得時にエラーが生じたならば、終了ステータスは1で戻る。もしもコマンド行
-	引数の解釈時にエラーがあれば終了ステータスは2で戻る。</p></div><div class="refsect1" title="実行例"><a name="id2487608"/><h2>実行例</h2><p>SIDに対してフルアクセスを追加
+	引数の解釈時にエラーがあれば終了ステータスは2で戻る。</p></div><div class="refsect1" title="実行例"><a name="id2487610"/><h2>実行例</h2><p>SIDに対してフルアクセスを追加
 	<em class="parameter"><code>S-1-5-21-1866488690-1365729215-3963860297-17724</code></em> on
 	<em class="parameter"><code>share</code></em>:
 	</p><pre class="programlisting">
@@ -70,9 +70,9 @@ log.smbd,など)。ログファイルはクライアントによって削除さ�
 	GROUP:(NULL SID)
 	ACL:S-1-1-0:ALLOWED/0/0x101f01ff
 	ACL:S-1-5-21-1866488690-1365729215-3963860297-17724:ALLOWED/0/FULL
-	</pre></div><div class="refsect1" title="バージョン"><a name="id2487657"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="著者"><a name="id2487668"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	</pre></div><div class="refsect1" title="バージョン"><a name="id2487659"/><h2>バージョン</h2><p>このマニュアルページは Samba バージョン 3用である。</p></div><div class="refsect1" title="著者"><a name="id2487670"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team によって、Linux
 	カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
-	</p></div><div class="refsect1" title="日本語訳"><a name="id2487684"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.3.6 - 3.5.6 対応の翻訳は
+	</p></div><div class="refsect1" title="日本語訳"><a name="id2487686"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.5.6 対応のものである。</p><p>このドキュメントの Samba 3.3.6 - 3.5.6 対応の翻訳は
 	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>太田俊哉 (ribbon@samba.gr.jp)</p></li></ul></div><p>	
         によって行なわれた。</p></div></div></body></html>
