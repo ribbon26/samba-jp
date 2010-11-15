@@ -1,7 +1,7 @@
 #
 # set version
 #
-set VERSION=3.5.3
+set VERSION=3.5.6
 #
 # extract archives
 #
@@ -33,9 +33,3 @@ if ($LINES > 0) then
 else 
   echo smbdotconf OK
 endif
-#
-#compile
-#
-cd samba-$VERSION/docs-xml
-setenv XML_CATALOG_FILES "file:///etc/xml/catalog file://$cwd/build/catalog.xml"
-env | grep XML
