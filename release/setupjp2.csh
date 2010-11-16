@@ -14,6 +14,7 @@ setenv | grep XML
 echo compile
 #
 make distclean
+make smbdotconf/parameters.all.xml
 make html
 make htmlman3
 make manpages3
