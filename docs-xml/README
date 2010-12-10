@@ -55,19 +55,32 @@ Sambaのバージョンが変更になってもドキュメントの修正がな
 HTML形式、およびman形式のファイル両方ともUTF-8でエンコードしています。
 必要に応じて他の文字コードに変換してください。
 
-4. setupjp3x.sh/setupjp.sh の使い方
+4. ビルド方法
 ======================================================================
 
-svnからまずこれだけダウンロードしてください。次に、オリジナルのSamba-
-3.x.y のベースディレクトリに移してください。その後、この
-スクリプトを実行すると、soucreforge.jpのsvnからデータをダウンロードし、
-必要なファイルをコピーして初期セットアップを行います。
-次に、docs-xmlディレクトリに移動し、
 
-export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
 
-を実行してください。その後、make htmlman3,make manpages3を実行してください。
-OpenSUSE 11.2と11.3でしかテストしていません。
+  $ cd /srv/build
+  $ tar xzf /srv/source/samba-3.X.Y.tar.gz
+
+(2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
+
+  $ cd /srv/build
+  $ mkdir samba-ja-docs-3.X.Y-Z
+  $ cd /srv/source/samba-ja-docs-3.X.Y-Z
+  $ tar xzf samba-ja-docs-3.X.Y-Z.tar.gz
+
+(3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
+    リンクを翻訳文書ディレクトリ内に作成
+
+  $ cd /srv/source/samba-ja-docs-3.X.Y-Z/docs-xml
+  $ ln -s /srv/build/samba-3.X.Y/docs-xml samba-docs-xml
+
+(4) ビルドを実行
+
+  $ make clean
+  $ make
 
 5. 変更履歴
 ======================================================================
