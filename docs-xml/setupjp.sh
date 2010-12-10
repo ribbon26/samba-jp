@@ -1,10 +1,8 @@
 #!/bin/sh
+
+set -e
+
 svn export https://svn.sourceforge.jp/svnroot/samba-jp/trunk
-if [ $? -ne 0 ]
-then
-   echo svn get error
-   exit 1
-fi
 cp -pvr trunk/docs-xml/manpages-3/* docs-xml/manpages-3
 cp -pvr trunk/docs-xml/smbdotconf/* docs-xml/smbdotconf
 cp -pvr trunk/docs-xml/Samba3-HOWTO/* docs-xml/Samba3-HOWTO
