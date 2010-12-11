@@ -29,7 +29,7 @@ SAMBA_DOCBUILD_FILES= 	\
 #	xslt/smb.conf-html.xsl \
 #	xslt/yodl.xsl \
 
-SAMBA_XML_CATALOG_FILE=	`pwd`/build/catalog.xml
+SAMBA_XML_CATALOG_FILE=	build/catalog.xml
 
 ## ======================================================================
 
@@ -39,20 +39,21 @@ default: config.stamp
 all: html html-single htmlman3 manpages3
 
 html html-single htmlman3 manpages3 clean:: config.stamp
-	 XML_CATALOG_FILES="file:///etc/xml/catalog file://$(SAMBA_XML_CATALOG_FILE)" \
+	 XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/$(SAMBA_XML_CATALOG_FILE)" \
 	 $(MAKE) -f Makefile $@
 
 config.stamp: $(SAMBA_DOCBUILD_FILES)
 	$(MAKE) -f Makefile
 	sed "s|@BUILDDIR@|`pwd`|g" $(SAMBA_XML_CATALOG_FILE).in >$(SAMBA_XML_CATALOG_FILE)
-	touch config.stamp
+	touch $@
 
-$(SAMBA_DOCS_XML_DIR):
-	@echo "You must create a symlink '$(SAMBA_DOCS_XML_DIR)' for Samba docs-xml directory,"
-	@echo "e.g.: ln -s /path/to/samba-3.X.Y/docs-xml samba-docs-xml"
-	@exit 1
 
-$(SAMBA_DOCBUILD_FILES): $(SAMBA_DOCS_XML_DIR)
+$(SAMBA_DOCBUILD_FILES):
+	@[ -d $(SAMBA_DOCS_XML_DIR) ] || { \
+	  echo "You must create a symlink '$(SAMBA_DOCS_XML_DIR)' for Samba docs-xml directory,"; \
+	  echo "e.g.: ln -s /path/to/samba-3.X.Y/docs-xml samba-docs-xml"; \
+	  exit 1; \
+	}
 	cp -rp $(SAMBA_DOCS_XML_DIR)/$@ $@
 
 distclean::
