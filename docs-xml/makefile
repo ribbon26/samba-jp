@@ -45,6 +45,7 @@ html html-single htmlman3 manpages3 clean:: config.stamp
 config.stamp: $(SAMBA_DOCBUILD_FILES)
 	$(MAKE) -f Makefile
 	sed "s|@BUILDDIR@|`pwd`|g" $(SAMBA_XML_CATALOG_FILE).in >$(SAMBA_XML_CATALOG_FILE)
+	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
 	touch $@
 
 
