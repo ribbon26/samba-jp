@@ -53,14 +53,16 @@ for lang in $langs; do
  
 	    if (rm -f $FNAME && touch $FNAME); then
 		if [ "x$GROFF" = x ] ; then
-		    cp -v $s $m            # Copy raw nroff 
+		    cp -pv $s $m        # Copy raw nroff
+		    gzip -v $FNAME      # Compress
+		    chmod 0644 "$FNAME.gz"
 		else
 		    echo "\t$FNAME"     # groff'ing can be slow, give the user
 					#   a warm fuzzy.
 		    $GROFF $s > $FNAME  # Process nroff, because man(1) (on
 					#   this system) doesn't .
+ 		    chmod 0644 $FNAME
 		fi
-		chmod 0644 $FNAME
 	    else
 		echo Cannot create $FNAME... does $USER have privileges?
 	    fi
