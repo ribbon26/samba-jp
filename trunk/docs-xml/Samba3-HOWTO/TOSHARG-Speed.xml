@@ -22,11 +22,11 @@
 <para>
 SamvaサーバーはクライアントとTCP通信を使用しているため、パフォーマンスを上げるには
 同じプロトコルを使用しているプログラムと比べてみるべきである。最も簡単に入手できる
-TCPを使用したファイル転送プログラムは、FTPもしくは他のTCPベースのSMBサーバである。
+TCPを使用したファイル転送プログラムは、FTPもしくは他のTCPベースのSMBサーバーである。
 </para>
 
 <para>
-もしNTやWindows Workgroups serverに対して実験してみたいなら、クライアントかサーバの
+もしNTやWindows Workgroups serverに対して実験してみたいなら、クライアントかサーバーの
 TCP以外は無効にする必要がある。
 そうしないとNetBEUIのようなまったく違うプロトコルが使われ、比較は意味がない。
 </para>
@@ -40,7 +40,7 @@ TCP以外は無効にする必要がある。
 何人かは、SambaとNovell、NFS又はWindows NTとの間での比較を行った。そのうちの
 いくつかの場合は、Sambaの動作は一番よく、ほかの場合は一番悪かった。最も
 大きな要素は、Samba対他のシステムではなく、種々のシステムで使用しているハードウェアと
-ドライバであると推測している。同じようなハードウェアで、Sambahaは他のシステムと、
+ドライバーであると推測している。同じようなハードウェアで、Sambahaは他のシステムと、
 速度の点において競合できうる。
 </para>
 
@@ -50,7 +50,7 @@ TCP以外は無効にする必要がある。
 <title>ソケットオプション</title>
 
 <para>
-いくつかのオプションは、SambaのようなTCPベースのサーバのパフォーマンスに
+いくつかのオプションは、SambaのようなTCPベースのサーバーのパフォーマンスに
 大きな影響を与える。
 </para>
 
@@ -80,9 +80,9 @@ MicrosoftのTCP/IPスタックがTCP ACKを送るのが遅いためだという�
 
 <para>
 <parameter>socket options = SO_RCVBUF=8192</parameter> をsmb.confの中に書き込む
-ことで、Sambaのループバックアダプタ(IP Address 127.0.0.1)のパフォーマンスが
+ことで、Sambaのループバックアダプター(IP Address 127.0.0.1)のパフォーマンスが
 ひどく下がるという報告がある。<parameter>socket options</parameter>を設定する前に、
-サーバ上で定量的に計測することを強く推奨する。
+サーバー上で定量的に計測することを強く推奨する。
 </para>
 
 </sect1>
@@ -94,7 +94,7 @@ MicrosoftのTCP/IPスタックがTCP ACKを送るのが遅いためだという�
 <smbconfoption name="read size"/>オプションは、ディスクのR/WとネットワークのR/Wの
 同時動作に影響する。
 いくつかのSMBコマンド(currently SMBwrite, SMBwriteXとSMBreadbraw)で転送されている
-データ量がこの値より大きかったとき、サーバはネットワークからそのパケットを受け取る前に
+データ量がこの値より大きかったとき、サーバーはネットワークからそのパケットを受け取る前に
 データを書き込む。もしくは、SMBreadrawコマンドの場合、全てのデータをディスクから
 読む前にネットワークに書き込む。
 </para>
@@ -115,7 +115,7 @@ MicrosoftのTCP/IPスタックがTCP ACKを送るのが遅いためだという�
 <title>Max Xmit</title>
 
 <para>
-起動時にクライアントとサーバとの間で、ほぼすべてのコマンドサイズを制限する、
+起動時にクライアントとサーバーとの間で、ほぼすべてのコマンドサイズを制限する、
 <parameter>maximum transmit</parameter>値の調停を行う。
 sambaが調停する最大値を&smb.conf;に<smbconfoption name="max xmit"/>
 オプションを使うことで設定できる。
@@ -138,7 +138,7 @@ sambaが調停する最大値を&smb.conf;に<smbconfoption name="max xmit"/>
 <para>
 <smbconfoption name="debug level"/>として設定できるログレベルを2より大きくすると、
 大幅にパフォーマンスが低下する。
-これはサーバが各操作後ににログをフラッシュし、それがとても時間がかかるためである。
+これはサーバーが各操作後ににログをフラッシュし、それがとても時間がかかるためである。
 </para>
 </sect1>
 
@@ -147,7 +147,7 @@ sambaが調停する最大値を&smb.conf;に<smbconfoption name="max xmit"/>
 
 <para>
 <smbconfoption name="read raw"/>操作は、最適化された、レイテンシの小さい、
-ファイル読み取り操作の為に設計されている。サーバはそれをサポートしなくてもよいが、
+ファイル読み取り操作の為に設計されている。サーバーはそれをサポートしなくてもよいが、
 Sambaは<smbconfoption name="read raw"/>サポートをオプションとしていて、
 規定値では有効になっている。
 
@@ -169,13 +169,13 @@ Sambaは<smbconfoption name="read raw"/>サポートをオプションとして�
 
 <para>
 <smbconfoption name="write raw"/>操作は、最適化された、レイテンシの小さい、
-ファイル読み取り操作の為に設計されている。サーバはそれをサポートしなくてもよいが、
+ファイル読み取り操作の為に設計されている。サーバーはそれをサポートしなくてもよいが、
 Sambaは<smbconfoption name="read raw"/>サポートをオプションとしていて、
 規定値では有効になっている。
 </para>
 
 <para>
-多くの場合、<smbconfoption name="write raw"/>をパラメータを変更しようとした場合、
+多くの場合、<smbconfoption name="write raw"/>をパラメーターを変更しようとした場合、
 変更すると通常よりも速度が遅くなる。
 
 </para>
@@ -222,7 +222,7 @@ Sambaは<smbconfoption name="read raw"/>サポートをオプションとして�
 <quote>普通のソース(kernel)に移行しろ!</quote>」と言うでしょう。
 もちろん私は試しましたが、上手くいきませんでした。
 私は100MBのLANと２台のコンピュータ(LinuxとWindows2000)を使っています。
-LinuxサーバーでDivxファイルの入ったフォルダを共有し、クライアント(Windows2000)で
+LinuxサーバーでDivxファイルの入ったフォルダーを共有し、クライアント(Windows2000)で
 LAN経由で再生していました。2.4.19カーネルにする前は全てが上手く動いていましたが、
 現在では動画は固まって止まってしまいます。サーバーからWindowsへファイルを移動させようと
 しましたが、それもとても遅いです。
@@ -254,7 +254,7 @@ ethenetが問題ないのかを見ましょう。
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>mbd kept spawning</primary></indexterm>
 <indexterm><primary>/var/locks/*.tdb</primary></indexterm>
-我々のSambaPDCサーバは、3年間の間問題なく500以上のユーザ[Windows NT/XP]で3TBのデータを
+我々のSambaPDCサーバーは、3年間の間問題なく500以上のユーザー[Windows NT/XP]で3TBのデータを
 ホスティングしていました。現在ではすべての共有がとても遅いです。親プロセスのsmbdは
 継続してプロセスを起動していて、(通常なら平均で250なのに)1600以上のSMDBプロセスが
 起動しています。これによってSUN E3500が2回壊れています。
@@ -296,21 +296,21 @@ MYOB Premier操作とそのデータファイルへのアクセスにおいて�
 </para>
 
 <para>
-<indexterm><primary>プリンタモニタ</primary></indexterm>
+<indexterm><primary>プリンターモニター</primary></indexterm>
 <indexterm><primary>pauses</primary></indexterm>
-Windowsクライアント上でプリンタモニタープログラムを走らせたところ、この問題が発生した。
+Windowsクライアント上でプリンターモニタープログラムを走らせたところ、この問題が発生した。
 ログから、1秒ごとに休止状態が発生していることが分かりました。
 </para>
 
 <para>
 <indexterm><primary>ネットワークアクセス</primary></indexterm>
 <indexterm><primary>printing now</primary></indexterm>
-モニタソフトウエアを止めたところ、ネットワーク速度が普通(早い状態に)戻りました。
-再びモニタソフトウエアを起動させたところ、再び遅くなりました。
+モニターソフトウエアを止めたところ、ネットワーク速度が普通(早い状態に)戻りました。
+再びモニターソフトウエアを起動させたところ、再び遅くなりました。
 プリンターはCanon LBP-810で
  and the relevant task wassomething like CAPON (not sure on spelling). 
 
-モニタソフトウエアは、クライアントが印刷中、"印刷中"を表示している。
+モニターソフトウエアは、クライアントが印刷中、"印刷中"を表示している。
 </para>
 
 <para>

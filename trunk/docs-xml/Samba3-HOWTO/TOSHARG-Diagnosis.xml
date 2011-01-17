@@ -15,7 +15,7 @@
 
 <para>
 <indexterm><primary>検証</primary></indexterm>
-この章には、Sambaサーバの検証が行えるテストの一覧が含まれている。また、それらの手順の
+この章には、Sambaサーバーの検証が行えるテストの一覧が含まれている。また、それらの手順の
 どこかで失敗した問題を起こす可能性の高いものが何かと言うことについても説明している。
 もしも、すべてのテストをパスしたら、おそらく正しく動いているだろう。
 </para>
@@ -38,7 +38,7 @@
 <title>前提条件</title>
 
 <para>
-すべてのテストにおいて、SambaサーバはBIGSERVERで、PCクライアントがACLIENTで、両者とも
+すべてのテストにおいて、SambaサーバーはBIGSERVERで、PCクライアントがACLIENTで、両者とも
 TESTGROUPというワークグループに属していることを仮定する。
 </para>
 
@@ -72,18 +72,18 @@ TESTGROUPというワークグループに属していることを仮定する�
 <indexterm><primary>名前解決</primary></indexterm>
 <indexterm><primary>/etc/resolv.conf</primary></indexterm>
 受け取ったエラーメッセージに注意をはらってほしい。もしもエラーメッセージが、使用している
-サーバが調子が悪いという事を報告しているのであれば、まず初めに使用しているIPを名前解決
+サーバーが調子が悪いという事を報告しているのであれば、まず初めに使用しているIPを名前解決
 する方式が正しく設定されているかどうかをチェックすべきである。実際に存在している
-ネームサーバを、<filename>/etc/resolv.conf</filename>が正しく指し示しているようにする
+ネームサーバーを、<filename>/etc/resolv.conf</filename>が正しく指し示しているようにする
 こと。
 </para>
 
 <para>
-<indexterm><primary>DNSサーバアクセス</primary></indexterm>
+<indexterm><primary>DNSサーバーアクセス</primary></indexterm>
 <indexterm><primary>名前解決</primary></indexterm>
 <indexterm><primary>dnsプロキシ</primary></indexterm>
 <indexterm><primary>testparm</primary></indexterm>
-また、もしも、名前解決用のDNSサーバアクセスが出来ないならば、&smb.conf;に
+また、もしも、名前解決用のDNSサーバーアクセスが出来ないならば、&smb.conf;に
 <parameter>dns proxy = no</parameter>が設定されているかをチェックする。
 これをチェックする最も良い方法は、<command>testparm smb.conf</command>である。
 </para>
@@ -94,9 +94,9 @@ TESTGROUPというワークグループに属していることを仮定する�
 <indexterm><primary>tail</primary></indexterm>
 <indexterm><primary>/usr/local/samba/var</primary></indexterm>
 <indexterm><primary>/var/log/samba</primary></indexterm>
-<indexterm><primary>ログファイル</primary><secondary>モニタリング</secondary></indexterm>
+<indexterm><primary>ログファイル</primary><secondary>モニターリング</secondary></indexterm>
 別のターミナルコンソール(X中で複数のターミナルを使うには、ctrl-alt-F1からF6を使用)で、
-<command>tail -F log_file_name</command>を使うことで、テストの間ログファイルをモニタする
+<command>tail -F log_file_name</command>を使うことで、テストの間ログファイルをモニターする
 のは便利である。適切なログファイルは(既定値によるインストールでは)、
 <filename>/usr/local/samba/var</filename>にある。また、マシンからの接続ログは、ここか、
 <filename>/var/log/samba</filename>か、あるいは
@@ -113,7 +113,7 @@ TESTGROUPというワークグループに属していることを仮定する�
 <sect1>
 <title>テスト</title>
 <procedure>
-<title>使用しているSambaサーバの診断</title>
+<title>使用しているSambaサーバーの診断</title>
 
 
 <step performance="required">
@@ -150,7 +150,7 @@ PC上でpingを動かす場合には、<quote>DOS プロンプト</quote>を起�
 もしも、<quote><errorname>host not found</errorname></quote>か同様なメッセージが
 表示されたならば、DNSソフトウェアか<filename>/etc/hosts</filename>ファイルが正しく
 設定されていない。もしもDNSを使っている場合、<filename>/etc/resolv.conf</filename>に、
-正しい、最新のエントリがあるかどうかをチェックする。DNSエントリなしにSambaをサーバと
+正しい、最新のエントリがあるかどうかをチェックする。DNSエントリなしにSambaをサーバーと
 クライアントとして動作させることは可能であるが、この後のテストでは、正しいエントリが
 あると仮定している。
 </para>
@@ -238,7 +238,7 @@ UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
 <para>
 <indexterm><primary>inetd.conf</primary></indexterm>
 もしも、<literal>connection refused</literal>というメッセージが帰ってきたら、
-<command>smbd</command>サーバが動いていないかもしれない。もしも
+<command>smbd</command>サーバーが動いていないかもしれない。もしも
 <filename>inetd.conf</filename>経由で動作するようにしていたら、おそらくこのファイルの
 編集が間違っている。もしもdaemonとして動作するようにしていたら、動作しているかを調べ、
 <command>netstat -a</command>を使ってnetbios-ssnポートがLISTEN中かを確認する。
@@ -254,7 +254,7 @@ UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
 
 <para>
 もしも、<literal>session request failed</literal>というメッセージが表示されたならば、
-サーバは接続を拒否している。もしも<quote>Your server software is being unfriendly</quote>
+サーバーは接続を拒否している。もしも<quote>Your server software is being unfriendly</quote>
 というメッセージが表示されたならば、それはおそらく&smbd;に対するコマンドラインオプションを
 間違えているか、&smbd;の初期起動時に同様の致命的な問題がある。&testparm;で設定ファイル
 (&smb.conf;)の文法と、ログとロックファイルを保持する種々のディレクトリもチェックする。
@@ -281,7 +281,7 @@ UNIXマシン上で<command>smbclient -L BIGSERVER</command>を動かす。
 <para>
 <indexterm><primary>loopback adapter</primary></indexterm>
 <link linkend="modif1">特定のサブネットからのみ接続を受け付ける設定例</link>では、
-ループバックアダプタアドレス 127.0.0.1へ自動的に変換される任意のセッション要求は
+ループバックアダプターアドレス 127.0.0.1へ自動的に変換される任意のセッション要求は
 許可されない。この問題を解決するためには、<link linkend="modif2">以下の例</link>で
 示されているような行に変更する。
 </para>
@@ -325,7 +325,7 @@ IPアドレス、ブロードキャスト、サブネットマスクが正しい
 <para>
 <indexterm><primary>nmblookup</primary></indexterm>
 <command>nmblookup -B BIGSERVER __SAMBA__</command>コマンドを動かす。
-使用しているSambaサーバのIPアドレスが表示されるはずである。
+使用しているSambaサーバーのIPアドレスが表示されるはずである。
 </para>
 
 <para>
@@ -338,8 +338,8 @@ IPアドレス、ブロードキャスト、サブネットマスクが正しい
 </para>
 
 <para>
-ある1つのよくある問題は、多くのinetdの実装が、コマンドライン上に多数のパラメータを使えない
-というものである。もしもこの場合、正しいパラメータを含む1行のみのスクリプトを作成し、
+ある1つのよくある問題は、多くのinetdの実装が、コマンドライン上に多数のパラメーターを使えない
+というものである。もしもこの場合、正しいパラメーターを含む1行のみのスクリプトを作成し、
 それをinetdから起動する。
 </para>
 
@@ -389,7 +389,7 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 </para>
 
 <para>
-もしも、使用しているPCとサーバが同じサブネットにない場合、そのPCのサブネットの
+もしも、使用しているPCとサーバーが同じサブネットにない場合、そのPCのサブネットの
 ブロードキャストアドレスを指定する<option>-B</option>オプションを使う必要がある。
 </para>
 
@@ -413,7 +413,7 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 </para>
 
 <note><para>
-以下のように、ユーザ名に引き続いてパスワードを指定することも出来る:
+以下のように、ユーザー名に引き続いてパスワードを指定することも出来る:
 <command>smbclient //bigserver/tmp -Ujohndoe%secret</command>.
 </para></note>
 
@@ -459,7 +459,7 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 
 <listitem>
 	<para>
-	パスワード暗号化を有効にしているが、SambaユーザにUNIXユーザをマップしていない。
+	パスワード暗号化を有効にしているが、SambaユーザーにUNIXユーザーをマップしていない。
 	<command>smbpasswd -a username</command>を実行する。
 	</para>
 </listitem>
@@ -483,7 +483,7 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 <para>
 <indexterm><primary>net view</primary></indexterm>
 PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。これは、DOSウィンドウ
-内で入力する必要がある。サーバ上で有効な共有一覧が表示されるべきである。
+内で入力する必要がある。サーバー上で有効な共有一覧が表示されるべきである。
 </para>
 
 <para>
@@ -520,8 +520,8 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 </para>
 
 <para>
-また、ワークステーションがSambaサーバに接続を要求するとき、Windowsマシンにログオンしている
-名前を使うという事実を見落とさないこと。Sambaサーバ上で存在しているアカウントと正確に
+また、ワークステーションがSambaサーバーに接続を要求するとき、Windowsマシンにログオンしている
+名前を使うという事実を見落とさないこと。Sambaサーバー上で存在しているアカウントと正確に
 同じ名前とパスワードにする必要がある。
 </para>
 
@@ -545,11 +545,11 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 </para>
 
 <para>
-サーバが、どのユーザ名で接続するかを見いだせないという事もあり得る。この問題かどうかを
+サーバーが、どのユーザー名で接続するかを見いだせないという事もあり得る。この問題かどうかを
 見るためには、&smb.conf;中の<smbconfsection name="[tmp]"/>セクションに
 <smbconfoption name="user">username</smbconfoption>行を追加する。ここで、
 <parameter>username</parameter>は、入力するパスワードに対応するものである。
-もしもこれで修正されるならば、ユーザ名マッピングオプションが必要となるかもしれない。
+もしもこれで修正されるならば、ユーザー名マッピングオプションが必要となるかもしれない。
 </para>
 
 <para>
@@ -563,9 +563,9 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 <step performance="required">
 
 <para>
-ワークグループの名前が<parameter>testgroup</parameter>である、SambaサーバとWindows PCが
+ワークグループの名前が<parameter>testgroup</parameter>である、SambaサーバーとWindows PCが
 属している所で<command>nmblookup -M <parameter>testgroup</parameter></command>を
-実行する。そのワークグループにおけるマスタブラウザのIPアドレスが表示されるはずである。
+実行する。そのワークグループにおけるマスターブラウザーのIPアドレスが表示されるはずである。
 </para>
 
 <para>
@@ -580,12 +580,12 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 <step performance="required">
 
 <para>
-ファイルマネージャから、サーバをブラウジングしてみる。ローカルワークグループ
-(か&smb.conf;中で指定したもの)のブラウズリスト中にSambaサーバが現れるはずである。
-サーバの名前をダブルクリックし、共有の一覧が得られるべきである。もしも、
+ファイルマネージャから、サーバーをブラウジングしてみる。ローカルワークグループ
+(か&smb.conf;中で指定したもの)のブラウズリスト中にSambaサーバーが現れるはずである。
+サーバーの名前をダブルクリックし、共有の一覧が得られるべきである。もしも、
 <quote>invalid password</quote>というエラーが表示されたならば、おそらくWindows NTが
-動作していて、それがユーザレベルのセキュリティモードで動作していて暗号化パスワードを
-扱えない状態になっていてサーバのブラウジングを拒否している。この場合、
+動作していて、それがユーザーレベルのセキュリティモードで動作していて暗号化パスワードを
+扱えない状態になっていてサーバーのブラウジングを拒否している。この場合、
 <smbconfoption name="security">server</smbconfoption>と
 <smbconfoption name="password server">Windows_NT_Machine</smbconfoption>のどちらかを
 &smb.conf;ファイル中に設定するか、<smbconfoption name="encrypt passwords"/>を

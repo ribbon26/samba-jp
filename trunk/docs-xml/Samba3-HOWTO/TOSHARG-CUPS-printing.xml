@@ -72,7 +72,7 @@
 	CUPSは印刷スプールシステムというもの以上である。これは、新しいインターネット印刷
 	プロトコル(IPP)に従う完全な印刷管理システムである。IPPは産業製品であり、
 	ネットワーク印刷に関するInternet Engineering Task Force (IETF)標準である。
-	この機能の多くはWebブラウザ(CUPS印刷サーバにアクセスするプラットフォーム非依存の
+	この機能の多くはWebブラウザー(CUPS印刷サーバーにアクセスするプラットフォーム非依存の
 	アクセスを提供する)経由でリモート(またはローカル)から管理することが出来る。さらに
 	追加で、伝統的なコマンド行といくつかのより新しいGUIインタフェースを持っている
 	(GUIインタフェースはサードパーティによって開発され、たとえば、KDEのoverwhelming
@@ -82,8 +82,8 @@
 	<para>
 <indexterm><primary>raw printers</primary></indexterm>
 <indexterm><primary>smart printers</primary></indexterm>
-	CUPSは、<emphasis>smart</emphasis>プリンタ(すなわち、CUPSがプリンタに対して要求
-	された時にファイル形式の変換を行う)と同じように、<emphasis>raw</emphasis>プリンタ
+	CUPSは、<emphasis>smart</emphasis>プリンター(すなわち、CUPSがプリンターに対して要求
+	された時にファイル形式の変換を行う)と同じように、<emphasis>raw</emphasis>プリンター
 	すなわち、印刷ファイル形式を変換しない)の作成が出来る。多くの手段で、Microsoft Windows
 	印刷関しシステム同じような機能がCUPSにはある。もちろん、CUPSの推進者ならば、
 	CUPSの方がもっと良いと言うだろう!多くの場合、Samba経由でMicrosoft Windows印刷
@@ -105,16 +105,16 @@
 <indexterm><primary>PrintcapFormat</primary></indexterm>
 Samba-3.0(2.2.xから使える)でのCUPSを使った印刷環境の、最も基本的な&smb.conf;のセットアップは
 <smbconfoption name="printing">cups</smbconfoption>と
-<smbconfoption name="printcap">cups</smbconfoption>という2つのパラメータを必要とする。
+<smbconfoption name="printcap">cups</smbconfoption>という2つのパラメーターを必要とする。
 CUPSはprintcapファイルを必要としない。しかし、<filename>cupsd.conf</filename>設定ファイルは、
 サードパーティアプリケーション(例えば<parameter>Printcap /etc/printcap</parameter>と
 <parameter>PrintcapFormat BSD</parameter>)に便利なように、どのように、CUPSによって
 自動的に作成され、管理されるファイルを制御する2つの関連するディレクトリを知っている。
-旧式のプログラムはしばしばprintcapファイルに含まれているプリンタ名が存在することを
+旧式のプログラムはしばしばprintcapファイルに含まれているプリンター名が存在することを
 要求するので、そうでないと印刷を拒否してしまう。CUPSがprintcapファイルを作成して管理する
 ようにしておくこと。詳細は、<command>man cupsd.conf</command>と、
 <ulink noescape="1" url="http://localhost:631/documentation.html">CUPS</ulink>
-Webサイトにある、CUPSサーバそれ自身が提供する、関連する貴重な文書のようなCUPS関連の
+Webサイトにある、CUPSサーバーそれ自身が提供する、関連する貴重な文書のようなCUPS関連の
 文書を参照のこと。
 	</para>
 
@@ -134,7 +134,7 @@ Webサイトにある、CUPSサーバそれ自身が提供する、関連する�
 <indexterm><primary>libcups</primary></indexterm>
 <indexterm><primary>ldd</primary></indexterm>
 	Sambaが<filename>libcups</filename>とリンクされ、コンパイルされた時、
-	<smbconfoption name="printcap">cups</smbconfoption>は、プリンタ一覧の表示、
+	<smbconfoption name="printcap">cups</smbconfoption>は、プリンター一覧の表示、
 	ジョブの投稿、キューの問い合わせなどにCUPS APIを使う。それ以外は、印刷のために、
 	これらの操作を、<command>-oraw</command>オプションを付加して、System Vの
 	コマンドにマップする。Linuxシステムでは、smbdが、libcupsライブラリにリンク
@@ -207,19 +207,19 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<para>
 <indexterm><primary>PDF</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-<indexterm><primary>プリンタドライバ</primary></indexterm>
+<indexterm><primary>プリンタードライバー</primary></indexterm>
 	これはCUPSに対する基本的な印刷設定に必要なもののすべてである。Windowsクライアント
 	から投稿されたすべてのグラフィック、PDFとPostscriptファイルは印刷できる。
-	しかし、ほとんどのWindowsユーザは、GUIアプリケーションを開かないで、印刷する
+	しかし、ほとんどのWindowsユーザーは、GUIアプリケーションを開かないで、印刷する
 	ファイルの種類を送る方法を知らない。Windowsクライアントはインストールされた
-	ローカルのプリンタドライバを持つ傾向があり、GUIアプリケーションの印刷ボタンは、
-	プリンタドライバを開始する。ユーザは滅多にコマンド行からファイルを送らない。
+	ローカルのプリンタードライバーを持つ傾向があり、GUIアプリケーションの印刷ボタンは、
+	プリンタードライバーを開始する。ユーザーは滅多にコマンド行からファイルを送らない。
 	UNIXクライアントとは違い、グラフィック、テキストあるいはPDFファイルを直接
 	スプーラに送らない。通常、アプリケーションのネイティブな形式と印刷データ
 	ストリームの間でホックされた<quote>printer driver</quote>を使うGUI
-	アプリケーションから排他的に印刷を行う。もしもバックエンドプリンタが
+	アプリケーションから排他的に印刷を行う。もしもバックエンドプリンターが
 	Postscriptデバイスでない場合、印刷データストリームは<quote>バイナリ</quote>で、
-	対象のプリンタのみが対象である。この問題が引き起こすこととそれを防ぐことを
+	対象のプリンターのみが対象である。この問題が引き起こすこととそれを防ぐことを
 	学ぶために、この先を読み続けること。
 	</para>
 
@@ -229,13 +229,13 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<title>より複雑なCUPS &smb.conf;設定</title>
 
 	<para>
-	<link linkend="overridesettings">1台のプリンタ用にグローバルなCUPS設定を上書きする例</link> 
-	は、&smb.conf;用の、やや複雑な印刷関連設定である。これはすべてのプリンタに対して
-	一般的なCUPS印刷サポートを有効にするが、1台だけ設定が異なるプリンタ共有を定義する。
+	<link linkend="overridesettings">1台のプリンター用にグローバルなCUPS設定を上書きする例</link> 
+	は、&smb.conf;用の、やや複雑な印刷関連設定である。これはすべてのプリンターに対して
+	一般的なCUPS印刷サポートを有効にするが、1台だけ設定が異なるプリンター共有を定義する。
 	</para>
 
 	<example id="overridesettings">
-	<title>1台のプリンタ用にグローバルなCUPS設定を上書きする</title>
+	<title>1台のプリンター用にグローバルなCUPS設定を上書きする</title>
 	<smbconfblock>
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="printing">cups</smbconfoption>
@@ -267,7 +267,7 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 
 	<para>
 	この特別な共有は、テスト目的専用である。これは印刷ジョブをファイルに書かない。
-	これは、ジョブパラメータをSambaが認識する<filename>/tmp/smbprn.log</filename>
+	これは、ジョブパラメーターをSambaが認識する<filename>/tmp/smbprn.log</filename>
 	ファイルに記録し、ジョブファイルを削除する。さらに、この共有の
 	<smbconfoption name="printer admin"/>は<quote>kurt</quote>で
 	(<quote>@ntadmins</quote>グループではなくて)、ゲストアクセスは許可されず、共有は
@@ -302,48 +302,48 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<indexterm><primary>スプーリング</primary><secondary>集中</secondary></indexterm>
 	<indexterm><primary>スプーリング</primary><secondary>ピアツーピア</secondary></indexterm>
 	多くの小規模オフィスや家庭用ネットワークでは、計画がひどい、より大きな環境と
-	同じように、各クライアントがネットワークプリンタへ直接アクセス出来るように
+	同じように、各クライアントがネットワークプリンターへ直接アクセス出来るように
 	なっている。これは一般的には悪いアイデアである。他のクライアントのジョブが
 	印刷しているときに、あるクライアントのアクセスを頻繁にブロックしてしまう。
 	ジョブが終了するのを待っている間、最初のクライアントのアプリケーションは
 	フリーズしてしまうかもしれない。同様に、数多くのジョブが印刷しているとき、
 	それぞれが異なったページをまぜこぜにしてしまうという苦情もしばしば聞く。
-	よりよいコンセプトは、プリントサーバを使うことである。これは、すべてのジョブを
+	よりよいコンセプトは、プリントサーバーを使うことである。これは、すべてのジョブを
 	集中したシステムに一本化し、即時に反応し、複数の並列したクライアントから
-	ジョブを受け取り、正しい順序でプリンタに転送する。
+	ジョブを受け取り、正しい順序でプリンターに転送する。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>直接印刷機能:Windowsクライアント上のベンダドライバ</title>
+	<title>直接印刷機能:Windowsクライアント上のベンダドライバー</title>
 
 	<para>
 	<indexterm><primary>スプールのみ</primary></indexterm>
 	<indexterm><primary>直接印刷</primary></indexterm>
-	ほとんどの現代的に設定されたUNIX印刷サーバは、本当に単純なセットアップを意味する、
+	ほとんどの現代的に設定されたUNIX印刷サーバーは、本当に単純なセットアップを意味する、
 	SambaのWindowsクライアントのために振る舞う。それらの唯一の業務は、Sambaによって
 	すべてのジョブが扱われる<quote>直接</quote>スプーリングを管理することである。
 	この試みは、Windowsクライアントが、印刷デバイスに送られる準備が出来た印刷ジョブ
 	ファイルを準備することが期待されるということである。この場合、ネイティブな
-	(ベンダが供給した)Windowsプリンタドライバは、各、およびすべてのクライアントで、
+	(ベンダが供給した)Windowsプリンタードライバーは、各、およびすべてのクライアントで、
 	対象デバイスのものをインストールする必要がある。
 	</para>
 
 	<para>
 <indexterm><primary>render</primary></indexterm>
-<indexterm><primary>ベンダが提供したドライバ</primary></indexterm>
+<indexterm><primary>ベンダが提供したドライバー</primary></indexterm>
 	同様に現代的な、簡単な方法で、CUPS、SambaとWindowsクライアントを設定することは
-	可能である。CUPSプリンタが直接印刷モード状態で設定されているならば、完全に
+	可能である。CUPSプリンターが直接印刷モード状態で設定されているならば、完全に
 	印刷ジョブ(ファイル)を描画することは、Sambaクライアントの責任である。ファイルは
-	プリンタに直接配信するのに適した形式で送られる必要がある。クライアントはこれを
-	行うために、ベンダが提供したドライバを動作させる必要がある。この場合、CUPSは
+	プリンターに直接配信するのに適した形式で送られる必要がある。クライアントはこれを
+	行うために、ベンダが提供したドライバーを動作させる必要がある。この場合、CUPSは
 	何ら印刷ファイル形式変換を行わない。
 	</para>
 
 	<para>
 	可能な、最も簡単な印刷設定は、直接印刷(raw print-through)である。これは、
-	Windowsクライアントに物理的に結合されているようにプリンタをインストールする
+	Windowsクライアントに物理的に結合されているようにプリンターをインストールする
 	事によって行える。次に、それをrawネットワーク印刷キューにリダイレクトする。
 	この手続きは、以下の手順によって行えるだろう:
 	</para>
@@ -366,10 +366,10 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 		</para></step>
 
 		<step><para>
-		Webインタフェースを使ってrawプリンタを追加する。ブラウザで
+		Webインタフェースを使ってrawプリンターを追加する。ブラウザーで
 		<constant>http://localhost:631</constant>をクリックする。
-		Administrationに入り、プロンプトに従ってプリンタを追加する。
-		ドライバをこれにインストールしてはならない。Rawを選択する。
+		Administrationに入り、プロンプトに従ってプリンターを追加する。
+		ドライバーをこれにインストールしてはならない。Rawを選択する。
 		<constant>Raw Queue</constant>というキュー名を選択する。
 		</para></step>
 
@@ -382,12 +382,12 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 		</para></step>
 
 		<step><para>
-		ローカルプリンタのようにプリンタをインストールし、結果、印刷先が
+		ローカルプリンターのようにプリンターをインストールし、結果、印刷先が
 		<constant>LPT1:</constant>となる。
 		</para></step>
 
 		<step><para>
-		<guimenu>Detail</guimenu>タブ下の設定を編集し、上記で設定したrawプリンタ
+		<guimenu>Detail</guimenu>タブ下の設定を編集し、上記で設定したrawプリンター
 		キューを指し示す<constant>local port</constant>を作成する。例:
 		<constant>\\server\raw_q</constant>。ここで、<constant>raw_q</constant>
 		という名前はCUPS環境中で印刷キューに割り当てた名前である。
@@ -397,15 +397,15 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	</sect2>
 
 	<sect2>
-	<title>Windowsクライアントドライバのインストール</title>
+	<title>Windowsクライアントドライバーのインストール</title>
 
 	<para>
-	Windowsクライアント上のプリンタドライバは2つの機能的に異なった方法でインストール
+	Windowsクライアント上のプリンタードライバーは2つの機能的に異なった方法でインストール
 	できる:
 	</para>
 
 	<itemizedlist>
-	<listitem><para>手動で各クライアント上にドライバを1つずつインストールする。
+	<listitem><para>手動で各クライアント上にドライバーを1つずつインストールする。
 	これは旧式のLanMan形式印刷環境を必要とし、
 	<filename>\\sambaserver\printershare</filename>タイプの接続を使う。
 	</para></listitem>
@@ -413,8 +413,8 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 
 	<listitem><para>
 	<indexterm><primary>ポイントアンドプリント</primary></indexterm>
-	プリントサーバ(Samba)上でドライバ(後でダウンロードするための)の準備と配信を
-	行う。これは、プリンタに最初にアクセスするとき、半自動的にドライバを入手して
+	プリントサーバー(Samba)上でドライバー(後でダウンロードするための)の準備と配信を
+	行う。これは、プリンターに最初にアクセスするとき、半自動的にドライバーを入手して
 	インストールする<quote>ポイントアンドプリント</quote>をクライアントが使う
 	ことが出来るようになる。この方法を使うと、NT/200x/XPクライアントは、
 	<emphasis>SPOOLSS/MS-RPC</emphasis>タイプの印刷呼び出しを使う。
@@ -422,7 +422,7 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	</itemizedlist>
 
 	<para>
-	二番目の方法は、管理コストの削減と、偶然異なったバージョンのドライバが使われる
+	二番目の方法は、管理コストの削減と、偶然異なったバージョンのドライバーが使われる
 	ことを防ぐのに、最初のものを使うよりも推奨される。
 	</para>
 	</sect2>
@@ -435,7 +435,7 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 	<indexterm><primary>raw印刷</primary></indexterm>
 	<indexterm><primary>MIME</primary><secondary>raw</secondary></indexterm>
-	もしも最初のオプション(ドライバはクライアントサイド上でインストールされる)を使う
+	もしも最初のオプション(ドライバーはクライアントサイド上でインストールされる)を使う
 	場合、注意すべき設定が1つある:CUPSに対して、手の込んだ(バイナリ)ファイル形式
 	である<quote>raw</quote>印刷を許可するように設定する。rawモード印刷を動かす
 	ための、正しい設定する必要があるCUPSファイルは以下の通り:
@@ -478,20 +478,20 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<indexterm><primary>application/octet-stream</primary></indexterm>
 <indexterm><primary>MIME type</primary></indexterm>
 	CUPSは、伝統的な印刷システムが既定値では印刷デバイスに手の込んだ(おそらく
-	バイナリ)のデータを、ユーザに送ることを認めていないと比べて、より
-	セキュリティに気づいている印刷システムである。これは、プリンタに対して、
+	バイナリ)のデータを、ユーザーに送ることを認めていないと比べて、より
+	セキュリティに気づいている印刷システムである。これは、プリンターに対して、
 	少なくとも大量の紙とインクを無駄にすることとなる、
 	<quote>サービス不能</quote>攻撃を引き起こす不正な使い方を簡単に行える。
 	<quote>不明な</quote>データはCUPSによって、
 	<parameter>MIME type: application/octet-stream</parameter>とタグ付けられ、
-	プリンタに送ることを許可されない。既定値では、他の(既知の)MIMEタイプである
+	プリンターに送ることを許可されない。既定値では、他の(既知の)MIMEタイプである
 	<quote>raw</quote>のみを送ることが出来る。<quote>raw</quote>を送ることは、
-	CUPSがそれらを変換せず、何もさわらないでプリンタに渡すことを意味する。
+	CUPSがそれらを変換せず、何もさわらないでプリンターに渡すことを意味する。
 	</para>
 	</formalpara>
 
 	<para>
-	これが、ベンダドライバをローカルにインストールしたWindowsクライアントによって
+	これが、ベンダドライバーをローカルにインストールしたWindowsクライアントによって
 	準備された<quote>raw</quote>ファイルをCUPS/Sambaの協調印刷で行うときに知っておく
 	必要があることのすべてである。もしもより詳細なCUPS/Samba印刷についての背景
 	情報について興味がないならば、この章の残りの部分を読み飛ばせばよいだろう。
@@ -500,28 +500,28 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title>ドライバアップロード手法</title>
+	<title>ドライバーアップロード手法</title>
 
 	<para>
-	この節では、プリンタドライバをアップロードする、3つのなじみやすい方法に、
+	この節では、プリンタードライバーをアップロードする、3つのなじみやすい方法に、
 	さらに新しいもの1つについて説明する。
 	</para>
 
 	<para>
 	<indexterm><primary>ポイントアンドプリント</primary></indexterm>
-	もしも、MS-RPCタイプの印刷を使いたいならば、最初にSambaサーバ上に
-	(<smbconfsection name="[print$]"/>共有)ドライバをアップロードしなければならない。
-	Sambaホスト上からプリンタドライバを配信する方法(結果、Windowsクライアントは
+	もしも、MS-RPCタイプの印刷を使いたいならば、最初にSambaサーバー上に
+	(<smbconfsection name="[print$]"/>共有)ドライバーをアップロードしなければならない。
+	Sambaホスト上からプリンタードライバーを配信する方法(結果、Windowsクライアントは
 	<quote>ポイントアンドプリント</quote>経由でダウンロードしそれを利用できる)
 	についての議論は、この資料の
 	<link linkend="classicalprinting">旧式の印刷 の章</link>を参照のこと。
-	以下は、Sambaサーバ上にクライアントドライバを準備するための3つの方法への
+	以下は、Sambaサーバー上にクライアントドライバーを準備するための3つの方法への
 	説明又は参照である:
 	</para>
 
 	<itemizedlist>
 		<listitem><para>
-		<indexterm><primary>プリンタウィザードによる追加</primary></indexterm>
+		<indexterm><primary>プリンターウィザードによる追加</primary></indexterm>
 		GUIである<quote>Add Printer Wizard</quote>を使う
 		<emphasis>Windowsクライアントからのアップロード</emphasis>方法。
 		</para></listitem>
@@ -541,7 +541,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 	これらの3つの方法は、CUPSに対して同じように適用される。
 	<command>cupsaddsmb</command>ユーティリティは最新で、CUPSを使っている場合、
-	WindowsドライバをSamba中に起き、提供するより便利な方法である。
+	WindowsドライバーをSamba中に起き、提供するより便利な方法である。
 	</para>
 
 	<para>
@@ -555,12 +555,12 @@ application/octet-stream   application/vnd.cups-raw   0   -
 </sect1>
 
 <sect1>
-	<title>Postscriptドライバダウンロードを使う高度に賢い印刷</title>
+	<title>Postscriptドライバーダウンロードを使う高度に賢い印刷</title>
 
 	<para>
 	<indexterm><primary>PostScript</primary><seealso>Ghostscript</seealso></indexterm>
-	<quote>dump</quote>プリントサーバをセットアップする方法は分かっているが、それは
-	すなわち、プリントジョブを<quote>raw</quote>でスプールするサーバは、印刷データを
+	<quote>dump</quote>プリントサーバーをセットアップする方法は分かっているが、それは
+	すなわち、プリントジョブを<quote>raw</quote>でスプールするサーバーは、印刷データを
 	変更しないということである。
 	</para>
 
@@ -574,23 +574,23 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>print quota</primary></indexterm>
 	<itemizedlist>
 	<listitem><para>もしかしたら、あなたの上司は月次の印刷統計報告を希望しているだろう。
-	すなわち、どのプリンタがどのくらいページを印刷したか?、印刷における平均的な
+	すなわち、どのプリンターがどのくらいページを印刷したか?、印刷における平均的な
 	時間ピークはどのくらいか?、どの部署がどのくらい印刷したか?</para></listitem>
 
 	<listitem><para>もしかしたらプリントquotaシステムを設定したかと聞かれるだろう:
-	ユーザが、一定期間内での制限より超えたジョブを印刷出来ないという。</para></listitem>
+	ユーザーが、一定期間内での制限より超えたジョブを印刷出来ないという。</para></listitem>
 
 	<listitem><para>もしかしたら以前のネットワーク印刷の設定はひどい状態で、
 	一から再構成しなければならないだろう。</para></listitem>
 
 	<listitem><para>もしかしたらNT<quote>kernelモード</quote>で動作するあまりデバッグ
-	されていないプリンタドライバに起因する<quote>ブルースクリーン</quote>を、とても
+	されていないプリンタードライバーに起因する<quote>ブルースクリーン</quote>を、とても
 	たくさん体験しているだろう?</para></listitem>
 	</itemizedlist>
 
 	<para>
-	これらのゴールはraw印刷サーバによっては成し遂げることが出来ない。それらの要求に
-	auサーバを構築するためには、最初にどのようにCUPSが動作するかと、どのように
+	これらのゴールはraw印刷サーバーによっては成し遂げることが出来ない。それらの要求に
+	auサーバーを構築するためには、最初にどのようにCUPSが動作するかと、どのように
 	それらの機能を有効にするかを学ぶ必要がある。
 	</para>
 
@@ -606,7 +606,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<para>
 	<indexterm><primary>GDI</primary></indexterm>
 	<indexterm><primary>PostScript</primary></indexterm>
-	ネットワーク印刷は最も複雑でエラーが発生しがちであり、ユーザや管理者が
+	ネットワーク印刷は最も複雑でエラーが発生しがちであり、ユーザーや管理者が
 	遭遇しがちである日々の作業の1つである。これはすべてのOSプラットフォーム上で
 	真実であり、そうなる理由がある。
 	</para>
@@ -618,38 +618,38 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>Adobe</primary></indexterm>
 <indexterm><primary>ページ記述言語</primary><see>PDL</see></indexterm>
-	プリンタに任意のファイルフォーマットを送り込み、それが印刷されることを期待する
+	プリンターに任意のファイルフォーマットを送り込み、それが印刷されることを期待する
 	ことはできない。ファイルフォーマット変換を行う必要がある。問題は、すべての
-	メーカとプリンタタイプに共通の、共通標準印刷ファイルフォーマットがないという
+	メーカとプリンタータイプに共通の、共通標準印刷ファイルフォーマットがないという
 	ことである。Postscript(Adobeの商標)とその拡張であるPCL(HPの商標)はページ記述言語
 	(PDL)として使われていることにより、ほぼ公式な<quote>標準</quote>として開発されて
 	いる。しかし、多くのメーカは引き続き<quote>固有のものを使っている</quote>
-	(それらの理由は、プリンタ内蔵のPostscriptインタプリタの、受け入れられないような
+	(それらの理由は、プリンター内蔵のPostscriptインタプリタの、受け入れられないような
 	ライセンス費用などである)。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Windowsドライバ、GDIとEMF</title>
+	<title>Windowsドライバー、GDIとEMF</title>
 
 	<para>
 	<indexterm><primary>GDI</primary></indexterm>
 	<indexterm><primary>EMF</primary></indexterm>
 	<indexterm><primary>WYSIWYG</primary></indexterm>
 <indexterm><primary>拡張MetaFile</primary><see>EMF</see></indexterm>
-	WindowsOSでは、フォーマット変換ジョブはプリンタドライバによって行われる。
+	WindowsOSでは、フォーマット変換ジョブはプリンタードライバーによって行われる。
 	Microsoft Windows OSプラットフォーム上ではすべてのアプリケーションプログラマは、
 	それらの基盤となるOSそれ自身の一部分、あるいは一区画として、自由に使える
 	組み込みのAPI、グラフィカルデバイスインタフェース(GDI)を使える。このGDIコアは
 	絵、フォントと文書を<emphasis>画面上に</emphasis>描画するのと同様に
 	<emphasis>紙の上に</emphasis>(印刷)する、すべてのWindowsプログラムにある1つの
-	共通基盤として使える。そのため、プリンタドライバ開発者はよく定義されたGDI出力を
-	固有のドライバ入力として標準化できる。WYSIWYG(What You See Is What You Get)の
+	共通基盤として使える。そのため、プリンタードライバー開発者はよく定義されたGDI出力を
+	固有のドライバー入力として標準化できる。WYSIWYG(What You See Is What You Get)の
 	実現は、スクリーン上のグラフィックプリミティブが紙上の描画オブジェクトと同じ
 	ようで、同じソースから来るために、相対的に容易である。このソース、すなわちGDIは、
 	しばしば拡張メタファイル(EMF)と呼ばれるファイルフォーマットを生成する。EMFは
-	プリンタドライバによって処理され、プリンタ固有のファイルフォーマットに変換される。
+	プリンタードライバーによって処理され、プリンター固有のファイルフォーマットに変換される。
 	</para>
 
 	<note><para>
@@ -667,12 +667,12 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</para></note>
 
 	<para>
-	<link linkend="1small">ローカルプリンタに対するWindowsの印刷</link>中の例は、
+	<link linkend="1small">ローカルプリンターに対するWindowsの印刷</link>中の例は、
 	ローカルWindows印刷を図示している。
 	</para>
 
 	<figure id="1small">
-		<title>ローカルプリンタに対するWindowsの印刷</title>
+		<title>ローカルプリンターに対するWindowsの印刷</title>
 		<imagefile>1small</imagefile>
 	</figure>
 
@@ -686,16 +686,16 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<indexterm><primary>PostScript</primary></indexterm>
 	<indexterm><primary>PCL</primary></indexterm>
 	<indexterm><primary>Xprint</primary></indexterm>
-	UNIXとLinuxでは、OSカーネルかX(画面表示)サーバ中に、構築された、類似のレイヤは
+	UNIXとLinuxでは、OSカーネルかX(画面表示)サーバー中に、構築された、類似のレイヤは
 	ない。すべてのアプリケーションはそれ自身でその印刷出力を作成することに責任が
 	ある。幸い、大部分がPostscriptを使い、それを何らかの共通基盤としている。
 	また、悪いことに、同じ文書を画面上に表示することとどのようにそれを紙に
 	印刷するかを行う、非常にたくさんの(そして何ら共通項がない)方法がある。
-	これは、数10年前にさかのぼってみると、グラフィカルユーザインタフェースのための
+	これは、数10年前にさかのぼってみると、グラフィカルユーザーインタフェースのための
 	UNIX 基盤とプロトコルを設計したX.orgの前身は、幾人かがその時点で要求したように、
 	<quote>紙出力</quote>についての責任を取るのを拒否し、それ自身を
 	<quote>画面表示のみ</quote>に制限した(何年か後、<quote>Xprint</quote>
-	プロジェクトが開発中で、Xのフレームワーク中に、PostscriptとPCLドライバを含む
+	プロジェクトが開発中で、Xのフレームワーク中に、PostscriptとPCLドライバーを含む
 	印刷サポートを構築することを試みたが、まだ完成していない)。この、余り好ましくない
 	遺産は、使用しているシステムの、種々の<quote>font</quote>ディレクトリ中で、今も
 	見ることができる。X表示用と印刷用に使うフォントが分かれている。
@@ -726,7 +726,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	している。もちろん、テキスト形式でPostscriptファイルを見ることもでき、
 	ラスタライザによって解釈されるに必要な言語命令であるPostscriptコードを読む
 	ことも出来る。ラスタライザは、ビューワプログラムによって画面上で表示されるか、
-	プリンタによって印刷されるかする、ピクセルイメージを生成する。
+	プリンターによって印刷されるかする、ピクセルイメージを生成する。
 	</para>
 	</formalpara>
 	</sect2>
@@ -741,27 +741,27 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>PostScriptインタプリタ</primary></indexterm>
 <indexterm><primary>ラスタイメージプロセッサ</primary><see>RIP</see></indexterm>
 	UNIXは紙への印刷と画面上への表示についての共通基盤が欠けている。UNIXの、好ましく
-	ない遺産にもかかわらず、自由に使えるPostscriptプリンタを持っている場合、基本的な
+	ない遺産にもかかわらず、自由に使えるPostscriptプリンターを持っている場合、基本的な
 	印刷はかなり簡単である。その理由は、それらのデバイスは、ラスタイメージプロセッサ
 	(RIP)と呼ばれる内蔵PostScript言語<quote>インタプリタ</quote>を持っているという
-	(それにより、他のタイプのプリンタよりも値段が高い)ことである。それに向けて
+	(それにより、他のタイプのプリンターよりも値段が高い)ことである。それに向けて
 	PostScriptを送り込むと、印刷したページを出力する。RIPは紙の上で見る事ができる、
 	ビットマップの絵にPostScript描画コマンドを変換するすべての大変な仕事をこなし、
-	プリンタによってそれを処理してしまう。これは、Windows上からPostScript印刷を
+	プリンターによってそれを処理してしまう。これは、Windows上からPostScript印刷を
 	行うのと何ら違いはない。
 	</para>
 
 	<note><para>
 	<indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>PPD-aware</primary></indexterm>
-<indexterm><primary>PostScriptプリンタ記述</primary><see>PPD</see></indexterm>
+<indexterm><primary>PostScriptプリンター記述</primary><see>PPD</see></indexterm>
 	一般的なUNIXプログラムと印刷システムが、PostScriptを使っている間は、主にPPDを
-	認識していない。PPDは<quote>PostScriptプリンタ記述</quote>ファイルである。これは
-	プリンタがサポートしているすべてのオプションを指定し、制御する事を可能にする。
+	認識していない。PPDは<quote>PostScriptプリンター記述</quote>ファイルである。これは
+	プリンターがサポートしているすべてのオプションを指定し、制御する事を可能にする。
 	そのオプションとは、たとえば、両面印刷、ステープル留めと穴空けである。そのため、
-	WindowsかAppleユーザとは違って、たくさんのサポートされたデバイスとジョブ
-	オプションを、UNIXユーザは長い時間選択できなかった。しかし、今では、CUPSがある。
-	<link linkend="2small">PostScriptプリンタによる印刷</link>で図示されているように。
+	WindowsかAppleユーザーとは違って、たくさんのサポートされたデバイスとジョブ
+	オプションを、UNIXユーザーは長い時間選択できなかった。しかし、今では、CUPSがある。
+	<link linkend="2small">PostScriptプリンターによる印刷</link>で図示されているように。
 	</para>
 	</note>
 
@@ -772,18 +772,18 @@ application/octet-stream   application/vnd.cups-raw   0   -
 
 	<para>
 	<indexterm><primary>PDL</primary></indexterm>
-	しかしながら、それ以外のタイプのプリンタもある。それらはどのようにPostscriptを
+	しかしながら、それ以外のタイプのプリンターもある。それらはどのようにPostscriptを
 	印刷するかが分からない。それらは、しばしばメーカ固有のPDLを使う。それらに対して
 	印刷を行う事の注文はもっと多い。利用しているUNIXアプリケーションはほとんどの
 	場合、Postscriptを生成し、それらのデバイスはPostscriptを理解しないので、
-	それに対してデータを送る前に、ホスト上で使用しているプリンタに合わせた印刷
+	それに対してデータを送る前に、ホスト上で使用しているプリンターに合わせた印刷
 	ファイルのフォーマット変換を行う必要がある。
 	</para>
 
 	</sect2>
 
 	<sect2>
-	<title>Ghostscript: 非Postscriptプリンタに対するソフトウェアRIP</title>
+	<title>Ghostscript: 非Postscriptプリンターに対するソフトウェアRIP</title>
 
 	<para>
 	<indexterm><primary>GhostScript</primary></indexterm>
@@ -791,14 +791,14 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	使われている、伝統的な(そしてとても強力な)Postscriptインタプリタである。
 	これはソフトウェアによるRIPであり、ソフトウェアファイルフォーマットと同様、
 	非常に広範囲のハードウェアデバイスへの、たくさんのファイル変換を行う能力がある。
-	Ghostscript技術とドライバは非PostscriptハードウェアでPostscript印刷を実行
+	Ghostscript技術とドライバーは非PostscriptハードウェアでPostscript印刷を実行
 	できるようにするものである。これについては
-	<link linkend="3small">非Postscriptプリンタに対するRIPとしてのGhostscript</link>
+	<link linkend="3small">非Postscriptプリンターに対するRIPとしてのGhostscript</link>
 	に説明がある。
 	</para>
 
 	<figure id="3small">
-		<title>非Postscriptプリンタに対するRIPとしてのGhostscript</title>
+		<title>非Postscriptプリンターに対するRIPとしてのGhostscript</title>
 		<imagefile>3small</imagefile>
 	</figure>
 
@@ -808,10 +808,10 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>ESP</primary></indexterm>
 	使用しているGhostscriptバージョンの内蔵<quote>デバイス</quote>すべてを確認する
 	ために、<quote>gs -h</quote>コマンドを使う。もしも、使用しているGhostscriptの
-	コマンド行に<parameter>-sDEVICE=png256</parameter>というパラメータを指定した
+	コマンド行に<parameter>-sDEVICE=png256</parameter>というパラメーターを指定した
 	ならば、入力をPNGファイルに変換するように、Ghostscriptに指定する。コマンド行上の
 	<quote>device</quote>の名前指定は、入力をどのように描画するかを正確に
-	Ghostscriptに指示するのに最も重要な単一パラメータである。新しいGhostscriptの
+	Ghostscriptに指示するのに最も重要な単一パラメーターである。新しいGhostscriptの
 	バージョンは、現在artofcode LCCにおいて、通常かなり間隔を空けてリリースされる。
 	通常最初は<quote>AFPL</quote>ライセンスで提供されるが、次のAFPLバージョンが
 	リリースされると、すぐにGNU GPLライセンスで再リリースされる。GNU Ghostscript
@@ -821,13 +821,13 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	そのため、ESP Ghostscriptは、たくさんのバグ修正、追加のデバイスと改善がある、
 	GNU Ghostscriptの拡張として開発されている。これは、CUPS, Gutenprint, MandrakeSoft,
 	SuSE, Red Hatと Debianからの開発者によって一緒に保守されている。それには
-	<quote>cups</quote>デバイス(CUPSから非PSプリンタに印刷する基本部分)を含む。
+	<quote>cups</quote>デバイス(CUPSから非PSプリンターに印刷する基本部分)を含む。
 	</para></tip>
 
 	</sect2>
 
 	<sect2>
-	<title>PostScriptプリンタ定義(PPD)の仕様</title>
+	<title>PostScriptプリンター定義(PPD)の仕様</title>
 
 	<para>
 	<indexterm><primary>PPD</primary></indexterm>
@@ -836,25 +836,25 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	Postscriptの本質がデバイス非依存の方式でページレイアウトを表現するための
 	PDLである間は、実世界での印刷上部は常時デバイス固有の機能を持ったハードウェア
 	上で最終的に出力される。ハードウェアの違いに気を遣うことと、機能改善を図るため、
-	Adobeは文法とPostscriptプリンタ定義(PPD)ファイルのファイルフォーマットを定義
-	してきた。すべてのPostscriptプリンタはそれらのファイルの1つを同梱して出荷されて
+	Adobeは文法とPostscriptプリンター定義(PPD)ファイルのファイルフォーマットを定義
+	してきた。すべてのPostscriptプリンターはそれらのファイルの1つを同梱して出荷されて
 	いる。
 	</para>
 
 	<para>
-	PPDは、そのプリンタに割り当てられた一般的および特別な機能についてのすべての情報を
+	PPDは、そのプリンターに割り当てられた一般的および特別な機能についてのすべての情報を
 	含んでいる。扱える異なった解像度は何か?両面印刷ユニットがあるか?ペーパートレイは
 	いくつあるか?メディアのタイプとサイズは何が使えるか?それぞれの要素について、
-	プリンタに送られる特別なコマンド文字列を、それを有効にするために指定する事が
+	プリンターに送られる特別なコマンド文字列を、それを有効にするために指定する事が
 	出来る(ほとんどの場合、Postscriptファイル中に)。
 	</para>
 
 	<para>
-	PPDからの情報はプリンタドライバによって考慮されることを意味する。そのため、
-	与えられたプリンタのための、Windows PostScriptドライバの一部としてインストール
-	されるものはプリンタのPPDである。それが意味をなす場合、PPD機能は、印刷
-	オプションをユーザに選択されるために表示される、ドライバのユーザインタフェース
-	ダイアログ中で提供される。最後に、ユーザの選択は、ドライバによって作成された
+	PPDからの情報はプリンタードライバーによって考慮されることを意味する。そのため、
+	与えられたプリンターのための、Windows PostScriptドライバーの一部としてインストール
+	されるものはプリンターのPPDである。それが意味をなす場合、PPD機能は、印刷
+	オプションをユーザーに選択されるために表示される、ドライバーのユーザーインタフェース
+	ダイアログ中で提供される。最後に、ユーザーの選択は、ドライバーによって作成された
 	PostScriptファイル中に(特別なPostScript、PJL、JCLあるいはベンダ固有のコマンド
 	形式として)何らかの形で書かれる。
 	</para>
@@ -880,7 +880,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	従っているPPDを扱うことが出来る。もしもベンダがマニュアルとパンフレットに
 	使用しているOSについての言及がなかったとしても、それらを安全に信用できる:
 	<emphasis>もしも、Windows NTバージョンのPPDを入手したならば、CUPS中で変更なしに利用でき</emphasis>、
-	その結果、Windows NTユーザが出来るように使用するプリンタのすべての能力に
+	その結果、Windows NTユーザーが出来るように使用するプリンターのすべての能力に
 	アクセスできる。
 	</para>
 
@@ -896,7 +896,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<warning><para>
 	<indexterm><primary>foomatic</primary></indexterm>
 	<indexterm><primary>cupsomatic</primary></indexterm>
-	実際のPostScriptプリンタのためには、Linuxprinting.orgからの
+	実際のPostScriptプリンターのためには、Linuxprinting.orgからの
 	<emphasis>Foomatic</emphasis>か<emphasis>cupsomatic</emphasis>PPDを
 	<emphasis>使ってはならない</emphasis>。それらのデバイスには、オリジナルの
 	ベンダが提供したPPDが常時最初の選択肢となる。
@@ -906,7 +906,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>W32X86/2</primary></indexterm>
 	もしも、特定のデバイスに対するオリジナルのベンダ提供PPDを捜していて、LAN上の
 	NT4マシン(あるいは他の任意のWindowsマシン)がインストールされているPostScript
-	プリンタを持っている場合、すべてのプリンタドライバが格納されているWindows
+	プリンターを持っている場合、すべてのプリンタードライバーが格納されているWindows
 	ディレクトリにアクセスするために、
 	<command>smbclient //NT4-box/print\$ -U username</command>を使用する。
 	最初に、捜しているPPDのために、<filename>W32X86/2</filename>サブディレクトリを
@@ -915,16 +915,16 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title>非PostScriptプリンタのためにCUPSはPPDを使う</title>
+	<title>非PostScriptプリンターのためにCUPSはPPDを使う</title>
 
 	<para>
 <indexterm><primary>非PostScript</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>CUPSフィルタリング</primary></indexterm>
-	CUPSは非PostScriptプリンタを扱うために、特別に作成されたPPDをも使う。それらの
-	PPDは通常ベンダから供給されない(そして、同じモデル名のPostScriptプリンタ用の
+	CUPSは非PostScriptプリンターを扱うために、特別に作成されたPPDをも使う。それらの
+	PPDは通常ベンダから供給されない(そして、同じモデル名のPostScriptプリンター用の
 	PPDファイルを使うことが出来ず、非PostScriptバージョンが動くことを期待することも
-	同じである)。非PostScriptプリンタに対してPPDがどのように適用されるかを知るため
+	同じである)。非PostScriptプリンターに対してPPDがどのように適用されるかを知るため
 	には、最初にCUPSフィルタリングとファイルフォーマット変換アーキテクチャについて
 	深く言及する必要がある。引き続き読み続けること。
 	</para>
@@ -947,7 +947,7 @@ CUPSはそれ自身固有のフィルタ以外のいくつかを使う。あな�
 フィルタを追加しても良い。CUPSはすべてのデータファイルフォーマットを種々のMIMEタイプの
 ラベル配下で取り扱う。入力された各印刷ファイルは、最初に行われる自動タイプわけに基づいて
 扱われる。自動タイプわけにより、MIMEタイプが決定する。与えられたMIMEタイプは、選択された対象
-プリンタに、0またはそれ以上の、フィルタリングチェーンが自動的に(暗黙のうちに)設定される。
+プリンターに、0またはそれ以上の、フィルタリングチェーンが自動的に(暗黙のうちに)設定される。
 この節では、どのようにMIMEタイプ認識と変換ルールが相互に作用するかについて説明する。
 それらは、与えられた入力データフォーマットに対する、動作させるフィルタリングチェーンを
 自動的に設定するために、CUPSによって使われる。
@@ -970,7 +970,7 @@ CUPSはそれ自身固有のフィルタ以外のいくつかを使う。あな�
 	<listitem><para>
 <indexterm><primary>raster driver</primary></indexterm>
 	第二のステージでは、標準的なCUPSラスタをデバイス固有のラスタに変換する、
-	<quote>ラスタドライバ</quote>を使う。
+	<quote>ラスタドライバー</quote>を使う。
 	</para></listitem>
 </itemizedlist>
 
@@ -998,13 +998,13 @@ Linuxprinting.orgによって現在は推奨されている。
 <indexterm><primary>foomatic</primary></indexterm>
 <indexterm><primary>foomatic-rip</primary></indexterm>
 <indexterm><primary>ESP Ghostscript</primary></indexterm>
-CUPSプリンタは外部レンダリングパスを使うように設定しても良い。最も共通的なものは、
+CUPSプリンターは外部レンダリングパスを使うように設定しても良い。最も共通的なものは、
 <ulink url="http://www.linuxprinting.org/">Linuxprinting.org</ulink>からの
 Foomatic/cupsomaticコンセプトによって提供されるものである。これは古いGhostscript
 を用いて、すべてを1ステップで処理する。これは<quote>cups</quote>デバイスを使わないが、
 その他の多くを使う。しかし、Foomatic/cupsomaticの使用にもかかわらず、最も良い解と
 <indexterm><primary>ESP</primary><secondary>Ghostscript</secondary></indexterm>
-広範囲のプリンタモデルのサポートはESC Ghostscriptによって提供される
+広範囲のプリンターモデルのサポートはESC Ghostscriptによって提供される
 (Foomatic/cupsomaticについての詳細、現在<emphasis>foomatic-rip</emphasis>と
 呼ばれている、特に新しいバージョンについては、以下を参照)。
 </para>
@@ -1177,7 +1177,7 @@ text/plain              application/postscript   33    texttops
 	<variablelist>
 		<varlistentry><term>printer</term>
 			<listitem><para>
-			プリンタキューの名前(通常これは動かすフィルタの名前である)。
+			プリンターキューの名前(通常これは動かすフィルタの名前である)。
 			</para></listitem>
 		</varlistentry>
 
@@ -1189,7 +1189,7 @@ text/plain              application/postscript   33    texttops
 
 		<varlistentry><term>user</term>
 			<listitem><para>
-			オリジナルのユーザ名属性からの文字列。
+			オリジナルのユーザー名属性からの文字列。
 			</para></listitem>
 		</varlistentry>
 
@@ -1231,10 +1231,10 @@ text/plain              application/postscript   33    texttops
 
 	<para>
 	<indexterm><primary>PostScript</primary></indexterm>
-<indexterm><primary>非PostScriptプリンタ</primary></indexterm>
+<indexterm><primary>非PostScriptプリンター</primary></indexterm>
 <indexterm><primary>raster</primary></indexterm>
 	以前に説明したように、PostScriptは、任意のUNIXベースの印刷システムにおいて
-	中核となるファイル形式である。PostScriptから、非PostScriptプリンタに送る
+	中核となるファイル形式である。PostScriptから、非PostScriptプリンターに送る
 	ためのラスタデータを、CUPSは生成する。
 	</para>
 
@@ -1284,7 +1284,7 @@ text/plain              application/postscript   33    texttops
 	<emphasis>pstops</emphasis>は、<parameter>application/postscript</parameter>を
 	<parameter>application/vnd.cups-postscript</parameter>に変換するために使われる
 	フィルタである。以前に説明したように、このフィルタはすべてのデバイス固有の印刷
-	オプション(両面印刷やstanpingと穴あけなどをプリンタに指示するコマンド)を、
+	オプション(両面印刷やstanpingと穴あけなどをプリンターに指示するコマンド)を、
 	PostScriptファイル中に挿入する。その例は、
 	<link linkend="5small">デバイス固有印刷オプションの追加</link>に例示されている。
 	</para>
@@ -1342,14 +1342,14 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>CUPS ラスタ</primary></indexterm>
 <indexterm><primary>汎用ラスタ</primary></indexterm>
 <indexterm><primary>IANA</primary></indexterm>
-<indexterm><primary>ラスタドライバ</primary></indexterm>
+<indexterm><primary>ラスタドライバー</primary></indexterm>
 	CUPSラスタは強力な機能を持つ汎用ラスタフォーマットである。これは、ページ単位
-	情報、色のプロファイルなど、下位のラスタドライバで使われるものを含むことが
+	情報、色のプロファイルなど、下位のラスタドライバーで使われるものを含むことが
 	出来る。そのMIMEタイプはIANAに登録されていてその仕様はもちろん完全に公開されて
-	いる。それを作るのはとても簡単で、選択したものに対応すべきプリンタモデル用に、
-	LinuxとUNIXラスタドライバを製造元が作成するために、費用がかからないように
+	いる。それを作るのはとても簡単で、選択したものに対応すべきプリンターモデル用に、
+	LinuxとUNIXラスタドライバーを製造元が作成するために、費用がかからないように
 	設計されている。CUPSは常時ラスタライズする最初のステージに注意を払っているので、
-	ベンダはGhostscript互換について注意を払う必要はない(実際、CUPSラスタドライバの
+	ベンダはGhostscript互換について注意を払う必要はない(実際、CUPSラスタドライバーの
 	開発の資金調達を行っている、1つ以上のベンダが現在存在する)。これは、
 	<link linkend="cups-raster2">Ghostscriptを使うCUPSラスタ生成の図解</link>
 	に図示している。
@@ -1375,7 +1375,7 @@ text/plain              application/postscript   33    texttops
 	バージョン1.1.15以降、この機能は変更された。このフィルタの機能は、Ghostscriptに
 	統合された(現在はGNU Ghostscript バージョン 7.05をベースとしている)。
 	<parameter>pstoraster</parameter>フィルタは現在<command>-sDEVICE=cups</command>
-	パラメータを付けた<command>gs</command>を呼び出す単純なシェルスクリプトである。
+	パラメーターを付けた<command>gs</command>を呼び出す単純なシェルスクリプトである。
 	もしも、<command>gs -h |grep cups</command>を実行したときにGhostscriptがエラーに
 	なるならば、印刷は出来ないので、Ghostscriptをアップデートする必要がある。
 	</para>
@@ -1403,7 +1403,7 @@ text/plain              application/postscript   33    texttops
 	</sect2>
 
 	<sect2>
-	<title>rasterto [プリンタ固有]</title>
+	<title>rasterto [プリンター固有]</title>
 
 	<para>
 <indexterm><primary>rastertoalps</primary></indexterm>
@@ -1417,25 +1417,25 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>rastertoprinter</primary></indexterm>
 <indexterm><primary>rastertoprinter</primary></indexterm>
 <indexterm><primary>Gutenprint</primary></indexterm>
-	CUPSはCUPSラスタを処理するための非常に数多くのラスタドライバを提供している。
+	CUPSはCUPSラスタを処理するための非常に数多くのラスタドライバーを提供している。
 	筆者の環境では、/usr/lib/cups/filter/配下に
 	<parameter>rastertoalps</parameter>,<parameter>rastertobj</parameter>,
         <parameter>rastertoepson</parameter>,<parameter>rastertoescp</parameter>,
 	<parameter>rastertopcl</parameter>,<parameter>rastertoturboprint</parameter>,
 	<parameter>rastertoapdk</parameter>,<parameter>rastertodymo</parameter>,
 	<parameter>rastertoescp</parameter>, <parameter>rastertohp</parameter>と
-        <parameter>rastertoprinter</parameter>があった。これよりドライバの数が少なくても
+        <parameter>rastertoprinter</parameter>があった。これよりドライバーの数が少なくても
 	心配することはない。上記のいくつかはCUPSに対する商用アドオンであり
 	(<parameter>rastertoturboprint</parameter>のような)、その他
 	(<parameter>rastertoprinter</parameter>のような)は、可能な限りCUPSと協調する
-	ことを望んでいるサードパーティドライバ開発プロジェクトに由来する
+	ことを望んでいるサードパーティドライバー開発プロジェクトに由来する
 	(たとえばGutenprint)。
-	<link linkend="small9">ラスタからプリンタ固有形式への変換図</link>
+	<link linkend="small9">ラスタからプリンター固有形式への変換図</link>
 	を参照。
 	</para>
 
 		<figure id="small9">
-			<title>ラスタからプリンタ固有形式への変換図</title>
+			<title>ラスタからプリンター固有形式への変換図</title>
 			<imagefile>9small</imagefile>
 		</figure>
 	</sect2>
@@ -1462,68 +1462,68 @@ text/plain              application/postscript   33    texttops
 	<variablelist>
 		<varlistentry><term>usb</term>
 		<listitem><para>
-		このバックエンドはUSB接続のプリンタに印刷ファイルを送る。使用する
+		このバックエンドはUSB接続のプリンターに印刷ファイルを送る。使用する
 		CUPS device URIの例は以下の通り。
 		<filename>usb:/dev/usb/lp0</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>serial</term>
 		<listitem><para>
-		このバックエンドはシリアル接続したプリンタに印刷ファイルを送る。使用する
+		このバックエンドはシリアル接続したプリンターに印刷ファイルを送る。使用する
                 CUPS device URIの例は以下の通り。
 		<filename>serial:/dev/ttyS0?baud=11500</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>parallel</term>
 		<listitem><para>
-		このバックエンドはパラレルポートに接続したプリンタに印刷ファイルを送る。使用する
+		このバックエンドはパラレルポートに接続したプリンターに印刷ファイルを送る。使用する
                 CUPS device URIの例は以下の通り。
 		<filename>parallel:/dev/lp0</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>SCSI</term>
 		<listitem><para>
-		このバックエンドはSCSIインタフェースに接続されたプリンタに印刷ファイルを送る。使用する
+		このバックエンドはSCSIインタフェースに接続されたプリンターに印刷ファイルを送る。使用する
                 CUPS device URIの例は以下の通り。
 		<filename>scsi:/dev/sr1</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>lpd</term>
 		<listitem><para>
-		このバックエンドはLPR/LPDで接続されたネットワークプリンタに印刷ファイルを送る。使用する
+		このバックエンドはLPR/LPDで接続されたネットワークプリンターに印刷ファイルを送る。使用する
                 CUPS device URIの例は以下の通り。
 		<filename>lpd://remote_host_name/remote_queue_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>AppSocket/HP JetDirect</term>
 		<listitem><para>
-		このバックエンドはAppSocket(別名JetDirect)で接続されたネットワークプリンタに
+		このバックエンドはAppSocket(別名JetDirect)で接続されたネットワークプリンターに
 		印刷ファイルを送る。使用するCUPS device URIの例は以下の通り。
 		<filename>socket://10.11.12.13:9100</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>ipp</term>
 		<listitem><para>
-		このバックエンドはIPPで接続されたネットワークプリンタ(か他のCUPSサーバ)に
+		このバックエンドはIPPで接続されたネットワークプリンター(か他のCUPSサーバー)に
 		印刷ファイルを送る。使用するCUPS device URIの例は以下の通り。
 		<filename>ipp:://192.193.194.195/ipp</filename>
-		(多くのHPプリンタ用)と
+		(多くのHPプリンター用)と
 		<filename>ipp://remote_cups_server/printers/remote_printer_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>http</term>
 		<listitem><para>
-		このバックエンドはHTTPで接続されたプリンタにファイルを送る
+		このバックエンドはHTTPで接続されたプリンターにファイルを送る
 		(http:// CUPSバックエンドはipp://バックエンドの単なるシンボリックリンクである)。
 		CUPS device URIの例は以下の通り。
 		<filename>http:://192.193.194.195:631/ipp</filename>
-		(多くのHPプリンタ用)と
+		(多くのHPプリンター用)と
 		<filename>http://remote_cups_server:631/printers/remote_printer_name</filename>
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>smb</term>
 		<listitem><para>
-		このバックエンドはWindowsホストによって共有されているプリンタに印刷ファイルを送る。
+		このバックエンドはWindowsホストによって共有されているプリンターに印刷ファイルを送る。
                 CUPS device URIの例は以下の通り。
 		</para>
 
@@ -1540,7 +1540,7 @@ text/plain              application/postscript   33    texttops
 		The smb:// backendはSambaユーティリティ<parameter>smbspool</parameter>
 		(CUPSによって提供されていない)へのシンボリックリンクである。もしも
 		CUPSバックエンドディレクトリ中にシンボリックリンクがない場合、root
-		ユーザになって、
+		ユーザーになって、
 		<command>ln -s `which smbspool' /usr/lib/cups/backend/smb</command>
 		を実行してこれを作ること。
 		</para></listitem></varlistentry>
@@ -1551,12 +1551,12 @@ text/plain              application/postscript   33    texttops
 	スクリプトで固有のバックエンドを書くことは簡単である。印刷ジョブをメールとして
 	(<quote>mailto:/</quote>バックエンド経由で)送る、PDFに変換する
 	(<quote>pdfgen:/</quote>バックエンド経由で)、あるいは<quote>/dev/null</quote>に
-	ダンプするというような<quote>特別な</quote>プリンタを作成したいというような
-	希望が理由としてあげられる(実際、システム全体での既定値のプリンタとして、
-	devnull:/バックエンドに接続するプリンタを用意している)。とても多くの人が、
-	プリンタを指定しないでジョブを送信したり、スクリプトとプログラムがプリンタを
+	ダンプするというような<quote>特別な</quote>プリンターを作成したいというような
+	希望が理由としてあげられる(実際、システム全体での既定値のプリンターとして、
+	devnull:/バックエンドに接続するプリンターを用意している)。とても多くの人が、
+	プリンターを指定しないでジョブを送信したり、スクリプトとプログラムがプリンターを
 	指定しない。システム全体での既定値はジョブを削除し、$USERに、
-	正しいプリンタ名を常時指定するようにという丁寧なメールを送る)。
+	正しいプリンター名を常時指定するようにという丁寧なメールを送る)。
 	</para>
 
 	<para>
@@ -1581,16 +1581,16 @@ text/plain              application/postscript   33    texttops
 	<indexterm><primary>cupsomatic</primary></indexterm>
 	<indexterm><primary>foomatic</primary></indexterm>
 <indexterm><primary>PPDs</primary></indexterm>
-<indexterm><primary>Foomaticプリンタ</primary></indexterm>
+<indexterm><primary>Foomaticプリンター</primary></indexterm>
 <indexterm><primary>Linuxprinting.org</primary></indexterm>
 	<parameter>cupsomatic</parameter>フィルタはCUPSをインストールするときに最も広く
 	使われているだろう。これらはCUPS開発者によって開発されたものではないということを
 	明確にする必要がある。これらはCUPSに対するサードパーティアドオンである。これらは
 	CUPSのためにジョブをレンダリングする従来のGhostscriptデバイスを使う。
 	問題が発生したときの調査時にはその違いを知っておく必要がある。ここでは1ステージで
-	すべてのレンダリングプロセスがGhostscript内部で、対象のプリンタに適したデバイスを
+	すべてのレンダリングプロセスがGhostscript内部で、対象のプリンターに適したデバイスを
 	使って行われる。<parameter>cupsomatic</parameter>は、Linuxprinting.orgにある
-	Foomaticプリンタドライバデータベースから生成されたPPDを使う。
+	Foomaticプリンタードライバーデータベースから生成されたPPDを使う。
 	</para>
 
 	<para>
@@ -1600,7 +1600,7 @@ text/plain              application/postscript   33    texttops
 *cupsFilter: "application/vnd.cups-postscript  0  cupsomatic"
 </programlisting>
 	PPDファイルの最初の40かそのあたりで、この行を見つけるかもしれない。
-	もしも、そのような、インストールされたPPDがあるならば、プリンタは
+	もしも、そのような、インストールされたPPDがあるならば、プリンターは
 	<parameter>foomatic</parameter>の名前部分に<parameter>foomatic</parameter>が
 	表示されたCUPS Webインタフェース中で表示される。
 	<parameter>cupsomatic</parameter>は、選択されたPPDとプリントジョブに与えられた
@@ -1655,10 +1655,10 @@ text/plain              application/postscript   33    texttops
 	<title><filename>mime.convs</filename></title>
 
 	<para>
-	CUPSは与えられたMIMEタイプとインストールされたすべてのプリンタに対する可能な
+	CUPSは与えられたMIMEタイプとインストールされたすべてのプリンターに対する可能な
 	すべてのフィルタリングチェーンパスを自動構築する。しかし、どのようにして
 	優先するものや特定の選択肢を決めるのであろうか(2つ以上の、同じターゲット
-	プリンタに対するフィルタリングチェーンが存在するような場合があるだろう)?
+	プリンターに対するフィルタリングチェーンが存在するような場合があるだろう)?
 	簡単である。mime-convファイルの3番目のカラム中にある数字に気がついたかも
 	しれない。それはこのフィルタに割り当てられている仮想コストを表現している。
 	すべての可能なフィルタリングチェーンは全体の<quote>フィルタコスト</quote>
@@ -1671,7 +1671,7 @@ text/plain              application/postscript   33    texttops
 	<filename>cupsd.conf</filename>中で<parameter>FilterLimit 1000</parameter>を
 	設定すると、仮想フィルタコストが合計1000を消費するより多く、フィルタが同時に動く
 	ことを許可しない。これは適切な<quote>FilterLimit</quote>値を設定することにより
-	CUPSサーバの負荷を制限する効率的な方法である。200というFilterLimitの値はおおよそ
+	CUPSサーバーの負荷を制限する効率的な方法である。200というFilterLimitの値はおおよそ
 	一度に1つのジョブを許可し、FilterLimitを1000にするとおおよそ最大5つのジョブが
 	同時に動作する。
 	</para></tip>
@@ -1685,9 +1685,9 @@ text/plain              application/postscript   33    texttops
 <indexterm><primary>lpadmin</primary></indexterm>
 <indexterm><primary>rawprinter</primary></indexterm>
 	CUPSに対して任意の<quote>raw</quote>ファイルを印刷(ほとんど)させることが出来る。
-	<quote>raw</quote>はフィルタされないことを意味する。CUPSは、プリンタがそれを理解
-	できる時に、思い悩まずに<quote>そのまま</quote>プリンタに対してファイルを送る。
-	ユーザは賢明なデータ形式のみをそれらに送る事について注意を払う必要がある。raw
+	<quote>raw</quote>はフィルタされないことを意味する。CUPSは、プリンターがそれを理解
+	できる時に、思い悩まずに<quote>そのまま</quote>プリンターに対してファイルを送る。
+	ユーザーは賢明なデータ形式のみをそれらに送る事について注意を払う必要がある。raw
 	形式の印刷は、もしも<quote><parameter>-o raw</parameter></quote>オプションが
 	コマンド行上で指定されたときにどのキューにおいても発生する。任意のPPDを単に関連
 	づけない事によってrawのみのキューを設定することも出来る。以下のように行う:
@@ -1748,7 +1748,7 @@ text/plain              application/postscript   33    texttops
 application/octet-stream
 </programlisting>
 	自動タイプルールセットが指定されていないこの行は、他の行で
-	<parameter>application/octet-stream</parameter>のメンバが自動タイプされていない
+	<parameter>application/octet-stream</parameter>のメンバーが自動タイプされていない
 	限り、全てのファイルを作成する。<filename>/etc/cups/mime.convs</filename>中では
 	以下のような行になる:
 <programlisting>
@@ -1758,7 +1758,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	この行はCUPSに、<parameter>application/octet-stream</parameter>上で
 	(<quote>-</quote>で示される、何もしない)<emphasis>Null Filter</emphasis>
 	を使うことを指示し、<parameter>application/vnd.cups-raw</parameter>として
-	結果をタグづける。この最後の部分は、プリンタに接続しファイルを送信するための
+	結果をタグづける。この最後の部分は、プリンターに接続しファイルを送信するための
 	バックエンドに向けてCUPSスケジューラがいつでも今あるファイルを引き渡せるように
 	している。
 	</para>
@@ -1779,7 +1779,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>/etc/cups/mime.convs</primary></indexterm>
 	そのCUPSは従来のものよりセキュリティに気を払っている印刷システムで、既定値では、
 	印刷デバイスに対して手の込んだ(おそらくバイナリ)データを送ることを誰にも許可して
-	いない(これは、使用しているプリンタに対してサービス不能攻撃をかける不正使用が
+	いない(これは、使用しているプリンターに対してサービス不能攻撃をかける不正使用が
 	簡単にでき、少なくとも大量の紙とインクが無駄になることが発生する)。
 	<quote>不明な</quote>データはCUPSによって、<emphasis>MIMEタイプ</emphasis>
 	<emphasis>application/octet-stream</emphasis>と見なされる。
@@ -1794,7 +1794,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title>非PostScriptプリンタのためのPostScriptプリンタ記述</title>
+	<title>非PostScriptプリンターのためのPostScriptプリンター記述</title>
 
 	<para>
 	<indexterm><primary>PPD</primary></indexterm>
@@ -1803,18 +1803,18 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>RIP</primary></indexterm>
 <indexterm><primary>Ghostscript</primary></indexterm>
 <indexterm><primary>デバイス固有のコマンド</primary></indexterm>
-	オリジナルのPPDはPostScriptプリンタのみに使われることを意図していた。それらは
+	オリジナルのPPDはPostScriptプリンターのみに使われることを意図していた。それらは
 	ジョブファイルを処理する、RIPのためのデバイス固有のコマンドと設定を送るための
-	手助けとなる。CUPSはPPDに対するこのスコープを拡張し、非PostScriptプリンタにも
+	手助けとなる。CUPSはPPDに対するこのスコープを拡張し、非PostScriptプリンターにも
 	カバーするようにした。これが標準化されたファイル形式のために、これを行うのは
 	難しくない。その方法は論理的でもある:CUPSはPostScriptを取り扱い、ジョブファイルを
-	処理するためにPostScript RIP(Ghostscript)を使う。唯一の違いはPostScriptプリンタは
-	RIPを内蔵していて、その他のタイプのプリンタはホストコンピュータ上でGhostscript
+	処理するためにPostScript RIP(Ghostscript)を使う。唯一の違いはPostScriptプリンターは
+	RIPを内蔵していて、その他のタイプのプリンターはホストコンピュータ上でGhostscript
 	のRIPを動かすと言うことである。
 	</para>
 
 	<para>
-	非PostScriptプリンタに対するPPDはCUPS固有のいくつかの行を持っている。最も
+	非PostScriptプリンターに対するPPDはCUPS固有のいくつかの行を持っている。最も
 	重要なものは下記と似たようなものである:
 	<indexterm><primary>application/vnd.cups-raster</primary></indexterm>
 <programlisting>
@@ -1832,7 +1832,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</para>
 
 	<para>
-	CUPSが提供しているPPDは数少ないが、プリンタモデルは数多くある。異なった紙の
+	CUPSが提供しているPPDは数少ないが、プリンターモデルは数多くある。異なった紙の
 	トレイや指定されたモデルがサポートしているよりもより大きなマージンを取ることが
 	出来ないかもしれない。要約は表21.1<link linkend="cups-ppds"></link>を参照。
 	</para>
@@ -1842,31 +1842,31 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		<tgroup cols="2" align="left">
 			<colspec align="left"/>
 			<colspec align="justify" colwidth="1*"/>
-			<thead><row><entry>PPDファイル</entry><entry>プリンタタイプ</entry></row></thead>
+			<thead><row><entry>PPDファイル</entry><entry>プリンタータイプ</entry></row></thead>
 			<tbody>
-			<row><entry>deskjet.ppd</entry><entry>古いHP inkjetプリンタとその互換</entry></row>
+			<row><entry>deskjet.ppd</entry><entry>古いHP inkjetプリンターとその互換</entry></row>
 
-			<row><entry>deskjet2.ppd</entry> <entry>新しいHP inkjetプリンタとその互換</entry> </row>
+			<row><entry>deskjet2.ppd</entry> <entry>新しいHP inkjetプリンターとその互換</entry> </row>
 
-			<row><entry>dymo.ppd</entry> <entry>labelプリンタ</entry> </row>
+			<row><entry>dymo.ppd</entry> <entry>labelプリンター</entry> </row>
 
-			<row><entry>epson9.ppd</entry> <entry>エプソン9-ピンインパクトプリンタとその互換</entry> </row>
+			<row><entry>epson9.ppd</entry> <entry>エプソン9-ピンインパクトプリンターとその互換</entry> </row>
 
-			<row><entry>epson24.ppd</entry> <entry>エプソン 24-ピンインパクトプリンタとその互換</entry> </row>
+			<row><entry>epson24.ppd</entry> <entry>エプソン 24-ピンインパクトプリンターとその互換</entry> </row>
 
-			<row><entry>okidata9.ppd</entry> <entry>Okidata 9-ピンインパクトプリンタとその互換</entry> </row>
+			<row><entry>okidata9.ppd</entry> <entry>Okidata 9-ピンインパクトプリンターとその互換</entry> </row>
 
-			<row><entry>okidat24.ppd</entry> <entry>Okidata 24-ピンインパクトプリンタとその互換</entry> </row>
+			<row><entry>okidat24.ppd</entry> <entry>Okidata 24-ピンインパクトプリンターとその互換</entry> </row>
 
-			<row><entry>stcolor.ppd</entry> <entry>古いエプソン Stylusカラープリンタ</entry> </row>
+			<row><entry>stcolor.ppd</entry> <entry>古いエプソン Stylusカラープリンター</entry> </row>
 
-			<row><entry>stcolor2.ppd</entry> <entry>新しいエプソン Stylusカラープリンタ</entry> </row>
+			<row><entry>stcolor2.ppd</entry> <entry>新しいエプソン Stylusカラープリンター</entry> </row>
 
-			<row><entry>stphoto.ppd</entry> <entry>古いエプソン Stylus Photoプリンタ</entry> </row>
+			<row><entry>stphoto.ppd</entry> <entry>古いエプソン Stylus Photoプリンター</entry> </row>
 
-			<row><entry>stphoto2.ppd</entry> <entry>新しいエプソン Stylus Photoプリンタ</entry> </row>
+			<row><entry>stphoto2.ppd</entry> <entry>新しいエプソン Stylus Photoプリンター</entry> </row>
 
-			<row><entry>laserjet.ppd</entry> <entry>すべての PCL プリンタ</entry> </row>
+			<row><entry>laserjet.ppd</entry> <entry>すべての PCL プリンター</entry> </row>
 
 			</tbody>
 		</tgroup>
@@ -1934,13 +1934,13 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	単一のステップで行う。従ってそれはGhostscript中に組み込まれる他のすべての
 	デバイスに依存する。他のスプーラでのGhostscriptのレンダリングと同じくらい
 	品質は良い(あるいは悪い)。優位点は、この方法は、より最新のCUPSによる方法によって
-	(まだ)サポートされていない、たくさんのプリンタモデルをサポートするということで
+	(まだ)サポートされていない、たくさんのプリンターモデルをサポートするということで
 	ある。
 	</para>
 
 	<para>
 	もちろん、あるシステムで並列に両方の手法を使うことが出来(もしも異なったキューを
-	設定するならば1つのプリンタに対しても)、どれが一番うまく動作するかを見いだせる。
+	設定するならば1つのプリンターに対しても)、どれが一番うまく動作するかを見いだせる。
 	</para>
 
 	<para>
@@ -1954,7 +1954,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<parameter>application/vnd.cups-postscript</parameter>ステージ後に捕まえ、
 	システム全体でインストールされたGhostscriptである、CUPS-externalを通してそれを
 	横取りする。その結果、印刷ファイルは<parameter>pstoraster</parameter>フィルタ
-	をバイパスする(さらにCUPSラスタドライバ<parameter>rastertosomething</parameter>も
+	をバイパスする(さらにCUPSラスタドライバー<parameter>rastertosomething</parameter>も
 	バイパスする)。Gostscriptがラスタライズ処理を終えた後、
 	<parameter>cupsomatic</parameter>はレンダリングされたファイルディレクトリをCUPS
 	バックエンドに渡す。
@@ -1976,7 +1976,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>2アップ</primary></indexterm>
 <indexterm><primary>両面印刷</primary></indexterm>
-	HP JetDirect接続のPostScriptプリンタにPDFファイルを印刷しようとしていることを
+	HP JetDirect接続のPostScriptプリンターにPDFファイルを印刷しようとしていることを
 	仮定するが、ページ3-5,7と11-13のみを印刷したく、更にそれを<quote>2アップ</quote>
 	と<quote>両面印刷</quote>にしたいとする:
 	</para>
@@ -1996,11 +1996,11 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	<listitem><para>ファイルは次にコマンドラインオプションを適用する
 	<parameter>pstops</parameter>フィルタに渡される:これはページ2-5,7と11-13を
 	選択し、<quote>1枚のページ上に2つのページ</quote>という合成されたレイアウトを
-	作成し、正しい<quote>両面印刷</quote>コマンド(プリンタのPPD中で定義されている)
+	作成し、正しい<quote>両面印刷</quote>コマンド(プリンターのPPD中で定義されている)
 	を、新しいPostScriptファイルに挿入する。ファイルはこの時点でPostScript MIME
 	タイプ<parameter>application/vnd.cups-postscript</parameter>となる。</para></listitem>
 
-	<listitem><para>ファイルは、プリンタにジョブを転送する
+	<listitem><para>ファイルは、プリンターにジョブを転送する
 	<parameter>ソケット</parameter>バックエンドに送られる。</para></listitem>
 	</itemizedlist>
 
@@ -2050,7 +2050,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		ファイルは次にコマンドラインオプションを適用する<quote>pstops</quote>
 		フィルタに送られる。ここでページ2-5,7と11-13を選択し、
 		<quote>一枚の紙の上に2ページを</quote>合成し、正しい<quote>両面印刷</quote>
-		コマンド(おっと、このプリンタとPPDは両面印刷をサポートしていないので、
+		コマンド(おっと、このプリンターとPPDは両面印刷をサポートしていないので、
 		このオプションは無視される)を新しいPostScriptファイルに挿入する。
 		ファイルはこの時点でPostScript MIMEタイプ
 		<parameter>application/vnd.cups-postscript</parameter>となる。
@@ -2064,13 +2064,13 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		<listitem><para>
 <indexterm><primary>rastertoepson</primary></indexterm>
 		最後に、<parameter>rastertoepson</parameter>フィルタは、その処理を行い
-		(プリンタのPPD中で示されるように)、プリンタ固有のラスタデータを生成し、
-		ユーザが選択した任意の印刷オプションを、印刷データストリーム中に
+		(プリンターのPPD中で示されるように)、プリンター固有のラスタデータを生成し、
+		ユーザーが選択した任意の印刷オプションを、印刷データストリーム中に
 		埋め込む。
 		</para></listitem>
 
 		<listitem><para>
-		ファイルは、ジョブをプリンタに転送する<parameter>usb</parameter>
+		ファイルは、ジョブをプリンターに転送する<parameter>usb</parameter>
 		バックエンドに送られる。
 		</para></listitem>
 	</itemizedlist>
@@ -2087,7 +2087,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title>CUPSドライバ/PPDの提供元</title>
+	<title>CUPSドライバー/PPDの提供元</title>
 
 	<para>
 	インターネット上でたくさんのCUPS-PPDファイルを(それに適したフィルタと一緒に)、
@@ -2102,34 +2102,34 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		<ulink url="http://www.easysw.com/printpro/">ESP PrintPro</ulink>
 		(商用、自由ではない)は、3000以上のPPDをパッケージしていて、
 		Linux, Mac OS X, IBM-AIX,HP-UX, Sun-Solaris, SGI-IRIX, Compaq Tru64,
-		Digital UNIXと他の商用UNIX上での<quote>外部ドライバ</quote>として使える
+		Digital UNIXと他の商用UNIX上での<quote>外部ドライバー</quote>として使える
 		(これは、CUPS開発者それ自身で書かれていて、その売り上げは
 		開発者を食べさせるという形で、将来のCUPS開発費用を助ける)。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://gimp-print.sourceforge.net/">Gutenprint Project</ulink>
-		(GPL、フリーソフトウェア)は140ほどのPPDを提供し(おおよそ400のプリンタを
+		(GPL、フリーソフトウェア)は140ほどのPPDを提供し(おおよそ400のプリンターを
 		サポートしていて、多くは写真品質出力を提供する)、Gutenprint CUPS
-		ドライバと共に使われる。
+		ドライバーと共に使われる。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://www.turboprint.de/english.html/">TurboPrint </ulink>
-		(シェアウェア、自由ではない)は、とても良い品質で、おおよそ、プリンタの数と
+		(シェアウェア、自由ではない)は、とても良い品質で、おおよそ、プリンターの数と
 		同じくらいのサポートがある。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://www-124.ibm.com/developerworks/oss/linux/projects/omni/">OMNI </ulink>
-		(LGPL、自由)は、IBMによって作られたパッケージで、現在400以上のプリンタ
+		(LGPL、自由)は、IBMによって作られたパッケージで、現在400以上のプリンター
 		サポートを含み、IBM OS/2のノウハウの遺産をLinux上に移植している
 		(CUPSサポートは現在β状態である)。
 		</para></listitem>
 
 		<listitem><para>
 		<ulink url="http://hpinkjet.sourceforge.net/">HPIJS </ulink> (BSD系のライセンス、自由)
-		は、おおよそ150のHP製プリンタをサポートし、優れた印刷品質をも提供する
+		は、おおよそ150のHP製プリンターをサポートし、優れた印刷品質をも提供する
 		(現在Foomaticパス経由でのみ有効)。
 		</para></listitem>
 
@@ -2151,10 +2151,10 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>lpadmin</primary></indexterm>
 	CUPSはまたSystemV AT&amp;T印刷システムからとして知られている
 	<quote>interface scripts</quote>の使用もサポートしている。それらはしばしば
-	PCL印刷ジョブを生成するアプリケーションから、PCLプリンタにおいて使われる。
-	interface scriptsはプリンタモデルに特化している。これらはPostScriptプリンタの
+	PCL印刷ジョブを生成するアプリケーションから、PCLプリンターにおいて使われる。
+	interface scriptsはプリンターモデルに特化している。これらはPostScriptプリンターの
 	ためのPPDと同様の役割を持っている。interface scriptsは、たとえば、もしも
-	ユーザが特定のペーパートレイを選択したか、紙の方向を変更したかA3用紙を
+	ユーザーが特定のペーパートレイを選択したか、紙の方向を変更したかA3用紙を
 	しようするような場合、印刷データストリーム中に要求されたESCシーケンスを
 	追加してもよい。interface scriptsはLinux領域ではほとんど知られていない。
 	HP-UXプラットフォームでは、もう少し使われている。動作する任意の
@@ -2181,15 +2181,15 @@ application/octet-stream   application/vnd.cups-raw   0   -
 
 <para>
 ネットワーク印刷は多くの分野をカバーしている。Windowsクライアントのために印刷するとき
-Samba上で何が起こるかを正確に理解するために、まず初めに、Windows NTサーバと共に使う
+Samba上で何が起こるかを正確に理解するために、まず初めに、Windows NTサーバーと共に使う
 Windowsクライアントという、<quote>Windowsのみ</quote>の設定を見てみよう。
 </para>
 
 <sect2>
-<title>WindowsクライアントからNT印刷サーバへ</title>
+<title>WindowsクライアントからNT印刷サーバーへ</title>
 
 <para>
-WindowsクライアントからNTベースの印刷サーバへの印刷は、2つのオプションがある。
+WindowsクライアントからNTベースの印刷サーバーへの印刷は、2つのオプションがある。
 それらは以下の2つである:
 <indexterm><primary>GDI</primary></indexterm>
 <indexterm><primary>EMF</primary></indexterm>
@@ -2197,47 +2197,47 @@ WindowsクライアントからNTベースの印刷サーバへの印刷は、2�
 
 
 <itemizedlist>
-	<listitem><para>ドライバをローカルに実行し、GDI出力(EMF)を、使用している
-	    プリンタに対するプリンタ固有の形式に描画する。
+	<listitem><para>ドライバーをローカルに実行し、GDI出力(EMF)を、使用している
+	    プリンターに対するプリンター固有の形式に描画する。
 	</para></listitem>
 
-	<listitem><para>プリンタ固有の出力に描画するためにドライバが実行されたときに、
-	    GDI出力(EMF)をサーバに送る。
+	<listitem><para>プリンター固有の出力に描画するためにドライバーが実行されたときに、
+	    GDI出力(EMF)をサーバーに送る。
 	</para></listitem>
 </itemizedlist>
 
 <para>
 両方の印刷パスは
-<link linkend="small11">クライアント上での印刷ドライバの実行</link>と
-<link linkend="small12">サーバ上での印刷ドライバの実行</link>という
+<link linkend="small11">クライアント上での印刷ドライバーの実行</link>と
+<link linkend="small12">サーバー上での印刷ドライバーの実行</link>という
 フローチャートで図示されている。
 </para>
 </sect2>
 
 <sect2>
-<title>クライアント上でのドライバの実行</title>
+<title>クライアント上でのドライバーの実行</title>
 
 <para>
-最初の場合、印刷サーバはraw形式でファイルをスプールせねばならない。これはジョブファイルに
+最初の場合、印刷サーバーはraw形式でファイルをスプールせねばならない。これはジョブファイルに
 さわらず、何らの方法での変換もしないことを意味する。これは、現代的なUNIXベースの印刷
-サーバが同じように行えることでもあり、NT印刷サーバよりもよりよいパフォーマンスとより
+サーバーが同じように行えることでもあり、NT印刷サーバーよりもよりよいパフォーマンスとより
 信頼性がある。これは、おそらくほとんどのSamba管理者が慣れ親しんでいるものである。この
-設定の1つの利点は、この<quote>スプールのみ</quote>の印刷サーバが、UNIX用のドライバがない
-場合にも使えるかもしれないと言うことである。これは、有効なWindowsクライアントドライバが
+設定の1つの利点は、この<quote>スプールのみ</quote>の印刷サーバーが、UNIX用のドライバーがない
+場合にも使えるかもしれないと言うことである。これは、有効なWindowsクライアントドライバーが
 あり、クライアントにインストールされていれば十分である。これは
-<link linkend="small11">クライアント上での印刷ドライバの実行ダイアグラム</link>
+<link linkend="small11">クライアント上での印刷ドライバーの実行ダイアグラム</link>
 で図示されている。
 </para>
 
 <figure id="small11">
-	<title>クライアント上での印刷ドライバの実行</title>
+	<title>クライアント上での印刷ドライバーの実行</title>
 	<imagefile>11small</imagefile>
 </figure>
 
 </sect2>
 
 <sect2>
-<title>サーバ上でのドライバの実行</title>
+<title>サーバー上でのドライバーの実行</title>
 
 
 <para>
@@ -2246,11 +2246,11 @@ WindowsクライアントからNTベースの印刷サーバへの印刷は、2�
 <indexterm><primary>ESC/P</primary></indexterm>
 <indexterm><primary>EMF</primary></indexterm>
 <indexterm><primary>GDI</primary></indexterm>
-他のパスはサーバ上でプリンタドライバを実行する。クライアントはサーバにEMF形式で印刷
-ファイルを送る。サーバはPostScript, PCL, ESC/Pか他のドライバを、EMFファイルをプリンタ
-固有の言語に変換するために使う。同じ事はUNIX上ではできない。現在、プリンタが理解できる
-ものに、UNIXサーバ上でWindowsクライアントのGDI出力を変換するプログラムか手法はない。
-これは<link linkend="small12">サーバ上での印刷ドライバの実行ダイアグラム</link>で
+他のパスはサーバー上でプリンタードライバーを実行する。クライアントはサーバーにEMF形式で印刷
+ファイルを送る。サーバーはPostScript, PCL, ESC/Pか他のドライバーを、EMFファイルをプリンター
+固有の言語に変換するために使う。同じ事はUNIX上ではできない。現在、プリンターが理解できる
+ものに、UNIXサーバー上でWindowsクライアントのGDI出力を変換するプログラムか手法はない。
+これは<link linkend="small12">サーバー上での印刷ドライバーの実行ダイアグラム</link>で
 図示されている。
 </para>
 
@@ -2266,17 +2266,17 @@ WindowsクライアントからNTベースの印刷サーバへの印刷は、2�
 </sect1>
 
 <sect1>
-<title>ネットワーク印刷(WindowsクライアントとUNIX/Samba印刷サーバ)</title>
+<title>ネットワーク印刷(WindowsクライアントとUNIX/Samba印刷サーバー)</title>
 
 <para>
-UNIX印刷サーバがそのプラットフォーム上でWin32プログラムコードを
+UNIX印刷サーバーがそのプラットフォーム上でWin32プログラムコードを
 <emphasis>実行できない</emphasis>ので、絵は若干異なる。しかしながら、
 これは、それほど選択権を制限するものではない。それどころか、他では不可能な
 印刷機能を実装することができるかもしれない。
 </para>
 
 <sect2>
-<title>WindowsクライアントからCUPS/Samba印刷サーバへ</title>
+<title>WindowsクライアントからCUPS/Samba印刷サーバーへ</title>
 
 <para>
 Windowsネットワーク印刷クライアントに対する、CUPSの強力な機能の利点をどのように
@@ -2284,15 +2284,15 @@ Windowsネットワーク印刷クライアントに対する、CUPSの強力な
 </para>
 
 <itemizedlist>
-	<listitem><para>WindowsクライアントにPostScriptをCUPSサーバに送らせる。
+	<listitem><para>WindowsクライアントにPostScriptをCUPSサーバーに送らせる。
 	</para></listitem>
 
-	<listitem><para>CUPSサーバにPostScriptをドライバ固有のラスタフォーマットに変換させる。</para></listitem>
+	<listitem><para>CUPSサーバーにPostScriptをドライバー固有のラスタフォーマットに変換させる。</para></listitem>
 </itemizedlist>
 
 <para>
-これは、クライアントにPostScriptドライバ(プリンタが非PostScriptモデルであっても。CUPS
-サーバ上でのドライバがあることも要求する)を使うことを要求する。
+これは、クライアントにPostScriptドライバー(プリンターが非PostScriptモデルであっても。CUPS
+サーバー上でのドライバーがあることも要求する)を使うことを要求する。
 </para>
 
 <para>
@@ -2306,20 +2306,20 @@ Windowsネットワーク印刷クライアントに対する、CUPSの強力な
 </smbconfblock>
 
 <para>
-これらのパラメータが指定されると、&smb.conf;中の(Sambaそれ自身と同様)、すべての手動設定
+これらのパラメーターが指定されると、&smb.conf;中の(Sambaそれ自身と同様)、すべての手動設定
 した印刷ディレクティブ(たとえば<smbconfoption name="print command"/>か
 <smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、SambaがCUPS
 ライブラリ(libcups)をサポートするようにコンパイルされているとき、CUPS APIを通してCUPSと
 直接やりとりする。他の印刷コマンドが設定されていない場合、印刷は、-orawオプションを
 自動的に付けてパススルーする、<emphasis>System V</emphasis>AT&amp;Tコマンドセットを
-使う(もし、コンパイル時にCUPSサポートをするようしたSambaサーバで動作するよう、個別に
+使う(もし、コンパイル時にCUPSサポートをするようしたSambaサーバーで動作するよう、個別に
 定義した印刷コマンドを使いたい場合、単に
 <smbconfoption name="classicalprinting">sysv</smbconfoption>を使う)。これは
-<link linkend="13small">CUPS/Sambaサーバ経由での印刷ダイアグラム</link>で図示されている。
+<link linkend="13small">CUPS/Sambaサーバー経由での印刷ダイアグラム</link>で図示されている。
 </para>
 
 	<figure id="13small">
-		<title>CUPS/Sambaサーバ経由での印刷</title>
+		<title>CUPS/Sambaサーバー経由での印刷</title>
 		<imagefile>13small</imagefile>
 	</figure>
 </sect2>
@@ -2342,7 +2342,7 @@ SambaとCUPSで共通のスプール空間を使う例は滅多に見たこと�
 </para>
 
 <para>
-WindowsユーザはSambaでのみ認証する(構成されるどんな手段でも)。もしもSambaがCUPSと同じ
+WindowsユーザーはSambaでのみ認証する(構成されるどんな手段でも)。もしもSambaがCUPSと同じ
 ホストで動作しているならば、印刷においては<quote>localhost</quote>のみ許可しなければ
 ならない。もしも異なったマシンで動作しているならば、CUPSで印刷できるように、Samba
 ホストがアクセス権を得られるようにしておかねばならない。
@@ -2354,7 +2354,7 @@ WindowsユーザはSambaでのみ認証する(構成されるどんな手段で�
 <title>ネットワーク PostScript RIP</title>
 
 <para>
-この節では、クライアントがCUPS-PPDと一緒にPostScriptドライバを使うようにさせる、サーバの
+この節では、クライアントがCUPS-PPDと一緒にPostScriptドライバーを使うようにさせる、サーバーの
 &smbmdash;設定上でのCUPSフィルタの使い方について議論する。
 </para>
 
@@ -2363,60 +2363,60 @@ WindowsユーザはSambaでのみ認証する(構成されるどんな手段で�
 <indexterm><primary>PostScript</primary></indexterm>
 <indexterm><primary>PCL</primary></indexterm>
 <indexterm><primary>PJL</primary></indexterm>
-PPDはすべての印刷デバイスオプションを制御できる。もしも、固有のPostScriptプリンタを
+PPDはすべての印刷デバイスオプションを制御できる。もしも、固有のPostScriptプリンターを
 持っているならば、&smbmdash;すなわちこれらは通常開発元によって提供される。PPDファイルは
-、つねに、Microsoft WindowsまたはApple Mac OSシステム上でのPostScriptプリンタドライバの
-コンポーネントである。それらはユーザが選択できる印刷オプション、適切なPostScriptへの
-マッピング、対象プリンタ用のPCLあるいはPJLコマンドを含むASCIIファイルである。プリンタ
-ドライバGUIダイアログはこれらのオプションを<quote>その場で</quote>ユーザが選択できる、
+、つねに、Microsoft WindowsまたはApple Mac OSシステム上でのPostScriptプリンタードライバーの
+コンポーネントである。それらはユーザーが選択できる印刷オプション、適切なPostScriptへの
+マッピング、対象プリンター用のPCLあるいはPJLコマンドを含むASCIIファイルである。プリンター
+ドライバーGUIダイアログはこれらのオプションを<quote>その場で</quote>ユーザーが選択できる、
 ボタンとドロップダウンリストに変換する。
 </para>
 
 <para>
-CUPSは、何らの変換なしに、任意のWindows(NTが推奨される)PostScriptドライバからのPPD
-ファイルロードでき、それらのオプションを扱える。印刷オプションのためのWebブラウザ
+CUPSは、何らの変換なしに、任意のWindows(NTが推奨される)PostScriptドライバーからのPPD
+ファイルロードでき、それらのオプションを扱える。印刷オプションのためのWebブラウザー
 インタフェース
 (<ulink noescape="1" url="http://localhost:631/printers/">http://localhost:631/printers/</ulink>
 を選択し、そこにある<guibutton>Configure Printer</guibutton>ボタンをクリック)か、
 コマンドラインインタフェース(<command>man lpoptions</command>か、システム上にあるならば、
-<command>lphelp</command>を参照)がある。これらはユーザへのPPDオプションを提供出来る
+<command>lphelp</command>を参照)がある。これらはユーザーへのPPDオプションを提供出来る
 Linux/UNIX上のGUIフロントエンドとは若干異なる。PPDオプションは通常、実際ののPostScript
-プリンタ上のPostScript RIPによって評価される事を意味する。
+プリンター上のPostScript RIPによって評価される事を意味する。
 </para>
 
 <sect2>
-<title>UNIX上の、非PSプリンタのためのPPD</title>
+<title>UNIX上の、非PSプリンターのためのPPD</title>
 
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
-CUPSはそのPPDの使用にあたっては<quote>実際の</quote>PostScriptプリンタだけにに制限
-されない。CUPS開発者は非PostScriptプリンタに対してもCUPS-PPDを使って有効なデバイスと
-ドライバオプションを記述するPPDコンセプトの範囲を拡張した。
+CUPSはそのPPDの使用にあたっては<quote>実際の</quote>PostScriptプリンターだけにに制限
+されない。CUPS開発者は非PostScriptプリンターに対してもCUPS-PPDを使って有効なデバイスと
+ドライバーオプションを記述するPPDコンセプトの範囲を拡張した。
 </para>
 
 <para>
 CUPSは完全なPostScriptインタプリタ(RIP)を含んでいるため、これは合理的である。RIPは
 GhostScriptをベースにしている。これはクライアントからすべてのPostScript(と更に追加で、
 その他のファイル形式)を受け取り処理できる。すべてのCUPS-PPDは、キーワード
-<parameter>*cupsFilter</parameter>で始まる追加の行を含んでいると非PostScriptプリンタに
+<parameter>*cupsFilter</parameter>で始まる追加の行を含んでいると非PostScriptプリンターに
 ギアを切り替える。この行はCUPS印刷システムに、受け取ったPostScriptを解釈するための
-プリンタ固有のフィルタを使うように告げる。そのため、そのプリンタに対してPostScript RIP
+プリンター固有のフィルタを使うように告げる。そのため、そのプリンターに対してPostScript RIP
 として振る舞うことが出来るため、そのクライアントに対してPostScriptデバイスとしてその
-すべてのプリンタを見せるようにし、受け取ったPostScriptコードを適切なラスタ印刷形式に
+すべてのプリンターを見せるようにし、受け取ったPostScriptコードを適切なラスタ印刷形式に
 処理する。
 </para>
 </sect2>
 
 <sect2>
-<title>Windows上の非PostScriptプリンタのためのPPD</title>
+<title>Windows上の非PostScriptプリンターのためのPPD</title>
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
-Windowsクライアントでは<quote>中核の</quote>PostScript ドライバ
+Windowsクライアントでは<quote>中核の</quote>PostScript ドライバー
 に加えて CUPS-PPD も利用可能である。（ただし現在は CUPS PostScript
 Driver for Windows NT/200x/XP が推奨されている。これを使うと、制
-限付きながら Adobe のドライバが利用できる）。CUPS-PPD を使う場合、
+限付きながら Adobe のドライバーが利用できる）。CUPS-PPD を使う場合、
 他のスプーラではできない機能のいくつかを CUPS が利用できるよう
 になる。
 </para>
@@ -2429,14 +2429,14 @@ Driver for Windows NT/200x/XP が推奨されている。これを使うと、�
 
 	<listitem><para>
 	すべてのファイルがpstopフィルタを通し、その結果<filename>page_log</filename>に
-	記録されるため、CUPSの集中アカウント件請求サーバとして振る舞う。
+	記録されるため、CUPSの集中アカウント件請求サーバーとして振る舞う。
 	<emphasis>注意:</emphasis>これは、常時定義毎にフィルタなしが存在するため、
 	<quote>raw</quote>印刷ジョブでは該当しない。
 	</para></listitem>
 
 	<listitem><para>
-	たくさんの異なった対象プリンタがあっても、クライアントが、単一のPostScript
-	ドライバに集約することが出来るようになる。
+	たくさんの異なった対象プリンターがあっても、クライアントが、単一のPostScript
+	ドライバーに集約することが出来るようになる。
 	</para></listitem>
 </itemizedlist>
 
@@ -2448,32 +2448,32 @@ Windowsクライアント上のCUPS PPDを使うと、すべての印刷ジョ�
 </sect1>
 
 <sect1>
-<title>CUPSクライアントとしてのWindowsターミナルサーバ (WTS)</title>
+<title>CUPSクライアントとしてのWindowsターミナルサーバー (WTS)</title>
 
 <para>
 この設定は、WTS環境で大きな問題を体験している人にとって、特別な興味を引くかもしれない。
-WTSはしばしば、そのクライアントの数多くのプリンタモデルを動かすために､多数の非PostScript
-プリンタドライバをインストールする必要がある。これはしばしば非常に不安定性を増大させる。
+WTSはしばしば、そのクライアントの数多くのプリンターモデルを動かすために､多数の非PostScript
+プリンタードライバーをインストールする必要がある。これはしばしば非常に不安定性を増大させる。
 </para>
 
 <sect2>
-<title><quote>カーネルモード</quote>でのプリンタドライバの実行は多くの問題を引き起こす</title>
+<title><quote>カーネルモード</quote>でのプリンタードライバーの実行は多くの問題を引き起こす</title>
 
 <para>
-<quote>カーネルモード</quote>で動作するWindows NTプリンタドライバは、ドライバが安定せず、
+<quote>カーネルモード</quote>で動作するWindows NTプリンタードライバーは、ドライバーが安定せず、
 よくテストされていない場合には、システムの安定性にとって高いリスクとなる。そして、できの
-悪いドライバはたくさんあるのである!特に、悪名高いものは、ジョブの終了時にサウンドカード
-経由でユーザに通知を行う追加のサウンドモジュールが動くものを持っているPCLドライバが例で
+悪いドライバーはたくさんあるのである!特に、悪名高いものは、ジョブの終了時にサウンドカード
+経由でユーザーに通知を行う追加のサウンドモジュールが動くものを持っているPCLドライバーが例で
 ある。通常使っていて、<quote>ブルースクリーン</quote>をこれが出してしまうと言うことを言う
 必要があるだろうか?
 </para>
 
 <para>
-PostScriptドライバは一般的によくテストされている。カーネルモードで動作したとしても、
+PostScriptドライバーは一般的によくテストされている。カーネルモードで動作したとしても、
 それらが何かの問題を引き起こすことは知られていない。これは2つの異なったPostScript
-ドライバが現在存在しているという事によるのかもしれない。1つはAdobeのものであり、もう1つは
+ドライバーが現在存在しているという事によるのかもしれない。1つはAdobeのものであり、もう1つは
 Microsoftのものである。両方ともよくテストされ、Windows上で想像できるように安定している。
-CUPSドライバはマイクロソフトのもの由来である。
+CUPSドライバーはマイクロソフトのもの由来である。
 </para>
 </sect2>
 
@@ -2481,10 +2481,10 @@ CUPSドライバはマイクロソフトのもの由来である。
 <title>Workarounds Impose Heavy Limitations</title>
 
 <para>
-回避方法として、サイト管理者は、WTS上にインストールされる許可されたドライバを、1つの
-汎用PCLと1つのPostScriptドライバだけに制限するという方針を選んだ。しかしこれは、
+回避方法として、サイト管理者は、WTS上にインストールされる許可されたドライバーを、1つの
+汎用PCLと1つのPostScriptドライバーだけに制限するという方針を選んだ。しかしこれは、
 クライアントが使う事が出来るたくさんの印刷オプションを制限することになる。
-異なったドライバによって制御される場合、そのデバイスはより良い動作が出来るはずが、
+異なったドライバーによって制御される場合、そのデバイスはより良い動作が出来るはずが、
 しばしば、1つの標準ペーパトレイでの単純な印刷よりも複雑なことが出来なくなる!
 </para>
 </sect2>
@@ -2495,12 +2495,12 @@ CUPSドライバはマイクロソフトのもの由来である。
 <para>
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
-PostScriptドライバを使い、CUPS-PPDを有効にすることは、すべてのこれらの欠点を解決する
+PostScriptドライバーを使い、CUPS-PPDを有効にすることは、すべてのこれらの欠点を解決する
 とてもエレガントな方法に見える。これらは使用するWindows OSバージョンに依存する、最大3つの
-異なったドライバ、すなわちAdobe、MicrosoftとCUPS PostScriptドライバが現在有効である。
+異なったドライバー、すなわちAdobe、MicrosoftとCUPS PostScriptドライバーが現在有効である。
 WTS上で大きな安定性の問題を引き起こすことは、上記3つのどれも知られていない(たとえ、
 たくさんの異なったPPDを使ったとしても)。クライアントは(再度)ペーパトレイ、両面印刷や
-その他の設定を選択できる。しかし、確かな代価もある:そのクライアントに対して、CUPSサーバは
+その他の設定を選択できる。しかし、確かな代価もある:そのクライアントに対して、CUPSサーバーは
 PostScript RIPとして振る舞い、<quote>raw スプール</quote>デバイスとして振る舞うよりも
 よりCPUとメモリを必要とする。更に、この設定は、最初のフィードバックがとても有望ではあるが、
 広範囲にはテストされていない。
@@ -2508,7 +2508,7 @@ PostScript RIPとして振る舞い、<quote>raw スプール</quote>デバイ�
 </sect2>
 
 <sect2>
-<title>カーネルモードでもPostScriptドライバは大きな問題はない</title>
+<title>カーネルモードでもPostScriptドライバーは大きな問題はない</title>
 
 <para>
 <indexterm><primary>DDK</primary></indexterm>
@@ -2517,28 +2517,28 @@ PostScript RIPとして振る舞い、<quote>raw スプール</quote>デバイ�
 <indexterm><primary>Visual Studio</primary></indexterm>
 <indexterm><primary>Microsoft driver</primary></indexterm>
 <indexterm><primary>Adobe</primary></indexterm>
-より新しいW200xとに同梱されているXPプリンタドライバでは、Windows NTとは異なり、カーネル
-モードでは動作しない。ただし、両OS共に、引き続き、カーネルモードで動作するドライバを
+より新しいW200xとに同梱されているXPプリンタードライバーでは、Windows NTとは異なり、カーネル
+モードでは動作しない。ただし、両OS共に、引き続き、カーネルモードで動作するドライバーを
 使う事は可能である(端的に言って、サブディレクトリ<quote>W32X86</quote>中の
-<quote>2</quote>にあるドライバが、<quote>古い</quote>ものかだと思って良いだろう)。
-以前に説明したように、AdobeのものはMicrosoft PostScriptドライバのように安定している。
-CUPSドライバはMicrosoftベースである。これは次のような理由による。Visual Studioの
+<quote>2</quote>にあるドライバーが、<quote>古い</quote>ものかだと思って良いだろう)。
+以前に説明したように、AdobeのものはMicrosoft PostScriptドライバーのように安定している。
+CUPSドライバーはMicrosoftベースである。これは次のような理由による。Visual Studioの
 ライセンスを持つ人が無償で使える、Windows NT用のMicrosoftのDDK(Device Development Kit)は、
-Microsoftがライセンスを持つドライバのソースコードが含まれる。Visual Studioのライセンスを
-持つ人は、自分が作るドライバの開発作業に、そのコードを使用し、変更する事が許可されている。
+Microsoftがライセンスを持つドライバーのソースコードが含まれる。Visual Studioのライセンスを
+持つ人は、自分が作るドライバーの開発作業に、そのコードを使用し、変更する事が許可されている。
 CUPSではこのように開発されている。しかし、Microsoftのライセンスは、(DDKの部分を含む)
 ソースコード全体を公開することは許可していない。しかし、CUPSは、GPL配下で<quote>差分</quote>を
 リリースしている。そのため、もしも<quote>MS DDK for Windows NT</quote>のライセンスを
-持っていれば、差分コードを使い、ドライバを自分自身で調べる事が出来る。
+持っていれば、差分コードを使い、ドライバーを自分自身で調べる事が出来る。
 </para>
 </sect2>
 </sect1>
 
 <sect1>
-<title>ドライバダウンロードを行うためのCUPSの設定</title>
+<title>ドライバーダウンロードを行うためのCUPSの設定</title>
 
 <para>
-前に説明したように、ダウンロードのためにSambaサーバ上でクライアントプリンタドライバを
+前に説明したように、ダウンロードのためにSambaサーバー上でクライアントプリンタードライバーを
 準備するためと、Windowsワークステーションの利便性のためのポイントアンドプリントのための、
 すべての以前に知られている方法も、CUPS上で動作する。これらの方法は
 <link linkend="classicalprinting">旧式の印刷サポート</link>で説明されている。実際は、
@@ -2552,34 +2552,34 @@ CUPSではこのように開発されている。しかし、Microsoftのライ�
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <parameter>cupsaddsmb</parameter>ユーティリティ(現在すべてのCUPSバージョンに同梱)は、
-Sambaの<smbconfsection name="[print$]"/>共有中に、プリンタドライバを転送する別の解で
-ある。思い出してほしいのは、この共有は、クライアントが、ドライバが配布されると期待
+Sambaの<smbconfsection name="[print$]"/>共有中に、プリンタードライバーを転送する別の解で
+ある。思い出してほしいのは、この共有は、クライアントが、ドライバーが配布されると期待
 し、ダウンロードとインストールのためにセットアップする場所であるということである。
-これは、とても簡単に、任意の(か全部の)インストールされたCUPSプリンタの共有が出来るように
-なる。<command>cupsaddsmb</command>は、Adobe PostScriptドライバを、最近開発された
-Windows NT/200x/XP用のCUPS PostScriptドライバと同様に使うことが出来る。
-<parameter>cupsaddsmb</parameter>は、ベンダプリンタドライバと一緒に
+これは、とても簡単に、任意の(か全部の)インストールされたCUPSプリンターの共有が出来るように
+なる。<command>cupsaddsmb</command>は、Adobe PostScriptドライバーを、最近開発された
+Windows NT/200x/XP用のCUPS PostScriptドライバーと同様に使うことが出来る。
+<parameter>cupsaddsmb</parameter>は、ベンダプリンタードライバーと一緒に
 <emphasis>動作することはできず</emphasis>、そのマニュアルページ中に名前がある
-ドライバと<emphasis>同じもののみ</emphasis>動作する。
+ドライバーと<emphasis>同じもののみ</emphasis>動作する。
 </para>
 
 <para>
-CUPSプリンタドライバはCUPSダウンロードサイトにある。そのパッケージ名は
+CUPSプリンタードライバーはCUPSダウンロードサイトにある。そのパッケージ名は
 <filename>cups-samba-[version].tar.gz</filename>である。これには以下のような数多くの
-利点があるので、Adobeドライバよりも好まれる:
+利点があるので、Adobeドライバーよりも好まれる:
 </para>
 
 <itemizedlist>
 	<listitem><para>より正確なページ印刷情報をサポートする。</para></listitem>
 
-	<listitem><para>すべてのプリンタで、バナーページとページラベルをサポートする。</para></listitem>
+	<listitem><para>すべてのプリンターで、バナーページとページラベルをサポートする。</para></listitem>
 
 	<listitem><para>数多くのジョブのIPP属性の設定をサポートする
 	    (たとえば、ジョブの優先度、ページラベルとジョブの費用請求など)</para></listitem>
 </itemizedlist>
 
 <para>
-しかし、現在Windows NT,2000とXPのみがCUPSドライバによってサポートされている。もしも、
+しかし、現在Windows NT,2000とXPのみがCUPSドライバーによってサポートされている。もしも、
 Windows95、98とMEクライアントのサポートが必要ならば、Adobe Driverのそれぞれの部分を
 入手する事も必要である。
 </para>
@@ -2627,7 +2627,7 @@ Windows95、98とMEクライアントのサポートが必要ならば、Adobe D
 
 <para>
 <indexterm><primary>PostScript</primary></indexterm>
-CUPSユーザは
+CUPSユーザーは
 <ulink noescape="1" url="http://www.cups.org/software.html">http://www.cups.org/software.html</ulink>
 から正確に同じパッケージを入手できる。これは、CUPSベースのソフトウェアファイルから
 分離されたパッケージで、CUPS 1.1.x Windows NT/200x/XP Printer Driver for Samba (tar.gz,192k)
@@ -2671,13 +2671,13 @@ Installation is complete.
 
 <para>
 スクリプトは<filename>/usr/share/cups/drivers/</filename>ディレクトリ中に
-ドライバファイルを自動的に置く:
+ドライバーファイルを自動的に置く:
 <screen>
 &rootprompt;<userinput>cp /usr/share/drivers/cups.hlp /usr/share/cups/drivers/</userinput>
 </screen></para>
 
 <warning><para>
-バグのために、ある最近のCUPSリリースでは、<filename>cups.hlp</filename>ドライバファイルを
+バグのために、ある最近のCUPSリリースでは、<filename>cups.hlp</filename>ドライバーファイルを
 <filename>/usr/share/cups/drivers/</filename>の代わりに
 <filename>/usr/share/drivers/</filename>中に置いてしまう。これを直すためには、
 手動で正しい場所にファイルをコピー/移動する(<command>./cups-samba.install</command>
@@ -2686,9 +2686,9 @@ Installation is complete.
 
 <para>
 <indexterm><primary>DDK</primary></indexterm>
-この新しいCUPS PostScriptドライバは現在バイナリのみである。しかし、無料で使える。
+この新しいCUPS PostScriptドライバーは現在バイナリのみである。しかし、無料で使える。
 (まだ)完全なソースコードは提供されていない。その理由は、Microsoft DDKの手助けを得て
-Microsoft Visual Studio 6でコンパイルしつつ、開発されているからである。ドライバ開発者は
+Microsoft Visual Studio 6でコンパイルしつつ、開発されているからである。ドライバー開発者は
 フリーソフトウェアとしてソースコード全体を配布する許可を得ていない。しかし、CUPS開発者は
 GPL配下でソースコードの<quote>差分</quote>をリリースしているので、Visual StudioとDDK
 のライセンスを持つ人は誰でも自分自身でコンパイルすることが出来る。
@@ -2696,10 +2696,10 @@ GPL配下でソースコードの<quote>差分</quote>をリリースしてい�
 </sect2>
 
 <sect2>
-<title>異なったドライバファイルの認識</title>
+<title>異なったドライバーファイルの認識</title>
 
 <para>
-CUPSドライバは古いWindows 95/98/Meをサポートせず、Windows NT/2000/XPクライアントのみサポートする。
+CUPSドライバーは古いWindows 95/98/Meをサポートせず、Windows NT/2000/XPクライアントのみサポートする。
 </para>
 
 <para>Windows NT, 2000と XPは以下でサポートされる:</para>
@@ -2711,7 +2711,7 @@ CUPSドライバは古いWindows 95/98/Meをサポートせず、Windows NT/2000
 </itemizedlist>
 
 <para>
-古いWindows 95/98/MeのためのAdobeドライバはWindows NT/2000/XPクライアントと
+古いWindows 95/98/MeのためのAdobeドライバーはWindows NT/2000/XPクライアントと
 同じように提供されている。ファイルの組み合わせは異なったプラットフォームでは
 異なる。
 </para>
@@ -2736,47 +2736,47 @@ CUPSドライバは古いWindows 95/98/Meをサポートせず、Windows NT/2000
 </itemizedlist>
 
 <note><para>
-<indexterm><primary>Adobeドライバファイル</primary></indexterm>
-もしも、Windows NT/2000/XPサポート用の、AdobeドライバファイルとCUPSドライバファイルの
-両方がサーバ上に現在インストールされているならば、Adobeファイルは無視されCUPSファイルが
-使われる。もしも理由がなんであれ、Adobeのみのドライバを使いたいと思うのであれば、3つの
-CUPSドライバをどこかに移動すること。Windows 9x/Meクライアントはどんな場合にもAdobeの
-ドライバを使う。
+<indexterm><primary>Adobeドライバーファイル</primary></indexterm>
+もしも、Windows NT/2000/XPサポート用の、AdobeドライバーファイルとCUPSドライバーファイルの
+両方がサーバー上に現在インストールされているならば、Adobeファイルは無視されCUPSファイルが
+使われる。もしも理由がなんであれ、Adobeのみのドライバーを使いたいと思うのであれば、3つの
+CUPSドライバーをどこかに移動すること。Windows 9x/Meクライアントはどんな場合にもAdobeの
+ドライバーを使う。
 </para></note>
 </sect2>
 
 <sect2>
-<title>ドライバファイルの入手</title>
+<title>ドライバーファイルの入手</title>
 
 <para>
-Adobeドライバファイルの入手は、多くのユーザにとって予想外に難しいように見える。それらは
+Adobeドライバーファイルの入手は、多くのユーザーにとって予想外に難しいように見える。それらは
 Adobe Webサイトに1つのファイルとして見えているわけではなく、自己解凍か自動インストールを
 行うWindows-.exeファイルを見つけるのも難しい。おそらく内蔵されたネイティブな
 インストーラを使用しなければならず、クライアント上で一回はインストールプロセスを動かす
-ことが必要である。これは、クライアント上ローカルにドライバ(と1つの汎用PostScriptプリンタ)
-をインストールする。それらがインストールされた後、汎用PostScriptプリンタを共有する。
+ことが必要である。これは、クライアント上ローカルにドライバー(と1つの汎用PostScriptプリンター)
+をインストールする。それらがインストールされた後、汎用PostScriptプリンターを共有する。
 この作業後、クライアントの<smbconfsection name="[print$]"/>共有は、CUPSホストから
 smbclientで入手可能なAdobeファイルを保持する。
 </para>
 </sect2>
 
 <sect2>
-<title>Windows NT/200x/XP用のESP Print Pro PostScriptドライバ</title>
+<title>Windows NT/200x/XP用のESP Print Pro PostScriptドライバー</title>
 
 <para>
 <indexterm><primary>ESP</primary><secondary>Print Pro</secondary></indexterm>
-ESP Print ProソフトウェアのユーザはAdobe PostScriptドライバの代替として、ESCプリント
-ドライバパッケージをインストールすることが出来る。これを行うために、
+ESP Print ProソフトウェアのユーザーはAdobe PostScriptドライバーの代替として、ESCプリント
+ドライバーパッケージをインストールすることが出来る。これを行うために、
 <ulink noescape="1" url="http://www.easysw.com/software.html">Easy Software</ulink>
-Webサイトで、ESC Print Proソフトウェアの通常のダウンロード領域からドライバファイルを
+Webサイトで、ESC Print Proソフトウェアの通常のダウンロード領域からドライバーファイルを
 検索できる。<guilabel>Download Printer Drivers for ESP Print Pro 4.x</guilabel>
 領域の間で<quote>SAMBA</quote>と名前が付いたリンクを探し、パッケージをダウンロード
 する。一度インストールすると、Printer Manager GUI中の中のメニューの、
-<guilabel>Export Driver...</guilabel>を選択して、プリンタを単にハイライトさせる
-ことによって任意のドライバを準備できる。もちろん、ドライバファイルを扱うために、
+<guilabel>Export Driver...</guilabel>を選択して、プリンターを単にハイライトさせる
+ことによって任意のドライバーを準備できる。もちろん、ドライバーファイルを扱うために、
 あらかじめ準備されたSambaが必要である。すなわち、<smbconfsection name="[print$]"/>
 共有を設定することなどである。ESP Print ProパッケージにはWindows 95/98/Me
-クライアントファミリ用の(ライセンスされた)Adobeドライバ一式と同様にCUPSドライバ
+クライアントファミリ用の(ライセンスされた)Adobeドライバー一式と同様にCUPSドライバー
 ファイルが含まれている。
 </para>
 </sect2>
@@ -2791,17 +2791,17 @@ Webサイトで、ESC Print Proソフトウェアの通常のダウンロード�
 <indexterm><primary>WIN40</primary></indexterm>
 <indexterm><primary>W32X86</primary></indexterm>
 一度インストールスクリプト(と、<filename>/usr/share/cups/drivers/</filename>への
-<filename>cups.hlp</filename>ファイルの手動での移動)を実行すると、ドライバはSambaの
+<filename>cups.hlp</filename>ファイルの手動での移動)を実行すると、ドライバーはSambaの
 <smbconfsection name="[print$]"/>共有(これはしばしば
 <filename>/etc/samba/drivers/</filename>にマップされ、<emphasis>WIN40</emphasis>と
-<emphasis>W32X86</emphasis>という枝を持つサブディレクトリを含む)中に、ドライバが
+<emphasis>W32X86</emphasis>という枝を持つサブディレクトリを含む)中に、ドライバーが
 配置できるようになる。これは、<command>cupsaddsmb</command>を動かすことによって
 行える(CUPSリリース1.1.16以降では<command>man cupsaddsmb</command>も参照)。
 </para>
 
 <tip><para>
 <indexterm><primary>シングルサインオン</primary></indexterm>
-<indexterm><primary>ドメインコントローラ</primary></indexterm>
+<indexterm><primary>ドメインコントローラー</primary></indexterm>
 <command>smbpasswd</command>を動かしてrootをsmbpasswdファイル中に格納する必要が
 あるかもしれない。もしも、全体の手順を最初に動かすときに、これは、特に重要であり、
 Windowsドメインコンピュータでの<emphasis>シングルサインオン</emphasis>用にすべてが
@@ -2809,59 +2809,59 @@ Windowsドメインコンピュータでの<emphasis>シングルサインオン
 </para></tip>
 
 <para>
-いったんドライバファイルが<smbconfsection name="[print$]"/>共有に置かれ、初期化
+いったんドライバーファイルが<smbconfsection name="[print$]"/>共有に置かれ、初期化
 されると、それらはダウンロード可能になり、Windows NT/200x/XPクライアントによって
 インストールされる。
 </para>
 
 <note><para>
-Windows 9x/MeクライアントはCUPS PostScriptドライバでは動かない。それらには
-前述の通り、<filename>ADOBE*.*</filename>ドライバを使うことが引き続き必要である。
+Windows 9x/MeクライアントはCUPS PostScriptドライバーでは動かない。それらには
+前述の通り、<filename>ADOBE*.*</filename>ドライバーを使うことが引き続き必要である。
 </para></note>
 
 <note>
 <para>
 もしも、<filename>/usr/share/cups/drivers/</filename>ディレクトリ中に以前の
-インストールによる<filename>ADOBE*.*</filename>ドライバファイルが引き続きあるならば、
+インストールによる<filename>ADOBE*.*</filename>ドライバーファイルが引き続きあるならば、
 それは無害である。
 </para></note>
 
 <note><para>
-<indexterm><primary>"Printers" フォルダ</primary></indexterm>
+<indexterm><primary>"Printers" フォルダー</primary></indexterm>
 <indexterm><primary>Adobe PostScript</primary></indexterm>
-使用しているWindowsクライアントが、Adobe PostScriptドライバ用の古い
+使用しているWindowsクライアントが、Adobe PostScriptドライバー用の古い
 <filename>ADOBE*.*</filename>ファイルがインストールされていると、新しい
-Windows NT/200x/XP用のCUPS PostScriptドライバのダウンロードとインストールは最初に失敗する。
-最初にクライアントから古いドライバを消し去る必要がある。もしも、プリンタを再インストール
-しようとしたときのために、ドライバファイルはクライアントによって引き続き保存され、
-再利用されることによりプリンタを<quote>削除</quote>するだけでは十分ではない。
-クライアント上のAdobeドライバファイルを完全に取り除くためには、まず
-<guilabel>プリンタフォルダ</guilabel>を開き(おそらく
-<guilabel>スタート -> 設定 -> コントロールパネル ->プリンタ</guilabel>)、
-フォルダの背景を右クリックし、<guilabel>ドライバ</guilabel>タブを選択する。
-一覧表示上で削除したいドライバを選択し、<guilabel>削除</guilabel>ボタンをクリックする。
-これは1つも特定のドライバを使うプリンタが残っていないときに動作する。まず初めに
-<guilabel>プリンタ</guilabel>フォルダ中でこのドライバを使うすべてのプリンタを
+Windows NT/200x/XP用のCUPS PostScriptドライバーのダウンロードとインストールは最初に失敗する。
+最初にクライアントから古いドライバーを消し去る必要がある。もしも、プリンターを再インストール
+しようとしたときのために、ドライバーファイルはクライアントによって引き続き保存され、
+再利用されることによりプリンターを<quote>削除</quote>するだけでは十分ではない。
+クライアント上のAdobeドライバーファイルを完全に取り除くためには、まず
+<guilabel>プリンターフォルダー</guilabel>を開き(おそらく
+<guilabel>スタート -> 設定 -> コントロールパネル ->プリンター</guilabel>)、
+フォルダーの背景を右クリックし、<guilabel>ドライバー</guilabel>タブを選択する。
+一覧表示上で削除したいドライバーを選択し、<guilabel>削除</guilabel>ボタンをクリックする。
+これは1つも特定のドライバーを使うプリンターが残っていないときに動作する。まず初めに
+<guilabel>プリンター</guilabel>フォルダー中でこのドライバーを使うすべてのプリンターを
 <quote>削除</quote>する必要がある。これを行うには管理者権限が必要である。
 </para></note>
 
 <note><para>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 <indexterm><primary>CUPS PostScript</primary></indexterm>
-一度クライアントにCUPS PostScriptドライバをダウンロードすると、
+一度クライアントにCUPS PostScriptドライバーをダウンロードすると、
 <link linkend="classicalprinting">旧式の印刷サポート</link>で説明したような手続きで、
-すべてのプリンタを簡単に切り替えることが出来る。
-<guilabel>プリンタのプロパティ</guilabel>ダイアログを動かすことか、
+すべてのプリンターを簡単に切り替えることが出来る。
+<guilabel>プリンターのプロパティ</guilabel>ダイアログを動かすことか、
 <command>setdriver</command>サブコマンドを指定した<command>rpcclient</command>
-を使うことのどちらかで、存在するプリンタのドライバを切り替えられる。
+を使うことのどちらかで、存在するプリンターのドライバーを切り替えられる。
 </para></note>
 </sect2>
 
 <sect2>
-<title>WindowsのCUPS PostScriptドライバ対Adobeドライバ</title>
+<title>WindowsのCUPS PostScriptドライバー対Adobeドライバー</title>
 
 <para>
-CUPSとAdobe PostScriptドライバの比較に興味があるだろうか?我々の目的のために、
+CUPSとAdobe PostScriptドライバーの比較に興味があるだろうか?我々の目的のために、
 Are you interested in a comparison between the CUPS and the Adobe PostScript drivers? For our purposes, these
 are the most important items that weigh in favor of CUPS:
 </para>
@@ -2869,13 +2869,13 @@ are the most important items that weigh in favor of CUPS:
 <itemizedlist>
 	<listitem><para>Adobe EULAに縛られない。</para></listitem>
 
-	<listitem><para><quote>ADOBE*.*ドライバファイルをダウンロードできる所はどこか?</quote>
+	<listitem><para><quote>ADOBE*.*ドライバーファイルをダウンロードできる所はどこか?</quote>
         という質問に縛られない。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>PJL</primary></indexterm>
-	Adobe ドライバ(sれに関連するプリンタのPPD要求において)はしばしば印刷ファイルの
-	メイン部分の先頭にPJLヘッダを置く。そのため、印刷ファイルは
+	Adobe ドライバー(sれに関連するプリンターのPPD要求において)はしばしば印刷ファイルの
+	メイン部分の先頭にPJLヘッダーを置く。そのため、印刷ファイルは
 	<parameter>%!PS</parameter>の代わりに<parameter>&lt;1B&gt;%-12345X</parameter>か
 	<parameter>&lt;escape&gt;%-12345X</parameter>で始まる。これはCUPSデーモンが入力
 	ファイルを印刷可能なファイルと自動タイプすることをさせるようにし、
@@ -2891,7 +2891,7 @@ are the most important items that weigh in favor of CUPS:
 	<quote>1</quote>が記録される。
 	</para></listitem>
 
-	<listitem><para>Adobeドライバは、それによって生成するPostScriptを間違って
+	<listitem><para>Adobeドライバーは、それによって生成するPostScriptを間違って
 	設定するいくつかのオプションがある
 <indexterm><primary>Adobe driver</primary></indexterm>
 	(CUPSがそれを処理することが出来ないようにしてしまう、
@@ -2899,30 +2899,30 @@ are the most important items that weigh in favor of CUPS:
 	<guilabel>Optimize for Portability</guilabel>の代わりに、うっかりして
 	設定してしまう)。</para></listitem>
 
-	<listitem><para>WindowsクライアントによるCUPSサーバへのCUPS PostScriptドライバの
+	<listitem><para>WindowsクライアントによるCUPSサーバーへのCUPS PostScriptドライバーの
 	出力は、汎用MIMEタイプ<parameter>application/postscript</parameter>として
-<indexterm><primary>CUPS PostScriptドライバ</primary></indexterm>
+<indexterm><primary>CUPS PostScriptドライバー</primary></indexterm>
 	自動タイプされ、CUPS <parameter>pstops</parameter>フィルタに渡され、会計と
 	quota目的のために<filename>page_log</filename>中に正しいページ数を記録する。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>バナーページ</primary></indexterm>
-	CUPS PostScriptドライバは、Windows NT/200x/XPクライアントによる、追加の標準(IPP)
+	CUPS PostScriptドライバーは、Windows NT/200x/XPクライアントによる、追加の標準(IPP)
 	印刷オプションを送信することをサポートする。そのような追加印刷オプションは、
-	CUPS標準<emphasis>バナーページ</emphasis>(かカスタムなもので、ドライバは
+	CUPS標準<emphasis>バナーページ</emphasis>(かカスタムなもので、ドライバーは
 	ダウンロード時点でインストールされるべき)と名前を付けられ、CUPSページラベル
 	オプションを使い、ジョブのプライオリティを設定し、(将来、追加の便利な
 	IPPジョブ属性をサポートするオプションで)印刷予定時間を設定する。
 	</para></listitem>
 
-	<listitem><para>CUPS PostScriptドライバは、PostScriptファイルの先頭に、新しい
+	<listitem><para>CUPS PostScriptドライバーは、PostScriptファイルの先頭に、新しい
 	<parameter>*cupsJobTicket</parameter>コメントの挿入をサポートする
 	(これは、将来、すべての種類のCUPS上での便利な拡張のために使われるが、
 	これがコメントとして扱われ、単に無視されるため、任意の他の
 	アプリケーションのじゃまをしない)。</para></listitem>
 
-	<listitem><para>CUPS PostScriptドライバは、近々リリースされる、
+	<listitem><para>CUPS PostScriptドライバーは、近々リリースされる、
 	Windows NT/200x/XP用の完全なCUPS IPPクライアントの心臓部である
 	(おそらく最初のCUPS 1.2のβリリースと一緒に)。</para></listitem>
 </itemizedlist>
@@ -2937,12 +2937,12 @@ are the most important items that weigh in favor of CUPS:
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <indexterm><primary>ポイントアンドプリント</primary></indexterm>
 <command>cupsaddsmb</command>コマンドは、必要とされるファイルを
-<smbconfsection name="[print$]"/>共有にコピーする。さらに追加で、このプリンタに関連
+<smbconfsection name="[print$]"/>共有にコピーする。さらに追加で、このプリンターに関連
 づけられているPPDは、<filename>/etc/cups/ppd/</filename>から
 <smbconfsection name="[print$]"/>にコピーされる。これらファイルはポイントアンドプリント
 経由でWindowsクライアントのインストールの都合のために待機している。コマンドを
 正しく実行できる前に、Sambaに対して認証を行っておく必要がある。小さなネットワーク
-環境では、おそらくユーザレベルのセキュリティ
+環境では、おそらくユーザーレベルのセキュリティ
 (<smbconfoption name="security">user</smbconfoption>)を使っているだろう。
 </para>
 
@@ -2957,9 +2957,9 @@ Password for root required to access localhost via Samba: <userinput>['secret']<
 
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-<emphasis>すべての</emphasis>プリンタとドライバを共有するために、プリンタ名の代わりに
-<option>-a</option>パラメータを使う。<command>cupsaddsmb</command>がプリンタドライバを
-Sambaに<quote>エクスポート</quote>してから、CUPSドライバに関連づけられているキュー
+<emphasis>すべての</emphasis>プリンターとドライバーを共有するために、プリンター名の代わりに
+<option>-a</option>パラメーターを使う。<command>cupsaddsmb</command>がプリンタードライバーを
+Sambaに<quote>エクスポート</quote>してから、CUPSドライバーに関連づけられているキュー
 のみ動作することは明白になるべきである。
 </para>
 </sect2>
@@ -2971,7 +2971,7 @@ Sambaに<quote>エクスポート</quote>してから、CUPSドライバに関�
 <para>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 おそらく何が起きているかを見たいのだと思う。より詳細な出力は、<option>-v</option>
-パラメータを使う。可読性向上のために下記の出力には手を入れてある。
+パラメーターを使う。可読性向上のために下記の出力には手を入れてある。
 すべての行末の<quote>\</quote>は手動で入れてあり、そのほかにインデントもしている:
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
@@ -3046,8 +3046,8 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 もし、しっかり見た場合、ネットワーク上で暗号化されていないrootパスワードが転送されて
 いることを発見するはずなので、注意するように。また、もしもさらによく見てみると、
 出力中にNT_STATUS_OBJECT_NAME_COLLISIONというようなエラーメッセージを見つけるだろう。
-これは、WIN40とW32X36というディレクトリが(以前のドライバインストールにより)
-すでに<smbconfsection name="[print$]"/>というドライバダウンロード共有中に存在
+これは、WIN40とW32X36というディレクトリが(以前のドライバーインストールにより)
+すでに<smbconfsection name="[print$]"/>というドライバーダウンロード共有中に存在
 している時に発生する。これらは問題のないエラーメッセージである。
 </para>
 </sect2>
@@ -3063,32 +3063,32 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 <orderedlist>
 	<listitem><para>
 	<indexterm><primary>IPP</primary></indexterm>
-	IPP経由でCUPSサーバを呼び出し、その名前のプリンタ用のドライバファイルとPPDファイルを要求する。</para></listitem>
+	IPP経由でCUPSサーバーを呼び出し、その名前のプリンター用のドライバーファイルとPPDファイルを要求する。</para></listitem>
 
 	<listitem><para>ローカルのTEMPDIR中(<filename>cupsd.conf</filename>で定義されている)に、
 	ファイルを一時的に格納する。</para></listitem>
 
-	<listitem><para>smbclient経由でSambaサーバの<smbconfsection name="[print$]"/>共有に
+	<listitem><para>smbclient経由でSambaサーバーの<smbconfsection name="[print$]"/>共有に
 	接続し、共有のWIN40(Windows 9x/Me用)とW32X86(Windows NT/200x/XP用)サブディレクトリ
 	中にファイルを書き込む。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
-	rpcclient経由でSambaサーバに接続し、正しいパラメータで<command>adddriver</command>
+	rpcclient経由でSambaサーバーに接続し、正しいパラメーターで<command>adddriver</command>
 	コマンドを実行する。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
-	rpcclient経由でSambaサーバにもう一度接続し、<command>setdriver</command>コマンドを実行する。</para></listitem>
+	rpcclient経由でSambaサーバーにもう一度接続し、<command>setdriver</command>コマンドを実行する。</para></listitem>
 </orderedlist>
 
 <note>
 <para>
 1番目のリモートホストとしてSambaホストを、2番目のリモートホストとしてCUPSホストを指定する
-ためのパラメータを付けて<command>cupsaddsmb</command>ユーティリティを実行できる。
+ためのパラメーターを付けて<command>cupsaddsmb</command>ユーティリティを実行できる。
 特に、もしもより深く理解したい場合、何が起きたかをより明快にするためにテストしてみるのは
-良いことである(実際には、ほとんどの人はCUPSとSambaサーバを同じホストで動作させている):
+良いことである(実際には、ほとんどの人はCUPSとSambaサーバーを同じホストで動作させている):
 <screen>
 &rootprompt;<userinput>cupsaddsmb -H sambaserver -h cupsserver -v printer</userinput>
 </screen>
@@ -3120,9 +3120,9 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 
 <para>
 これらのメッセージはおそらく一般的な出力中では簡単に認識できない。もしも
-(ダウンロードのための、<emphasis>すべての</emphasis>有効なプリンタドライバを
+(ダウンロードのための、<emphasis>すべての</emphasis>有効なプリンタードライバーを
 準備しようとする)<option>-a</option>オプションを付けて<command>cupsaddsmb</command>を
-動かした場合、もしも個々のプリンタドライバに、正しくにインストールすることに関して
+動かした場合、もしも個々のプリンタードライバーに、正しくにインストールすることに関して
 問題がある場合、失敗するかもしれない。出力のリダイレクトは、結果を解析することを
 手助けする。
 </para>
@@ -3133,7 +3133,7 @@ Running command: smbclient //localhost/print\$ -N -U'root%secret' \
 SetPrinter call failed!
 result was WERR_ACCESS_DENIED
 </screen>
-これは、このプリンタに対して<smbconfoption name="use client driver">yes</smbconfoption>
+これは、このプリンターに対して<smbconfoption name="use client driver">yes</smbconfoption>
 という設定がされているかもしれないということを意味する。この設定を<quote>no</quote>に
 すると、この問題が解決する。&smb.conf;マニュアルページ中の、
 <parameter>use client driver</parameter>についての説明を参照のこと。
@@ -3185,23 +3185,23 @@ raw印刷キューと一緒に動かないし、そういうことを意図し�
 </sect2>
 
 <sect2>
-<title>クライアント上でのPostScriptドライバのインストール</title>
+<title>クライアント上でのPostScriptドライバーのインストール</title>
 
 <para>
 <indexterm><primary>point'n'print</primary></indexterm>
 <indexterm><primary>cupsaddsmb</primary></indexterm>
-<command>cupsaddsmb</command>の完了後、ドライバは、クライアントから使えるようになる。
+<command>cupsaddsmb</command>の完了後、ドライバーは、クライアントから使えるようになる。
 以下は、ポイントアンドプリント経由でダウンロードしインストールするために行わなければ
-ならない手順である。Windowsクライアントから、CUPS/Sambaサーバをブラウズする:
+ならない手順である。Windowsクライアントから、CUPS/Sambaサーバーをブラウズする:
 </para>
 
 <itemizedlist>
 
 	<listitem><para>
-	<indexterm><primary>"プリンタ"フォルダ</primary></indexterm>
-	ネットワークコンピュータ中のSambaの<guilabel>プリンタ</guilabel>共有を開く</para></listitem>
+	<indexterm><primary>"プリンター"フォルダー</primary></indexterm>
+	ネットワークコンピュータ中のSambaの<guilabel>プリンター</guilabel>共有を開く</para></listitem>
 
-	<listitem><para>問い合わせ(question)中のプリンタを右クリックする</para></listitem>
+	<listitem><para>問い合わせ(question)中のプリンターを右クリックする</para></listitem>
 
 	<listitem><para>開いたコンテキストメニューから下記を選択する
 	<guimenuitem>インストール...</guimenuitem> あるいは 
@@ -3209,24 +3209,24 @@ raw印刷キューと一緒に動かないし、そういうことを意図し�
 </itemizedlist>
 
 <para>
-数秒後、クライアントの<emphasis>ローカル</emphasis><guilabel>プリンタ</guilabel>
-フォルダ中に新しいプリンタが現れる。Windows XP上では、
-<emphasis>Sambaサーバ上のプリンタ名</emphasis>という名前が付けられている
+数秒後、クライアントの<emphasis>ローカル</emphasis><guilabel>プリンター</guilabel>
+フォルダー中に新しいプリンターが現れる。Windows XP上では、
+<emphasis>Sambaサーバー上のプリンター名</emphasis>という名前が付けられている
 (現在多くの場合kde-bitshop上のinfotec_2105のようになる)。もしもMicrosoft Wordのような
-アプリケーションから、テストと最初のジョブを送りたい場合、有効なプリンタ一覧の
+アプリケーションから、テストと最初のジョブを送りたい場合、有効なプリンター一覧の
 ドロップダウンリスト中に、<filename>\\SambaServer\PrinterName</filename>という
-エントリで新しいプリンタが現れる。
+エントリで新しいプリンターが現れる。
 </para>
 
 <para>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>Adobe PostScript ドライバ</primary></indexterm>
+<indexterm><primary>Adobe PostScript ドライバー</primary></indexterm>
 <indexterm><primary>net use lpt1:</primary></indexterm>
 <command>cupsaddsmb</command>はCUPSバージョン1.1.15以上とSamba バージョン2.2.4以降でのみ
-確実に動作する。もしも動かない場合か、クライアントへの自動プリンタダウンロードが成功
-しないばあい、クライアント上でAdobe PostScriptドライバのtop ofのCUPSプリンタPPDを手動で
+確実に動作する。もしも動かない場合か、クライアントへの自動プリンターダウンロードが成功
+しないばあい、クライアント上でAdobe PostScriptドライバーのtop ofのCUPSプリンターPPDを手動で
 インストールトーすすることができる。次に、UNCタイプの接続のために、クライアントの
-プリンタキューをSambaプリンタ共有に指定する:
+プリンターキューをSambaプリンター共有に指定する:
 <command>cupsaddsmb</command> will only reliably work with CUPS version 1.1.15 or higher and with Samba
 version 2.2.4, or later. If it does not work, or if the automatic printer driver download to the clients does
 not succeed, you can still manually install the CUPS printer PPD on top of the Adobe PostScript driver on
@@ -3235,14 +3235,14 @@ clients. Then point the client's printer queue to the Samba printer share for a 
 &dosprompt;<userinput>net use lpt1: \\sambaserver\printershare /user:ntadmin</userinput>
 </screen>
 これは、CUPSでネットワークされたPostScript RIP機能を使用することが出来るようになる
-(ユーザ<quote>ntadmin</quote>はプリンタ共有にアクセスするための必要な権限を持つ
-有効なSambaユーザである必要がある)。これは、従来からのLanManによる方法(MS-RPCを使わない)
-でプリンタの接続を設定する。
+(ユーザー<quote>ntadmin</quote>はプリンター共有にアクセスするための必要な権限を持つ
+有効なSambaユーザーである必要がある)。これは、従来からのLanManによる方法(MS-RPCを使わない)
+でプリンターの接続を設定する。
 </para>
 </sect2>
 
 <sect2 id="cups-avoidps1">
-<title>クライアント上での危険なPostScriptドライバ設定を防止する</title>
+<title>クライアント上での危険なPostScriptドライバー設定を防止する</title>
 
 <para>
 印刷が動作するが、まだ問題があるとする。ほとんどのジョブは正しく印刷するが、いくつかは
@@ -3250,23 +3250,23 @@ clients. Then point the client's printer queue to the Samba printer share for a 
 いくつかのジョブは速やかに処理されるが、いくつかはとても遅い。これらの問題の多くは、
 いくつかのガイドラインに従うことで、劇的に軽減できるか、完全になくなる。思い出して
 ほしいが、もしも使用している印刷デバイスがPostScriptが有効でない場合、
-使用しているクライアントドライバの設定が生成する出力を使って、CUPSホスト上での
+使用しているクライアントドライバーの設定が生成する出力を使って、CUPSホスト上での
 Ghostscriptインストールを取り扱ているはずである。以下のようにうまく処理するようにする:
 </para>
 
 <itemizedlist>
 	<listitem><para>
 	Optimize for Speedという設定のPostScript出力オプションを抑制する。その代わりに
-	Optimize for Portabilityを使用する(Adobe PostScriptドライバ)。</para></listitem>
+	Optimize for Portabilityを使用する(Adobe PostScriptドライバー)。</para></listitem>
 
 	<listitem><para>
 	Page Independenceを使わない:設定なしにする。その代わりに、Page Independence: YES
-	とする(CUPS PostScriptドライバ)。
+	とする(CUPS PostScriptドライバー)。
 	</para></listitem>
 
 	<listitem><para>
 	推奨はTrue Typeフォントダウンロードオプション:Native True Type over Automatic and Outline
-	である。なんとしてもBitmapを避けるべきである(Adobe PostScriptドライバ)。</para></listitem>
+	である。なんとしてもBitmapを避けるべきである(Adobe PostScriptドライバー)。</para></listitem>
 
 	<listitem><para>
 	True Typeフォントを選択する:Download as Softfont into Printer over the default Replace by Device Font
@@ -3279,24 +3279,24 @@ Ghostscriptインストールを取り扱ているはずである。以下のよ
 	</para></listitem>
 
 	<listitem><para>
-	PostScriptエラーハンドラにYesと答える(Adobe)。</para></listitem>
+	PostScriptエラーハンドラーにYesと答える(Adobe)。</para></listitem>
 </itemizedlist>
 
 </sect2>
 </sect1>
 
 <sect1>
-<title>rpcclientを使ったPostScriptドライバファイルの手動インストール</title>
+<title>rpcclientを使ったPostScriptドライバーファイルの手動インストール</title>
 
 <para>
 もちろん、1つずつ、cupsaddsmbという便利なユーティリティ中に埋め込まれているすべての
-コマンドを動かすことと、アップロードと、将来のクライアントダウンロードのためにドライバ
+コマンドを動かすことと、アップロードと、将来のクライアントダウンロードのためにドライバー
 ファイルを準備することは出来る。
 </para>
 
 <orderedlist>
-	<listitem><para>Sambaを準備する(そこにあるべきプリンタの名前を使うCUPSプリントキュー。
-	ドライバを提供している。)</para></listitem>
+	<listitem><para>Sambaを準備する(そこにあるべきプリンターの名前を使うCUPSプリントキュー。
+	ドライバーを提供している。)</para></listitem>
 
 	<listitem><para><smbconfsection name="[print$]"/>にファイルをコピー。</para></listitem>
 
@@ -3339,12 +3339,12 @@ Windowsクライアントによって使われ、とりわけ、ポイントア�
 <indexterm><primary>adddriver</primary></indexterm>
 <indexterm><primary>AddPrinterDriver()</primary></indexterm>
 <indexterm><primary>getdriverdir</primary></indexterm>
-<command>adddriver &lt;arch&gt; &lt;config&gt;</command>は、サーバ上でプリンタドライバ
+<command>adddriver &lt;arch&gt; &lt;config&gt;</command>は、サーバー上でプリンタードライバー
 情報をインストールするために、<command>AddPrinterDriver()</command>RPCを実行する。
-ドライバファイルは<command>getdriverdir</command>によって返されるディレクトリ中に
+ドライバーファイルは<command>getdriverdir</command>によって返されるディレクトリ中に
 すでに存在すべきである。<parameter>arch</parameter>が取れる値は
 <command>getdriverdir</command>コマンドのものと同じである。<parameter>config</parameter>
-パラメータは以下のように定義される:
+パラメーターは以下のように定義される:
 <screen>
 Long Printer Name:\
 Driver File Name:\
@@ -3361,10 +3361,10 @@ Comma Separated list of Files
 </para>
 
 <para>
-Sambaはプリントモニタというコンセプトをサポートする必要がないので、通信のために双方向
-リンクを使うことが出来るドライバがあるローカルプリンタのためにのみそれらは適用される。
-このフィールドは<quote>NULL</quote>にすべきである。リモートNT印刷サーバ上で、ドライバに
-対する印刷モニタはドライバを追加する前にすでにインストールされていなければならない。
+Sambaはプリントモニターというコンセプトをサポートする必要がないので、通信のために双方向
+リンクを使うことが出来るドライバーがあるローカルプリンターのためにのみそれらは適用される。
+このフィールドは<quote>NULL</quote>にすべきである。リモートNT印刷サーバー上で、ドライバーに
+対する印刷モニターはドライバーを追加する前にすでにインストールされていなければならない。
 そうしないと、RPCは失敗する。
 </para>
 
@@ -3372,15 +3372,15 @@ Sambaはプリントモニタというコンセプトをサポートする必要
 <indexterm><primary>setdriver</primary></indexterm>
 <indexterm><primary>SetPrinter()</primary></indexterm>
 <command>setdriver &lt;printername&gt; &lt;drivername&gt;</command>は、インストール
-されたプリンタに関連するプリンタドライバをアップロードするために、
-<command>SetPrinter()</command>コマンドを実行する。プリンタドライバはプリンタサーバ
+されたプリンターに関連するプリンタードライバーをアップロードするために、
+<command>SetPrinter()</command>コマンドを実行する。プリンタードライバーはプリンターサーバー
 上にあらかじめ正しくインストールされている必要がある。
 </para>
 
 <para>
 <indexterm><primary>enumprinters</primary></indexterm>
 <indexterm><primary>enumdrivers</primary></indexterm>
-インストールされたプリンタとドライバの一覧を得るための、
+インストールされたプリンターとドライバーの一覧を得るための、
 <command>enumprinters</command>と<command>enumdrivers</command>コマンドも
 参照のこと。
 </para>
@@ -3393,7 +3393,7 @@ Sambaはプリントモニタというコンセプトをサポートする必要
 <para>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
 <emphasis>正確な</emphasis>フォーマットはマニュアルページによって明快にはならないので、
-空白を含むパラメータを扱う必要がある。以下は、それに対するもう少しわかりやすい説明で
+空白を含むパラメーターを扱う必要がある。以下は、それに対するもう少しわかりやすい説明で
 ある。ここではコマンドを改行し、改行は<quote>\</quote>で示している。通常、改行なしに
 1行でコマンドを記述するだろう:
 The <emphasis>exact</emphasis> format isn't made too clear by the man page, since you have to deal with some
@@ -3411,9 +3411,9 @@ adddriver "Architecture" \
 単純な<parameter>&lt;config&gt;</parameter>キーワードである。最後のフィールドは、
 複数の(あまり尋常でない場合では、異なった20のもの)ファイルである。これは、最初は
 混乱するように見えるかもしれない。<quote>LongPrinterName</quote>とマニュアルページが
-呼んでいるものは、実際では<quote>ドライバ名</quote>と呼ばれるべきである。これは
+呼んでいるものは、実際では<quote>ドライバー名</quote>と呼ばれるべきである。これは
 自由に名前を付けられ、後で<command>rpcclient ... setdriver</command>コマンド中で
-この名前を使える。実用的な理由で、多くはプリンタと同じ名前をドライバに付ける。
+この名前を使える。実用的な理由で、多くはプリンターと同じ名前をドライバーに付ける。
 What the man pages denote as a simple <parameter>&lt;config&gt;</parameter> keyword in reality consists of
 eight colon-separated fields. The last field may take multiple (in some very insane cases, even 20 different
 additional) files. This might sound confusing at first.  What the man pages call the
@@ -3423,12 +3423,12 @@ command. For practical reasons, many name the driver the same as the printer.
 </para>
 
 <para>
-これは全く単純ではない。<quote>どのファイルがドライバファイルをどうやったら分かるか</quote>、
+これは全く単純ではない。<quote>どのファイルがドライバーファイルをどうやったら分かるか</quote>、
 各<quote>データファイル</quote>, <quote>構成ファイル</quote>, <quote>ヘルプファイル</quote>
 と<quote>Language Monitorファイルの場合は?</quote>という質問があるだろう。答えのために、
-共有プリンタを持つWindows NTがそれらのファイルをどのように提供しているかを見てみるのも
+共有プリンターを持つWindows NTがそれらのファイルをどのように提供しているかを見てみるのも
 よいかもしれない。覚えておいてほしいが、この全体の手続きはネットワーク上でWindows
-コンピュータが発生させたトラフィックをモニタすることによってSambaチームにより開発
+コンピュータが発生させたトラフィックをモニターすることによってSambaチームにより開発
 されねばならなかったと言うことである。Windowsマシンに切り替えて、UNIX
 ワークステーションからうまくアクセスしても良い。それが何を送っているかを見るために、
 <command>rpcclient</command>で問い合わせてもよく、より明快にするために、マニュアル
@@ -3487,10 +3487,10 @@ workstation with the Samba utilities installed, then type the following command:
 </screen></para>
 
 <para>
-いくつかのプリンタドライバは<parameter>Dependentfiles</parameter>というラベルで、
+いくつかのプリンタードライバーは<parameter>Dependentfiles</parameter>というラベルで、
 追加のファイルを一覧表示し、それらは最後のフィールドである
 <parameter>ListOfFiles,Comma-separated</parameter>中に押し込まれる。CUPS PostScript
-ドライバ用には、それらは不要で(Adobe PostScriptドライバも)、それゆえ、フィールドには
+ドライバー用には、それらは不要で(Adobe PostScriptドライバーも)、それゆえ、フィールドには
 <quote>NULL</quote>が入るだろう。
 Some printer drivers list additional files under the label <parameter>Dependentfiles</parameter>, and these
 would go into the last field <parameter>ListOfFiles,Comma-separated</parameter>. For the CUPS PostScript
@@ -3507,7 +3507,7 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 <indexterm><primary>cupsaddsmb</primary></indexterm>
 <indexterm><primary>setdriver</primary></indexterm>
 マニュアルページから(と上記の<command>cupsaddsmb</command>の引用された出力から)、
-手動でのアップロードとドライバファイルの初期化を成功させるために、一定の状態を用意
+手動でのアップロードとドライバーファイルの初期化を成功させるために、一定の状態を用意
 する必要があることが明確になる。2つの<command>rpcclient</command>サブコマンド
 (<command>adddriver</command>と<command>setdriver</command>)は、成功させるために、
 以下の前提条件を準備する必要がある:
@@ -3520,12 +3520,12 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 	<emphasis>printer admin</emphasis>グループ)で接続する。
 	</para></listitem>
 
-	<listitem><para>要求されたドライバを<filename>\\SAMBA\print$\w32x86</filename>
+	<listitem><para>要求されたドライバーを<filename>\\SAMBA\print$\w32x86</filename>
 	と<filename>\\SAMBA\print$\win40</filename>に、適切にすべてコピーする。
 	これらは、その後最終的に<quote>0</quote>と<quote>2</quote>という
 	サブディレクトリで終わる。現時点では、それらをそこに
 	<emphasis>置いてはならない</emphasis>。それらは自動的に
-	<command>adddriver</command>サブコマンドによって使われる(もしも共有中にドライバ
+	<command>adddriver</command>サブコマンドによって使われる(もしも共有中にドライバー
 	ファイルを置くために、<command>smbclient</command>コマンドを使うならば、
 	<quote>$</quote>をエスケープする必要があることに注意。たとえば、
 	<command>smbclient //sambaserver/print\$ -U root.</command>)。
@@ -3536,31 +3536,31 @@ drivers, we do not need any (nor would we for the Adobe PostScript driver); ther
 	put the driver files into the share, note that you need to escape the <quote>$</quote>: <command>smbclient
 	//sambaserver/print\$ -U root.</command>)</para></listitem>
 
-	<listitem><para>接続しているユーザは<smbconfsection name="[print$]"/>共有に
+	<listitem><para>接続しているユーザーは<smbconfsection name="[print$]"/>共有に
 	書き込みとサブディレクトリの作成が出来ねばならない。</para></listitem>
 
-	<listitem><para>Windowsクライアント用に設定しようとしているプリンタは、
+	<listitem><para>Windowsクライアント用に設定しようとしているプリンターは、
 	CUPSによってすでにインストールされている必要がある。</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
 	<indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
-	CUPSプリンタはSambaによって認識されねばならない:さもないと、
+	CUPSプリンターはSambaによって認識されねばならない:さもないと、
 	<command>setdriver</command>サブコマンドは、NT_STATUS_UNSUCCESSFULというエラーで
-	失敗する。Sambaによってプリンタが認識されているかを調べるには、
+	失敗する。Sambaによってプリンターが認識されているかを調べるには、
 	 <command>rpcclient</command>で<command>enumprinters</command>サブコマンドを
 	 使うことが出来る。長く存在しているバグが、各smbdプロセスがSIGHUPを受け取るか、
-	 再起動するまで、プリンタ一覧の適切な更新を阻害している。ごく最近CUPSプリンタを
+	 再起動するまで、プリンター一覧の適切な更新を阻害している。ごく最近CUPSプリンターを
 	 作成して問題が発生した場合、Sambaを再起動することを覚えておいてほしい。
 	</para></listitem>
 </itemizedlist>
 </sect2>
 
 <sect2>
-<title>15ステップでの手動ドライバインストール</title>
+<title>15ステップでの手動ドライバーインストール</title>
 
 <para>
-すべての要求されたコマンドを実行して、手動で、プリンタドライバをインストールしてみる。
+すべての要求されたコマンドを実行して、手動で、プリンタードライバーをインストールしてみる。
 最初、これは複雑なプロセスなように見えるという理由で、手順を1つずつ、やらなければ
 ならない、単一のアクションアイテム毎に説明する。
 We are going to install a printer driver now by manually executing all
@@ -3570,10 +3570,10 @@ single action item as it comes up.
 </para>
 
 <procedure>
-<title>手動でのドライバインストール</title>
+<title>手動でのドライバーインストール</title>
 
 	<step>
-	<title>CUPS上でのプリンタのインストール</title>
+	<title>CUPS上でのプリンターのインストール</title>
 
 	<para><screen>
 	&rootprompt;<userinput>lpadmin -p mysmbtstprn -v socket://10.160.51.131:9100 -E \
@@ -3581,14 +3581,14 @@ single action item as it comes up.
 	</screen></para>
 
 	<para>
-	これは、CUPSシステムに<parameter>mysmbtstprn</parameter>という名前のプリンタを
-	インストールする。プリンタはソケット(JetDirectかDirect TCP/IPとして知られる)
+	これは、CUPSシステムに<parameter>mysmbtstprn</parameter>という名前のプリンターを
+	インストールする。プリンターはソケット(JetDirectかDirect TCP/IPとして知られる)
 	接続経由で接続される。このステップはrootで行う必要がある。
 	</para>
 	</step>
 
 	<step>
-	<title>(オプション)Sambaによってプリンタが認識されているかを調べる。</title>
+	<title>(オプション)Sambaによってプリンターが認識されているかを調べる。</title>
 
 	<para>
 	<indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
@@ -3603,23 +3603,23 @@ comment:[mysmbtstprn]
 	</para>
 
 	<para>
-	これは、一覧中にプリンタを表示する。層でなければ、Sambaデーモン(smbd)をいったん
+	これは、一覧中にプリンターを表示する。層でなければ、Sambaデーモン(smbd)をいったん
 	止めて再起動するか、HUPシグナルを送る:
 <screen>
 &rootprompt;<userinput>kill -HUP `pidof smbd`</userinput>
 </screen>
 	再度チェックする。成功するまでトラブルシュートを繰り返し行う。
 	<quote>description</quote>行中に、2つのカンマの間に<quote>空白</quote>の
-	フィールドがあることに注意。すでに1つ存在していれば、ドライバ名はここに現れる。
+	フィールドがあることに注意。すでに1つ存在していれば、ドライバー名はここに現れる。
 	このステップと、この後のステップのほとんどのために、rootのSambaでのパスワード
 	(<command>smbpasswd</command>コマンドによって設定される)を知っておく必要がある。
 	代わりに、<smbconfsection name="[print$]"/>に対して&smb.conf;中で
-	<quote>write list</quote>として定義されているユーザからの1つで認証する事が出来る。
+	<quote>write list</quote>として定義されているユーザーからの1つで認証する事が出来る。
 	</para>
 	</step>
 
 	<step>
-	<title>(オプション)プリンタに対するドライバをSambaが認識しているかを調べる。</title>
+	<title>(オプション)プリンターに対するドライバーをSambaが認識しているかを調べる。</title>
 
 	<para>
 	<indexterm><primary>rpcclient</primary><secondary>getprinter</secondary></indexterm>
@@ -3648,16 +3648,16 @@ printprocessor:[winprint]
 </screen></para>
 
 <para>
-上記で示されている3つのコマンドのどれもドライバを表示しない。
+上記で示されている3つのコマンドのどれもドライバーを表示しない。
 このステップはこの条件をデモンストレーションする目的で行われた。このステージにおける
-プリンタへの接続の試みは、
+プリンターへの接続の試みは、
 <quote>The server does not have the required printer driver installed.</quote>
 という行を表示する。
 </para>
 </step>
 
 <step>
-<title>すべての要求されたドライバファイルをSambaの[print$]に置く。</title>
+<title>すべての要求されたドライバーファイルをSambaの[print$]に置く。</title>
 
 <para><screen>
 &rootprompt;<userinput>smbclient //localhost/print\$ -U 'root%xxxx' \
@@ -3671,16 +3671,16 @@ printprocessor:[winprint]
 <para>
 (このコマンドは、単一の長い行で入力すべきである<quote>\</quote>によって示される
 改行と行末は可読性向上のために挿入されている)。このステップは、次のものを成功
-させるために<emphasis>必要とされる</emphasis>。これは、ドライバファイルを物理的に
+させるために<emphasis>必要とされる</emphasis>。これは、ドライバーファイルを物理的に
 <smbconfsection name="[print$]"/>共有中に存在させるようにする。しかし、それらを
-Sambaはまだドライバファイルとして扱えないので、クライアントはまだそれらをインストール
-できない。クライアントがドライバについて問い合わせると、引き続き
+Sambaはまだドライバーファイルとして扱えないので、クライアントはまだそれらをインストール
+できない。クライアントがドライバーについて問い合わせると、引き続き
 <quote>not installed here</quote>というメッセージが表示される。
 </para>
 </step>
 
 <step>
-<title>現在どこにドライバファイルがあるかを検査する。</title>
+<title>現在どこにドライバーファイルがあるかを検査する。</title>
 
 <para><screen>
 &rootprompt;<userinput>ls -l /etc/samba/drivers/W32X86/</userinput>
@@ -3694,13 +3694,13 @@ drwxr-sr-x    2 root     ntadmin       670 May 16 03:15 3
 </screen></para>
 
 <para>
-ドライバファイルは現在<smbconfsection name="[print$]"/>を<quote>root</quote>とする
+ドライバーファイルは現在<smbconfsection name="[print$]"/>を<quote>root</quote>とする
 W32X86アーキテクチャにある。
 </para>
 </step>
 
 <step>
-<title>Sambaにそれらがドライバファイルであると告げる(<command>adddriver</command>)。</title>
+<title>Sambaにそれらがドライバーファイルであると告げる(<command>adddriver</command>)。</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>adddriver</secondary></indexterm>
@@ -3714,18 +3714,18 @@ Printer Driver mydrivername successfully installed.
 
 <para>
 これが失敗してもこのステップを繰り返すことはできない。これは単なるtypoの結果であったと
-しても失敗する。それは、たいていの場合、ドライバファイルの一部を<quote>2</quote>
+しても失敗する。それは、たいていの場合、ドライバーファイルの一部を<quote>2</quote>
 サブディレクトリ中に移動してしまっただろう。もしもこのステップが失敗したならば、
 このステップを再度実行する前に、4番目のステップに戻り、繰り返す必要がある。この
-ステップ中で、ドライバの名前を選択する必要がある。プリンタの名前として使うものと同じ
+ステップ中で、ドライバーの名前を選択する必要がある。プリンターの名前として使うものと同じ
 名前を使うことはよい方法である。しかし、大量にインストールする場合、明確に異なった
-名前の、数多くのプリンタに対するドライバを使っても良い。そのため、ドライバの名前は
+名前の、数多くのプリンターに対するドライバーを使っても良い。そのため、ドライバーの名前は
 決定されない。
 </para>
 </step>
 
 <step>
-<title>現在ドライバファイルがどこにあるかを調べる。</title>
+<title>現在ドライバーファイルがどこにあるかを調べる。</title>
 
 <para><screen>
 &rootprompt;<userinput>ls -l /etc/samba/drivers/W32X86/</userinput>
@@ -3743,13 +3743,13 @@ total 5039
 </screen></para>
 
 <para>
-どのようにステップ6が適切なサブディレクトリ中にドライバファイルを移動したかに注目。
+どのようにステップ6が適切なサブディレクトリ中にドライバーファイルを移動したかに注目。
 ステップ5の後の状態と今の状態を比較する。
 </para>
 </step>
 
 <step>
-<title>(オプション)Sambaが現時点でドライバを認識しているかを確認する。</title>
+<title>(オプション)Sambaが現時点でドライバーを認識しているかを確認する。</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>enumdrivers</secondary></indexterm>
@@ -3767,13 +3767,13 @@ Helpfile: [\\kde-bitshop\print$\W32X86\2\cups.hlp]
 </screen></para>
 
 <para>
-思い出してほしいが、このコマンドはステップ6で選択したドライバの名前を検索する。
+思い出してほしいが、このコマンドはステップ6で選択したドライバーの名前を検索する。
 このコマンドは次のステップに行く前に成功しなければならない。
 </para>
 </step>
 
 <step>
-<title>どのプリンタがこのドライバファイルを使うかをSambaに告げる(<command>setdriver</command>)。</title>
+<title>どのプリンターがこのドライバーファイルを使うかをSambaに告げる(<command>setdriver</command>)。</title>
 
 <para>
 <indexterm><primary>rpcclient</primary><secondary>setdriver</secondary></indexterm>
@@ -3784,11 +3784,11 @@ Successfully set mysmbtstprn to driver mydrivername
 </screen></para>
 
 <para>
-任意のプリンタ名(プリンタキュー)を任意のドライバに結合できるので、これは同じドライバを
+任意のプリンター名(プリンターキュー)を任意のドライバーに結合できるので、これは同じドライバーを
 使う数多くのキューを設定するのに便利な方法である。これを成功させるために、setdriver
 コマンドに対する以前のステップのすべてを繰り返す必要はない。やらなければならない唯一の
-準備は、<command>enumdrivers</command>がドライバを見つけられねばならないと言うことと、
-<command>enumprinters</command>がプリンタを見つけられねばならないと言うことである。
+準備は、<command>enumdrivers</command>がドライバーを見つけられねばならないと言うことと、
+<command>enumprinters</command>がプリンターを見つけられねばならないと言うことである。
 </para>
 </step>
 
@@ -3842,25 +3842,25 @@ Printer Driver Info 3:
 <para>
 <indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
 ステップ2と3からの結果とこの結果を比較する。上記のコマンドの1つ1つはインストールされた
-ドライバを表示する。たとえ<command>enumprinters</command>コマンドが
-<quote>description</quote>行上のドライバを一覧表示するとしても。
+ドライバーを表示する。たとえ<command>enumprinters</command>コマンドが
+<quote>description</quote>行上のドライバーを一覧表示するとしても。
 </para>
 </step>
 
 <step>
-<title>(オプション)正しいデバイスモードにドライバを修正する</title>
+<title>(オプション)正しいデバイスモードにドライバーを修正する</title>
 
 <para>
-<indexterm><primary>"プリンタ"フォルダ</primary></indexterm>
-クライアント上にドライバをどのようにインストールするかについては確実に知っている
+<indexterm><primary>"プリンター"フォルダー</primary></indexterm>
+クライアント上にドライバーをどのようにインストールするかについては確実に知っている
 はずである。特にWindowsに慣れていない場合、簡単なやり方がある:
-ネットワークコンピュータをブラウズし、Sambaサーバを選び、共有を捜す。
-すべての共有されたSambaプリンタが見えるはずである。質問(question)中の1つを
-ダブルクリックする。ドライバが得られてインストールされて、ネットワーク接続が
-設定される。別の方法は、<guilabel>プリンタとFAX</guilabel>フォルダを開き、
-質問(question)中のプリンタを右クリックし、<guilabel>接続</guilabel>又は
+ネットワークコンピュータをブラウズし、Sambaサーバーを選び、共有を捜す。
+すべての共有されたSambaプリンターが見えるはずである。質問(question)中の1つを
+ダブルクリックする。ドライバーが得られてインストールされて、ネットワーク接続が
+設定される。別の方法は、<guilabel>プリンターとFAX</guilabel>フォルダーを開き、
+質問(question)中のプリンターを右クリックし、<guilabel>接続</guilabel>又は
 <guilabel>インストール</guilabel>を選択する。その結果、クライアントのローカルの
-<guilabel>プリンタとFAX</guilabel>フォルダ中に新しいプリンタが現れ、それには
+<guilabel>プリンターとFAX</guilabel>フォルダー中に新しいプリンターが現れ、それには
 <guilabel>Sambahostname上のprintersharename</guilabel>のような何らかの名前が
 付いている。
 </para>
@@ -3877,14 +3877,14 @@ Printer Driver Info 3:
 </screen></para>
 
 <para>
-任意のプリンタの設定を一回変更し、
+任意のプリンターの設定を一回変更し、
 (<emphasis><guilabel>縦方向</guilabel>を<guilabel>横方向</guilabel></emphasis>になど)
 <guibutton>適用</guibutton>をクリックし、設定を元に戻す。
 </para>
 </step>
 
 <step>
-<title>クライアント上でプリンタをインストールする(ポイントアンドプリント)。</title>
+<title>クライアント上でプリンターをインストールする(ポイントアンドプリント)。</title>
 
 <para>
 <indexterm significance="preferred"><primary>ポイントアンドプリント</primary></indexterm>
@@ -3905,7 +3905,7 @@ Printer Driver Info 3:
 
 <para>
 次に5回[タブ]を入力し、[ENTER]を二回入力し、[TAB]を1回、そして再度[ENTER]を入力し
-プリンタの所に行く。
+プリンターの所に行く。
 </para>
 </step>
 
@@ -3913,8 +3913,8 @@ Printer Driver Info 3:
 <title>(推奨)テストページを調査する。</title>
 
 <para>
-今は、プリンタのインストールについてすべてを知っていて、そこに書いてあることを読む必要は
-ない。額縁にこれを入れて、"初めてRPCCLIENTでインストールしたプリンタ"というタイトルを
+今は、プリンターのインストールについてすべてを知っていて、そこに書いてあることを読む必要は
+ない。額縁にこれを入れて、"初めてRPCCLIENTでインストールしたプリンター"というタイトルを
 付けて壁に貼ろう。でも、やはり捨てるよね。
 Hmmm. Just kidding! By now you know everything about printer installations and you do not need to read a word.
 Just put it in a frame and bolt it to the wall with the heading "MY FIRST RPCCLIENT-INSTALLED PRINTER"
@@ -3954,9 +3954,9 @@ result was NT_STATUS_UNSUCCESSFUL
 CUPS中のキューを見ることができるだけでは十分ではないので、
 <command>lpstat -p ir85wm</command>コマンドを使う。最も最近のSambaのバージョンでは、
 適切なキュー一覧の更新を妨害するというバグがある。Sambaを再起動するか、すべてのsmbd
-プロセスにHUPを送るまで、新しくインストールしたCUPSプリンタの認識に失敗する。なぜSambaが
+プロセスにHUPを送るまで、新しくインストールしたCUPSプリンターの認識に失敗する。なぜSambaが
 <command>setdriver</command>コマンドを正しく実行しないかという理由がこれかと言うことを
-検証するために、Sambaがプリンタを<quote>認識している</quote>かを調べる:
+検証するために、Sambaがプリンターを<quote>認識している</quote>かを調べる:
 <indexterm><primary>rpcclient</primary><secondary>enumprinters</secondary></indexterm>
 <screen>
 &rootprompt;<userinput>rpcclient transmeta -N -U'root%xxxx' -c 'enumprinters 0'|grep ir85wm</userinput>
@@ -3977,7 +3977,7 @@ CUPS中のキューを見ることができるだけでは十分ではないの�
 
 <para>
 所で、上記のコマンドに、さらにいくつかを使うことが出来、もちろん、
-リモートのWindows NT印刷サーバにもインストールできる!
+リモートのWindows NT印刷サーバーにもインストールできる!
 </para>
 </sect2>
 </sect1>
@@ -4013,9 +4013,9 @@ CUPS中のキューを見ることができるだけでは十分ではないの�
 
 <para>
 <indexterm><primary>TDB</primary></indexterm>
-Windows NT(印刷)サーバは、Windowsレジストリ中にエントリを格納することによって、その
+Windows NT(印刷)サーバーは、Windowsレジストリ中にエントリを格納することによって、その
 クライアントに対して、その作業を提供するのに必要なすべての情報を記録する。クライアントの
-問い合わせはレジストリを読み取ることによって回答が行われ、Administratorかユーザの
+問い合わせはレジストリを読み取ることによって回答が行われ、Administratorかユーザーの
 構成設定はレジストリ中に書き込むことで保存される。SambaとUNIXは明らかにこのような
 レジストリを持っていない。Sambaはその代わりに、一連の<filename>*.tdb</filename>ファイルに
 すべてのクライアントに関連する情報を保存する(TDBはtrivial data baseの省略形である)。
@@ -4066,7 +4066,7 @@ Sambaの<filename>*.tdb</filename>ファイル形式は、これを提供でき�
 <indexterm><primary>TDB</primary><secondary>backing up</secondary><see>tdbbackup</see></indexterm>
 <indexterm><primary>tdbbackup</primary></indexterm>
 Sambaは、システム中にある<filename>*.tdb</filename>ファイルをバックアップする、
-rootユーザを手助けする小さなユーティリティを同梱している。もしも引数なしでそれを
+rootユーザーを手助けする小さなユーティリティを同梱している。もしも引数なしでそれを
 動かすと、以下のメッセージが表示される:
 <screen>
 &rootprompt;<userinput>tdbbackup</userinput>
@@ -4101,11 +4101,11 @@ ntprinters.tdb sessionid.tdb
 </sect1>
 
 <sect1>
-<title>Linuxprinting.orgからのCUPSプリントドライバ</title>
+<title>Linuxprinting.orgからのCUPSプリントドライバー</title>
 
 <para>
 <indexterm><primary>Linuxprinting.org</primary></indexterm>
-CUPSはHP LaserJetタイプのプリンタに対する良いサポートがある。以下のように汎用ドライバを
+CUPSはHP LaserJetタイプのプリンターに対する良いサポートがある。以下のように汎用ドライバーを
 インストールできる:
 <indexterm><primary>lpadmin</primary></indexterm>
 <screen>
@@ -4122,11 +4122,11 @@ CUPSはHP LaserJetタイプのプリンタに対する良いサポートがあ�
 <para>
 しかし、汎用<filename>laserjet.ppd</filename>は、各LaserJet五巻も出るの各特別な
 オプションをサポートしない。すべてのモデルの、一連の<quote>最小の共通項</quote>が
-構成要素である。もしもある理由で、商用のESP Print Pro ドライバに対してお金を払わなければ
+構成要素である。もしもある理由で、商用のESP Print Pro ドライバーに対してお金を払わなければ
 ならない場合、最初に見に行く所は、
 <ulink noescape="1" url="http://www.linuxprinting.org/printer_list.cgi">Linuxprinting</ulink>
-Webサイト上にあるデータベースにすべきである。Linuxprinting.orgは、各プリンタに対して
-使える最適のドライバがどれか、ということについて、優れた推奨情報を提供している。
+Webサイト上にあるデータベースにすべきである。Linuxprinting.orgは、各プリンターに対して
+使える最適のドライバーがどれか、ということについて、優れた推奨情報を提供している。
 そのデータベースは、<command>foomatic-rip</command>ユーティリティの主要な著者でもある、
 MandrakesoftのTill Kamppeterの精力的な仕事によって、現在保持されている。
 </para>
@@ -4141,10 +4141,10 @@ MandrakesoftのTill Kamppeterの精力的な仕事によって、現在保持さ
 URLは
 <ulink noescape="1" url="http://www.linuxprinting.org/driver_list.cgi">Foomatic-3.0</ulink>
 である。もしも<command>foomatic-rip</command>にアップグレードする場合、Foomaticで制御
-されるプリンタ用の、新しい形式のPPDもアップグレードすることも忘れないこと。
+されるプリンター用の、新しい形式のPPDもアップグレードすることも忘れないこと。
 foomatic-ripは古い<command>cupsomatic</command>で生成したPPDでは動かない。新しい形式の
 PPDはAdobe PPDの仕様と100％互換である。これらはまたSambaとcupsaddnmbユーティリティに
-よってWindowsクライアントのためにドライバを提供するために、代わりに使われる!
+よってWindowsクライアントのためにドライバーを提供するために、代わりに使われる!
 </para></note>
 
 <sect2>
@@ -4158,31 +4158,31 @@ PPDはAdobe PPDの仕様と100％互換である。これらはまたSambaとcup
 印刷関連のソフトウェアを作成するために、
 <ulink url="http://www.linuxprinting.org/">Linuxprinting.org</ulink>からのユーティリティに
 頼っている。このサイトからのユーティリティは、サポートしているすべてのモデル、すべての
-スプーラ、すべてのOSとすべてのパッケージ形式(それらがないので)に対して、ドライバとPPDの
-簡単な更新が出来る、エンドユーザにとてもわかりやすいインタフェースを持っている。その
+スプーラ、すべてのOSとすべてのパッケージ形式(それらがないので)に対して、ドライバーとPPDの
+簡単な更新が出来る、エンドユーザーにとてもわかりやすいインタフェースを持っている。その
 歴史は、数年前にさかのぼる。
 </para>
 
 <para>
-最近、Foomaticは、対応プリンタモデルが
+最近、Foomaticは、対応プリンターモデルが
 <ulink url="http://www.linuxprinting.org/printer_list.cgi?make=Anyone">1,000を超えるという</ulink>
-驚くべきマイルストーンに到達した。Linuxprinting.orgは、プリンタドライバ、サポートする
+驚くべきマイルストーンに到達した。Linuxprinting.orgは、プリンタードライバー、サポートする
 モデルと、<ulink url="http://www.linuxprinting.org/foomatic.html">Foomatic</ulink>
-データベース中で有効な種々のドライバ/プリンタの組み合わせに対するオプションについての、
+データベース中で有効な種々のドライバー/プリンターの組み合わせに対するオプションについての、
 すべての重要な要素を保持している。現在、そのデータベース中には、
-<ulink url="http://www.linuxprinting.org/driver_list.cgi">245のドライバ</ulink>が存在
-する。多くのドライバは種々のモデルをサポートし、多くのモデルは、異なったドライバで
+<ulink url="http://www.linuxprinting.org/driver_list.cgi">245のドライバー</ulink>が存在
+する。多くのドライバーは種々のモデルをサポートし、多くのモデルは、異なったドライバーで
 動作するかもしれない。これはあなたが選択するものである!
 </para>
 
 <sect3>
-<title>690の<quote>完璧な</quote>プリンタ</title>
+<title>690の<quote>完璧な</quote>プリンター</title>
 
 <para>
 <indexterm><primary>Windows PPD</primary></indexterm>
-現在、690ものドライバが完全に動作することが分かっている:181は<emphasis>ほとんど</emphasis>
+現在、690ものドライバーが完全に動作することが分かっている:181は<emphasis>ほとんど</emphasis>
 完全で、96は <emphasis>部分的に</emphasis>完全で、46は文鎮(paperweight)である(???)。
-これらの大半は、非PostScriptモデルであり(PostScriptプリンタは、CUPSによって、
+これらの大半は、非PostScriptモデルであり(PostScriptプリンターは、CUPSによって、
 固有の製造元が提供したWindows PPDを使うことによって、完璧にサポートされる)、多機能
 デバイスは、GNU/Linux配下で、スキャンとコピーとFAXが出来ないならば、決して完全に
 動くとは見なされないということを心にとめておいておくこと。これは本当に驚くべき
@@ -4205,10 +4205,10 @@ anywhere near the quality it is today.
 数年前、<ulink url="http://www2.picante.com/">Grant Taylor</ulink>が作業を開始した。
 現在のLinuxprinting.orgの大元は、彼が書いた最初の
 <ulink url="http://www.linuxprinting.org/foomatic2.9/howto/">Linux Printing HOWTO</ulink>
-である。多数のLinuxユーザと管理者に、この複雑で繊細な設定の最初のステップをガイドする
+である。多数のLinuxユーザーと管理者に、この複雑で繊細な設定の最初のステップをガイドする
 ために提供された、この文書の関連プロジェクトとして(科学者にとって、印刷とは
 <quote>紙の基盤の上に、インクかトナーの微片による明白なパターンによる構造化した堆積物を
-付けたものである</quote>)、その時点でのLinux印刷を補う、ハードウェアとドライバについての
+付けたものである</quote>)、その時点でのLinux印刷を補う、ハードウェアとドライバーについての
 情報集積を行う小さなPostgresデータベースの構築を開始した。このデータベースは、現在に
 おける、Foomaticの、ツールとデータの集合体のコアコンポーネントになった。その途中で、データを
 XML表記に変更した。
@@ -4223,7 +4223,7 @@ XML表記に変更した。
 <indexterm><primary>foomatic</primary></indexterm>
 <quote>なぜこんな奇妙な名前なのか?</quote>2000年の春頃に、これが軌道に乗ったときに、
 CUPSは現在よりもかなり知名度が亡く、ほとんどのシステムはLPD、LPRng、か、あるいはPDQを
-印刷に使用していた。CUPSはごくわずかの汎用ドライバ(100くらいの少数の異なったプリンタ
+印刷に使用していた。CUPSはごくわずかの汎用ドライバー(100くらいの少数の異なったプリンター
 モデルにのみ対応)しか提供できていなかった。デバイス固有のオプションのサポートも出来て
 いなかった。CUPSは固有の組み込みラスタライズフィルタ(Ghostscript由来の
 <parameter>pstoraster</parameter>)も提供していた。他方、CUPSは、標準化され、きちんと
@@ -4232,9 +4232,9 @@ CUPSは現在よりもかなり知名度が亡く、ほとんどのシステム�
 </para>
 
 <para>
-Taylorはすでに、より多くのプリンタと、それと共に動くGhostscript<quote>ドライバ</quote>に
+Taylorはすでに、より多くのプリンターと、それと共に動くGhostscript<quote>ドライバー</quote>に
 ついて、良くできた動作状況一覧を、彼のデータベース中に用意していた。彼のアイデアは、
-データベース情報からPPDを作成するためと、CUPSで動作する標準Ghostscriptドライバを生成する
+データベース情報からPPDを作成するためと、CUPSで動作する標準Ghostscriptドライバーを生成する
 ために、それがうまく動くことを検証することであった。また、それは一石数鳥でもあった:
 </para>
 
@@ -4242,12 +4242,12 @@ Taylorはすでに、より多くのプリンタと、それと共に動くGhost
 	<listitem><para>これは、CUPSで有効な現在と将来のすべてのGhostscript
 	フィルタ開発を行う。</para></listitem>
 
-	<listitem><para>CUPSユーザにたくさんの追加プリンタモデルを有効にさせる
+	<listitem><para>CUPSユーザーにたくさんの追加プリンターモデルを有効にさせる
 	(しばしば、伝統的なGhostscriptによる印刷は、1つのみが有効であるという理由で)</para></listitem>
 
 	<listitem><para>これは、Ghostscriptフィルタを使う事を望んでいる(あるいは
-	必要としている)ユーザに、すべての詳細CUPSオプションを提供する(Web
-	インタフェース、GUIドライバの組み合わせで)</para></listitem>
+	必要としている)ユーザーに、すべての詳細CUPSオプションを提供する(Web
+	インタフェース、GUIドライバーの組み合わせで)</para></listitem>
 </itemizedlist>
 </sect3>
 
@@ -4265,7 +4265,7 @@ Ghostscript経由でprintflieを動かし、必要とされる、どちらかと
 自動的に構築する。これは、それが動くようにするために、CUPSシステム中にコピーされる必要が
 ある。cupsomatic制御がGhostscript病がプロセスを制御する方法を構築するために、CUPS-PPDが
 必要である。このPPDはデータベースの内容から直接生成される。CUPSとそれぞれの
-プリンタ/フィルタの組み合わせのために、CUPS-O-Maticという名前の、他のPerlスクリプトが
+プリンター/フィルタの組み合わせのために、CUPS-O-Maticという名前の、他のPerlスクリプトが
 PPDを生成する。これが動作した後、Taylorは2つの他のスプーラのために、類似のことを数日で
 実装した。config-generatorスクリプトのために選ばれた名前は、(PDQ用には)
 <ulink url="http://www.linuxprinting.org/download.cgi?filename=lpdomatic&amp;show=0">PDQ-O-Matic</ulink>
@@ -4280,7 +4280,7 @@ PPDを生成する。これが動作した後、Taylorは2つの他のスプー�
 新たに<ulink url="http://www.mandrakesoft.com/">Mandrakesoft</ulink>に雇われ、その後
 <ulink url="http://www.fltk.org/">FLTK</ulink>ベースの
 <ulink url="http://cups.sourceforge.net/xpp/">XPP</ulink>(CUPS lpコマンドに対するGUI
-フロントエンド)が出来た。彼は、大量の新しい情報と新しいプリンタを追加した。また、
+フロントエンド)が出来た。彼は、大量の新しい情報と新しいプリンターを追加した。また、
 <ulink url="http://ppr.sourceforge.net/">PPR</ulink> (ppromatic経由), 
 <ulink url="http://sourceforge.net/projects/lpr/">GNUlpr</ulink>,と
 <ulink url="http://www.lprng.org/">LPRng</ulink> (存在するlpdomatic経由両方)と
@@ -4293,7 +4293,7 @@ PPDを生成する。これが動作した後、Taylorは2つの他のスプー�
 そのため、あなたの質問に答えるために、<quote>Foomatic</quote>は、
 <quote>*omatic</quote>スクリプトに隠れたコードとデータをすべて上書きする汎用の
 名前である。Foomaticは、バージョン2.0.xまで、CUPS用のLinuxprinting.orgのPPDに結合する
-(ひどい)Perlデータ構造を要求していた。異なったプリンタ設定ファイルのように、すべての
+(ひどい)Perlデータ構造を要求していた。異なったプリンター設定ファイルのように、すべての
 スプーラに対して異なった<quote>*omatic</quote>スクリプトがある。
 </para>
 </sect3>
@@ -4307,9 +4307,9 @@ PPDを生成する。これが動作した後、Taylorは2つの他のスプー�
 すべて変更された。これは現在、すべての*omaticスクリプトの集合として到達して、さらにこれは
 <ulink url="http://www.linuxprinting.org/foomatic2.9/download.cgi?filename=foomatic-rip&amp;show=0">foomatic-rip</ulink>
 と呼ばれている。foomatcic-rip はすべての異なったスプーラと同様によって使われ、それがPPD
-(オリジナルPostScriptプリンタのPPDとLinuxprinting.orgが作成したもの両方)を読むことが
+(オリジナルPostScriptプリンターのPPDとLinuxprinting.orgが作成したもの両方)を読むことが
 出来るという理由で、すべてのサポートされているスプーラは突然自由にPPDの機能を使えるように
-なる。ユーザはシステムにfoomatic-ripを組み込む必要があるだけである。ユーザ用に、
+なる。ユーザーはシステムにfoomatic-ripを組み込む必要があるだけである。ユーザー用に、
 改良されたメディア対湯とソースのサポートがある。それは、紙のサイズとトレイが簡単に設定
 できるものである。
 </para>
@@ -4324,7 +4324,7 @@ PPDを生成する。これが動作した後、Taylorは2つの他のスプー�
 新しい
 <ulink url="http://www.linuxprinting.org/download/foomatic/foomatic-db-engine-3.0.0beta1.tar.gz">foomatic-db-engine</ulink>
 経由で新しいバージョンのPPDセットを生成することを覚えておいてほしい!
-個々のユーザは、Foomaticチュートリアル中で概要が説明されている
+個々のユーザーは、Foomaticチュートリアル中で概要が説明されている
 <ulink url="http://www.linuxprinting.org/kpfeifle/LinuxKongress2002/Tutorial/II.Foomatic-User/II.tutorial-handout-foomatic-user.html">以下のステップ</ulink>
 か、この章によって、使用しているモデルのための、特定の、新しい単一PPDを生成することが
 必要である。この新しい開発版は全く驚くべきものである。
@@ -4340,15 +4340,15 @@ the steps</ulink> outlined in the Foomatic tutorial or in this chapter. This new
 <para>
 <indexterm><primary>foomatic-rip</primary></indexterm>
 <indexterm><primary>Adobe</primary></indexterm>
-<indexterm><primary>プリンタドライバ</primary></indexterm>
-foomatic-ripは、異なった文法、オプション、デバイスの選択、あるいは異なる各プリンタ
+<indexterm><primary>プリンタードライバー</primary></indexterm>
+foomatic-ripは、異なった文法、オプション、デバイスの選択、あるいは異なる各プリンター
 またはスプーラのためのフィルタを使うGhostscriptを動かすために必要な、とても巧妙な
-ラッパーである。同時に、これはプリントキューに関連づけられているPPDを読み、ユーザの
+ラッパーである。同時に、これはプリントキューに関連づけられているPPDを読み、ユーザーの
 選択に従って、印刷ジョブを変更する。これを一緒にすると、Adobeのspecに対し、新しい
 Foomatic PPDは100％準拠となる(ここ怪しい)。Foomaticのコンセプトにおける、いくつかの
-革新的な特徴は、ユーザを驚かせるだろう。これは、多くのプリンタに対する、個別の
+革新的な特徴は、ユーザーを驚かせるだろう。これは、多くのプリンターに対する、個別の
 紙サイズのサポートや同じジョブ内での、異なったペーパトレイを使う印刷のサポート
-ができる(両方の場合において、Windowsベースのベンダプリンタドライバがこれをサポート
+ができる(両方の場合において、Windowsベースのベンダプリンタードライバーがこれをサポート
 していなかったとしても)。
 foomatic-rip is a very clever wrapper around the need to run Ghostscript with a different syntax, options,
 device selections, and/or filters for each different printer or spooler. At the same time, it can read the PPD
@@ -4361,18 +4361,18 @@ support for this from Windows-based vendor printer drivers).
 </sect3>
 
 <sect3>
-<title>ドライバ開発の外側</title>
+<title>ドライバー開発の外側</title>
 
 <para>
 <indexterm><primary>Linuxprinting.org</primary></indexterm>
-ほとんどのドライバ開発それ自身は、Linuxprinting.org中では発生しない。ドライバは独立した
+ほとんどのドライバー開発それ自身は、Linuxprinting.org中では発生しない。ドライバーは独立した
 メンテナによって書かれる。Linuxprinting.orgはすべての情報を蓄え、そのデータベース中に
 格納するだけである。さらに、今知られている、任意の最新式(あるいは旧来の)印刷システム
-中にたくさんのドライバを統合する、Foomaticという糊も提供する。
+中にたくさんのドライバーを統合する、Foomaticという糊も提供する。
 </para>
 
 <para>
-異なったドライバ開発グループについて話すと、仕事のほとんどは、それらのプロジェクトに
+異なったドライバー開発グループについて話すと、仕事のほとんどは、それらのプロジェクトに
 おいて、現在ほとんど終わっている:
 </para>
 
@@ -4380,8 +4380,8 @@ support for this from Windows-based vendor printer drivers).
 	<listitem><para>
 <indexterm><primary>Omni</primary></indexterm>
 	<ulink url="http://www-124.ibm.com/developerworks/oss/linux/projects/omni/">Omni</ulink>&smbmdash;
-	IBMによるフリーソフトウェアプロジェクトで、良くできたOS/2時代のプリンタ
-	ドライバの知識を、Linux/UNIXに対する、最新の、モジュラーなユニバーサルドライバ
+	IBMによるフリーソフトウェアプロジェクトで、良くできたOS/2時代のプリンター
+	ドライバーの知識を、Linux/UNIXに対する、最新の、モジュラーなユニバーサルドライバー
 	アーキテクチャに変換することを試みている(今だβ)。これは現在437モデルを
 	サポートしている。</para></listitem>
 
@@ -4397,8 +4397,8 @@ support for this from Windows-based vendor printer drivers).
 	<ulink url="http://gimp-print.sourceforge.net/">Gutenprint</ulink> &smbmdash;
 	フリーソフトウェアの取り組みであり、(CUPSの主要開発者としても知られている)
 	Michael Sweetによって開始され、現在驚異的な写真レベルの品質に到達した
-	Robert Krawitzによって指揮されている(多くのエプソンユーザは、その品質は、
-	Microsoftプラットフォーム向けのEpsonによって提供されたベンダドライバよりも
+	Robert Krawitzによって指揮されている(多くのエプソンユーザーは、その品質は、
+	Microsoftプラットフォーム向けのEpsonによって提供されたベンダドライバーよりも
 	良いと断言している)。現在522モデルをサポートしている。</para></listitem>
 </itemizedlist>
 </sect3>
@@ -4407,12 +4407,12 @@ support for this from Windows-based vendor printer drivers).
 <title>フォーラム、ダウンロード、チュートリアル、HOWTO(Mac OS Xと商用UNIX用も)</title>
 
 <para>
-Linuxprinting.orgは現在プリンタドライバのダウンロードを行うためのとりまとめ窓口である。
-プリンタ情報を探し、
+Linuxprinting.orgは現在プリンタードライバーのダウンロードを行うためのとりまとめ窓口である。
+プリンター情報を探し、
 <ulink url="http://www.linuxprinting.org//kpfeifle/LinuxKongress2002/Tutorial/">チュートリアル</ulink>
-か、プリンタの問題について、よく知られている
+か、プリンターの問題について、よく知られている
 <ulink url="http://www.linuxprinting.org/newsportal/">フォーラム</ulink>で解決してみよう。
-このフォーラムは、GNU/Linuxユーザに限ったものではなく、
+このフォーラムは、GNU/Linuxユーザーに限ったものではなく、
 <ulink url="http://www.linuxprinting.org/macosx/">商用UNIXシステム</ulink>の管理者も
 ここに来ていて、相対的に新しい
 <ulink url="http://www.linuxprinting.org/newsportal/thread.php3?name=linuxprinting.macosx.general">Mac OS Xフォーラム</ulink>
@@ -4423,9 +4423,9 @@ Linuxprinting.orgは現在プリンタドライバのダウンロードを行う
 <indexterm><primary>Mandriva</primary></indexterm>
 <indexterm><primary>Mandrake</primary></indexterm>
 <indexterm><primary>Conectiva</primary></indexterm>
-Linuxprinting.orgとGhostscriptを囲むFoomaticドライバラッパはすべての重要な
+Linuxprinting.orgとGhostscriptを囲むFoomaticドライバーラッパはすべての重要な
 ディストリビューション上で印刷のための標準ツール(tool-chain)である。それらのほとんどは、
-基盤としてCUPSを使っている。ここ数年の間、ほとんどのプリンタに関するデータは、
+基盤としてCUPSを使っている。ここ数年の間、ほとんどのプリンターに関するデータは、
 Kamppeterによって追加され、多くの追加コードが、SuSE、Red Hat、Conectiva、Debianや
 その他の技術者から寄贈された。ベンダ中立はFoomaticプロジェクトの重要なゴールである。
 MandrakeとConectivaは統合されて現在Mandrivaと呼ばれている。
@@ -4449,13 +4449,13 @@ MandrakesoftのTill Kamppeterは彼の空き時間にLinuxprinting.orgとFoomati
 <indexterm><primary>xpp</primary></indexterm>
 <indexterm><primary>HP Photosmart</primary></indexterm>
 <indexterm><primary>Epson Stylus inkjet</primary></indexterm>
-<indexterm><primary>非PostScriptプリンタ</primary></indexterm>
+<indexterm><primary>非PostScriptプリンター</primary></indexterm>
 <indexterm><primary>raster</primary></indexterm>
-Foomaticデータベースはそれ自身だけで驚くべき工夫の1つである。プリンタとドライバ情報を
+Foomaticデータベースはそれ自身だけで驚くべき工夫の1つである。プリンターとドライバー情報を
 保存しているだけではなく、その内部XMLベースのデータベースから、その場でPPDファイルを
 生成できる。それらPPDがAdobe仕様のPPDにモデル化される間、Linuxprinting.org/Foomatic-PPDは
-普通ではPostScriptプリンタを制御できない。それらは、Eposn Stylus inkjet、HP Photosmart、
-あるいは持っているプリンタ上で鳴らすことや吹くことが出来る、すべてのベルと笛を
+普通ではPostScriptプリンターを制御できない。それらは、Eposn Stylus inkjet、HP Photosmart、
+あるいは持っているプリンター上で鳴らすことや吹くことが出来る、すべてのベルと笛を
 記述するのに使われる。その主要仕掛けは小さな追加の1行であり、PPDの仕様によって予測された
 ものではなく、<parameter>*cupsFilter</parameter>というキーワードで始まる。これはCUPS
 デーモンに、どのようにPostScript印刷ファイルを処理するかを告げる(旧形式のFoomatic-PPDは
@@ -4464,11 +4464,11 @@ cupsomaticフィルタスクリプトと名前が付けられ、新しい形式�
 ESP Ghostscript)、レンダリング作業を行う。foomatic-ripは、
 PostScriptジョブを、対象デバイス用のラスタフォーマットに変換する、Ghostscriptから
 問い合わせを行う、フィルタか内部デバイス設定がどれかを知っている。この、
-非PostScriptプリンタのオプションを記述するPPDの使用法は、CUPS開発者の発明である。
+非PostScriptプリンターのオプションを記述するPPDの使用法は、CUPS開発者の発明である。
 その結果は簡単である。GUIツール
 (すばらしいKDEの<ulink url="http://printing.kde.org/overview/kprinter.phtml">kprinter</ulink>
 か、GNOMEの<ulink url="http://gtklp.sourceforge.net/">gtklp</ulink> xppとCUPSのWebサイト)
-はPPDを読み取り、その情報を直感的な面ふー選択として、ユーザに対し、有効な設定を
+はPPDを読み取り、その情報を直感的な面ふー選択として、ユーザーに対し、有効な設定を
 提供するための情報として使う。
 </para>
 </sect3>
@@ -4478,44 +4478,44 @@ PostScriptジョブを、対象デバイス用のラスタフォーマットに�
 <title>foomatic-ripとFoomatic PPDのダウンロードとインストール</title>
 
 <para>
-以下はfoomati-ripで制御される、CUPSでのLaserJet 4Plus互換プリンタインストール手順である
+以下はfoomati-ripで制御される、CUPSでのLaserJet 4Plus互換プリンターインストール手順である
 (SuSE、UnitedLinuxとMandrakeにおける最新ディストリビューションではFoomatic-PPDの完全な
 パッケージと<command>foomatic-rip</command>ユーティリティを同梱している。
-Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入手できる)。
+Linuxprinting.orgに直接行くと最新のドライバー/PPDファイルを入手できる)。
 </para>
 
 <itemizedlist>
-	<listitem><para>inuxprinting.orgのプリンタ一覧ページ<ulink url="http://www.linuxprinting.org/printer_list.cgi">
-	をブラウザで開く。</ulink>
+	<listitem><para>inuxprinting.orgのプリンター一覧ページ<ulink url="http://www.linuxprinting.org/printer_list.cgi">
+	をブラウザーで開く。</ulink>
 	</para></listitem>
 
 	<listitem><para><ulink url="http://www.linuxprinting.org/printer_list.cgi?make=Anyone">データベース</ulink>
-	中の完全なプリンタ一覧をチェックする。
+	中の完全なプリンター一覧をチェックする。
 	</para></listitem>
 
 	<listitem><para>使用しているモデルを選択しそのリンクをクリックする。
 	</para></listitem>
 
-	<listitem><para>このモデルに対して動作可能なすべてのドライバの一覧ページが表示される
-	(すべてのプリンタに、必ず<emphasis>1つ</emphasis>推奨ドライバがある。まず初めにそれを試す)。
+	<listitem><para>このモデルに対して動作可能なすべてのドライバーの一覧ページが表示される
+	(すべてのプリンターに、必ず<emphasis>1つ</emphasis>推奨ドライバーがある。まず初めにそれを試す)。
 	</para></listitem>
 
 	<listitem><para>この例の場合(HP LaserJet 4 Plus)、
 	<ulink url="http://www.linuxprinting.org/show_printer.cgi?recnum=HP-LaserJet_4_Plus">HP-LaserJet 4 Plus</ulink>
-	という既定値のドライバになる。
+	という既定値のドライバーになる。
 	</para></listitem>
 
-	<listitem><para>推奨ドライバはljet4である。</para></listitem>
+	<listitem><para>推奨ドライバーはljet4である。</para></listitem>
 
 	<listitem><para>いくつかのリンクがここで提供されている。Linuxprinting.orgに
 	不慣れならば、それらすべてを見てみるべきである。
 	</para></listitem>
 
 	<listitem><para><ulink url="http://www.linuxprinting.org/show_driver.cgi?driver=ljet4">ljet4</ulink>
-	に対するデータベースページへのリンクがある。ドライバのページ上には、種々の有効な
-	スプーラでそのドライバをどのように使うかについての重要かつ詳細な情報がある。</para></listitem>
+	に対するデータベースページへのリンクがある。ドライバーのページ上には、種々の有効な
+	スプーラでそのドライバーをどのように使うかについての重要かつ詳細な情報がある。</para></listitem>
 
-	<listitem><para>他のリンクは、ドライバの著者のホームページを示しているだろう。</para></listitem>
+	<listitem><para>他のリンクは、ドライバーの著者のホームページを示しているだろう。</para></listitem>
 
 	<listitem><para><ulink noescape="1" url="http://www.linuxprinting.org/cups-doc.html">CUPS</ulink>
 	に関するセットアップ手順のヒントを提供する重要なリンクがある:
@@ -4525,19 +4525,19 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 	または<quote>spoolerless</quote> <ulink url="http://www.linuxprinting.org/direct-doc.html">printing</ulink>.
 	</para></listitem>
 
-	<listitem><para>このリンク経由でブラウザ中でPPDを閲覧できる:
+	<listitem><para>このリンク経由でブラウザー中でPPDを閲覧できる:
 	<ulink noescape="1" url="http://www.linuxprinting.org/ppd-o-matic.cgi?driver=ljet4&amp;printer=HP-LaserJet_4_Plus&amp;show=1">http://www.linuxprinting.org/ppd-o-matic.cgi?driver=ljet4&amp;printer=HP-LaserJet_4_Plus&amp;show=1</ulink>
 	</para></listitem> <listitem><para>最も重要なことは、
 	<ulink url="http://www.linuxprinting.org/ppd-o-matic.cgi?driver=ljet4&amp;printer=HP-LaserJet_4_Plus&amp;show=0">PPD</ulink>
 	を生成しダウンロードできると言うことである。
 	</para></listitem>
 
-	<listitem><para>PPDは使用するモデルとドライバが使うときに必要なすべての情報を
-	含む。一度インストールすると、これはユーザに対して透過的に動作する。その後は
+	<listitem><para>PPDは使用するモデルとドライバーが使うときに必要なすべての情報を
+	含む。一度インストールすると、これはユーザーに対して透過的に動作する。その後は
 	Webベースのメニューか、印刷ダイアログGUIか、コマンドラインから、解像度、
 	紙のサイズなどのみを指定する必要がある。</para></listitem>
 
-	<listitem><para>もしもドライバ
+	<listitem><para>もしもドライバー
 	<ulink url="http://www.linuxprinting.org/show_driver.cgi?driver=ljet4">ページ</ulink>
 	で作業を終わるならば、<quote>PPD-O-Matic</quote>オンラインPPDジェネレータ
 	プログラムを使う選択が出来る。</para></listitem>
@@ -4546,17 +4546,17 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 	<guilabel>Display PPD file</guilabel>のどちらかをチェックし、
 	<guilabel>Generate PPD file</guilabel>をクリックする。</para></listitem>
 
-	<listitem><para>もしもブラウザビューからPPDファイルをセーブした場合、
+	<listitem><para>もしもブラウザービューからPPDファイルをセーブした場合、
 	カットアンドペーストは使わないこと(行末やタブ情報を欠落する可能性があるため、
 	PPDファイルが壊れてしまう可能性が高くなる)。代わりに、
-	ブラウザメニュー中の<guimenuitem>ファイル名を指定して保存</guimenuitem>を
+	ブラウザーメニュー中の<guimenuitem>ファイル名を指定して保存</guimenuitem>を
 	使う(Webページからの<guilabel>Download</guilabel>オプションを使うのが
 	最も良い)。</para></listitem>
 
-	<listitem><para>各ドライバページ上にある、他の興味深い部分は、
+	<listitem><para>各ドライバーページ上にある、他の興味深い部分は、
 	<guimenuitem>Show execution details</guimenuitem>である。もしも使用している
-	プリンタモデルを指定し、そのボタンをクリックすると、完全なGhostscript
-	コマンドラインが表示され、そのドライバとプリンタモデルの組み合わせに対して
+	プリンターモデルを指定し、そのボタンをクリックすると、完全なGhostscript
+	コマンドラインが表示され、そのドライバーとプリンターモデルの組み合わせに対して
 	有効なすべてのオプションをエミュレートする。これは
 	<quote>それを行うことでGhostscriptを学ぶ</quote>優れた方法である。
 	また、忌々しい印刷スクリプトのための、優れたコマンドラインを再構築することを
@@ -4565,12 +4565,12 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 
 	<listitem><para>時々、Linuxprinting.orgを見ている間に、ハードディスクの
 	<filename>/path/to/my-printer.ppd</filename>のような、適当な位置にPPDを
-	セーブする(CUPS Webインタフェースの助けを借りて使用しているプリンタを
+	セーブする(CUPS Webインタフェースの助けを借りて使用しているプリンターを
 	インストールすることを好むならば、PPDを
 	<filename>/usr/share/cups/model/</filename>というパスにセーブし、
 	cupsdを再起動する)。</para></listitem>
 
-	<listitem><para>次に、以下のようなコマンドラインでプリンタをインストールする:
+	<listitem><para>次に、以下のようなコマンドラインでプリンターをインストールする:
 	</para>
 
 	<para><screen>
@@ -4591,7 +4591,7 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 	<listitem><para><filename>/usr/lib/cups/filter/foomatic-rip</filename>か
 	他の$pathのどちらかにfoomatic-ripを保存する(そして、それを誰でも実行できる
 	ようにするのを忘れないこと)。繰り返すが、コピーアンドペーストでセーブしない
-	こと。適切なリンクを使うか、ブラウザ中の
+	こと。適切なリンクを使うか、ブラウザー中の
 	<guimenuitem>ファイル名を指定して</guimenuitem>保存を使うこと。</para></listitem>
 
 	<listitem><para>もしも固有の$PATHにfoomatic-ripを保存したならば、シンボリックリンクを作る:
@@ -4608,9 +4608,9 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 一度Foomatic PPDで設定された印刷キューに印刷すると、CUPSは適切なコマンドを挿入し、
 結果のPostScriptファイル中にコメントを挿入する。foomatic-ripはそれを読み、それらに
 対して処理を行うことが出来、さらに、ジョブファイル中に埋め込まれている、特別にエンコード
-されたFoomaticコメントのいくつかを使う。それらは順に(ユーザにとっては透過的に)
-どのように結果のラスタデータを見えるようにすべきかと、どのプリンタコマンドを、
-データストリーム中に埋め込むかを、正確に、プリンタドライバに指示する、複雑なGhostscript
+されたFoomaticコメントのいくつかを使う。それらは順に(ユーザーにとっては透過的に)
+どのように結果のラスタデータを見えるようにすべきかと、どのプリンターコマンドを、
+データストリーム中に埋め込むかを、正確に、プリンタードライバーに指示する、複雑なGhostscript
 コマンドを組み立てるのに使われる。以下が必要である:
 </para>
 
@@ -4624,12 +4624,12 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 
 	<listitem><para>foomatic-ripを動かすためのPerl</para></listitem>
 
-	<listitem><para>使用しているプリンタが受け取れる形に適合したラスタデータを
+	<listitem><para>使用しているプリンターが受け取れる形に適合したラスタデータを
 	生成するためのGhostscript(これが主要な仕事を行うため、PPD/foomatic-ripの組で
 	制御される)</para></listitem>
 
-	<listitem><para>Ghostscriptは(ドライバ/モデルに依存するが)使用しているモデルに
-	対する選択されたドライバを表す特定のデバイスに対するサポートを
+	<listitem><para>Ghostscriptは(ドライバー/モデルに依存するが)使用しているモデルに
+	対する選択されたドライバーを表す特定のデバイスに対するサポートを
 	<emphasis>含んでいなければならない</emphasis>(<command>gs -h</command>によって
 	確認できる)。</para></listitem>
 </itemizedlist>
@@ -4642,7 +4642,7 @@ Linuxprinting.orgに直接行くと最新のドライバ/PPDファイルを入�
 
 <para>
 <indexterm><primary>CUPS</primary><secondary>ページの課金</secondary></indexterm>
-しばしば、日、週、月単位に、一定のページ数かデータ量を超えて、Sambaユーザ(すなわち
+しばしば、日、週、月単位に、一定のページ数かデータ量を超えて、Sambaユーザー(すなわち
 Windowsクライアント)が、印刷が出来ないようにする、印刷quotaに関連する質問がある。
 この機能は、使用している実際の印刷サブシステムに依存する。Sambaはクライアントから
 常にジョブファイルを受け取り(<emphasis>フィルタされるか否か</emphasis>、この印刷
@@ -4660,7 +4660,7 @@ CUPSがある。CUPSは、ジョブのサイズやページ数やその両方を
 
 <para>
 <indexterm><primary>CUPS</primary><secondary>quotas</secondary></indexterm>
-CUPSで印刷quotaをrootがどのように設定するかのコマンド例であり、存在するプリンタが
+CUPSで印刷quotaをrootがどのように設定するかのコマンド例であり、存在するプリンターが
 <quote>quotaprinter</quote>であることを仮定している:
 <indexterm><primary>lpadmin</primary></indexterm>
 <screen>
@@ -4669,7 +4669,7 @@ CUPSで印刷quotaをrootがどのように設定するかのコマンド例で�
 </screen></para>
 
 <para>
-これは個々ののユーザに対して、604800秒(=一週間)で、100ページまたはデータが1024KBでの
+これは個々ののユーザーに対して、604800秒(=一週間)で、100ページまたはデータが1024KBでの
 制限を行う(どちらか小さい方)。
 </para>
 </sect2>
@@ -4683,50 +4683,50 @@ CUPSで正しく計測するために、印刷ファイルはCUPSpstopsフィル
 それに送られないが(例えば画像ファイル)、それらはほとんど1ページのジョブである。
 これはまた、それらのファイルを<quote>raw</quote>(すなわちそれらに何も変更をせず、
 フィルタリングもしない)すぷーすする、クライアントコンピュータとCUPS/Samba上で動いている、
-対象プリンタ用のプロプラエティなドライバは、1ページとして計測するということでもある!
+対象プリンター用のプロプラエティなドライバーは、1ページとして計測するということでもある!
 </para>
 
 <para>
 課金を行える機会を得るために、それらのクライアントからPostScriptで送る必要がある
-(すなわち、そこでPostScriptドライバを動かす)。もしも、プリンタが非PostScriptモデル
-ならば、対象のプリンタ用に印刷可能な形式にファイルを変換するためのジョブを、CUPSで
-行わせる必要がある。Linuxprinting.orgにはドライバの
+(すなわち、そこでPostScriptドライバーを動かす)。もしも、プリンターが非PostScriptモデル
+ならば、対象のプリンター用に印刷可能な形式にファイルを変換するためのジョブを、CUPSで
+行わせる必要がある。Linuxprinting.orgにはドライバーの
 <ulink url="http://www.linuxprinting.org/printer_list.cgi">リスト</ulink>がある。
 </para>
 </sect2>
 
 <sect2>
-<title>Windowsクライアント用のAdobeとCUPS PostScriptドライバ</title>
+<title>Windowsクライアント用のAdobeとCUPS PostScriptドライバー</title>
 
 <para>
 <indexterm><primary>Adobe PostScript</primary></indexterm>
 <indexterm><primary>pstops</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>pstoraster</primary></indexterm>
-<indexterm><primary>PJL-ヘッダ</primary></indexterm>
-CUPS 1.1.16より前は、Windowsクライアント上でAdobe PostScriptドライバを使うことが出来る
-のみであった。このドライバの出力は、CUPS/Sambaサイド上の<command>pstops</command>
+<indexterm><primary>PJL-ヘッダー</primary></indexterm>
+CUPS 1.1.16より前は、Windowsクライアント上でAdobe PostScriptドライバーを使うことが出来る
+のみであった。このドライバーの出力は、CUPS/Sambaサイド上の<command>pstops</command>
 フィルタに常時渡されるわけではなく、そのため、正しく計測出来なかった(その理由は、
 それがしばしば使用されるPPDに依存するからであり、CUPSに<command>pstops</command>を
-スキップさせる真のPostScriptの直前にPJL-ヘッダが書かれ、直接<command>pstoraster</command>
+スキップさせる真のPostScriptの直前にPJL-ヘッダーが書かれ、直接<command>pstoraster</command>
 ステージに行くからである)。
 </para>
 
 <para>
 CUPS 1.1.16とそれ以降のリリースから、Windows NT/200x/XPクライアント用のCUPS PostScript
-ドライバを使うことが出来る(これは<filename>cups-samba-1.1.16.tar.gz</filename>という
+ドライバーを使うことが出来る(これは<filename>cups-samba-1.1.16.tar.gz</filename>という
 パッケージとして<filename>http://www.cups.org/</filename>のダウンロード領域中に
 タグされている)。これはWindows 9x/Meクライアントでは<emphasis>動かない</emphasis>が
 以下は保証される:
 </para>
 
 <itemizedlist>
-	<listitem><para> <indexterm><primary>PJL</primary></indexterm>PJL-ヘッダを書かない。</para></listitem>
+	<listitem><para> <indexterm><primary>PJL</primary></indexterm>PJL-ヘッダーを書かない。</para></listitem>
 
-	<listitem><para>固有の意味を持つドライバPPD中に名前があるすべての
+	<listitem><para>固有の意味を持つドライバーPPD中に名前があるすべての
 	PJL-オプションを、引き続き読み取りサポートする。</para></listitem>
 
-	<listitem><para>CUPS/Sambaサーバ上の<command>pstops</command>フィルタに
+	<listitem><para>CUPS/Sambaサーバー上の<command>pstops</command>フィルタに
 	ファイルが渡される。</para></listitem>
 
 	<listitem><para>印刷ファイルのページカウントが正しくなる。</para></listitem>
@@ -4748,9 +4748,9 @@ CUPS 1.1.16とそれ以降のリリースから、Windows NT/200x/XPクライア
 </para>
 
 <itemizedlist>
-	<listitem><para>プリンタ名(Printer name)</para></listitem>
+	<listitem><para>プリンター名(Printer name)</para></listitem>
 
-	<listitem><para>ユーザ名(User name)</para></listitem>
+	<listitem><para>ユーザー名(User name)</para></listitem>
 
 	<listitem><para>ジョブID(Job ID)</para></listitem>
 
@@ -4766,7 +4766,7 @@ CUPS 1.1.16とそれ以降のリリースから、Windows NT/200x/XPクライア
 </itemizedlist>
 
 <para>
-以下は項目を含む形式の図示を行うための、CUPSサーバの<filename>page_log</filename>ファイル
+以下は項目を含む形式の図示を行うための、CUPSサーバーの<filename>page_log</filename>ファイル
 から抜き出したものである:
 </para>
 
@@ -4780,9 +4780,9 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 
 <para>
 これはジョブID<parameter>401</parameter>で、<parameter>tec_IS2027</parameter>上で
-ユーザ<parameter>kurt</parameter>によって印刷され、64ページのジョブで三部印刷され、
+ユーザー<parameter>kurt</parameter>によって印刷され、64ページのジョブで三部印刷され、
 <parameter>#marketing</parameter>に請求が行き、IPアドレス<constant>10.160.50.13.</constant>
-から送られた。次のジョブはIDが<parameter>402</parameter>であり、ユーザ
+から送られた。次のジョブはIDが<parameter>402</parameter>であり、ユーザー
 <parameter>boss</parameter>によって、<constant>10.160.51.33</constant>というIP
 アドレスから送られ、1ページ、440部印刷され、<parameter>finance-dep</parameter>に
 請求が行った。
@@ -4797,26 +4797,26 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 </para>
 
 <itemizedlist>
-	<listitem><para>The ones named above (プリンタハードウェアが壊れたなどの場合に
+	<listitem><para>The ones named above (プリンターハードウェアが壊れたなどの場合に
 	間違ってジョブが記録される)。</para></listitem>
 
-	<listitem><para>実際、CUPSは、物理的にプリンタデバイスから出て行った紙の代わりに
+	<listitem><para>実際、CUPSは、物理的にプリンターデバイスから出て行った紙の代わりに
 	<emphasis>ソフトウェア</emphasis>で処理されたジョブのページをカウントする
 	(すなわち、RIPを使って)。そのため、もしも1000ページ印刷中に五枚目でジャムが
-	発生し、ジョブがプリンタによって中断した場合、そのジョブに対しては1000ページ
+	発生し、ジョブがプリンターによって中断した場合、そのジョブに対しては1000ページ
 	印刷していると引き続き表示される。</para></listitem>
 
-	<listitem><para>すべてのquotaはすべてのユーザに対して同じであり(事務員よりも
+	<listitem><para>すべてのquotaはすべてのユーザーに対して同じであり(事務員よりも
 	管理者の方により大きなquotaを割り当てるような自由度がない)、グループの
 	サポートもない。</para></listitem>
 
 	<listitem><para>現在のバランス(current balance??)と、現在のquotaに関する
 	<quote>使い切った</quote>分を読む方法がない。</para></listitem>
 
-	<listitem><para>quotaが100で99まで使ったユーザは、まだ1000ページのジョブを
+	<listitem><para>quotaが100で99まで使ったユーザーは、まだ1000ページのジョブを
 	送信し印刷できる。</para></listitem>
 
-	<listitem><para>quotaの制限に引っかかっりジョブが拒否されたユーザは、
+	<listitem><para>quotaの制限に引っかかっりジョブが拒否されたユーザーは、
 	CUPSから<quote>client-error-not-possible</quote>という意味のあるメッセージを
 	受け取れない。</para></listitem>
 </itemizedlist>
@@ -4831,13 +4831,13 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 </para>
 
 <itemizedlist>
-	<listitem><para>ページカウントはバックエンドに移行する(それらはプリンタと
+	<listitem><para>ページカウントはバックエンドに移行する(それらはプリンターと
 	直接通信し、実際の印刷処理に計数が同期する)。そのため、5枚目でジャムが発生した
 	場合、カウントを中断する)</para></listitem>
 
 	<listitem><para>quotaはより自由度が向上する。</para></listitem>
 
-	<listitem><para>おそらく前もって、使用しているアカウントについてユーザが
+	<listitem><para>おそらく前もって、使用しているアカウントについてユーザーが
 	問い合わせる機能をサポートする。</para></listitem>
 
 	<listitem><para>おそらく、このトピックの周辺にあるような他のツールのいくつかを
@@ -4861,7 +4861,7 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 
 <para>
 <emphasis>PPDを使わない</emphasis>、それに関係する印刷キューは、
-<quote>raw</quote>プリンタで、スプーラが受け取ったすべてのファイルはそのまま直接
+<quote>raw</quote>プリンターで、スプーラが受け取ったすべてのファイルはそのまま直接
 送られる。例外は、パススルー機能を有効とすることが必要とされる
 <parameter>application/octet-stream</parameter>ファイルタイプである。<quote>raw</quote>
 キューはフィルタリングを全く行わない。それはCUPSバックエンドに直接送られる。この
@@ -4871,10 +4871,10 @@ Dig9110 boss 402 [22/Apr/2003:10:33:22 +0100] 1 440 finance-dep 10.160.51.33
 </para>
 
 <para>
-cupsomatic/FoomaticはネイティブなCUPSドライバ<emphasis>ではなく</emphasis>、CUPSには
+cupsomatic/FoomaticはネイティブなCUPSドライバー<emphasis>ではなく</emphasis>、CUPSには
 同梱されない。これらはLinuxprinting.orgで開発されたサードパーティアドオンである。
 同様に、すべてのモデルで、CUPS経由でも動くようにさせる、優れたハックであり(
-伝統的なスプーラで、Ghostscriptドライバ/フィルタによって動作する)、他のスプーラでの
+伝統的なスプーラで、Ghostscriptドライバー/フィルタによって動作する)、他のスプーラでの
 品質と(良くも悪くも)同じである。<parameter>cupsomatic</parameter>は、単なる媒体
 である。すなわち、通常ネイティブなCUPS<parameter>pstoraster</parameter>フィルタが
 起動される、CUPSフィルタリングチェーン中のそのステージで、Ghostscriptコマンドラインを
@@ -4906,7 +4906,7 @@ application/vnd.cups-postscript  application/vnd.cups-raw  0  -
 
 これは、すべてのPostScriptファイルをフィルタされないようにする(というよりは、
 <quote>-</quote>で指定された仮想の<emphasis>nullfilter</emphasis>に渡す)。これは、
-PostScriptプリンタのみに便利である。もしも、非PostScriptプリンタにPostScriptコードを
+PostScriptプリンターのみに便利である。もしも、非PostScriptプリンターにPostScriptコードを
 印刷したい場合(ASCCテキスト印刷のサポートを提供している)、以下のエントリは便利である:
 
 <programlisting>
@@ -4929,7 +4929,7 @@ PostScriptを解析する(シェルスクリプトであり得る)
 <parameter>my_PJL_stripping_filter</parameter>を書き、望まないPJLを取り除く
 必要があるかもしれない。これはCUPSフィルタデザインに従う必要がある(主に、printername,
 job-id,username, jobtitle, copies, print optionsと可能ならばファイル名
-パラメータを受け渡す)。これは<filename>/usr/lib/cups/filters/</filename>中に
+パラメーターを受け渡す)。これは<filename>/usr/lib/cups/filters/</filename>中に
 誰でも実行できるようにインストールされ、MIMEタイプ
 <parameter>application/vnd.cups-postscript</parameter>が来た場合には、
 CUPSによって呼び出される。
@@ -4937,8 +4937,8 @@ CUPSによって呼び出される。
 
 <para>
 CUPSは<parameter>-o job-hold-until=indefinite</parameter>を扱える。これは、キュー中に
-ジョブを保存しておく。プリンタ操作者によって手動で解放されるときにのみ印刷される。
-これは、誰も直接アクセスできないいくつかの大きなマシン上で、数百人のユーザのジョブを、
+ジョブを保存しておく。プリンター操作者によって手動で解放されるときにのみ印刷される。
+これは、誰も直接アクセスできないいくつかの大きなマシン上で、数百人のユーザーのジョブを、
 少数のオペレータが管理する、多くの集中印刷センタからの要求である(これは、ダイレクト
 メール発送のためなどに要求される10000ページのジョブを動かす前に、オペレータが
 適切な紙を設置する必要がしばしばある場合など)。
@@ -4965,7 +4965,7 @@ Sambaは2つのスプールディレクトリ経由で印刷ファイルを渡�
 
 <para>
 CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、いくつかの
-重要なパラメータは以下の通り:
+重要なパラメーターは以下の通り:
 </para>
 
 <variablelist>
@@ -5049,13 +5049,13 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 <para>
 <indexterm><primary>smbspool</primary></indexterm>
 <indexterm><primary>backends</primary></indexterm>
-時々、Samba<emphasis>から</emphasis>Windowsに接続されたプリンタ<emphasis>に</emphasis>
+時々、Samba<emphasis>から</emphasis>Windowsに接続されたプリンター<emphasis>に</emphasis>
 印刷をするにはどうしたらいいか、という質問が来ることがある。通常Windowsホストから
-プリンタへのローカル接続はUSBまたはパラレルケーブルで行われるが、これはSambaにとっては
+プリンターへのローカル接続はUSBまたはパラレルケーブルで行われるが、これはSambaにとっては
 重要ではない。ここから、Windowsホストに対してSMB接続でオープンする事のみが必要である。
-もちろん、プリンタはまず共有されねばならない。今まで学習してきたように、CUPSはプリンタや
+もちろん、プリンターはまず共有されねばならない。今まで学習してきたように、CUPSはプリンターや
 他のサービスと通信する<emphasis>バックエンド</emphasis>を使える。Windowsで共有された
-プリンタと通信するには、(驚くべき事だが)<filename>smb</filename>バックエンドを使う必要が
+プリンターと通信するには、(驚くべき事だが)<filename>smb</filename>バックエンドを使う必要が
 ある。まず<filename>smb</filename>ファイルをそこで捜す必要がある。それは
 <filename>smbspool</filename>へのシンボリックリンクであり、ファイルは存在して実行可能で
 なければならない:
@@ -5091,19 +5091,19 @@ lrwxrwxrwx    1 root   root      17 Apr  2 03:11 smb -&gt; /usr/bin/smbspool
 <indexterm><primary>smbspool</primary></indexterm>
 <indexterm><primary>トラブルシュート</primary></indexterm>
 <command>smbspool</command>は、CUPS関係者のMike Sweetによって書かれた。これは、Sambaに
-同梱されている。これはまた、CUPS以外の印刷サブシステムで使われ、Windowsプリンタ共有の
-ためにジョブをスプールする。CUPS上で<replaceable>winprinter</replaceable>プリンタを
-設定するためには、そのためのドライバが必要である。本質的に、これは、プリンタが理解できる
+同梱されている。これはまた、CUPS以外の印刷サブシステムで使われ、Windowsプリンター共有の
+ためにジョブをスプールする。CUPS上で<replaceable>winprinter</replaceable>プリンターを
+設定するためには、そのためのドライバーが必要である。本質的に、これは、プリンターが理解できる
 (Windowsホストは、送ったファイルを形式変換する能力はない)ファイル形式用に、CUPS/Samba
 ホスト上で、印刷データを変換することを意味する。これはまた、使用しているSamba/CUPS
-ホストに直接繋がっている場合、プリンタに対して印刷出来るべきであると言うことを意味する。
+ホストに直接繋がっている場合、プリンターに対して印刷出来るべきであると言うことを意味する。
 トラブルシューティングのために、一連の手続きのその部分が順番になっている場合、
 これが、何をすべきかを決定すべきかということである。次に、Windowsホストに対する
 接続/認証を修正することなどを行う。
 </para>
 
 <para>
-バックエンドがCUPSの<parameter>smb</parameter>を使うプリンタをインストールするために、
+バックエンドがCUPSの<parameter>smb</parameter>を使うプリンターをインストールするために、
 以下のコマンドを使う:
 </para>
 
@@ -5113,14 +5113,14 @@ lrwxrwxrwx    1 root   root      17 Apr  2 03:11 smb -&gt; /usr/bin/smbspool
 </screen></para>
 
 <para>
-<indexterm><primary>PostScriptプリンタ</primary></indexterm>
+<indexterm><primary>PostScriptプリンター</primary></indexterm>
 <indexterm><primary>PPD</primary></indexterm>
-<indexterm><primary>Windows NT PostScriptドライバ</primary></indexterm>
+<indexterm><primary>Windows NT PostScriptドライバー</primary></indexterm>
 PPDは、そのターゲットモデルのために、印刷データを生成するために、直接CUPSを管理する必要が
-ある。PostScriptプリンタのためには、Windows NT PostScriptドライバを使うPPDを使う。しかし、
-パスワードがないとプリンタにアクセスできない場合、一体何が出来るだろうか?あるいは、もしも
-プリンタのホストが他のワークグループのだった場合は?これには以下の方策がある:
-以下のように、<filename>smb://</filename>デバイスURIの一部として、要求されたパラメータを
+ある。PostScriptプリンターのためには、Windows NT PostScriptドライバーを使うPPDを使う。しかし、
+パスワードがないとプリンターにアクセスできない場合、一体何が出来るだろうか?あるいは、もしも
+プリンターのホストが他のワークグループのだった場合は?これには以下の方策がある:
+以下のように、<filename>smb://</filename>デバイスURIの一部として、要求されたパラメーターを
 含めることが出来る:
 </para>
 
@@ -5131,11 +5131,11 @@ PPDは、そのターゲットモデルのために、印刷データを生成�
 </itemizedlist>
 
 <para>
-ログファイルに書かれる前に、ユーザ名とパスワードが削除されたとしても、デバイスURLは
-Sambaサーバ上のプロセス一覧で見えてしまうことに注意(すなわち、誰かが、Linux上で
+ログファイルに書かれる前に、ユーザー名とパスワードが削除されたとしても、デバイスURLは
+Sambaサーバー上のプロセス一覧で見えてしまうことに注意(すなわち、誰かが、Linux上で
 <command>ps -aux</command>コマンドを使うと)。これは、本質的に脆弱性のあるオプション
 である。しかし、これが唯一の解である。パスワードを保護したい場合、これを使わないこと。
-パスワードを要求しないプリンタの共有の方が優れている!印刷は、NetBIOS名前解決が起動し、
+パスワードを要求しないプリンターの共有の方が優れている!印刷は、NetBIOS名前解決が起動し、
 動作している時にのみ動く。これはCUPSの機能であり、smbdを動かす必要はないことに注意。
 
 </para>
@@ -5167,11 +5167,11 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 <title>よくあるエラー</title>
 
 	<sect2>
-	<title>Windows 9x/Meクライアントがドライバをインストール出来ない</title>
+	<title>Windows 9x/Meクライアントがドライバーをインストール出来ない</title>
 
-	<para>Windows 9x/Me用クライアント用には、最大8文字までのプリンタ名を必要とする
+	<para>Windows 9x/Me用クライアント用には、最大8文字までのプリンター名を必要とする
 	(あるいは、<quote>8文字に3文字の拡張子</quote>)。そうでないと、
-	Sambaからそれらをダウンロードするときに、ドライバファイルが転送できない。</para>
+	Sambaからそれらをダウンロードするときに、ドライバーファイルが転送できない。</para>
 
 	</sect2>
 
@@ -5211,12 +5211,12 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 	</para>
 
 	<para>
-	CUPS上でプリンタ共有を有効にしていないだろうか?これは、
+	CUPS上でプリンター共有を有効にしていないだろうか?これは、
 	<quote>cupsaddsmb</quote>が動いているホストからのアクセスを拒否する、
-	CUPSサーバの<filename>cupsd.conf</filename>中に、
+	CUPSサーバーの<filename>cupsd.conf</filename>中に、
 	<literal>&lt;Location /printers&gt;....&lt;/Location&gt;</literal>
 	があるということである。cupsaddsmbをリモートで使っているか、
-	<option>-h</option>パラメータを付けて:
+	<option>-h</option>パラメーターを付けて:
 	<userinput>cupsaddsmb -H sambaserver -h cupsserver -v printername</userinput>
 	として使っている場合、これは<emphasis>問題となりえる</emphasis>。
 	</para>
@@ -5228,9 +5228,9 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 	</sect2>
 
 	<sect2>
-		<title>クライアントがSambaプリンタに接続できない</title>
+		<title>クライアントがSambaプリンターに接続できない</title>
 
-	<para>Sambaの観点からどのユーザであるかを、<command>smbstatus</command>を
+	<para>Sambaの観点からどのユーザーであるかを、<command>smbstatus</command>を
 	使って調べる。<smbconfsection name="[print$]"/>共有に対して書き込み許可が
 	あるだろうか?</para>
 
@@ -5240,33 +5240,33 @@ Sambaサーバ上のプロセス一覧で見えてしまうことに注意(す�
 	<title>Windows 200x/Xpからの新しいアカウント再接続のトラブル</title>
 
 <para>
-ひとたび間違ったユーザ(たとえば、<smbconfoption name="map to guest">bad user</smbconfoption>
+ひとたび間違ったユーザー(たとえば、<smbconfoption name="map to guest">bad user</smbconfoption>
 を設定した場合、しばしば発生する<constant>nobody</constant>など)で接続すると、Windows
-エクスプローラは異なったユーザで再度接続する試みを受け付けない。Sambaに対しては全くデータ
+エクスプローラーは異なったユーザーで再度接続する試みを受け付けない。Sambaに対しては全くデータ
 転送が出来ないが、Sambaがアクセスを拒否したと考えられる不可解なメッセージが表示され
 続ける。有効な接続の状態を<command>smbstatus</command>で確認すること。そして、当該の
 プロセス(PID)をKillする。まだ再接続は出来なく、接続しようとすると、
 <computeroutput>You can't connect with a second account from the same machine</computeroutput>
 というメッセージがすぐに出る。再説俗を試みても、、まだ1バイトもSambaには届かない
-(ログを見ること。<quote>ethereal</quote>を使う)。Windows上のすべてのエクスプローラを
+(ログを見ること。<quote>ethereal</quote>を使う)。Windows上のすべてのエクスプローラーを
 閉じる。 これは確立した接続としてメモリ中にキャッシュされたものを、Windowsに
-捨てさせる。次に正しいユーザで接続する。一番良い方法は、DOSターミナルウィンドウを
+捨てさせる。次に正しいユーザーで接続する。一番良い方法は、DOSターミナルウィンドウを
 使い、<emphasis>最初に</emphasis>
 <userinput>net use z: \\&example.server.samba;\print$ /user:root</userinput>を行う。
 異なったアカウントで接続されたと言うことを、<command>smbstatus</command>で確認する。
-この後、<guilabel>プリンタ</guilabel>フォルダを開き(Sambaサーバ上の
-<guilabel>ネットワークコンピュータ</guilabel>で)、質問中のプリンタ上で右クリックし、
+この後、<guilabel>プリンター</guilabel>フォルダーを開き(Sambaサーバー上の
+<guilabel>ネットワークコンピュータ</guilabel>で)、質問中のプリンター上で右クリックし、
 <guibutton>接続....</guibutton>を選択する。
 </para>
 </sect2>
 
 <sect2>
-<title>間違ったユーザでSambaサーバに接続されるのを防ぐ</title>
+<title>間違ったユーザーでSambaサーバーに接続されるのを防ぐ</title>
 	
 <para>
 <indexterm><primary>smbstatus</primary></indexterm>
 nobodyとして接続されていることを<command>smbstatus</command> で確認するが、
-本当はrootかprinter adminにしたい。これは、おそらく、正しくないユーザ名(たぶん
+本当はrootかprinter adminにしたい。これは、おそらく、正しくないユーザー名(たぶん
 何らかのミス)を指定した時に、黙ってguest accountとする、
 <smbconfoption name="map to guest">bad user</smbconfoption>のせいであろう。
 これを防ぐためには、<smbconfoption name="map to guest"/>を取り除く。
@@ -5274,24 +5274,24 @@ nobodyとして接続されていることを<command>smbstatus</command> で確
 </sect2>
 
 <sect2>
-<title>AdobeドライバからCUPSドライバにアップグレードする</title>
+<title>AdobeドライバーからCUPSドライバーにアップグレードする</title>
 
 <para>
-この情報は、Microsoft Windows NT/200x/XPクライアント上で、AdobeドライバからCUPSドライバに
+この情報は、Microsoft Windows NT/200x/XPクライアント上で、AdobeドライバーからCUPSドライバーに
 アップグレードした時、それに関連した問題の体験を、メーリングリスト上に投稿されたもの
 によっている。
 </para>
 
-<para>最初に、すべての古い、Adobeが使っているプリンタを削除する。次に、すべとの古い
-Adobeドライバを削除する(Windows 200x/XP上では、<guilabel>プリンタ</guilabel>フォルダの
+<para>最初に、すべての古い、Adobeが使っているプリンターを削除する。次に、すべとの古い
+Adobeドライバーを削除する(Windows 200x/XP上では、<guilabel>プリンター</guilabel>フォルダーの
 背景部分で右クリックし、<guimenuitem>Server Properties...</guimenuitem>を選択し、
-<guilabel>ドライバ</guilabel>タブを選択し、ここで削除する)。</para>
+<guilabel>ドライバー</guilabel>タブを選択し、ここで削除する)。</para>
 </sect2>
 
 <sect2>
-<title>PDCであるSambaサーバ上で<quote>cupsaddsmb</quote>が使えない</title>
+<title>PDCであるSambaサーバー上で<quote>cupsaddsmb</quote>が使えない</title>
 
-<para><quote>そのままの</quote>rootユーザ名を使っていないか?以下の方法を
+<para><quote>そのままの</quote>rootユーザー名を使っていないか?以下の方法を
 試してみよう:
 <userinput>cupsaddsmb -U <replaceable>DOMAINNAME</replaceable>\\root -v <replaceable>printername</replaceable></userinput>>
 (2つのバックスラッシュ:最初のものは二番目のものを<quote>エスケープ</quote>
@@ -5300,41 +5300,41 @@ Adobeドライバを削除する(Windows 200x/XP上では、<guilabel>プリン�
 </sect2>
 
 <sect2>
-<title>削除されたWindows 200xプリンタドライバが引き続き表示されている</title>
+<title>削除されたWindows 200xプリンタードライバーが引き続き表示されている</title>
 
-<para>クライアント上のプリンタの削除は、ドライバも一緒に削除はしない
-(それを確かめるために、<guilabel>プリンタ</guilabel>フォルダの白い背景部分で
+<para>クライアント上のプリンターの削除は、ドライバーも一緒に削除はしない
+(それを確かめるために、<guilabel>プリンター</guilabel>フォルダーの白い背景部分で
 右クリックし、<guimenuitem>サーバーのプロパティ</guimenuitem>を選択し、
-<guilabel>ドライバ</guilabel>タブをクリックする)。これら同じ古いドライバは、
-同じ名前でプリンタをインストールする時に再度使われる。もしも、新しいドライバに
-アップデートしたい場合は、古いものを最初に削除する。削除は、同じドライバを使う他の
-プリンタが無い場合にのみ可能である。</para>
+<guilabel>ドライバー</guilabel>タブをクリックする)。これら同じ古いドライバーは、
+同じ名前でプリンターをインストールする時に再度使われる。もしも、新しいドライバーに
+アップデートしたい場合は、古いものを最初に削除する。削除は、同じドライバーを使う他の
+プリンターが無い場合にのみ可能である。</para>
 </sect2>
 
 <sect2>
 <title>Windows 200x/XP ローカルセキュリティポリシー</title>
 
 <indexterm><primary>ローカルセキュリティポリシー</primary></indexterm>
-<indexterm><primary>未署名のドライバ</primary></indexterm>
-<para>ローカルセキュリティポリシーは、未署名のドライバのインストールを許可しないようにも
-できる&smbmdash;。<quote>ローカルセキュリティポリシー</quote>は全くプリンタドライバの
+<indexterm><primary>未署名のドライバー</primary></indexterm>
+<para>ローカルセキュリティポリシーは、未署名のドライバーのインストールを許可しないようにも
+できる&smbmdash;。<quote>ローカルセキュリティポリシー</quote>は全くプリンタードライバーの
 インストールを許可しないようにしてもよい。</para>
 
 </sect2>
 
 <sect2>
-<title>Administratorはすべてのローカルユーザに対してプリンタをインストールできない</title>
+<title>Administratorはすべてのローカルユーザーに対してプリンターをインストールできない</title>
 
 <para>
-<indexterm><primary>SMBプリンタ</primary></indexterm>
+<indexterm><primary>SMBプリンター</primary></indexterm>
 <indexterm><primary>IPPクライアント</primary></indexterm>
-Windows XPは<quote>ユーザ単位に</quote>SMBプリンタを扱うことが出来る。
-これは、すべてのユーザは自分自身でプリンタをインストールする必要があることを意味する。
-すべてのユーザに対してプリンタを有効にするためには、Windows XPにおける内蔵IPP
+Windows XPは<quote>ユーザー単位に</quote>SMBプリンターを扱うことが出来る。
+これは、すべてのユーザーは自分自身でプリンターをインストールする必要があることを意味する。
+すべてのユーザーに対してプリンターを有効にするためには、Windows XPにおける内蔵IPP
 クライアントの機能を使う事になるかもしれない。
 <parameter>http://cupsserver:631/printers/printername</parameter>という印刷パスで
-プリンタを追加する。これについては引き続き調査中である。おそらく、すべてのユーザに対して
-自動的にプリンタのインストールが出来るログオンスクリプトかもしれない。
+プリンターを追加する。これについては引き続き調査中である。おそらく、すべてのユーザーに対して
+自動的にプリンターのインストールが出来るログオンスクリプトかもしれない。
 </para>
 
 </sect2>
@@ -5343,7 +5343,7 @@ Windows XPは<quote>ユーザ単位に</quote>SMBプリンタを扱うことが�
 <title>NTクライアント上での印刷の変更、機能の通知</title>
 
 <para>印刷の変更のために、NT++クライアント上でその機能に通知する。これらは
-最初に<command>サーバ</command>サービスを動かす必要がある(XP中では
+最初に<command>サーバー</command>サービスを動かす必要がある(XP中では
 <command>File &amp; Print Sharing for MS Networks</command>に名前が変わっている)。</para>
 
 </sect2>
@@ -5352,24 +5352,24 @@ Windows XPは<quote>ユーザ単位に</quote>SMBプリンタを扱うことが�
 <title>Windows XP SP1</title>
 
 <para>Windows XP SP1では、ポイントアンドプリントの制限ポリシーが導入された(この制限は、
-<quote>Administrator</quote>か<quote>Power User</quote>グループのユーザには適用されない)。
-グループポリシーオブジェクトエディタ中で、
-<guimenu>ユーザの設定 -> 管理テンプレート -> コントロールパネル -> プリンタ</guimenu>に
+<quote>Administrator</quote>か<quote>Power User</quote>グループのユーザーには適用されない)。
+グループポリシーオブジェクトエディター中で、
+<guimenu>ユーザーの設定 -> 管理テンプレート -> コントロールパネル -> プリンター</guimenu>に
 行く。ポリシーは自動的に<constant>有効</constant>に設定され、
-<constant>ユーザはそのフォレスト中のマシンに対してのみポイントアンドプリント</constant>が
-使える。おそらく、<constant>無効</constant>か、ドライバのダウンロードをSambaから出来るように、
-<constant>ユーザはそれらのサーバに対してのみポイントアンドプリントが使える</constant>
+<constant>ユーザーはそのフォレスト中のマシンに対してのみポイントアンドプリント</constant>が
+使える。おそらく、<constant>無効</constant>か、ドライバーのダウンロードをSambaから出来るように、
+<constant>ユーザーはそれらのサーバーに対してのみポイントアンドプリントが使える</constant>
 それを変更する必要がある。
 </para>
 </sect2>
 
 <sect2>
-<title>Windows 200x/XP上ですべてのユーザが印刷オプションを設定出来ない</title>
+<title>Windows 200x/XP上ですべてのユーザーが印刷オプションを設定出来ない</title>
 
 <para>何をしているのだろうか?間違っているに違いない(しかし、これを発見するのは容易では
 ない)。すべてを設定する<emphasis>ように見える</emphasis>ダイアログを表示するための、
 3つの異なった方法がある。それら3つのダイアログは、同じように<emphasis>見える</emphasis>
-が、そのうちの1つのみが意図しているものである。これをすべてのユーザに対して行うために、
+が、そのうちの1つのみが意図しているものである。これをすべてのユーザーに対して行うために、
 AdministratorかPrint Administratorである必要がある。XP上でどのようにやるかは以下の通り:
 </para>
 
@@ -5378,10 +5378,10 @@ AdministratorかPrint Administratorである必要がある。XP上でどのよ�
 	<listitem><para>最初の間違った方法:
 
 		<orderedlist>
-		<listitem><para><guilabel>Printers</guilabel>フォルダを開く。
+		<listitem><para><guilabel>Printers</guilabel>フォルダーを開く。
 		</para></listitem>
 
-		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		<listitem><para>プリンター(<guilabel>cupshost上のremoteprinter</guilabel>)
 		を右クリックし、コンテキストメニュー
 		<guimenuitem>印刷のプリファレンス</guimenuitem>を選択する。</para></listitem>.
 
@@ -5391,9 +5391,9 @@ AdministratorかPrint Administratorである必要がある。XP上でどのよ�
 
 	<listitem><para>二番目の間違った方法:
 	<orderedlist>
-		<listitem><para><guilabel>プリンタ</guilabel>フォルダを開く</para></listitem>
+		<listitem><para><guilabel>プリンター</guilabel>フォルダーを開く</para></listitem>
 
-		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		<listitem><para>プリンター(<guilabel>cupshost上のremoteprinter</guilabel>)
 		を右クリックし、コンテキストメニュー<guimenuitem>プロパティ</guimenuitem>
 		を選択する。</para></listitem>
 
@@ -5409,17 +5409,17 @@ AdministratorかPrint Administratorである必要がある。XP上でどのよ�
 
 	<listitem><para>三番目の正しい方法: 
 	<orderedlist>
-		<listitem><para><guilabel>プリンタ</guilabel>フォルダを開く。</para></listitem>
+		<listitem><para><guilabel>プリンター</guilabel>フォルダーを開く。</para></listitem>
 
-		<listitem><para>プリンタ(<guilabel>cupshost上のremoteprinter</guilabel>)
+		<listitem><para>プリンター(<guilabel>cupshost上のremoteprinter</guilabel>)
 		を右クリックし、コンテキストメニュー<guimenuitem>プロパティ</guimenuitem>
                 を選択する。</para></listitem>
 
 		<listitem><para><guilabel>詳細</guilabel>タブをクリックする
 		(もしもすべてが<quote>灰色になっていて入力できないならば</quote>、
-		十分な権限を持つユーザとしてログインしていない)。</para></listitem>
+		十分な権限を持つユーザーとしてログインしていない)。</para></listitem>
 
-		<listitem><para><guibutton>プリンタの既定値</guibutton>ボタンを
+		<listitem><para><guibutton>プリンターの既定値</guibutton>ボタンを
 		クリックする</para></listitem>
 
 		<listitem><para>2つの新しいタブのどちらかで、
@@ -5433,40 +5433,40 @@ AdministratorかPrint Administratorである必要がある。XP上でどのよ�
 
 <para>
 違いがわかるだろうか?私にはわからない。しかし、<quote>C.1. から C.6.</quote>の手順で
-到達した最後のもののみ、任意の設定を恒久的に保存し、新しいユーザの既定値となる。もしも、
-すべてのユーザに同じ既定値を設定したいならば、これらのステップを
+到達した最後のもののみ、任意の設定を恒久的に保存し、新しいユーザーの既定値となる。もしも、
+すべてのユーザーに同じ既定値を設定したいならば、これらのステップを
 <emphasis>as Administrator</emphasis>(&smb.conf;中で<smbconfoption name="printer admin"/>
 であるもの)で、クライアントが、(クライアントが、以下の手順<emphasis>A</emphasis>または
-<emphasis>B</emphasis>)によって、各固有の、<emphasis>ユーザ単位の既定値</emphasis>を
-設定出来る)ドライバをダウンロードする<emphasis>前に</emphasis>行う必要がある。
+<emphasis>B</emphasis>)によって、各固有の、<emphasis>ユーザー単位の既定値</emphasis>を
+設定出来る)ドライバーをダウンロードする<emphasis>前に</emphasis>行う必要がある。
 </para>
 
 </sect2>
 
 <sect2>
-<title>Windowsクライアント上でのドライバ設定における、多くに共通する失敗</title>
+<title>Windowsクライアント上でのドライバー設定における、多くに共通する失敗</title>
 
 <para>
 <parameter>Optimize for Speed</parameter>を使わずに、代わりに、
-<parameter>Optimize for Portability</parameter>を使う(Adobe PSドライバの場合)。
+<parameter>Optimize for Portability</parameter>を使う(Adobe PSドライバーの場合)。
 <parameter>Page Independence: No</parameter>を使わない。常時、
 <parameter>Page Independence: Yes</parameter>を使う(Windows NT/200x/XP用の、
-Microsoft PDドライバとCUPS PSドライバ)。もしもフォントに問題がある場合には、
+Microsoft PDドライバーとCUPS PSドライバー)。もしもフォントに問題がある場合には、
 <parameter>Download as Softfont into printer</parameter>を使う(Adobe PS
-ドライバの場合)。<guilabel>TrueType Download Options</guilabel>オプション用に、
-<constant>Outline</constant>を選択する。もしも、非PSプリンタでトラブルがあるか、
+ドライバーの場合)。<guilabel>TrueType Download Options</guilabel>オプション用に、
+<constant>Outline</constant>を選択する。もしも、非PSプリンターでトラブルがあるか、
 選択できる場合はPostScript Level 2を使う。
 </para>
 
 </sect2>
 
 <sect2>
-<title><command>cupsaddsmb</command>が、新しくインストールしたプリンタで動かない</title>
+<title><command>cupsaddsmb</command>が、新しくインストールしたプリンターで動かない</title>
 
 <para>
 以下と同様: <command>cupsaddsmb</command>の最後のコマンドが完全に終わっていない。もしも、
 <command>cmd = setdriver printername printername</command>の結果が
-NT_STATUS_UNSUCCESSFULの場合、おそらくプリンタがまだSambaによって認識されていない。
+NT_STATUS_UNSUCCESSFULの場合、おそらくプリンターがまだSambaによって認識されていない。
 ネットワークコンピュータ中に表示されているだろうか?
  <command>rpcclient hostname -c `enumprinters'</command>で表示されるだろうか?
 smbdを再起動(か、<command>smbstatus</command>で一覧表示されるすべてのプロセスに対して
@@ -5503,13 +5503,13 @@ cupsdは再起動後毎回そのスプールディレクトリのアクセス許
 <indexterm><primary>lp</primary></indexterm>
 <indexterm><primary>暗黙のクラス</primary></indexterm>
 <indexterm><primary>BrowseShortNames</primary></indexterm>
-プリンタに対して<quote>lp</quote>という名前を付けるのは好ましくない。これは、伝統的な
-UNIXにおける既定値のプリンタである。CUPSは暗黙のクラスを自動的に作成する事を行うように
-設定されているかもしれない。これは、デバイスをプールするために同じ名前のすべてのプリンタを
+プリンターに対して<quote>lp</quote>という名前を付けるのは好ましくない。これは、伝統的な
+UNIXにおける既定値のプリンターである。CUPSは暗黙のクラスを自動的に作成する事を行うように
+設定されているかもしれない。これは、デバイスをプールするために同じ名前のすべてのプリンターを
 グループ化するためと、ラウンドロビン方式でジョブのロードバランスを取るということである。
-誰かが<quote>lp</quote>という名前のプリンタを持っている場合にもこれがあり得る。その人の
+誰かが<quote>lp</quote>という名前のプリンターを持っている場合にもこれがあり得る。その人の
 ジョブを受け取り、無意識にその人のデバイスに自分のジョブを送っているかもしれない。
-プリンタ名に対して厳密の制御をするためには、巨大なネットワーク環境において起こるかも
+プリンター名に対して厳密の制御をするためには、巨大なネットワーク環境において起こるかも
 しれない事に対する、より良い制御を行う、<parameter>BrowseShortNames No</parameter>を
 設定する。
 </para>
@@ -5517,10 +5517,10 @@ UNIXにおける既定値のプリンタである。CUPSは暗黙のクラスを
 </sect2>
 
 <sect2>
-<title><quote>cupsaddsmb</quote>に対するAdobe PostScriptドライバファイルの位置</title>
+<title><quote>cupsaddsmb</quote>に対するAdobe PostScriptドライバーファイルの位置</title>
 
 <para>
-共有されたPostScriptプリンタを持つWindowsマシンに繋ぐために、<command>smbclient</command>
+共有されたPostScriptプリンターを持つWindowsマシンに繋ぐために、<command>smbclient</command>
 を、
 <command>smbclient //windowsbox/print\$ -U guest</command>
 のように使う。<filename>W32X86/2</filename>サブディレクトリに移動でき、
