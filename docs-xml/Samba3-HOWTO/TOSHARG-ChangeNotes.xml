@@ -42,7 +42,7 @@ Sambaをアップデートまたはアップグレードする前に、この章
 </para>
 
 <para>
-近年では、Samba のユーザも <ulink url="http://wiki.samba.org/">Samba Wiki</ulink>
+近年では、Samba のユーザーも <ulink url="http://wiki.samba.org/">Samba Wiki</ulink>
 構築の推進に加わった。新しく作成される Samba ドキュメントは、すべてここに集約
 される予定である。Wikiは規模の大きなコミュニティからの投稿に適していて、より
 いっそう最新情報を提供できることを期待している。そのすばらしい夢が実現して、
@@ -58,19 +58,19 @@ Sambaをアップデートまたはアップグレードする前に、この章
 </para>
 
 <sect2>
-<title>ユーザとグループの変更</title>
+<title>ユーザーとグループの変更</title>
 
 <para>
-マップされていないユーザとグループアカウントのみに影響する変更点はここで文書化されている。
+マップされていないユーザーとグループアカウントのみに影響する変更点はここで文書化されている。
 </para>
 
 <para>
-<indexterm><primary>ユーザ</primary></indexterm>
+<indexterm><primary>ユーザー</primary></indexterm>
 <indexterm><primary>グループ</primary></indexterm>
 <indexterm><primary>相対識別子</primary><see>RID</see></indexterm>
 <indexterm><primary>net</primary><secondary>groupmap</secondary></indexterm>
 <indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>vampire</tertiary></indexterm>
-ユーザとグループに対する内部管理ルーチンは割り当てられた相対識別子(RID)
+ユーザーとグループに対する内部管理ルーチンは割り当てられた相対識別子(RID)
 の重複を防ぐために書き直された。過去では、<command>net groupmap</command>コマンド
 又は<command>net rpc vampire</command>コマンドで
 <command>net rpc vampire</command>
@@ -83,26 +83,26 @@ Sambaをアップデートまたはアップグレードする前に、この章
 <indexterm><primary>SAM</primary></indexterm>
 <indexterm><primary>RID</primary></indexterm>
 <indexterm><primary>net</primary><secondary>getlocalsid</secondary></indexterm>
-マップされていないユーザは、今回から<literal>S-1-22-1</literal>ドメイン中の
+マップされていないユーザーは、今回から<literal>S-1-22-1</literal>ドメイン中の
 SIDが割り当てられ、マップされていないグループは<literal>S-1-22-2</literal>ドメイン
-中のSIDを割り当てられる。以前はSambaサーバ上のSAM内のRIDを割り当てていた。
-ドメインコントローラにとって、これは、メンバサーバかスタンドアロンサーバ上のような
+中のSIDを割り当てられる。以前はSambaサーバー上のSAM内のRIDを割り当てていた。
+ドメインコントローラーにとって、これは、メンバーサーバーかスタンドアロンサーバー上のような
 ドメインSIDの権限の配下にあり、これはローカルSAM(<command>net getlocalsid</command>
 マニュアルページを参照)の権限下にあった。
 </para>
 
 <para>
-<indexterm><primary>マップされていないユーザ</primary></indexterm>
+<indexterm><primary>マップされていないユーザー</primary></indexterm>
 <indexterm><primary>マップされていないグループ</primary></indexterm>
 <indexterm><primary>SID</primary></indexterm>
 <indexterm><primary>NTFS</primary></indexterm>
 <indexterm><primary>GID</primary></indexterm>
-結果は、アップグレードされたSambaドメインコントローラ上の、あるマップされていない
-ユーザ又はグループは新しいSIDを割り当てられることになる。Windowsセキュリティ
-記述子中に名前というかSIDが格納されるので、これは、そのユーザが
-たとえば、Sambaファイルサーバからローカルの
+結果は、アップグレードされたSambaドメインコントローラー上の、あるマップされていない
+ユーザー又はグループは新しいSIDを割り当てられることになる。Windowsセキュリティ
+記述子中に名前というかSIDが格納されるので、これは、そのユーザーが
+たとえば、Sambaファイルサーバーからローカルの
 WindowsクライアントNTFSパーティションにファイルがコピーされた場合、もはやリソースに
-アクセスできないという現象を引き起こす。Sambaサーバ上自身で格納された任意のファイル
+アクセスできないという現象を引き起こす。Sambaサーバー上自身で格納された任意のファイル
 は、UNIXがUNIXのGIDを格納し、権限の検査にSIDを使わないために引き続きアクセスできる。
 </para>
 
@@ -117,7 +117,7 @@ WindowsクライアントNTFSパーティションにファイルがコピーさ
 <indexterm><primary>SID</primary></indexterm>
 <emphasis>developers</emphasis>という名前のグループがありそのUNIX GIDが782だと
 する。この場合、このグループはSambaのグループマップテーブル中には存在しない。
-このグループがACLエディタ中に現れることは全く通常通りである。Samba-3.0.23より
+このグループがACLエディター中に現れることは全く通常通りである。Samba-3.0.23より
 前では、グループSIDは
 <literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>として
 表示される。
@@ -130,10 +130,10 @@ WindowsクライアントNTFSパーティションにファイルがコピーさ
 <indexterm><primary>group permissions</primary></indexterm>
 Samba-3.0.23のリリースから、グループSIDは<literal>S-1-22-2-782</literal>のよう
 に表示されるようになった。任意の、Windows NTFSパーティション上に格納されるファイルに付
-随するセキュリティ記述子は、ユーザが
+随するセキュリティ記述子は、ユーザーが
 <literal>S-1-5-21-647511796-4126122067-3123570092-2565</literal>グループ
-のメンバでない場合、グループパーミッションベースのアクセスを許可されない。
-このグループSIDが<literal>S-1-22-2-782</literal>で、ユーザトークン中に
+のメンバーでない場合、グループパーミッションベースのアクセスを許可されない。
+このグループSIDが<literal>S-1-22-2-782</literal>で、ユーザートークン中に
 表示されないという理由で、たとえ両方のSIDが同じUNIXグループを参照する
 という観点においても、Windowsは認証に失敗する。
 </para>
@@ -155,13 +155,13 @@ Samba 3.0.xシリーズの3.0.23より前のリリースでは、
 <literal>Domain Admins, Domain Users, Domain Guests</literal>というWindows
 ドメイングループに対するグループマッピングは自動的に作成された。Samba-3.0.23
 から、これらのマッピングはSamba管理者によって作成されなければならないように
-なった。これが失敗すると、正しい認証と、有効なドメインユーザの認識に失敗する
-結果となる。これが起きた場合、ユーザはWindowsクライアントにログオンできなくなる。
+なった。これが失敗すると、正しい認証と、有効なドメインユーザーの認識に失敗する
+結果となる。これが起きた場合、ユーザーはWindowsクライアントにログオンできなくなる。
 </para>
 
 <note><para>
-グループマッピングは、SambaサーバがPDC/BDCとして動作している時にのみ重要である。
-スタンドアロンサーバはグループマッピングを必要としない。
+グループマッピングは、SambaサーバーがPDC/BDCとして動作している時にのみ重要である。
+スタンドアロンサーバーはグループマッピングを必要としない。
 </para></note>
 
 <para>
@@ -203,7 +203,7 @@ POSIX(UNIX)グループがLDAP内に格納される場合、それぞれ
 <indexterm><primary>GID</primary></indexterm>
 <indexterm><primary>SQL</primary></indexterm>
 <indexterm><primary>XML</primary></indexterm>
-もはや<smbconfoption name="passdb backend"/>パラメータは、複数のpassdbバックエンドを
+もはや<smbconfoption name="passdb backend"/>パラメーターは、複数のpassdbバックエンドを
 連続して設定できない。SQLとXML passdbバックエンドもSamba-3.0.23のリリースから取り除
 かれた。外部のSQL passdb サポートについてのより詳細な情報は
 <ulink url="http://pdbsql.sourceforge.net/">pdbsql</ulink>ページを参照のこと。

@@ -55,7 +55,7 @@ modules at run time.
 無関係であり、たった2つの事が実際には重要である:特定の実装が他のモジュールの
 実装と協調することを必要としているか否かかということと、モジュールが、それが動作中の
 文脈で特有である追加情報を格納することを必要とするか否かということである。
-複数のVFSモジュールは同じ時にロードでき、異なったパラメータで同じVFSモジュールの、
+複数のVFSモジュールは同じ時にロードでき、異なったパラメーターで同じVFSモジュールの、
 いくつかのインスタンスをロードすることも可能である。
 </para>
 
@@ -92,7 +92,7 @@ Sambaの内部構造体とAPIは、日時が経つにつれ変化し、各リリ
 </para>
 
 <para>それ故、初期化関数はVFS登録関数 <literal>smb_register_vfs()</literal>に
-3つのパラメータを渡す。
+3つのパラメーターを渡す。
 <itemizedlist>
 	<listitem><para><emphasis>インタフェースバージョン番号</emphasis>, 
 			<literal>SMB_VFS_INTERFACE_VERSION</literal>という定数として, </para></listitem>
@@ -146,8 +146,8 @@ transparent and opaque being prevalent.
 </para>
 
 <para>
-各VFS操作は、操作の呼び出しを簡単にさせるための、vfs_op_type、関数ポインタと
-vfs_ops構造体中のハンドルポインタと、treeマクロを持つ(
+各VFS操作は、操作の呼び出しを簡単にさせるための、vfs_op_type、関数ポインターと
+vfs_ops構造体中のハンドルポインターと、treeマクロを持つ(
 <filename>include/vfs.h</filename> と
 <filename>include/vfs_macros.h</filename>を参照のこと)。
 </para>
@@ -173,7 +173,7 @@ typedef enum _vfs_op_type {
 } vfs_op_type;
 </programlisting></para>
 
-<para>この構造体は関数とすべての操作のためのハンドルポインタを含む。<programlisting>
+<para>この構造体は関数とすべての操作のためのハンドルポインターを含む。<programlisting>
 struct vfs_ops {
 	struct vfs_fn_pointers {
 		...
@@ -331,7 +331,7 @@ NTSTATUS smb_register_vfs(int version, const char *name, vfs_op_tuple *vfs_op_tu
 
 <varlistentry><term>name</term>
 <listitem><para>これは、このモジュールを使うために、<command>vfs objects</command>
-パラメータ中で一覧表示する事が出来る名前である。</para></listitem>
+パラメーター中で一覧表示する事が出来る名前である。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>vfs_op_tuples</term>
@@ -358,7 +358,7 @@ typedef struct _vfs_op_tuple {
 <variablelist>
 
 <varlistentry><term>op</term>
-<listitem><para>指定した関数への関数ポインタ。</para></listitem>
+<listitem><para>指定した関数への関数ポインター。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>type</term>
@@ -395,7 +395,7 @@ NTSTATUS init_module(void)
 <sect2>
 <title>どのようにモジュールは接続単位でデータを処理するか</title>
 
-<para>各VFS関数の最初のパラメータは、vfs_handle_structモジュールへのポインタである。
+<para>各VFS関数の最初のパラメーターは、vfs_handle_structモジュールへのポインターである。
 </para>
 
 <programlisting>
@@ -412,9 +412,9 @@ typedef struct vfs_handle_struct {
 <variablelist>
 
 <varlistentry><term>param</term>
-<listitem><para>これは<command>vfs objects</command>パラメータ中で指定されるモジュール
-パラメータである。</para>
-<para>すなわち、'vfs objects = example:test'用パラメータは、&quot;test&quot;であろう。</para></listitem>
+<listitem><para>これは<command>vfs objects</command>パラメーター中で指定されるモジュール
+パラメーターである。</para>
+<para>すなわち、'vfs objects = example:test'用パラメーターは、&quot;test&quot;であろう。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>vfs_next</term>
@@ -424,18 +424,18 @@ typedef struct vfs_handle_struct {
 </varlistentry>
 
 <varlistentry><term>conn</term>
-<listitem><para>これは、ハンドルが帰属するconnection_structに戻るためのポインタである。</para></listitem>
+<listitem><para>これは、ハンドルが帰属するconnection_structに戻るためのポインターである。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>data</term>
-<listitem><para>モジュール固有データを保持するためのポインタである。
+<listitem><para>モジュール固有データを保持するためのポインターである。
 handle-&gt;conn-&gt;mem_ctx TALLOC_CTX上で接続が有効な間、データをallocできる。
 しかし、自分自身でメモリ管理を行う必要もある。</para></listitem>
 </varlistentry>
 
 <varlistentry><term>free_data</term>
-<listitem><para>これは、モジュール固有データをフリーにする関数へのポインタである。
-TALLOC_CTX handle-&gt;conn-&gt;mem_ctx上で固有データをtallocした場合、この関数ポインタは
+<listitem><para>これは、モジュール固有データをフリーにする関数へのポインターである。
+TALLOC_CTX handle-&gt;conn-&gt;mem_ctx上で固有データをtallocした場合、この関数ポインターは
 NULLに設定することが出来る。</para></listitem>
 </varlistentry>
 
@@ -554,7 +554,7 @@ NULLに設定することが出来る。</para></listitem>
 
 <orderedlist>
 <listitem><para>
-すべてのvfs操作関数に最初のパラメータとして&quot;vfs_handle_struct *handle, &quot;
+すべてのvfs操作関数に最初のパラメーターとして&quot;vfs_handle_struct *handle, &quot;
 を追加する。例えば、
 example_connect(connection_struct *conn, const char *service, const char *user);
 -&gt;   example_connect(vfs_handle_struct *handle, connection_struct *conn, const char *service, const char *user);
@@ -573,7 +573,7 @@ e.g. smb_vfs_next_connect(conn, service, user);
 </para></listitem>
 
 <listitem><para>
-すべてのSMB_VFS_NEXT_*()呼び出しに対して最初のパラメータとして&quot;handle, &quot;を
+すべてのSMB_VFS_NEXT_*()呼び出しに対して最初のパラメーターとして&quot;handle, &quot;を
 追加する。たとえば、
 SMB_VFS_NEXT_CONNECT(conn, service, user);
 -&gt;   SMB_VFS_NEXT_CONNECT(handle, conn, service, user);
@@ -891,15 +891,15 @@ static int example_close(vfs_handle_struct *handle, files_struct *fsp, int fd)
 <para>
 もしも、既定値のSamba opaque関数よりもよりよいバージョンを実装したいならば
 (たとえば、特別なファイルシステムに対するdisk_free()関数のようなもの)、
-その特定の関数をオーバロードすることは問題ない。
+その特定の関数をオーバーロードすることは問題ない。
 </para>
 
 <para>
 もしもデータベースファイルシステムあるいはposixファイルシステムから異なる
-何かを実装したい場合、すべてのvfs操作をオーバロードするようにすること!!!
+何かを実装したい場合、すべてのvfs操作をオーバーロードするようにすること!!!
 </para>
 <para>
-使用するファイルシステムがサポートしない機能は、以下のようなものでオーバロードすべきである:
+使用するファイルシステムがサポートしない機能は、以下のようなものでオーバーロードすべきである:
 たとえば、リードオンリファイルシステムなど。
 </para>
 

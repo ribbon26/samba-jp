@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>winbindd</refname>
-	<refpurpose>NT サーバからの名前解決を行う Name Service Switch (NSS)デーモン</refpurpose>
+	<refpurpose>NT サーバーからの名前解決を行う Name Service Switch (NSS)デーモン</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -42,12 +42,12 @@
 	<command>ntlm_auth</command> および Samba 自身に対する各種サービスを提供する。</para>
 
 	<para> NSS 機能を使用しない場合でも、
-	winbindd はドメインコントローラとの通信を行い、
+	winbindd はドメインコントローラーとの通信を行い、
 	<command>smbd</command> 、<command>ntlm_auth</command> 、
 	PAM モジュールの <command>pam_winbind.so</command> に対するサービスを提供する。
 	この場合、
 	<smbconfoption name="idmap uid"/> および
-	<smbconfoption name="idmap gid"/> パラメータは不要である
+	<smbconfoption name="idmap gid"/> パラメーターは不要である
 	(これは「netlogon [proxy only mode」と呼ばれる)。
 	</para>
 
@@ -57,13 +57,13 @@
 	実際の動作は、
 	<filename>/etc/nsswitch.conf</filename>
 	ファイルにて設定する。
-	各ユーザやグループに対しては、
-	Samba サーバの管理者が指定したユーザ ID とグループ ID の範囲から
+	各ユーザーやグループに対しては、
+	Samba サーバーの管理者が指定したユーザー ID とグループ ID の範囲から
 	ID が割り当てられる。
 	</para>
 
 	<para> <command>winbindd</command> によって提供されるサービスは「winbind」と呼ばれ、
-	Windows NT サーバからユーザとグループの情報を取得するために用いられる。
+	Windows NT サーバーからユーザーとグループの情報を取得するために用いられる。
 	このサービスは関連する PAM モジュールを通じて、
 	認証サービスを提供することも可能である。</para>
 
@@ -72,8 +72,8 @@
 	モジュールは、
 	<parameter>auth</parameter> 、 <parameter>account</parameter> 、 <parameter>password</parameter>
 	の各モジュールタイプをサポートしている。
-        <parameter>account</parameter> モジュールについては、システムによるユーザの UID の取得可否を確認するために getpwnam() を実行するだけの機能しかない。
-	これは、ドメインコントローラにより既にアクセス制御が行われているためである。
+        <parameter>account</parameter> モジュールについては、システムによるユーザーの UID の取得可否を確認するために getpwnam() を実行するだけの機能しかない。
+	これは、ドメインコントローラーにより既にアクセス制御が行われているためである。
 	<filename>libnss_winbind</filename> もしくはシステムに応じた名称のライブラリが適切にインストールされていれば、このモジュールは必ず成功するはずである。
 	</para>
 
@@ -83,7 +83,7 @@
 	<variablelist>
 		<varlistentry>
 		<term>-D</term>
-		<listitem><para>もしも指定されたならば、このパラメータは、サーバをデーモンとして動かす。
+		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
 		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
 		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
 		</para></listitem>
@@ -93,17 +93,17 @@
 		<term>hosts</term>
 		<listitem><para>
 		これは、 IRIX でのみ有効である。
-		ユーザ情報(訳注: ホスト情報だと思われる)は、伝統的に
+		ユーザー情報(訳注: ホスト情報だと思われる)は、伝統的に
 		<filename>hosts(5)</filename> ファイルに格納され、
 		<command>gethostbyname(3)</command> 関数によって取得される。
-		名前解決は WINS サーバ経由か、ブロードキャストによって行われる。
+		名前解決は WINS サーバー経由か、ブロードキャストによって行われる。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>passwd</term>
 		<listitem><para>
-		ユーザ情報は、伝統的に
+		ユーザー情報は、伝統的に
 		<filename>passwd(5)</filename> ファイルに格納され、
 		<command>getpwent(3)</command> 関数によって取得される。
 		</para></listitem>
@@ -123,8 +123,8 @@
 	以下のような簡単な設定を
 	<filename>/etc/nsswitch.conf</filename>
 	ファイルに記述することで、
-	ユーザ情報やグループ情報は、最初に
-	<filename>/etc/passwd</filename> や <filename>/etc/group</filename> ファイルから、ついで Windows NT サーバから取得される。
+	ユーザー情報やグループ情報は、最初に
+	<filename>/etc/passwd</filename> や <filename>/etc/group</filename> ファイルから、ついで Windows NT サーバーから取得される。
 <programlisting>
 passwd:         files winbind
 group:          files winbind
@@ -139,7 +139,7 @@ hosts:          files dns wins
 	<filename>/etc/nsswitch.conf</filename>
 	ファイルに記述することで、
 	ホスト名は、最初に
-	<filename>/etc/hosts</filename> ファイルから、ついで WINS サーバから取得される。
+	<filename>/etc/hosts</filename> ファイルから、ついで WINS サーバーから取得される。
 	</para>
 <programlisting>
 hosts:		files wins
@@ -155,7 +155,7 @@ hosts:		files wins
 		<varlistentry>
 		<term>-F</term>
 		<listitem><para>
-		このパラメータを指定すると、
+		このパラメーターを指定すると、
 		<command>winbindd</command>
 		のメインプロセスがデーモンとして動作しなくなる。
 		つまり、
@@ -167,7 +167,7 @@ hosts:		files wins
 		パッケージに含まれる
 		<command>supervise</command> と <command>svscan</command>
 		や、
-		AIX のプロセスモニタなどのプロセス監視機構配下で
+		AIX のプロセスモニターなどのプロセス監視機構配下で
 		<command>winbindd</command>
 		を動作させるためのものである。
 		</para></listitem>
@@ -176,7 +176,7 @@ hosts:		files wins
 		<varlistentry>
 		<term>-S</term>
 		<listitem><para>
-		このパラメータを指定すると、
+		このパラメーターを指定すると、
 		<command>winbindd</command>
 		はファイルの代わりに標準出力にログを出力するようになる。
 		</para></listitem>
@@ -195,7 +195,7 @@ hosts:		files wins
 		<command>winbindd</command>
 		の対話的なデバッグが必要な開発者のためのものである。
 		この際、<command>-S</command>
-		パラメータが指定されたときと同じく、ログは標準出力に出力される。
+		パラメーターが指定されたときと同じく、ログは標準出力に出力される。
 		</para></listitem>
 		</varlistentry>
 
@@ -204,9 +204,9 @@ hosts:		files wins
 		<listitem><para>
 		キャッシュを無効にする。これにより、
 		<command>winbindd</command> は、
-		クライアントに応答する前にドメインコントローラからの応答を毎回待たなければならず動作が遅くなるが、
+		クライアントに応答する前にドメインコントローラーからの応答を毎回待たなければならず動作が遅くなるが、
 		キャッシュを使用しなくなるため、より厳密な結果を得られるようになる。
-		なお、ドメインコントローラが応答するまで
+		なお、ドメインコントローラーが応答するまで
 		<command>winbindd</command> は処理を停止してしまう。
 		</para></listitem>
 		</varlistentry>
@@ -231,27 +231,27 @@ hosts:		files wins
 	<title>名前と ID の解決</title>
 
 	<para>
-	Windows NT サーバ上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。
-	Windows NT のユーザとグループを UNIX のユーザとグループに変換するには、
-	SID とユーザ ID およびグループ ID 間のマッピングが必要となる。
+	Windows NT サーバー上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。
+	Windows NT のユーザーとグループを UNIX のユーザーとグループに変換するには、
+	SID とユーザー ID およびグループ ID 間のマッピングが必要となる。
 	これは <command>winbindd</command> が行なう作業の一つである。
 	</para>
 
 	<para>
-	winbindd のユーザとグループが解決される際に、
-	ユーザ ID とグループ ID が指定された範囲から割り当てられる。
+	winbindd のユーザーとグループが解決される際に、
+	ユーザー ID とグループ ID が指定された範囲から割り当てられる。
 	ID は解決された順に順番に割り当てられるが、
-	クライアントがユーザやグループの列挙コマンドを実行すれば、存在するすべてのユーザとグループのマッピングが行われる。
+	クライアントがユーザーやグループの列挙コマンドを実行すれば、存在するすべてのユーザーとグループのマッピングが行われる。
 	割り当てられた UNIX 側の ID は、
 	Samba のロックディレクトリ配下のデータベースファイルに格納され、記憶される。
 	</para>
 
 	<para><emphasis>警告:</emphasis>
 	SID と UNIX の ID を変換するデータベース以外に
-	winbindd がユーザとグループのマッピング情報を格納している場所はない。
+	winbindd がユーザーとグループのマッピング情報を格納している場所はない。
 	このファイルが削除されたり壊れたりしてしまうと
-	winbindd が、ユーザ ID やグループ ID と
-	Windows NT のユーザあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
+	winbindd が、ユーザー ID やグループ ID と
+	Windows NT のユーザーあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
 	</para>
 
 </refsect1>
@@ -262,8 +262,8 @@ hosts:		files wins
 	<para>
 	<command>winbindd</command> デーモンの設定は、
 	<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
-	ファイルのパラメータで行う。
-	すべてのパラメータは、
+	ファイルのパラメーターで行う。
+	すべてのパラメーターは、
 	smb.conf の [global] セクション内に記述しなければならない。
 	</para>
 
@@ -290,7 +290,7 @@ hosts:		files wins
 		<smbconfoption name="winbind use default domain"/></para></listitem>
 		<listitem><para>
 		<smbconfoption name="winbind: rpc only"/>
-		このパラメータを設定すると、ドメインコントローラから情報を
+		このパラメーターを設定すると、ドメインコントローラーから情報を
 		検索するため、LDAPの変わりにwinbindがRPCを使うことを強制
 		する。
 		</para></listitem>
@@ -302,7 +302,7 @@ hosts:		files wins
 	<title>設定例</title>
 
 	<para>
-	ユーザとグループ名の解決と認証をドメインコントローラで行うには、
+	ユーザーとグループ名の解決と認証をドメインコントローラーで行うには、
 	winbindd を以下のように設定する。
 	この設定例は、古いバージョンの Red Hat Linux で動作を確認した。
 	</para>
@@ -346,8 +346,8 @@ auth  required    /lib/security/pam_unix.so \
 	<para><command>net join -S PDC -U Administrator</command></para>
  
 	<para>
-	<parameter>-U</parameter> に続くユーザ名は、
-	PDC 上で administrator 権限を持つドメインのユーザであれば誰でもよい。
+	<parameter>-U</parameter> に続くユーザー名は、
+	PDC 上で administrator 権限を持つドメインのユーザーであれば誰でもよい。
 	「PDC」の部分は、実際の PDC の IP もしくは名前に置き換えること。
 	</para>
 	
@@ -381,10 +381,10 @@ auth  required    /lib/security/pam_unix.so \
 </programlisting></para>
   
 	<para>
-	ここで winbindd を起動すると、ユーザおよびグループの対応を行うデータベースが
-	Windows NT のユーザとグループの情報を取り込むに従い、大きくなっていくのが確認できる。
-	また、「ドメイン名+ユーザー名」という形式でユーザ名を指定することで、
-	ドメインのユーザが UNIX にログインできることも確認できるだろう。
+	ここで winbindd を起動すると、ユーザーおよびグループの対応を行うデータベースが
+	Windows NT のユーザーとグループの情報を取り込むに従い、大きくなっていくのが確認できる。
+	また、「ドメイン名+ユーザー名」という形式でユーザー名を指定することで、
+	ドメインのユーザーが UNIX にログインできることも確認できるだろう。
 
 	<command>getent passwd</command> と <command>getent group</command>
 	コマンドを実行すれば、
@@ -417,14 +417,14 @@ auth  required    /lib/security/pam_unix.so \
 	<para>
 	複数の UNIX マシンで <command>winbindd</command>
 	を実行した場合、一般的に
-	winbindd によって割り当てられるユーザ ID とグループ ID はマシン毎に異なる。
-	<smbconfoption><name>idmap backend</name></smbconfoption> パラメータで、情報を共有する設定を行わない限り、
-	ユーザ ID とグループ ID はローカルマシン内でのみ有効である。
+	winbindd によって割り当てられるユーザー ID とグループ ID はマシン毎に異なる。
+	<smbconfoption><name>idmap backend</name></smbconfoption> パラメーターで、情報を共有する設定を行わない限り、
+	ユーザー ID とグループ ID はローカルマシン内でのみ有効である。
 	</para>
 
 	<para>
 	Windows NT の SID と
-	UNIX のユーザ ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、
+	UNIX のユーザー ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、
 	マッピング情報は失われてしまう。
 	</para>
 </refsect1>
@@ -444,9 +444,9 @@ auth  required    /lib/security/pam_unix.so \
 		<listitem><para><citerefentry><refentrytitle>smb.conf</refentrytitle>
 		<manvolnum>5</manvolnum></citerefentry>
 		ファイルを再読み込みさせ、
-		実行中の <command>winbindd</command> にパラメータの変更を反映させる。
+		実行中の <command>winbindd</command> にパラメーターの変更を反映させる。
 		このシグナルにより、
-		ユーザ情報とグループ情報のキャッシュもクリアされる。
+		ユーザー情報とグループ情報のキャッシュもクリアされる。
 		また、winbindd が信頼するドメインの一覧も再取得される。
 		</para></listitem>
 		</varlistentry>
@@ -459,7 +459,7 @@ auth  required    /lib/security/pam_unix.so \
 
 		<para>
 		ログファイルは、
-		log file パラメータで指定したファイルである。
+		log file パラメーターで指定したファイルである。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -500,7 +500,7 @@ auth  required    /lib/security/pam_unix.so \
 		(<command>ntlm_auth</command> ユーティリティが必要とする機能など)
 		へのアクセスは制限されており、
 		デフォルトでは、
-		「root」グループに属するユーザだけがアクセスできる。
+		「root」グループに属するユーザーだけがアクセスできる。
 		管理者が $LOCKDIR/winbindd_privileged
 		のグループパーミッションを変更することで、
 		「squid」などのプログラムが ntlm_auth を利用できるようにすることなどが可能である。
@@ -521,7 +521,7 @@ auth  required    /lib/security/pam_unix.so \
 		<term>$LOCKDIR/winbindd_idmap.tdb</term>
 		<listitem><para>
 		Windows NT の RID から
-		UNIX の ユーザ/グループ ID へのマッピング情報の保管場所。
+		UNIX の ユーザー/グループ ID へのマッピング情報の保管場所。
 		ロックディレクトリは、Samba のコンパイル時に
 		<parameter>--with-lockdir</parameter>
 		オプションを用いて指定する。
@@ -533,7 +533,7 @@ auth  required    /lib/security/pam_unix.so \
 	
 		<varlistentry>
 		<term>$LOCKDIR/winbindd_cache.tdb</term>
-		<listitem><para>キャッシュされたユーザ/グループ情報の保管場所。
+		<listitem><para>キャッシュされたユーザー/グループ情報の保管場所。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
