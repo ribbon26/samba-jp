@@ -2,12 +2,12 @@
 .\"     Title: smb.conf
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 05/13/2010
+.\"      Date: 01/25/2011
 .\"    Manual: ファイルフォーマットと変換
 .\"    Source: Samba 3.4
 .\"  Language: English
 .\"
-.TH "SMB\&.CONF" "5" "05/13/2010" "Samba 3\&.4" "ファイルフォーマットと変換"
+.TH "SMB\&.CONF" "5" "01/25/2011" "Samba 3\&.4" "ファイルフォーマットと変換"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -1608,23 +1608,6 @@ change notify (S)
 \fI\fIchange notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
-change notify timeout (S)
-.\" change notify timeout
-.PP
-.RS 4
-この SMB により、クライアントは指定したディレクトリが変更されていないかをサーバに「監視」させ、なんらかの変更が発生した際にのみ、その SMB 要求に返答させるということが可能になる。こうした定常的なディレクトリの監視は、 UNIX では高負荷な作業になるため、
-\fBsmbd\fR(8)
-デーモンは
-\fIchange notify timeout\fR
-で設定された秒毎に、要求された各ディレクトリの監視を行なう。 Samba 3\&.0\&.23 以降、このパラメータは共有単位のパラメータに変更され、 このパラメータを 0 に設定することで change notify 機能による共有内のディレクトリ走査を完全に抑止することが可能となった。 大量のディレクトリが存在するため、(大量のファイルを削除すると) 削除処理のたびに Windows クライアントが change notify によりディレクトリ全体の再走査を何度も繰り返すような共有において、このパラメータを 0 に設定することが可能となった。 この change notify 処理は、システムによっては非常に負荷のかかる処理となる。
-.sp
-既定値:
-\fI\fIchange notify timeout\fR\fR\fI = \fR\fI60\fR\fI \fR
-.sp
-例:
-\fI\fIchange notify timeout\fR\fR\fI = \fR\fI300 # スキャン間隔を 5 分毎にする。\fR\fI \fR
-.RE
-
 change share command (G)
 .\" change share command
 .PP
@@ -3003,20 +2986,6 @@ CDROM 等の物理的に読みとり専用のメディアの場合など、 読�
 .sp
 既定値:
 \fI\fIfake oplocks\fR\fR\fI = \fR\fIno\fR\fI \fR
-.RE
-
-fam change notify (G)
-.\" fam change notify
-.PP
-.RS 4
-このパラメータにより、Samba がディレクトリ内の変更を FAM デーモンに問い合わせ、SMB クライアントがサーバ上のデータに変更があった際に、 更新を行なうことが可能になるようにするかが制御される。
-.sp
-このパラメータは、FAM デーモンによるユーザプログラムへの変更通知機能がサポートされている場合のみ使用される。 FAM デーモンが実行されていない場合、このパラメータは自動的に無効となる。
-\fIkernel change notify\fR
-パラメータが有効な場合、そちらが優先される。
-.sp
-既定値:
-\fI\fIfam change notify\fR\fR\fI = \fR\fIyes\fR\fI \fR
 .RE
 
 follow symlinks (S)
@@ -4407,9 +4376,9 @@ ldap page size (G)
 .\" ldap page size
 .PP
 .RS 4
-This parameter specifies the number of entries per page\&.
+このパラメータは1ページあたりのエントリ数を指定する。
 .sp
-If the LDAP server supports paged results, clients can request subsets of search results (pages) instead of the entire list\&. This parameter specifies the size of these pages\&.
+もしも、LDAPサーバがpaged resultsをサポートする場合、クライアントは すべての一覧の代わりに、検索結果(ページ)のサブセットを要求できる。 このパラメータはそのページの大きさを指定する。
 .sp
 既定値:
 \fI\fIldap page size\fR\fR\fI = \fR\fI1024\fR\fI \fR
@@ -5537,34 +5506,6 @@ Magic スクリプトは
 .sp
 例:
 \fI\fImagic script\fR\fR\fI = \fR\fIuser\&.csh\fR\fI \fR
-.RE
-
-mangled map (S)
-.\" mangled map
-.PP
-.RS 4
-このパラメータは、 Windows や DOS で表示できない UNIX ファイル名の対応づけを直接指定するためのものである。 名前の短縮のみがこの機能に必要とされるすべてではない。 実際、DOS と UNIX とでファイル名の拡張子の異なるドキュメントが存在することがある。 一例を挙げると、UNIX では通常 HTML ファイルを示す拡張子として
-\&.html
-が使用されるが、DOS では
-\&.htm
-の方が一般的である。
-.sp
-このため、html
-と
-htm
-の対応づけを行なう場合は、以下のようにする:
-.sp
-
-\m[blue]\fBmangled map = (*\&.html *\&.htm)\fR\m[]\&.
-.sp
-とても便利な利用方法の一つに、CDROMによってファイル名の末尾に付加されている
-;1(幾つかのUNIX上でのみ表示される) の削除が挙げられる。これを行なうためには、 (*;1 *;) のように指定すればよい。
-.sp
-既定値:
-\fI\fImangled map\fR\fR\fI = \fR\fI # mangled map なし\fR\fI \fR
-.sp
-例:
-\fI\fImangled map\fR\fR\fI = \fR\fI(*;1 *;)\fR\fI \fR
 .RE
 
 mangled names (S)
@@ -7688,20 +7629,6 @@ Windows 95 や Windows NTでは、 「プリンタ」ウインドウからこの
 .sp
 例:
 \fI\fIqueueresume command\fR\fR\fI = \fR\fIenable %p\fR\fI \fR
-.RE
-
-read bmpx (G)
-.\" read bmpx
-.PP
-.RS 4
-この真偽値パラメータは、
-\fBsmbd \fR(8)
-に 「Read Block Multiplex」 SMB をサポートさせるかどうかを制御する。 これは、まず使われることがないため、デフォルトは
-\fBno\fR
-になっている。 このパラメータを設定する必要はまずないであろう。
-.sp
-既定値:
-\fI\fIread bmpx\fR\fR\fI = \fR\fIno\fR\fI \fR
 .RE
 
 read list (S)
@@ -10345,11 +10272,11 @@ wtmp directory (G)
 で入手可能な優れた オープンソースソフトウェア) に変換され、Samba 2\&.0 リリースに伴い、 Jeremy Allison によって更新された。Samba 2\&.2 における DocBook 形式への変換は、Gerald Carter によって行なわれた。Samba 3\&.0 における DocBook XML 4\&.2 形式への変換は Alexander Bokovoy によって行われた。
 .SH "日本語訳"
 .PP
-このマニュアルページは Samba 3\&.4\&.8 対応のものである。
+このマニュアルページは Samba 3\&.4\&.11 対応のものである。
 .PP
 Samba 3\&.0\&.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba\&.gr\&.jp) によって行なわれた。
 .PP
-Samba 3\&.2\&.4\-3\&.4\&.8 対応の翻訳は、
+Samba 3\&.2\&.4\-3\&.4\&.11 対応の翻訳は、
 .PP
 たかはしもとのぶ
 .PP
