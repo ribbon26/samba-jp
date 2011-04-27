@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.5</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
 </refmeta>
 
 
@@ -23,6 +23,29 @@
 	APIのみに実装され、リードオンリである。マッピングは、posixAccount/posixGroupクラスと、ユーザーに対する
 相対的な属性型/属性値ペアとAD中のグループオブジェクトを管理者によって前もって
 追加することを提供されることが必要である。</para>
+
+        <para>
+	idmap_adモジュールは、Sambaバージョン3.0と3.2からかなり変わっている事に注意。
+	現在、<parameter>ad</parameter>バックエンドは既定値のidmapバックエンドとしては
+	動作しないが、これを使用したい場合、各ドメイン毎に個別に、disjoint rangeを使って
+	設定しなければならない。
+	
+        Note that the idmap_ad module has changed considerably since
+        Samba versions 3.0 and 3.2.
+        Currently, the <parameter>ad</parameter> backend
+        does not work as the the default idmap backend, but one has
+        to configure it separately for each domain for which one wants
+        to use it, using disjoint ranges. One usually needs to configure
+        a writeable default idmap range, using for example the
+        <parameter>tdb</parameter> or <parameter>ldap</parameter>)
+        backend, in order to be able to map the BUILTIN sids and
+        possibly other trusted domains. The writeable default config
+        is also needed in order to be able to create group mappings.
+        This catch-all default idmap configuration should have a range
+        that is disjoint from any explicitly configured domain with
+        idmap backend <parameter>ad</parameter>. See the example below.
+        </para>
+
 </refsynopsisdiv>
 
 <refsect1>
