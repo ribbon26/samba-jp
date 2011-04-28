@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_autorid.8">
+
+<refmeta>
+	<refentrytitle>idmap_autorid</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_autorid</refname>
+	<refpurpose>Samba の Winbind 用 idmap_autoridバックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+	<para>The idmap_autorid backend provides a way to use an algorithmic
+	mapping scheme to map UIDs/GIDs and SIDs that is more deterministic
+	than idmap_tdb and easier to configure than idmap_rid.
+	idmap_autoridバックエンドは、idmap_tdbよりもより決定的な、UID/GIDと
+	SIDをマップするためのアルゴリズム的なマッピング方法を提供し、idmap_rid
+	よりもより簡単に設定できる。</para>
+	<para>The module works similar to idmap_rid, but it automatically
+	configures the range to be used for each domain, so there is no need
+	to specify a specific range for each domain in the forest, the only
+	configuration that is needed is the range of uid/gids that shall
+	be used for user/group mappings and an optional size of the ranges
+	to be used.
+	モジュールはidmap_ridと同じように動くが、各ドメインに対して使われる
+	レンジを自動的に設定し、そのため、フォレスト中の各ドメインに対して
+	特定のレンジを指定する必要がないので、設定しなければならない項目は、
+	user/groupマッピングのために使われることができるuid/gidのレンジと、
+	使用されるレンジのオプションのサイズである。</para>
+	<para>The mappings of which domain is mapped to which range is stored
+	in autorid.tdb, thus you should backup this database regularly.
+	ドメインのマッピングはレンジにマップされ、それはautorid.tdbに
+	格納されるので、このデータベースを常時バックアップする必要がある。</para>
+	<para>Due to the algorithm being used, it is the module that is
+	most easy to use as it only requires a minimal configuration.
+	アルゴリズムが使われるという理由で、それは単に最小の設定のみを要求する
+	もっとも簡単に使うことが出来るモジュールである。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>rangesize = numberofidsperdomain</term>
+		<listitem><para>
+			Defines the available number of uids/gids per domain. The
+			minimum needed value is 2000. SIDs with RIDs larger than this
+			value cannot be mapped, are ignored and the corresponding map
+			is discarded. Choose this value carefully, as this should
+			not be changed after the first ranges for domains have been
+			defined, otherwise mappings between domains will get intermixed
+			leading to unpredictable results. Please note that RIDs in Windows
+			Domains usually start with 500 for builtin users and 1000
+			for regular users. As the parameter cannot be changed later, please
+			plan accordingly for your expected number of users in a domain
+			with safety margins.
+		</para>
+		<para>The default value is 100000.</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>THE MAPPING FORMULAS</title>
+	<para>
+		The Unix ID for a RID is calculated this way:
+		<programlisting>
+			ID = IDMAP UID LOW VALUE + DOMAINRANGENUMBER * RANGESIZE + RID
+		</programlisting>
+	</para>
+	<para>
+		Correspondingly, the formula for calculating the RID for a
+		given Unix ID is this:
+		<programlisting>
+			RID = ID - IDMAP UID LOW VALUE - DOMAINRANGENUMBER * RANGESIZE
+		</programlisting>
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定例</title>
+	<para>
+		This example shows you the minimal configuration that will
+		work for the principial domain and 19 trusted domains.
+	</para>
+
+	<programlisting>
+	[global]
+	security = ads
+	workgroup = CUSTOMER
+	realm = CUSTOMER.COM
+
+	idmap backend = autorid
+	idmap uid = 1000000-1999999
+	idmap gid = 1000000-1999999
+
+	</programlisting>
+
+	<para>
+		This example shows how to configure idmap_autorid as default
+		for all domains with a potentially large amount of users
+		plus a specific configuration for a trusted domain
+		that uses the SFU mapping scheme. Please note that idmap uid/gid
+		ranges and sfu ranges are not allowed to overlap.
+	</para>
+
+	<programlisting>
+	[global]
+	security = ads
+	workgroup = CUSTOMER
+	realm = CUSTOMER.COM
+
+	idmap backend = autorid
+	autorid:rangesize = 1000000
+	idmap uid = 1000000-19999999
+	idmap gid = 1000000-19999999
+
+	idmap config TRUSTED : backend  = ad
+	idmap config TRUSTED : range    = 50000 - 99999
+	idmap config TRUSTED : schema_mode = sfu
+	</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+        <para>
+    オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell
+    により書かれた。Samba は現在 Samba チームの元で、Linux のカーネルと
+    同様にオープンソースソフトウェアとして開発されている。
+        </para>
+
+</refsect1>
+
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
+        <para>このドキュメントの翻訳は
+    <itemizedlist>
+        <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+    </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
