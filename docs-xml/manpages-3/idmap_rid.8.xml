@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.5</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
 </refmeta>
 
 
@@ -22,6 +22,35 @@
 	方法のひとつとして、アルゴリズム的なマッピングの仕組みを提供する。
 	このケースでは決定論的なマッピングを行うため、データベースを必要
 	としない。</para>
+
+       <para>
+       Note that the idmap_rid module has changed considerably since Samba
+       versions 3.0. and 3.2.
+       idmap_ridモジュールはSambaバージョン3.0と3.2からかなり変更されている
+       事に注意。
+       Currently, there should to be an explicit idmap configuration for each
+       domain that should use the idmap_rid backend, using disjoint ranges.
+       One usually needs to define a writeable default idmap range, using
+       a backent like <parameter>tdb</parameter> or <parameter>ldap</parameter>
+       that can create unix ids, in order to be able to map the BUILTIN sids
+       and other domains, and also in order to be able to create group mappings.
+       See the example below.
+       現在、それらはdisjointレンジを使うidmap_ridバックエンドを使うべき各ドメインの
+       ための明示的なidmap設定であるべきである。通常、BUILTIN sidと他のドメインを
+       マップスル事が出来るようにするためと、グループマッピングを作成できるように
+       するために、unix idを作成できる、
+       <parameter>tdb</parameter>か<parameter>ldap</parameter>のような
+       バックエンドを使う、書き込み可能な既定値のidmapレンジを定義する必要がある。
+       以下の例を参照のこと。
+       </para>
+
+       <para>
+       Note that the old syntax
+       <parameter>idmap backend = rid:"DOM1=range DOM2=range2 ..."</parameter>
+       is not supported any more since Samba version 3.0.25.
+       <parameter>idmap backend = rid:"DOM1=range DOM2=range2 ..."</parameter>
+       という昔の文法はSambaバージョン3.0.25移行はサポートされていないことに注意。
+       </para>
 </refsynopsisdiv>
 
 <refsect1>
@@ -109,8 +138,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.4.0 - 3.5.6  対応のものである。</para>
-		<para>このドキュメントの Samba 3.4.0 - 3.5.6 対応の翻訳は
+	<para>このマニュアルページは Samba 3.6.0  対応のものである。</para>
+		<para>このドキュメントの Samba 3.6.0 対応の翻訳は
 	<itemizedlist>
 	<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
 	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
