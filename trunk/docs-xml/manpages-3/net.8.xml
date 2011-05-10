@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.5</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
 </refmeta>
 
 
@@ -1231,12 +1231,33 @@ idmap_tdbバックエンドによって生成されたマップのダンプに�
 </refsect2>
 
 <refsect2>
-<title>IDMAP SECRET &lt;DOMAIN&gt;|ALLOC &lt;secret&gt;</title>
+<title>IDMAP SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
 
 <para>
 指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
 </para>
 
+</refsect2>
+
+<refsect2>
+<title>IDMAP DELETE [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
+
+<para>
+Delete a mapping sid &lt;-&gt; gid or sid &lt;-&gt; uid from the IDMAP database.
+The mapping is given by &lt;ID&gt; which may either be a sid: S-x-..., a gid: "GID number
+" or a uid: "UID number".
+Use -f to delete an invalid partial mapping &lt;ID&gt; -&gt; xx
+IDMAPデータベースから、マップされたsid &lt;-&gt; gid あるいは sid &lt;-&gt; uid を
+削除する。マップはsid: S-x-....よりもより簡単な &lt;ID&gt; 、gid: "GID番号" あるいは
+uid: "UID番号"によって与えられる。
+不正な部分的なマッピング &lt;ID&gt; -&gt; xx を削除するには -f を使う。
+</para>
+<para>
+  Use "smbcontrol all idmap ..." to notify running smbd instances.
+  動作しているsmbdインスタンスに通知をするためには"smbcontrol all idmap ..."
+  を使う。詳細は、<citerefentry><refentrytitle>smbcontrol</refentrytitle>
+  <manvolnum>1</manvolnum></citerefentry>マニュアルページを参照。
+</para>
 </refsect2>
 
 <refsect2>
