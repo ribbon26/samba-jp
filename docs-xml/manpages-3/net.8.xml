@@ -1261,6 +1261,119 @@ uid: "UID番号"によって与えられる。
 </refsect2>
 
 <refsect2>
+
+<title>IDMAP CHECK [-v] [-r] [-a] [-T] [-f] [-l] [--db=&lt;DB&gt;]</title>
+
+<para>
+  Check and repair the IDMAP database. If no option is given a read only check
+  of the database is done. Among others an interactive or automatic repair mode
+  may be chosen with one of the following options:
+  IDMAPデータベースの検査と修復を行う。もしも、オプションが何も指定されないと、
+  データベースに対するリードオンリのチェックが行われる。とりわけ、対話的または
+  自動修復モードでは以下のオプションの1つを選んでも良い:
+
+  <variablelist>
+    <varlistentry><term>-r|--repair</term>
+    <listitem><para>
+      Interactive repair mode, ask a lot of questions.
+      対話的修復モードで、数多くの質問を要求してくる。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-a|--auto</term>
+    <listitem><para>
+      Noninteractive repair mode, use default answers.
+      非対話的修復モードで、既定値を利用する。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-v|--verbose</term>
+      <listitem><para>
+	Produce more output.
+	より多くの出力を生成する。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-f|--force</term>
+      <listitem><para>
+	Try to apply changes, even if they do not apply cleanly.
+	もしも、きれいに適用されなくても、変更を適用する。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-T|--test</term>
+      <listitem><para>
+	Dry run, show what changes would be made but don't touch anything.
+	試験実行であり、どのような変更が行われるかを表示するが何も変更しない。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-l|--lock</term>
+      <listitem><para>
+	Lock the database while doing the check.
+	検査中にデータベースをロックする。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>--db &lt;DB&gt;</term>
+      <listitem><para>
+	Check the specified database.
+	指定されたデータベースを検査する。
+      </para></listitem>
+    </varlistentry>
+    <varlistentry><term></term>
+      <listitem><para>
+      </para></listitem>
+    </varlistentry>
+  </variablelist>
+
+  It reports about the finding of the following errors:
+  これは、見つかった以下のエラーを報告する:
+
+  <variablelist>
+    <varlistentry><term>Missing reverse mapping:</term>
+    <listitem><para>
+      A record with mapping A-&gt;B where there is no B-&gt;A. Default action
+      in repair mode is to "fix" this by adding the reverse mapping.
+      B-&gt;A が無いのにA-&gt;Bがマッピングされているレコード。修復モードにおける
+      既定値の動作は、逆方向のマッピングを追加することでこれを"修復"する。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>Invalid mapping:</term>
+    <listitem><para>
+      A record with mapping A-&gt;B where B-&gt;C. Default action
+      is to "delete" this record.
+      B-&gt;C なのにA-&gt;Bというマッピングがあるレコード。既定値の動作は
+      このレコードを"削除"する。
+    </para></listitem>
+  </varlistentry>
+
+  <varlistentry><term>Missing or invalid HWM:</term>
+    <listitem><para>
+      A high water mark is not at least equal to the largest ID in the
+      database. Default action is to "fix" this by setting it to the
+      largest ID found +1.
+      データベース中で最も大きなIDに対して、少なくともwater markが等しくない。
+      既定値の動作は見つかった、最も大きなID+1にこれを設定することで
+      修復する。
+    </para></listitem>
+  </varlistentry>
+
+  <varlistentry><term>Invalid record:</term>
+    <listitem><para>
+      Something we failed to parse. Default action is to "edit" it
+      in interactive and "delete" it in automatic mode.
+      何らかの理由で解析に失敗した。既定値の動作は、対話モードでは
+      "編集"で、自動モードでは"削除"である。      
+    </para></listitem>
+  </varlistentry>
+</variablelist>
+</para>
+</refsect2>
+
+
+<refsect2>
 <title>USERSHARE</title>
 
 <para>
@@ -1554,6 +1667,187 @@ smb.confテキストファイル中では、むしろメタパラメーターで
 </refsect2>
 
 <refsect2>
+<title>REGISTRY</title>
+<para>
+Manipulate Samba's registry.
+Sambaのレジストリを操作する。
+</para>
+
+<para>レジストリコマンドは以下の通り:
+<simplelist>
+<member>net registry enumerate   - numerate registry keys and values.レジストリキーと値に番号を振る。</member>
+<member>net registry createkey   - Create a new registry key.新しいレジストリキーを作成する。</member>
+<member>net registry deletekey   - Delete a registry key.レジストリキーを削除する。</member>
+<member>net registry getvalue    - Print a registry value.レジストリキーの値を印刷する。</member>
+<member>net registry getvalueraw - Print a registry value (raw format).レジストリキーの値を印刷する(生の値で)。</member>
+<member>net registry setvalue    - Set a new registry value.新しいレジストリ値を設定する。</member>
+<member>net registry increment   - Increment a DWORD registry value under a lock.ロックしている状態で、DWORDレジストリ値を増やす。
+</member>
+<member>net registry deletevalue - Delete a registry value.レジストリ値を削除する。</member>
+<member>net registry getsd       - Get security descriptor.セキュリティ識別子を得る。</member>
+<member>net registry getsd_sdd1  - Get security descriptor in sddl format.sddl形式でセキュリティ識別子を得る。
+</member>
+<member>net registry setsd_sdd1  - Set security descriptor from sddl format
+string.sddl形式文字列でセキュリティ識別子を設定する。</member>
+<member>net registry import      - Import a registration entries (.reg) file.レジストリエントリ(.reg)ファイルをインポートする。
+</member>
+<member>net registry export      - Export a registration entries (.reg) file.レジストリエントリ(.reg)ファイルをエクスポートする。
+</member>
+<member>net registry convert     - Convert a registration entries (.reg) file.レジストリエントリ(.reg)ファイルを変換する。
+</member>
+</simplelist>
+</para>
+
+<refsect3>
+  <title>REGISTRY ENUMERATE <replaceable>key</replaceable> </title>
+  <para>Enumerate subkeys and values of <emphasis>key</emphasis>
+  Enumerate subkeysと<emphasis>key</emphasis>の値に番号を振る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY CREATEKEY <replaceable>key</replaceable> </title>
+  <para>Create a new <emphasis>key</emphasis> if not yet existing.
+  もしもまだ存在しないならば、新しい<emphasis>key</emphasis>を作成する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY DELETEKEY <replaceable>key</replaceable> </title>
+  <para>Delete the given <emphasis>key</emphasis> and all of its
+  subkeys and values from the registry.
+  与えられた<emphasis>key</emphasis>とそのサブキーと値をレジストリから削除する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+
+  <para>Output type and actual value of the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETVALUERAW <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+  <para>Output the actual value of the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.
+  与えられた<emphasis>key</emphasis>の<emphasis>name</emphasis>の値の
+  実際の値を出力する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY SETVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable> <replaceable>type</replaceable> <!--
+  --><replaceable>value</replaceable> ...<!--
+  --></title>
+
+  <para>Set the value <emphasis>name</emphasis>
+  of an existing <emphasis>key</emphasis>.
+  <emphasis>type</emphasis> may be one of
+  <emphasis>sz</emphasis>, <emphasis>multi_sz</emphasis> or
+  <emphasis>dword</emphasis>.
+  In case of <emphasis>multi_sz</emphasis> <replaceable>value</replaceable> may
+  be given multiple times.
+  存在する<emphasis>key</emphasis>の<emphasis>name</emphasis>の値を設定する。
+  <emphasis>type</emphasis>は、<emphasis>sz</emphasis>、
+  <emphasis>multi_sz</emphasis> か <emphasis>dword</emphasis>のうちのどれかが選べる。
+  <emphasis>multi_sz</emphasis> <replaceable>値</replaceable>の場合は、
+  複数個設定できる。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY INCREMENT <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable> <replaceable>[inc]</replaceable><!--
+  --></title>
+
+  <para>Increment the DWORD value <emphasis>name</emphasis>
+  of <emphasis>key</emphasis> by <replaceable>inc</replaceable>
+  while holding a g_lock.
+  <emphasis>inc</emphasis> defaults to 1.
+  g_lockを行う間、<replaceable>inc</replaceable>だけ増やすことで
+  <emphasis>key</emphasis>の<emphasis>name</emphasis>のDWORD値を増加させる。
+  <emphasis>inc</emphasis> 
+  の既定値は1である。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY DELETEVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+
+  <para>Delete the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.
+  与えられた<emphasis>key</emphasis>の<emphasis>name</emphasis>の
+  値を削除する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETSD <replaceable>key</replaceable></title>
+
+  <para>Get the security descriptor of the given <emphasis>key</emphasis>.
+  与えられた<emphasis>key</emphasis>のセキュリティ識別子を得る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETSD_SDDL <replaceable>key</replaceable></title>
+
+  <para>Get the security descriptor of the given <emphasis>key</emphasis> as a
+  Security Descriptor Definition Language (SDDL) string.
+  セキュリティ記述子定義言語(SDDL)文字列として与えられた
+  <emphasis>key</emphasis>のセキュリティ記述子を得る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY SETSD_SDDL <replaceable>key</replaceable><!--
+  --><replaceable>sd</replaceable></title>
+
+  <para>Set the security descriptor of the given <emphasis>key</emphasis> from a
+  Security Descriptor Definition Language (SDDL) string <emphasis>sd</emphasis>.
+  セキュリティ記述子定義言語(SDDL) <emphasis>sd</emphasis>から
+  与えられた<emphasis>key</emphasis>のセキュリティ記述子を設定する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY IMPORT <replaceable>file</replaceable><!--
+  --><replaceable>[opt]</replaceable></title>
+
+  <para>Import a registration entries (.reg) <emphasis>file</emphasis>.
+  レジストリエントリ(.reg)<emphasis>file</emphasis>ファイルをインポートする。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY EXPORT <replaceable>key</replaceable><!--
+  --><replaceable>file</replaceable><!--
+  --><replaceable>[opt]</replaceable></title>
+
+  <para>Export a <emphasis>key</emphasis> to a registration entries (.reg)
+  レジストリエントリ(.reg)<emphasis>file</emphasis>に<emphasis>key</emphasis>
+  をエクスポートする。
+  <emphasis>file</emphasis>.
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY CONVERT <replaceable>in</replaceable> <!--
+  --><replaceable>out</replaceable> <!--
+  --><replaceable>[[inopt] outopt]</replaceable></title>
+
+  <para>Convert a registration entries (.reg) file <emphasis>in</emphasis>.
+  レジストリエントリ(.reg)ファイル<emphasis>中に</emphasis>変換する。
+  </para>
+</refsect3>
+
+</refsect2>
 
 <refsect2>
 <title>EVENTLOG</title>
