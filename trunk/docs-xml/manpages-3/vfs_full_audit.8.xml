@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.5</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
 </refmeta>
 
 
@@ -185,6 +185,7 @@
 		<listitem>
 		<para>LISTはVFSオペレーションのリストで、動作が成功したときに記録を残すものを表す。
 		オペレーションは上に示したリストにある名前で指定する。
+		名前の前に"!"を付けることで、操作から外せる。
 		</para>
 
 		</listitem>
@@ -195,6 +196,7 @@
 		<listitem>
 		<para>LISTはVFSオペレーションのリストで、動作が失敗したときに記録を残すものを表す。
 		オペレーションは上に示したリストにある名前で指定する。
+		名前の前に"!"を付けることで、操作から外せる。
 		</para>
 
 		</listitem>
@@ -232,7 +234,8 @@
 
 	<para>[records]共有の中のファイルやディレクトリをオープンしたときにログを残す。
 	その際、LOCAL7ファシリティーと、ALERTプライオリティーを使用し、
-	ユーザー名とIPアドレスも記録する:</para>
+	ユーザー名とIPアドレスも記録する。ログは:失敗時におけるVFS機能
+	オープンを含まない:</para>
 
 <programlisting>
         <smbconfsection name="[records]"/>
@@ -241,6 +244,7 @@
 	<smbconfoption name="full_audit:prefix">%u|%I</smbconfoption>
 	<smbconfoption name="full_audit:success">open opendir</smbconfoption>
 	<smbconfoption name="full_audit:failure">all</smbconfoption>
+        <smbconfoption name="full_audit:failure">all !open</smbconfoption>
 	<smbconfoption name="full_audit:facility">LOCAL7</smbconfoption>
 	<smbconfoption name="full_audit:priority">ALERT</smbconfoption>
 </programlisting>
@@ -264,7 +268,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このドキュメントは、Samba 3.0.25 - 3.5.6 対応のものである。</para>	
+	<para>このドキュメントは、Samba 3.6.0 対応のものである。</para>	
     
     <para>このドキュメントの翻訳は
 	<itemizedlist>
