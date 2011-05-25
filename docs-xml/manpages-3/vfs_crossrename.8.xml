@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_crossrename.8">
+
+<refmeta>
+	<refentrytitle>vfs_crossrename</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_crossrename</refname>
+	<refpurpose>ファイルシステムをまたがって、サーバサイドでファイルの改名を行う</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = crossrename</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>vfs_crossrename</command> VFS モジュールは、
+	ソースとターゲットが物理的に別のデバイスにあったとしても、改名操作を
+	行えるようにする。エクスプローラでの"移動"は、通常、単一の共有か
+	デバイス内においては、改名操作である。通常そのような改名操作は
+	NT_STATUS_NOT_SAME_DEVICEを返し、クライアントは手動でのコピーと
+	削除操作を行うことにより移動を行わなければならない。もしもコピーに
+	よる改名が、サーバによって行われた場合、これは、より効率的である。
+	vfs_crossrenameは、サーバサイド、デバイス間で改名操作を行うことを
+	試みる。しかし、現在の所、解決できない制限事項がある:
+
+	<variablelist>
+		<varlistentry>
+		  ファイルのACLが保存されない
+		</varlistentry>
+		<varlistentry>
+		  EAのメタデータが保存されない
+		</varlistentry>
+		<varlistentry>
+		  全部のサブディレクトリの改名は再帰的に行えず、このような
+		  場合、引き続きSTATUS_NOT_SAME_DEVICEが返り、クライアントに
+		  何をすべきかを伝える。
+		</varlistentry>
+		<varlistentry>
+		  非常に大量のファイルの改名操作は、クライアントが改名
+		  操作が速やかに終了することを期待しているため、クライアントを
+		  ハングさせる可能性がある。
+		</varlistentry>
+	</variablelist>
+	</para>
+
+	<para>このモジュールはスタッカブルである。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>crossrename:sizelimit = BYTES</term>
+		<listitem>
+		<para>サーバサイド、デバイス間の改名は、タイムアウトを防ぐ
+		ために、MiB単位での定義された大きさ以下のファイルサイズの
+		ファイルについてのみ行われる。既定値のサイズ制限値は
+		20(MiB)である。
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>50MBを超す、すべてのファイルに対し、共有内の、サーバサイド、
+	デバイス間の改名を指定する例:</para>
+
+<programlisting>
+        <smbconfsection name="[testshare]"/>
+	<smbconfoption name="path">/data/mounts</smbconfoption>
+	<smbconfoption name="vfs objects">crossrename</smbconfoption>
+	<smbconfoption name="crossrename:sizelimit">50</smbconfoption>
+</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	<para>このマニュアルページはSamba 3.6.0 のために修正された。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 3.6.0 対応のものである。</para>	
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+
+</refentry>
