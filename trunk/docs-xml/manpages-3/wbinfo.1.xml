@@ -7,7 +7,7 @@
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
-	<refmiscinfo class="version">3.5</refmiscinfo>
+	<refmiscinfo class="version">3.6</refmiscinfo>
 </refmeta>
 
 
@@ -23,40 +23,49 @@
 		<arg choice="opt">--all-domains</arg>
 		<arg choice="opt">--allocate-gid</arg>
 		<arg choice="opt">--allocate-uid</arg>
+                <arg choice="opt">-c</arg>
+                <arg choide="opt">--ccache-save</arg>
+                <arg choide="opt">--change-user-password</arg>
 		<arg choice="opt">-D domain</arg>
 		<arg choice="opt">--domain domain</arg>
+                <arg choide="opt">--dsgetdcname domain</arg>
 		<arg choice="opt">-g</arg>
 		<arg choice="opt">--getdcname domain</arg>
 		<arg choice="opt">--get-auth-user</arg>
 		<arg choice="opt">-G gid</arg>
-		<arg choice="opt">-h</arg>
+                <arg choide="opt">--gid-info</arg>
+                <arg choide="opt">--group-info</arg>
+                <arg choice="opt">--help|-?</arg>
 		<arg choice="opt">-i user</arg>
 		<arg choice="opt">-I ip</arg>
 		<arg choice="opt">-K user%password</arg>
+                <arg choide="opt">--lanman</arg>
 		<arg choice="opt">-m</arg>
 		<arg choice="opt">-n name</arg>
 		<arg choice="opt">-N netbios-name</arg>
+                <arg choide="opt">--ntlmv2</arg>
+                <arg choide="opt">--online-status</arg>
 		<arg choice="opt">--own-domain</arg>
 		<arg choice="opt">-p</arg>
+                <arg choice="opt">-P|--ping-dc</arg>
 		<arg choice="opt">-r user</arg>
-		<arg choice="opt">--remove-uid-mapping uid,sid</arg>
-		<arg choice="opt">--remove-gid-mapping gid,sid</arg>
+                <arg choide="opt">-R|--lookup-rids</arg>
 		<arg choice="opt">-s sid</arg>
 		<arg choice="opt">--separator</arg>
-		<arg choice="opt">--sequence</arg>
 		<arg choice="opt">--set-auth-user user%password</arg>
-		<arg choice="opt">--set-uid-mapping uid,sid</arg>
-		<arg choice="opt">--set-gid-mapping gid,sid</arg>
 		<arg choice="opt">-S sid</arg>
+                <arg choide="opt">--sid-aliases</arg>
+                <arg choide="opt">--sid-to-fullname</arg>
 		<arg choice="opt">-t</arg>
 		<arg choice="opt">-u</arg>
 		<arg choice="opt">--uid-info uid</arg>
+                <arg choide="opt">--usage</arg>
 		<arg choice="opt">--user-domgroups sid</arg>
 		<arg choice="opt">--user-sids sid</arg>
 		<arg choice="opt">-U uid</arg>
 		<arg choice="opt">-V</arg>
-		<arg choice="opt">-Y sid</arg>
 		<arg choice="opt">--verbose</arg>
+		<arg choice="opt">-Y sid</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -107,19 +116,56 @@
 		</varlistentry>
 
 		<varlistentry>
+		<term>-c|--change-secret</term>
+		<listitem><para>信頼アカウントパスワードを変更する。ドメイン間信頼
+		アカウントパスワードを変更するために、<option>domain</option>と
+		組み合わせて使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--ccache-save <replaceable>username%password</replaceable></term>
+		<listitem><para>ccacheにユーザ名とパスワードを格納する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--change-user-password <replaceable>username</replaceable></term>
+		<listitem><para>ユーザのパスワードを変更する。新旧パスワードが要求される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
 		<term>--domain <replaceable>name</replaceable></term>
 		<listitem><para>このパラメーターで指定された操作が行われるドメインを
 		設定する。特殊なドメイン名である '.' は、現在<citerefentry><refentrytitle>
 		winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>が属する
-		ドメインを表すために使用される。今のところ、<option>--sequence
-		</option>、<option>-u</option> と <option>-g</option>
-		オプションのみがこのパラメーターに対応している。
+		ドメインを表すために使用される。今のところ、<option>-u</option> と
+		<option>-g</option>オプションのみがこのパラメーターに対応している。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>-D|--domain-info <replaceable>domain</replaceable></term>
 		<listitem><para>指定したドメインに関してのほとんどの情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--dsgetdcname <replaceable>domain</replaceable></term>
+		<listitem><para>ドメインのDCを捜す。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--gid-info <replaceable>gid</replaceable></term>
+		<listitem><para>gidからgroup infoを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--group-info <replaceable>user</replaceable></term>
+		<listitem><para>ユーザのgroup infoを得る。
 		</para></listitem>
 		</varlistentry>
 
@@ -157,7 +203,13 @@
 		に変換しようとする。もし指定された gid が idmap gid で指定された
 		範囲に収まらない場合、この操作は失敗する。</para></listitem>
 		</varlistentry>
-		
+
+                <varlistentry>
+                <term>-?</term>
+                <listitem><para>簡単なヘルプを表示する。
+                </para></listitem>
+                </varlistentry>		
+
 		<varlistentry>
 		<term>-i|--user-info <replaceable>user</replaceable></term>
 		<listitem><para>ユーザー情報を得る。
@@ -179,6 +231,12 @@
 		<listitem><para>Kerberos経由でユーザーの認証を試みる。
 		</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+                <term>--lanman</term>
+                <listitem><para>ユーザの認証時にlanman暗号化を使用する。
+                </para></listitem>
+                </varlistentry
 
 		<varlistentry>
 		<term>-m|--trusted-domains</term>
@@ -214,6 +272,20 @@
 		</para></listitem>
 		</varlistentry>
 
+                <varlistentry>
+                <term>--ntlmv2</term>
+                <listitem><para>ユーザの認証時にNTLMv2暗号化を使用する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--online-status <replaceable>domain</replaceable></term>
+                <listitem><para>ドメインがオンライン化オフラインかのどちらかに
+		マークされているかを表示する。オプションのdomain引数は、与えられた
+		ドメインのオンラインステータスのみに出力を制限する。
+                </para></listitem>
+                </varlistentry>
+
 		<varlistentry>
 		<term>--own-domain</term>
 		<listitem><para>所有するドメインを一覧表示する。
@@ -227,12 +299,27 @@
 		</para></listitem>
 		</varlistentry>
 
+                <varlistentry>
+                <term>-P|--ping-dc</term>
+                <listitem><para>使用するDCに対して何ら作用しないコマンドを
+		発光する。これは、使用するドメインコントローラに対してセキュア
+		チャネルでの接続が引き続き有効かどうかを調べる。これは、
+		wbinfo -t よりもさらに影響が少ない。
+                </para></listitem>
+                </varlistentry>
+
 		<varlistentry>
 		<term>-r|--user-groups <replaceable>username</replaceable></term>
 		<listitem><para>ユーザーが所属する UNIX の group ids 一覧を表示しようとする。
 		これはドメインコントローラーに登録されているユーザーにのみ動作する。
 		</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+                <term>-R|--lookup-rids <replaceable>rid1, rid2, rid3...</replaceable></term>
+                <listitem><para>RIDを名前に変換する。カンマで分離されたridの一覧を使う。
+                </para></listitem>
+                </varlistentry>
 		
 		<varlistentry>
 		<term>-s|--sid-to-name <replaceable>sid</replaceable></term>
@@ -248,12 +335,19 @@
 		<term>--separator</term>
 		<listitem><para>有効なwinbindセパレータを得る。
 		</para></listitem>
+		</varlistentry>
 
-		</varlistentry>
-		<varlistentry>
-		<term>--sequence</term>
-		<listitem><para>すべての既知のドメインのシーケンス番号を表示する。</para></listitem>
-		</varlistentry>
+                <varlistentry>
+                <term>--sid-aliases <replaceable>sid</replaceable></term>
+                <listitem><para>与えられたSIDに対するSIDの別名を得る。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--sid-to-fullname <replaceable>sid</replaceable></term>
+                <listitem><para>SIDを完全なユーザ名(DOMAIN\username)に変換する。
+                </para></listitem>
+                </varlistentry>
 
 		<varlistentry>
 		<term>--set-auth-user <replaceable>username%password</replaceable></term>
@@ -294,6 +388,12 @@
 		<term>--uid-info <replaceable>uid</replaceable></term>
 		<listitem><para>ユーザーID UIDとして接続されたユーザーのためのユーザー情報を得る。</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+                <term>--usage</term>
+                <listitem><para>簡単なヘルプを表示する。
+                </para></listitem>
+                </varlistentry>
 
 		<varlistentry>
 		<term>--user-domgroups <replaceable>sid</replaceable></term>
@@ -401,11 +501,11 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.3.6 - 3.5.6 対応のものである。</para>
+	<para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 山田 史朗 (shiro@miraclelinux.com)
 	によって行なわれた。</para>
-        <para>このドキュメントの Samba 3.2.4 - 3.5.6 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 3.6.0 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
 </refsect1>
 
 </refentry>
