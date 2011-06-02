@@ -1,0 +1,46 @@
+<samba:parameter name="client use spnego principal"
+                 context="G"
+				 type="boolean"
+                 advanced="1" developer="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このパラメータは、<citerefentry><refentrytitle>smbclient</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>とクライアントとして動作する、
+    他のSambaコンポーネントが、時々SPNEGOの交換中において与えられた、
+    サーバから供給されたプリンシパルを使う事を試みるかどうかを決める。</para>
+
+    <para>もしも有効にした場合、SambaはIPアドレスによってのみ知ることが出来る
+    サーバへ接続するためにKerberosを使うことを試みることが出来る。Kerberos
+    は名前に依存するので、この状況においては、通常機能しない。</para>
+
+    <para>もしも無効にすると、SambaはチケットをKDCに問い合わせる時、
+    サーバを検索する時に名前を使う。これは、サーバが他のサーバのなりすまし
+    かもしれない時、もう一つのサーバとして存在している時、
+    1つのプリンシパルとして認証を要求する状況を防ぐ。</para>
+
+    <para>Windows XP SP2とそれ以降のバージョンはすでにこの動作に従い、
+    Windows Vistaとそれ以降のサーバは、サーバサイド上で、もはやこの
+    'rfc4178 hint' プリンシパルを提供しない。</para>
+
+    <para>This parameter determines whether or not
+    <citerefentry><refentrytitle>smbclient</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> and other samba components
+    acting as a client will attempt to use the server-supplied
+    principal sometimes given in the SPNEGO exchange.</para>
+
+    <para>If enabled, Samba can attempt to use Kerberos to contact
+    servers known only by IP address.  Kerberos relies on names, so
+    ordinarily cannot function in this situation. </para>
+
+    <para>If disabled, Samba will use the name used to look up the
+    server when asking the KDC for a ticket.  This avoids situations
+    where a server may impersonate another, soliciting authentication
+    as one principal while being known on the network as another.
+    </para>
+
+    <para>Note that Windows XP SP2 and later versions already follow
+    this behaviour, and Windows Vista and later servers no longer
+    supply this 'rfc4178 hint' principal on the server side.</para>
+</description>
+<value type="default">no</value>
+</samba:parameter>
