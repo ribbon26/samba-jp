@@ -1,7 +1,8 @@
 #
 # set version
 #
-set VERSION=3.5.6
+setenv VERSION 3.6.0rc1
+setenv DOWNLOAD trunk
 #
 # extract archives
 #
@@ -14,6 +15,7 @@ cp -p setupjp.sh samba-$VERSION
 #
 echo get svn data
 (cd samba-$VERSION;sh setupjp.sh)
+exit
 #
 echo check file
 #
