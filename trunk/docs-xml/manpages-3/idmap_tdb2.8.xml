@@ -29,25 +29,7 @@
     idmap_rid のようなバックエンドはリードオンリーであるが、これは
     割り当て機能を持つバックエンドだと言える。つまり、新しいマッピング
     を生成するために、新しいユーザーやグループの ID を割り当てる必要が
-    あるということである。(割り当てを受け持つ)アロケータを idmap_tdb2
-    バックエンド自身が担当することもできるし、idmap_tdb や idmap_ldap
-    といった他のバックエンドにその処理を依頼することもできる。この機能は
-    <parameter>idmap alloc backend</parameter> パラメーターにより有効となる。
-	</para>
-
-	<para>
-    注意：この(もしくは他のアロケータとなりうる)バックエンドで本機能が
-    動作するためには、デフォルトのバックエンドが書き込み可能でなければ
-    ならない。uid と gid の割り当てに使われる範囲は、&quot;idmap uid&quot;
-    と &quot;idmap gid&quot; で構成されるデフォルトの範囲が使われる。
-	</para>
-
-	<para>
-    さらに、書き込み可能な idmap バックエンドを使うすべてのドメインの
-    ために、割り当てを実行できる唯一のグローバルなバックエンドがあるので、
-    明示的に tdb2 の idmap バックエンドで構成されたドメインは、
-    同じ範囲をデフォルトの範囲として持つべきである。つまり、グローバルの
-    uid / gid アロケータを使用する必要がある。以下の例を見て欲しい。
+    あるということである。
 	</para>
 </refsynopsisdiv>
 
@@ -59,9 +41,7 @@
 		<term>range = low - high</term>
 		<listitem><para>
             バックエンドが割り当て権限を持っていて、かつ利用可能な uid と gid
-            の範囲を定義する。このパラメーターが指定されない場合 winbind は
-            フェイルオーバーして、smb.conf の &quot;idmap uid&quot; と
-             &quot;idmap gid&quot; オプションを使う。
+            の範囲を定義する。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -109,15 +89,13 @@
 	<para>
     tdb2 がどのようにデフォルトの imapd バックエンドとして使われるかという
     例を以下に示す。全ドメインについて適用されるグローバルオプションで idmap
-    の範囲を設定していることがわかる。これと同じ範囲が uid/gid の割り当て
-    の際に使われる。
+    の範囲を設定していることがわかる。
 	</para>
 
 	<programlisting>
-	[global]
-	idmap backend = tdb2
-	idmap uid = 1000000-2000000
-	idmap gid = 1000000-2000000
+        [global]
+        idmap config * : backend = tdb2
+        idmap config * : range = 1000000-2000000
 	</programlisting>
 </refsect1>
 
@@ -133,7 +111,7 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 3.3.6 - 3.6.0 対応のものである。</para>
+    <para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
