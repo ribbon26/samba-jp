@@ -773,6 +773,126 @@ net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
 <para>現在のドメイン間の信頼関係を一覧表示する。</para>
 
 </refsect3>
+</refsect2>
+
+<refsect2>
+<title>RPC TRUST</title>
+
+<refsect3>
+<title>RPC TRUST CREATE</title>
+
+<para>lsaCreateTrustedDomainEx2を呼び出すことで、trust trust objectを
+作成する。これは、ランダムなtrustパスワードを使う可能性がある、1つまたは
+2つのサーバ上で同時に行うことが出来る。
+Create a trust trust object by calling lsaCreateTrustedDomainEx2.
+The can be done on a single server or on two servers at once with the
+possibility to use a random trust password.</para>
+
+<variablelist><title>オプション:</title>
+<varlistentry>
+<term>otherserver</term>
+<listitem><para>2番目のドメインのドメインコントローラ</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otheruser</term>
+<listitem><para>2番目のドメインのAdmin user</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomainsid</term>
+<listitem><para>2番目のドメインのSID</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>other_netbios_domain</term>
+<listitem><para>2番目のドメインの(短い)NetBIOS名</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomain</term>
+<listitem><para>2番目のドメインの(完全な)DNS名</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>trustpw</term>
+<listitem><para>Trust password</para></listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist><title>使用例:</title>
+<varlistentry>
+<term>srv1.dom1.dom上で、ドメイン dom2用のtrust objectを作成</term>
+<listitem><literallayout>
+net rpc trust create \
+    otherdomainsid=S-x-x-xx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxx \
+    other_netbios_domain=dom2 \
+    otherdomain=dom2.dom \
+    trustpw=12345678 \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+<varlistentry>
+<term>dom1とdom2の間での信頼関係を作成</term>
+<listitem><literallayout>
+net rpc trust create \
+    otherserver=srv2.dom2.test \
+    otheruser=dom2adm \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+</variablelist>
+</refsect3>
+
+<refsect3>
+<title>RPC TRUST DELETE</title>
+
+<para>lsaDeleteTrustedDomainを呼び出すことで、trust trust objectを削除する。
+これは、1つまたは2つのサーバで同時に行える。
+Delete a trust trust object by calling lsaDeleteTrustedDomain.
+The can be done on a single server or on two servers at once.</para>
+
+<variablelist><title>オプション:</title>
+<varlistentry>
+<term>otherserver</term>
+<listitem><para>2番目のドメインのドメインコントローラ</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otheruser</term>
+<listitem><para>2番目のドメインのAdmin user</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomainsid</term>
+<listitem><para>2番目のドメインのSID</para></listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist><title>使用例:</title>
+<varlistentry>
+<term>srv1.dom1.dom上ドメインdome2用のでtrust obejectを削除する。</term>
+<listitem><literallayout>
+net rpc trust delete \
+    otherdomainsid=S-x-x-xx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxx \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+<varlistentry>
+<term>Delete a trust relationship between dom1 and dom2</term>
+<listitem><literallayout>
+net rpc trust delete \
+    otherserver=srv2.dom2.test \
+    otheruser=dom2adm \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+</variablelist>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
 
 <refsect3>
 <title>RPC RIGHTS</title>
