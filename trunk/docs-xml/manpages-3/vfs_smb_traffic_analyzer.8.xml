@@ -44,6 +44,8 @@
 	  一覧のみをサポートし、いくつかの欠点があった。プロトコルバージョン2では
 	  バージョン1が持っていた問題を解決することと、新しい機能追加が行われた
 	  ものである。
+	  Samba 3.6.0リリースから、モジュールは既定値でバージョン2のプロトコルで
+	  動作する。
 	</para>
 </refsect1>
 
@@ -79,6 +81,7 @@
 	<listitem><para><command>SHARE</command> - VFS操作が行われた共有の名前</para></listitem>
 	<listitem><para><command>FILENAME</command> - VFS操作によって使われたファイルの名前</para></listitem>
 	<listitem><para><command>TIMESTAMP</command> - VFS操作が行われたことを示す "yyyy-mm-dd hh-mm-ss.ms" での時間</para></listitem>
+       <listitem><para><command>IP</command> - VFS操作を開始したクライアントマシンのIPアドレス(v4又はv6)。</para></listitem>
 	</itemizedlist>
 
 	</para>
@@ -143,7 +146,7 @@
 		the receiver may run with a different sub-release number than the module.
 		しかしながら、V2.xプロトコル上で両者が動いても、たとえモジュールが
 		より新しい副リリース中でのみ実装される機能を使うとしても、receiverは
-		クラッシュしない。★さらに★、もしもモジュールが、新しい副リリースから
+		クラッシュしない。もしもモジュールが、新しい副リリースから
 		新しい機能を使う場合で、receiverが古いプロトコルで動作する場合、
 		それは単に機能を無視するだけである。もちろん、receiverとモジュールが
 		共にプロトコルの同じ副リリースを使うのが最善である。
@@ -240,9 +243,10 @@
                 <varlistentry>
                 <term>smb_traffic_analyzer:protocol_version = STRING</term>
                 <listitem>
-                <para>もしもSTRINGがV1に一致するか全く与えられていない場合、
-		モジュールはバージョン1のプロトコルを使う。もしもSTRINGが"V2"に
-		一致した場合、モジュールはバージョン2のプロトコルを使う。
+                <para>もしもSTRINGがV1に一致する場合、
+		モジュールはバージョン1のプロトコルを使う。もしもSTRINGが
+		なかった場合、モジュールはバージョン2のプロトコルを使い、それが
+		既定値となる。
                 </para>
 		</listitem>
 		</varlistentry>
@@ -258,7 +262,6 @@
         <smbconfsection name="[example_share]"/>
         <smbconfoption name="path">/data/example</smbconfoption>
         <smbconfoption name="vfs_objects">smb_traffic_analyzer</smbconfoption>
-        <smbconfoption name="smb_traffic_analyzer:protocol_version">V2</smbconfoption>
         <smbconfoption name="smb_traffic_analyzer:host">examplehost</smbconfoption>
         <smbconfoption name="smb_traffic_analyzer:port">3491</smbconfoption>
         </programlisting>

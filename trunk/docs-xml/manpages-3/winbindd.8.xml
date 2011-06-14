@@ -46,9 +46,8 @@
 	<command>smbd</command> 、<command>ntlm_auth</command> 、
 	PAM モジュールの <command>pam_winbind.so</command> に対するサービスを提供する。
 	この場合、
-	<smbconfoption name="idmap uid"/> および
-	<smbconfoption name="idmap gid"/> パラメーターは不要である
-	(これは「netlogon [proxy only mode」と呼ばれる)。
+        <smbconfoption name="idmap config * : range"/>
+	パラメーターは不要である(これは「netlogon [proxy only mode」と呼ばれる)。
 	</para>
 
 	<para>
@@ -271,11 +270,9 @@ hosts:		files wins
 		<listitem><para>
 		<smbconfoption name="winbind separator"/></para></listitem>
 		<listitem><para>
-		<smbconfoption name="idmap uid"/></para></listitem>
+                <smbconfoption name="idmap config * : range"/></para></listitem>
 		<listitem><para>
-		<smbconfoption name="idmap gid"/></para></listitem>
-		<listitem><para>
-		<smbconfoption name="idmap backend"/></para></listitem>
+                <smbconfoption name="idmap config * : backend"/></para></listitem>
 		<listitem><para>
 		<smbconfoption name="winbind cache time"/></para></listitem>
 		<listitem><para>
@@ -373,8 +370,7 @@ auth  required    /lib/security/pam_unix.so \
         winbind cache time = 10
         template shell = /bin/bash
         template homedir = /home/%D/%U
-        idmap uid = 10000-20000
-        idmap gid = 10000-20000
+        idmap config * : range = 10000-20000
         workgroup = DOMAIN
         security = domain
         password server = *
@@ -418,7 +414,7 @@ auth  required    /lib/security/pam_unix.so \
 	複数の UNIX マシンで <command>winbindd</command>
 	を実行した場合、一般的に
 	winbindd によって割り当てられるユーザー ID とグループ ID はマシン毎に異なる。
-	<smbconfoption><name>idmap backend</name></smbconfoption> パラメーターで、情報を共有する設定を行わない限り、
+	<smbconfoption name="idmap config * : backend"/>パラメーターで、情報を共有する設定を行わない限り、
 	ユーザー ID とグループ ID はローカルマシン内でのみ有効である。
 	</para>
 
@@ -579,7 +575,7 @@ auth  required    /lib/security/pam_unix.so \
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.3.6 - 3.6.0 対応のものである。</para>
+	<para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
