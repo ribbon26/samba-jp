@@ -21,34 +21,20 @@
     これは Windows 98 と Windows NT との間で通信を行なうときに必要とされるもっとも一般的な設定(訳注: ユーザーレベルのセキュリティ)である。
     </para>
 
-    <para>その他に <command moreinfo="none">security = share</command>、
-    <command moreinfo="none">security = server</command>、
-    <command moreinfo="none"> security = domain </command> が設定可能な値である。
-    (訳注:  <command moreinfo="none"> security = ads </command>も設定可能)</para>
+    <para>その他に Samba を Windows ドメインに参加させることが出来る、
+    <command moreinfo="none"> security = ads </command>、
+    <command moreinfo="none"> security = domain </command>と、廃止予定の
+    <command moreinfo="none">security = share</command>と
+    <command moreinfo="none">security = server</command> が設定可能な値である。</para>
 
     <para> 2.0.0 以前のバージョンの Samba では、
     主に過去との互換性を保つ目的で、 <command moreinfo="none">security = share</command> がデフォルトであった。
     </para>
 
-    <para> Windows for Workgroups(WfWg) には、
-    このオプションの設定時に注意すべきバグがある。
-    このパラメーターが user もしくは server の場合、WfWg クライアントは、
-     &quot;connect drive&quot;ダイアログボックスで入力したパスワードを完全に無視してしまう。
-    そのため、WfWg にログオンしたユーザー以外のユーザーで、Samba の サービスに
-    接続することが(不可能でない場合でも)非常に難しくなっている。</para>
-
-    <para> PC上で UNIX マシン上と同じユーザー名を使う場合は、
-    <command moreinfo="none">security = user</command> を用いるとよいだろう。
-    UNIX マシン上にないユーザー名を使っている場合は、
-    <command moreinfo="none">security = share</command> を使う必要がある。
-    </para>
-
-    <para>パスワードなしの共有(ゲスト共有)の作成が主目的である場合も、
-    <command moreinfo="none">security = share</command> を使った方がよいであろう。
-    この設定は、通常共有プリンターサーバーで使われることが多い。
-    <command moreinfo="none">security = user</command> の設定で、
-    ゲスト共有を作成するのは、多少複雑になる。
-    詳細については、<smbconfoption name="map to guest"/> パラメーターを参照のこと。</para>
+    <para>パスワードなしの共有(ゲスト共有)の作成が主目的である場合は、
+    <command moreinfo="none">security = user</command>と、
+    <smbconfoption name="map to guest"/>を使うべきである。
+    この設定は、通常共有プリンターサーバーで使われることが多い。</para>
 
     <para>
     <smbconfoption name="NetBIOS aliases"/> を用いることで、
@@ -59,8 +45,65 @@
 
     <para>以下、それ以外の設定について説明する。</para>
 
+    <para><anchor id="SECURITYEQUALSUSER"/><emphasis>SECURITY = USER</emphasis></para>
+
+    <para>これは、Samba セキュリティ設定の既定値である。ユーザレベルのセキュリティでは、
+    クライアントは最初に正しい(<smbconfoption name="username map"/>を使うことによって
+    マップ可能な)ユーザ名とパスワードで最初に&quot;ログオン&quot;する必要がある。
+    暗号化パスワード(<smbconfoption name="encrypted passwords"/>パラメータ参照)も
+    このセキュリティモードで使うことが出来る。<smbconfoption name="user"/>と
+    <smbconfoption name="guest only"/>のようなパラメータは、もしも設定された場合、
+    有効となり、この接続上で使用するために、UNIX ユーザを変更できるが、それは、
+    そのユーザが正しく認証されたあとである。</para>
+
+    <para>要求されたリソースの名前は、サーバによるクライアントの認証が
+    正しく完了するまでサーバに<emphasis>送られない</emphasis>ことに
+    <emphasis>注意</emphasis>。これは、なぜ、ゲスト共有が、不明なユーザを
+    <smbconfoption name="guest account"/>に、自動的にマップする事を許可しないと
+    ユーザレベルのセキュリティが動作しないかという事の理由である。これの動作
+    詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
+
+    <para><link linkend="VALIDATIONSECT">NOTE ABOUT USERNAME/PASSWORD VALIDATION</link>節も参照のこと。</para>
+
+    <para><anchor id="SECURITYEQUALSDOMAIN"/><emphasis>SECURITY = DOMAIN</emphasis></para>
+
+    <para>このモードは、もしも、<citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>によって、このマシンをWindows NT ドメインに
+    追加するのに使った後にのみ正しく動作する。これは、
+    <smbconfoption name="encrypted passwords"/>パラメータが、<constant>yes</constant>
+    に設定されていることを前提とする。このモードにおいては、Windows NT サーバが
+    行うのと正確に同じ方法で、Samba はユーザ名/パスワードを
+    Windows NT プライマリあるいはバックアップドメインコントローラに送ることで
+    検証しようとする。</para>
+
+    <para><emphasis>有効な UNIX ユーザは、ファイルにアクセスするためにマップ
+    するための有効な UNIX アカウントを Samba が得られるようにするため、
+    ドメインコントローラ上でのアカウントと同様に存在する必要があることに
+    <emphasis>注意</emphasis>。</para>
+
+    <para>クライアントの観点からは、
+    <command moreinfo="none">security = domain</command>は、
+    <command moreinfo="none">security = user</command>と同じである
+    ことに<emphasis>注意</emphasis>。これは認証をサーバがどのように扱うか
+    にのみ影響し、クライアントからのやりとりには何も影響しない。</para>
+
+    <para>要求されたリソースの名前は、サーバによるクライアントの認証が
+    正しく完了するまでサーバに<emphasis>送られない</emphasis>ことに
+    <emphasis>注意</emphasis>。これは、なぜ、ゲスト共有が、不明なユーザを
+    <smbconfoption name="guest account"/>に、自動的にマップする事を許可しないと
+    ユーザレベルのセキュリティが動作しないかという事の理由である。これの動作
+    詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
+
+    <para><link linkend="VALIDATIONSECT">
+    NOTE ABOUT USERNAME/PASSWORD VALIDATION</link>節も参照のこと。</para>
+
+    <para><smbconfoption name="password server"/>パラメータと
+	  <smbconfoption name="encrypted passwords"/>パラメータも参照のこと。</para>
+
     <para><anchor id="SECURITYEQUALSSHARE"/><emphasis>SECURITY = SHARE</emphasis></para> 
-		
+
+    <note><para>このオプションはSMB2と非互換のため廃止予定である。</para></note>
+
     <para>共有レベルのセキュリティに構成されたサーバーに接続するクライアントは、
     共有リソースに接続しようとする際に、
     適切なユーザー名とパスワードでサーバーにログオンしておく必要がない
@@ -142,70 +185,9 @@
     <para><link linkend="VALIDATIONSECT">
     ユーザー名とパスワード認証についての注意</link> のセクションも参照のこと。</para>
 
-    <para><anchor id="SECURITYEQUALSUSER"/><emphasis>SECURITY = USER</emphasis></para>
-
-    <para>これは、Samba 3.0 におけるデフォルトのセキュリティ設定である。
-    ユーザーレベルのセキュリティにおいては、クライアントは最初に正しいユーザー名とパスワード
-    (<smbconfoption name="username map"/> 
-    パラメーターを使ってマッピングしたものでもよい)で&quot;ログオン&quot;を行なう必要がある。
-    このセキュリティレベルでは、暗号化パスワード(
-    <smbconfoption name="encrypted passwords"/> パラメーターを参照のこと)
-    も使うことができる。
-    <smbconfoption name="user"/> や <smbconfoption name="guest only"/>
-    のようなパラメーターを利用して、この接続で利用するUNIX上のユーザーを変更することもできるが、
-    これはユーザー認証に成功した後で、行なわれる。</para>
-
-    <para><emphasis>注意</emphasis> : 要求されたリソース名は、
-    サーバーがクライアントの認証に成功するまでサーバーに<emphasis>送られない</emphasis>。
-    そのため、ユーザーレベルのセキュリティでは、サーバー上で不明なユーザーを自動的に
-    <smbconfoption name="guest account"/>
-    として処理するようにしない限り、ゲスト共有がうまく動作しない。
-    上記処理の詳細については、
-    <smbconfoption name="map to guest"/>
-    パラメーターを参照のこと。</para>
-
-    <para><link linkend="VALIDATIONSECT">
-    ユーザー名とパスワード認証についての注意</link> のセクションも参照のこと。</para>
-
-    <para><anchor id="SECURITYEQUALSDOMAIN"/><emphasis>SECURITY = DOMAIN</emphasis></para>
-
-    <para> このモードは、 <citerefentry><refentrytitle>net</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry> コマンドで、
-    マシンを Windows NT ドメインに参加させている時のみ正しく動作する。 
-    このモードでは、<smbconfoption name="encrypted passwords"/>
-    パラメーターを <constant>yes</constant> 
-    にすることが求められる。このモードでは、Samba は認証要求を Windows NT のプライマリ、
-    もしくはバックアップドメインコントローラーに対して、
-    Windows NT Server と全く同様の方法で依頼する。</para>
-
-    <para><emphasis>注意</emphasis>: ファイルアクセスを行なう際に、 Samba は
-    UNIX 上のアカウントを用いる必要があるため、
-    ドメインコントローラー上のアカウントだけでなく、 UNIX 上のアカウントも依然として
-    存在する必要がある。</para>
-
-    <para><emphasis>注意</emphasis>: クライアントからは、
-    <command moreinfo="none">security=domain</command> と
-    <command>security=user</command> とは同一である。
-    このパラメーターは、サーバーがどのように認証を行なうかにのみ影響し、
-    クライアントとのやりとりには何ら影響しない。</para>
-
-    <para><emphasis>注意</emphasis> : 要求されたリソース名は、
-    サーバーがクライアントの認証に成功するまでサーバーに<emphasis>送られない</emphasis>。
-    サーバー上で不明なユーザーを自動的に
-    <smbconfoption name="guest account"/>
-    として処理するようにしない限り、ゲスト共有がうまく動作しない。
-    上記処理の詳細については、<smbconfoption name="map to guest"/>
-    パラメーターを参照のこと。</para>
-
-    <para><link linkend="VALIDATIONSECT">
-    ユーザー名とパスワード認証についての注意</link> のセクションも参照のこと。</para>
-
-    <para><smbconfoption name="password server"/>パラメーターおよび
-          <smbconfoption name="encrypted passwords"/>パラメーターも参照のこと。</para>
-
     <para><anchor id="SECURITYEQUALSSERVER"/><emphasis>SECURITY = SERVER</emphasis></para>
 
-    <para> このモードの場合、 Samba はまず NT マシンのような別の
+    <para> この廃止予定のモードの場合、 Samba はまず NT マシンのような別の
     SMB サーバーにユーザー名とパスワードの認証を依頼する。
     これに失敗すると、<command moreinfo="none">security = user</command> 
     と同様に処理を行なう。このモードを用いる場合は、リモートサーバーが対応していない場合を
@@ -223,11 +205,17 @@
     クライアントがコネクションを一度切断するまでの間) Samba サーバーに対する認証は失敗して
     しまう。</para></note>
 
+    <note><para>もしも、クライアントがNTLMv2認証を選択した場合、このモードの処理は
+    <emphasis>失敗する</emphasis>。
+    </para></note>
+
     <note><para>クライアントからは、
     <command moreinfo="none">security=server</command> と
     <command moreinfo="none">security=user</command> とは同一である。
     このパラメーターは、サーバーがどのように認証を行なうかにのみ影響し、
     クライアントとのやりとりには何ら影響しない。</para></note>
+
+    <note><para>このオプションは廃止予定で、将来使えなくなる。</para><note>
 
     <para><emphasis>注意</emphasis> : 要求されたリソース名は、
     サーバーがクライアントの認証に成功するまでサーバーに<emphasis>送られない</emphasis>。
