@@ -5,42 +5,23 @@
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
     <para>このパラメーターは、<citerefentry><refentrytitle>smbclient</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry>とクライアントとして動作する、
-    他のSambaコンポーネントが、時々SPNEGOの交換中において与えられた、
-    サーバーから供給されたプリンシパルを使う事を試みるかどうかを決める。</para>
+    <manvolnum>8</manvolnum></citerefentry>をはじめとする、Sambaのコンポーネントが、
+    クライアントとして動作する時に、SPNEGO交換の際にサーバから提供されることが
+    あるプリンシパルを使うかどうかを制御する。</para>
 
-    <para>もしも有効にした場合、SambaはIPアドレスによってのみ知ることが出来る
-    サーバーへ接続するためにKerberosを使うことを試みることが出来る。Kerberos
-    は名前に依存するので、この状況においては、通常機能しない。</para>
+    <para>これを有効にした場合、SambaはIPアドレスのみで定義されている
+    サーバへ接続する際にもKerberosを使うことを試行する。しかし、Kerberos
+    は名前に依存したプロトコルなので、通常こうした状況においては機能しない。</para>
 
-    <para>もしも無効にすると、SambaはチケットをKDCに問い合わせる時、
-    サーバーを検索する時に名前を使う。これは、サーバーが他のサーバーのなりすまし
-    かもしれない時、もう一つのサーバーとして存在している時、
-    1つのプリンシパルとして認証を要求する状況を防ぐ。</para>
+    <para>これを無効にした場合、SambaはチケットをKDCに問い合わせる時、
+    サーバを検索する時に用いた名前を使う。これにより、あるサーバが
+    ネットワーク上で用いられている名前とは別のプリンシパルとして認証を
+    要求することで、別のサーバになりすましてしまうという事態を避ける
+    ことができる。</para>
 
-    <para>Windows XP SP2とそれ以降のバージョンはすでにこの動作に従い、
-    Windows Vistaとそれ以降のサーバーは、サーバーサイド上で、もはやこの
-    'rfc4178 hint' プリンシパルを提供しない。</para>
-
-    <para>This parameter determines whether or not
-    <citerefentry><refentrytitle>smbclient</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry> and other samba components
-    acting as a client will attempt to use the server-supplied
-    principal sometimes given in the SPNEGO exchange.</para>
-
-    <para>If enabled, Samba can attempt to use Kerberos to contact
-    servers known only by IP address.  Kerberos relies on names, so
-    ordinarily cannot function in this situation. </para>
-
-    <para>If disabled, Samba will use the name used to look up the
-    server when asking the KDC for a ticket.  This avoids situations
-    where a server may impersonate another, soliciting authentication
-    as one principal while being known on the network as another.
-    </para>
-
-    <para>Note that Windows XP SP2 and later versions already follow
-    this behaviour, and Windows Vista and later servers no longer
-    supply this 'rfc4178 hint' principal on the server side.</para>
+    <para>Windows XP SP2以降のバージョンは後者の動作を行うように変更されている。
+    また、Windows Vista以降がサーバとして機能する際にも、この
+    'rfc4178 hint' プリンシパルを提供しないようになっている。</para>
 </description>
 <value type="default">no</value>
 </samba:parameter>
