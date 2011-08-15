@@ -12,6 +12,8 @@ SAMBA_DOCS_XML_CONFIGURED_FILES= \
 
 SAMBA_DOCS_XML_CATALOG_FILE=	build/catalog.xml
 
+SAMBA_DOCS_XML_HTML_COMMON_XSL=	xslt/html-common.xsl
+
 SAMBA_DOCS_XML_BUILD_FILES= \
 	$(SAMBA_DOCS_XML_CONFIGURE_FILES) \
 	configure.ac \
@@ -22,7 +24,7 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	xslt/generate-attributions.xsl \
 	xslt/html \
 	xslt/html-chunk.xsl \
-	xslt/html-common.xsl \
+	xslt/html.xsl \
 	xslt/latex.xsl \
 	xslt/man.xsl \
 	xslt/manpage-summary.xsl \
@@ -53,7 +55,7 @@ html html-single htmlman3 manpages3:: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE
 	 XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/$(SAMBA_DOCS_XML_CATALOG_FILE)" \
 	 $(MAKE) -f Makefile $@
 
-config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES)
+config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL)
 	touch $@
 
 $(SAMBA_DOCS_XML_BUILD_FILES):
@@ -70,12 +72,18 @@ $(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
 	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
 	sed "s|@BUILDDIR@|`pwd`|g" $(SAMBA_DOCS_XML_CATALOG_FILE).in >$(SAMBA_DOCS_XML_CATALOG_FILE)
 
+
+$(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
+	awk '/<\/xsl:stylesheet>/ {print "<xsl:output method=\"html\" encoding=\"UTF-8\"/>"} {print}' $< >$@.tmp
+	mv $@.tmp $@
+
 clean::
 	[ -f Makefile.settings ] || exit 0; $(MAKE) -f Makefile $@
 
 distclean::
 	[ -f Makefile.settings ] || exit 0; $(MAKE) -f Makefile $@
-	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_CONFIGURED_FILES)
+	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) */*.tmp
+	rm -rf $(SAMBA_DOCS_XML_CONFIGURED_FILES)
 	rm -rf configure autom4te.cache
 	rm -rf config.stamp output
 
