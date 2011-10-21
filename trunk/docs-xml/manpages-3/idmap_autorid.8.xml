@@ -21,7 +21,7 @@
 	<para>The idmap_autorid backend provides a way to use an algorithmic
 	mapping scheme to map UIDs/GIDs and SIDs that is more deterministic
 	than idmap_tdb and easier to configure than idmap_rid.
-	idmap_autoridバックエンドは、idmap_tdbよりもより決定的な、UID/GIDと
+	idmap_autoridバックエンドは、idmap_tdbよりもより決定論的な、UID/GIDと
 	SIDをマップするためのアルゴリズム的なマッピング方法を提供し、idmap_rid
 	よりもより簡単に設定できる。</para>
 	<para>The module works similar to idmap_rid, but it automatically
@@ -30,18 +30,18 @@
 	configuration that is needed is the range of uid/gids that shall
 	be used for user/group mappings and an optional size of the ranges
 	to be used.
-	モジュールはidmap_ridと同じように動くが、各ドメインに対して使われる
-	レンジを自動的に設定し、そのため、フォレスト中の各ドメインに対して
-	特定のレンジを指定する必要がないので、設定しなければならない項目は、
+	モジュールはidmap_ridと同じように動作するが、各ドメインに対して使われる
+	レンジを自動的に設定するので、フォレスト中の各ドメインに対しては、
+	特定のレンジを指定する必要がなく、唯一設定できる項目は、
 	user/groupマッピングのために使われることができるuid/gidのレンジと、
-	使用されるレンジのオプションのサイズである。</para>
+	オプションの、レンジのサイズである。</para>
 	<para>The mappings of which domain is mapped to which range is stored
 	in autorid.tdb, thus you should backup this database regularly.
 	ドメインのマッピングはレンジにマップされ、それはautorid.tdbに
 	格納されるので、このデータベースを常時バックアップする必要がある。</para>
 	<para>Due to the algorithm being used, it is the module that is
 	most easy to use as it only requires a minimal configuration.
-	アルゴリズムが使われるという理由で、それは単に最小の設定のみを要求する
+	アルゴリズムによって処理が行われるので、これは、最小の設定のみで済む、
 	もっとも簡単に使うことが出来るモジュールである。
 	</para>
 </refsynopsisdiv>
@@ -64,16 +64,16 @@
 			for regular users. As the parameter cannot be changed later, please
 			plan accordingly for your expected number of users in a domain
 			with safety margins.
-			ドメイン毎のuid/gidの有効な数を定義する。一番小さい値は2000
+			ドメイン毎のuid/gidの有効範囲を定義する。一番小さい値は2000
 			である。この値より大きいRIDを伴うSIDはマップされず、無視され、
-			対応するマップは無視される。これはドメインのための最初のレンジの
-			後に変更すべきではないので、この値は十分に注意して選ばなければ
-			ならず、そうでないと、ドメイン間のマッピングは、予知できない結果
-			から、まぜこぜになってしまうだろう。WindowsドメインのRIDは
-			通常、ビルトインユーザーでは500から、通常のユーザーは1000から
-			始まることに注意してほしい。後でパラメーターの値を変えられないため、
-			安全なマージンをとって、予想されるドメイン中のユーザー数に対応
-			するように設定を行ってほしい。
+			対応するマップは無視される。これはドメインのための最初のレンジ
+			が定義された後に変更すべきではないため、この値は十分に注意して
+                        選ばなければならず、そうでないと、ドメイン間のマッピングは、
+                        予知できない結果によりまぜこぜになってしまうだろう。
+                        WindowsドメインのRIDは通常、ビルトインユーザーでは500から、
+                        通常のユーザーは1000から始まることに注意してほしい。後でパラメータ
+                        の値を変えられないため、安全なマージンをとって、予想される
+                        ドメイン中のユーザー数に対応するように設定を行ってほしい。
 		</para>
 		<para>既定値は 100000である。</para>
 		</listitem>
@@ -93,7 +93,7 @@
 	<para>
 		Correspondingly, the formula for calculating the RID for a
 		given Unix ID is this:
-		相応して、与えられたUnix IDのためRID計算方式は
+		同じように、与えられたUnix IDのためのRID計算方式は
 		以下のようになる:
 		<programlisting>
 			RID = ID - IDMAP UID LOW VALUE - DOMAINRANGENUMBER * RANGESIZE
@@ -127,8 +127,8 @@
 		plus a specific configuration for a trusted domain
 		that uses the SFU mapping scheme. Please note that idmap
 		ranges and sfu ranges are not allowed to overlap.
-		この例は、大量のユーザーがあり得るすべてのドメインと、それに
-		加えて、SFPマッピング方法を使う信頼されたドメインのための
+		この例は、大量のユーザーが存在しうるすべてのドメインと、それに
+		加えて、SFUマッピング方法を使う信頼されたドメインのための
 		特定の設定のために、既定値としてidmap_autoridを設定する方法を
 		示す。idmapレンジとsfuレンジはオーバーラップが許されない
 		事に注意してほしい。
@@ -164,7 +164,7 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
+    <para>このマニュアルページは Samba 3.6.0 - 3.6.1 対応のものである。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
