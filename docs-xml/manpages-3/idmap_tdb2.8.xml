@@ -44,6 +44,16 @@
             の範囲を定義する。
 		</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+                <term>script</term>
+                <listitem><para>
+			このオプションは、idマッピングを実行するために、
+			tdbカウンタの代替として使う、外部プログラムを定義するのに
+			使われる。マッピングはtdb2 idmapデータベースに格納される。
+			詳細は、以下のIDMAP SCRIPT節を参照のこと。
+		      </para></listitem>
+                </varlistentry>
 	</variablelist>
 </refsect1>
 
@@ -51,10 +61,24 @@
 	<title>IDMAP スクリプト</title>
 
 	<para>
-    tdb2 idmap バックエンドは、id のマッピングをスクリプトで実行するための
-    smb.conf の <parameter>idmap : script</parameter> オプションをサポート
-    している。このスクリプトは、以下のコマンドラインオプションを受け付ける
-    ようになっていなければならない。
+    tdb2 idmap バックエンドは、id のマッピングを外部プログラムで実行する
+    ため、 smb.conf の <parameter>idmap config * : script</parameter> 又は
+    将来廃止予定の、旧形式である<parameter>idmap : script</parameter> オプション
+    をサポートしている。
+        </para>
+
+        <para>
+	  スクリプトによるマッピングは、idカウンタを増やす事によって作成される
+	  マッピングの代わりに、idmap tdb2データベース中に格納される。そのため、
+          SID を UNIX の ID マッピングに対して渡すにあたり、このスクリプトは
+          SID の全範囲をカバーするべきである。そうでないと、スクリプトではカバー
+          されていない SID が、すでにスクリプトで割り当て済みの ID に割り当てられる
+          恐れがある。
+	</para>
+
+        <para>
+        このスクリプトは、以下のコマンドラインオプションを受け付ける
+        ようになっていなければならない。
 	</para>
 
 	<programlisting>
@@ -75,12 +99,6 @@
 	ERR:yyyy
 	</programlisting>
 
-	<para>
-    注意：SID を UNIX の ID マッピングに対して渡すにあたり、このスクリプトは
-    SID の全範囲をカバーするべきである。そうでないと、スクリプトではカバー
-    されていない SID が、すでにスクリプトで割り当て済みの ID に割り当てられる
-    恐れがある。 
-	</para>
 </refsect1>
 
 <refsect1>
@@ -88,8 +106,7 @@
 
 	<para>
     tdb2 がどのようにデフォルトの imapd バックエンドとして使われるかという
-    例を以下に示す。全ドメインについて適用されるグローバルオプションで idmap
-    の範囲を設定していることがわかる。
+    例を以下に示す。
 	</para>
 
 	<programlisting>
@@ -97,6 +114,13 @@
         idmap config * : backend = tdb2
         idmap config * : range = 1000000-2000000
 	</programlisting>
+
+        <programlisting>
+        [global]
+        idmap config * : backend = tdb2
+        idmap config * : range = 1000000-2000000
+        idmap config * : script = /usr/local/samba/bin/idmap_script.sh
+        </programlisting>
 </refsect1>
 
 <refsect1>
@@ -111,10 +135,11 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 3.6.0 対応のものである。</para>
+    <para>このマニュアルページは Samba 3.6.0 - 3.6.1 対応のものである。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+        <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
     </itemizedlist>
         によって行なわれた。</para>
 </refsect1>
