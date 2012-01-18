@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html><head><title>vfs_shadow_copy2</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="vfs_shadow_copy2"><a name="vfs_shadow_copy2.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>vfs_shadow_copy2 — Windows クライアントに対して、スナップショットを
-    シャドウコピーとして見せる。 </p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = shadow_copy2</code></p></div></div><div class="refsect1" title="説明"><a name="id2528780"/><h2>説明</h2><p>この VFS モジュールは
+    シャドウコピーとして見せる。 </p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">vfs objects = shadow_copy2</code></p></div></div><div class="refsect1" title="説明"><a name="id2491814"/><h2>説明</h2><p>この VFS モジュールは
 	<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p><code class="literal">vfs_shadow_copy2</code> VFS モジュールは
     Microsoft のシャドウコピーサービスと似た機能を提供する。
     適切に設定されると、このモジュールにより Microsoft
@@ -13,7 +12,7 @@
 	    </p></li><li class="listitem"><p>それぞれのファイルの inode 番号は変更され、
         オリジナルのものとは異なる。これにより「リストア」ボタンを
         押した際に共有が壊れたりすることがなくなる。
-	   </p></li></ol></div><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="設定"><a name="id2489207"/><h2>設定</h2><p><code class="literal">vfs_shadow_copy2</code>は、ファイルシステムが
+	   </p></li></ol></div><p>このモジュールはスタック可能である。</p></div><div class="refsect1" title="設定"><a name="id2490535"/><h2>設定</h2><p><code class="literal">vfs_shadow_copy2</code>は、ファイルシステムが
     スナップショットを実装していることを前提にしている。
     一般的なファイルシステムの多くが標準でこれをサポートしている。
 	</p><p><code class="literal">vfs_shadow_copy2</code>が認識できるように、
@@ -27,7 +26,7 @@
     以下の<a class="citerefentry" href="date.1.html"><span class="citerefentry"><span class="refentrytitle">date</span>(1)</span></a>コマンドで生成できる：
 	</p><pre class="programlisting">
 	TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S
-	</pre></div><div class="refsect1" title="オプション"><a name="id2489436"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">shadow:snapdir = SNAPDIR
+	</pre></div><div class="refsect1" title="オプション"><a name="id2490654"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">shadow:snapdir = SNAPDIR
         </span></dt><dd><p>スナップショットがあるディレクトリへのパス。
         </p></dd><dt><span class="term">shadow:basedir = BASEDIR
 		</span></dt><dd><p>スナップショットが参照するベースディレクトリへのパス。
@@ -40,21 +39,21 @@
         番号を持つ場合に必要となる。（訳注：そのようなシステムにおいて）
         このオプションを設定しないでシャドウコピー UI の「リストア」
         ボタンを押すと、共有違反で失敗してしまう。
-        </p></dd></dl></div></div><div class="refsect1" title="設定例"><a name="id2489516"/><h2>設定例</h2><p>ユーザーのホームディレクトリでシャドウコピーをサポートするには
+        </p></dd></dl></div></div><div class="refsect1" title="設定例"><a name="id2531109"/><h2>設定例</h2><p>ユーザーのホームディレクトリでシャドウコピーをサポートするには
     以下の設定を行なう：</p><pre class="programlisting">
     <em class="parameter"><code>[homes]</code></em>
 	<a class="link" href="smb.conf.5.html#VFSOBJECTS" target="_top">vfs objects = shadow_copy2</a>
 	<a class="link" href="smb.conf.5.html#SHADOW:SNAPDIR" target="_top">shadow:snapdir = /data/snaphots</a>
 	<a class="link" href="smb.conf.5.html#SHADOW:BASEDIR" target="_top">shadow:basedir = /data/home</a>
-</pre></div><div class="refsect1" title="警告"><a name="id2489568"/><h2>警告</h2><p>これはバックアップでも、アーカイブでも、バージョン管理のための
+</pre></div><div class="refsect1" title="警告"><a name="id2531265"/><h2>警告</h2><p>これはバックアップでも、アーカイブでも、バージョン管理のための
     機能でもないことに注意。</p><p>Samba と Windows の双方において、<code class="literal">vfs_shadow_copy2</code>
     はエンドユーザのための機能として設計されている。これはバックアップや
     アーカイ機能を代替、もしくは拡張するものではないので、そのような認識
     は禁物である。バージョン管理機能が必要であれば、バージョン管理機能を
-    実装する必要がある。</p></div><div class="refsect1" title="バージョン"><a name="id2489601"/><h2>バージョン</h2><p>このマニュアルページは Samba システムのバージョン3.2.7(訳注:3.x?) に適合する。
-	</p></div><div class="refsect1" title="著者"><a name="id2489613"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+    実装する必要がある。</p></div><div class="refsect1" title="バージョン"><a name="id2531298"/><h2>バージョン</h2><p>このマニュアルページは Samba システムのバージョン3.2.7(訳注:3.x?) に適合する。
+	</p></div><div class="refsect1" title="著者"><a name="id2531310"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
     Tridgell によって作成された。現在 Samba は Samba Team に
     よって、Linuxカーネルの開発と同様にオープンソースプロジェクト
-    として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2487412"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.7 - 3.4.11 対応のものである。</p><p>このドキュメントの Samba 3.2.4 - 3.4.11 対応の翻訳は
+    として開発が行なわれている。</p></div><div class="refsect1" title="日本語訳"><a name="id2489498"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.2.7 - 3.4.11 対応のものである。</p><p>このドキュメントの Samba 3.2.4 - 3.4.11 対応の翻訳は
     </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>堀田 倫英(hotta@net-newbie.com)</p></li></ul></div><p>
         によって行なわれた。</p></div></div></body></html>
