@@ -1,5 +1,5 @@
 #!/bin/sh
-svn export https://svn.sourceforge.jp/svnroot/samba-jp/branches/3.4
+svn export http://svn.sourceforge.jp/svnroot/samba-jp/branches/3.4
 cp -pvr 3.4/docs-xml/manpages-3/* docs-xml/manpages-3/
 cp -pvr 3.4/docs-xml/smbdotconf/* docs-xml/smbdotconf/
 cp -pv  3.4/docs-xml/build/DTD/samba.entities docs-xml/build/DTD/
