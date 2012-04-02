@@ -1,4 +1,4 @@
-<html><head><title>winbindd</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="winbindd"><a name="winbindd.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>winbindd — NT サーバからの名前解決を行う Name Service Switch (NSS)デーモン</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">winbindd</code> [-F] [-S] [-i] [-Y] [-d &lt;debug level&gt;] [-s &lt;smb config file&gt;] [-n]</p></div></div><div class="refsect1" title="説明"><a name="id2490516"/><h2>説明</h2><p>このプログラムは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p><code class="literal">winbindd</code> は、
+<html><head><title>winbindd</title><link rel="stylesheet" href="../samba.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"/></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="winbindd"><a name="winbindd.8"/><div class="titlepage"/><div class="refnamediv"><h2>Name</h2><p>winbindd — NT サーバからの名前解決を行う Name Service Switch (NSS)デーモン</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="literal">winbindd</code> [-F] [-S] [-i] [-Y] [-d &lt;debug level&gt;] [-s &lt;smb config file&gt;] [-n]</p></div></div><div class="refsect1" title="説明"><a name="id2490513"/><h2>説明</h2><p>このプログラムは、<a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a> システムの一部である。</p><p><code class="literal">winbindd</code> は、
 	はデーモンであり、
 	現在 C ライブラリの大半に実装されている NSS (ネームサービススイッチ) 機能、
 	PAM を利用する任意のアプリケーション、
@@ -69,7 +69,7 @@ hosts:          files dns wins
 	<code class="filename">/etc/hosts</code> ファイルから、ついで WINS サーバから取得される。
 	</p><pre class="programlisting">
 hosts:		files wins
-</pre></div><div class="refsect1" title="オプション"><a name="id2489529"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-F</span></dt><dd><p>
+</pre></div><div class="refsect1" title="オプション"><a name="id2489531"/><h2>オプション</h2><div class="variablelist"><dl><dt><span class="term">-F</span></dt><dd><p>
 		このパラメータを指定すると、
 		<code class="literal">winbindd</code>
 		のメインプロセスがデーモンとして動作しなくなる。
@@ -89,31 +89,24 @@ hosts:		files wins
 		このパラメータを指定すると、
 		<code class="literal">winbindd</code>
 		はファイルの代わりに標準出力にログを出力するようになる。
-		</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> is an integer 
-from 0 to 10. The default value if this parameter is 
-not specified is 0.</p><p>The higher this value, the more detail will be 
-logged to the log files about the activities of the 
-server. At level 0, only critical errors and serious 
-warnings will be logged. Level 1 is a reasonable level for
-day-to-day running - it generates a small amount of 
-information about operations carried out.</p><p>Levels above 1 will generate considerable 
-amounts of log data, and should only be used when 
-investigating a problem. Levels above 3 are designed for 
-use only by developers and generate HUGE amounts of log
-data, most of which is extremely cryptic.</p><p>Note that specifying this parameter here will 
-override the <a class="link" href="smb.conf.5.html#" target="_top"/> parameter
-in the <code class="filename">smb.conf</code> file.</p></dd><dt><span class="term">-V|--version</span></dt><dd><p>Prints the program version number.
-</p></dd><dt><span class="term">-s|--configfile &lt;configuration file&gt;</span></dt><dd><p>The file specified contains the 
-configuration details required by the server.  The 
-information in this file includes server-specific
-information such as what printcap file to use, as well 
-as descriptions of all the services that the server is 
-to provide. See <code class="filename">smb.conf</code> for more information.
-The default configuration file name is determined at 
-compile time.</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>Base directory name for log/debug files. The extension
-<code class="constant">".progname"</code> will be appended (e.g. log.smbclient, 
-log.smbd, etc...). The log file is never removed by the client.
-</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>Print a summary of command line options.
+		</p></dd><dt><span class="term">-d|--debuglevel=level</span></dt><dd><p><em class="replaceable"><code>level</code></em> は0から10までの整数値である。
+既定値の値は、パラメータが設定されていなければ0である。</p><p>この値を大きくするほど、サーバの動作に関するより詳細な情報が
+ログファイルに記録される。レベル 0 では、致命的なエラーと重大な警告
+のみが記録される。レベル 1 は日々の運用に適しており、少量の稼働状況
+に関する情報を生成する。</p><p>1 より上のレベルは大量のログが生成されるので、問題解決の時にのみ
+使用すべきである。 3 より上のレベルは開発者だけが利用するように設計されて
+おり、莫大な量のログデータが生成される。そのほとんどは非常に謎めいた内容
+となっている</p><p>このパラメータの指定は、<code class="filename">smb.conf</code>ファイル中の、 <a class="link" href="smb.conf.5.html#" target="_top"/> パラメータの
+指定よりも優先する。</p></dd><dt><span class="term">-V</span></dt><dd><p>プログラムのバージョン番号を表示する。
+</p></dd><dt><span class="term">-s &lt;configuration file&gt;</span></dt><dd><p>サーバーが必要とする詳細な設定を含む設定ファイルを
+指定する。このファイルには、サーバーが提供するサービスに関する記述や、
+どの printcap ファイルを利用するかといった情報が含まれている。詳細は
+<code class="filename">smb.conf</code> を参照のこと。設定ファイルの名前の既定値は、コンパイル時
+に決定される。
+</p></dd><dt><span class="term">-l|--log-basename=logdirectory</span></dt><dd><p>ログ/デバッグファイルのファイル名。拡張子として
+<code class="constant">".progname"</code> が追加される(例えば log.smbclient,
+log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
+</p></dd><dt><span class="term">-h|--help</span></dt><dd><p>コマンドラインオプションの要約を表示する。
 </p></dd><dt><span class="term">-i</span></dt><dd><p>
 		<code class="literal">winbindd</code>
 		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
@@ -136,7 +129,7 @@ log.smbd, etc...). The log file is never removed by the client.
 		(Samba 2.2 での動作モード)。
 		<code class="literal">winbindd</code> のデフォルトの動作では、
 		期限切れのキャッシュエントリの更新を行う子プロセスが起動される。
-		</p></dd></dl></div></div><div class="refsect1" title="名前と ID の解決"><a name="id2489848"/><h2>名前と ID の解決</h2><p>
+		</p></dd></dl></div></div><div class="refsect1" title="名前と ID の解決"><a name="id2489872"/><h2>名前と ID の解決</h2><p>
 	Windows NT サーバ上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。
 	Windows NT のユーザとグループを UNIX のユーザとグループに変換するには、
 	SID とユーザ ID およびグループ ID 間のマッピングが必要となる。
@@ -154,7 +147,7 @@ log.smbd, etc...). The log file is never removed by the client.
 	このファイルが削除されたり壊れたりしてしまうと
 	winbindd が、ユーザ ID やグループ ID と
 	Windows NT のユーザあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
-	</p></div><div class="refsect1" title="設定"><a name="id2489905"/><h2>設定</h2><p>
+	</p></div><div class="refsect1" title="設定"><a name="id2489929"/><h2>設定</h2><p>
 	<code class="literal">winbindd</code> デーモンの設定は、
 	<a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>
 	ファイルのパラメータで行う。
@@ -175,7 +168,7 @@ log.smbd, etc...). The log file is never removed by the client.
 		このパラメータを設定すると、ドメインコントローラから情報を
 		検索するため、LDAPの変わりにwinbindがRPCを使うことを強制
 		する。
-		</p></li></ul></div></div><div class="refsect1" title="設定例"><a name="id2490101"/><h2>設定例</h2><p>
+		</p></li></ul></div></div><div class="refsect1" title="設定例"><a name="id2490123"/><h2>設定例</h2><p>
 	ユーザとグループ名の解決と認証をドメインコントローラで行うには、
 	winbindd を以下のように設定する。
 	この設定例は、古いバージョンの Red Hat Linux で動作を確認した。
@@ -239,7 +232,7 @@ auth  required    /lib/security/pam_unix.so \
 	<code class="literal">getent passwd</code> と <code class="literal">getent group</code>
 	コマンドを実行すれば、
 	winbindd が正常に稼働していることを確認できる。
-	</p></div><div class="refsect1" title="注意"><a name="id2540940"/><h2>注意</h2><p>以下の注意点は、
+	</p></div><div class="refsect1" title="注意"><a name="id2540965"/><h2>注意</h2><p>以下の注意点は、
 	<code class="literal">winbindd</code> の設定や実行の際に有用である:
 	</p><p>
 	<code class="literal">winbindd</code>
@@ -262,7 +255,7 @@ auth  required    /lib/security/pam_unix.so \
 	Windows NT の SID と
 	UNIX のユーザ ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、
 	マッピング情報は失われてしまう。
-	</p></div><div class="refsect1" title="シグナル"><a name="id2541025"/><h2>シグナル</h2><p>
+	</p></div><div class="refsect1" title="シグナル"><a name="id2541051"/><h2>シグナル</h2><p>
 	以下のシグナルによって
 	<code class="literal">winbindd</code> デーモンを操作することが
 	可能である。
@@ -277,7 +270,7 @@ auth  required    /lib/security/pam_unix.so \
 		</p><p>
 		ログファイルは、
 		log file パラメータで指定したファイルである。
-		</p></dd></dl></div></div><div class="refsect1" title="ファイル"><a name="id2541105"/><h2>ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/nsswitch.conf(5)</code></span></dt><dd><p>ネームサービススイッチの設定ファイル。</p></dd><dt><span class="term">/tmp/.winbindd/pipe</span></dt><dd><p>
+		</p></dd></dl></div></div><div class="refsect1" title="ファイル"><a name="id2541130"/><h2>ファイル</h2><div class="variablelist"><dl><dt><span class="term"><code class="filename">/etc/nsswitch.conf(5)</code></span></dt><dd><p>ネームサービススイッチの設定ファイル。</p></dd><dt><span class="term">/tmp/.winbindd/pipe</span></dt><dd><p>
 		クライアントが
 		<code class="literal">winbindd</code>
 		と通信するための UNIX パイプ。
@@ -314,12 +307,12 @@ auth  required    /lib/security/pam_unix.so \
 		<code class="filename">/usr/local/samba/var/locks</code>
 		である。
 		</p></dd><dt><span class="term">$LOCKDIR/winbindd_cache.tdb</span></dt><dd><p>キャッシュされたユーザ/グループ情報の保管場所。
-		</p></dd></dl></div></div><div class="refsect1" title="バージョン"><a name="id2541277"/><h2>バージョン</h2><p>このマニュアルは、Samba システムのバージョン 3 に適用される。</p></div><div class="refsect1" title="参照"><a name="id2541288"/><h2>参照</h2><p><code class="filename">nsswitch.conf(5)</code>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>, <a class="citerefentry" href="wbinfo.1.html"><span class="citerefentry"><span class="refentrytitle">wbinfo</span>(1)</span></a>, <a class="citerefentry" href="ntlm_auth.8.html"><span class="citerefentry"><span class="refentrytitle">ntlm_auth</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="pam_winbind.8.html"><span class="citerefentry"><span class="refentrytitle">pam_winbind</span>(8)</span></a></p></div><div class="refsect1" title="著者"><a name="id2541344"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+		</p></dd></dl></div></div><div class="refsect1" title="バージョン"><a name="id2488996"/><h2>バージョン</h2><p>このマニュアルは、Samba システムのバージョン 3 に適用される。</p></div><div class="refsect1" title="参照"><a name="id2489008"/><h2>参照</h2><p><code class="filename">nsswitch.conf(5)</code>, <a class="citerefentry" href="samba.7.html"><span class="citerefentry"><span class="refentrytitle">samba</span>(7)</span></a>, <a class="citerefentry" href="wbinfo.1.html"><span class="citerefentry"><span class="refentrytitle">wbinfo</span>(1)</span></a>, <a class="citerefentry" href="ntlm_auth.8.html"><span class="citerefentry"><span class="refentrytitle">ntlm_auth</span>(8)</span></a>, <a class="citerefentry" href="smb.conf.5.html"><span class="citerefentry"><span class="refentrytitle">smb.conf</span>(5)</span></a>, <a class="citerefentry" href="pam_winbind.8.html"><span class="citerefentry"><span class="refentrytitle">pam_winbind</span>(8)</span></a></p></div><div class="refsect1" title="著者"><a name="id2541512"/><h2>著者</h2><p>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
 	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
 	</p><p><code class="literal">wbinfo</code> および <code class="literal">winbindd</code> コマンドは Tim Potter によって作成された。</p><p>
 	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。 
 	Samba 3.0 のための DocBook XML 4.2 形式の変換は Alexander Bokovoy によって行われた。
-	</p></div><div class="refsect1" title="日本語訳"><a name="id2541383"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.4.15 対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
+	</p></div><div class="refsect1" title="日本語訳"><a name="id2541550"/><h2>日本語訳</h2><p>このマニュアルページは Samba 3.3.6 - 3.4.15 対応のものである。</p><p>このドキュメントの Samba 3.0.24 対応の翻訳は
 	</p><div class="itemizedlist"><p>たかはしもとのぶ (monyo@samba.gr.jp)</p><p>さとうふみやす</p><ul class="itemizedlist" type="disc"/></div><p>	
         によって行なわれた。</p><p>このドキュメントの Samba 3.2.4 - 3.4.15 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</p></div></div></body></html>
