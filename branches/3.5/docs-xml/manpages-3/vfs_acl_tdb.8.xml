@@ -39,18 +39,41 @@
 	<filename>$LOCKDIR/file_ntacls.tdb</filename>中に格納される。
 	</para>
 
-	<para>このモジュールは
-	<emphasis>実験的</emphasis>であることに留意して欲しい!
-	</para>
-
 	<para>このモジュールはスタック可能である。</para>
 </refsect1>
 
 <refsect1>
 	<title>オプション</title>
-	<para>
-	<command>vfs_acl_tdb</command>に対してオプションはない。
-	</para>
+
+       <variablelist>
+               <!-- please keep in sync with the other acl vfs modules that provide the same
+ options -->
+               <varlistentry>
+               <term>acl_tdb:ignore system acls = [yes|no]</term>
+               <listitem>
+               <para>
+               When set to <emphasis>yes</emphasis>, a best effort mapping
+               from/to the POSIX ACL layer will <emphasis>not</emphasis> be
+               done by this module. The default is <emphasis>no</emphasis>,
+               which means that Samba keeps setting and evaluating both the
+               system ACLs and the NT ACLs. This is better if you need your
+               system ACLs be set for local or NFS file access, too. If you only
+               access the data via Samba you might set this to yes to achieve
+               better NT ACL compatibility.
+	       <emphasis>yes</emphasis>に設定した場合、POSIX ACLレイヤとの間での
+	       最適なマッピングは、このモジュールによっては<emphasis>完了しない</emphasis>。
+	       既定値は<emphasis>no</emphasis>であり、この場合、Sambaは設定
+	       を保持し、システムACLとNT ACLの両方を評価する。もしも、
+	       ローカルあるいはNFSファイルアクセスに、システムACLを
+	       設定する必要がある場合には、これはより良い方法である。もしも、データを
+	       Samba経由でのみアクセスするのであれば、よりNT ACLの互換性を
+	       高めるために、これをyesに設定しても良いだろう。
+               </para>
+
+               </listitem>
+               </varlistentry>
+       </variablelist>
+
 </refsect1>
 
 <refsect1>
@@ -64,7 +87,7 @@
 
 <refsect1>
         <title>日本語訳</title>
-        <para>このドキュメントは、Samba 3.3.6 - 3.5.14 対応のものである。</para>
+        <para>このドキュメントは、Samba 3.5.14 対応のものである。</para>
     <para>このドキュメントの翻訳は
         <itemizedlist>
         <listitem><para>太田俊哉 (ribbon@samba.grjp)</para></listitem>
