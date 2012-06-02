@@ -70,7 +70,7 @@ $(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
 	rm -f $(SAMBA_DOCS_XML_CONFIGURED_FILES)
 	$(MAKE) -f Makefile Makefile.settings
 	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
-	sed "s|@BUILDDIR@|`pwd`|g" $(SAMBA_DOCS_XML_CATALOG_FILE).in >$(SAMBA_DOCS_XML_CATALOG_FILE)
+	sed "s|@abs_top_builddir@|`pwd`|g" $(SAMBA_DOCS_XML_CATALOG_FILE).in >$(SAMBA_DOCS_XML_CATALOG_FILE)
 
 
 $(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
