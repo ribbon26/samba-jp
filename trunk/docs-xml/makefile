@@ -1,6 +1,8 @@
 ## makefile for building samba-ja documentation
 ## ======================================================================
 
+TARFILE= 3.6.5-1
+
 SAMBA_DOCS_XML_DIR=	samba-docs-xml
 
 SAMBA_DOCS_XML_CONFIGURE_FILES= \
@@ -47,6 +49,10 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 default: help
 
 all: html html-single htmlman3 manpages3
+
+tar::
+	tar -cvzf samba-ja-docs-manpages-$(TARFILE).tar.gz output/manpages-3 COPYING README
+	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages-3 output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING makefile README
 
 help: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	$(MAKE) -f Makefile help
