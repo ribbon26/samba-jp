@@ -37,6 +37,8 @@
 	モジュールがロードされるときにのみAIOが有効になるか、特定の、システム全体での
 	非同期要求がスケジュールされている時にのみAIOが許可される。
 	(ほとんどのLinuxシステムで使われている)glibcベースのシステムでは、
+	glibcの実装を使うシステム上でPOSIX AIOを本質的に使えなくさせる、
+	ファイルディスクリプタ毎の、単一の未処理要求のみを許可する。
 	</para>
 	<para><command>aio_pthread</command> VFSmodule enables asynchronous
 	I/O for Samba on platforms which have the pthreads API available,
@@ -50,6 +52,16 @@
 	descriptor which essentially makes Posix AIO useless on systems
 	using the glibc implementation.</para>
 
+	<para>これらのすべての実装を直すため、aio_pthreadモジュールが
+	作成された。これは、読み取りと書き込みの呼び出しを非同期に処理する
+	ことができるようにするため、内部Posix AIOインタフェースの代わりに、
+	ptherad poolを使用する。workとして新しいスレッドを作成することに
+	よる、動的に拡張されるpthead poolが作成され、それは、smbdプロセス毎に
+	最大100スレッドまで割り当てられる。この制限を変更するには、下記の
+	"aio num threads"を参照のこと。新しいスレッドは、新しい読み取りか
+	書き込み要求が受け取られた時に有効なアイドルスレッドがあった場合には
+	作成されず、新しいworkは存在するアイドルスレッドに割り当てられる。
+	スレッドはもしも1秒アイドルになった時にそれ自身を終了する。</para>
 	<para>To work around all these limitations, the aio_pthread module
 	was written. It uses a pthread pool instead of the
 	internal Posix AIO interface to allow read and write calls
@@ -64,11 +76,20 @@
 	</para>
 
 	<para>
+	smb.confパラメータ<command>aio write size</command>と
+	<command>aio write size</command>はこのモジュールを有効にするために
+	適切に設定する必要があることに注意。</para>
+	<para>
 	Note that the smb.conf parameters <command>aio read size</command>
 	and <command>aio write size</command> must also be set appropriately
 	for this module to be active.
 	</para>
 
+	<para>このモジュールは、Samba VFS pread/pwriteインタフェースが
+	スレッドセーフではないので、任意のモジュールスタックの最後に
+	位置づけなければならない。このモジュールは直接preadとpwrite
+	システムコールを使い、Samba VFS preadとpwriteインタフェースを
+	呼び出さない。</para>
 	<para>This module MUST be listed last in any module stack as
 	the Samba VFS pread/pwrite interface is not thread-safe. This
 	module makes direct pread and pwrite system calls and does
@@ -100,10 +121,10 @@
 		<varlistentry>
 		<term>aio_pthread:aio num threads = INTEGER</term>
 		<listitem>
-		<para>Limit the maximum number of threads per smbd that
-		will be created in the thread pool to service IO requests.
+		<para>IO要求を提供するためのthread pool中に作成される、
+		smbd毎のスレッドの最大数を制限する。
 		</para>
-		<para>By default this is set to 100.</para>
+		<para>既定値ではこの値は 100である。</para>
 		</listitem>
 		</varlistentry>
 
@@ -112,7 +133,7 @@
 <refsect1>
 	<title>バージョン</title>
 
-	<para>This man page is correct for version 3.6.3 of the Samba suite.
+	<para>このマニュアルページはバージョン 3.6.3のSambaシステム用である。
 	</para>
 </refsect1>
 
@@ -131,7 +152,7 @@
 	<para>このドキュメントは、Samba 3.6.6 - 3.6.7 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
-			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
 		</itemizedlist>
         によって行なわれた。</para>
 </refsect1>
