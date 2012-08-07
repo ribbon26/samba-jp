@@ -25,11 +25,20 @@
 <refsect1>
 	<title>説明</title>
 
-	<para>This VFS module is part of the
+	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>The <command>aio_pthread</command> VFS module enables asynchronous
+	<para><command>aio_pthread</command> VFS モジュールは、pthread APIが
+	有効で、Posix AIOインタフェースを使っていないプラットフォーム上で、
+	Samba用の非同期I/Oを有効にする。Posix AIOはきつい制限によって使いづらい。
+	たとえば、あるバージョンのLinuxでは、使用するリアルタイムシグナルは
+	高負荷の時には動作が不正になる。その他のシステムでは、特別なカーネル
+	モジュールがロードされるときにのみAIOが有効になるか、特定の、システム全体での
+	非同期要求がスケジュールされている時にのみAIOが許可される。
+	(ほとんどのLinuxシステムで使われている)glibcベースのシステムでは、
+	</para>
+	<para><command>aio_pthread</command> VFSmodule enables asynchronous
 	I/O for Samba on platforms which have the pthreads API available,
 	without using the Posix AIO interface. Posix AIO can suffer from severe
 	limitations.  For example, on some Linux versions the
