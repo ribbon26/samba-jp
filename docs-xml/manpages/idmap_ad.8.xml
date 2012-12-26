@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -25,7 +25,6 @@
 追加することを提供されることが必要である。</para>
 
         <para>
-	idmap_adモジュールは、Sambaバージョン3.0と3.2からかなり変わっている事に注意。
 	現在、<parameter>ad</parameter>バックエンドは既定値のidmapバックエンドとしては
 	動作せず、これを使用したい場合、各ドメイン毎に個別に、disjoint rangeを使って
 	設定しなければならない。通常、書き込み可能な既定値のidmapレンジを設定しなければ
@@ -36,8 +35,7 @@
 	既定値のidmap設定は、idmap バックエンド <parameter>ad</parameter>を使う
 	任意の明示的に設定されたドメインからdisjointされたレンジを持たなければならない。
 	以下の例を参照のこと。</para>
-        <para>Note that the idmap_ad module has changed considerably since
-        Samba versions 3.0 and 3.2.
+        <para>
         Currently, the <parameter>ad</parameter> backend
         does not work as the the default idmap backend, but one has
         to configure it separately for each domain for which one wants
@@ -67,11 +65,13 @@
 		マップは破棄される。ローカルとリモートで定義されたIDの、偶然のUID/GIDの重なりを防ぐために、それは意図されている。</para></listitem>
 		</varlistentry>
 		<varlistentry>
-		<term>schema_mode = &lt;rfc2307 | sfu &gt;</term>
+		<term>schema_mode = &lt;rfc2307 | sfu | sfu20&gt;</term>
 		<listitem><para>
                                                                         			Active Directory に関するユーザーとグループ情報を問い合わせるときに、idmap_adを
 		使うべきであるスキーマを定義する。これは、Windows 2003 R2またはService for Unix(SFU)
 スキーマ中に含まれているRFC2307スキーマサポートよりも簡単である。
+    SFU 3.0と3.5は、"sfu" を、SFU 2.0は、"sfu20"を選択すること。
+    プライマルグループのメンバシップは現在常時"primaryGroupID" LDAP属性から計算されることに注意。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -90,6 +90,7 @@
 
 	<programlisting>
 	[global]
+	workgroup = CORP
         idmap config * : backend = tdb
         idmap config * : range = 1000000-1999999
 
@@ -106,7 +107,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.0 - 3.6.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.0  に対応する。</para>
         <para>このドキュメントの翻訳は
 	<itemizedlist>
 		<listitem><para>武田保真</para></listitem>
