@@ -7,7 +7,7 @@
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -118,7 +118,7 @@
 		リストされたユーザー名から SID を解決する。
 		</para></listitem></varlistentry>
 
-		<varlistentry><term>enumtrusts</term><listitem><para>
+		<varlistentry><term>enumtrust</term><listitem><para>
 		信頼するドメインの一覧を表示する。
 		</para></listitem></varlistentry>
 
@@ -318,11 +318,14 @@ Comma Separated list of Files
 		サーバーのドライバーのリストからエントリだけを削除するものである。
 		</para></listitem></varlistentry>
 
-		<varlistentry><term>deldriverex &lt;driver&gt; [architecture] [version]
+		<varlistentry><term>deldriverex &lt;driver&gt; [architecture] [version] [flags]
 		</term><listitem><para>
 		指定されたプリンタードライバーについて、ドライバーファイルも含めて削除する。
 		削除対象のバージョンやアーキテクチャを指定することも可能である。
 		アーキテクチャが指定されなかった場合、すべてのドライバーファイルが削除される。
+                <parameter>flags</parameter> は、数値の DPD_*値に関連づけられ、
+		すなわち、3つのリクエストの値である
+		(DPD_DELETE_UNUSED_FILES | DPD_DELETE_SPECIFIC_VERSION)。
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>enumdata</term><listitem><para>サーバー上に格納されているプリンターの設定情報を一覧表示する。Windows NT クライアントの場合、
@@ -474,6 +477,51 @@ Comma Separated list of Files
 	</refsect2>
 
 	<refsect2>
+	<title>FSRVP</title>
+	<variablelist>
+
+	<varlistentry><term>fss_is_path_sup</term>
+		<listitem>
+			<para>共有がシャドーコピー要求をサポートするかを検査する。
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_get_sup_version</term>
+		<listitem>
+			<para>サーバからサポートしているFSRVPバージョンを得る。</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_create_expose</term>
+		<listitem>
+			<para>シャドーコピーの作成と公開を要求する</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_delete</term>
+		<listitem>
+			<para>シャドーコピー共有の削除を要求する</para>
+	</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_has_shadow_copy</term>
+		<listitem>
+			<para>関連づけられている共有のシャドーコピーを検査する</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_get_mapping</term>
+		<listitem>
+			<para>シャドーコピー共有マッピング情報を得る</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_recovery_complete</term>
+		<listitem>
+			<para>読み書き可能なスナップショットをリカバリ完了にマークし、
+			それ以降のシャドーコピー要求を許可する</para>
+		</listitem>
+	</varlistentry>
+
+	</variablelist>
+	</refsect2>
+
+	<refsect2>
 	<title>共通コマンド</title>
 
 	<variablelist>
@@ -542,7 +590,7 @@ Comma Separated list of Files
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.0 - 3.6.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -553,6 +601,7 @@ Comma Separated list of Files
         によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - 3.6.9 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 4.0.0  対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 
 </refsect1>
 
