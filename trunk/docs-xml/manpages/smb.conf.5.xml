@@ -6,7 +6,7 @@
 	<manvolnum>5</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ファイルフォーマットと変換</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -505,7 +505,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 		<varlistentry>
 		<term>%I</term>
 		<listitem><para>クライアントマシンの IP アドレス。</para>
-		<para>Samba 3.6.0以前では、これはIPv4マップIPv6アドレスを
+		<para>Samba 4.0.0以前では、これはIPv4マップIPv6アドレスを
 		含んでいても良かったが、現在は、IPv4かIPv6アドレスのみ含められる。</para>
 		</listitem>
 		</varlistentry>
@@ -513,7 +513,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 		<varlistentry>
 		<term>%i</term>
 		<listitem><para>クライアントが接続してきたサーバーの IP アドレス。</para>
-                <para>Samba 3.6.0以前では、これはIPv4マップIPv6アドレスを
+                <para>Samba 4.0.0以前では、これはIPv4マップIPv6アドレスを
                 含んでいても良かったが、現在は、IPv4かIPv6アドレスのみ含められる。</para>
 		</listitem>
 		</varlistentry>
@@ -670,60 +670,6 @@ chmod 1770 /usr/local/samba/lib/usershares
 	
 </refsect1>
 
-<refsect1 id="VALIDATIONSECT">
-	<title>ユーザー名とパスワード認証についての注意</title>
-
-	<para>ユーザーがサービスに接続するための方法は幾つかある。サーバーは、
-	以下のステップを踏みサービスに対して接続を許可するかどうかを確認する。
-	すべてのステップが失敗した場合、接続要求は拒否される。
-	いずれかのステップで成功した場合、それ以降のステップは行なわれない。
-	</para>
-
-	<para>サービスが <quote>guest only = yes</quote> となっており、
-	サーバーが共有レベルのセキュリティ (<quote>security = share</quote>)
-	で構成されている場合、ステップ 1 から 5 は省かれる。</para>
-
-
-	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
-		<listitem><para>クライアントからユーザー名とパスワードが
-		提供されており、それが UNIX システムのパスワード機構によって
-		認証された場合、そのユーザー名を使った接続が行なわれる。この
-		ステップは <literal>\\server\service%<replaceable>username</replaceable></literal>
-		形式でユーザー名が提供された場合にも行なわれることに注意。
-		</para></listitem>
-
-		<listitem><para>クライアントからシステムに登録されている
-		ユーザー名が提供された場合、そのユーザー名に対する適切な
-		パスワードが提供されれば、接続が許可される。</para></listitem>
-		
-		<listitem><para> クライアントの NetBIOS 名および以前に使われた
-		ユーザー名について提供されたパスワードとの確認が行なわれ、
-		合致すれば、対応するユーザー名を使った接続が許可される。
-		</para></listitem>
-		
-		<listitem><para>クライアントが既にユーザー名とパスワードを
-		提供してサーバーに認証されており、その際の認証トークンが
-		提示された場合、そのユーザー名が使われる。</para></listitem>
-
-		<listitem><para><literal>user = </literal> フィールドが
-		<filename moreinfo="none">smb.conf</filename> ファイルで
-		該当サービスに対して設定されており、クライアントから提供された
-		パスワードが (UNIX システムのパスワード認証により) 
-		<literal>user =</literal> 行に記述されたユーザー名のいずれかのものと
-		合致した場合、接続は、<literal>user = </literal> 行で設定された
-		ユーザー名で行なわれる。<literal>user = </literal> リスト中のユーザー名の
-		中に <literal>@</literal> ではじまるものがあった場合、それはその名前の
-		グループに所属するユーザー名のリストに展開される。
-		</para></listitem>
-
-		<listitem><para>サービスがゲストサービスの場合、
-		提供されたパスワードがなんであっても、そのサービスの
-		<literal>guest account =</literal> で指定されたユーザー名で接続が
-		行なわれる。</para></listitem>
-	</orderedlist>
-
-</refsect1>
-
 <refsect1>
 	<title>レジストリベースの設定方法</title>
 
@@ -799,7 +745,10 @@ chmod 1770 /usr/local/samba/lib/usershares
 	<title>各パラメーターの説明</title>
 	
 	<samba:parameterlist>
-		<xi:include href="../smbdotconf/parameters.all.xml" parse="xml"/>
+		<!-- The URI below is resolved to local generated version of parameters.all.xml //-->
+		<!-- WAF build places it in bin/default/docs-xml/smbdotconf/parameters.all.xml //-->
+		<!-- and we redirect there via use of XML_CATALOG_FILES, see docs-xml/build/catalog.xml.in //-->
+		<xi:include href="http://www.samba.org/samba/smbdotconf/parameters.all.xml" parse="xml"/>
 	</samba:parameterlist>
 
 </refsect1>
@@ -830,7 +779,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 
 <refsect1>
 	<title>バージョン</title>
-	<para>このマニュアルページは Samba 3.0 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0 に対応する。</para>
 </refsect1>
 
 <refsect1>
@@ -841,6 +790,9 @@ chmod 1770 /usr/local/samba/lib/usershares
 	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>swat</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>smbd</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>winbindd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>samba-tool</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>smbclient</refentrytitle>
 	<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>nmblookup</refentrytitle>
 	<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>testparm</refentrytitle>
@@ -868,7 +820,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.1 - 3.6.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
 
 	<para>Samba 3.0.23d 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
 	<para>Samba 3.2.4-3.6.9 対応の翻訳は、
@@ -881,6 +833,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 	    <para>海老澤</para>
 	  </itemizedlist>
 	によって行なわれた。</para>
+	 <para>Samba 4.0.0 対応の翻訳は、太田俊哉によって行われた。</para>
 </refsect1>
 
 </refentry>
