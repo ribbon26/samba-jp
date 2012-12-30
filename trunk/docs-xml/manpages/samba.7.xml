@@ -7,13 +7,13 @@
 	<manvolnum>7</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">その他</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
 <refnamediv>
 	<refname>samba</refname>
-	<refpurpose>UNIX 用の Windows SMB/CIFS ファイルサーバー</refpurpose>
+	<refpurpose>UNIX 用の Windows AD と SMB/CIFS ファイルサーバー</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -24,13 +24,25 @@
 	<title>説明</title>
 	
 	<para> Sambaシステムは、Server Message Block (通常 SMB と略される) 
-	プロトコルを実装した UNIX 用のプログラムの集合体である。
+	プロトコルの実装と、Active Directory サービスを提供する UNIX 用
+	プログラムの集合体である。
 	このプロトコルは、Common Internet File System(CIFS) として言及される
 	こともある。より詳細な説明は、<ulink url="http://www.ubiqx.org/cifs/">
 	http://www.ubiqx.org/cifs/</ulink> を参照のこと。
 	また Samba は nmbd によって NetBIOS プロトコルを実装する。</para>
 	
 	<variablelist>
+		<varlistentry>
+		<term><citerefentry><refentrytitle>samba</refentrytitle>
+		<manvolnum>8</manvolnum></citerefentry></term>
+		<listitem><para><command>samba</command>デーモンは、Active Directory
+		サービスと、SMBクライアントに対するファイルおよび印刷サービスを
+		提供する。このデーモンに対する設定ファイルは、
+		<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum>にて説明している</citerefentry>。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smbd</refentrytitle>
 		<manvolnum>8</manvolnum></citerefentry></term>
@@ -55,6 +67,13 @@
 		</varlistentry>
 
 		<varlistentry>
+		<term><citerefentry><refentrytitle>winbindd</refentrytitle>
+		<manvolnum>8</manvolnum></citerefentry></term>
+		<listitem><para><command>winbindd</command>は、認証と、
+		unix中へのユーザデータベースの統合のために使われる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
 		<term><citerefentry><refentrytitle>smbclient</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbclient</command> プログラムは
@@ -62,6 +81,14 @@
 		NT のような) 互換性のあるサーバーの SMB 共有へのアクセスに便利である。
 		また、これを用いることで、UNIX マシンから SMB サーバー (Windows
 		NT が動作している PC など) に接続されているプリンターへの印刷も可能となる。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term><citerefentry><refentrytitle>samba-tool</refentrytitle>
+		<manvolnum>8</manvolnum></citerefentry></term>
+		<listitem><para><command>samba-tool</command>は、Active Directory
+		サービスに対する、メインのSamba管理ツールである。</para>
 		</listitem>
 		</varlistentry>
 
@@ -122,14 +149,6 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term><citerefentry><refentrytitle>smbsh</refentrytitle>
-		<manvolnum>1</manvolnum></citerefentry></term>
-		<listitem><para><command>smbsh</command> コマンドは
-		ロードされた VFS を用いて unix shell を実行するプログラムである。
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
 		<term><citerefentry><refentrytitle>smbtree</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbtree</command> コマンドは、
@@ -156,7 +175,9 @@
 		<term><citerefentry><refentrytitle>smbcontrol</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbcontrol</command> は
-		起動中の Samba デーモンの動作を変更することができるユーティリティである。
+		起動中の<command>smbd</command> <command>nmbd</command> と
+                <command>winbindd</command> デーモンの動作を変更することができる
+		ユーティリティである。
 		</para></listitem>
 		</varlistentry>
 
@@ -199,14 +220,6 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term><citerefentry><refentrytitle>winbindd</refentrytitle>
-		<manvolnum>8</manvolnum></citerefentry></term>
-		<listitem><para><command>winbindd</command> は、
-		UNIX の認証とユーザーデータベースを統合するデーモンである。
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
 		<term><citerefentry><refentrytitle>wbinfo</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>wbinfo</command> は winbind に関係する
@@ -244,16 +257,6 @@
 		<listitem><para><command>ntlm_auth</command> は外部プログラムが
 		NTLM 認証を使用できるようにするためのヘルパーユーティリティである。
 		</para></listitem></varlistentry>
-
-		<varlistentry>
-			<term>
-<citerefentry><refentrytitle>smbmount</refentrytitle><manvolnum>8</manvolnum></citerefentry>, 
-<citerefentry><refentrytitle>smbumount</refentrytitle><manvolnum>8</manvolnum></citerefentry>, 
-<citerefentry><refentrytitle>smbmnt</refentrytitle><manvolnum>8</manvolnum></citerefentry></term>
-		<listitem><para><command>smbmount</command> 、
-		<command>smbmnt</command> 、 <command>smbmnt</command> は、Linux の CIFS/SMB 共有をマウントするために使用されるコマンドである。
-		</para></listitem>
-		</varlistentry>
 
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smbcquotas</refentrytitle>
@@ -312,7 +315,7 @@
 <refsect1>
 	<title>バージョン</title>
 	
-	<para>この man ページは、Samba システムのバージョン 3 用である。
+	<para>このマニュアルページは、Samba システムのバージョン 4 用である。
 	</para>
 </refsect1>
 
@@ -337,8 +340,8 @@
 	全員が全ての Samba ユーザーから称賛されるに値する。
 	全員のリストを見るには、cvs で管理する以前については
 	ソースパッケージ中の <filename>change-log</filename> を、cvs で管理するようになってからの
-	貢献者については <ulink url="http://cvs.samba.org/">
-	http://cvs.samba.org/</ulink> を参照のこと。
+	貢献者については <ulink url="http://git.samba.org/">
+	http://git.samba.org/</ulink> を参照のこと。
 	CVS は Samba Team が Samba の開発に利用しているオープンソースの
 	ソース管理システムである。
 	このプロジェクトは、cvs 無しには管理しきれないに違いない(訳注:現在はgitを使用している)。
@@ -367,7 +370,7 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.0.23 - 3.6.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
         <para>このマニュアルページの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
@@ -378,6 +381,7 @@
         によって行なわれた。</para>
 
 	<para>このマニュアルページの Samba 3.0.23 - 3.6.9 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>このマニュアルページの Samba 4.0.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 
 </refsect1>
 
