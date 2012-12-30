@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="samba.8">
+
+<refmeta>
+	<refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>samba</refname>
+	<refpurpose>UNIX 用の Windows AD と SMB/CIFS ファイルサーバ</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>samba</command>
+		<arg choice="opt">-D</arg>
+		<arg choice="opt">-i</arg>
+		<arg choice="opt">-M &lt;model&gt;</arg>
+		<arg choice="opt">--maximum-runtime=&lt;seconds&gt;</arg>
+		<arg choice="opt">-b</arg>
+		<arg choice="opt">--help</arg>
+		<arg choice="opt">--usage</arg>
+		<arg choice="opt">-d &lt;debug level&gt;</arg>
+		<arg choice="opt">--debug-stderr</arg>
+		<arg choice="opt">-s &lt;configuration file&gt;</arg>
+		<arg choice="opt">--option=&lt;smb_conf_param&gt;=&lt;value&gt;</arg>
+		<arg choice="opt">-l &lt;log directory&gt;</arg>
+		<arg choice="opt">--leak-report</arg>
+		<arg choice="opt">--leak-report-full</arg>
+		<arg choice="opt">-V</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+	<para>このプログラムは<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>samba</command>は、Active Directory、ファイル共有と印刷
+	サービスをクライアントに提供するサーバデーモンである。サーバはファイルスペースと
+	ディレクトリサービスを、SMB(あるいはCIFS)プロトコルおよび、その他の、たとえば
+	DCE/RPC、LDAPとKerberosのような、関連するプロトコルを使ってクライアントに
+	提供する。
+	</para>
+
+	<para>
+	 DOS向けMSCLIENT 3.0、Windows for Workgroups、Windows 95/98/ME、Windows NT、
+	 Windows 2000/XP/2003、OS/2、DAVE for MacintoshとLinuxにおけるcifsfsを
+	 クライアントとしてサポートする。</para>
+
+	<para>サーバが提供するものの、広範囲な説明は、それらのサービスの属性を制御する
+	設定ファイルのためのマニュアルページにある(<citerefentry>
+	<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+	を参照)。このマニュアルページでは、サービスについては説明せず、サーバを
+	動かすことへの、管理的な観点に注力をおいている。
+	</para>
+
+	<para>このサーバを動かすと重大なセキュリティ上の影響があり、
+	<citerefentry><refentrytitle>smb.conf</refentrytitle>
+        <manvolnum>5</manvolnum></citerefentry>マニュアルページには、インストールを
+	行う前に、きちんと読んでおくことが大事であるということに注意。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>-D|--daemon</term>
+		<listitem><para>指定された場合、サーバをデーモンとして動かす。
+		それゆえ、それ自身をデタッチし、バックグラウンドで動作し、
+		適切なポートのリクエストを処理する。デーモンでのサーバの動作は、
+		簡単なファイルと印刷サービスより以上のものをサーバが提供する、
+		<command>samba</command>の、推奨動作方法である。
+		このスイッチは、<command>samba</command>が、シェルのコマンドラインから
+		起動されたときの既定値である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-i|--interactive</term>
+		<listitem><para>指定された場合、シェルのコマンドラインからサーバが
+		起動されたとしても、デーモンとしてではなく、"対話的に"サーバを
+		動作させる。コマンドラインから動作させた場合、暗黙のデーモンモードを、
+		このパラメータは反転させる。<command>samba</command>はまた、
+		<command>-S</command>が与えられたように、ログを標準出力に出力
+		する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-M model</term>
+		<listitem><para>このパラメータはSambaが使う&quot;プロセスモデル&quot;
+		を指定するのに使われる。これは、どのようにクライアントの同時処理を
+		行うかを決める。有効なプロセスモードには、<emphasis>single</emphasis>
+		(すべてを単一プロセスで)、<emphasis>standard</emphasis>
+		(Samba3と同様な動作)、<emphasis>thread</emphasis>
+		(単一プロセスで異なるスレッド)が含まれている。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--maximum-runtime=seconds</term>
+		<listitem><para>自動終了までの、サーバプロセスが動作する最大時間を
+		秒単位で指定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-b|--show-build</term>
+		<listitem><para>どのようにSambaが構築されたかの情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-?|--help</term>
+		<listitem><para>ヘルプメッセージを表示する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--usage</term>
+		<listitem><para>簡単な使い方を表示する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-d|--debuglevel=DEBUGLEVEL</term>
+		<listitem><para>デバッグレベルを指定する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--debug-stderr</term>
+		<listitem><para>標準出力にデバッグ情報を出力する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-s|--configfile=CONFIGFILE</term>
+		<listitem><para>代替の構成ファイルを使用する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--option=SMB_CONF_PARAM=VALUE</term>
+		<listitem><para>コマンドラインからのsmb.confオプションを指定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-l|--log-basename=LOGFILEBASE</term>
+		<listitem><para>ログ/デバッグファイルのベース名。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--leak-report</term>
+		<listitem><para>終了時におけるtallocのリークレポートを有効にする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--leak-report-full</term>
+		<listitem><para>終了時におけるtallocの完全リークレポートを有効にする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-V|--version</term>
+		<listitem><para>バージョンを表示する。</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>ファイル</title>
+
+	<variablelist>
+		<varlistentry>
+		<term><filename>/etc/rc</filename></term>
+		<listitem><para>またはシステムが使う何らかの初期化スクリプト。
+		</para>
+
+		<para>もしも、システム起動時に、サーバがデーモンとして動いているならば、
+		このファイルはサーバに対する適切な起動シーケンスを含んでいる必要がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term><filename>/etc/services</filename></term>
+		<listitem><para>もしも、サーバが<command>inetd</command>
+		経由のメタデーモンとして動いているならば、このファイルは
+		サービス名(たとえば netbios-ssn)とサービスポート(たとえば139)および
+		プロトコルタイプ(たとえば tcp)へのマッピングを含む必要がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term><filename>/usr/local/samba/lib/smb.conf</filename></term>
+		<listitem><para>これは、
+		<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry>サーバ設定ファイルの
+		既定値の位置である。その他、よく使われているこのファイルが
+		インストールされる位置は、
+		<filename>/usr/samba/lib/smb.conf</filename>と
+		<filename>/etc/samba/smb.conf</filename>である。</para>
+
+		<para>このファイルはサーバがクライアントに対して提供する
+		すべてのサービスを記述する。より詳細な情報については
+		<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry>を参照のこと。</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>診断</title>
+
+	<para>ほとんどの、サーバによって引き起こされる診断結果は指定された
+	ログファイルに記録される。ログファイルの名前はコンパイル時に決まるが、
+	コマンドラインで上書きできる。</para>
+
+	<para>有効な診断の数と情報は、サーバによって使われるデバッグレベル
+	に依存する。もしも何らかの問題があった場合、デバッグレベルを3にし、
+	ログファイルをよく調べること。</para>
+
+	<para>ほとんどのメッセージは読むだけで意味が分かるようになっている。
+	残念なことに、このマニュアルページが作成された時点では非常にたくさんの
+	診断メッセージがソースコード上にあるので、おのおのについて説明できない。
+	この段階においては、ソースコードを検索し、今見ている診断を引き起こした
+	条件を探すことが一番の方法である。</para>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、Samba システムのバージョン 4 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>参照</title>
+	<para><citerefentry><refentrytitle>hosts_access</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry>
+	<citerefentry><refentrytitle>smb.conf</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry>, <citerefentry><refentrytitle>smbclient</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>samba-tool</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>winbindd</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry>, と、
+	Internet RFCである<filename>rfc1001.txt</filename>, <filename>rfc1002.txt</filename>。
+	さらに追加すると、CIFS(SMBの発展形)仕様が
+	 <ulink noescape="1" url="http://samba.org/cifs/">
+	http://samba.org/cifs/</ulink>Webページからリンクされている。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。
+	Samba は現在 Linux カーネルが 開発されているような方法での
+	オープンソースプロジェクトである Samba Team によって開発されている。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
+	<para>このマニュアルページの Samba 4.0.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+
+</refsect1>
+
+</refentry>
