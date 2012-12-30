@@ -7,7 +7,7 @@
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 <refnamediv>
@@ -561,6 +561,17 @@
 		</varlistentry>
 
 		<varlistentry>
+		<term>backup</term>
+		<listitem><para>ディレクトリ表示とファイルのオープン時にサーバに
+		送られる"backup intent"フラグをOn/Offする。もしも"backup intent"
+		フラグが真であれば、サーバは、もしもユーザがSE_BACKUPまたは
+		SE_RESTORE権限が許可されているならば、いくつかのシステムチェックを
+		試み、バイパスする。この状態は、バックアップまたはリストア操作を
+		行う時に便利である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
 		<term>blocksize &lt;number&gt;</term>
 		<listitem><para>操作時のブロックサイズパラメーターを設定する。既定値は20である。
 		tarファイルの出力をblocksize*TBLOCK(通常512バイト)ユニットごとに行うようにする。
@@ -738,6 +749,13 @@
 		<term>logon &lt;username&gt; &lt;password&gt;</term>
 		<listitem><para>再度ログオンすることにより、このセッションのための新しい
 		vuidを確立する。新しいvuidを表示する。Samba内部のテスト用のみに使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>logoff</term>
+		<listitem><para>サーバからログオフし、セッションをクローズする。
+		内部的なSambaテストの目的で使われる。
 		</para></listitem>
 		</varlistentry>
 
@@ -1058,6 +1076,30 @@
 		</para></listitem>
 		</varlistentry>
 
+		<varlistentry>
+		<term>tcon &lt;sharename&gt;</term>
+		<listitem><para>新しい tree connect(共有への接続)を確立する。
+		現在のtree connectを置き換える。新しいtid(tree id)を表示する。
+		内部的なSambaテスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tdis</term>
+		<listitem><para>現在の共有接続をクローズする(tree disconnect)。
+		内部的なSambaテスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tid &lt;number&gt;</term>
+		<listitem><para>新しいarbitrary番号の為に、プロトコル中の
+		現在のtree id(tid)を変更する。引数が無い場合、現在使われている
+		tidを表示する。
+		内部的なSambaテスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
 	</variablelist>
 </refsect1>
 
@@ -1160,7 +1202,7 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.6 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
         <para>このドキュメントの Samba 3.0.0 - 3.0.24 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
@@ -1175,6 +1217,7 @@
 		<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
 	</itemizedlist>	
         によって行なわれた。</para>
+	<para>このドキュメントの Samba 4.0.0 対応の翻訳は太田俊哉によって行われた。</para>
 </refsect1>
 
 </refentry>
