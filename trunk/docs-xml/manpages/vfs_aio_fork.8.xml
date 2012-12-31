@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_aio_fork.8">
+
+<refmeta>
+	<refentrytitle>vfs_aio_fork</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_aio_fork</refname>
+	<refpurpose>Samba vfsにおける非同期I/Oの実装</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = aio_fork</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>aio_fork</command> VFS モジュールは、システムレベルのPOSIX AIO
+	インタフェースが不十分なものであるプラットフォーム上で、Samba用の非同期I/Oを
+	有効にする。Posix AIO は、きつい制限がある。たとえば、あるLinuxバージョン上では
+	それが使うリアルタイムシグナルは、高負荷の時には動作しない。その他のシステムでは、
+	特別なカーネルモジュールがロードされた時にのみAIOが使えるか、あるいは、システム
+	全体で一定量の非同期要求がスケジュールされた時にのみに使える。glibc(ほとんどの
+	Linuxしすてむ)ベースのシステムは、ファイル記述子あたり単一の未処理要求のみ許可
+	される。 </para>
+
+	<para>これらすべての制限を回避するために、aio_folkモジュールが書かれた。
+	これは、読み出しと書き込み呼び出しを非同期的に作成するために、
+	内部Posix AIOインタフェースの代わりにフォークされたヘルパプロセスを使う。
+	これはパラメータを持たず、必要に応じて非同期要求が来たとき、ヘルパプロセスを
+	作成する。アイドル状態のヘルパプロセスは30秒ごとに消滅する。
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>簡単な使い方:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="vfs objects">aio_fork</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、バージョン 4.0.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 3.5.12 - 4.0.0 対応のものである。</para>	
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
