@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">3.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -54,6 +54,9 @@
 	</para>
 
 	<para>このモジュールはスタック可能である。</para>
+
+	<para>Samba 4.0以降、すべてのオプションは共有単位のオプションである。</para>
+
 </refsect1>
 
 
@@ -129,17 +132,14 @@
 		<listitem>
 		<para>
 		  このFSがHSMを有効にしている場合、アナウンスを有効/無効にする。
-		Enable/Disable announcing if this FS has HSM enabled.
 		</para>
 
 		<itemizedlist>
 		<listitem><para>
 		<command>no(既定値)</command> - HSMアナウンスを通知しない
-		Do not announce HSM.
 		</para></listitem>
 		<listitem><para>
-		<command>no</command> - HSMアナウンスを行う。
-		Announce HSM.
+		<command>yes</command> - HSMアナウンスを行う。
 		</para></listitem>
 		</itemizedlist>
 		</listitem>
@@ -230,6 +230,25 @@
 		</varlistentry>
 		<varlistentry>
 
+		<term>gpfs:acl = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  このオプションはSambaにGPFS ACLを無視させるようにする。
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - GPFS ACLを使う。
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - GPFS ACLを使わず、次の SMB VFSモジュールにすべてを渡す。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
 		<term>gpfs:refuse_dacl_protected = [ yes | no ]</term>
 		<listitem>
 		<para>
@@ -273,6 +292,91 @@
 		</listitem>
 
 		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:dfreequota = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  quotaによる共有の残量と使用量の報告を調整する。これを"yes"に
+		  設定すると、使用量と残量の要求は、ユーザが要求したデータの
+		  ユーザクォータ、ユーザのプライマリグループのグループクォータと
+		  共有の最上位ディレクトリが持っているファイルセットに対する
+		  ファイルセットクォータも評価される。
+		</para>
+		<para>
+		Adjust reporting of the size and free space of a share
+		according to quotas. If this setting is "yes", a
+		request for size and free space will also evaluate the
+		user quota of the user requesting the data, the group
+		quota of the primary group of the user and the fileset
+		quota for the fileset containing the top level
+		directory of the share.
+		</para>
+
+		<para>
+		  もしも、何らかの、ソフトあるいはハードクォータ制限に達した
+		  場合、残量は0と報告される。もしもクォータが動作しているが、
+		  制限に達していない場合、残量はクォータの残り量に従って
+		  報告される。もしも1つ以上のクォータが残量に引っかかって
+		  いる場合、それらのクォータの、最も小さい量のものが報告される。
+		  共有のサイズはクォータの使用量にそって報告される。もしも
+		  1つ以上のクォータが適用される場合、共有のサイズは、それらの
+		  クォータの中の最も小さいものに従って報告される。
+		</para>
+		<para>
+		If any of the soft or hard quota limits has been
+		reached, the free space will be reported as 0. If a
+		quota is in place, but the limits have not been
+		reached, the free space will be reported according to
+		the space left in the quota. If more than one quota
+		applies the free space will be reported as the smallest
+		space left in those quotas. The size of the share
+		will be reported according to the quota usage. If more
+		than one quota applies, the smallest size will be
+		reported for the share size according to these quotas.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes</command> - 共有の使用量と残量を報告するときにクォータを含める
+		</para></listitem>
+		<listitem><para>
+		<command>no(既定値)</command> - クォータを含めず、単に
+		ファイルシステムの大きさと残量を報告する。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:prealloc = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  もしもyesに設定された場合、gpfs_prealloc 機能は、適切なときに
+		  fallocate コールバック中で使われる。もしも no に設定された場合、
+		  gpfs_prealloc は使われない。両方の場合において、システムとライブラリ
+		  コールは回避される。
+		</para>
+		<para>
+		If set to yes the gpfs_prealloc function will be used in the
+		fallocate callback when appropriate. If set to no gpfs_prealloc
+		will not be used. In both cases the system and libc calls are
+		avoided.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes (既定値)</command> - fallocate コールバックのために gpfs_prealloc を使う。
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - fallocate コールバックのために gpfs_prealloc を使わない。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+
 		<varlistentry>
 
 		<term>nfs4:mode = [ simple | special ]</term>
@@ -348,9 +452,9 @@
 		  values:
 		</para>
 		<itemizedlist>
-		<listitem><para><command>yes</command>ファイルをO_SYNCで開く
+		<listitem><para><command>yes</command> - ファイルをO_SYNCで開く
 		</para></listitem>
-		<listitem><para><command>no (既定値)</command>通常Sambaが行うように
+		<listitem><para><command>no (既定値)</command> - 通常Sambaが行うように
 		ファイルをオープンする
 		</para></listitem>
 		</itemizedlist>
@@ -407,7 +511,7 @@
 
 <refsect1>
 	<title>バージョン</title>
-	<para>このマニュアルページは Samba バージョン 3.0.25用(訳注:3.3?)である。</para>
+	<para>このマニュアルページは Samba バージョン 3.0.25用(訳注:4.0?)である。</para>
 </refsect1>
 
 <refsect1>
@@ -425,8 +529,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.0 - 3.6.9 に対応する。</para>
-        <para>このドキュメントの Samba 3.2.4 - 3.6.9 対応の翻訳は
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.0.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
