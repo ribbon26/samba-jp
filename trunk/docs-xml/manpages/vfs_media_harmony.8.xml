@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_media_harmony.8">
+
+<refmeta>
+	<refentrytitle>vfs_media_harmony</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_media_harmony</refname>
+	<refpurpose>複数のAvidクライアントがネットワークドライブを共有することを可能にする。</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = media_harmony</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システム用である。</para>
+
+	<para><command>vfs_media_harmony</command> VFS モジュールは、
+	Avid editorial workstationがネットワークドライブを共有することができるように
+	する。これは以下の方法で行う:</para>
+	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
+	<listitem><para>各クライアントに、固有の Avid msmMMOB.mdb と msmFMID.pmr
+	ファイルのコピーを与え、ディレクトリを作成する。</para></listitem>
+	<listitem><para>各クライアントが書き込み時間を明示的に制御する事をできるようにし、
+	Avid アプリケーションがAvid メディアディレクトリを認識する。</para>
+	<para>Allowing each client to explicitly control the
+	write time the Avid application sees on Avid media directories.</para></listitem>
+	</orderedlist>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para><command>vfs_media_harmony</command>は、自動的に、クライアントから
+	Avidデータベースファイルまたはファイルのクライアント固有のバージョン用
+	Avid Creating ディレクトリへの要求をリダイレクトする。この機能のこの部分を
+	利用するために、モジュールを有効にする以上の設定は必要ない。</para>
+	<para><command>vfs_media_harmony</command> automatically redirects
+	requests from clients for Avid database files or an Avid Creating
+	directory to a client-specific version of the file.  No
+	configuration beyond enabling the module is needed to get this
+	portion of its functionality working.</para>
+
+	<para>もしも、MacとWindowsのAvidクライアントが同じフォルダをアクセス
+	する場合、それらは、Windows共有上で拒否(veto)される、隠しMacファイルを含む、
+	別々の共有定義が与えられる。例を参照のこと。</para>
+	<para>If Mac and Windows Avid clients will be accessing the same
+	folder, they should be given separate share definitions, with
+	hidden Mac files vetoed on the Windows share.  See EXAMPLES.</para>
+
+	<para>各クライアントに、AvidアプリケーションがそれらのAvidデータベースを
+	リフレッシュする時制御できるようにするため、
+	[avid_dir_name]_[client_ip_address]_[client_username]という名前の
+	各クライアント用と各Avid メディアディレクトリ用のファイルを作成する。
+	Avid データベースリフレッシュをトリガするため、それらのファイルを
+	書き込み時に更新する。例を参照のこと。</para>
+	<para>To allow each client to control when the Avid application
+	refreshes their Avid databases, create files for each client
+	and each Avid media directory with the name
+	[avid_dir_name]_[client_ip_address]_[client_username].
+	To trigger Avid database refreshes, update the write time on
+	those files.  See EXAMPLES.</para>
+
+	<para>また、クライアントにAvid メディアフォルダ書き込み時間を
+	制御することを可能にするため、
+	<command>cache locked write times = no</command>オプションを設定する
+	ことも必要である。</para>
+	<para>It is also necessary for the <command>cache locked write times = no</command>
+	option to be set for clients to be able to control their Avid
+	media folder write times.</para>
+
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>Mac とWindows クライアント用に media_harmony を有効にする:</para>
+<programlisting>
+        <smbconfsection name="[avid_mac]"/>
+	<smbconfoption name="path">/avid</smbconfoption>
+	<smbconfoption name="vfs objects">media_harmony</smbconfoption>
+	<smbconfoption name="cache locked write times">no</smbconfoption>
+        <smbconfsection name="[avid_win]"/>
+	<smbconfoption name="path">/avid</smbconfoption>
+	<smbconfoption name="vfs objects">media_harmony</smbconfoption>
+	<smbconfoption name="cache locked write times">no</smbconfoption>
+	<smbconfoption name="veto files">/.DS_Store/._@/.Trash@/.Spotlight@/.hidden/.hotfiles@/.vol/</smbconfoption>
+	<smbconfoption name="delete veto files">yes</smbconfoption>
+</programlisting>
+
+	<para>ユーザ david と susan に、それら固有のAvidデータベースリフレッシュを
+	コントロールすることができるようにするため、ファイルを作成する:</para>
+<programlisting>
+	touch '/avid/OMFI MediaFiles_192.168.1.10_david' \
+		'/avid/OMFI MediaFiles_192.168.1.11_susan' \
+		'/avid/Avid MediaFiles/MXF/1_192.168.1.10_david' \
+		'/avid/Avid MediaFiles/MXF/1_192.168.1.11_susan'
+</programlisting>
+	<para>ユーザ david 用にAvidデータベースリフレッシュを行う:</para>
+<programlisting>
+	touch '/avid/OMFI MediaFiles_192.168.1.10_david' \
+		'/avid/Avid MediaFiles/MXF/1_192.168.1.10_david'
+</programlisting>
+
+	<para>もしも、管理対象が非常に大きなAvidメディアフォルダの場合、
+	各エディタに、適切に変更されたバージョンの
+	examples/scripts/vfs/media_harmony/trigger_avid_update.py を
+	それらのファイルの作成と更新のために使う事ができる。</para>
+	<para>If you have a large number of Avid media folders to manage,
+	you can give each editor a suitably modified version of
+	examples/scripts/vfs/media_harmony/trigger_avid_update.py to
+	create and update these files.</para>
+
+</refsect1>
+
+<refsect1>
+	<title>CAVEATS</title>
+
+	<para><command>vfs_media_harmony</command>は、メディア向けの、
+	OMFI MediaFilesディレクトリかAvid MediaFiles中を見るAvid編集
+	アプリケーションといっしょに使って動くように設計されている。
+	汎用的な使用法を行うすべての環境で期待されているように動くようには
+	設計されていない。たとえば、ディレクトリ一覧中に表示されない
+	としても、msmMMOB.mdb_192.168.1.10_userxのようなクライアント固有の
+	ファイルをオープンすることは可能である。</para>
+	<para><command>vfs_media_harmony</command> is designed to work with
+	Avid editing applications that look in the Avid MediaFiles or
+	OMFI MediaFiles directories for media.  It is not designed to work
+	as expected in all circumstances for general use.  For example: It
+	is possible to open a client-specific file such as
+	msmMMOB.mdb_192.168.1.10_userx even though it doesn't show up
+	in a directory listing.</para>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページはバージョン 3.2.7(訳注4.0?)のSambaシステムのために修正された。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.0.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.0.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
+
+</refentry>
