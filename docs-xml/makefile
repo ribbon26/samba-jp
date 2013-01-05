@@ -1,7 +1,7 @@
 ## makefile for building samba-ja documentation
 ## ======================================================================
 
-TARFILE= 3.6.5-1
+TARFILE= 4.0.0-1
 
 SAMBA_DOCS_XML_DIR=	samba-docs-xml
 
@@ -51,8 +51,8 @@ default: help
 all: html html-single htmlman3 manpages3
 
 tar::
-	tar -cvzf samba-ja-docs-manpages-$(TARFILE).tar.gz output/manpages-3 COPYING README
-	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages-3 output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING makefile README
+	tar -cvzf samba-ja-docs-manpages-$(TARFILE).tar.gz output/manpages COPYING README
+	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING makefile README
 
 help: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	$(MAKE) -f Makefile help
@@ -67,7 +67,7 @@ config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL)
 $(SAMBA_DOCS_XML_BUILD_FILES):
 	@[ -d $(SAMBA_DOCS_XML_DIR) ] || { \
 	  echo "You must create a symlink '$(SAMBA_DOCS_XML_DIR)' for Samba docs-xml directory,"; \
-	  echo "e.g.: ln -s /path/to/samba-3.X.Y/docs-xml samba-docs-xml"; \
+	  echo "e.g.: ln -s /path/to/samba-4.X.Y/docs-xml samba-docs-xml"; \
 	  exit 1; \
 	}
 	cp -rp $(SAMBA_DOCS_XML_DIR)/$@ $@
