@@ -57,8 +57,7 @@ tar::
 help: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	$(MAKE) -f Makefile help
 
-html html-single htmlman3 manpages3:: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
-	 XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/$(SAMBA_DOCS_XML_CATALOG_FILE)" \
+html html-single htmlman manpages:: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	 $(MAKE) -f Makefile $@
 
 config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL)
