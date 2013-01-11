@@ -1,7 +1,7 @@
 ## makefile for building samba-ja documentation
 ## ======================================================================
 
-TARFILE= 4.0.0-1
+TARFILE= 4.0.0-alpha1
 
 SAMBA_DOCS_XML_DIR=	samba-docs-xml
 
@@ -22,8 +22,11 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	aclocal.m4 \
 	Makefile \
 	htmldocs.html \
+	xslt/docbook2pearson.xsl \
 	xslt/expand-sambadoc.xsl \
+	xslt/extract-examples.xsl \
 	xslt/generate-attributions.xsl \
+	xslt/generate-dependencies.xsl \
 	xslt/html \
 	xslt/html-chunk.xsl \
 	xslt/html.xsl \
@@ -36,8 +39,6 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	templates \
 
 # FIXME: Remove?
-#	xslt/docbook2pearson.xsl \
-#	xslt/extract-examples.xsl \
 #	xslt/latex \
 #	xslt/latex.overrides.xml \
 #	xslt/sambadoc2pearson.xsl \
