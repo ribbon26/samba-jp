@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2012/11/04
+						2013/01/11
 						日本Sambaユーザー会
 
 
@@ -58,7 +58,34 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 
 4. ビルド方法
 ======================================================================
-4.1 Samba 3.5.x 以降
+4.1 Samba 4.0.x
+
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
+
+  $ cd /srv/build
+  $ tar xzf /srv/source/samba-4.0.X.tar.gz
+
+(2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
+
+  $ cd /srv/build
+  $ mkdir samba-ja-docs-4.0.X-Z
+  $ cd /srv/source/samba-ja-docs-4.0.X-Z
+  $ tar xzf samba-ja-docs-4.0.X-Z.tar.gz
+
+(3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
+    リンクを翻訳文書ディレクトリ内に作成
+
+  $ cd /srv/source/samba-ja-docs-4.0.X-Z/docs-xml
+  $ ln -s /srv/build/samba-4.0.X-Z/docs-xml samba-docs-xml
+
+(4) ビルドを実行
+
+  $ make clean
+  $ make manpages (manpagesの作成)
+  $ make htmlman  (html化したmanpagesの作成)
+  $ make html     (Samba3-HOWTO等のhtml文書の作成)
+
+4.2 Samba 3.5.x および 3.6.x
 
 (1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
 
@@ -85,7 +112,7 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
   $ make htmlman3  (html化したmanpagesの作成)
   $ make html      (Samba3-HOWTO等のhtml文書の作成)
 
-4.2 Samba 3.4.x以前
+4.3 Samba 3.4.x以前
 
   svnからまずsetup3x.shダウンロードしてください。次に、オリジナルのSamba-
 3.x.y のベースディレクトリに移してください。その後、この
@@ -96,14 +123,14 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
 
 を実行してください。その後、make htmlman3,make manpages3を実行してください。
-OpenSUSE 12.1でしかテストしていません。
+OpenSUSE 12.2でしかテストしていません。
 
 
 
 5. 変更履歴
 ======================================================================
 
-3.2系列から3.5系列を一緒に管理しています。そのため、バージョン番号と
+3.2系列から4.0系列を一緒に管理しています。そのため、バージョン番号と
 変更日付が前後する場合があります。
 
 2008/11/08 ver 0.1	3.2.4対応版を初期リリース
@@ -337,7 +364,27 @@ OpenSUSE 12.1でしかテストしていません。
 			修正。
 			vfs_aio_pthread.8.xml追加
 
+2012/09/27 Ver 3.5.18-1 3.5.18対応。
+	       		idmap_rid.8.xml修正。
+
 2012/11/04 Ver 3.6.9-1 3.6.9対応。
+
+2013/01/01 Ver 3.5.20-1 3.5.20対応。
+	       		vfs_aio_fork.8.xml追加,
+			cifs_upcall.8.xml,mount.cifs.8.xml微修正,
+			"このドキュメントは"->"このマニュアルページは"に修正。
+
+2013/01/02 Ver 3.6.10-1 3.6.10対応。
+	       		vfs_aio_fork.8.xml追加,smbcacls.1.xml,smbclient.1.xml,
+			smbcquotas.1.xmlvfs_aio_pthread.8.xml,
+			vfs_default_quota.8.xml,vfs_dirsort.8.xml,
+			vfs_fake_perms.8.xml,
+			vfs_full_audit.8.xml,fix vfs_xattr_tdb.8.xml訳微修正,
+			"このドキュメントは"->"このマニュアルページは"に修正。
+
+2013/01/11 Ver 4.0.0-alpha1 4.0.0暫定対応
+	       		manpages配下を翻訳(smb.conf.5は未翻訳)。
+			それ以外のドキュメントについては3.xのまま。
 
 6.責任の放棄
 ======================================================================
