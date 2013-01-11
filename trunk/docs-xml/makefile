@@ -59,6 +59,7 @@ help: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	$(MAKE) -f Makefile help
 
 html html-single htmlman manpages:: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
+	XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/$(SAMBA_DOCS_XML_CATALOG_FILE)" \
 	 $(MAKE) -f Makefile $@
 
 config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL)
@@ -76,7 +77,7 @@ $(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
 	rm -f $(SAMBA_DOCS_XML_CONFIGURED_FILES)
 	$(MAKE) -f Makefile Makefile.settings
 	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
-	sed "s|@abs_top_builddir@|`pwd`|g" $(SAMBA_DOCS_XML_CATALOG_FILE).in >$(SAMBA_DOCS_XML_CATALOG_FILE)
+	sed "s|@abs_top_srcdir@|`pwd`|g" $(SAMBA_DOCS_XML_CATALOG_FILE).in | sed "s|@abs_top_builddir@|`pwd`|g" >$(SAMBA_DOCS_XML_CATALOG_FILE)
 
 
 $(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
