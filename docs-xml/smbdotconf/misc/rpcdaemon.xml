@@ -1,0 +1,112 @@
+<samba:parameter name="rpc_daemon:DAEMON"
+                 context="G"
+		 type="string"
+		 advanced="1" print="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+        <para>
+	  定義されてたrpcサービスのために、分離されたデーモンを起動するか、
+	  埋め込まれたコードを使うかを定義する。
+	  rpc_daemonプレフィックスはその後にサーバ名と値がなければならない。
+	</para>
+	<para>
+	Defines whether to use the embedded code or start a separate daemon
+	for the defined rpc services.
+	The rpc_daemon prefix must be followed by the server name, and a value.
+	</para>
+
+	<para>
+	  現時点では、以下の2つが使用可能である:
+		<command moreinfo="none">disabled</command>
+		<command moreinfo="none">fork</command>
+	</para>
+
+	<para>
+	  旧来のメソッドはsmbd中に埋め込まれた内部デーモンとして、
+	  rpcサービスを動かすものであり、それゆえ、外部デーモンは
+	  既定値では<emphasis>無効</emphasis>になっている。
+	</para>
+
+	<para>
+	  <emphasis>fork</emphasis>オプションを選ぶと、この方法で設定された
+	  各デーモン用に分離されたプロセスを、sambaはフォークする。各デーモンは、
+	  複数のsmbdからのリクエストを処理する為に使われる、複数の子プロセスを
+	  順番にフォークする(エンドポイントマッパが有効な場合)。
+	  名前付きパイプ上で発生し、そこで指定されたパイプを要求するsmbdとの
+	  通信は、外部デーモンにフォワードされる(<smbconfoption name="rpc_server"/>
+	  を参照のこと)。
+	</para>
+	<para>
+	Choosing the <emphasis>fork</emphasis> option will cause samba to fork
+	a separate proces for each daemon configured this way. Each daemon may
+	in turn fork a number of children used to handle requests from multiple
+	smbds and direct tcp/ip connections (if the Endpoint Mapper is
+	enabled). Communication with smbd happens over named pipes and require
+	that said pipes are forward to the external daemon (see <smbconfoption
+	name="rpc_server"/>).
+	</para>
+
+	<para>
+	  フォークされたRPCデーモンは接続を扱うために動的に子プロセスをフォーク
+	  する事をサポートする。どのくらい子プロセスを作るか、どのくらい早く
+	  それらをフォークするか、また、どのくらい各子プロセスにクライアントを
+	  同時に取り扱うかについて、ヒューリスティックな方法は、デーモンの後に
+	  名前が付けられたparametricalオプションによって定義される。
+	  現時点では以下の5つのオプションがある。
+		<command moreinfo="none">prefork_min_children</command>
+		<command moreinfo="none">prefork_max_children</command>
+		<command moreinfo="none">prefork_spawn_rate</command>
+		<command moreinfo="none">prefork_max_allowed_clients</command>
+		<command moreinfo="none">prefork_child_min_life</command>
+
+		上記のオプションの1つを設定するためには以下の方法を使う:
+	<programlisting>
+	damonname:prefork_min_children = 5
+	</programlisting>
+	</para>
+	<para>
+	Forked RPC Daemons support dynamically forking children to handle
+	connections. The heuristics about how many children to keep around and
+	how fast to allow them to fork and also how many clients each child is
+	allowed to handle concurrently is defined by parametrical options named
+	after the daemon.
+	Five options are currently supported:
+		<command moreinfo="none">prefork_min_children</command>
+		<command moreinfo="none">prefork_max_children</command>
+		<command moreinfo="none">prefork_spawn_rate</command>
+		<command moreinfo="none">prefork_max_allowed_clients</command>
+		<command moreinfo="none">prefork_child_min_life</command>
+
+	To set one of these options use the follwing syntax:
+	<programlisting>
+	damonname:prefork_min_children = 5
+	</programlisting>
+	</para>
+
+	<para>
+	  Sambaはspoolssとlsarpc/lsass, netlogonとsamr pipes用に分離されたデーモンを
+	  含む。現在、3つのデーモンが有効でそれらは以下の通りである:
+		<command moreinfo="none">epmd</command>
+		<command moreinfo="none">lsasd</command>
+		<command moreinfo="none">spoolssd</command>
+	例:
+	<programlisting>
+	rpc_daemon:spoolssd = fork
+	</programlisting>
+	</para>
+	<para>
+	Samba includes separate daemons for spoolss and the lsarpc/lsass,
+	netlogon and samr pipes. Currently three daemons are available and they
+	are called:
+		<command moreinfo="none">epmd</command>
+		<command moreinfo="none">lsasd</command>
+		<command moreinfo="none">spoolssd</command>
+	Example:
+	<programlisting>
+	rpc_daemon:spoolssd = fork
+	</programlisting>
+	</para>
+</description>
+
+<value type="default">disabled</value>
+</samba:parameter>
