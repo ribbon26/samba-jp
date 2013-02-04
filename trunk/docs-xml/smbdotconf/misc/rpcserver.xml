@@ -1,51 +1,91 @@
-<samba:parameter name="rpc_server"
+<samba:parameter name="rpc_server:SERVER"
                  context="G"
 		 type="string"
 		 advanced="1" print="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 	<para>
-	  名前付きパイプのために使うrpcサーバーの種類を定義する。
-	  rpc_serverプレフィックスは、パイプ名と値が伴わなければならない。
+	  このオプションを使うと、smbd内で、内部/埋め込み状態でrpc サービスを
+	  動かすようにするか、Samba4の、エンドポイントマッパデーモン、
+	  spoolssデーモン、あるいは新しいLSAサービスデーモンのように、
+	  外部デーモンにリダイレクトするかを選べることができるようになる。
 	</para>
 
 	<para>
-	  現時点で以下の3つがサポートされている:
+	  このオプションはSamba中の有効なrpcサービスごとに設定することができる。
+	  以下のリストは、このオプションで変更可能な、すべての有効なパイプ名サービス
+	  一覧である。
+
+	</para>
+
+	<itemizedlist>
+		<listitem><para>epmapper     - Endpoint Mapper</para></listitem>
+		<listitem><para>winreg       - Remote Registry Service</para></listitem>
+		<listitem><para>srvsvc       - Remote Server Services</para></listitem>
+		<listitem><para>lsarpc       - Local Security Authority</para></listitem>
+		<listitem><para>samr         - Security Account Management</para></listitem>
+		<listitem><para>netlogon     - Netlogon Remote Protocol</para></listitem>
+		<listitem><para>netdfs       - Settings for Distributed File System</para></listitem>
+		<listitem><para>dssetup      - Active Directory Setup</para></listitem>
+		<listitem><para>wkssvc       - Workstation Services</para></listitem>
+		<listitem><para>spoolss      - Network Printing Spooler</para></listitem>
+		<listitem><para>svcctl       - Service Control</para></listitem>
+		<listitem><para>ntsvcs       - Plug and Play Services</para></listitem>
+		<listitem><para>eventlog     - Event Logger</para></listitem>
+		<listitem><para>initshutdown - Init Shutdown Service</para></listitem>
+	</itemizedlist>
+
+	<para>
+	  以下の3つの値が現在サポートされている:
 		<command moreinfo="none">embedded</command>
-		<command moreinfo="none">daemon</command>
 		<command moreinfo="none">external</command>
+		<command moreinfo="none">disabled</command>
 	</para>
 
 	<para>
-	  古くからの手法は、smbd中で、内部関数<emphasis>embedded</emphasis>
-	  としてすべてのパイプを実行する手法である。
+	  旧来の方法は、smbd中の<emphasis>embedded</emphasis>内部関数のように
+	  すべてのパイプを実行する手法である。既定値は各サービスごとに依存する。
 	</para>
 
 	<para>
-	  だいたいの手法は、smbd起動時以前に<emphasis>daemon</emphasis>を
-	  フォークする方法である。
-	An alternative method is to fork a <emphasis>daemon</emphasis>
-	early on at smbd startup time. This is supported only for selected
-	pipes.
+	  <emphasis>external</emphasis>オプションを選択すると、
+	  分離されたデーモンか、名前付きパイプ上のMS-RPCインタフェース経由で、
+	  Sambaとインタフェースを取ることのできる、完全に独立した
+	  (サードパーティの)サーバとして動かす事ができる。
 	</para>
 
 	<para>
-	  <emphasis>external</emphasis>オプションを選ぶと、完全に独立した
-	  (サードパーティの)サーバーを動かすことが出来、それは、名前付きパイプ上で
-	  MS-RPCインタフェース経由でsambaとのインタフェースをとることが出来る。
-	Choosing the <emphasis>external</emphasis> option allows to run a
-	completely independent (3rd party) server capable of interfacing
-	with samba via the MS-RPC interface over named pipes.
+	現在、Samba3では、spoolssd,epmdとlsasdという3つのデーモンをサポートしている。
+	3つのデーモンは<emphasis>rpc_daemon</emphasis>オプションを使う事で
+	有効にできる。spoolssdに対しては、以下のように、デーモンを有効にし、
+	名前付きパイプをプロキシする必要がある:
+	you have to to enable the daemon and proxy the named pipe with:
 	</para>
 
 	<para>
-	  現在、以下のようにspoolssパイプが<emphasis>daemon</emphasis>
-	  として設定することのみが出来る:
-	<programlisting>
-	rpc_server:spoolss = daemon
-	</programlisting>
+	例:
+		<programlisting>
+			rpc_daemon:lsasd = fork
+			rpc_server:lsarpc = external
+			rpc_server:samr = external
+			rpc_server:netlogon = external
+
+			rpc_server:spoolss = external
+			rpc_server:epmapper = disabled
+		</programlisting>
+
+	</para>
+
+	<para>
+	  ncacn_ip_tcpコネクションもリッスンする為にrpc サービスを有効にするための
+	  特別なオプションがある。現在、これは、テスト用にのみ使われ、スケールしない!
+
+		<programlisting>
+			rpc_server:tcpip = yes
+		</programlisting>
+
 	</para>
 </description>
 
-<value type="default">none</value>
+<value type="default">embedded</value>
 </samba:parameter>
