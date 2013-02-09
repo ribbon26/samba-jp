@@ -1,0 +1,28 @@
+<samba:parameter name="durable handles"
+                 context="S"
+                 advanced="1"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+      この論理値パラメータはSambaが共有上でSMB2永続(durable)ファイルハンドルを
+      許可するかどうかを制御する。
+    </para>
+    <para>
+      永続ハンドルは、
+    Note that durable handles are only enabled if
+    <smbconfoption name="kernel oplocks">no</smbconfoption>,
+    <smbconfoption name="kernel share modes">no</smbconfoption>と
+    <smbconfoption name="posix locking">no</smbconfoption>, すなわち
+    共有がCUFS/SMB2のみでアクセスするように設定され、ローカルのUNIXプロセスや
+    NFS操作との相互運用性機能をサポートしないように設定される時にのみ有効になる
+    ことに注意。
+    </para>
+    <para>
+      さらに、さしあたり、永続(durability)はdelete on closeフラグが設定されている
+      ハンドルに対しては許可されないことにも注意。
+    </para>
+</description>
+
+<value type="default">yes</value>
+</samba:parameter>
