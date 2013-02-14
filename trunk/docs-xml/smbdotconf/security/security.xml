@@ -11,43 +11,32 @@
     クライアントがどのように Samba に応答するかを決めるものであり、
     <filename moreinfo="none">smb.conf</filename> 中でもっとも重要な設定の 1 つである。</para>
 
-    <para> このオプションは、 <citerefentry><refentrytitle>smbd</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry> とのプロトコルネゴシエーション時の応答に含まれる、
-    &quot;security mode bit&quot;を設定し、共有レベルのセキュリティを使用するか否かを
-    制御する。クライアントは、このbitを元にして、ユーザーとパスワードの情報をサーバーに転送
-    するかどうか、また転送する際の方法を決定する。</para>
-
-    <para>デフォルトは、<command moreinfo="none">security = user</command> であり、
-    これは Windows 98 と Windows NT との間で通信を行なうときに必要とされるもっとも一般的な設定(訳注: ユーザーレベルのセキュリティ)である。
+    <para>既定値は<command moreinfo="none">security = user</command> であり、
+    これは、スタンドアロンファイルサーバあるいはDCで使われる、もっとも一般的な設定である。
     </para>
 
     <para>その他に Samba を Windows ドメインに参加させることが出来る、
-    <command moreinfo="none"> security = ads </command>、
-    <command moreinfo="none"> security = domain </command>と、廃止予定の
-    <command moreinfo="none">security = share</command>と
-    <command moreinfo="none">security = server</command> が設定可能な値である。</para>
-
-    <para> 2.0.0 以前のバージョンの Samba では、
-    主に過去との互換性を保つ目的で、 <command moreinfo="none">security = share</command> がデフォルトであった。
-    </para>
+    <command moreinfo="none"> security = ads </command>か
+    <command moreinfo="none">security = domain</command> がある。</para>
 
     <para>パスワードなしの共有(ゲスト共有)の作成が主目的である場合は、
     <command moreinfo="none">security = user</command>と、
     <smbconfoption name="map to guest"/>を使うべきである。
     この設定は、通常共有プリンターサーバーで使われることが多い。</para>
 
-    <para>
-    <smbconfoption name="NetBIOS aliases"/> を用いることで、
-    ユーザーレベルと共有レベルのセキュリティの両方を提供する
-    <emphasis>混在モード(hybrid mode)</emphasis> で
-    <command moreinfo="none">smbd</command>を運用することも可能である。
-    </para>
-
     <para>以下、それ以外の設定について説明する。</para>
+
+    <para><anchor id="SECURITYEQUALSAUTO"/><emphasis>SECURITY = AUTO</emphasis></para>
+
+    <para>これはSambaのセキュリティ設定の既定値であり、Sambaが、
+    security モードを決める<smbconfoption name="server role"/>パラメータ
+    (もしも設定されていれば)を調べるようにさせる。
+    </para>
 
     <para><anchor id="SECURITYEQUALSUSER"/><emphasis>SECURITY = USER</emphasis></para>
 
-    <para>これは、Samba セキュリティ設定の既定値である。ユーザーレベルのセキュリティでは、
+    <para>もしも<smbconfoption name="server role"/>が指定されていない場合、これは
+    Samba セキュリティ設定の既定値である。ユーザーレベルのセキュリティでは、
     クライアントは最初に正しい(<smbconfoption name="username map"/>を使うことによって
     マップ可能な)ユーザー名とパスワードで最初に&quot;ログオン&quot;する必要がある。
     暗号化パスワード(<smbconfoption name="encrypted passwords"/>パラメーター参照)も
@@ -62,8 +51,6 @@
     <smbconfoption name="guest account"/>に、自動的にマップする事を許可しないと
     ユーザーレベルのセキュリティが動作しないかという事の理由である。これの動作
     詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
-
-    <para><link linkend="VALIDATIONSECT">NOTE ABOUT USERNAME/PASSWORD VALIDATION</link>節も参照のこと。</para>
 
     <para><anchor id="SECURITYEQUALSDOMAIN"/><emphasis>SECURITY = DOMAIN</emphasis></para>
 
@@ -94,128 +81,9 @@
     ユーザーレベルのセキュリティが動作しないかという事の理由である。これの動作
     詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
 
-    <para><link linkend="VALIDATIONSECT">
-    NOTE ABOUT USERNAME/PASSWORD VALIDATION</link>節も参照のこと。</para>
-
     <para><smbconfoption name="password server"/>パラメーターと
 	  <smbconfoption name="encrypted passwords"/>パラメーターも参照のこと。</para>
 
-    <para><anchor id="SECURITYEQUALSSHARE"/><emphasis>SECURITY = SHARE</emphasis></para> 
-
-    <note><para>このオプションはSMB2と非互換のため廃止予定である。</para></note>
-
-    <para>共有レベルのセキュリティに構成されたサーバーに接続するクライアントは、
-    共有リソースに接続しようとする際に、
-    適切なユーザー名とパスワードでサーバーにログオンしておく必要がない
-    (最近の Windows 95/98 や Windows NT は、
-    <command moreinfo="none">security=share</command> 
-    のサーバーと通信をする際にユーザー名を設定してログオン要求を送るが、パスワードは送らない)。
-    そのかわり、クライアントは、共有への接続時に共有毎に認証情報(パスワード)を送信する。
-    </para>
-
-    <para><command moreinfo="none">security=share</command> レベルのセキュリティで構成されていた場合であっても、
-    <command moreinfo="none">smbd</command> がクライアントからの要求を処理する際には<emphasis>常に</emphasis>
-    UNIX 上のいずれかのユーザーの権限で処理が行なわれる点に注意。</para>
-
-    <para> 共有レベルのセキュリティでは、
-    クライアントがユーザー名をサーバーに送るように要求されないため、
-    <command moreinfo="none">smbd</command> は、いくつかの方法を用いて、
-   クライアントの要求を処理する際に利用する UNIX 上のユーザーを決定する。</para>
-
-    <para> クライアントから送られてきたパスワードの確認対象となる
-    UNIX 側のユーザーのリストは、以下のようにして生成される:</para>
-
-    <itemizedlist>
-        <listitem>
-            <para> <smbconfoption name="guest only"/>
-            パラメーターが設定されている場合、以下の手順は省略され、
-            <smbconfoption name="guest account"/>
-            に設定されたユーザー名のみが確認対象となる。
-            </para>
-        </listitem>
-
-        <listitem>
-            <para>共有への接続時にユーザー名も送られてきた場合、
-            そのユーザー名(変換後のもの - 
-            <smbconfoption name="username map"/> を参照のこと)
-            が確認対象のユーザー名に追加される。
-            </para>
-        </listitem>
-
-        <listitem>
-            <para> クライアントが以前に	<emphasis>ログオン </emphasis> 要求 
-            (SessionSetup SMB 呼び出し) を行なっていた場合、
-            その SMB 呼び出し中で送られたユーザー名が確認対象のユーザー名に追加される。
-            </para>
-        </listitem>
-
-        <listitem>
-            <para>クライアントが接続しようとしているサービスの名前が、
-            確認対象のユーザー名に追加される。
-            </para>
-        </listitem>
-
-        <listitem>
-            <para> クライアントの NetBIOS 名が、
-            確認対象のユーザー名に追加される。
-            </para>
-        </listitem>
-
-	<listitem>
-            <para> <smbconfoption name="user"/>
-            リスト中のユーザー名が確認対象のユーザー名に追加される。
-	    </para>
-	</listitem>
-    </itemizedlist>
-
-    <para> <parameter moreinfo="none">guest only</parameter> パラメーターが設定されていないと、
-    このリスト中のユーザー名を用いて、送信されたパスワードの確認が行なわれる。
-    送信されたパスワードが最初に一致したユーザーが、
-    以降の処理に用いられる UNIX 上のユーザーとして利用される。</para>
-
-    <para> <parameter>guest only</parameter> パラメーターが設定されているか、
-    利用するユーザーを決定できなかった場合、
-    共有で <parameter moreinfo="none"> guest account </parameter> が利用可能であれば、
-    ゲストアクセスが行なわれ、それ以外の場合はアクセスが拒否されることになる。</para>
-
-    <para> 共有レベルのセキュリティでは、
-    どの UNIX 上のユーザーを用いてアクセス権のチェックが行なわれるかの判断が、
-    <emphasis>非常に</emphasis> 複雑になる事態が想定されることに注意。</para>
-
-    <para><link linkend="VALIDATIONSECT">
-    ユーザー名とパスワード認証についての注意</link> のセクションも参照のこと。</para>
-
-    <para><anchor id="SECURITYEQUALSSERVER"/><emphasis>SECURITY = SERVER</emphasis></para>
-
-    <para> この廃止予定のモードの場合、 Samba はまず NT マシンのような別の
-    SMB サーバーにユーザー名とパスワードの認証を依頼する。
-    これに失敗すると、<command moreinfo="none">security = user</command> 
-    と同様に処理を行なう。このモードを用いる場合は、リモートサーバーが対応していない場合を
-    除き、<smbconfoption name="encrypted passwords"/>パラメーターを <constant>yes</constant>
-    にする必要がある。なお、暗号化パスワードで認証処理が行なわれると、
-    Samba 上で UNIX パスワードファイルでの認証(平文認証)に戻れなくなるため、ユーザーの認証
-    は <filename moreinfo="none">smbpasswd</filename> ファイルで行なう必要がある。
-    設定方法の詳細は、 Samba HOWTO collection 中の User Database の章を参照のこと。</para>
-
-    <note><para>
-    このモードの処理には、中間介入攻撃(man-in-the-middle attack)やサーバーの偽装に脆弱で
-    あるという重大な落し穴がある。また、ユーザーのセッションが継続している間、アクティブな
-    コネクションを維持しておく必要があるため、 PDC のリソースを非常に多く消費する恐れある。
-    さらに、このコネクションがいったん失われると、回復させることができず、それ以降(個々の
-    クライアントがコネクションを一度切断するまでの間) Samba サーバーに対する認証は失敗して
-    しまう。</para></note>
-
-    <note><para>もしも、クライアントがNTLMv2認証を選択した場合、このモードの処理は
-    <emphasis>失敗する</emphasis>。
-    </para></note>
-
-    <note><para>クライアントからは、
-    <command moreinfo="none">security=server</command> と
-    <command moreinfo="none">security=user</command> とは同一である。
-    このパラメーターは、サーバーがどのように認証を行なうかにのみ影響し、
-    クライアントとのやりとりには何ら影響しない。</para></note>
-
-    <note><para>このオプションは廃止予定で、将来使えなくなる。</para></note>
 
     <para><emphasis>注意</emphasis> : 要求されたリソース名は、
     サーバーがクライアントの認証に成功するまでサーバーに<emphasis>送られない</emphasis>。
@@ -224,9 +92,6 @@
     として処理するようにしない限り、ゲスト共有がうまく動作しない。
     上記処理の詳細については、<smbconfoption name="map to guest"/>
     パラメーターを参照のこと。</para>
-
-    <para><link linkend="VALIDATIONSECT">
-    ユーザー名とパスワード認証についての注意</link> のセクションも参照のこと。</para>
 
     <para>
     <smbconfoption name="password server"/>
