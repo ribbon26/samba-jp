@@ -25,25 +25,23 @@
 <refsect1>
 	<title>説明</title>
 
-	<para>このVFSモジュールは
+	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry>システムの一部である.</para>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>The <command>vfs_recycle</command>はファイル削除要求に割り込み、
+	<para><command>vfs_recycle</command> はファイル削除要求に介入し、
 	直接ファイルを削除するのではなく、一時エリアに移動させる。
-	これによりWindowsのごみ箱と同様の機能を提供する。
+	これにより Windows のごみ箱と同様の機能を提供する。
 	</para>
 
-	<para>ごみ箱(Recycle Bin)はWindowsのエクスプローラーのネットワークファイルシステム
-	や、マップドライブの表示上には現れない。
-	その代わり、.recycleディレクトリが初めてファイルを削除したときに自動的に作成される
-	(recycle:repositoryが指定されていない場合)
-	
-	recycle:repositoryが設定されている場合、新たに作成されるディレクトリ名はrecycle:repository
-	で指定されたものになる。
-	
-	もしrecycle:keeptreeオプションが設定されている場合、パスとともに保存される
-	 </para>
+        <para>ごみ箱 (Recycle Bin) は Windows のエクスプローラーのネットワークファイルシステム (共有) や<!-- 割り当てられた -->ドライブには表示されない。
+        その代わり、.recycle という名前のディレクトリが<!-- 初めてファイルを削除したときに -->自動的に作成される。<!-- (recycle:repositoryが指定されていない場合) -->
+        recycle:repository が設定されている場合は、
+        作成されるディレクトリ名は .recycle ではなく
+        recycle:repository で指定された名前になる。
+        recycle:keeptree オプションが設定されている場合、
+        パスとともに保存される。
+	</para>
 
 	<para>このモジュールはスタック可能である。</para>
 </refsect1>
@@ -57,9 +55,9 @@
 		<varlistentry>
 		<term>recycle:repository = PATH</term>
 		<listitem>
-		<para>削除されたファイルをどこに移動するか指定する.
+		<para>削除されたファイルをどこに移動するかを指定する。
 		</para>
-		<para>オプションが指定されていない場合、初期値として .recycleが用いられる
+		<para>オプションが指定されていない場合の既定値は .recycle である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -68,11 +66,11 @@
 		<term>recycle:directory_mode = MODE</term>
 		<listitem>
 		<para>
-		ごみ箱(recycle repository)ディレクトリを作成する場合のmodeを8進で指定する。
-		ごみ箱ディレクトリは初めてファイルが削除されるときに作成する。
+		ごみ箱ディレクトリを作成する場合のモードを 8 進数で指定する。
+		ごみ箱ディレクトリは初めてファイルが削除されたときに作成される。
 		</para>
 		<para>
-		もしrecycle:subdir_modeが指定されていない場合、0700を使用する。
+		既定値は 0700 である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -81,11 +79,11 @@
 		<term>recycle:subdir_mode = MODE</term>
 		<listitem>
 		<para>
-		ごみ箱の中のサブディレクトリを作成する場合のmodeを8進で指定する。
+                  ごみ箱の中のサブディレクトリを作成する場合のモードを
+                  8 進数で指定する。
 		</para>
 		<para>
-		このオプションが指定されていない場合、サブディレクトリの作成はrecycle:directory_mode
-		を使用する。
+		既定値は recycle:directory_mode の値である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -94,7 +92,9 @@
 		<term>recycle:keeptree = BOOL</term>
 		<listitem>
 		<para>
-		ディレクトリ構造を残したままファイルを削除するか、別のリポジトリ(ごみ箱)として管理するかを指定する。
+                ディレクトリ構造を残したままファイルを削除するかどうかを指定する。
+                有効にすると、ディレクトリ中のファイルが削除されたとき、
+                ごみ箱内の個別のディレクトリに移動される。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -103,10 +103,11 @@
 		<term>recycle:versions = BOOL</term>
 		<listitem>
 		<para>
-		このオプションをtrueと指定すると、同一の名前を持つ2つのファイルが削除された場合
-		した場合、リポジトリの中に両方のファイルを保存する。
-		新しく削除したファイルは
-		&quot;Copy #x of filename&quot;.
+                このオプションに true を指定すると、
+                同一の名前を持つ 2 つのファイルが削除されたとき、
+                ごみ箱の中に両方のファイルを保存する。
+		新しく削除したファイルの名前は
+		&quot;Copy #番号 of 元のファイル名&quot;
 		となる。
 		</para>
 		</listitem>
@@ -116,7 +117,7 @@
 		<term>recycle:touch = BOOL</term>
 		<listitem>
 		<para>
-		ファイルのアクセス日付をごみ箱に移動した日付にアップデートするか否かを指定する。
+		ファイルをごみ箱に移動するときにのアクセス日時を更新するか否かを指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -125,7 +126,7 @@
 		<term>recycle:touch_mtime = BOOL</term>
 		<listitem>
 		<para>
-		ファイルの最終変更日付をごみ箱に移動した日付にアップデートするか否かを指定する。
+		ファイルをごみ箱に移動するときに最終変更日時を更新するか否かを指定する。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -152,8 +153,8 @@
 		<term>recycle:exclude = LIST</term>
 		<listitem>
 		<para>
-		削除要求があった時、ごみ箱に移動せず通常のように削除するファイルを指定する。
-		*や?といったワイルドカードをサポートする。
+		ごみ箱に移動せず通常のように削除するファイルを指定する。
+		* や ? といったワイルドカードをサポートする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -162,8 +163,8 @@
 		<term>recycle:exclude_dir = LIST</term>
 		<listitem>
 		<para>
-		削除要求があった時、ごみ箱に移動せず通常のように削除するディレクトリを指定する。
-		*や?といったワイルドカードをサポートする。
+		ごみ箱に移動せず通常のように削除するディレクトリを指定する。
+		* や ? といったワイルドカードをサポートする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -172,9 +173,9 @@
 		<term>recycle:noversions = LIST</term>
 		<listitem>
 		<para>
-		バージョン管理せず、直接削除すべきパス
-        (*や?のようなワイルドカードをサポートする)
-		を指定する。recycle:versionsが有効のときだけ使用される。
+                バージョン管理せずに直接削除すべきパスを指定する。
+                recycle:versions が有効のときだけ使用される。
+		* や ? といったワイルドカードをサポートする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -186,8 +187,9 @@
 	<title>設定例</title>
 
 	<para>
-    <parameter>share</parameter>上の "削除対象" ファイルを、
-    削除する代わりに<parameter>/data/share/.recycle</parameter>に移動する。
+        共有 <parameter>share</parameter> 内の削除要求されたファイルを実際に削除する代わりに
+        <parameter>/data/share/.recycle</parameter>
+        に移動する:
 	</para>
 
 <programlisting>
@@ -203,9 +205,8 @@
 
 <refsect1>
 	<title>バージョン</title>
-
-	<para>このマニュアルはSambaシステムバージョン3.0.25(訳注:4.x?)に対応している
-	</para>
+	<para>このマニュアルは Samba 3.6.0 〜 4.0.3 に対応する。</para>
+        <!-- 英文では 3.0.25 と記載されている -->
 </refsect1>
 
 <refsect1>
@@ -219,13 +220,13 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 3.6.0 - 4.0.0 に対応する。</para>
-    <para>このドキュメントのSamba 3.3.6 - 3.6.9 対応の翻訳は
-		<itemizedlist>
-			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
-            <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
-		</itemizedlist>
-        によって行なわれた。</para>
+        <para>Samba 3.3.6 〜 3.6.9 対応の翻訳者:
+        <itemizedlist>
+                <listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+                <listitem><para>堀田 倫英 (hotta@net-newbie.com)</para></listitem>
+		<listitem><para>さとうふみやす (fumiyas @ OSS Technology Corp.)</para></listitem>
+        </itemizedlist>
+        </para>
 </refsect1>
 
 </refentry>
