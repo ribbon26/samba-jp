@@ -813,72 +813,6 @@ DMSによって必要とされる信頼アカウント情報は
 
 </sect2>
 
-<sect2>
-<title>これがなぜ<parameter>security = server</parameter>よりもすぐれているのか?</title>
-
-<para>
-<indexterm><primary>ドメインセキュリティ</primary></indexterm>
-<indexterm><primary>UNIXユーザー</primary></indexterm>
-<indexterm><primary>認証</primary></indexterm>
-現在、Samba のドメインセキュリティでは、サーバーに紐づくユーザーに対応するローカルUNIXユーザーを
-作成しなければならない。このことは、もしも、ドメインユーザー<constant>DOM\fred</constant>
-がドメインセキュリティのSambaサーバーに紐づく場合、UNIXファイルシステム上にそれに対応する
-fred というローカル UNIXユーザーがいなければならないことを意味する。これは以前のSambaの
-セキュリティモードである<smbconfoption name="security">server</smbconfoption>と似ているが、
-このモードでは、Windows 95又はWindows 98サーバーと同じように、 Sambaが認証リクエストを
-Windows NT サーバーに回送していた。
-</para>
-
-<para>
-<indexterm><primary>winbind</primary></indexterm>
-<indexterm><primary>UID</primary></indexterm>
-<indexterm><primary>GID</primary></indexterm>
-UNIX の UID 及び GID を自動的に Windows NT ドメインユーザー及びグループへ割り当てる
-システムについての情報は<link linkend="winbind">Winbind: ドメインアカウントの使用</link>
-を参照のこと。
-</para>
-
-<para>
-<indexterm><primary>ドメインレベル</primary></indexterm>
-<indexterm><primary>認証</primary></indexterm>
-<indexterm><primary>RPC</primary></indexterm>
-ドメインレベルのセキュリティの利点は、NT サーバーと全く同じように、ドメインレベルセキュリティ
-における認証が、認証されたRPC チャンネルを通ることである。これは、Sambaサーバーが NT サーバーと
-全く同じやり方でドメインの信頼関係に参加できることを意味する(すなわち、Sambaサーバーをリソース
-ドメインに追加し、リソースドメインPDC からアカウントドメイン PDC に認証を渡してもらうことができる)。
-</para>
-
-<para>
-<indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>BDC</primary></indexterm>
-<indexterm><primary>connection resources</primary></indexterm>
-さらに、<smbconfoption name="security">server</smbconfoption>(訳注:サーバーレベルのセキュリティ)
-を使う場合、サーバー上のすべてのSambaデーモンは、起動している限り認証サーバーと接続し続けなければ
-ならない。これはMicrosoft NTサーバーの接続リソースを使い果たし、利用可能な接続がなくなることに
-なりかねない。それに対し<smbconfoption name="security">domain</smbconfoption>
-(訳注:ドメインレベルのセキュリティ)の場合は、Sambaデーモンはユーザー認証に必要な時のみPDC/BDCに
-接続し、その後接続を切断する。これにより PDC の接続リソースを節約することができる。
-</para>
-
-<para>
-<indexterm><primary>PDC</primary></indexterm>
-<indexterm><primary>authentication reply</primary></indexterm>
-<indexterm><primary>SID</primary></indexterm>
-<indexterm><primary>NTグループ</primary></indexterm>
-最後に、NT サーバーと同じように PDC 認証を行うということは、認証の返答の一部として、ユーザー SIDや
-ユーザーが属する NTグループなどのユーザー識別情報を、Samba サーバーが受け取ることを意味する。
-</para>
-
-<note>
-<para>
-この文書の内容の大半は、ウェブマガジン
-<ulink url="http://www.linuxworld.com"><emphasis>LinuxWorld</emphasis></ulink>の記事
-<ulink url="http://www.linuxworld.com/linuxworld/lw-1998-10/lw-10-samba.html"/>
-<emphasis>Doing the NIS/NT Samba</emphasis>として最初に発表された(訳注:リンク切れ)。
-</para>
-</note>
-
-</sect2>
 </sect1>
 
 <sect1 id="ads-member">
@@ -999,11 +933,7 @@ MITとHeimdalでは、最新のKRB5ライブラリがSRVレコードをチェッ
 <screen>
 [libdefaults]
 	default_realm = YOUR.KERBEROS.REALM
-
-[realms]
-	YOUR.KERBEROS.REALM = {
-	kdc = your.kerberos.server
-	}
+	dns_lookup_kdc = true
 
 [domain_realms]
 	.kerberos.server = YOUR.KERBEROS.REALM
@@ -1011,13 +941,10 @@ MITとHeimdalでは、最新のKRB5ライブラリがSRVレコードをチェッ
 </para>
 
 <para>
-<indexterm><primary>Heimdal</primary></indexterm>
-Heimdal のバージョン 0.6 以前を使用する場合は次のように設定する:
+KDCを直接指定したい場合、最小の設定は以下の通り:
 <screen>
 [libdefaults]
 	default_realm      = YOUR.KERBEROS.REALM
-	default_etypes     = des-cbc-crc des-cbc-md5
-	default_etypes_des = des-cbc-crc des-cbc-md5
 
 [realms]
         YOUR.KERBEROS.REALM = {
@@ -1035,18 +962,6 @@ Heimdal のバージョン 0.6 以前を使用する場合は次のように設�
 <userinput>kinit<replaceable>USERNAME</replaceable>@<replaceable>REALM</replaceable></userinput>
 を実行して設定をテストし、パスワードが Windows 2000 KDC に認証されることを確認
 する。
-</para>
-
-<para>
-<indexterm><primary>Heimdal</primary></indexterm>
-<indexterm><primary>ADS</primary></indexterm>
-<indexterm><primary>KDC</primary></indexterm>
-<indexterm><primary>Windows 2003</primary></indexterm>
-Heimdal 0.6.x 以前のバージョンでは、ADSで新規に作成されたアカウントであるか、
-移行後にパスワードが変更されたアカウントであるか、インストール後に
-<constant>Administrator</constant>であれば使用できる。現行、Windows 2003 KDCは
-Heimdal のバージョン 0.6 以降のリリース(かつkrb5.conf内にetypesの既定値の設定が
-ないもの)とのみ使用できる。残念ながらこの領域はいまだに流動的な状態である。
 </para>
 
 <note><para>
@@ -1076,26 +991,6 @@ great while getting initial credentials</errorname>
 <indexterm><primary>クロックスキュー</primary></indexterm>
 <indexterm><primary>Kerberos</primary></indexterm>
 Kerberos プロトコルではクロックスキューの限界値を設定できる。既定値は5分である。
-</para>
-
-<para>
-<indexterm><primary>DNS</primary></indexterm>
-<indexterm><primary>KDC</primary></indexterm>
-<indexterm><primary>ホスト名</primary></indexterm>
-<indexterm><primary>realm</primary></indexterm>
-更に、使用するKDCのIP アドレスによる逆引きDNS検索をできるようにしなければならない。
-また、この逆引きDNS検索がマッピングする先の名前はKDCのNetBIOS名(すなわち、ドメイン
-に紐づかないホスト名)またはレルムが後に付くNetBIOS名のどちらでもよい。
-</para>
-
-<para>
-<indexterm><primary>/etc/hosts</primary></indexterm>
-<indexterm><primary>KDC</primary></indexterm>
-<indexterm><primary>realm</primary></indexterm>
-以上を確実に行うための最も簡単な方法は、使用するKDCのIPアドレスをマッピングする
-<filename>/etc/hosts</filename>のエントリーを、KDCのNetBIOS名に追加することである。
-もし正しくなければ、レルムに参加しようとすると<errorname>local error</errorname>
-が発生する。
 </para>
 
 <para>
@@ -1188,15 +1083,6 @@ ADS ディレクトリ中に存在しなければならない。バックスラ�
 	を使ってドメインにログインする必要がある。
 	<replaceable>USERNAME</replaceable>はマシンをドメインへ追加する権限を持つユーザーでなければならない。
 	</para></listitem></varlistentry>
-
-	<varlistentry><term>サポートされない暗号/もしくはチェックサムタイプ</term>
-	<listitem><para>
-	<indexterm><primary>/etc/krb5.conf</primary></indexterm>
-	<indexterm><primary>unsupported encryption</primary></indexterm>
-	<indexterm><primary>Kerberos</primary></indexterm>
-	<filename>/etc/krb5.conf</filename>システムにインストールされているKerberosの
-	タイプとバージョンに対して適切に設定されているか確認する。
-	</para></listitem></varlistentry>
 </variablelist>
 </para>
 
@@ -1245,28 +1131,6 @@ SambaはDES-CBC-MD5暗号及びARCFOUR-HMAC-MD5符号を使用できる。
 Sambaサーバー上で&smbclient;とKerberosを使用してWindows2000サーバー又はSambaサーバー
 にログインすることを試みる。&smbclient;は通常通り使用するが、Kerberos認証を選択
 するように、<option>-k</option>オプションを指定する。
-</para>
-
-</sect2>
-
-<sect2>
-<title>注意</title>
-
-<para>
-<indexterm><primary>管理者パスワード</primary></indexterm>
-<indexterm><primary>パスワードの変更</primary></indexterm>
-<indexterm><primary>暗号化タイプ</primary></indexterm>
-ドメインコントローラーインストール後は、正しい暗号化タイプを作成するために、少なくとも
-一度は管理者パスワードを変更しなれけばならない。
-</para>
-
-<para>
-<indexterm><primary>_kerberos._udp</primary></indexterm>
-<indexterm><primary>_ldap._tcp</primary></indexterm>
-<indexterm><primary>既定値のDNS設定</primary></indexterm>
-Windows200xは既定値のDNS設定では<parameter>_kerberos._udp</parameter>や
-<parameter>_ldap._tcp</parameter>を作成しないようである。おそらく今後
-サービスパックで修正されるだろう。
 </para>
 
 </sect2>
@@ -1434,26 +1298,5 @@ Windows200xもしくはXP ProfessionalマシンをSamba PDCドメインに追加
 </para>
 
 </sect2>
-
-<sect2>
-	<title>Windows 2003 PDC に参加できない</title>
-
-	<para>
-<indexterm><primary>SMB署名</primary></indexterm>
-<indexterm><primary>SMB</primary></indexterm>
-<indexterm><primary>Windows 2003</primary></indexterm>
-<indexterm><primary>SMB/CIFS</primary></indexterm>
-	Windows 2003はSMB署名を必要とする。クライアント側のSMB署名はSamba-3.0で
-	実現されている。Windows 2003サーバーと通信する際には
-	<smbconfoption name="client use spnego">yes</smbconfoption>に設定する。
-	この機能は、クライアントは単純にそれ自身とサーバーと両方がサポートする
-	プロトコルをネゴシエートするので、Windows 2003が持つより高度なセキュリティ
-	機能をサポートしない他のWindowsクライアントとインタフェースを取れない。
-	これは、SMB/CIFSプロトコル中で構築されているよく知られたフォールバック
-	機能である。
-	</para>
-
-</sect2>
-
 </sect1>
 </chapter>
