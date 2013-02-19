@@ -20,7 +20,7 @@
 </para>
 
 <sect1>
-<title>Subversion経由でのSambaソースコードへのアクセス</title>
+<title>GIT経由でのSambaソースコードへのアクセス</title>
 
 
 <sect2>
@@ -28,114 +28,13 @@
 
 <para>
 <indexterm><primary>Subversion</primary></indexterm>
-(訳注:この節は現在古くなっている)
-Sambaは公開された環境で開発されている。開発者はSubversionを使って、新しい
+Sambaは公開された環境で開発されている。開発者はGITを使って、新しい
 ソースコードを<quote>checkin</quote>(<quote>commit</quote>としても知られる)
-する。Sambaの種々のSubversionブランチはこの章で説明される手順で匿名
-Subversion経由でアクセスできる。
+する。この章は、
+<ulink noescape="1" url="https://wiki.samba.org/index.php/Using_Git_for_Samba_Development">
+Using Git for Samba Development page</ulink> Samba Wikiサイトを参照のこと。
 </para>
 
-<para>
-この章は、<ulink noescape="1" url="http://samba.org/samba/subversion.html">Samba</ulink>
-Webサイトにある手順を変更したものである。
-</para>
-
-</sect2>
-
-<sect2>
-<title>samba.orgへのSubversionアクセス</title>
-
-<para>
-samba.orgのマシンはSamba,rsync,distcc, ccacheとjitterbugを含むいくつかのパッケージの
-ソースコードへアクセスできるSubversionリポジトリに自由にアクセスできるサーバーを動かして
-いる。このホスト上のSubversionサーバーにアクセスするには2つの方法がある。
-</para>
-
-<sect3>
-<title>ViewCVS経由のアクセス</title>
-
-
-<para>
-<indexterm><primary>SVN</primary><secondary>web</secondary></indexterm>
-お好みのWWWブラウザー経由でソースコードにアクセスできる。これにより、リポジトリの
-個別のファイルの内容、リビジョン履歴、特定のファイルに対するコミットログに
-アクセスできる。リポジトリ上の任意の2つのバージョン間での差分表示を得ることもできる。
-</para>
-
-<para>
-<ulink noescape="1" url="http://viewcvs.samba.org/">http://viewcvs.samba.org/</ulink>
-を使うこと。
-</para>
-</sect3>
-
-<sect3>
-<title>Subversion経由でのアクセス</title>
-
-<para>
-<indexterm><primary>Subversion</primary></indexterm>
-通常のSubversionクライアント経由でソースコードにアクセスすることもできる。そうすると、
-リポジトリに対してより多くの制御ができ、完全なソースコードツリーをチェックアウトでき、
-通常のSubversionコマンド経由で最新版に追従できる。もしもあなたが開発者であれば、
-これは好ましいアクセス方法であり、通常のブラウザーは好ましくない。
-</para>
-
-<para>SubversionでSambaのソースをダウンロードできるように、するためには、Subversion
-クライアントが必要である。使用しているディストリビューションに入っているかもしれないし、
-そうでなければ、
-<ulink noescape="1" url="http://subversion.tigris.org/">http://subversion.tigris.org/</ulink>
-からソースをダウンロードできる。
-</para>
-
-<para>
-匿名Subversion経由でアクセスするためには、以下のステップを使う。
-</para>
-
-<procedure>
-	<title>Subversionを使うSambaの検索</title>
-
-	<step>
-	<para>
-	最新のSubversionのコピーをインストールする。必要なものすべては、
-	Subversionクライアントバイナリのコピーである。
-	</para>
-	</step>
-
-	<step>
-	<para>
-	以下のコマンドを動かす
-	<screen>
-	<userinput>svn co svn://svnanon.samba.org/samba/trunk samba</userinput>.
-	</screen>
-	</para>
-	
-	<para>
-	これは、最新のSambaソースコード(通常次のメジャーリリースになるブランチ)を含む、
-	<filename>samba</filename>と呼ばれるディレクトリを作成する。これは現在
-	3.1開発ツリーに連動している。
-	</para>
-	
-	<para>
-	trunk以外のSubversionブランチは、チェックアウトするときに、branches/BRANCH_NAME
-	というURLによって得られる。ブランチ名の一覧は、Samba Webサイトの
-	<quote>Development</quote>のページから得られる。最新の3.0リリースコードを得たい
-	という共通の要求がある。これは以下のコマンドを使うことによってできる:
-	<screen>
-	<userinput>svn co svn://svnanon.samba.org/samba/branches/SAMBA_3_0 samba_3</userinput>.
-	</screen>
-	</para>
-	</step>
-
-	<step>
-	<para>
-	最新のコードの変更にマージしたい場合は、Sambaディレクトリ内で以下のコマンドを使う:
-	<screen>
-	<userinput>svn update</userinput>
-	</screen>
-	</para>
-	</step>
-</procedure>
-	
-</sect3>
 </sect2>
 
 </sect1>
@@ -148,10 +47,10 @@ samba.orgのマシンはSamba,rsync,distcc, ccacheとjitterbugを含むいくつ
 	<indexterm><primary>rsync</primary></indexterm>
 	<indexterm><primary>ftp</primary></indexterm>
 	<parameter>pserver.samba.org</parameter>も、
-	<ulink noescape="1" url="ftp://pserver.samba.org/pub/unpacked">pserver</ulink>
+	<ulink noescape="1" url="ftp://samba.org/pub/unpacked">unpacked</ulink>
 	というSambaのサイトの所から、Subversionツリーのほとんどの部分のパックされてない
 	コピーをエクスポートでき、また、
-	<ulink noescape="1" url="rsync://pserver.samba.org/ftp/unpacked/">rsync</ulink>
+	<ulink noescape="1" url="rsync://samba.org/ftp/unpacked/">rsync</ulink>
 	という、Sambaの匿名rsyncサーバー経由でも同じようにできる。ftpよりはrsyncの方が、
 	rsyncはデータを圧縮転送できるのでお勧めであり、また、抜けているデータのみを
 	転送出来るという、部分更新が出来て、オーバーヘッドが少ないという点でもお勧めで
@@ -161,7 +60,7 @@ samba.orgのマシンはSamba,rsync,distcc, ccacheとjitterbugを含むいくつ
 	</para>
 
 	<para>
-	アンパックされたツリーの欠点は、Subversionのように、ローカルな変更の自動マージを
+	アンパックされたツリーの欠点は、GITのように、ローカルな変更の自動マージを
 	サポートしないと言うことである。<command>rsync</command>によるアクセスは、
 	初期導入に最も便利である。
 	</para>
@@ -185,8 +84,9 @@ PGPの代わりとして使える。
 </para>
 
 <para><screen>
-&prompt;<userinput>wget http://us1.samba.org/samba/ftp/samba-3.0.20.tar.asc</userinput>
-&prompt;<userinput>wget http://us1.samba.org/samba/ftp/samba-pubkey.asc</userinput>
+&prompt;<userinput>wget http://samba.org/samba/ftp/samba-latest.tar.asc</userinput>
+&prompt;<userinput>wget http://samba.org/samba/ftp/samba-latest.tar.gz</userinput>
+&prompt;<userinput>wget http://samba.org/samba/ftp/samba-pubkey.asc</userinput>
 </screen></para>
 
 
@@ -199,8 +99,8 @@ PGPの代わりとして使える。
 </screen>
 そして、Sambaソースコードの正当性を以下のようにして検査する:
 <screen>
-&prompt;<userinput>gzip -d samba-3.0.20.tar.gz</userinput>
-&prompt;<userinput>gpg --verify samba-3.0.20.tar.asc</userinput>
+&prompt;<userinput>gzip -d samba-latest.tar.gz</userinput>
+&prompt;<userinput>gpg --verify samba-latest.tar.asc</userinput>
 </screen>
 </para>
 
@@ -219,24 +119,8 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	<title>バイナリの構築</title>
 	
 	<para>
-	<indexterm><primary>autogen.sh</primary></indexterm>
-<indexterm><primary>configure</primary></indexterm>
-	tar形式のソースコードを展開後、次のステップは、使用しているOSプラットフォームに
-	Sambaが適合するように、設定(configuration)を行う。もしもソースディレクトリが
-	<command>configure</command>スクリプトを含んでいないのであれば、以降を行う
-	ために、構築作業が必要である。configureスクリプトの構築はautoconfの正しい
-	バージョンが必要である。ど必要とされるバージョンのautoconfがある場合、
-	以下を実行して生成されるスクリプトでconfigureスクリプトを生成できる。
-<screen>
-&rootprompt; cd samba-3.0.20/source
-&rootprompt; ./autogen.sh
-</screen>
-	</para>
-	
-
-	<para>
 	<indexterm><primary>configure</primary></indexterm>
-	バイナリを構築するためには、ソースディレクトリ中で、
+	バイナリを構築するためには、ソースディレクトリの最上位で、
 	<userinput>./configure</userinput>プログラムを動かす。これは、使用している
 	OS用にSambaを自動的に設定する。もしも特別な要求があるならば、最初に
 	以下のように起動しても良いだろう:
@@ -266,30 +150,6 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 </screen>
 	</para>
 	
-	<para>
-	ある人は、バイナリファイルとマニュアルページを分離してインストールすることを
-	好んでいる。もしもそうしたいのであれば、以下を実行することで、バイナリファイルを
-	インストールできる:
-<screen>
-&rootprompt; <userinput>make installbin</userinput>
-</screen>
-	マニュアルページは以下のコマンドでインストールできる:
-<screen>
-&rootprompt; <userinput>make installman</userinput>
-</screen>
-	</para>
-
-	<para>
-	もしも、以前のバージョンからアップグレードするのであれば、古いバージョンの
-	バイナリは<quote>.old</quote>という拡張子を付けて改名される。
-	以下を実行することで、前のバージョンに戻ることが出来る:
-<screen>
-&rootprompt; <userinput>make revert</userinput>
-</screen>
-	上記を見て分かるとおり、Sambaの構築とインストールは災難を引き起こす事はない!
-	</para>
-	
-
 	<sect2>
 	<title>Active Directoryサポートを伴うSambaのコンパイル</title>
 	
@@ -318,7 +178,7 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	</para>
 
 	<para>
-	configrue を実行後、生成された<filename>include/config.h</filename>が、
+	configrue を実行後、生成された<filename>bin/include/config.h</filename>が、
 	以下のような行を含んでいるかを確認する:
 <programlisting>
 #define HAVE_KRB5 1
@@ -410,80 +270,7 @@ gpg: BAD signature from <quote>Samba Distribution Verification Key</quote>
 	</para>
 
 	<sect2>
-	<title>inetd.confからの起動</title>
-
-	<indexterm><primary>inetd</primary></indexterm>
-	
-	<note>
-	<para>以下は、もしもNIS、NIS+あるいはLDAPが分散されたサービスマップを
-	使っている場合は異なる。</para>
-	</note>
-	
-	<para><filename>/etc/services</filename>を見る。ポート139/tcpに何が定義されて
-	いるだろうか?もしも何も定義されていないならば、以下のように行を追加する:</para>
-
-	<para><programlisting>netbios-ssn     139/tcp</programlisting></para>
-
-	<para>137/udpに対して、以下のようなエントリーを同様に追加する:</para>
-
-	<para><programlisting>netbios-ns	137/udp</programlisting></para>
-
-	<para>
-	次に、<filename>/etc/inetd.conf</filename>を編集し、以下のように2行追加する:
-<programlisting>
-netbios-ssn stream tcp nowait root /usr/local/samba/sbin/smbd smbd 
-netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd 
-</programlisting>
-	</para>
-
-<indexterm><primary>/etc/inetd.conf</primary></indexterm>
-	<para>
-	<filename>/etc/inetd.conf</filename>の正しい文法はUNIX毎に異なる。ガイドの
-	inetd.conf中の他の項目を参照すること。
-	</para>
-
-	<para>
-	<indexterm><primary>xinetd</primary></indexterm>
-	いくつかのディストリビューションはinetdの代わりにxinetdを使っている。
-	設定情報についてはxinetdのマニュアルを参照すること。
-	</para>
-
-	<note><para>いくつかのUNIXではすでに<filename>/etc/services</filename>中に
-	netbios_ns(下線に注意)のようなエントリーが存在している。整合性を取るために、
-	<filename>/etc/services</filename>か<filename>/etc/inetd.conf</filename>を
-	編集する必要がある。
-	</para></note>
-
-	<note><para>
-	<indexterm><primary>ifconfig</primary></indexterm>
-	多くのシステムでは、使用しているネットワークインタフェースのIPアドレスと
-	ネットマスクを指定するために、 &smb.conf;中で
-	<smbconfoption name="interfaces"/>オプションを使う必要があるかもしれない。
-	使用しているネットワークでの、ブロードキャストが何であるかを知らないのであれば、
-	rootで<application>ifconfig</application>を起動する。&nmbd;は実行時にそれを
-	決めようとするが、ある種のUNIXでは失敗する。
-	</para></note>
-
-	<warning><para>
-	多くのUNIXは、<filename>inetd.conf</filename>中で、コマンドライン上におおよそ
-	5つのパラメーターのみを受け付ける。これは、オプションと引数間でスペースが使えない
-	という事を意味するので、そうしたくなければ、スクリプトを使い、
-	<command>inetd</command>経由でスクリプトを起動する。
-	</para></warning>
-
-	<para>
-	おそらく以下のようにHUPを送ることで、<application>inetd</application>を
-	再起動する:
-<indexterm><primary>killall</primary></indexterm>
-<screen>
-&rootprompt;<userinput>killall -HUP inetd</userinput>
-</screen>
-	</para>
-		
-	</sect2>
-	
-	<sect2>
-	<title>もう一つの方法: &smbd;をデーモンとして起動する</title>
+	<title>&smbd;をデーモンとして起動する</title>
 		
 	<para>
 	<indexterm><primary>daemon</primary></indexterm>
@@ -520,25 +307,6 @@ netbios-ns dgram udp wait root /usr/local/samba/sbin/nmbd nmbd
 
 	<sect3>
 	<title>Red Hat LinuxでのSambaの起動</title>
-
-	<para>
-	Red Hat Linuxは標準的なインストール状態ではすべてのSambaコンポーネントが
-	常時含まれるわけではない。そのためRed Hat Linuxのバージョンによっては、
-	インストールCDROMメディアにあったとしても、winbindユーティリティをインストール
-	しない。システム上に<command>winbindd</command>があるかをチェックすること:
-<screen>
-&rootprompt; ls /usr/sbin/winbindd
-/usr/sbin/winbindd
-</screen>
-	これは、適切なRPMパッケージがインストールされていることを意味する。以下の応答は、
-	インストールされていない場合である:
-<screen>
-/bin/ls: /usr/sbin/winbind: No such file or directory
-</screen>
-	この場合、<command>winbindd</command>を使うつもりであるならば、インストールが
-	必要である。samba-winbind RPMをCDROMインストールメディアから捜し、以下の
-	Red Hatガイドラインに従ってインストールする。
-	</para>
 
 	<para>
 	Sambaの起動の手順の概要を以下で説明する。Sambaを起動する前に、Sambaの
