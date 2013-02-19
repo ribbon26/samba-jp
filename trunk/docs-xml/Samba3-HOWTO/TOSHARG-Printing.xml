@@ -290,7 +290,6 @@ Sambaの印刷動作を制御するための設定パラメーターは多数あ
         deleteprinter command = 
         show add printer wizard = Yes
         os2 driver map =
-        printer admin =
         min print space = 0
         max print jobs = 1000
         printable = No
@@ -414,7 +413,6 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
         deleteprinter command =
         show add printer wizard = Yes
         os2 driver map =
-        printer admin =
         min print space = 0
         max print jobs = 1000
         printable = No
@@ -493,7 +491,6 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <smbconfoption name="load printers">yes</smbconfoption>
 <smbconfoption name="show add printer wizard">yes</smbconfoption>
 <smbconfoption name="printcap name">/etc/printcap</smbconfoption>
-<smbconfoption name="printer admin">@ntadmin, root</smbconfoption>
 <smbconfoption name="max print jobs">100</smbconfoption>
 <smbconfoption name="lpq cache time">20</smbconfoption>
 <smbconfoption name="use client driver">no</smbconfoption>
@@ -511,7 +508,6 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 <smbconfsection name="[my_printer_name]"/>
 <smbconfoption name="comment">Printer with Restricted Access</smbconfoption>
 <smbconfoption name="path">/var/spool/samba_my_printer</smbconfoption>
-<smbconfoption name="printer admin">kurt</smbconfoption>
 <smbconfoption name="browseable">yes</smbconfoption>
 <smbconfoption name="printable">yes</smbconfoption>
 <smbconfoption name="writable">no</smbconfoption>
@@ -650,24 +646,6 @@ Samba-3中の<command>testparm</command>は2.2.xのものとは動作が異な�
 		ディレクティブによって制御される。
 	</para></listitem></varlistentry>
 
-	<varlistentry><term><smbconfoption name="printer admin">@ntadmin </smbconfoption></term>
-		<listitem><para>
-<indexterm><primary>ドライバーの追加</primary></indexterm>
-<indexterm><primary>/etc/group</primary></indexterm>
-<indexterm><primary>プリンター共有</primary></indexterm>
-<indexterm><primary>プリンタープロパティの設定</primary></indexterm>
-		ntadminグループメンバーはドライバーを追加するためとプリンタープロパティを設定することが
-		出来るようにすべきである(<constant>ntadmin</constant>は単なる例としての名前で
-		ある。有効なUNIXグループ名が必要である)。rootは暗黙的にいつでも
-		<smbconfoption name="printer admin"/>である。グループ名の前に付く
-		<literal>@</literal>記号は<filename>/etc/group</filename>中の名前である。
-		printer adminは、MS-RPC
-		(<link linkend="cups-msrpc">Samba-2.2からの印刷環境開発</link>を参照)
-		によって提供されるリモート管理インタフェース経由でプリンターのすべてを操作出来る。
-		より大きなシステムでは、<smbconfoption name="printer admin"/>パラメーターは
-		通常共有単位に存在するパラメーターである。こうすると、各プリンター共有の管理者に
-		異なったグループを割り当てる事ができる。
-	</para></listitem></varlistentry>
 
 	<varlistentry><term><smbconfoption name="lpq cache time">20 </smbconfoption></term>
 		<listitem><para>
@@ -829,14 +807,6 @@ printersセクションは2つめの特別なセクションである。もし�
 		<listitem><para>
 		このプリンターに対するスプール領域のディレクトリを既定値の代わりに設定する。
 		これは異なって設定する必要はないが、オプションは有効である。
-		</para></listitem>
-	</varlistentry>
-
-	<varlistentry><term><smbconfoption name="printer admin">kurt </smbconfoption></term>
-		<listitem><para>
-		printer admin定義は、この一般的な<smbconfsection name="[printers]"/>共有から
-		明示的に定義されたプリンター共有と違う。もし要求がなければ、可能であればそれを
-		表示しない。
 		</para></listitem>
 	</varlistentry>
 
@@ -1329,9 +1299,6 @@ Sambaはスプールされたファイルに対してどのような方法でも
 <title>[print$] の例</title>
 <smbconfblock>
 <smbconfsection name="[global]"/>
-<smbconfcomment>ドライバーの追加と設定を可能にすべき、ntdomainグループのメンバー</smbconfcomment>
-<smbconfcomment>プリンターのプロパティ。rootは常時'printer admin'と仮定される。</smbconfcomment>
-<smbconfoption name="printer admin">@ntadmin</smbconfoption>
 <smbconfcomment>...</smbconfcomment>
 
 <smbconfsection name="[printers]"/>
@@ -1438,11 +1405,7 @@ UNIXファイルシステム上に存在するようにしておく必要もあ�
 		グループは先頭に<quote>@</quote>が付いたものである。共有上にファイルの
 		アップデートを必要とするこの一覧にあるユーザーは、(一般的にパブリックな
 		リードオンリアクセスの例外として)書き込みが許可される。
-		通常この設定中で管理者レベルのユーザーのみ指名したいであろう。もしもこれが
-		非rootアカウントである場合、アカウントはグローバルの
-		<smbconfoption name="printer admin"/>パラメーター中で言及されるべきである。
-		ファイル共有上の設定についてのより詳細な情報は、&smb.conf;マニュアル
-		ページを参照のこと。
+		通常この設定中で管理者レベルのユーザーのみ指名したいであろう。
 		</para></listitem>
 	</varlistentry>
 </variablelist>
@@ -1484,10 +1447,6 @@ Windows NT印刷サーバーが、複数のクライアントアーキテクチ�
 	<itemizedlist>
 		<listitem><para>
 		Sambaホストに接続する時に使われるアカウントはUIDが0でなければならない(すなわちrootアカウント)。
-		</para></listitem>
-
-		<listitem><para>
-		Sambaホストに接続する時に使われるアカウントは<emphasis>printer admin</emphasis>リスト中に列挙されねばならない。
 		</para></listitem>
 	</itemizedlist>
 
@@ -1589,7 +1548,7 @@ Sambaの<guiicon>プリンター</guiicon>フォルダーを開き、プリン�
 <para>
 一度APWが起動すると、Windows中でなじみがある、ものと手続きは正確に同じである(Windows NT
 上のプリンタードライバーインストール手続きに慣れていることを仮定している)。接続を確認し、
-<smbconfoption name="printer admin"/>権限を持つユーザーとしてセットアップ(ユーザーが
+printer administration 権限を持つユーザーとしてセットアップ(ユーザーが
 権限を持つか分からない場合は<command>smbstatus</command>でチェックしてみる)。
 クライアントOSに対して<application>Windows NT x86</application>の代わりのプリンター
 ドライバーをインストールしたい場合、プリンタープロパティダイアログの<guilabel>共有</guilabel>
@@ -1597,11 +1556,10 @@ Sambaの<guiicon>プリンター</guiicon>フォルダーを開き、プリン�
 </para>
 
 <para>
-管理者(root)アカウント(<smbconfoption name="printer admin"/>パラメーターで指定されたもの)
-で接続していると仮定すると、さらに、このダイアログを使ってACLと既定値のデバイスの設定
-のようなプリンターのプロパティをも修正できる。既定値のデバイス設定のためには、
-<link linkend="inst-rpc"><command>rpcclient</command>を使った印刷ドライバーのインストール</link>
-に助言が書いてあることを考慮してほしい。
+管理者(root)アカウントで接続していると仮定すると、さらに、このダイアログを使って
+ACLと既定値のデバイスの設定のようなプリンターのプロパティをも修正できる。
+既定値のデバイス設定のためには、<link linkend="inst-rpc"><command>rpcclient</command>を
+使った印刷ドライバーのインストール</link>に助言が書いてあることを考慮してほしい。
 </para>
 </sect2>
 
@@ -2229,7 +2187,7 @@ DOSプロンプトで以下を入力する:
 <para><userinput>net use \\<replaceable>SAMBA-SERVER</replaceable>\print$ /user:root</userinput></para>
 
 <para>
-必要であれば、<smbconfoption name="printer admin"/>で定義している他の有効なユーザーに
+必要であれば、printer administrator ユーザーに
 rootを置き換える。異なったユーザーですでに接続しているならば、エラーメッセージが表示
 される。Windowsは共有の接続からログオフする概念が内容に見えるので、その接続のridを
 取得するのに簡単な方法はない(ローカルワークステーションからのログオフと混同しない
@@ -2333,7 +2291,7 @@ Windows NT/200x/XPクライアントからプリンターが完璧に使える�
 </para>
 
 <para>
-有効なデバイスモードは<smbconfoption name="printer admin"/>かrootによってのみ初期化できる
+有効なデバイスモードは printer administrator かrootによってのみ初期化できる
 (理由は明白であろう)ことに気がつくこと。デバイスモードはプリンタードライバープログラムそれ
 自身を実行することのみで正しく設定できる。SambaはこのWin32プラットフォームドライバー
 プログラムを実行できないので、この設定は初期状態ではNULLになる(クライアントが使うためには
@@ -2451,12 +2409,12 @@ Windows 200x/XP Professionalワークステーション上で以下のコマン�
 </sect2>
 
 <sect2>
-<title>常時最初のクライアントからの接続はrootか<quote>printer admin</quote>で行う</title>
+<title>常時最初のクライアントからの接続はrootか printer administratorで行う</title>
 
 <para>
 Sambaサーバー上にドライバーをインストール後(その<smbconfsection name="[print$]"/>共有中に)、
 常時最初のクライアントインストールを正しく完了させねばならない。クライアントから
-<smbconfoption name="printer admin"/>として、まさしくその最初の接続を確立することを
+printer administrator として、まさしくその最初の接続を確立することを
 習慣づけるようにすること。これは、以下のように行う:
 </para>
 
@@ -2492,7 +2450,7 @@ Sambaプリンターにrootとして接続するためには、以下のコマ�
 <para>
 <constant>root</constant>のSambaパスワードを入力し、しばらく待ち、
 <guibutton>印刷の既定値</guibutton>をクリックし、すべてのクライアントで使われる既定値と
-すべきジョブオプションを設定する。代替として、<smbconfoption name="printer admin"/>の
+すべきジョブオプションを設定する。代替として、printer administrator の
 設定中のメンバーの中の名前をrootの代わりとして使うことが出来る。
 </para>
 
@@ -2599,7 +2557,7 @@ AdministratorかPrint Administratorでこれを行う必要がある。XP Profes
 任意の設定を恒常的に保存する。もしも全クライアントに同じ既定値を設定したいならば、
 クライアントがドライバーをダウンロードする前に(上記のAまたはBの手順に従うことで、
 クライアントはユーザー毎の既定値を後で設定出来る)、管理者
-(<smbconfoption name="printer admin"/>)としてそれらのステップを行う必要がある。
+としてそれらのステップを行う必要がある。
 Windows 200x/XPはユーザー毎の既定値設定が出来、その管理者はそれら固有の設定を行う前に
 それを提供する。同一に見えるダイアログの親は、そのウィンドウ名が微妙に違っている。
 1つは<computeroutput>サーバーBar上のプリンターFoo用の既定値の印刷値</computeroutput>
@@ -2746,7 +2704,7 @@ rundll32 printui.dll,PrintUIEntry /p /t0 /n\\<replaceable>SAMBA-SERVER</replacea
 <itemizedlist>
 	<listitem><para>
 	接続したユーザーは管理者権限つきで<command>OpenPrinterEx(\\server)</command>を
-	正常に実行できる(すなわち、root又は<smbconfoption name="printer admin"/>)。
+	正常に実行できる(すなわち、root又はprinter administrador)。
 	</para>
 
 	<tip><para> Windows 200x/XP DOSプロント内で下記を試してみる:
