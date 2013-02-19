@@ -103,9 +103,8 @@
 <indexterm><primary>/etc/printcap</primary></indexterm>
 <indexterm><primary>Printcap</primary></indexterm>
 <indexterm><primary>PrintcapFormat</primary></indexterm>
-Samba-3.0(2.2.xから使える)でのCUPSを使った印刷環境の、最も基本的な&smb.conf;のセットアップは
-<smbconfoption name="printing">cups</smbconfoption>と
-<smbconfoption name="printcap">cups</smbconfoption>という2つのパラメーターを必要とする。
+SambaでのCUPSを使った印刷環境の、最も基本的な&smb.conf;の設定方法は、
+<smbconfoption name="printing">cups</smbconfoption>だけである。
 CUPSはprintcapファイルを必要としない。しかし、<filename>cupsd.conf</filename>設定ファイルは、
 サードパーティアプリケーション(例えば<parameter>Printcap /etc/printcap</parameter>と
 <parameter>PrintcapFormat BSD</parameter>)に便利なように、どのように、CUPSによって
@@ -123,56 +122,12 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 
 	<para>
 <indexterm><primary>libcups.so</primary></indexterm>
-	SambaはCUPSと特別な関係がある。SambaはCUPSライブラリサポート機能を有効にして
-	コンパイルできる。最も最新のバージョンでは、このサポートを有効にしている。
-	既定値では、CUPSはsmbdとその他のSambaバイナリにリンクされる。もちろん、
-	<filename>libcups.so</filename>をSambaにリンクしなくてもCUPSを使う事が
-	できるが、要求されるあるいはサポートされる設定にいくつかの違いがある。
+	SambaはCUPSと特別な関係があり、SambaはCUPSライブラリサポート機能を有効にして
+	コンパイルしなければならない。最も最新のバージョンでは、このサポートを有効にしている。
+	既定値では、CUPSはsmbdとその他のSambaバイナリにリンクされる。
+	パラメータ<smbconfoption name="printing">cups</smbconfoption>は、
+	この場合にのみ動作する。
 	</para>
-
-	<para>
-<indexterm><primary>libcups</primary></indexterm>
-<indexterm><primary>ldd</primary></indexterm>
-	Sambaが<filename>libcups</filename>とリンクされ、コンパイルされた時、
-	<smbconfoption name="printcap">cups</smbconfoption>は、プリンター一覧の表示、
-	ジョブの投稿、キューの問い合わせなどにCUPS APIを使う。それ以外は、印刷のために、
-	これらの操作を、<command>-oraw</command>オプションを付加して、System Vの
-	コマンドにマップする。Linuxシステムでは、smbdが、libcupsライブラリにリンク
-	されているかを、<command>ldd</command>ユーティリティを使う事で知ることが出来る
-	(<command>ldd</command>は他のOSプラットフォーム上には無いかもしれないか、
-	その機能は別のコマンドによって行われるかもしれない):
-<screen>
-&rootprompt;<userinput>ldd `which smbd`</userinput>
-libssl.so.0.9.6 =&gt; /usr/lib/libssl.so.0.9.6 (0x4002d000)
-libcrypto.so.0.9.6 =&gt; /usr/lib/libcrypto.so.0.9.6 (0x4005a000)
-libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
-[....]
-</screen>
-	</para>
-
-	<para>
-<indexterm><primary>libcups.so.2</primary></indexterm>
-	<computeroutput>libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)</computeroutput>
-	行は、このバージョンのSambaがCUPSサポートするようにコンパイルされていることを
-	示している。もしもこの場合で、printing = cupsが設定されている場合、
-	<emphasis>他の&smb.conf;中にある、手動で設定した印刷関係のコマンドは無視される</emphasis>。
-	これは重要な点なので覚えておくこと!
-	</para>
-
-	<tip><para>何らかの理由で、固有の印刷コマンドを設定するために、
-	<smbconfoption name="printing">sysv</smbconfoption>を設定することにより、これを行える
-	ようにする事が必要である。しかし、CUPSとSambaを密に統合する利便性のすべてを
-	失うことになる。これを行う場合、以下のように、印刷システムコマンドを手動で設定しなければ
-	ならない。
-	(最も重要: 
-	<smbconfoption name="print command"/>; other commands are
-	<smbconfoption name="lppause command"/>,
-	<smbconfoption name="lpresume command"/>,
-	<smbconfoption name="lpq command"/>,
-	<smbconfoption name="lprm command"/>,
-	<smbconfoption name="queuepause command"/> and
-	<smbconfoption name="queue resume command"/>).
-	</para></tip>
 
 	</sect2>
 
@@ -191,7 +146,6 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="load printers">yes</smbconfoption>
 	<smbconfoption name="printing">cups</smbconfoption>
-	<smbconfoption name="printcap name">cups</smbconfoption>
 
 	<smbconfsection name="[printers]"/>
 	<smbconfoption name="comment">All Printers</smbconfoption>
@@ -200,7 +154,6 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<smbconfoption name="guest ok">yes</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
-	<smbconfoption name="printer admin">root, @ntadmins, @smbprintadm</smbconfoption>
 	</smbconfblock>
 	</example>
 
@@ -239,7 +192,6 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<smbconfblock>
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="printing">cups</smbconfoption>
-	<smbconfoption name="printcap name">cups</smbconfoption>
 	<smbconfoption name="load printers">yes</smbconfoption>
 
 	<smbconfsection name="[printers]"/>
@@ -248,7 +200,6 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<smbconfoption name="guest ok">yes</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
-	<smbconfoption name="printer admin">root, @ntadmins, @smbprintadm</smbconfoption>
 
 	<smbconfsection name="[special_printer]"/>
 	<smbconfoption name="comment">A special printer with his own settings</smbconfoption>
@@ -259,7 +210,6 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<smbconfoption name="guest ok">no</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
-	<smbconfoption name="printer admin">kurt</smbconfoption>
 	<smbconfoption name="hosts deny">0.0.0.0</smbconfoption>
 	<smbconfoption name="hosts allow">turbo_xp, 10.160.50.23, 10.160.51.60</smbconfoption>
 	</smbconfblock>
@@ -268,9 +218,8 @@ libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
 	<para>
 	この特別な共有は、テスト目的専用である。これは印刷ジョブをファイルに書かない。
 	これは、ジョブパラメーターをSambaが認識する<filename>/tmp/smbprn.log</filename>
-	ファイルに記録し、ジョブファイルを削除する。さらに、この共有の
-	<smbconfoption name="printer admin"/>は<quote>kurt</quote>で
-	(<quote>@ntadmins</quote>グループではなくて)、ゲストアクセスは許可されず、共有は
+	ファイルに記録し、ジョブファイルを削除する。さらに、ゲストアクセスは許可されず、
+	共有は
 	ネットワークコンピューターに公開されず(そのため、これが共有であることを知っておく
 	必要がある)、3つのホストのみからアクセスできる。その共有に対して、CUPSが起動し、
 	印刷ジョブ上で通信をすることを防ぐために、
@@ -2302,19 +2251,13 @@ Windowsネットワーク印刷クライアントに対する、CUPSの強力な
 
 <smbconfblock>
 <smbconfoption name="printing">cups</smbconfoption>
-<smbconfoption name="printcap">cups</smbconfoption>
 </smbconfblock>
 
 <para>
 これらのパラメーターが指定されると、&smb.conf;中の(Sambaそれ自身と同様)、すべての手動設定
 した印刷ディレクティブ(たとえば<smbconfoption name="print command"/>か
-<smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、SambaがCUPS
-ライブラリ(libcups)をサポートするようにコンパイルされているとき、CUPS APIを通してCUPSと
-直接やりとりする。他の印刷コマンドが設定されていない場合、印刷は、-orawオプションを
-自動的に付けてパススルーする、<emphasis>System V</emphasis>AT&amp;Tコマンドセットを
-使う(もし、コンパイル時にCUPSサポートをするようしたSambaサーバーで動作するよう、個別に
-定義した印刷コマンドを使いたい場合、単に
-<smbconfoption name="classicalprinting">sysv</smbconfoption>を使う)。これは
+<smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、
+CUPS APIを通してCUPSと直接やりとりする。これは
 <link linkend="13small">CUPS/Sambaサーバー経由での印刷ダイアグラム</link>で図示されている。
 </para>
 
@@ -5015,8 +4958,6 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printing">cups</smbconfoption>
 	を設定する。</para></listitem>
 
-	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printcap">cups</smbconfoption>
-	も設定する。</para></listitem>
 </itemizedlist>
 
 <note><para>
@@ -5030,17 +4971,6 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 </para></note>
 </sect2>
 
-<sect2>
-<title>手動の設定</title>
-
-<para>
-すべてを手動で行いたいならば、<smbconfoption name="printing">cups</smbconfoption>を
-<smbconfoption name="printing">bsd</smbconfoption>に置き換える。そうすると手動で設定した
-コマンドが動作し(テストはしていないが)、
-<smbconfoption name="print command">lp -d %P %s; rm %s</smbconfoption>が期待通りの
-事を行うだろう。
-</para>
-</sect2>
 </sect1>
 
 <sect1>
