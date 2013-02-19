@@ -125,9 +125,9 @@ TESTGROUPというワークグループに属していることを仮定する�
 
 <note><para>
 <indexterm><primary>/etc/samba</primary></indexterm>
-<indexterm><primary>/usr/local/samba/lib</primary></indexterm>
+<indexterm><primary>/usr/local/samba/etc</primary></indexterm>
 使用している&smb.conf;ファイルは、<filename>/etc/samba</filename>か
-<filename>/usr/local/samba/lib</filename>にあってもよい。
+<filename>/usr/local/samba/etc</filename>にあってもよい。
 </para></note>
 </step>
 
@@ -432,8 +432,9 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 <orderedlist>
 <listitem>
 	<para>
-	shadowパスワード(かその他のパスワードシステム)を使っているが、&smbd;中で
-	それをサポートするようにコンパイルされていない。
+	  パスワードの暗号化は既定値で有効になっているが、samba userに
+	  対してまだパスワードを設定していない。
+	  <command>smbpasswd -a username</command>を実行すること。
 	</para>
 </listitem>
 
@@ -445,6 +446,8 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 
 <listitem>
 	<para>
+	  <smbconfoption name="encrypt passwords">no</smbconfoption>を
+	  使って明示的に暗号化パスワードを無効化にしているのに
 	大文字小文字を混ぜたパスワードを使っているが、十分に大きなレベルを
 	<smbconfoption name="password level"/>オプションで有効にしていない。
 	</para>
@@ -457,12 +460,6 @@ PCのIPアドレスが表示されるはずである。もしもそうでなけ�
 	</para>
 </listitem>
 
-<listitem>
-	<para>
-	パスワード暗号化を有効にしているが、SambaユーザーにUNIXユーザーをマップしていない。
-	<command>smbpasswd -a username</command>を実行する。
-	</para>
-</listitem>
 </orderedlist>
 
 <para>
@@ -545,15 +542,7 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 </para>
 
 <para>
-サーバーが、どのユーザー名で接続するかを見いだせないという事もあり得る。この問題かどうかを
-見るためには、&smb.conf;中の<smbconfsection name="[tmp]"/>セクションに
-<smbconfoption name="user">username</smbconfoption>行を追加する。ここで、
-<parameter>username</parameter>は、入力するパスワードに対応するものである。
-もしもこれで修正されるならば、ユーザー名マッピングオプションが必要となるかもしれない。
-</para>
-
-<para>
-クライアントが暗号化パスワードのみを送り、&smb.conf;中で
+既定値では、ほとんどのクライアントは暗号化パスワードのみを送り、&smb.conf;中で
 <smbconfoption name="encrypt passwords">no</smbconfoption>が設定されているという
 場合もあるかもしれない。これを修正するためには、設定を`yes'に変更する。
 </para>
@@ -583,13 +572,10 @@ PC上で、<command>net view \\BIGSERVER</command>コマンドを入力する。
 ファイルマネージャから、サーバーをブラウジングしてみる。ローカルワークグループ
 (か&smb.conf;中で指定したもの)のブラウズリスト中にSambaサーバーが現れるはずである。
 サーバーの名前をダブルクリックし、共有の一覧が得られるべきである。もしも、
-<quote>invalid password</quote>というエラーが表示されたならば、おそらくWindows NTが
-動作していて、それがユーザーレベルのセキュリティモードで動作していて暗号化パスワードを
-扱えない状態になっていてサーバーのブラウジングを拒否している。この場合、
-<smbconfoption name="security">server</smbconfoption>と
-<smbconfoption name="password server">Windows_NT_Machine</smbconfoption>のどちらかを
-&smb.conf;ファイル中に設定するか、<smbconfoption name="encrypt passwords"/>を
-<quote>yes</quote>に設定するようにする。
+<quote>invalid password</quote>というエラーが表示されたならば、
+暗号化パスワードが扱えないサーバをブラウズすることを拒否しているかもしれない。
+このような場合、<smbconfoption name="encrypt passwords"/>を<quote>yes</quote>に設定
+して、このガイドの各ステップを繰り返してみる。
 </para>
 
 </step>
