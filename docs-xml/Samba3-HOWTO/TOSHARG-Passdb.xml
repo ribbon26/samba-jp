@@ -20,16 +20,6 @@
 <title>アカウント情報データベース</title>
 
 <para>
-<indexterm><primary>アカウントバックエンド</primary></indexterm>
-<indexterm><primary>パスワードバックエンド</primary></indexterm>
-<indexterm><primary>拡張性</primary></indexterm>
-<indexterm><primary>ADS</primary></indexterm>
-以前のSamba3リリースでは複数のアカウント情報バックエンドを同時に動作させることが
-できた。この機能はSamba3.0.23からなくなった。Samba3.0.23からは、passdbバックエンド
-は1つのみ指定できる。
-</para>
-
-<para>
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
@@ -69,13 +59,6 @@
 
 <sect1>
 <title>機能と利便性</title>
-
-<para>
-Samba-3 は Samba-2.2.x の以下の機能について完全な下位互換性を提供する:
-<indexterm><primary>SAM backend</primary><secondary>smbpasswd</secondary></indexterm>
-<indexterm><primary>SAM backend</primary><secondary>ldapsam_compat</secondary></indexterm>
-<indexterm><primary>暗号化パスワード</primary></indexterm>
-</para>
 
 <sect2>
 	<title>下位互換性のあるバックエンド</title>
@@ -121,21 +104,6 @@ Samba-3 は Samba-2.2.x の以下の機能について完全な下位互換性�
 			<para>
 		このバックエンドは、Samba のより古いバージョンとの下位互換性のために
 		のみ使用するべきである。将来のリリースでは、切り捨てられていくかもしれない。
-			</para>
-		</listitem>
-	</varlistentry>
-
-	<varlistentry><term>ldapsam_compat (Samba-2.2 LDAP互換)</term>
-		<listitem>
-			<para>
-<indexterm><primary>ldapsam_compat</primary></indexterm>
-<indexterm><primary>Samba-2.2.x LDAPスキーマ</primary></indexterm>
-<indexterm><primary>OpenLDAPバックエンド</primary></indexterm>
-		これは、Samba-2.2.x LDAP スキーマ拡張を使用する、既存のOpenLDAP
-		バックエンドとの継続的運用を可能にするパスワードバックエンドの
-		オプションである。このオプションはマイグレーションツールとして
-		提供されているが、この時点で強制的にマイグレーションする意味はない。
-		このツールは最終的には切り捨てられることになる。
 			</para>
 		</listitem>
 	</varlistentry>
@@ -359,10 +327,10 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 
 		<note>
 		<para>
-<indexterm><primary>Windows XP Home</primary></indexterm>
+<indexterm><primary>Windows Home Edition</primary></indexterm>
 <indexterm><primary>ドメインメンバー</primary></indexterm>
 <indexterm><primary>ドメインログオン</primary></indexterm>
- 	MS Windows XP Home は、ドメインメンバーになる機能はなく、ドメインログオンは実行できない。
+ 	MS Windows Home Edition は、ドメインメンバーになる機能はなく、ドメインログオンは実行できない。
 		</para>
 		</note>
 
@@ -373,9 +341,8 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 		<itemizedlist>
 			<listitem><para>Windows NT 3.5x.</para></listitem>
 			<listitem><para>Windows NT 4.0.</para></listitem>
-			<listitem><para>Windows 2000 Professional.</para></listitem>
-			<listitem><para>Windows 200x Server/Advanced Server.</para></listitem>
-			<listitem><para>Windows XP Professional.</para></listitem>
+			<listitem><para>Professional と名の付く Windows エディション</para></listitem>
+			<listitem><para>Server/Advanced Server と名の付く Windows エディション</para></listitem>
 		</itemizedlist>
 
 		<para>
@@ -431,8 +398,7 @@ Samba-3では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>パスワードプロンプト</primary></indexterm>
 <indexterm><primary>SMB暗号化</primary></indexterm>
 		Windows NTは暗号化パスワードをサポートしないサーバーとやりとりする
-		ことを好まない。また、サーバーが「userレベル」のセキュリティモード
-		になっているとき、そのサーバーを ブラウズすることを拒否する。そのため、
+		ことを好まない。そのサーバーを ブラウズすることを拒否する。そのため、
 		接続の度に、ユーザーにパスワードを入力するように要求するので、大変厄介
 		である。 これを止めさせる唯一の方法は、SMB暗号を使用することである。
 				</para></listitem>
@@ -1724,24 +1690,6 @@ Samba-3リリースファイル中の、この機能に関する特定の更新�
 <sect1>
 <title>パスワードバックエンド</title>
 
-<para>
-<indexterm><primary>アカウントデータベース</primary></indexterm>
-<indexterm><primary>SMB/CIFSサーバー</primary></indexterm>
-Sambaはバックエンドアカウントデータベースのデザインに柔軟性を提供する。この柔軟性
-は探せばすぐに見つかる。Sambaにおける最近の変更(Samba 3.0.23以降)はいくつかのインストール時
-にうまくいかなくなる問題を単純化するために複数バックエンド機能が削除された。この
-削除によりSamba-3の内部動作はより首尾一貫し安定した。
-</para>
-
-<para>
-<indexterm><primary>複数のバックエンド</primary></indexterm>
-<indexterm><primary>tdbsam データベース</primary></indexterm>
-Samba 3.0.23から、もはや複数のpassdbバックエンドを指定して使うことは出来なくなった。
-それ以前のSamba-3では、同じタイプのバックエンドを含む複数のpassdbバックエンドが指定できた。
-複数のpassdbバックエンド機能は名前->SID変換とSID->名前解決で多くの問題を引き起こした。
-Sambaチームはいろいろと検討した結果この機能を取り除く必要があると決定した。
-</para>
-
 	<sect2>
 	<title>平文</title>
 
@@ -2757,18 +2705,6 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 		<link linkend="acctmgmttools">アカウント管理ツール</link>を読むこと。</para>
 
 	</sect2>
-
-	<sect2>
-	<title><parameter>auth methods</parameter>の設定</title>
-
-	<para>
-	明示的に<smbconfoption name="auth methods"/>パラメーターを設定する場合、
-	<parameter>guest</parameter>はエントリーの最初の行に指定しなければならない &smbmdash;
-	例えば、<smbconfoption name="auth methods">guest sam</smbconfoption>である。
-	</para>
-
-	</sect2>
-
 </sect1>
 
 </chapter>
