@@ -31,18 +31,37 @@
 
 	<para>Catia CADパッケージはCIFSファイルシステムで使用できない文字を使用して
 	ファイルを作成する。
-	
 	<command>vfs_catia</command> VFS モジュールはCIFSクライアントが共有可能になるように
 	文字マッピングを行う。
 	</para>
 
 	<para>このモジュールはスタック可能である。</para>
+
+	<para>Sambaバージョン 3.4.x まで、固定的な文字が使われていた。不正なWindowsの
+	文字  \ / : * ? " &lt; &gt; | と空白文字はハードコードされた方法でマップされて
+	いた。</para><para>
+	Up to samba version 3.4.x a fixed character mapping was used.
+	The invalid windows characters  \ / : * ? " &lt; &gt; | and the blank
+	character were mapped in a hardcoded way.
+	</para>
+
+	<para>Samba 3.5.0 からは、より柔軟なマップ方法が導入された。
+	新しいパラメータ "catia:mappings" は、unix hex char 0x.. : windows hex char 0x..
+	と言う、文字ごとにマッピングを指定するという記述方法を使う。
+	複数の文字マッピングはカンマで分離する。</para><para>
+Starting with samba-3.5.0 a more flexible mapping was introduced.
+	The new parameter "catia:mappings" now specifies the mapping on a char by char
+	basis using the notation: unix hex char 0x.. : windows hex char 0x..
+	Multiple character mappings are separated by a comma.
+	</para>
+
 </refsect1>
 
 
 <refsect1>
 	<title>EXAMPLES</title>
 
+	<para>Sambaバージョン 3.4.xまで</para>
 	<para>[CAD]共有のファイル名をマップする:</para>
 
 <programlisting>
@@ -50,6 +69,55 @@
 	<smbconfoption name="path">/data/cad</smbconfoption>
 	<smbconfoption name="vfs objects">catia</smbconfoption>
 </programlisting>
+
+	<para>Samba バージョン 3.5.0 とそれ以降:</para>
+	<para>CAD]共有のファイル名をマップする:</para>
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8</smbconfoption>
+</programlisting>
+
+        <para>To get the full formerly fixed mappings:</para>
++<programlisting>
++        <smbconfsection name="[CAD]"/>
++	<smbconfoption name="path">/data/cad</smbconfoption>
++	<smbconfoption name="vfs objects">catia</smbconfoption>
++	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6,0x20:0xb1</smbconfoption>
++</programlisting>
++
++        <para>Unix filename to be translated (Note that the path delimiter "/" is not used here):
++	</para>
++	<para>a\a:a*a?a"a&lt;a&gt;a|a a</para>
++
++	<para>Resulting windows filename:</para>
++
++	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a&#x00b1;a
++	</para>
++
++        <para>Note that the character mapping must work in BOTH directions
++	(unix -&gt; windows and windows -&gt; unix) to get unique and existing file names!
++	</para>
++
++	<para>A NOT working example:</para>
++
++<programlisting>
++        <smbconfsection name="[CAD]"/>
++	<smbconfoption name="path">/data/cad</smbconfoption>
++	<smbconfoption name="vfs objects">catia</smbconfoption>
++	<smbconfoption name="catia:mappings">0x3a:0x5f</smbconfoption>
++</programlisting>
++
++         <para>Here the colon ":" is mapped to the underscore "_".</para>
++	 <para>Assuming a unix filename "a:should_work", which is well translated
++	 to windows as "a_should_work".</para>
++	 <para>BUT the reverse mapping from windows "a_should_work" to unix
++	 will result in "a:should:work" - something like "file not found"
++	 will be returned.
++	 </para>
++
 
 </refsect1>
 
