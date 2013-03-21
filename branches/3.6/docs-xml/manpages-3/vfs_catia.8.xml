@@ -81,50 +81,49 @@ Starting with samba-3.5.0 a more flexible mapping was introduced.
 </programlisting>
 
         <para>To get the full formerly fixed mappings:</para>
-+<programlisting>
-+        <smbconfsection name="[CAD]"/>
-+	<smbconfoption name="path">/data/cad</smbconfoption>
-+	<smbconfoption name="vfs objects">catia</smbconfoption>
-+	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6,0x20:0xb1</smbconfoption>
-+</programlisting>
-+
-+        <para>Unix filename to be translated (Note that the path delimiter "/" is not used here):
-+	</para>
-+	<para>a\a:a*a?a"a&lt;a&gt;a|a a</para>
-+
-+	<para>Resulting windows filename:</para>
-+
-+	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a&#x00b1;a
-+	</para>
-+
-+        <para>Note that the character mapping must work in BOTH directions
-+	(unix -&gt; windows and windows -&gt; unix) to get unique and existing file names!
-+	</para>
-+
-+	<para>A NOT working example:</para>
-+
-+<programlisting>
-+        <smbconfsection name="[CAD]"/>
-+	<smbconfoption name="path">/data/cad</smbconfoption>
-+	<smbconfoption name="vfs objects">catia</smbconfoption>
-+	<smbconfoption name="catia:mappings">0x3a:0x5f</smbconfoption>
-+</programlisting>
-+
-+         <para>Here the colon ":" is mapped to the underscore "_".</para>
-+	 <para>Assuming a unix filename "a:should_work", which is well translated
-+	 to windows as "a_should_work".</para>
-+	 <para>BUT the reverse mapping from windows "a_should_work" to unix
-+	 will result in "a:should:work" - something like "file not found"
-+	 will be returned.
-+	 </para>
-+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6,0x20:0xb1</smbconfoption>
+</programlisting>
+
+        <para>変換されるUnixファイル名(パスの区切り "/" はここでは使われていない事に注意):
+	</para>
+	<para>a\a:a*a?a"a&lt;a&gt;a|a a</para>
+
+	<para>結果としてのWindowsファイル名:</para>
+
+	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a&#x00b1;a
+	</para>
+
+        <para>固有で存在するファイル名のために、文字マッピングは
+	両方向で動かなければならないことに注意 (unix -&gt; Windows と Windows -&gt; unix)!
+	</para>
+
+	<para>動かない例:</para>
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x3a:0x5f</smbconfoption>
+</programlisting>
+
+         <para>ここで、コロン ":" は、下線 "_" にマップされる</para>
+	 <para>unix のファイル名 "a:should_work" を考えると、これは、
+	 "a_should_work" という Windows 用のファイル名に問題なく変換される。</para>
+	 <para>しかし、Windowsの、"a_should_work" というファイル名をunix向けに、逆方向
+	 マッピングしようとすると、結果が、"a:should:work" となってしまい、たとえば
+	 "file not found" が返ってくることになる。
+	 </para>
 
 </refsect1>
 
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルはSambaシステムバージョン3.0.25(訳注:3.x?)に対応している
+	<para>このマニュアルはSambaシステムバージョン4.0.3 まですべてに対応している。
 	</para>
 </refsect1>
 
@@ -135,14 +134,16 @@ Starting with samba-3.5.0 a more flexible mapping was introduced.
 	Tridgell によって作成された。現在 Samba は Samba Team に
 	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
 	として開発が行なわれている。</para>
+	<para>新しいバージョンは、Guenter Kukkukk kukks@samba.org によって書かれた。</para>
 
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 3.0.25 - 3.6.13 に対応する。</para>
+	<para>このマニュアルページは、Samba 3.6.13 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
 		</itemizedlist>
         によって行なわれた。</para>
 </refsect1>
