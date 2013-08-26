@@ -110,13 +110,31 @@
 		    pam_winbindが、<parameter>krb5_auth</parameter>オプションを有効に
 		    することでkerberos認証を使うとするように設定されている場合、
 		    認証キャッシュ中に、受け取ったTicket Granting Ticket(TGT)を格納
-		    することが出来る。現在サポートされている値は、
-		    <parameter>FILE</parameter>のみである。この場合、UIDがユーザーの
-		    IDに変更された、/tmp/krb5cc_UID形式での認証キャッシュが作成される。
-		    ログオンが成功した後に、チケットキャッシュなしでKerberos認証を行う
-		    ために、空のままにしておくこと。この設定は既定値では空である。
+		    することが出来る。認証キャッシュのタイプはこのオプションで制御できる。
+		    現在サポートされている値は、<parameter>FILE</parameter>と
+		    <parameter>DIR</parameter>(システムのKerberosライブラリでDIR
+		    タイプがサポートされている場合)である。タイプがFILEの場合、
+		    UIDがユーザーのIDに変更された、/tmp/krb5cc_UID形式での認証
+		    キャッシュが作成され、タイプがDIRの場合、/run/user/UID/krb5cc
+		    ディレクトリ配下に配置される。</para>
 
-		</para></listitem>
+		    <para>個別のファイルパスを定義することと、数字のユーザIDを変換
+		    するために、"%u"を使うことも可能である。
+		    例は以下の通り:</para>
+
+              <variablelist>
+                <varlistentry>
+                    <term>krb5_ccache_type = DIR:/run/user/%u/krb5cc</term>
+                      <listitem><para>これは指定されたディレクトリに、認証キャッシュを作成する。</para></listitem>
+                </varlistentry>
+                 <varlistentry>
+                    <term>krb5_ccache_type = FILE:/tmp/krb5cc_%u</term>
+                      <listitem><para>これは、認証キャッシュファイルを作成する。</para></listitem>
+                 </varlistentry>
+                </variablelist>
+	        <para>ログオンが成功した後に、チケットキャッシュなしでKerberos認証を行う
+	        ために、空のままにしておくこと。この設定は既定値では空である。 
+        	</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
