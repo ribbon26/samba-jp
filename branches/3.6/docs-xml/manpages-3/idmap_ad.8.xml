@@ -20,9 +20,13 @@
 	<title>説明</title>
 	<para>idmap_adプラグインは、RFC2307/SFUスキーマ拡張を使うADサーバーからの
        idマッピングをWinbindが読み出す方法を提供する。このモジュールは&quot;idmap&quot;
-	APIのみに実装され、リードオンリである。マッピングは、posixAccount/posixGroupクラスと、ユーザーに対する
-相対的な属性型/属性値ペアとAD中のグループオブジェクトを管理者によって前もって
-追加することを提供されることが必要である。</para>
+	APIのみに実装され、リードオンリである。
+	マッピングは、AD中の、ユーザーに対してはuidNumber属性、グループに対しては
+	gidNumber属性を追加することで、管理者によって前もって追加することを提供
+	されることが必要である。Winbindは、uidNumberが設定され、そのプライマリ
+	グループがgidNumber属性を設定されているユーザのみをマップする。
+	しかしながら、使用中のすべてのグループがgidNumberを持っている事を推奨し、
+	そうでない場合は動作しない。</para>
 
         <para>
 	idmap_adモジュールは、Sambaバージョン3.0と3.2からかなり変わっている事に注意。
@@ -106,7 +110,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.0 - 3.6.13 に対応する。</para>
+	<para>このマニュアルページは Samba 3.6.18 - 3.6.19 に対応する。</para>
         <para>このドキュメントの翻訳は
 	<itemizedlist>
 		<listitem><para>武田保真</para></listitem>
