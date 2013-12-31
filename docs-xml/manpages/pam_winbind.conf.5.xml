@@ -111,12 +111,20 @@
 		    することでkerberos認証を使うとするように設定されている場合、
 		    認証キャッシュ中に、受け取ったTicket Granting Ticket(TGT)を格納
 		    することが出来る。認証キャッシュのタイプはこのオプションで制御できる。
-		    現在サポートされている値は、<parameter>FILE</parameter>と
+		    サポートされている値は、<parameter>KEYRING</parameter>
+		    (システムのKerberosライブラリとカーネルがサポートする時)、
+		    <parameter>FILE</parameter>と
 		    <parameter>DIR</parameter>(システムのKerberosライブラリでDIR
 		    タイプがサポートされている場合)である。タイプがFILEの場合、
 		    UIDがユーザーのIDに変更された、/tmp/krb5cc_UID形式での認証
-		    キャッシュが作成され、タイプがDIRの場合、/run/user/UID/krb5cc
-		    ディレクトリ配下に配置される。</para>
+		    キャッシュが作成され、タイプがDIRの場合には、ディレクトリを
+		    指定しなければならない。UIDはユーザIDの数値で置き換わる。</para>
+
+		    <para>KEYRINGタイプを使う場合、サポートされるメカニズムは
+		    <quote>KEYRING:persistent:UID</quote>で、これは、ユーザID
+		    単位ごとの認証を格納するために、Linuxカーネルkeyringを使う。
+		    これは最新のLinuxディストリビューションにおける推奨される
+		    選択肢であり、さらに、最もセキュアで、ありきたりな方法である。</para>
 
 		    <para>個別のファイルパスを定義することと、数字のユーザIDを変換
 		    するために、"%u"を使うことも可能である。
@@ -209,7 +217,7 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.5.0 - 4.0.7 に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.13 に対応する。</para>
 	<para>Samba 3.5.0 - 4.0.7 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
