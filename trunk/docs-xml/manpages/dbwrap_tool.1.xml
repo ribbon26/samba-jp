@@ -19,6 +19,7 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>dbwrap_tool</command>
+		<arg choice="opt">--persistent</arg>
 		<arg choice="opt">-d &lt;debug level&gt;</arg>
 		<arg choice="opt">-s &lt;config file&gt;</arg>
 		<arg choice="opt">-l &lt;log file base&gt;</arg>
@@ -48,6 +49,7 @@
 		<listitem><para>fetch: レコードのフェッチ</para></listitem>
 		<listitem><para>store: レコードの作成と変更</para></listitem>
 		<listitem><para>delete: レコードの削除</para></listitem>
+		<listitem><para>exists: レコード存在の確認テスト</para></listitem>
 		<listitem><para>erase: すべてのレコードの削除</para></listitem>
 		<listitem><para>listkeys: すべての有効なレコードの一覧表示</para></listitem>
 		<listitem><para>listwatchers: レコード中で変更を待っているプロセスのリスト</para></listitem>
@@ -67,6 +69,13 @@
 	<title>オプション</title>
 
 	<variablelist>
+               <varlistentry>
+                       <term>--persistent</term>
+                       <listitem><para>永続的な(persistent)データベースとして、
+		       データベースを開く。もしもこのオプションが指定されない場合、
+		       データベースは非永続的なものとしてオープンされる。
+                       </para></listitem>
+               </varlistentry>
 		&popt.common.samba.client;
 		&stdarg.help;
 	</variablelist>
@@ -92,6 +101,12 @@
 			<command>dbwrap_tool</command> &lt;database&gt; delete &lt;key&gt;
 		</cmdsynopsis>
 	</refsect2>
+        <refsect2>
+               <title>exists</title>
+               <cmdsynopsis>
+                       <command>dbwrap_tool</command> &lt;database&gt; exists &lt;key&gt;
+               </cmdsynopsis>
+        </refsect2>
 	<refsect2>
 		<title>erase</title>
 		<cmdsynopsis>
@@ -116,17 +131,17 @@
 	<title>使用例</title>
 	<variablelist>
 		<varlistentry><term>winbindd_idmap.tdb からすべてのキーを表示する。</term>
-			<listitem><para><command>dbwrap_tool</command> winbindd_idmap.tdb listkeys</para></listitem>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb listkeys</para></listitem>
 		</varlistentry>
 		<varlistentry><term>uint32 として、キー "USER HWM" でレコードをフェッチする。</term>
-			<listitem><para><command>dbwrap_tool</command> winbindd_idmap.tdb fetch "USER HWM" uint32</para></listitem>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb fetch "USER HWM" uint32</para></listitem>
 		</varlistentry>
 		<varlistentry><term>"USER HWM" というキーでレコードを削除する。</term>
-			<listitem><para><command>dbwrap_tool</command> winbindd_idmap.tdb remove "USER HWM"</para></listitem>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb remove "USER HWM"</para></listitem>
 		</varlistentry>
 		<varlistentry><term>レコード "USER HWM" を値  214 で上書きし、格納する。</term>
-			<listitem><para>uint32: <command>dbwrap_tool</command> winbindd_idmap.tdb store "USER HWM" uint32 214</para></listitem>
-			<listitem><para>hex: <command>dbwrap_tool</command> winbindd_idmap.tdb store "USER HWM" hex D6000000</para></listitem>
+			<listitem><para>uint32: <command>dbwrap_tool</command> --persistent winbindd_idmap.tdb store "USER HWM" uint32 214</para></listitem>
+			<listitem><para>hex: <command>dbwrap_tool</command> --persistent winbindd_idmap.tdb store "USER HWM" hex D6000000</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
@@ -163,8 +178,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは 4.0.3 に対応する。</para>
-        <para>このドキュメントの Samba 4.0.3 対応の翻訳は
+	<para>このマニュアルページは 4.1.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.0.3 - 4.1.0  対応の翻訳は
 	<itemizedlist>
 	<para>太田俊哉 (ribbon@samba.gr.jp)</para>
 	</itemizedlist>	
