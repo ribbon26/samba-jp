@@ -52,29 +52,21 @@
 	<variablelist>
 		<varlistentry>
 		<term>rangesize = numberofidsperdomain</term>
-		<listitem><para>
-			Defines the available number of uids/gids per domain. The
-			minimum needed value is 2000. SIDs with RIDs larger than this
-			value cannot be mapped, are ignored and the corresponding map
-			is discarded. Choose this value carefully, as this should
-			not be changed after the first ranges for domains have been
-			defined, otherwise mappings between domains will get intermixed
-			leading to unpredictable results. Please note that RIDs in Windows
-			Domains usually start with 500 for builtin users and 1000
-			for regular users. As the parameter cannot be changed later, please
-			plan accordingly for your expected number of users in a domain
-			with safety margins.</para>
-			<para>ドメイン毎のuid/gidの有効範囲を定義する。一番小さい値は2000
-			である。この値より大きいRIDを伴うSIDはマップされず、無視され、
-			対応するマップは無視される。これはドメインのための最初のレンジ
-			が定義された後に変更すべきではないため、この値は十分に注意して
-                        選ばなければならず、そうでないと、ドメイン間のマッピングは、
-                        予知できない結果によりまぜこぜになってしまうだろう。
-                        WindowsドメインのRIDは通常、ビルトインユーザーでは500から、
-                        通常のユーザーは1000から始まることに注意してほしい。後でパラメーター
-                        の値を変えられないため、安全なマージンをとって、予想される
-                        ドメイン中のユーザー数に対応するように設定を行ってほしい。
+		<listitem>
+			<para>ドメインレンジ毎のuid/gidの有効範囲を定義する。最小値は2000
+			である。この値より大きいRIDを伴うSIDは、有効レンジ数に依存する
+			拡張レンジにマップされる。もしも、autoridバックエンドが、
+			有効レンジ外で動作している場合、新しいドメインに対する
+			マップ要求(あるいはすでに存在するドメインに対する新しい
+			拡張レンジ)は、無視され、対応するマップは破棄される。
 		</para>
+                       <para>
+                       例: レンジサイズが10000に設定され、RIDが10000までの
+		       users/groupsは、ドメインの最初のレンジに配置される。
+		       RIDが25000のオブジェクトをマップしようとする場合、
+		       拡張レンジが割り当てられ、20000-29999までのすべてのRIDを
+		       マップするのに使われる。
+		       </para>
                 <para>One range will be used for local users and groups and for
                       non-domain well-known SIDs like Everyone (S-1-1-0) or Creator Owner (S-1-3-0).
                      A chosen list of well-known SIDs will be preallocated on first start
@@ -114,8 +106,12 @@
 		The Unix ID for a RID is calculated this way:
 		RIDのためのUnix IDは以下の方法で計算される:
 		<programlisting>
-			ID = IDMAP UID LOW VALUE + DOMAINRANGENUMBER * RANGESIZE + RID
+		  ID =  REDUCED RID + IDMAP RANGE LOW VALUE + RANGE NUMBER * RANGE SIZE
 		</programlisting>
+		ここで、REDUCED RID = RID % RANGE_SIZE で、
+		DOMAIN RANGE INDEX = RID / RANGE_SIZE はドメインのsidと共に、
+		RANGE NUMBER(データベースに格納される)を決めるのに使われる。
+		
 	</para>
 	<para>
 		Correspondingly, the formula for calculating the RID for a
@@ -123,8 +119,10 @@
 		同じように、与えられたUnix IDのためのRID計算方式は
 		以下のようになる:
 		<programlisting>
-			RID = ID - IDMAP UID LOW VALUE - DOMAINRANGENUMBER * RANGESIZE
+			RID = (ID - LOW ID) % RANGE SIZE + DOMAIN RANGE INDEX * RANGE SIZE
 		</programlisting>
+		ここで、DOMAIN RANGE INDEX は RANGE NUMBER = (ID - LOW ID) / RANGE SIZE
+		によるドメインsidといっしょにデータベースから検索される。
 	</para>
 </refsect1>
 
@@ -133,7 +131,7 @@
 	<para>
 		This example shows you the minimal configuration that will
 		work for the principial domain and 19 trusted domains.
-		この例はプリンシパルドメインと19の信頼されたドメインのために
+		この例はプリンシパルドメインと19の信頼されたドメイン / レンジ拡張 のために
 		動作する最低限の設定例である。
 	</para>
 
@@ -193,7 +191,7 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.0.6 - 4.0.14 に対応する。</para>
+    <para>このマニュアルページは Samba 4.1.0 - 4.1.0 に対応する。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
