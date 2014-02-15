@@ -88,8 +88,15 @@
 		</varlistentry>
 		<varlistentry>
 			<term>ldap_domain</term>
-			<listitem><para>
-When using the LDAP server in
+			<listitem><para>Active Directory サーバ中の
+			LDAPサーバを使う時、これは、Active Directory
+			サーバにアクセスするためのドメインを指定出来るようにする。
+			これはまた、1つの場所にすべてのRFC 2307レコードを
+			保持している間、信頼関係を使えるようにする。
+			このパラメータはオプションであり、既定値は、LDAP
+			レコードを問い合わせるために、現在のドメイン中の
+			ADサーバにアクセスする。</para>
+			<para>When using the LDAP server in
 			the Active Directory server, this allows to
 			specify the domain where to access the Active
 			Directory server. This allows using trust
@@ -101,35 +108,39 @@ When using the LDAP server in
 		</varlistentry>
 		<varlistentry>
 			<term>ldap_url</term>
-			<listitem><para>When using a stand-alone LDAP
-			server, this parameter specifies the ldap URL
-			for accessing the LDAP
-			server.</para></listitem>
+			<listitem><para>スタンドアロンのLDAPサーバを使う時、
+			このパラメータは、LDAPサーバにアクセスするための
+			ldap URLを指定する。
+			</para></listitem>
 		</varlistentry>
 		<varlistentry>
 			<term>ldap_user_dn</term>
-			<listitem><para>Defines the user DN to be used
-			for authentication.  The secret for
-			authenticating this user should be stored with
-			net idmap secret (see
+			<listitem><para>認証に使うためのユーザDNを
+			定義する。このユーザにおける認証のためのシークレットは、
+			net idmap secret で格納される(
 			<citerefentry><refentrytitle>net</refentrytitle>
-			<manvolnum>8</manvolnum></citerefentry>). If
-			absent, an anonymous bind will be
-			performed.</para></listitem>
+			<manvolnum>8</manvolnum></citerefentry>を参照)。
+			もしも存在しない場合、匿名バインドが実行される。
+			</para></listitem>
 		</varlistentry>
 		<varlistentry>
 			<term>ldap_realm</term>
-			<listitem><para>Defines the realm to use in
-			the user and group names. This is only
-			required when using cn_realm together with a
-			stand-alone ldap server.</para></listitem>
+			<listitem><para>ユーザおよびグループ名で使うrealm
+			を定義する。これは、cn_realmをスタンドアロンLDAPサーバ
+			と共に使う時にのみ必要とされる。
+			</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>使用例</title>
 
+	<para>以下の例は、スタンドアロンLDAPサーバからidマッピングを
+	どのように検索するかを示す例である。この例は又、どのように、
+	BUILTINのような、内部バックエンド中で使われてるかもしれない
+	ローカルid割り当てのから、非競合しない小さなレンジを確保することも
+	示す。</para>
 	<para>The following example shows how to retrieve id mappings
 	from a stand-alone LDAP server.  This example also shows how
 	to leave a small non conflicting range for local id allocation
@@ -151,14 +162,25 @@ When using the LDAP server in
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
 	<para>
-	The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
 	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.1.0 - 4.1.0 に対応する。</para>
+		<para>このドキュメントの Samba 4.1.0 - 4.1.0 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>
+		によって行なわれた。</para>
 </refsect1>
 
 </refentry>
