@@ -220,6 +220,17 @@
         </para></listitem>
         </varlistentry>
 
+	<varlistentry>
+        <term>-m|--max-protocol protocol</term>
+        <listitem><para>このパラメータを使うと、smbclientがサーバに接続する時に使う、
+	最高位のSMSBプロトコルを選択できるようになる。既定値では、
+	SMB1プロトコルで最も最高位であるNT1に設定されている。
+	SMB2またはSMB3プロトコルで接続するためには、おのおのSMB2またはSMB3
+	という文字列を使用する。暗号化された通信で Windows 2012サーバに
+	接続するためには、SMB3が必要とされることに注意。</para>
+	</listitem>
+        </varlistentry>
+
 		<varlistentry>
 		<term>-P|--machine-pass</term>
 		<listitem><para>
@@ -289,12 +300,18 @@
 		
 			
 		<varlistentry>	
-		<term>-b buffersize</term>
-		<listitem><para>このオプションはサーバーとファイルの送受信を
-		行なうときの送受信バッファーのサイズを変更する。 デフォルト値は
-		65520 バイトである。この値を (最小 1200 バイトまで) 小さくすることで、
-		Windows 9x サーバーとのファイルの転送がスピードアップすることが
-		確認されている。</para></listitem>
+		<term>-b|--send-buffer buffersize</term>
+		<listitem><para>
+		ファイル送受信時、smbclinetは、接続されたサーバに対して許可されたリクエストの
+		最大数を元にしたサイズの内部バッファを使う。このコマンドは、
+		このサイズを0バイト(サーバが制御している既定値のサイズを使う事を意味する)
+		から16776960 (0xFFFF00)バイトまでの任意の値に変更できる。
+		サーバが制御している値を使う事は、大量の読み取りと書き込みが同時にあるとき、
+		サーバを最も効率よく動かすためにsmbclientがパイプライン動作するなどして、
+		もっとも効率的である。この値を、その他の任意の値に設定すると、転送は
+		遅くなるだろう。これはまたsmbclient内部にある
+		<command>iosize</command>コマンド使う事にもよって設定できる。
+		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
