@@ -487,9 +487,6 @@
 		<para><command>smbclient //mypc/myshare "" -N -Tc backup.tar 
 		users\\edocs </command></para>
 		
-		<para>(訳注: 原文は -tc となっているが、-Tc が正しいと思われる。また、
-		\ はコマンドライン上では \\ とする必要がある。)</para>
-		
 		<para>共有上にある全てのファイルとディレクトリを含む tar
 		ファイルを作成する。</para>
 		
@@ -630,7 +627,7 @@
 		<term>case_sensitive</term>
 		<listitem><para>サーバーに対して、ファイル名の大文字小文字の区別を行うことを
 		告げるSMBパケット中のフラグのOn/Offを行う。既定値では、OFFに設定される
-(ファイルサーバーに対してファイル名の大文字小文字の区別を行わない事を告げる)。
+		(ファイルサーバーに対してファイル名の大文字小文字の区別を行わない事を告げる)。
 		smb.conf中で case sensitive parameter が設定されているSamba 3.0.5以降
 		のサーバーにのみ、現在影響する。
 		</para></listitem>
@@ -643,7 +640,7 @@
 		そのディレクトリがアクセス不能の場合失敗する。</para>
 
 		<para>もしも、ディレクトリ名が指定されない場合は、サーバー上の現在の作業
-ディレクトリが表示される。</para></listitem>
+		ディレクトリが表示される。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
@@ -742,11 +739,16 @@
 
 		<varlistentry>
 		<term>iosize &lt;bytes&gt;</term>
-		<listitem><para>ファイル送受信の際、smbclientは既定値で64512バイトの
-		内部メモリバッファーを使用する。このコマンドは、163.4.3x4000)バイトから
-		16776960(0xFFFF00)バイトの範囲で、このサイズを変更することが出来る。
-		接続されたサーバーに対してより効率的な読み書き要求を使うことをsmbclientが
-		行うように試みるので、より大きなサイズはより効率的なデータ転送を意味する。
+		<listitem><para>
+		ファイル送受信の際、smbclientは、接続されたサーバへの、
+		許可された要求の最大数によってサイズが決まる内部バッファーを使用する。
+		このコマンドは、0バイト(既定値で、サーバが制御したサイズを使う事を
+		意味する)から 16776960(0xFFFF00)バイトの範囲で、このサイズを変更する
+		ことが出来る。
+		サーバが制御している値を使う事は、大量の読み取りと書き込みが同時にあるとき、
+		サーバを最も効率よく動かすためにsmbclientがパイプライン動作するなどして、
+		もっとも効率的である。この値を、その他の任意の値に設定すると、転送は
+		遅くなるだろう。
 		</para></listitem>
 		</varlistentry>
 	
@@ -926,7 +928,7 @@
 		<term>posix_rmdir &lt;directoryname&gt;</term>
 		<listitem><para>このコマンドはサーバーがCIFS UNIX拡張をサポートしているかに
 		依存し、もしもそうでなければ失敗する。CIFS UNIX拡張を使って
-リモートディレクトリを削除する。
+		リモートディレクトリを削除する。
 		Samba内部のテスト用のみに使用される。
 		</para></listitem>
 		</varlistentry>
@@ -1093,6 +1095,16 @@
 		クリアする (読み書きできる共有において)。
 		</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+                <term>timeout &lt;秒単位での動作単位のタイムアウト&gt;</term>
+               <listitem><para>これを使うと、各SMB要求で使う既定値のタイムアウトを
+	       変更できる。既定値は20秒である。サーバへの接続要求がしばしばタイム
+	       アウトする時にはこれを増やすと良いだろう。
+	       これはまた、SMB3暗号化が選択されていた場合とsmbclientが
+                serverに対して過負荷な時に発生する可能性がある。
+               </para></listitem>
+               </varlistentry>
 
 		<varlistentry>
 		<term>unlock &lt;filenum&gt; &lt;hex-start&gt; &lt;hex-len&gt;</term>
