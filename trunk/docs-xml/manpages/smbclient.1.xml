@@ -140,7 +140,11 @@
 		
 		<varlistentry>
 		<term>-R &lt;name resolve order&gt;</term> 
-		<listitem><para>このオプションは、Samba スイートのプログラムによって、ホスト名と IP アドレスの名前解決のためにどのようなネーミングサービスをどのような順序で使用するかを決めるのに使用される。このオプションには、名前解決オプションを文字列のかたちで指定する。複数を指定する場合はスペースで区切る。</para>
+		<listitem><para>このオプションは、Samba スイートのプログラムによって、
+		ホスト名と IP アドレスの名前解決のためにどのようなネーミングサービスを
+		どのような順序で使用するかを決めるのに使用される。このオプションには、
+		名前解決オプションを文字列のかたちで指定する。複数を指定する場合は
+		スペースで区切る。</para>
 
 	　　 <para>指定できるのは、"lmhosts"、"host"、"wins"、"bcast"である。それぞれにおいて、
 名前解決は次のように行われる。</para>
@@ -316,10 +320,11 @@
 
 		<varlistentry>
 		<term>-e|--encrypt</term>
-		<listitem><para>このコマンド行パラメーターは、UNIX拡張をサポートするリモート
-		サーバーを要求する。
-		コネクション要求は暗号化される。これは、Samba3.2のための新しい機能であり、
-		Samba3.2以降のサーバーでのみ動作する。GSSAPIを使用してSMB暗号化をネゴシエートする。
+		<listitem><para>
+		このコマンド行パラメータは、UNIX拡張をサポートするリモートサーバか、
+		SMB3プロトコルが選択されている事を必要とする。コネクション要求は
+		暗号化される。SMB暗号化のネゴシエーションは、SMB3かGSSAPI経由での
+		POSIX拡張が使われる。
 		もしも、ドメイン/ユーザー名/パスワード の3つ組が与えられた場合、暗号化
 		ネゴシエーション(kerberosまたはNTLMv1/v2)のため、与えられた証明書を使う。
 		もしも暗号化がネゴシエートできなかった場合、接続は失敗する。
@@ -331,6 +336,25 @@
 		&popt.common.credentials;
 		&popt.common.connection;
 		
+                <varlistentry>
+                <term>-t|--timeout &lt;timeout-seconds&gt;</term>
+                <listitem><para>これを使うと、利用者に、各SMB要求で使う既定値の
+		タイムアウトを修正出来るようになる。既定値は20秒である。サーバへの
+		要求がしばしばタイムアウトする場合、この値を増やすとよいだろう。
+		これはまた、SMB3暗号化が選択されていた場合とsmbclientが
+		serverに対して過負荷な時に発生する可能性がある。また、
+		smbclient内部で<command>timeout</command>コマンドを使うことで
+		も設定される。</para><para>
+		This allows the user to tune the default
+                timeout used for each SMB request. The default setting is
+                20 seconds. Increase it if requests to the server sometimes
+                time out. This can happen when SMB3 encryption is selected
+                and smbclient is overwhelming the server with requests.
+                This can also be set using the <command>timeout</command>
+                command inside smbclient.
+                </para></listitem>
+                </varlistentry>
+
 		<varlistentry>
 		<term>-T tar options</term>
 		<listitem><para>smbclient は SMB/CIFS 共有上の全てのファイルに
