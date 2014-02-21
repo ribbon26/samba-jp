@@ -37,6 +37,14 @@
 	</para>
 
 	<para>
+	  Btrfsは、複数のファイルに対して、クローンされたレンジを使う事によって、
+	  同じ、ディスク上のデータを共有することができる。
+	  SMBクライアントが重複データをコピーするために(SCTL_SRV_COPYCHUNK経由で)
+	  リクエストを発行する時、従来型のコピーによって要求される、読み取りと
+	  書き込みを実行する代わりに、このモジュールはリクエストをBtrfsクローンレンジ
+	  IOCTLにマップする。そう言うことを行う事で、ディスク容量の削減と、
+	  ディスクIOを劇的に削減する。
+	</para><para>
 		Btrfs allows for multiple files to share the same on-disk data
 		through the use cloned ranges. When an SMB client issues a
 		request to copy duplicate data (via FSCTL_SRV_COPYCHUNK), this
