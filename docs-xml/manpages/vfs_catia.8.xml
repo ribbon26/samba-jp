@@ -37,41 +37,38 @@
 
 	<para>このモジュールはスタック可能である。</para>
 
-	<para>Sambaバージョン 3.4.x まで、固定的な文字が使われていた。不正なWindowsの
-	文字  \ / : * ? " &lt; &gt; | と空白文字はハードコードされた方法でマップされて
-	いた。</para><para>
-	Up to samba version 3.4.x a fixed character mapping was used.
-	The invalid windows characters  \ / : * ? " &lt; &gt; | and the blank
-	character were mapped in a hardcoded way.
-	</para>
-
-	<para>Samba 3.5.0 からは、より柔軟なマップ方法が導入された。
-	新しいパラメータ "catia:mappings" は、unix hex char 0x.. : windows hex char 0x..
-	と言う、文字ごとにマッピングを指定するという記述方法を使う。
-	複数の文字マッピングはカンマで分離する。</para><para>
-Starting with samba-3.5.0 a more flexible mapping was introduced.
-	The new parameter "catia:mappings" now specifies the mapping on a char by char
-	basis using the notation: unix hex char 0x.. : windows hex char 0x..
-	Multiple character mappings are separated by a comma.
+	<para>
+	  パラメータ "catia:mappings" は以下で説明するように、文字単位の
+	  マッピングを指定する。
 	</para>
 
 </refsect1>
 
+<refsect1>
+        <title>オプション</title>
+        <variablelist>
+               <varlistentry>
+               <term>catia:mappings = SERVER_HEX_CHAR:CLIENT_HEX_CHAR
+               </term>
+               <listitem>
+               <para>SERVER_HEX_CHARは、Sambaのサーバ側にあるファイル名中に
+	       含まれている、0xという接頭辞が付いた16進文字コードで、
+	       CIFSクライアントに対してCLIENT_HEX_CHARにマップされる。
+	       </para>
+               <para>同じマッピングは、反対方向でも起きる。複数の文字
+	       マッピングはカンマによって分離される。</para>
+               </listitem>
+               </varlistentry>
+       </variablelist>
+</refsect1>
+
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>使用例</title>
 
-	<para>Sambaバージョン 3.4.xまで</para>
-	<para>[CAD]共有のファイル名をマップする:</para>
+       <para>[CAD]共有中のファイルにある、サーバサイドの引用符(")を
+       クライアントサイドのdiaeresis文字(&#x00a8;)にマップする:</para>
 
-<programlisting>
-        <smbconfsection name="[CAD]"/>
-	<smbconfoption name="path">/data/cad</smbconfoption>
-	<smbconfoption name="vfs objects">catia</smbconfoption>
-</programlisting>
-
-	<para>Samba バージョン 3.5.0 とそれ以降:</para>
-	<para>CAD]共有のファイル名をマップする:</para>
 
 <programlisting>
         <smbconfsection name="[CAD]"/>
