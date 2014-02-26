@@ -77,26 +77,30 @@
 	<smbconfoption name="catia:mappings">0x22:0xa8</smbconfoption>
 </programlisting>
 
-        <para>To get the full formerly fixed mappings:</para>
+        <para>共通的なCatiaファイル名マッピングの包括的な実行:</para>
 <programlisting>
         <smbconfsection name="[CAD]"/>
 	<smbconfoption name="path">/data/cad</smbconfoption>
 	<smbconfoption name="vfs objects">catia</smbconfoption>
-	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6,0x20:0xb1</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6</smbconfoption>
 </programlisting>
 
-        <para>変換されるUnixファイル名(パスの区切り "/" はここでは使われていない事に注意):
+        <para>変換されるサーバサイドのファイル名(パスの区切り "/" はここでは使われていない事に注意):
 	</para>
-	<para>a\a:a*a?a"a&lt;a&gt;a|a a</para>
+	<para>a\a:a*a?a"a&lt;a&gt;a|a</para>
 
-	<para>結果としてのWindowsファイル名:</para>
+	<para>結果としてクライアントで表示されるファイル名:</para>
 
-	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a&#x00b1;a
+	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a
 	</para>
+</refsect1>
 
-        <para>固有で存在するファイル名のために、文字マッピングは
-	両方向で動かなければならないことに注意 (unix -&gt; Windows と Windows -&gt; unix)!
-	</para>
+<refsect1>
+       <title>注意</title>
+
+       <para>一意と存在するファイル名を得るため、文字列のマッピングは双方向で動く
+       必要がある(サーバ -&gt; クライアント と クライアント -&gt; サーバ)。
+       </para>
 
 	<para>動かない例:</para>
 
@@ -108,10 +112,10 @@
 </programlisting>
 
          <para>ここで、コロン ":" は、下線 "_" にマップされる</para>
-	 <para>unix のファイル名 "a:should_work" を考えると、これは、
-	 "a_should_work" という Windows 用のファイル名に問題なく変換される。</para>
-	 <para>しかし、Windowsの、"a_should_work" というファイル名をunix向けに、逆方向
-	 マッピングしようとすると、結果が、"a:should:work" となってしまい、たとえば
+	 <para>サーバ側の のファイル名 "a:should_work" を考えると、これは、
+	 "a_should_work" という クライアント用のファイル名に問題なく変換される。</para>
+	 <para>しかし、クライアントの、"a_should_work" というファイル名をサーバ向けに、
+	 逆方向マッピングしようとすると、結果が、"a:should:work" となってしまい、たとえば
 	 "file not found" が返ってくることになる。
 	 </para>
 
@@ -120,7 +124,7 @@
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルはSambaシステムバージョン4.0.3 まですべてに対応している。
+	<para>このマニュアルはSambaシステムバージョン3.5.0 から 4.0.6 まですべてに対応している。
 	</para>
 </refsect1>
 
@@ -136,7 +140,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 4.0.5 - 4.0.14 に対応する。</para>
+	<para>このマニュアルページは、Samba 4.1.0 - 4.1.0 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
