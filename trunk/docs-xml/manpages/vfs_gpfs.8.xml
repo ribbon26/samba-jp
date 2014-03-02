@@ -53,6 +53,25 @@
 
 	</para>
 
+       <para>このモジュールは、smb.confのパラメータ
+       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
+       を使用する。これをyesに設定した場合(既定値)、このパラメータは、
+       FILE_DELETE と FILE_DELETE_CHILDを除いた、すべてのファイルのパーミッション
+       に、すでに含まれている(ディレクトリではなく)ファイルに対する、戻り値内の
+       ACEエントリ上にFILE_DELETE_CHILDビットを追加する。これは、GENERIC_ALLアクセス
+       要求を行うWindowsアプリケーションが、NFSv4互換のACLを持つ
+       ファイルシステムに対して動作している時、ACCESS_DENIEDエラーが帰ってくる
+       ことを防ぐ。</para>
+       <para>This module makes use of the smb.conf parameter
+       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
+       When set to yes (the default), this parameter will add in the FILE_DELETE_CHILD
+       bit on a returned ACE entry for a file (not a directory) that already
+       contains all file permissions except for FILE_DELETE and FILE_DELETE_CHILD.
+       This can prevent Windows applications that request GENERIC_ALL access
+       from getting ACCESS_DENIED errors when running against a filesystem
+       with NFSv4 compatible ACLs.
+       </para>
+
 	<para>このモジュールはスタック可能である。</para>
 
 	<para>Samba 4.0以降、すべてのオプションは共有単位のオプションである。</para>
@@ -382,16 +401,16 @@
 		<term>nfs4:mode = [ simple | special ]</term>
 		<listitem>
 		<para>
-		GPFS上の特別なIDの置き換えを有効/無効にする。このパラメーターはどのような方法でも
-		windowsのユーザーに影響を与えるべきでない。これは、Sambaに、GPFSに関連のある
-		OWNER@とGROUP@(単純なuidへのマッピング)である特別なIDを設定することのみを
-		確実にする。
+		  GPFS上の特別なID(OWNER@とGROUP@)の置換を制御する。
+		  mode を simple にする事を推奨する。このモード中では、
+		  ファイル所有者とグループに対する、非継承ACLエントリのみが特別な
+		  IDにマップされる。
 		</para>
 
 		<para>以下のモードがこのモジュールによって指定可能である:</para>
 		<itemizedlist>
-		<listitem><para><command>simple(既定値)</command> - GPFSのACE中で特別なIDを使わない</para></listitem>
-		<listitem><para><command>special</command> - GPFSのACE中で特別なIDを使う</para> </listitem>
+		<listitem><para><command>simple(既定値)</command> - 非継承ACEのみに対して、OWNER@とGROUP@の特別なIDを使用する。</para></listitem>
+		<listitem><para><command>special</command> - すべてのファイル所有者とグループACEに対して、OWNER@とGROUP@の特別なIDを使用する。</para> </listitem>
 		</itemizedlist>
 		</listitem>
 
@@ -529,8 +548,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.0.6 - 4.0.14 に対応する。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.0.14 対応の翻訳は
+	<para>このマニュアルページは Samba 4.1.0 - 4.1.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.1.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
