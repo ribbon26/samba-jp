@@ -30,6 +30,15 @@
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para>
+	  ある種のファイルシステム(いくつかなジャーナルファイルシステムなど)
+	  では、電源失効後にファイルシステム中に残っていることをオペレーション
+	  が保障するために、多くのメタデータ操作に対してfsync()が実行される
+	  事を要求する。これは、クラスタ化されたSambaにおいて、
+	  ノードフェイルオーバシステム中に参加している、いくつかのクラスタ
+	  ファイルシステムにおいては特に重要である。それらのファイルシステム
+	  に対して、<command>vfs_syncops</command> VFSモジュールは、それらの操作を
+	  安全に実行する方法を提供する。</para>
+	<para>  
 	Some filesystems (even some journaled filesystems) require that a
 	fsync() be performed on many meta data operations to ensure that the
 	operation is guaranteed to remain in the filesystem after a power
@@ -44,7 +53,7 @@
 </refsect1>
 
 <refsect1>
-	<title>CONFIGURATION</title>
+	<title>設定</title>
 
 	<para>
 	Most of the performance loss with the <command>vfs_syncops</command>
