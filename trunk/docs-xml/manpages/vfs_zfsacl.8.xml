@@ -100,8 +100,8 @@
 
 		<para>以下のモードはモジュールによって解釈される:</para>
 		<itemizedlist>
-		<listitem><para><command>simple(default)</command> - use OWNER@ and GROUP@ special IDs for non inheriting ACEs only.</para></listitem>
-		<listitem><para><command>special(deprecated)</command> - use OWNER@ and GROUP@ special IDs in ACEs for all file owner and group ACEs.</para></listitem>
+		<listitem><para><command>simple(既定値)</command> - OWNER@ と GROUP@ という特別なIDを、非継承ACEのみに使う。</para></listitem>
+		<listitem><para><command>special(非推奨)</command> - OWNER@ と GROUP@ という特別なIDを、すべてのファイル所有者とグループACEに対して使う。</para></listitem>
 		</itemizedlist>
 		</listitem>
 
@@ -112,11 +112,14 @@
 		<term>nfs4:acedup = [dontcare|reject|ignore|merge]</term>
 		<listitem>
 		<para>
+		  このパラメータは、ZFSのACL中にある重複したACEを、どのようにSambaが扱うかを設定する。
+		  ZFSは同じIDに対して異なったビットに対し、重複したACEを許可/作成できる。
+		</para><para>
 		This parameter configures how Samba handles duplicate ACEs encountered in ZFS ACLs.
 		ZFS allows/creates duplicate ACE for different bits for same ID.
 		</para>
 
-		<para>Following is the behaviour of Samba for different values :</para>
+		<para>以下はそれぞれの値に対するSambaの動作である:</para>
 		<itemizedlist>
 		<listitem><para><command>dontcare (default)</command> - copy the ACEs as they come</para></listitem>
 		<listitem><para><command>reject</command> - stop operation and exit with error on ACL set op</para></listitem>
