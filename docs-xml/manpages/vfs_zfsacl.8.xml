@@ -121,10 +121,10 @@
 
 		<para>以下はそれぞれの値におけるSambaの動作である:</para>
 		<itemizedlist>
-		<listitem><para><command>dontcare (既定値)</command> - 元の通りにACEをコピーする</para></listitem>
-		<listitem><para><command>reject</command> - ACL設定時にエラーがあれば、処理をやめてエラーを返す</para></listitem>
-		<listitem><para><command>ignore</command> - 二番目に一致するACEを含めない</para></listitem>
-		<listitem><para><command>merge</command> - bitwise OR the 2 ace.flag fields and 2 ace.mask fields of the 2 duplicate ACEs into 1 ACE</para></listitem>
+		<listitem><para><command>dontcare (既定値)</command> - 指定されたACEをそのまま設定する</para></listitem>
+		<listitem><para><command>reject</command> - ACL設定処理を中断しエラーを返す</para></listitem>
+		<listitem><para><command>ignore</command> - 重複するするACEの二番目以降を無視する</para></listitem>
+		<listitem><para><command>merge</command> - 重複する ACE のフラグとマスクをそれぞれ OR ビット演算して 1つの ACE にする</para></listitem>
 		</itemizedlist>
 		</listitem>
 		</varlistentry>
@@ -134,14 +134,15 @@
 		<term>nfs4:chown = [yes|no]</term>
 		<listitem>
 		<para>
-		  このパラメータはファイルシステムに依存してサポートされるchown機能を
+		  このパラメータはファイルシステムに依存してサポートされる所有者変更(chown)機能を
 		  有効にするか否かを指定する。このパラメータは、システムに脆弱性が
 		  出来てしまうかもしれないので、注意深く有効にすべきである。</para>
 		  <para>This parameter allows enabling or disabling the chown supported
 		by the underlying filesystem. This parameter should be enabled with
 		care as it might leave your system insecure.</para>
-		<para>いくつかのファイルシステムでは、 a) giving b) stalingとして
-		chownができる。後者はリスクであると考えられる。</para>
+		<para>いくつかのファイルシステムでは、所有者の変更権限として、
+		a) 所有権の付与権限 b) 所有権の取得権限の2種類を実装しており、
+		このうち後者はリスクであると考えられる。</para>
 		<para>Some filesystems allow chown as a) giving b) stealing. It is the latter
 		that is considered a risk.</para>
 
@@ -191,6 +192,7 @@
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>さとうふみやす</para></listitem>
 		</itemizedlist>
         によって行なわれた。</para>
 </refsect1>
