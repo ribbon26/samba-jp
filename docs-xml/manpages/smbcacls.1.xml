@@ -143,13 +143,15 @@
                <varlistentry>
                <term>-e</term>
                <listitem><para>このコマンド行パラメータは、リモートサーバがUNIX拡張をサポート
-	       しているか、SMB3プロトコルが選択されているかのどちらかを必要とする。
+	       しているか、SMB3プロトコルが選択されているか、どちらかを必要とする。
 	       コネクションの要求は暗号化される。SMB3またはPOSIX拡張を、GSSAPI経由で使って
 	       SMB暗号化のネゴシエーションを行う。暗号化のためのネゴシエーション
-	       (kerberosまたはNTLMv1/v2のどちらか)
-	       証明書の使用は、
-	       
-This command line parameter requires the remote
+	       (もしも提供されるならば、kerberosまたはNTLMv1/v2のどちらか)
+	       のために使う証明書は、ドメイン/ユーザ名/パスワード三つに対して使われる。
+	       もしも暗号化機能のネゴシエーションが出来ない場合、接続は失敗する。
+	        </para>
+	       <para>
+		 This command line parameter requires the remote
                server support the UNIX extensions or that the SMB3 protocol has been selected.
                Requests that the connection be encrypted. Negotiates SMB encryption using either
                SMB3 or POSIX extensions via GSSAPI. Uses the given credentials for
@@ -161,15 +163,15 @@ This command line parameter requires the remote
 
                <varlistentry>
                <term>-m|--max-protocol PROTOCOL_NAME</term>
-               <listitem><para>This allows the user to select the
-               highest SMB protocol level that smbcacls will use to
-               connect to the server. By default this is set to
-               NT1, which is the highest available SMB1 protocol.
-               To connect using SMB2 or SMB3 protocol, use the
-               strings SMB2 or SMB3 respectively. Note that to connect
-               to a Windows 2012 server with encrypted transport selecting
-               a max-protocol of SMB3 is required.
-               </para></listitem>
+               <listitem>
+		 <para>これは、ユーザに対して、smbcaclsがサーバ接続時に使用する
+		 最上位のSMBプロトコルを選択出来るようにする。既定値では、
+		 これは、SMB1プロトコルの最上位であるNT1に設定されている。
+		 SMB2またはSMB3プロトコルで接続する場合、おのおのSMB2または
+		 SMB23という文字列を指定する。通信路の暗号化を使ってWindows 
+		 2012 Serverに接続する場合、max-protocol はSMB3が必要である
+		 ことに注意。
+		 </para></listitem>
                </varlistentry>
 
 		<varlistentry>
@@ -187,9 +189,9 @@ This command line parameter requires the remote
 
 
 <refsect1>
-	<title>ACL FORMAT</title>
+	<title>ACL 形式</title>
 
-	<para>ACL の形式は、コンマか改行記号で 1 つ以上の ACL エントリーを区切ったもの
+	<para>ACL の形式は、カンマか改行記号で 1 つ以上の ACL エントリーを区切ったもの
 	である。ACL エントリーは以下のいずれかの形式をとる: </para>
 
 <para><programlisting> 
@@ -293,8 +295,8 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.6.6 - 4.0.14 に対応する。</para>
-        <para>このドキュメントの Samba 3.0.0 - Samba 4.0.14 対応の翻訳は
+	<para>このマニュアルページは Samba 4.1.0 - 4.1.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 - Samba 4.1.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
