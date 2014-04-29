@@ -20,19 +20,17 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>nmbd</command>
-		<arg choice="opt">-D</arg>
-		<arg choice="opt">-F</arg>
-		<arg choice="opt">-S</arg>
-		<arg choice="opt">-a</arg>
-		<arg choice="opt">-i</arg>
-		<arg choice="opt">-o</arg>
-		<arg choice="opt">-h</arg>
+		<arg choice="opt">-D|--daemon</arg>
+		<arg choice="opt">-F|--foreground</arg>
+		<arg choice="opt">-S|--log-stdout</arg>
+		<arg choice="opt">-i|--interactive</arg>
 		<arg choice="opt">-V</arg>
 		<arg choice="opt">-d &lt;debug level&gt;</arg>
-		<arg choice="opt">-H &lt;lmhosts file&gt;</arg>
+		<arg choice="opt">-H|--hosts &lt;lmhosts file&gt;</arg>
 		<arg choice="opt">-l &lt;log directory&gt;</arg>
-		<arg choice="opt">-p &lt;port number&gt;</arg>
+		<arg choice="opt">-p|--port &lt;port number&gt;</arg>
 		<arg choice="opt">-s &lt;configuration file&gt;</arg>
+		<arg choice="opt">--no-process-group</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -84,7 +82,7 @@
 
 	<variablelist>
 		<varlistentry>
-		<term>-D</term>
+		<term>-D|--daemon</term>
 		<listitem><para>このパラメーターが指定されると、<command>nmbd</command> はデーモンとして動作する。
 		すなわち、自分自身を分離してバックグラウンドで動作し、適切なポートのリクエストを処理する。 
 		既定では、<command>nmbd</command> はデーモンとして動作しない。
@@ -93,34 +91,30 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term>-F</term>
+		<term>-F|--foreground</term>
 		<listitem><para>
-		このパラメーターを指定すると、
-		<command>nmbd</command>
-		のメインプロセスはデーモン化しなくなる。
-		つまり、
+		このパラメーターを指定すると、<command>nmbd</command>
+		のメインプロセスはデーモン化しなくなる。つまり、
 		2 回の <command>fork(2)</command> と端末からの切り離しを行なわない。
 		通常通り接続要求を処理するための子プロセスが生成されるが、
 		メインプロセスは終了しない。
 		この動作方式は、
 		Daniel J. Bernstein 作の <command>daemontools</command>
 		パッケージに含まれる
-		<command>supervise</command> と <command>svscan</command>
-		や、
+		<command>supervise</command> と <command>svscan</command>や、
 		AIX のプロセスモニターなど、プロセス監視の下で
-		<command>nmbd</command>
-		を動作させるのに都合がよい。
+		<command>nmbd</command>を動作させるのに都合がよい。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-S</term>
+		<term>-S|--log-stdout</term>
 		<listitem><para>このパラメーターが指定されると、<command>nmbd</command> は
 		ファイルではなく標準出力にログを出力する。</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-i</term>
+		<term>-i|--interactive</term>
 		<listitem><para>このパラメーターが指定されると、
 		サーバーがシェルのコマンドライン上から起動されてもサーバーはデーモンとはならずに「対話的に」動作する。
 		このパラメーターにより、コマンドラインから起動した際に暗黙的にデーモンモードとなることが抑止される。
@@ -129,10 +123,10 @@
 		</para></listitem>
 		</varlistentry>
 
-		&stdarg.help;
+		&popt.autohelp;
 		
 		<varlistentry>
-		<term>-H &lt;filename&gt;</term>
+		<term>-H|--hosts &lt;filename&gt;</term>
 		<listitem><para>NetBIOS lmhosts ファイルの指定。lmhosts ファイルは、
 		NetBIOS 名と IP アドレスの組で構成されるリストである。 
 		これは、nmbd サーバーによってロードされ、任意の NetBIOS 名を解決する問い合わせのために、
@@ -162,12 +156,18 @@
 		&popt.common.samba;
 		
 		<varlistentry>
-		<term>-p &lt;UDP port number&gt;</term>
+		<term>-p|--port &lt;UDP port number&gt;</term>
 		<listitem><para>UDP ポート番号には正の整数を指定する。
 		このオプションは、<command>nmbd</command> が名前問い合わせに返答する、
 		既定値の UDP ポート番号(通常は137)を変更する。
 		あなたがどんな場面でも助けを必要としない専門家でない限り、
 		このオプションを使用してはならない! </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+                <term>--no-process-group</term>
+		<listitem><para>nmbd用に新しいプロセスグループを作成しない。
+                </para></listitem>
 		</varlistentry>
 
 	</variablelist>
@@ -305,7 +305,7 @@
 	
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 3.0.23 - 4.1.4 に対応する。</para>
+	<para>このマニュアルページは Samba 4.1.4 - 4.1.4 に対応する。</para>
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
