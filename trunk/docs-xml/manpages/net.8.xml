@@ -21,20 +21,25 @@
 	<cmdsynopsis>
 		<command>net</command>
 		<arg choice="req">&lt;ads|rap|rpc&gt;</arg>
-		<arg choice="opt">-h</arg>
-		<arg choice="opt">-w workgroup</arg>
-		<arg choice="opt">-W myworkgroup</arg>
-		<arg choice="opt">-U user</arg>
-		<arg choice="opt">-I ip-address</arg>
-		<arg choice="opt">-p port</arg>
+		<arg choice="opt">-h|--help</arg>
+		<arg choice="opt">-w|--workgroup workgroup</arg>
+		<arg choice="opt">-W|--myworkgroup myworkgroup</arg>
+		<arg choice="opt">-U|--user user</arg>
+		<arg choice="opt">-I|--ipaddress ip-address</arg>
+		<arg choice="opt">-p|--port port</arg>
 		<arg choice="opt">-n myname</arg>
 		<arg choice="opt">-s conffile</arg>
-		<arg choice="opt">-S server</arg>
-		<arg choice="opt">-l</arg>
-		<arg choice="opt">-P</arg>
+		<arg choice="opt">-S|--server server</arg>
+		<arg choice="opt">-l|--long</arg>
+		<arg choice="opt">-v|--verbose</arg>
+		<arg choice="opt">-f|--force</arg>
+		<arg choice="opt">-P|--machine-pass</arg>
 		<arg choice="opt">-d debuglevel</arg>
 		<arg choice="opt">-V</arg>
 		<arg choice="opt">--request-timeout seconds</arg>
+		<arg choice="opt">-t|--timeout seconds</arg>
+		<arg choice="opt">-i|--stdin</arg>
+		<arg choice="opt">--tallocreport</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -63,7 +68,7 @@
 		&stdarg.kerberos;
 		
 		<varlistentry>
-		<term>-w target-workgroup</term>
+		<term>-w|--workgroup target-workgroup</term>
 		<listitem><para>
 		操作対象とするワークグループやドメインを指定する。
 		このオプションか、サーバーの IP アドレスもしくは名前のいずれかは指定する必要がある。
@@ -71,21 +76,21 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term>-W workgroup</term>
+		<term>-W|--myworkgroup workgroup</term>
 		<listitem><para>
 		クライアントのワークグループやドメインを指定する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-U user</term>
+		<term>-U|--user user</term>
 		<listitem><para>
 		アクセスを行なうユーザー名を指定する。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-I ip-address</term>
+		<term>-I|--ipaddress ip-address</term>
 		<listitem><para>
 		操作対象のサーバーの IP アドレスを指定する。
 		このオプションか、
@@ -94,7 +99,7 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term>-p port</term>
+		<term>-p|--port port</term>
 		<listitem><para>
 		操作対象のサーバーに接続する際に用いるポート番号 (通常 139 か 445) を指定する。
 		既定値ではまず 445 を試行し、ついで 139 を試行する。
@@ -113,11 +118,25 @@
 		</varlistentry>
 
 		<varlistentry>
-		<term>-l</term>
+		<term>-l|--long</term>
 		<listitem><para>
 		情報を表示する際に、各項目の詳細情報を表示する。
 		</para></listitem>
 		</varlistentry>
+
+                <varlistentry>
+		<term>-v|--verbose</term>
+                <listitem><para>
+		データを一覧表示する時、各アイテムごとに、より詳細な情報を表示する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-f|--force</term>
+                <listitem><para>
+                netコマンドを強制実行する。
+                </para></listitem>
+                </varlistentry>
 
 		<varlistentry>
 		<term>-P</term>
@@ -132,7 +151,251 @@
 		クライアントの要求を30秒後にタイムアウトさせる。既定値は10秒。
                 </para></listitem>
                 </varlistentry>
-		&stdarg.server.debug;
+
+                <varlistentry>
+                <term>-t|--timeout 30</term>
+                <listitem><para>
+                クライアント操作のタイムアウト値を30秒に設定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--use-ccache</term>
+                <listitem><para>
+		winbindによってキャッシュされた認証情報を使う事を試みる。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-i|--stdin</term>
+                <listitem><para>
+                標準入力からnetコマンドの入力を受ける。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--tallocreport</term>
+                <listitem><para>
+                netコマンド実行中にtallocの状況を生成する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-T|--test</term>
+                <listitem><para>
+		コマンドシーケンスのテストのみを行う。dry-runである。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-F|--flags FLAGS</term>
+                <listitem><para>
+		net サブコマンドに整数のフラグを渡す。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-C|--comment COMMENT</term>
+                <listitem><para>
+		net サブコマンドにコメント文字列を渡す。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-n|--myname MYNAME</term>
+                <listitem><para>
+		net サブコマンドにおいて、MYNAMEを要求元の名前とする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-c|--container CONTAINER</term>
+                <listitem><para>
+		net ads 操作に対して AD コンテナを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-M|--maxusers MAXUSERS</term>
+                <listitem><para>
+		net rpc 操作に対して maxusersフィールドを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-r|--reboot</term>
+                <listitem><para>
+		コマンドが正常終了した後に、リモートマシンを再起動する(たとえば
+		リモート join操作など)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net rpc vampire -->
+
+                <varlistentry>
+                <term>--force-full-repl</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは
+		生成された keytabファイルの再生成を強制的に行わせる。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--single-obj-repl</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは、
+		生成されたkeytabファイルに対して、単一のオブジェクトとして、
+		置換することを許可する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--clean-old-entries</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは、
+		生成されたkeytabファイルから古いエントリを削除することを許可する。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net idmap -->
+
+                <varlistentry>
+                <term>--db</term>
+                <listitem><para>
+		"net idmap" コマンドに対してdbfileを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--lock</term>
+                <listitem><para>
+		"net idmap check" コマンドに対して、dbfileのロックを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-a|--auto</term>
+                <listitem><para>
+		"net idmap check" 中で非対話的モードを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--repair</term>
+                <listitem><para>
+		"net idmap check" 中で修復モードを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net rpc share migrate -->
+
+                <varlistentry>
+                <term>--acls</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にACLも含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--attrs</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にファイル属性も含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--timestamps</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にタイムスタンプも含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-X|--exclude DIRECTORY</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、  コピー対象から指定した
+		ディレクトリを除外する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--destination SERVERNAME</term>
+                <listitem><para>
+		マイグレーション操作において、ターゲットのサーバ名を指定する
+		(既定値はlocalhost)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net groupmap set -->
+
+                <varlistentry>
+                <term>-L|--local</term>
+                <listitem><para>
+		グループマッピングのタイプをlocalに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-D|--domain</term>
+		<listitem><para>
+		グループマッピングのタイプをdomainに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-N|--ntname NTNAME</term>
+                <listitem><para>
+		グループマッピングのタイプをntnameに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-R|--rid RID</term>
+                <listitem><para>
+		グループマッピングのタイプをridに設定する("net groupmap set" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+               <!-- Options for net registry check -->
+
+                <varlistentry>
+                <term>--reg-version REG_VERSION</term>
+                <listitem><para>
+		データベースバージョンを {n|1,2,3} と仮定する("net registry check" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-o|--output FILENAME</term>
+                <listitem><para>
+		データベースファイル出力先を指定する("net registry check" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--wipe</term>
+                <listitem><para>
+		新しく一からデータベースを作る("net registry check" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net registry import -->
+
+                <varlistentry>
+                <term>--precheck PRECHECK_DB_FILENAME</term>
+                <listitem><para>
+		データベースの事前チェックのためのファイル名を指定する
+		("net registry import" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                &stdarg.encrypt;
+                &popt.common.samba.client;
+
 	</variablelist>
 </refsect1>
 
@@ -2372,7 +2635,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.0 - 4.1.4 に対応する。</para>
+	<para>このマニュアルページは Samba 4.1.4 - 4.1.4 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
