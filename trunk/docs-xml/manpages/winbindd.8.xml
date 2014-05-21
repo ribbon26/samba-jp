@@ -19,12 +19,14 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>winbindd</command>
-		<arg choice="opt">-F</arg>
-		<arg choice="opt">-S</arg>
-		<arg choice="opt">-i</arg>
+		<arg choice="opt">-D|--daemon</arg>
+		<arg choice="opt">-F|--foreground</arg>
+		<arg choice="opt">-S|--stdout</arg>
+		<arg choice="opt">-i|--interactive</arg>
 		<arg choice="opt">-d &lt;debug level&gt;</arg>
 		<arg choice="opt">-s &lt;smb config file&gt;</arg>
-		<arg choice="opt">-n</arg>
+		<arg choice="opt">-n|--no-caching</arg>
+		<arg choice="opt">--no-process-group</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -79,14 +81,6 @@
  	</para>
 
 	<variablelist>
-		<varlistentry>
-		<term>-D</term>
-		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
-		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
-		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
-		</para></listitem>
-		</varlistentry>
-
 		<varlistentry>
 		<term>hosts</term>
 		<listitem><para>
@@ -151,7 +145,15 @@ hosts:		files wins
 
 	<variablelist>
 		<varlistentry>
-		<term>-F</term>
+		<term>-D|--daemon</term>
+		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
+		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
+		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-F|--foreground</term>
 		<listitem><para>
 		このパラメーターを指定すると、
 		<command>winbindd</command>
@@ -172,7 +174,7 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
-		<term>-S</term>
+		<term>-S|--stdout</term>
 		<listitem><para>
 		このパラメーターを指定すると、
 		<command>winbindd</command>
@@ -182,10 +184,10 @@ hosts:		files wins
 
 		&stdarg.server.debug;
 		&popt.common.samba;
-		&stdarg.help;
+		&popt.autohelp;
 
 		<varlistentry>
-		<term>-i</term>
+		<term>-i|--interactive</term>
 		<listitem><para>
 		<command>winbindd</command>
 		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
@@ -198,7 +200,7 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
-		<term>-n</term>
+		<term>-n|--no-caching</term>
 		<listitem><para>いくつかのキャッシュを無効にする。これにより、
 		<command>winbindd</command> は、
 		クライアントに応答する前にドメインコントローラーからの応答を時々待たなければならず動作が遅くなるが、
@@ -207,6 +209,12 @@ hosts:		files wins
 		<command>winbindd</command> は処理を停止してしまう。
 		これは、信頼関係にある環境(trusted environments)で、グループメンバーシップの
 		トラックのために必要とされるsamlogon キャッシュを無効にはしない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--no-process-group</term>
+		<listitem><para>winbinddのために、新しいプロセスグループを作成しない。
 		</para></listitem>
 		</varlistentry>
 
@@ -563,7 +571,7 @@ auth  required    /lib/security/pam_unix.so \
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.0.14 - 4.1.4に対応する。</para>
+	<para>このマニュアルページは Samba 4.1.4 - 4.1.4に対応する。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
