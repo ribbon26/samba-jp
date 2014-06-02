@@ -60,8 +60,8 @@
         subtrees, for example the GPFS independent file sets.
         </para></listitem>
         <listitem><para>
-	つまらないスナップショットのネーミング: スナップショットは
-	str[fp]time 変換結果と互換のある任意の形式で名前を定義できる。
+	目立つスナップショットのネーミング: スナップショットは
+	str[fp]time 変換結果と互換のある任意の形式で名前を付けることができる。
         </para><para>
         Vanity naming for snapshots: snapshots can be named in any format
         compatible with str[fp]time conversions.
@@ -69,7 +69,30 @@
         <listitem><para>
 	タイムスタンプはUTCの代わりにローカル時間で表現できる。
         </para></listitem>
-
+	<listitem><para>
+	ファイルのinode番号は、必要に応じて、オリジナルとは異なるように
+	変更できる。これはWindows GUIの'リストア'ボタンが、GPFSのように、
+	スナップショットファイルとオリジナルに対して同じデバイスとinode
+	番号を返すファイルシステムを使っているときに共有違反がないように
+	動作するようにする。</para><para>
+	The inode number of the files can optionally be altered to be
+	different from the original. This fixes the 'restore' button
+	in the Windows GUI to work without a sharing violation when
+	serving from file systems, like GPFS, that return the same
+	device and inode number for the snapshot file and the original.
+	</para></listitem>
+	<listitem><para>
+	シャドウコピーの結果は、既定値ではクライアントに送られる前に整列
+	される。これはディレクトリをアルファベット順に読めないファイルシステム
+	にとって便利である(通常のunix)。もしもファイルシステムが
+	ディレクトリ表示時を整列するのであれば、ここでの整列順は、設定可能で
+	停止もできる。</para><para>
+	Shadow copy results are by default sorted before being sent to the
+	client. This is beneficial for filesystems that don't read
+	directories alphabetically (the default unix). Sort ordering can be
+	configured and sorting can be turned off completely if the file
+	system sorts its directory listing.
+	</para></listitem>
 	</orderedlist>
 
 	<para>このモジュールはスタック可能である。</para>
