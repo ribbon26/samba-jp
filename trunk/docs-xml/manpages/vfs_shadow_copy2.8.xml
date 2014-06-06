@@ -190,13 +190,50 @@
         <term>shadow:basedir = BASEDIR
 		</term>
         <listitem>
-        <para>スナップショットが参照するベースディレクトリへのパス。
+        <para>
+	basedirオプションは共有のマウントポイントと、ファイルシステムの
+	共有のルートとの間で、ファイルシステムのスナップショットが取られる
+	所からの相対で、ディレクトリを指定できるようにする。
         </para>
+	<para>
+	たとえば、もしも
+	        <itemizedlist>
+		<listitem><para>
+		<command>basedir = mountpoint/rel_basedir</command>
+		</para></listitem>
+		<listitem><para>
+		<command>share_root = basedir/rel_share_root</command>
+		</para></listitem>
+		<listitem><para>
+		<command>snapshot_path = mountpoint/snapdir</command>
+	        </para>
+		<para>
+		または snapdirが絶対パスの場合
+		<command>snapshot_path = snapdir</command>
+		</para></listitem>
+		</itemizedlist>
+		TIMEにおけるスナップショット
+		<command>file = mountpoint/rel_basedir/rel_share_root/rel_file</command>
+		は
+		<command>snapshot_path/FS_GMT_TOKEN(TIME)/rel_share_root/rel_file</command>
+		に置かれる。このとき、FS_GMT_TOKEN(TIME)は、ファイルシステムが要求する
+		書式に沿った、TIMOのタイムスタンプである
+		(<command>shadow:format</command>コマンドを参照)。
+	        </para>
+		<para>basedirの既定値は共有ルートのファイルシステムにおけるマウントポイント
+		である(<command>shadow:mountpoint</command>を参照)。
+		</para>
+		<para>
+		<command>shadow:snapdirseverywhere</command>と
+		<command>shadow:crossmountpoints</command>オプションは、
+		<command>shadow:basedir</command>と非互換であり、
+		basedirの設定を無効にすることに注意。
+		</para>
         </listitem>
         </varlistentry>
 
 		<varlistentry>
-                 <term>shadow:sort = asc/desc, あるいは指定しないことで整列しない(既定値)
+                 <term>shadow:sort = asc/desc
                  </term>
                  <listitem>
                  <para>このパラメーターにより、シャドウコピーディレクトリを、クライアントに
