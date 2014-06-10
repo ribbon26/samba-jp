@@ -314,20 +314,36 @@
 		<para>もしも<command moreinfo="none">
 		shadow:snapdirseverywhere </command>を有効にした場合、
 		このモジュールは、現在のワーキングディレクトリに対する、
-		現在およびすべての上位ディレクトリのスナップショットディレクトリ
-		の外部を扱う。たとえば、これが必要なところは、IBMのGPFS中で
+		現在のワーキングディレクトリおよびすべての上位ディレクトリ
+		に対して、スナップショットディレクトリを見つけ出し、
+		既定値のマウントポイントを使うのをやめる。このような
+		動作の詳細については<command>shadow:crossmountpoints</command>
+		を参照のこと。
+		</para>
+		<para>
+		たとえば、これが必要なところは、IBMのGPFS中で
 		独立したファイルセットであるが、その他のファイルシステムと同様、
 		ファイルシステム中における特定のサブディレクトリのみを
 		スナップショットすることをサポートする場合がある。
 		</para>
-		<para>If you enable <command moreinfo="none">
-		shadow:snapdirseverywhere </command> then this module will look
-		out for snapshot directories in the current and all parent
-		directories of the current working directory.
+		<para>
 		An example where this is needed are independent filesets in
 		IBM's GPFS, but other filesystems might support snapshotting
 		only particular subtrees of the filesystem as well.
 		</para>
+		<para>
+		<command>shadow:snapdirseverywhere</command>は、
+		<command>shadow:snapdir</command>に依存し、それは相対パスが
+		必要なことに注意。絶対パスを設定すると、
+		<command>shadow:snapdirseverywhere</command>は無効になる。
+		</para>
+		<para>
+		このオプションは、<command>shadow:basedir</command>
+		とは非互換で、<command>shadow:basedir</command>で
+		設定したものを無効化する事に注意。
+		</para>
+		<para>例: shadow:snapdirseverywhere = yes</para>
+		<para>既定値: shadow:snapdirseverywhere = no</para>
 		</listitem>
 		</varlistentry>
 
