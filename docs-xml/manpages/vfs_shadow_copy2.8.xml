@@ -347,6 +347,50 @@
 		</listitem>
 		</varlistentry>
 
+		<varlistentry>
+		 <term>shadow:crossmountpoints = yes/no
+		 </term>
+		 <listitem>
+		<para>
+		このオプションは、<command>shadow:snapdirseverywhere = yes</command>
+		の場合に有効となる。
+		このオプションを設定すると、snapdirを捜す時、代わりにpathを使って
+		すべてを検索するので、最初のマウントポイント処理時にモジュールが
+		停まらないようにさせる。</para>
+		<para>
+                This option is effective in the case of
+                <command>shadow:snapdirseverywhere = yes</command>.
+                Setting this option makes the module not stop at the
+                first mount point encountered when looking for snapdirs,
+                but lets it search potentially all through the path
+                instead.
+		</para>
+		<para>
+		例をあげると、これが必要なのは、IBMのGPFS中の独立した
+		ファイルセットだが、他のファイルシステムでも同様に、
+		ファイルシステムの特定のサブツリーのみのスナップショットをサポートする
+		可能性がある。</para>
+		<para>
+		An example where this is needed are independent filesets in
+		IBM's GPFS, but other filesystems might support snapshotting
+		only particular subtrees of the filesystem as well.
+		</para>
+		<para>
+		<command>shadow:snapdirseverywhere</command>は
+		<command>shadow:snapdir</command>に依存し、それは相対パスが
+                必要なことに注意。絶対パスを設定すると、
+                <command>shadow:snapdirseverywhere</command>は無効になる。
+		</para>
+		<para>
+		このオプションは、<command>shadow:basedir</command>
+                とは非互換で、<command>shadow:basedir</command>で
+                設定したものを無効化する事に注意。
+		</para>
+		<para>例: shadow:crossmountpoints = yes</para>
+		<para>既定値: shadow:crossmountpoints = no</para>
+		 </listitem>
+		 </varlistentry>
+
 		</variablelist>
 </refsect1>
 
