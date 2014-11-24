@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2014/11/19
+						2014/11/24
 						日本Sambaユーザー会
 
 
@@ -60,11 +60,27 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 ======================================================================
 4.1 準備
 
+4.1.1 プロキシの設定
+
 XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
 ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
 かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
 使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
 を使う/使わないでかなり差が付きます。
+
+4.1.2 カタログファイルの準備
+
+docs-xml/build配下にあるREADMEファイルに記載のように、catalog.xmlファイルを
+作成します。具体的には、 docs-xml ディレクトリで、
+
+% export XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
+
+と、
+
+% cat $(pwd)/build/catalog.xml.in | sed -e "s|@abs_top_srcdir@|$(pwd)|g" |sed -e
+"s|@abs_top_builddir@|$(pwd)|g"> $(pwd)/build/catalog.xml
+
+を実行します。README中の上記行は間違っていますので、上記のように指定してください。
 
 4.2 Samba 4.x.y
 
