@@ -4,81 +4,85 @@
                  basic="1" advanced="1" wizard="1" developer="1"
 		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-    <para>このオプションはSambaサーバの基本的な動作モードを決定し、
-    <filename moreinfo="none"> smb.conf</filename>ファイル中で最も重要な
-    設定の1つである。</para>
+    <para>このオプションは、Sambaサーバの基本的なモードを制御するもので、
+    <filename moreinfo="none">smb.conf</filename>ファイルで最重要の
+    設定の一つである。</para>
 
-    <para>既定値は<command moreinfo="none">server role = auto</command>で、これは
-    Sambaに<smbconfoption name="security"/>の設定に従って動作するようにさせ、
-    また、もしも設定されていない場合は、どのドメインにも接続しない、単純ファイルサーバ
-    として動作するようにさせる。</para>
+    <para>デフォルトは<command moreinfo="none">server role = auto</command>で、
+    この場合、Sambaは<smbconfoption name="security"/>の設定に従って動作する。
+    未設定の場合は、ドメインに参加しない単純なファイルサーバとして動作する。
+    </para>
 
-    <para>そのほかの設定としては、<command moreinfo="none">server role = standalone</command>
-    または<command moreinfo="none">server role = member server</command>があり、これは、
-    WindowsドメインにSambaを参加させることをサポートし、そのほかには、
-     <command moreinfo="none">server role = domain controller</command>があり、
-    これは、SambaをWindows ドメインコントローラとして動かす。</para>
+    <para>値には、<command moreinfo="none">server role = standalone</command>、
+    SambaのWindowsドメインへの参加をサポートする
+    <command moreinfo="none">server role = member server</command>、
+    Sambaをドメインコントローラとして動作させる
+    <command moreinfo="none">server role = domain controller</command>がある。
+    </para>
 
-    <para>もしも、主に、パスワードなしで(ゲスト共有)を設定する場合には、
+    <para>主としてパスワードなしの共有（ゲスト共有）を使いたい場合は、
     <command moreinfo="none">server role = standalone</command>と
-    <smbconfoption name="map to guest"/>を使うべきである。これは、主に共有プリントサーバで
-    使われる。 </para>
+    <smbconfoption name="map to guest"/>を使うこと。この設定は、主として
+    共有プリントサーバで使われる。 </para>
 		
     <para><anchor id="AUTO"/><emphasis>SERVER ROLE = AUTO</emphasis></para>
 
-    <para>これは、Sambaにおける既定値の server roleであり、Sambaが、server roleを
-    決める<smbconfoption name="security"/>パラメータ(もしも設定されていれば)を確認する
-    ようにさせ、結果として、以前のSambaバージョンと互換のある動作をさせる。</para>
+    <para>これは、デフォルト値であり、Sambaの基本的な動作を設定する際に、
+    （設定されていれば）<smbconfoption name="security"/>パラメータを参照させる
+    ことで、以前のバージョンのSambaとの互換性を確保する。</para>
 
     <para><anchor id="STANDALONE"/><emphasis>SERVER ROLE = STANDALONE</emphasis></para>
 
-    <para>もしも、<smbconfoption name="security"/>が設定されていない場合、これは、
-    Samba セキュリティ設定の既定値である。スタンドアロン動作において、クライアントは最初に
-    このマシンに保持されている正しいユーザー名とパスワード(<smbconfoption name="username map"/>
-    パラメータを使ってマッピングしたものでもよい)で、&quot;ログオン&quot;を行なう必要がある。
-    暗号化パスワード(<smbconfoption name="encrypted passwords"/>パラメータを参照のこと)の使用は、
-    このセキュリティモードでは既定値である。もしも設定されていた場合、<smbconfoption name="user"/>と
-    <smbconfoption name="guest only"/>のようなパラメータは、次に適用され、この接続上で使われる
-    UNIXユーザを変更するかもしれないが、それは、ユーザ認証が正常に終わった後である。</para>
+    <para><smbconfoption name="security"/>が設定されていない場合は、
+    パラメータのデフォルト値が使われる。スタンドアロンで動作する場合、
+    クライアントは、サーバに格納されている有効なユーザ名
+    （<smbconfoption name="username map"/>パラメータによりマッピングしても
+    よい）とパスワードを用いて最初に&quot;ログオン&quot;を行なう必要がある。
+    デフォルトでは、暗号化パスワード（<smbconfoption name="encrypted passwords"/>パラメータを参照のこと）
+    が使われる。<smbconfoption name="user"/>や<smbconfoption name="guest only"/>といった
+    パラメータが設定された場合は、コネクションで使われるUNIXユーザが変更
+    される場合もあるが、この変更はユーザ認証が正常に完了した後で行われる。</para>
 
     <para><anchor id="MEMBER SERVER"/><emphasis>SERVER ROLE = MEMBER SERVER</emphasis></para>
 
-    <para>このモードは、<citerefentry><refentrytitle>net</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry>によってこのマシンをWindowsドメインに
-    追加するために使われた時にのみ正常に動作する。これは、
+    <para>このモードは、
     <smbconfoption name="encrypted passwords"/>が<constant>yes</constant>
-    であることを前提としている。このモードでは、Sambaは、WindowsまたはSambaドメイン
-    コントローラに、Windowsサーバが行うのと全く同じ方法で、ユーザ名/パスワードを
-    渡すことによって認証をしようとする。</para>
+    に設定され、<citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>によってサーバを
+    Windowsドメインに追加した場合のみ適切に動作する。
+    これによりSambaは、WindowsまたはSambaのドメインコントローラに対し、
+    Windowsサーバと全く同じ方法でユーザ名とパスワードを転送することで、
+    認証を行うようになる。</para>
 
-    <para>有効なUNIXユーザは、Sambaが、ファイルへのアクセスをマップするための、有効なUNIX
-    アカウントを使えるようにするため、ドメインコントローラ上のアカウントと
-    同じように、引き続き存在する必要があることに<emphasis>注意</emphasis>。
-    Winbindはこれを提供する事ができる。</para>
+    <para><emphasis>注意</emphasis>: Sambaがファイルへのアクセスに用いる
+    UNIXユーザを割り当てる必要があるため、ドメインコントローラ上の
+    アカウントだけでなく、有効なUNIXユーザの存在も依然として必須である点に
+    注意すること。このUNIXユーザは、Winbindで提供してもよい。</para>
 
     <para><anchor id="PDC"/><emphasis>SERVER ROLE = CLASSIC PRIMARY DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードの動作は、旧来のSambaプライマリドメインコントローラであり、
-    NT-4風のドメインとして、WindowsとSambaクライアントに対して、ドメインログオン
-    サービスを提供する。クライアントはネットワーク越しに、セキュアで信頼された
-    パスを作成するため、ドメインに参加しなければならない。そこには、NetBIOS
-    スコープ(通常、ブロードキャストネットワークまたは単一のWINSサーバによって
-    取り扱われるクライアント群)ごとに単一のPDCが存在しなければならない。
+    <para>このモードでは、Sambaは従来のプライマリドメインコントローラとして
+    動作し、NTドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
+    サービスを提供する。クライアントはネットワーク上にセキュアな信頼済の
+    パスを構築するためにドメインに参加する必要がある。NetBIOSスコープ
+   （通常はブロードキャストネットワーク、または単一のWINSサーバによって
+    名前解決が行われるクライアント群）ごとにPDCは1台のみが存在できる。
     </para>
 
     <para><anchor id="BDC"/><emphasis>SERVER ROLE = NETBIOS BACKUP DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードの動作は、旧来のSambaバックアップドメインコントローラであり、
-    NT-4風のドメインとして、WindowsとSambaクライアントに対して、ドメインログオン
-    サービスを提供する。BDCとして、単一のNetBIOSスコープに対し、冗長なログオン
-    サービスを提供するため、複数のSambaサーバを立てることができるようになる。
+    <para>このモードでは、Sambaは従来のバックアップドメインコントローラとして
+    動作し、NTドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
+    サービスを提供する。BDCにより、単一のNetBIOSスコープ上で、複数のSamba
+    サーバにログオンサービスを提供させて、冗長性を確保することができる
+    ようになる。
     </para>
 
     <para><anchor id="AD-DC"/><emphasis>SERVER ROLE = ACTIVE DIRECTORY DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードの動作は、SambaをActive Directoryドメインコントローラと
-    するものであり、ドメインのWindowsとSambaクライアントにドメインログオン
-    サービスを提供する。このロールは特別な設定を必要とするので、
+    <para>このモードでは、SambaはActive Directoryのドメインコントローラとして
+    動作し、ドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
+    サービスを提供する。このモードでは固有の設定が必要となるため、
     <ulink url="http://wiki.samba.org/index.php/Samba4/HOWTO">Samba4 HOWTO</ulink>
     を参照のこと。</para>
 
