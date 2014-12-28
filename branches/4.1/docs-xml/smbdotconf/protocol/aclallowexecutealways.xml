@@ -1,0 +1,27 @@
+<samba:parameter name="acl allow execute always"
+                 context="S"
+                 type="boolean"
+                 advanced="1" wizard="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+    この真偽値パラメータは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が Windows クライアントから
+    「open for execution」リクエストを受け取った際の動作を制御する。
+    Samba 3.6 以前は、ACL の実行権はチェックされなかったため、クライアントは
+    実行権が付与されていないファイルであっても実行することができた。
+    Samba 4.0 ではこの点が修正され、デフォルトの本パラメータが no に設定
+    された状態では、実行権が付与されていない場合、「open for execution」が
+    失敗するようになった。
+    </para>
+    <para>
+    このパラメータが yes に設定された場合、Samba は「open for execution」
+    の際に実行権をチェックしない。これにより Samba 3.6 の挙動を再現する。
+    これは、以前のバージョンの Samba から 4.0 以上へのアップグレードを円滑に
+    行う上で有用である。この設定は永続的に使用すべきものではなく、あくまで
+    一時的な対処策として扱うべきものである。ACL のパーミッションを修正して、
+    移行期間後には、このパラメータをデフォルトに戻すことが推奨される。
+    </para>
+</description>
+<value type="default">False</value>
+</samba:parameter>
