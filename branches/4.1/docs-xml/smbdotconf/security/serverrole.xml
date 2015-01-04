@@ -4,84 +4,111 @@
                  basic="1" advanced="1" wizard="1" developer="1"
 		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-    <para>このオプションは、Sambaサーバの基本的なモードを制御するもので、
-    <filename moreinfo="none">smb.conf</filename>ファイルで最重要の
-    設定の一つである。</para>
+  <para>
+    このパラメーターは、 Samba サーバーの基本的なモードを制御するもので、
+    <filename moreinfo="none">smb.conf</filename> ファイルで最重要の
+    設定の一つである。
+  </para>
 
-    <para>デフォルトは<command moreinfo="none">server role = auto</command>で、
-    この場合、Sambaは<smbconfoption name="security"/>の設定に従って動作する。
+  <para>
+    デフォルトは、 <command moreinfo="none">server role = auto</command> で
+    ある。この場合、 Sambaは <smbconfoption name="security"/> パラメーター
+    の設定に従って動作する。
     未設定の場合は、ドメインに参加しない単純なファイルサーバとして動作する。
     </para>
 
-    <para>値には、<command moreinfo="none">server role = standalone</command>、
-    SambaのWindowsドメインへの参加をサポートする
-    <command moreinfo="none">server role = member server</command>、
+  <para>
+    これ以外の値には、
+    <command moreinfo="none">server role = standalone</command> 、
+    Samba の Windows ドメイン参加をサポートする
+    <command moreinfo="none">server role = member server</command> 、
     Sambaをドメインコントローラとして動作させる
-    <command moreinfo="none">server role = domain controller</command>がある。
+    <command moreinfo="none">server role = domain controller</command> がある。
     </para>
 
-    <para>主としてパスワードなしの共有（ゲスト共有）を使いたい場合は、
-    <command moreinfo="none">server role = standalone</command>と
-    <smbconfoption name="map to guest"/>を使うこと。この設定は、主として
-    共有プリントサーバで使われる。 </para>
+  <para>
+    パスワードなしの共有 (ゲスト共有) の作成が主目的である場合は、
+    <command moreinfo="none">server role = standalone</command> と
+    <smbconfoption name="map to guest"/> を使用すること。
+    この設定は、共有プリンターサーバーで使用することが多い。
+  </para>
 		
     <para><anchor id="AUTO"/><emphasis>SERVER ROLE = AUTO</emphasis></para>
 
-    <para>これは、デフォルト値であり、Sambaの基本的な動作を設定する際に、
-    （設定されていれば）<smbconfoption name="security"/>パラメータを参照させる
-    ことで、以前のバージョンのSambaとの互換性を確保する。</para>
+  <para>
+    これはデフォルト値であり、Sambaの基本的な動作を設定する際に、
+    (設定されていれば) <smbconfoption name="security"/> パラメータを参照させる
+    ことで、以前のバージョンの Samba との互換性を確保する。
+  </para>
 
     <para><anchor id="STANDALONE"/><emphasis>SERVER ROLE = STANDALONE</emphasis></para>
 
-    <para><smbconfoption name="security"/>が設定されていない場合は、
-    パラメータのデフォルト値が使われる。スタンドアロンで動作する場合、
-    クライアントは、サーバに格納されている有効なユーザ名
-    （<smbconfoption name="username map"/>パラメータによりマッピングしても
-    よい）とパスワードを用いて最初に&quot;ログオン&quot;を行なう必要がある。
-    デフォルトでは、暗号化パスワード（<smbconfoption name="encrypted passwords"/>パラメータを参照のこと）
-    が使われる。<smbconfoption name="user"/>や<smbconfoption name="guest only"/>といった
-    パラメータが設定された場合は、コネクションで使われるUNIXユーザが変更
-    される場合もあるが、この変更はユーザ認証が正常に完了した後で行われる。</para>
+  <para>
+    <smbconfoption name="security"/> も設定されていない場合は、
+    これが Samba のデフォルトの設定となる。スタンドアロンで動作する場合、
+    クライアントはサーバー上で
+    有効なユーザー名 (<smbconfoption name="username map"/> により、
+    別のユーザー名からマッピング可能) とパスワードによって「ログオン」する
+    ことが求められる。このセキュリティモードでは、暗号化パスワード 
+    (<smbconfoption name="encrypted passwords"/> パラメーターを参照) が
+    デフォルトである。 <smbconfoption name="user"/> や
+    <smbconfoption name="guest only"/> といったパラメーターを設定する
+    ことで、コネクションで使用する UNIX ユーザーを変更することもできるが、
+    この処理はユーザーが適切に認証された後に行われる。
+  </para>
 
     <para><anchor id="MEMBER SERVER"/><emphasis>SERVER ROLE = MEMBER SERVER</emphasis></para>
 
-    <para>このモードは、
-    <smbconfoption name="encrypted passwords"/>が<constant>yes</constant>
-    に設定され、<citerefentry><refentrytitle>net</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry>によってサーバを
-    Windowsドメインに追加した場合のみ適切に動作する。
-    これによりSambaは、WindowsまたはSambaのドメインコントローラに対し、
-    Windowsサーバと全く同じ方法でユーザ名とパスワードを転送することで、
-    認証を行うようになる。</para>
+  <para>
+    このモードは、 <smbconfoption name="encrypted passwords"/>
+    を <constant>yes</constant> に設定し、 
+    <citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> によって、サーバーが Windows 
+    ドメインに参加しない限り適切に動作しない。併せて、
+    <smbconfoption name="encrypted passwords"/> パラメーターが
+    <constant>yes</constant> に設定されている必要がある。
+    このモードの Samba は、 Windows サーバーと全く同じ方式で、
+    Windows や Samba のドメインコントローラーにユーザー名と
+    パスワードを送信することで、認証を試行する。
+  </para>
 
-    <para><emphasis>注意</emphasis>: Sambaがファイルへのアクセスに用いる
-    UNIXユーザを割り当てる必要があるため、ドメインコントローラ上の
-    アカウントだけでなく、有効なUNIXユーザの存在も依然として必須である点に
-    注意すること。このUNIXユーザは、Winbindで提供してもよい。</para>
+  <para>
+    <emphasis>注意</emphasis>: 
+    Samba はファイルにアクセスする際に有効な UNIX ユーザーを必要と
+    するため、ドメインコントローラー上のアカウントだけではなく、
+    有効な UNIX ユーザーも依然として必要である。
+    この UNIX ユーザは、 Winbind で提供することもできる。
+  </para>
 
     <para><anchor id="PDC"/><emphasis>SERVER ROLE = CLASSIC PRIMARY DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードでは、Sambaは従来のプライマリドメインコントローラとして
-    動作し、NTドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
+  <para>
+   このモードの Samba は、従来のプライマリドメインコントローラーとして
+    動作し、 NT 形式のドメインの Windows および Samba クライアントに対して、
+    ドメインログオン
     サービスを提供する。クライアントはネットワーク上にセキュアな信頼済の
-    パスを構築するためにドメインに参加する必要がある。NetBIOSスコープ
-   （通常はブロードキャストネットワーク、または単一のWINSサーバによって
-    名前解決が行われるクライアント群）ごとにPDCは1台のみが存在できる。
-    </para>
+    パスを構築するためにドメインに参加する必要がある。 NetBIOS スコープ
+   （通常はブロードキャストネットワーク、または単一の WINS サーバーによって
+    名前解決が行われるクライアント群）ごとに存在できる PDC は 1 台のみである。
+  </para>
 
     <para><anchor id="BDC"/><emphasis>SERVER ROLE = NETBIOS BACKUP DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードでは、Sambaは従来のバックアップドメインコントローラとして
-    動作し、NTドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
-    サービスを提供する。BDCにより、単一のNetBIOSスコープ上で、複数のSamba
-    サーバにログオンサービスを提供させて、冗長性を確保することができる
-    ようになる。
-    </para>
+  <para>
+    このモードの Samba は、従来のバックアップドメインコントローラーとして
+    動作し、 NT 形式のドメインの Windows および Samba クライアントに対して、
+    ドメインログオン
+    サービスを提供する。 BDC により、単一の NetBIOS スコープ上で、複数の
+    Samba サーバーにログオンサービスを提供させ、冗長性を確保することができる
+    ようになった。
+  </para>
 
     <para><anchor id="AD-DC"/><emphasis>SERVER ROLE = ACTIVE DIRECTORY DOMAIN CONTROLLER</emphasis></para>
 
-    <para>このモードでは、SambaはActive Directoryのドメインコントローラとして
-    動作し、ドメインのWindowsおよびSambaクライアントに対して、ドメインログオン
+  <para>
+    このモードの Samba は、 Active Directory のドメインコントローラーとして
+    動作し、ドメインの Windows および Samba クライアントに対して、
+    ドメインログオン
     サービスを提供する。このモードでは固有の設定が必要となるため、
     <ulink url="http://wiki.samba.org/index.php/Samba4/HOWTO">Samba4 HOWTO</ulink>
     を参照のこと。</para>
