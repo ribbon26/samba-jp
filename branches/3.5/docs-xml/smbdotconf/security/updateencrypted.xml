@@ -4,33 +4,38 @@
 		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
     <para> この真偽値パラメーターにより、
-    平文パスワードでログインしたユーザーのログオン時に、
-    そのユーザーの暗号化(ハッシュ化)パスワードが自動的に smbpasswd ファイル中に格納されるようになる。
-    このオプションにより、暗号化パスワード認証を有効にする際、
-    ユーザーに smbpasswd へのパスワード再入力を強制することなく、
+    ユーザーが平文パスワードを使用してログオンした際に、
+    そのユーザーの暗号化 (ハッシュ化) パスワードが自動的に smbpasswd 
+    ファイル中に生成されるようになる。
+    このパラメーターにより、暗号化パスワード認証を有効にする際、
+    ユーザーに smbpasswd によるパスワードの再設定を強いることなく、
     平文パスワード認証
-    (平文パスワードによるユーザー認証情報がネットワーク上を流れて UNIX
-    側のアカウントデータベースで照会される)から暗号化パスワード認証
+    (平文パスワードによるユーザー認証情報がネットワーク上を転送され、 UNIX
+    側のアカウントデータベースで照会される) から暗号化パスワード認証
     (SMB のチャレンジアンドレスポンス認証) への移行を行うことが可能になる。
-    これは便利なオプションで、
-    ある程度の時間をかけて徐々に暗号化パスワードへと移行することを可能にする。
-    すべてのユーザーが smbpasswd ファイルに暗号化パスワードを格納したら、
+    これは、
+    ある程度の時間をかけて徐々に暗号化パスワードへと移行することを可能にする
+    便利なパラメーターである。
+    すべてのユーザーが smbpasswd ファイルに暗号化パスワードを保持した時点で、
     このパラメーターを <constant>no</constant> に設定すべきだろう。
-    </para>
+  </para>
 
-    <para>
-    <para>このパラメーターは
+  <para>
+    このパラメーターは
     <smbconfoption name="encrypt passwords"/>
-    が <constant>no</constant> に設定されている時のみ動作する。</para>
-    <smbconfoption name="encrypt passwords">Yes</smbconfoption> がデフォルトであるため、
+    が <constant>no</constant> に設定されている時のみ動作する。
+    デフォルトは <smbconfoption name="encrypt passwords">yes</smbconfoption> 
+    であるため、
     <smbconfoption name="update encrypted"/> を動作させるには
     このパラメーターを <constant>no</constant> に設定する必要があることに注意。
     </para>
 
-    <para> このパラメーターが有効になっている場合であっても、
-    <command moreinfo="none">smbd</command> に接続するユーザーは正しいパスワードを入力して、
-    (smbpasswdファイル中の)暗号化されたパスワードを更新する必要がある。
-    </para>
+  <para>
+    <smbconfoption name="encrypt passwords"/> が yes になっている場合でも、
+    <command moreinfo="none">smbd</command> に認証されたユーザーが
+    ハッシュ化された  (smbpasswd ファイル中の) パスワードを
+    更新するためには、正しいパスワードを入力する必要がある。
+  </para>
 </description>
 <value type="default">no</value>
 </samba:parameter>
