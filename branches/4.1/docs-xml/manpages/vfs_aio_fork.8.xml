@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_aio_fork</refname>
-	<refpurpose>Samba vfsにおける非同期I/Oの実装</refpurpose>
+	<refpurpose>非同期 I/O を実装する</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -23,27 +23,34 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>説明</title>
-
-	<para>このVFSモジュールは
+  <title>説明</title>
+  <para>
+    この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para><command>aio_fork</command> VFS モジュールは、システムレベルのPOSIX AIO
-	インタフェースが不十分なものであるプラットフォーム上で、Samba用の非同期I/Oを
-	有効にする。Posix AIO は、きつい制限がある。たとえば、あるLinuxバージョン上では
-	それが使うリアルタイムシグナルは、高負荷の時には動作しない。その他のシステムでは、
-	特別なカーネルモジュールがロードされた時にのみAIOが使えるか、あるいは、システム
-	全体で一定量の非同期要求がスケジュールされた時にのみに使える。glibc(ほとんどの
-	Linuxシステム)ベースのシステムは、ファイル記述子あたり単一の未処理要求のみ許可
-	される。 </para>
+  <para>
+    <command>aio_fork</command> VFS モジュールは、 システムの POSIX AIO
+    インターフェイスに問題があるプラットフォームで Samba の非同期 I/O を
+    有効にするためのものである。
+    POSIX AIO は、致命的な制約に悩まされることが多い。たとえば、ある
+    バージョンの Linux では、高負荷な環境でリアルタイムのシグナルを
+    使用すると、問題が発生する。別のシステムでは、 AIO の使用に際して
+    特殊なカーネルモジュールのロードが必要であったり、システム全体で
+    スケジュールされている非同期リクエスト数に制約があったりする。
+    glibc ベースのシステム (大半の Linux システム) では、ファイル記述子
+    あたり、 1 つの処理待ちリクエストしか許可されない。
+  </para>
 
-	<para>これらすべての制限を回避するために、aio_folkモジュールが書かれた。
-	これは、読み出しと書き込み呼び出しを非同期的に作成するために、
-	内部Posix AIOインタフェースの代わりにフォークされたヘルパプロセスを使う。
-	これはパラメーターを持たず、必要に応じて非同期要求が来たとき、ヘルパプロセスを
-	作成する。アイドル状態のヘルパプロセスは30秒ごとに消滅する。
-	</para>
+  <para>
+    こうした制約を回避するために、 aio_folk モジュールが作られた。
+    このモジュールは、読み取りと書き込みの呼び出しを非同期に生成するため、
+    内部の POSIX AIO インターフェイスに代わって、フォークされたヘルパー
+    プロセスを使用する。
+    このモジュールにパラメーターはなく、非同期リクエストが行われた際に、
+    必要に応じてヘルパープロセスを生成する。
+    アイドル状態のヘルパープロセスは 30 秒で消滅する。
+  </para>
 
 	<para>このモジュールはスタック可能である。</para>
 
@@ -82,10 +89,11 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 3.5.12 - 4.1.12 対応のものである。</para>	
+        <para>このドキュメントは、Samba 3.5.12 - 4.1.14 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		</itemizedlist>	
         によって行なわれた。</para>
 </refsect1>

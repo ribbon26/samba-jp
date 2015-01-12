@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_aio_linux</refname>
-	<refpurpose>Linux kernel aio コールを利用するSamba vfs中での非同期I/Oの実装</refpurpose>
+	<refpurpose>Linux カーネルの AIO 呼び出しを用いて非同期 I/O を実装する</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -29,30 +29,40 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para><command>aio_linux</command> VFS モジュールは、POSIX AIOインタフェースを
-	使わない、kernel AIO コールが有効なLinuxカーネル上でSamba用の非同期I/Oを有効に
-	する。Posix AIO はきつい制限がある。たとえば、あるLinuxバージョン上では
-        それが使うリアルタイムシグナルは、高負荷の時には動作しない。glibc(ほとんどの
-        Linuxシステム)ベースのシステムは、glibc実装を使うシステム上でPosix AIOが本質的に
-	無効になってしまう、ファイル記述子あたり単一の未処理要求のみ許可される。</para>
+  <para>
+    <command>vfs_aio_linux</command> VFS モジュールは、 POSIX AIO インター
+    フェイスを使用せず、カーネル AIO 呼び出しが有効な Linux カーネル上で
+    Samba の非同期 I/O を有効にするためのものである。
+    POSIX AIO は、致命的な制約に悩まされることが多い。たとえば、ある
+    バージョンの Linux では、高負荷な環境でリアルタイムのシグナルを
+    使用すると、問題が発生する。別のシステムでは、 AIO の使用に際して
+    特殊なカーネルモジュールのロードが必要であったり、システム全体で
+    スケジュールされている非同期リクエスト数に制約があったりする。
+    glibc ベースのシステム (大半の Linux システム) では、ファイル記述子
+    あたり、 1 つの処理待ちリクエストしか許可されない。
+  </para>
 
-	<para>これらすべての制限を回避するために、aio_linux モジュールが書かれた。
-	これは、非同期に、読み出しと書き込み呼び出しを許可するため、内部の POSIX AIO
-	インタフェースの代わりに Linux kernel AIO インタフェースを使う。
-	128イベントのキューサイズは既定値として使われる。この制限を変更するためには、
-	以下で述べる"aio num events"を設定する。
+  <para>
+    こうした制約を回避するために、 aio_linux モジュールが作られた。
+    このモジュールは、読み取りと書き込みの呼び出しを非同期に処理するため、
+    内部の POSIX AIO インターフェイスに代わって、Linux カーネルの AIO
+    インターフェイスを使用する。
+    イベントのキューサイズは 128 がデフォルトである。この制限を変更する
+    際には、以下で説明する aio num events パラメーターを設定すること。
+  </para>
+
+	<para>
+    このモジュールを有効にする際には、 smb.conf パラメーターの 
+    <command>aio read size</command> と <command>aio write size</command>
+    も適切に設定する必要がある。
 	</para>
 
 	<para>
-	smb.conf パラメーター<command>aio read size</command>と
-	<command>aio write size</command>は、このモジュールを有効にするために、
-	適切に設定することも必要であるということに注意。
-	</para>
-
-	<para>このモジュールは、Samba VFS pread/pwrite インタフェースがスレッドセーフで
-	ないため、他のモジュールスタックの後に配置しなければならない。このモジュールは
-	直接preadとpwriteシステムコールを呼び出し、Samba VFS pread と pwriteインタフェースを
-	使わないことに注意。</para>
+    このモジュールは、 Samba VFS の pread と pwrite インターフェイスが
+    スレッドセーフでないため、モジュールスタックの最後に配置すること。
+    このモジュールは、 pread と pwrite システムコールを直接呼び出し、
+    Samba VFS の pread と pwrite インターフェイスは使用しない。
+  </para>
 
 </refsect1>
 
@@ -80,10 +90,11 @@
 		<varlistentry>
 		<term>aio_linux:aio num events = INTEGER</term>
 		<listitem>
-		<para>未処理のIO要求を制限するために使われる、イベントキューの
+		<para>処理待ちの I/O リクエストを制限するための、
+                イベントキューの
 		最大値を設定する。
 		</para>
-		<para>既定値は 128 である。</para>
+		<para>デフォルトは 128 である。</para>
 		</listitem>
 		</varlistentry>
 
@@ -108,10 +119,11 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 4.0.6 - 4.1.12 対応のものである。</para>	
+	<para>このマニュアルページは、Samba 4.0.6 - 4.1.14 対応のものである。</para>	
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		</itemizedlist>	
         によって行なわれた。</para>
 </refsect1>

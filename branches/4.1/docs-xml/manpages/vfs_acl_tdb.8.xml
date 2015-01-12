@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_acl_tdb</refname>
-	<refpurpose>tdbファイルにNTFSのACLを保存する</refpurpose>
+	<refpurpose>tdb ファイルに NTFS のアクセス許可を保存する</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -30,13 +30,14 @@
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para><command>vfs_acl_tdb</command> VFSモジュールは、
-	tdbファイルにNTFSのアクセスコントロールリスト（ACL)を格納する。
-	これは、Sambaサーバー上でWindows ACLの完全なマッピングを有効にする。
+	tdb ファイルに NTFS のアクセス許可 (ACL) を格納する。
+	これにより、 Samba サーバーで NTFS のアクセス許可を
+	完全に実装することが可能となる。
 	</para>
 
 	<para>
-	ACLの設定は
-	<filename>$LOCKDIR/file_ntacls.tdb</filename>中に格納される。
+	アクセス許可の設定は
+	<filename>$LOCKDIR/file_ntacls.tdb</filename> 中に格納される。
 	</para>
 
 	<para>このモジュールはスタック可能である。</para>
@@ -52,24 +53,16 @@
                <term>acl_tdb:ignore system acls = [yes|no]</term>
                <listitem>
                <para>
-               When set to <emphasis>yes</emphasis>, a best effort mapping
-               from/to the POSIX ACL layer will <emphasis>not</emphasis> be
-               done by this module. The default is <emphasis>no</emphasis>,
-               which means that Samba keeps setting and evaluating both the
-               system ACLs and the NT ACLs. This is better if you need your
-               system ACLs be set for local or NFS file access, too. If you only
-               access the data via Samba you might set this to yes to achieve
-               better NT ACL compatibility.</para><para>
-	       <emphasis>yes</emphasis>に設定した場合、POSIX ACLレイヤとの間での
-	       最適なマッピングは、このモジュールによっては<emphasis>完了しない</emphasis>。
-	       既定値は<emphasis>no</emphasis>であり、この場合、Sambaは設定
-	       を保持し、システムACLとNT ACLの両方を評価する。もしも、
-	       ローカルあるいはNFSファイルアクセスのために、システムACLを
-	       設定する必要がある場合には、これはより良い方法である。もしも、データを
-	       Samba経由でのみアクセスするのであれば、よりNT ACLの互換性を
-	       高めるために、これをyesに設定しても良いだろう。
-               </para>
-
+    このパラメーターが <emphasis>yes</emphasis> に設定された場合、
+    このモジュールは、可能な範囲で実施しているシステムの ACL とのマッピング
+    処理を<emphasis>無効化</emphasis>する。デフォルトの <emphasis>no
+    </emphasis> の場合、 Samba はシステムの ACL と NTFS のアクセス許可の
+    両方に対して設定を行い、またアクセス可否の確認を実施する。
+    ローカルまたは NFS 経由でのファイルアクセスのために、システムの ACL も
+    設定しておく必要がある場合は、この設定が望ましいであろう。
+    Samba 経由以外でファイルアクセスを行わない場合は、このパラメーターを
+    yes にすることで、 NTFS のアクセス許可との互換性を高めることができる。
+  </para>
                </listitem>
                </varlistentry>
        </variablelist>
@@ -80,16 +73,17 @@
 
         <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
         Tridgell によって作成された。現在 Samba は Samba Team に
-        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        よって、Linux カーネルの開発と同様のオープンソースプロジェクト
         として開発が行なわれている。</para>
 </refsect1>
 
 <refsect1>
         <title>日本語訳</title>
-        <para>このドキュメントは、Samba 3.6.3 - 4.1.12 に対応する。</para>
+        <para>このドキュメントは、Samba 3.6.3 - 4.1.14 に対応する。</para>
     <para>このドキュメントの翻訳は
         <itemizedlist>
-        <listitem><para>太田俊哉 (ribbon@samba.grjp)</para></listitem>
+        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+        <listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
         </itemizedlist>
         によって行なわれた。</para>
 </refsect1>
