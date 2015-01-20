@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_crossrename</refname>
-	<refpurpose>ファイルシステムをまたがるファイルの改名をサーバーサイドで行う</refpurpose>
+	<refpurpose>ファイルシステム間のファイルのリネームをサーバー上で行う</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -25,38 +25,45 @@
 <refsect1>
 	<title>説明</title>
 
-	<para>このVFSモジュールは
+	<para>この VFS モジュールは、
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para><command>vfs_crossrename</command> VFS モジュールは、
-	ソースとターゲットが物理的に別のデバイスにあったとしても、改名操作を
-	行えるようにする。エクスプローラーでの"移動"は、通常、単一の共有か
-	デバイス内においては、改名操作である。通常そのような改名操作は
-	NT_STATUS_NOT_SAME_DEVICEを返し、クライアントは手動でのコピーと
+  <para>
+    <command>vfs_crossrename</command> VFS モジュールは、
+    リネーム元とリネーム先が物理的に別のデバイスにあったとしても、リネーム
+    処理を実行できるようにする。エクスプローラーでの「移動」は、同一の
+    共有やデバイス内に閉じて行われる場合、通常リネーム処理である。
+    通常、このようなリネーム処理は、 NT_STATUS_NOT_SAME_DEVICE が返却され、
+    クライアントは手動でコピーと
 	削除操作を行うことにより移動を行わなければならない。もしもコピーに
-	よる改名が、サーバーによって行われた場合、これは、より効率的である。
-	vfs_crossrenameは、サーバーサイド、デバイス間で改名操作を行うことを
-	試みる。</para>
+    よるリネーム操作をサーバー上で行うことができれば、非常に効率的である。
+    vfs_crossrename は、サーバー上のデバイス間でのリネーム操作を
+    試行する。
+  </para>
 
-	<para>しかし、現在の所、解決できない制限事項がある:</para>
+  <para>現在の所、このモジュールでは対応できない制限事項がある:</para>
 
 	<variablelist>
 		<varlistentry>
-		  <para>ファイルのACLが保存されない</para>
+		  <para>ファイルの ACL が保持されない</para>
 		</varlistentry>
 		<varlistentry>
-		  <para>EAのメタデータが保存されない</para>
+		  <para>EA のメタデータが保持されない</para>
 		</varlistentry>
 		<varlistentry>
-		  <para>全部のサブディレクトリの改名は再帰的に行えず、このような
-		  場合、引き続きSTATUS_NOT_SAME_DEVICEが返り、クライアントに
-		  何をすべきかを伝える。</para>
+    <para>
+      サブディレクトリ配下全体のリネーム操作を再帰的に行うことはできない。
+      このような場合は、従来どおり STATUS_NOT_SAME_DEVICE が返却され、
+      クライアント側に対応が委ねられる。
+    </para>
 		</varlistentry>
 		<varlistentry>
-		  <para>非常に大量のファイルの改名操作は、クライアントが改名
-		  操作が速やかに終了することを期待しているため、クライアントを
-		  ハングさせる可能性がある。</para>
+    <para>
+      大量のファイルのリネーム操作は、クライアントが
+      リネーム操作の即座完了を期待しているため、
+      結果としてハングアップを引き起こす可能性がある。
+    </para>
 		</varlistentry>
 	</variablelist>
 
@@ -72,21 +79,23 @@
 		<varlistentry>
 		<term>crossrename:sizelimit = BYTES</term>
 		<listitem>
-		<para>サーバーサイド、デバイス間の改名は、タイムアウトを防ぐ
-		ために、MiB単位での定義された大きさ以下のファイルサイズの
-		ファイルについてのみ行われる。既定値のサイズ制限値は
-		20(MiB)である。
-		</para>
+    <para>
+      サーバー上のデバイス間のリネーム操作は、タイムアウトを防止する
+      ため、 MiB 単位で指定されたファイルサイズ以下のファイルについてのみ
+      行われる。デフォルトのサイズは 20 (MiB) である。
+    </para>
 		</listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
-	<title>設定例</title>
+  <title>設定例</title>
 
-	<para>50MBを超す、すべてのファイルに対し、共有内の、サーバーサイド、
-	デバイス間の改名を指定する例:</para>
+  <para>
+    50MB 以下のファイルに対して、同一共有内に閉じた、サーバー上のデバイス
+    間でのリネーム操作を実施する:
+  </para>
 
 <programlisting>
         <smbconfsection name="[testshare]"/>
@@ -97,9 +106,10 @@
 </refsect1>
 
 <refsect1>
-	<title>バージョン</title>
-	<para>このマニュアルページはSamba 3.6.0 のために修正された。
-	</para>
+  <title>バージョン</title>
+  <para>
+    このヘルプは Samba システム 4.0.0 に対応している。
+  </para>
 </refsect1>
 
 <refsect1>
@@ -114,10 +124,12 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 4.0.10 - 4.1.12 に対応する。</para>
+	<para>このマニュアルページは、Samba 4.0.10 - 4.1.14 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+
 		</itemizedlist>	
         によって行なわれた。</para>
 </refsect1>
