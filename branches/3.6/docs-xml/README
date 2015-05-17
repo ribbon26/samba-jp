@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2013/12/29
+						2015/05/17
 						日本Sambaユーザー会
 
 
@@ -58,24 +58,48 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 
 4. ビルド方法
 ======================================================================
-4.1 Samba 4.0.x
+4.1 準備
 
-(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
+4.1.1 プロキシの設定
+
+XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
+ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
+かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
+使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
+を使う/使わないでかなり差が付きます。
+
+4.1.2 カタログファイルの準備
+
+docs-xml/build配下にあるREADMEファイルに記載のように、catalog.xmlファイルを
+作成します。具体的には、 docs-xml ディレクトリで、
+
+% export XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
+
+と、
+
+% cat $(pwd)/build/catalog.xml.in | sed -e "s|@abs_top_srcdir@|$(pwd)|g" |sed -e
+"s|@abs_top_builddir@|$(pwd)|g"> $(pwd)/build/catalog.xml
+
+を実行します。README中の上記行は間違っていますので、上記のように指定してください。
+
+4.2 Samba 4.x.y の場合
+
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
 
   $ cd /srv/build
-  $ tar xzf /srv/source/samba-4.0.X.tar.gz
+  $ tar xzf /srv/source/samba-4.X.Y.tar.gz
 
 (2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
 
   $ cd /srv/build
-  $ mkdir samba-ja-docs-4.0.X-Z
-  $ cd /srv/source/samba-ja-docs-4.0.X-Z
-  $ tar xzf samba-ja-docs-4.0.X-Z.tar.gz
+  $ mkdir samba-ja-docs-4.X.Y-Z
+  $ cd /srv/source/samba-ja-docs-4.X.Y-Z
+  $ tar xzf samba-ja-docs-4.X.Y-Z.tar.gz
 
 (3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
     リンクを翻訳文書ディレクトリ内に作成
 
-  $ cd /srv/source/samba-ja-docs-4.0.X-Z/docs-xml
+  $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
   $ ln -s /srv/build/samba-4.0.X-Z/docs-xml samba-docs-xml
 
 (4) ビルドを実行
@@ -85,9 +109,9 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
   $ make htmlman  (html化したmanpagesの作成)
   $ make html     (Samba3-HOWTO等のhtml文書の作成)
 
-4.2 Samba 3.5.x および 3.6.x
+4.3 Samba 3.5.x および 3.6.x の場合
 
-(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
 
   $ cd /srv/build
   $ tar xzf /srv/source/samba-3.X.Y.tar.gz
@@ -112,7 +136,7 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
   $ make htmlman3  (html化したmanpagesの作成)
   $ make html      (Samba3-HOWTO等のhtml文書の作成)
 
-4.3 Samba 3.4.x以前
+4.4 Samba 3.4.x以前の場合
 
   svnからまずsetup3x.shダウンロードしてください。次に、オリジナルのSamba-
 3.x.y のベースディレクトリに移してください。その後、この
@@ -124,7 +148,7 @@ export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.x
 
 を実行してください。その後、make htmlman3,make manpages3を実行してください。
 
-3.5.x 以降はOpenSUSE 12.2,12.3,13.1m3,CentOS 6.4でしかテストしていません。なお、左記
+Samba 3.5.x 以降はopenSUSE 12.2-13.2,CentOS 6.4でしかテストしていません。なお、左記
 すべてのバージョンでテストしているわけではありません。
 
 
@@ -419,6 +443,98 @@ export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.x
 		       
 2013/12/29 Ver 3.6.22-1 3.6.22対応
 	       	       ntlm_auth.xml,idmap_ad.8.xml,vfs_crossrename.8.xml修正
+
+2014/01/08 Ver 4.0.14-1 4.0.14対応
+	       	       pam_winbind.conf.5.xml,vfs_crossrename.8.xml,
+		       smbdotconf/security/validusers修正
+
+2014/06/20 Ver 4.1.8-1 4.1.8対応
+	       	       build/DTD/samba.entities修正,
+	       	       dbwrap_tool.1.xml,idmap_autorid.8.xml,net.8.xml,nmbd.8.xml,
+		       nmblookup.1.xml,ntlm_auth.1.xml,pdbedit.8.xml,profiles.1.xml,
+		       rpcclient.1.xml,samba-tool.8.xml,samba-regedit.8.xml,
+		       samba.7.xml,samba.8.xml,sharesec.1.xml,smb.conf.5.xml,
+		       smbcacls.1.xml,smbclient.1.xml,smbcontrol.1.xml,
+		       smbcquotas.1.xml,smbd.8.xml,smbget.1.xml,smbpasswd.8.xml,
+		       smbstatus.1.xml,smbta-util.8.xml,smbtree.1.xml,
+		       testparm.1.xml,vfs_catia.8.xml,vfs_full_audit.8.xml,
+		       vfs_gpfs.8.xml,vfs_shadow_copy2.8.xml,
+		       vfs_smb_traffic_analyzer.8.xml,vfstest.1.xml,wbinfo.1.xml,
+		       winbindd.8.xml修正
+		       idmap_rfc2307.8.xml,samba-regedit.8,vfs_btrfs.8.xml
+		       vfs_linux_xfs_sgid.8.xml,vfs_syncops.8.xml,
+		       vfs_zfsacl.8.xml追加
+		       swat.8.xml削除
+		       base/bindinterfacesonly.xml,
+		       domain/machinepasswordtimeout.xml,
+		       filename/hideunreadable.xml,filename/maparchive.xml,
+		       filename/maphidden.xml,filename/mapreadonly.xml,
+		       filename/mapsystem.xml,filename/storedosattirbutes.xml,
+		       ldap/ldapadmindn.xml,misc/rpcdaemon.xml,
+		       printing/showaddprinterwizard.xml,
+		       protocol/clientminprotocol.xml,
+		       protocol/serverminprotocol.xml,
+		       security/kerberosmethod.xml,
+		       security/privatedir.xml,
+		       tuning/socketoptions.xml,tuning/usentdb.xml,
+		       vfs/ntvfshandler.xml,
+		       Samba3-HOWTO/TOSHARG-Diagnosis.xml,
+		       Samba3-HOWTO/TOSHARG-ServerType.xml,
+		       Samba3-HOWTO/TOSHARG-TDBFiles.xml,
+		       Samba3-Developers-Guide/unix-smb.xml修正
+		       misc/setdirectory.xml,security/passwordlevel.xml削除
+		       printing/spoolssarchitecture.xml 追加
+
+2014/06/20 Ver 4.1.10-1 4.1.10対応
+	       	       net.8.xml修正
+
+2014/10/02 Ver 4.1.12-1 4.1.12対応
+	       	      winbindrequesttimeout.xml 追加
+		      net.8.xml修正
+
+2015/01/06 Ver 4.1.13-1 4.1.13対応
+	              domain/spnupdatecommand.xml,
+		      protocol/aclallowexecutealways.xml 追加
+	       	      dbwrap_tool.1.xml,
+		      locking/kernelsharemodes.xml,
+		      misc/nbtclientsocketaddress.xml,
+		      vfs/ntvfshandler.xml,
+		      protocol/durablehandles.xml,protocol/nbtport.xml,
+		      protocol/dgramport.xml,protocol/clientminprotocol.xml,
+		      protocol/clientmaxprotocol.xml,
+		      protocol/dcerpcendpointservers.xml,protocol/cldapport.xml,
+		      protocol/serverminprotocol.xml,
+		      protocol/servermaxprotocol.xml,
+		      protocol/rpcbigendian.xml,protocol/unicode.xml,
+		      protocol/webport.xml,
+		      domain/dnsforwarder.xml,domain/dnsupdatecommand.xml,
+		      domain/rndccommand.xml,
+		      security/ntpsigndsocketdirectory.xml,
+		      security/krb5port.xml,security/privatedir.xml,
+		      security/kpasswdport.xml,security/sambakcccommand.xml,
+		      security/serverrole.xml,security/tlsdhparamsfile.xml,
+		      security/tlskeyfile.xml,security/tlscrlfile.xml,
+		      security/tlscertfile.xml,security/tlscafile.xml,
+		      security/tlsenabled.xml,security/usernamemapcachetime.xml,
+		      tuning/usentdb.xml,
+		      base/serverservices.xml,base/sharebackend.xml
+		      winbind/winbinddprivilegedsocketdirectory.xml,
+		      winbind/winbindmaxclients.xml,
+		      winbind/winbindmaxdomainconnections.xml,
+		      winbind/winbindrequesttimeout.xml,
+		      winbind/winbindsealedpipes.xml,
+		      winbind/winbinddsocketdirectory.xml
+		      修正
+2015/01/06 Ver 4.0.23-1 4.0.23対応
+	       	      protocol/aclallowexecutealways.xml 追加
+	       	      misc/setdirectory.xml,
+		      winbind/winbindrequesttimeout.xml,
+		      protocol/unicode.xml,smbdotconf/protocol/webport.xml,
+		      security/tlscertfile.xml,security/tlscafile.xml,
+		      security/tlsenabled.xml,security/tlsdhparamsfile.xml,
+		      security/tlskeyfile.xml,security/tlscrlfile.xml
+2015/05/17 Ver 3.6.25-1 3.6.25対応
+	              数多くのドキュメントを修正。3.6系最終版。
 
 ======================================================================
 
