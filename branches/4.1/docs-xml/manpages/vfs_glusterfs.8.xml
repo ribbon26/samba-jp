@@ -6,7 +6,7 @@
 	<refentrytitle>vfs_glusterfs</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
-	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
 	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
@@ -14,7 +14,7 @@
 <refnamediv>
 	<refname>vfs_glusterfs</refname>
 	<refpurpose>
-		Utilize features provided by GlusterFS
+		GlusterFSによって提供される機能の利用
 	</refpurpose>
 </refnamediv>
 
@@ -25,29 +25,29 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
+	<title>説明</title>
 
-	<para>This VFS module is part of the
+	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> suite.</para>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para>
 		GlusterFS
 		(<ulink url="http://www.gluster.org/">http://www.gluster.org</ulink>)
-		is an Open Source clustered file system capable of scaling to
-		several peta-bytes.  With its FUSE based native client,
-		GlusterFS is available as a POSIX compliant file system and can
-		hence be shared by Samba without additional steps.
+		は、オープンソースのクラスタファイルシステムであり、ペタバイト
+		まで容量を拡張できる。FUSEベースのネイティブなクライアントを
+		使うと、GluterFSはPOSIX互換のファイルシステムとして有効となり、
+		そのため、追加の作業なしに、Sambaによって共有できる。
 	</para>
 
 	<para>
-		The <command>vfs_glusterfs</command> VFS module provides an
-		alternative, and superior way to access a Gluster filesystem
-		from Samba for sharing. It does not require a Gluster FUSE mount
-		but directly accesses the GlusterFS daemon through its library
-		<command>libgfapi</command>, thereby omitting the expensive
-		kernel-userspace context switches and taking advantage of some
-		of the more advanced features of GlusterFS.
+	  <command>vfs_glusterfs</command> VFS モジュールは、共有するために
+	        SambaからGlusterファイルシステムにアクセスする、代替の、かつ、
+	        より優れた方法を提供する。これは、Gluster FUSE マウントを
+		必要とせず、ライブラリ<command>libgfapi</command>経由で
+		GlusterFS デーモンに直接アクセスし、それゆえ、コストのかかる
+		kernel-userspaceコンテキストスイッチを省略し、いくつかの、
+		GlusterFSが持つより高度な機能を生かせる。
 	</para>
 
 	<para>
@@ -55,14 +55,18 @@
 		should be the last module in the <command>vfs objects</command>
 		list. Modules added to this list to the right of the glusterfs
 		entry may not have any effect at all.
+		このモジュールは他のモジュールと一緒に使えるが、
+		<command>vfs objects</command>リスト中で一番最後のモジュールに
+		してはいけない。このリストの一番右にglusterfsエントリを置くと
+		効果がなくなる。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>CONFIGURATION</title>
+	<title>設定</title>
 
 	<para>
-		A basic configuration looks like this.
+                基本的な設定は以下の通り。
 	</para>
 
 	<programlisting>
@@ -82,17 +86,28 @@
 		ctdb cluster setup where ctdb manages Samba, you need to set
 		<command>CTDB_SAMBA_SKIP_SHARE_CHECK=yes</command> in ctdb's
 		configuration file. Otherwise ctdb will not get healthy.
+		<command>vfs_glusterfs</command> はGluster mountを必要としない
+		ので、共有 <command>path</command> は他の共有と異なった形で
+		扱われることに注意:これは、使用したglusterボリュームからの
+		相対共有ベースパスとして扱われる。このため、通常、これはctdbがSamba
+		を管理する時の、ctdbクラスタセットアップ中での、システムパスと
+		同じではないので、ctdb設定ファイル中で、
+		<command>CTDB_SAMBA_SKIP_SHARE_CHECK=yes</command>を設定する
+		必要がある。そのほかの場合、ctdbはヘルスチェックが出来ない。
 	</para>
 
 	<para>
 		Note that currently kernel share modes have to be disabled
 		in a share running with the glusterfs vfs module for file
 		serving to work properly.
+		ファイル機能がちゃんと動くように、glusterfs vfs モジュール
+		と一緒に共有が使えるよう、現在のカーネル共有モードを無効に
+		しなければならないことに注意。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
@@ -103,9 +118,12 @@
 			Defines whether and where to store a vfs_glusterfs specific
 			logfile. Client variable substitution is supported (i.e.
 			%M, %m, %I), hence per client log file can be specified.
+			vfs_glusterfs固有のログファイルをどこに格納するかを定義する。
+			クライアント変数の置換はサポートされる(たとえば %M,%m,%Iなど)
+			ので、クライアント単位のログファイルを指定出来る。
 		</para>
 		<para>
-			Example: glusterfs:logfile =
+			例: glusterfs:logfile =
 			/var/log/samba/glusterfs-vol2.%M.log
 		</para>
 		</listitem>
@@ -117,10 +135,15 @@
 		<para>
 			Defines the level of logging, with higher numbers corresponding to more verbosity.
 			0 - No logs; 9 - Trace log level; 7 being the info log level is preferred.
+			ログレベルの定義を行う。より大きな数値はより詳細であることを意味する。
+			0 - ログなし; 9 - トレースログレベル ; 7 は info ログレベルで
+			実行される。
 		</para>
 		<para>
 			If this option is not defined with an explicit loglevel,
 			the glusterfs default is used (currently loglevel 7).
+			もしもオプションで明示的にログレベルが指定されない場合は
+			glusterfs の既定値のログレベルが使われる(通常 loglevel 7)。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -132,6 +155,8 @@
 		<para>
 			Defines which volfile server to use, defaults to
 			localhost.
+			使用する volfile サーバを定義する。既定値はlocalhost
+			である。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -140,7 +165,7 @@
 		<term>glusterfs:volume = volumename</term>
 		<listitem>
 		<para>
-			Defines the glusterfs volumename to use for this share.
+                        この共有で使うglusterfs volumename を定義する。
 		</para>
 		</listitem>
 
@@ -150,20 +175,20 @@
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
 	<para>
-		This man page is correct for version 4.2.0 of the Samba suite.
+		このマニュアルページは Sambaシステムバージョン 4.2.0 用である。
 	</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
 
 </refsect1>
 <refsect1>
