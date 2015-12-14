@@ -37,17 +37,17 @@
 		は、オープンソースのクラスタファイルシステムであり、ペタバイト
 		まで容量を拡張できる。FUSEベースのネイティブなクライアントを
 		使うと、GluterFSはPOSIX互換のファイルシステムとして有効となり、
-		そのため、追加の作業なしに、Sambaによって共有できる。
+		そのため、追加の作業なしで、Sambaから共有できる。
 	</para>
 
 	<para>
-	  <command>vfs_glusterfs</command> VFS モジュールは、共有するために
-	        SambaからGlusterファイルシステムにアクセスする、代替の、かつ、
-	        より優れた方法を提供する。これは、Gluster FUSE マウントを
+	  <command>vfs_glusterfs</command> VFS モジュールは、共有を行うとき、
+	        SambaからGlusterファイルシステムにアクセスする、
+	        より優れた代替手法を提供する。これは、Gluster FUSE マウントを
 		必要とせず、ライブラリ<command>libgfapi</command>経由で
-		GlusterFS デーモンに直接アクセスし、それゆえ、コストのかかる
-		kernel-userspaceコンテキストスイッチを省略し、いくつかの、
-		GlusterFSが持つより高度な機能を生かせる。
+		GlusterFS デーモンに直接アクセスするので、コストのかかる
+		kernel-userspaceコンテキストスイッチを省略でき、
+		GlusterFSが持つより高度な機能のいくつかを利用出来る。
 	</para>
 
 	<para>
@@ -88,12 +88,12 @@
 		configuration file. Otherwise ctdb will not get healthy.
 		<command>vfs_glusterfs</command> はGluster mountを必要としない
 		ので、共有 <command>path</command> は他の共有と異なった形で
-		扱われることに注意:これは、使用したglusterボリュームからの
-		相対共有ベースパスとして扱われる。このため、通常、これはctdbがSamba
-		を管理する時の、ctdbクラスタセットアップ中での、システムパスと
+		扱われることに注意: 使用時には glusterボリュームからの
+		相対共有ベースパスとして扱われる。このため、通常は、ctdbがSamba
+		を管理する時の、ctdbクラスタセットアップ中にあるシステムパスと
 		同じではないので、ctdb設定ファイル中で、
 		<command>CTDB_SAMBA_SKIP_SHARE_CHECK=yes</command>を設定する
-		必要がある。そのほかの場合、ctdbはヘルスチェックが出来ない。
+		必要がある。そのほかの場合だと、ctdbはヘルスチェックが出来ない。
 	</para>
 
 	<para>
