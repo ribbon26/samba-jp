@@ -26,45 +26,36 @@
         </listitem>
        </itemizedlist>
 
+       <para>
+	 このパラメータはグローバルおよび共有単位で設定できる。設定可能な
+	 値は以下の通り。
+	 <emphasis>off</emphasis> (または <emphasis>disabled</emphasis>),
+	 <emphasis>enabled</emphasis> (または <emphasis>auto</emphasis>, または
+	 <emphasis>if_required</emphasis>),
+	 <emphasis>desired</emphasis>,
+	 と
+	 <emphasis>required</emphasis>
+	 (または <emphasis>mandatory</emphasis>).
+	 特別な値 <emphasis>default</emphasis> は、既定値として
+	 <emphasis>enabled</emphasis>に設定されている。
+       </para>
 
-      <para>これは、Samba3.2以降で導入された新機能である。この機能は、SMB/CIFS
-        プロトコルを拡張し、UNIX拡張機能の一部としてネゴシエートされる。
-	SMB暗号化は、SMBプロトコルストリーム中のすべてのリクエスト/レスポンス
-	に対し、暗号化と署名を行うためにGSSAPI(Windows上のSSPI)を使う。
-
-	SMB暗号化を有効にすると、SMB/CIFSの通信がセキュアな方式で実行される。
-	これは、sshの保護されたセッションと似ているが、
-	暗号化のネゴシエートとキーの署名のためにはSMB/CIFS認証が用いられる。
-
-        現在、これは、Samba 3.2のsmbclientのみでサポートされているが、
-        そのうちLinuxのCIFSFSとMacOS/Xクライアントで使えるようになるだろう。
-        Windowsクライアントはこの機能をサポートしない。
-    </para>
-
-    <para>
-        この機能はサーバーが通信相手のクライアントに対してSMB暗号化を
-	提供、あるいは要求するかどうかを制御する。
-	利用できる値は、<emphasis>auto</emphasis>, <emphasis>mandatory</emphasis> 
-	と<emphasis>disabled</emphasis>である。これは、共有毎に設定できるが、
-	クライアントはすべてのセッション全体を暗号化するかもしれないし、
-	特定の共有へのトラフィックだけ暗号化を利用しないかもしれない。
-	もしもこれが mandatory に設定された場合、その共有へ接続が行われると、
-	その共有へのすべてのトラフィックは暗号化されなければ 
-	<emphasis>ならない</emphasis>。
-
-	そのような共有に対して、暗号化されていないアクセスがあると、
-	サーバーは「アクセス拒否」を返却する。
-	トラフィックが暗号化されると、
-	すべてのデータについて署名と暗号化のオーバーヘッドが発生するだけでなく、
-	小さいパケットサイズを用いる必要がある（UNIX形式の巨大なサイズでの読み取り/書き込みを用いることができない）ため、スループットが減少する。
-    </para>
-
-    <para>SMB暗号化が用いられると、Windows形式のSMB署名(<smbconfoption name="server signing"/>
-	を参照)はもはや必要でなくなり、GSSAPIフラグがデータの暗号化と署名と暗号化の両方で使われる。</para>
-
-    <para>パラメーターの値をautoに設定すると、SMB暗号化が提供されるが、強制はされない。
-	mandatoryに設定すると、SMB暗号化が要求される。disableに設定すると、
-	SMB暗号化は利用できない。</para>
+       <variablelist>
+	 <varlistentry>
+	 <term><emphasis>SMB1における影響</emphasis></term>
+	 <listitem>
+	 <para>
+	 SMB1におけるSamba固有の暗号化接続は、UNIX拡張の一部として
+	 ネゴシエーションされる、SMBプロトコルの拡張である。SMB暗号化は
+	 SMBプロトコルストリーム中で、リクエスト/応答を毎回暗号化および
+	 署名する機能を持つGSSAPI(Windows上のSSPI)を使う。有効にすると、
+	 sshで保護されたセッションのように、SMB/CIFS通信をセキュアにする
+	 機能を提供するが、暗号化のネゴシエーションおよびキーの署名には
+	 SMB/CIFSの認証を使う。現在これはSamba 3.2以降の smbclient のみ
+	 でサポートされていて、そのうちLinuxのCIFSFSとMacOS/Xでサポート
+	 されるかもしれない。Windowsクライアントはこの機能をサポートしない。
+	 </para>
+       
 </description>
 
 <value type="default">auto</value>
