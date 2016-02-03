@@ -102,7 +102,182 @@
 	 </listitem>
 	 </varlistentry>
 	 
+         <varlistentry>
+	 <term><emphasis>SMB2における影響</emphasis></term>
+	 <listitem>
+	 <para>
+	 ネイティブなSMBトランスポート暗号化機能は SMB バージョン3.0以降で有効に
+	 なっている。これは、<emphasis>server max protocol</emphasis>が
+	 <emphasis>SMB3</emphasis>以降に設定された場合にのみ、提供される。
+	 クライアントは、Windows 8以降、あるいはWindows Server 2012以降と、
+	 Samba 4.1 以降のsmbclientで、このタイプの暗号化をサポートしている。
+         </para>
+
+	 <para>
+	   このプロトコル実装にはいろいろなオプションがある:
+	 </para>
 	 
+         <itemizedlist>
+	   <listitem>
+	     <para>
+	       プロトコルネゴシエーション中にSMB暗号化のネゴシエーション実行
+	       する機能がある。
+	     </para>
+	     <para>
+	       The capability to perform SMB encryption can be
+	       negotiated during protocol negotiation.
+	     </para>
+	   </listitem>
+	   
+
+	   <listitem>
+	     <para>
+	       データ暗号化はグローバルに有効に出来る。この場合、
+	       暗号化対応なコネクションは、暗号化されたすべてのセッション中で
+	       すべてのトラフィックを持つことになる。
+	     </para>
+	     <para>
+	       Data encryption can be enabled globally. In that case,
+	       an encryption-capable connection will have all traffic
+	       in all its sessions encrypted. In particular all share
+	       connections will be encrypted.
+	     </para>
+	   </listitem>
+
+           <listitem>
+	     <para>
+	       データ暗号化は、グローバルに有効化されていない場合、
+	       共有単位でも有効にできる。ある、暗号化対応なコネクションに対し、
+	       暗号化が有効になっている共有へのすべてのコネクションは
+	       暗号化される。
+	     </para>
+	     <para>
+	       Data encryption can also be enabled per share if not
+	       enabled globally. For an encryption-capable connection,
+	       all connections to an encryption-enabled share will be
+	       encrypted.
+	     </para>
+	   </listitem>
+
+	   <listitem>
+	     <para>
+	       暗号化は強制することができる。このことは、データの暗号化が
+	       グローバルに有効化されている場合、暗号化に対応していない
+	       コネクションでは、セッションセットアップが拒否されることを
+	       意味する。さらに、tree connectionは、データ暗号化が有効に
+	       なっている場合、共有に対する暗号化に対応していないコネクションは
+	       拒否される。
+	     </para>
+	     <para>
+	       Encryption can be enforced. This means that session
+	       setups will be denied on non-encryption-capable
+	       connections if data encryption has been enabled
+	       globally. And tree connections will be denied for
+	       non-encryption capable connections to shares with data
+	       encryption enabled.
+	     </para>
+	   </listitem>
+	 </itemizedlist>
+	 
+         <para>
+	   これらの機能は、以下のような<emphasis>smb encrypt</emphasis>
+	   の設定で制御出来る:
+	 </para>
+
+         <itemizedlist>
+	   <listitem>
+	     <para>
+	       明示的に<emphasis>default</emphasis>を設定して
+	       既定値のままにするか、グローバルに<emphasis>enabled</emphasis>
+	       と設定すると、暗号化のネゴシエーションを有効にするが、
+	       グローバルあるいは共有単位のデータ暗号化を有効にはしない。
+	     </para>
+	     <para>
+	       Leaving it as default, explicitly setting
+	       <emphasis>default</emphasis>, or setting it to
+	       <emphasis>enabled</emphasis> globally will enable
+	       negotiation of encryption but will not turn on
+	       data encryption globally or per share.
+	     </para>
+	   </listitem>
+
+	   <listitem>
+	     <para>
+	       グローバルに<emphasis>desired</emphasis>を設定すると、
+	       ネゴシエーションを有効にし、セッションと共有への接続において、
+	       機能をサポートしているクライアントに対するデータ暗号化を有効にする。
+	     </para>
+	     <para>
+	       Setting it to <emphasis>desired</emphasis> globally
+	       will enable negotiation and will turn on data encryption
+	       on sessions and share connections for those clients
+	       that support it.
+	     </para>
+	   </listitem>
+
+           <listitem>
+	     <para>
+	       グローバルに<emphasis>required</emphasis>を設定すると、
+	       ネゴシエーションを有効にし、セッションと共有へのコネクション
+	       でデータ暗号化を有効にする。暗号化をサポートしていない
+	       クライアントではサーバへのアクセスが拒否される。
+	     </para>
+	   </listitem>
+
+	   <listitem>
+	     <para>
+	       グローバルに<emphasis>off</emphasis>を設定すると、
+	       暗号化機能を完全に無効にする。
+	     </para>
+	   </listitem>
+	   
+           <listitem>
+	     <para>
+	       共有上で<emphasis>desired</emphasis>を設定すると、
+	       ネゴシエーションがグローバルに有効になっている場合、
+	       暗号化をサポートしているクライアントに対してこの共有に
+	       対するデータの暗号化を有効にする。
+	     </para>
+	   </listitem>
+
+	   <listitem>
+	     <para>
+	       共有上で<emphasis>required</emphasis>を設定すると、
+	       ネゴシエーションがグローバルで有効になっている場合、
+	       この共有に対する暗号化が強制される。すなわち、暗号化を
+	       サポートしていないクライアントはこの共有に対するアクセスが
+	       拒否される。
+	     </para>
+             <para>
+	       このことは、Windowsと比べ、Sambaで制御される共有単位の
+	       強制は、Windowsと違うようになるということである。
+	       Windowsでは、<emphasis>RejectUnencryptedAccess</emphasis>
+	       はグローバルの設定で、これが設定された場合、データ暗号化が有効な
+	       すべての共有は、自動的に暗号化が強制される。Samba上で
+	       同じ事をSambaに行わせるためには、
+	       グローバルに <emphasis>smb encrypt</emphasis>を
+	       <emphasis>enabled</emphasis>に設定し、暗号化したい共有で
+	       <emphasis>required</emphasis>を設定する。
+	       さらに、Windowsではできない、
+	       Note that this allows per-share enforcing to be
+	       controlled in Samba differently from Windows:
+	       In Windows, <emphasis>RejectUnencryptedAccess</emphasis>
+	       is a global setting, and if it is set, all shares with
+	       data encryption turned on
+	       are automatically enforcing encryption. In order to
+	       achieve the same effect in Samba, one
+	       has to globally set <emphasis>smb encrypt</emphasis> to
+	       <emphasis>enabled</emphasis>, and then set all shares
+	       that should be encrypted to
+	       <emphasis>required</emphasis>.
+	       Additionally, it is possible in Samba to have some
+	       shares with encryption <emphasis>required</emphasis>
+	       and some other shares with encryption only
+	       <emphasis>desired</emphasis>, which is not possible in
+	       Windows.
+	     </para>
+	   </listitem>
+	   
 	 
 </description>
 
