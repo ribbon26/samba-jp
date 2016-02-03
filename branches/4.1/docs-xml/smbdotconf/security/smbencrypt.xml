@@ -55,7 +55,55 @@
 	 でサポートされていて、そのうちLinuxのCIFSFSとMacOS/Xでサポート
 	 されるかもしれない。Windowsクライアントはこの機能をサポートしない。
 	 </para>
-       
+
+         <para>
+	 これは共有単位で設定出来るが、クライアントは、指定された共有に対して
+	 トラフィックではなく、全セッションを暗号化することを選べる。
+	 もしも、これを mandatory に設定すると、共有へのすべてのトラフィックは
+	 共有に対する接続がなされた後は、<emphasis>必ず</emphasis>
+	 暗号化されなければならない。サーバは、そのような共有に対する、
+	 暗号化されていないすべての要求には "access denied" を返す。
+	 暗号化されたトラフィックを選ぶと、すべてのデータに対する暗号化および署名
+	 を暗号化する時のオーバヘッドと同様、より小さなパケットサイズが使われるため
+	 (巨大なUNIX系の読み/書き操作が許可されないため)、トラフィックが減少する。
+	 </para>
+	 <para>
+	   This may be set on a per-share
+	 basis, but clients may chose to encrypt the entire session, not
+	 just traffic to a specific share. If this is set to mandatory
+	 then all traffic to a share <emphasis>must</emphasis>
+	 be encrypted once the connection has been made to the share.
+	 The server would return "access denied" to all non-encrypted
+	 requests on such a share. Selecting encrypted traffic reduces
+	 throughput as smaller packet sizes must be used (no huge UNIX
+	 style read/writes allowed) as well as the overhead of encrypting
+	 and signing all the data.
+	 </para>
+
+	 <para>
+	   もしも、SMB暗号化が選択された場合、
+	   GSSAPIフラグが、データの署名とsealing両方を選択するのに使うように、
+	   Windows形式のSMB署名
+	   (<smbconfoption name="server signing"/>オプションを参照)は、
+	   もはや必要ない。
+	 </para>
+	 <para>
+	   If SMB encryption is selected, Windows style SMB signing (see
+	   the <smbconfoption name="server signing"/> option) is no longer
+	   necessary, as the GSSAPI flags use select both signing and
+	   sealing of the data.
+	 </para>
+
+         <para>
+	   auto または 既定値を設定すると、SMB暗号化機能は提供されるが、
+	   強制はされない。mandatoryに設定すると、SMB暗号化が要求され、
+	   disable を設定すると、SMB暗号化はネゴシエーション出来ない。
+	 </para>
+	 </listitem>
+	 </varlistentry>
+	 
+	 
+	 
 </description>
 
 <value type="default">auto</value>
