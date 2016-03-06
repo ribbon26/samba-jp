@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_catia.8">
+
+<refmeta>
+	<refentrytitle>vfs_catia</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_catia</refname>
+	<refpurpose>Catia ファイル名で無効な文字を変換する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = catia</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+  <para>
+    Catia CAD パッケージは、 CIFS ファイルシステムで使用できない文字を
+    使用したファイル名を頻繁に作成する。
+    <command>vfs_catia</command> VFS モジュールは、これを CIFS 
+    クライアントからアクセスできるように
+	文字マッピングを行う。
+  </para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+  <para>
+    catia:mappings パラメーターは、以下で説明するように、文字単位の
+	  マッピングを指定する。
+	</para>
+
+</refsect1>
+
+<refsect1>
+        <title>オプション</title>
+        <variablelist>
+               <varlistentry>
+               <term>catia:mappings = SERVER_HEX_CHAR:CLIENT_HEX_CHAR
+               </term>
+               <listitem>
+    <para>
+      SERVER_HEX_CHAR は、 0x というプレフィックスを付加した 16 進数の
+      文字コードであり、これが Samba サーバー上のファイル名に含まれている
+      場合、 CIFS クライアントに対しては、 CLIENT_HEX_CHAR にマッピングされる。
+    </para>
+    <para>
+      同様のマッピングが反対方向に対しても行われる。
+      複数の文字のマッピングはカンマ区切りで指定する。
+    </para>
+               </listitem>
+               </varlistentry>
+       </variablelist>
+</refsect1>
+
+
+<refsect1>
+  <title>使用例</title>
+
+  <para>
+    [CAD] 共有内のファイル名にある、クォーテーションマーク (") を、
+    クライアントに対しては diaeresis 文字 (&#x00a8;) にマッピングする:
+  </para>
+
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8</smbconfoption>
+</programlisting>
+
+  <para>
+    通常使用される Catia ファイル名に含まれる文字を包括的にマッピングする:
+  </para>
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6</smbconfoption>
+</programlisting>
+
+  <para>
+    マッピングされるサーバー上のファイル名 (パスを意味する / は使われて
+    いない点に注意) :
+	</para>
+	<para>a\a:a*a?a"a&lt;a&gt;a|a</para>
+
+  <para>最終的にクライアント上で表示されるファイル名:</para>
+
+	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a
+	</para>
+</refsect1>
+
+<refsect1>
+  <title>注意</title>
+
+  <para>
+    文字のマッピングは、ファイル名に対応するファイルの存在と一意性を担保する
+    ために、双方向 (サーバーからクライアント、クライアントからサーバー) に
+    機能する必要がある。
+  </para>
+
+  <para>機能しない例を以下に示す:</para>
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x3a:0x5f</smbconfoption>
+</programlisting>
+
+  <para>
+    この場合、コロン (:) が下線 (_) にマッピングされる。
+  </para>
+  <para>
+    サーバー上で a:should_work というファイル名のファイルは、クライアント上
+    では、 a_should_work にマッピングされる。
+  </para>
+  <para>
+    しかし、クライアント上の a_should_work というファイル名を逆方向に
+    マッピングすると、結果は a:should:work となってしまう。このため、
+    サーバーからは file not found といたエラーが返却されてしまうことになる。
+  </para>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルはSambaシステムバージョン 3.5.0 から 4.1.14 まですべてに対応している。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+	<para>新しいバージョンは、Guenter Kukkukk kukks@samba.org によって書かれた。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 4.1.0 - 4.1.14 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

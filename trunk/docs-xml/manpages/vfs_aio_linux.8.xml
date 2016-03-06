@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_aio_linux.8">
+
+<refmeta>
+	<refentrytitle>vfs_aio_linux</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_aio_linux</refname>
+	<refpurpose>Linux カーネルの AIO 呼び出しを用いて非同期 I/O を実装する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = aio_linux</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+  <para>
+    <command>vfs_aio_linux</command> VFS モジュールは、カーネル AIO 呼び
+    出しが有効な Linux カーネル上で、 POSIX AIO インターフェイスを使用せずに
+    Samba の非同期 I/O を有効にするためのものである。
+    POSIX AIO は、致命的な制約に悩まされることが多い。たとえば、ある
+    バージョンの Linux では、高負荷な環境でリアルタイムのシグナルを
+    使用すると、問題が発生する。別のシステムでは、 AIO の使用に際して
+    特殊なカーネルモジュールのロードが必要であったり、システム全体で
+    スケジュールされている非同期リクエスト数に制約があったりする。
+    glibc ベースのシステム (大半の Linux システム) では、ファイル記述子
+    あたり、 1 つの処理待ちリクエストしか許可されない。
+  </para>
+
+  <para>
+    こうした制約を回避するために、 aio_linux モジュールが作られた。
+    このモジュールは、読み取りと書き込みの呼び出しを非同期に処理するため、
+    内蔵の POSIX AIO インターフェイスに代わって、Linux カーネルの AIO
+    インターフェイスを使用する。
+    イベントのキューサイズは 128 がデフォルトである。この制限を変更する
+    際には、以下で説明する aio num events パラメーターを設定すること。
+  </para>
+
+	<para>
+    このモジュールを有効にする際には、 smb.conf パラメーターの 
+    <command>aio read size</command> と <command>aio write size</command>
+    も適切に設定する必要がある。
+	</para>
+
+	<para>
+    このモジュールは、 Samba VFS の pread と pwrite インターフェイスが
+    スレッドセーフでないため、モジュールスタックの最後に配置すること。
+    このモジュールは、 pread と pwrite システムコールを直接呼び出し、
+    Samba VFS の pread と pwrite インターフェイスは使用しない。
+  </para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>簡単な使い方:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="aio read size">1024</smbconfoption>
+	<smbconfoption name="aio write size">1024</smbconfoption>
+	<smbconfoption name="vfs objects">aio_linux</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>aio_linux:aio num events = INTEGER</term>
+		<listitem>
+		<para>処理待ちの I/O リクエストを制限するための、
+                イベントキューの
+		最大値を設定する。
+		</para>
+		<para>デフォルトは 128 である。</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、バージョン 4.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 4.0.6 - 4.1.14 対応のものである。</para>	
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

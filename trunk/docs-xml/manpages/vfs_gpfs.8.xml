@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_gpfs.8">
+
+<refmeta>
+	<refentrytitle>vfs_gpfs</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_gpfs</refname>
+	<refpurpose>GPFS 特有の ACL や prealloc 機能に対応するための Samba の拡張</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = gpfs</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para> <command>gpfs</command> VFS モジュールは、Samba が GPFS
+	と適切に連携する上で必要となる様々な GPFS エクステンションの
+モジュールのベースである。
+	このモジュールはGPFSによって提供されるGPLライブラリインタフェースを使う。
+	</para>
+
+	<para>現在のところ、gpfs VFS
+	モジュールは以下のエクステンションのみを提供している:
+	<itemizedlist>
+	<listitem><para>GPFSのために設定可能なNFSv4 ACL インタフェース </para></listitem>
+	<listitem><para>GPFS 上でのカーネル oplock のサポート</para></listitem>
+	<listitem><para>GPFS 上での lease サポート</para></listitem>
+	</itemizedlist>
+	</para>
+
+	<para><command>注意:</command>このモジュールは POSIX ACL
+	の挙動を模しているため、chown によるパーミッションの変更が可能である。
+	しかし、
+	Samba は現在のところ、この動作をサポートしていない。
+	このモジュールによる chown を禁止するには、Samba よりも下位の
+	ファイルシステム側の責任となる。
+
+	</para>
+
+       <para>このモジュールは、smb.confのパラメータ
+       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
+       を使用する。これをyesに設定した場合(既定値)、このパラメータは、
+       FILE_DELETE と FILE_DELETE_CHILDを除いた、すべてのファイルのパーミッション
+       に、すでに含まれている(ディレクトリではなく)ファイルに対する、戻り値内の
+       ACEエントリ上にFILE_DELETE_CHILDビットを追加する。これは、GENERIC_ALLアクセス
+       要求を行うWindowsアプリケーションが、NFSv4互換のACLを持つ
+       ファイルシステムに対して動作している時、ACCESS_DENIEDエラーが帰ってくる
+       ことを防ぐ。</para>
+       <para>This module makes use of the smb.conf parameter
+       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
+       When set to yes (the default), this parameter will add in the FILE_DELETE_CHILD
+       bit on a returned ACE entry for a file (not a directory) that already
+       contains all file permissions except for FILE_DELETE and FILE_DELETE_CHILD.
+       This can prevent Windows applications that request GENERIC_ALL access
+       from getting ACCESS_DENIED errors when running against a filesystem
+       with NFSv4 compatible ACLs.
+       </para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+	<para>Samba 4.0以降、すべてのオプションは共有単位のオプションである。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+
+		<term>gpfs:sharemodes = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  GPFS用のクロスノードsharemodeハンドリングを有効/無効にする。
+		Enable/Disable cross node sharemode handling for GPFS.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - すべてのGPFSノードにまたがってsharemodeを伝搬する。
+		propagate sharemodes across all GPFS nodes.
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - すべてのGPFSノードにまたがってsharemodesを伝搬しない。
+		これはもしもGPFSファイルシステムがSambaによって排他的にエクスポート
+		される場合にのみ使うべきである。ローカルのUNIXアプリケーションか
+		NFSエクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		do not propagate sharemodes across all GPFS nodes.
+		This should only be used if the GPFS file system is
+		exclusively exported by Samba. Access by local unix application or
+		NFS exports could lead to corrupted files.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:leases = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  GPFSのためのクロスノードリース(oplocks)を有効/無効にする。
+		  <command>oplocks</command>と<command>kernel oplocks</command>
+		  オプションを同じ値に設定すべきである。
+		Enable/Disable cross node leases (oplocks) for GPFS.
+		You should also set the <command>oplocks</command> and <command>kernel oplocks</command>
+		options to the same value.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - すべてのGPFSノードのリースを伝搬する。
+		propagate leases across all GPFS nodes.
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - すべてのGPFSノードのリースを伝搬しない。
+                これはもしもGPFSファイルシステムがSambaによって排他的にエクスポート
+                される場合にのみ使うべきである。ローカルのUNIXアプリケーションか
+                NFSエクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		do not propagate leases across all GPFS nodes.
+		This should only be used if the GPFS file system is
+		exclusively exported by Samba. Access by local unix application or
+		NFS exports could lead to corrupted files.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+
+		<varlistentry>
+
+		<term>gpfs:hsm = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  このFSがHSMを有効にしている場合、アナウンスを有効/無効にする。
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>no(既定値)</command> - HSMアナウンスを通知しない
+		</para></listitem>
+		<listitem><para>
+		<command>yes</command> - HSMアナウンスを行う。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+
+		<varlistentry>
+
+		<term>gpfs:getrealfilename = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  <command>gpfs_get_realfilename_path()</command>機能の使用を
+		  有効/無効にする。
+		  これは大文字小文字を認識するワイルドカードファイル名アクセスを
+		  改善する。
+		Enable/Disable usage of the <command>gpfs_get_realfilename_path()</command> function.
+		This improves the casesensitive wildcard file name access.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - <command>gpfs_get_realfilename_path()</command>を使用する。
+		use <command>gpfs_get_realfilename_path()</command>.
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - <command>gpfs_get_realfilename_path()</command>を使わない。
+		AIXでは<command>gpfs_get_realfilename_path()</command>が動かないように見える。
+		do not use <command>gpfs_get_realfilename_path()</command>.
+		It seems that <command>gpfs_get_realfilename_path()</command> doesn't work on AIX.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:winattr = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  GPFSのwindow属性の使用を有効/無効にする。
+		  GPFSは、たとえば、HIDDEN、READONLY、SYSTEMやその他のような
+		  window属性を個別に格納することが出来る。これは、Sambaが
+		  パーミッションビットや拡張属性にマップする必要がないことを
+		  意味する。</para><para>
+		Enable/Disable usage of the windows attributes in GPFS.
+		GPFS is able to store windows file attributes e.g. HIDDEN,
+		READONLY, SYSTEM and others natively. That means Samba doesn't
+		need to map them to permission bits or extended attributes.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>no(既定値)</command> - GPFS windows属性を使用しない。
+		do not use GPFS windows attributes.
+		</para></listitem>
+		<listitem><para>
+		<command>yes</command> - GFPS windows属性を使用する。
+		use GPFS windows attributes.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:merge_writeappend = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  GPFS ACLは 'APPEND'権限を認識しない。
+		  このオプションはSambaに'APPEND'権限をを'WRITE'権限に
+		  マップさせる。
+		GPFS ACLs doesn't know about the 'APPEND' right.
+		This optionen lets Samba map the 'APPEND' right to 'WRITE'.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - 'APPEND'を'WRITE'にマップする。
+		map 'APPEND' to 'WRITE'.
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - 'APPEND'を'WRITE'にマップしない。
+		do not map 'APPEND' to 'WRITE'.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:acl = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  このオプションはSambaにGPFS ACLを無視させるようにする。
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes(既定値)</command> - GPFS ACLを使う。
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - GPFS ACLを使わず、次の SMB VFSモジュールにすべてを渡す。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:refuse_dacl_protected = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  GPFSはACE4_FLAG_NO_PROPAGATE NFSv4フラグ(DESC_DACL_PROTECTEDフラグへの
+		  マッピングであろう)をサポートしないため、このフラグのステータスは
+		  現在Sambaによってあっさり無視される。これは、もしも、Windowsの
+		  ダイアログボックスで、"..継承を有効にする.."チェックボックスを
+		  選択しないでACLを適用した場合、フラグが即座に戻ることを意味する。</para><para>
+		As GPFS does not support the ACE4_FLAG_NO_PROPAGATE NFSv4 flag (which would be
+		the mapping for the DESC_DACL_PROTECTED flag), the status of this flag is
+		currently silently ignored by Samba. That means that if you deselect the "Allow
+		inheritable permissions..." checkbox in Windows' ACL dialog and then apply the
+		ACL, the flag will be back immediately.
+		</para>
+		<para>
+		  たとえば、robocopyのような、自動マイグレーションが知らないうちに
+		  (意図しないで)変更することがないようにするため、このフラグを明示的
+		  チェックして、明示的に有効にするために、
+		  <command>gpfs:refuse_dacl_protected = yes</command>を設定でき、
+		  もしも設定した場合、Windows側にNT_STATUS_NOT_SUPPORTEDが戻り、
+		  そのためエラーが表示され、Administratorは意図したようにACLが設定
+		  可能でないことを認識する。</para><para>
+		To make sure that automatic migration with e.g. robocopy does not lead to
+		ACLs silently (and unintentionally) changed, you can set
+		<command>gpfs:refuse_dacl_protected = yes</command> to enable an explicit
+		check for this flag and if set, it will return NT_STATUS_NOT_SUPPORTED so
+		errors are shown up on the Windows side and the Administrator is aware of
+		the ACLs not being settable like intended
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>no(既定値)</command> - DESC_DACL_PROTECTEDフラグを無視する。
+		ignore the DESC_DACL_PROTECTED flags.
+		</para></listitem>
+		<listitem><para>
+		<command>yes</command> - DESC_DACL_PROTECTEDでACLを拒否する。
+		reject ACLs with DESC_DACL_PROTECTED.
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:dfreequota = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  quotaによる共有の残量と使用量の報告を調整する。これを"yes"に
+		  設定すると、使用量と残量の要求は、ユーザーが要求したデータの
+		  ユーザークォータ、ユーザーのプライマリグループのグループクォータと
+		  共有の最上位ディレクトリが持っているファイルセットに対する
+		  ファイルセットクォータも評価される。
+		</para>
+		<para>
+		Adjust reporting of the size and free space of a share
+		according to quotas. If this setting is "yes", a
+		request for size and free space will also evaluate the
+		user quota of the user requesting the data, the group
+		quota of the primary group of the user and the fileset
+		quota for the fileset containing the top level
+		directory of the share.
+		</para>
+
+		<para>
+		  もしも、何らかの、ソフトあるいはハードクォータ制限に達した
+		  場合、残量は0と報告される。もしもクォータが動作しているが、
+		  制限に達していない場合、残量はクォータの残り量に従って
+		  報告される。もしも1つ以上のクォータが残量に引っかかって
+		  いる場合、それらのクォータの、最も小さい量のものが報告される。
+		  共有のサイズはクォータの使用量にそって報告される。もしも
+		  1つ以上のクォータが適用される場合、共有のサイズは、それらの
+		  クォータの中の最も小さいものに従って報告される。
+		</para>
+		<para>
+		If any of the soft or hard quota limits has been
+		reached, the free space will be reported as 0. If a
+		quota is in place, but the limits have not been
+		reached, the free space will be reported according to
+		the space left in the quota. If more than one quota
+		applies the free space will be reported as the smallest
+		space left in those quotas. The size of the share
+		will be reported according to the quota usage. If more
+		than one quota applies, the smallest size will be
+		reported for the share size according to these quotas.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes</command> - 共有の使用量と残量を報告するときにクォータを含める
+		</para></listitem>
+		<listitem><para>
+		<command>no(既定値)</command> - クォータを含めず、単に
+		ファイルシステムの大きさと残量を報告する。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>gpfs:prealloc = [ yes | no ]</term>
+		<listitem>
+		<para>
+		  もしもyesに設定された場合、gpfs_prealloc 機能は、適切なときに
+		  fallocate コールバック中で使われる。もしも no に設定された場合、
+		  gpfs_prealloc は使われない。両方の場合において、システムとライブラリ
+		  コールは回避される。
+		</para>
+		<para>
+		If set to yes the gpfs_prealloc function will be used in the
+		fallocate callback when appropriate. If set to no gpfs_prealloc
+		will not be used. In both cases the system and libc calls are
+		avoided.
+		</para>
+
+		<itemizedlist>
+		<listitem><para>
+		<command>yes (既定値)</command> - fallocate コールバックのために gpfs_prealloc を使う。
+		</para></listitem>
+		<listitem><para>
+		<command>no</command> - fallocate コールバックのために gpfs_prealloc を使わない。
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+
+		<varlistentry>
+
+		<term>nfs4:mode = [ simple | special ]</term>
+		<listitem>
+		<para>
+		  GPFS上の特別なID(OWNER@とGROUP@)の置換を制御する。
+		  mode を simple にする事を推奨する。このモード中では、
+		  ファイル所有者とグループに対する、非継承ACLエントリのみが特別な
+		  IDにマップされる。
+		</para>
+
+		<para>以下のモードがこのモジュールによって指定可能である:</para>
+		<itemizedlist>
+		<listitem><para><command>simple(既定値)</command> - 非継承ACEのみに対して、OWNER@とGROUP@の特別なIDを使用する。</para></listitem>
+		<listitem><para><command>special</command> - すべてのファイル所有者とグループACEに対して、OWNER@とGROUP@の特別なIDを使用する。</para> </listitem>
+		</itemizedlist>
+		</listitem>
+
+		</varlistentry>
+
+
+		<varlistentry>
+		<term>nfs4:acedup = [dontcare|reject|ignore|merge]</term>
+		<listitem>
+		<para>
+		このパラメーターはGPFSのACL中で遭遇した、重複したACEをSambaがどのように取り扱うかを設定する。
+		GPFSは同じIDに対して異なったbitを持つ重複したACEを許容し作成する。
+		</para>
+
+		<para>以下はそれぞれの値におけるSambaの動作である:</para>
+		<itemizedlist>
+		<listitem><para><command>dontcare (既定値)</command> - 重複したACEをそのまま利用する</para></listitem>
+		<listitem><para><command>reject</command> - ACLの設定処理で、処理を中断し、エラーとして終了する</para></listitem>
+		<listitem><para><command>ignore</command> - 2番目にマッチしたACEを無視する</para></listitem>
+		<listitem><para><command>merge</command> - 2つのace.flagフィールド、及び2つのace.maskフィールドをビット演算でORを取り、2つの重複したACEを1つのACEに統合する</para></listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+
+		<varlistentry>
+		<term>nfs4:chown = [yes|no]</term>
+		<listitem>
+		<para>このパラメーターはファイルシステムのレイヤによって
+		  サポートされる chown を有効または無効に設定する。
+		  このパラメーターは、あなたのシステムのセキュリティを
+		  低下させるかもしれない事に注意して有効にすべきである。
+		</para>
+		<para>いくつかのファイルシステムでは、chown の 
+		  a) 許可 b) 拒否 が可能である。
+		  リスクについて考慮されたのが後者である。</para>
+
+		<para>以下はそれぞれの値に対するSambaの動作である: </para>
+		<itemizedlist>
+		<listitem><para><command>yes</command> - ファイルシステム下でサポートするようなchownを有効にする。</para></listitem>
+		<listitem><para><command>no (既定値)</command> - chownを無効にする</para></listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>gpfs:syncio = [yes|no]</term>
+		<listitem>
+		<para>このパラメーターは、SambaにすべてのファイルをO_SYNCで
+		オープンするようにさせる。これは、高負荷でファイルを共用
+		するワークロードのためのGPFS中での最適化をトリガする。</para><para>
+		  This parameter makes Samba open all files with O_SYNC.
+		  This triggers optimizations in GPFS for workloads that
+		  heavily share files.</para>
+
+		<para>以下は、異なった値におけるSambaの動作である。:
+		Following is the behaviour of Samba for different
+		  values:
+		</para>
+		<itemizedlist>
+		<listitem><para><command>yes</command> - ファイルをO_SYNCで開く
+		</para></listitem>
+		<listitem><para><command>no (既定値)</command> - 通常Sambaが行うように
+		ファイルをオープンする
+		</para></listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>GPFS mount は以下のように、Samba経由でエクスポートできる:</para>
+
+<programlisting>
+        <smbconfsection name="[samba_gpfs_share]"/>
+	<smbconfoption name="vfs objects">gpfs</smbconfoption>
+	<smbconfoption name="path">/test/gpfs_mount</smbconfoption>
+	<smbconfoption name="nfs4: mode">special</smbconfoption>
+	<smbconfoption name="nfs4: acedup">merge</smbconfoption>
+</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>警告</title>
+        <para>
+	  gpfsのバージョンに依存するので、<command>libgpfs_gpl</command>
+	  ライブラリまたは<command>libgpfs</command>ライブラリは
+	  <command>gpfs</command> VFSモジュールによって実行時に必要とされる:
+	  gpfs 3.2.1 PTF8の公開時には、完全な<command>libgpfs</command>
+	  がオープンソースとして公開されていて、<command>libgpfs_gpl</command>
+	  はもはや存在しない。それより前のgpfsバージョンでは、
+	  <command>libgpfs_gpl</command>のみがオープンソースで、ランタイムとして
+	  使える。</para><para>
+        Depending on the version of gpfs, the <command>libgpfs_gpl</command>
+        library or the <command>libgpfs</command> library is needed at
+        runtime by the <command>gpfs</command> VFS module:
+        Starting with gpfs 3.2.1 PTF8, the complete <command>libgpfs</command>
+        is available as open source and <command>libgpfs_gpl</command> does no
+        longer exist. With earlier versions of gpfs, only the
+        <command>libgpfs_gpl</command> library was open source and could be
+        used at run time.
+        </para>
+        <para>
+	  コンパイル時には、<command>gpfs_gpl.h</command>ヘッダーファイルのみが必要で、
+	  これは3.2.1 PTF8よりも新しいgpfsバージョン中の<command>gpfs.h</command>
+	  へのシンボリックリンクである。</para><para>
+        At build time, only the header file <command>gpfs_gpl.h</command>
+        is required , which is a symlink to <command>gpfs.h</command> in
+        gpfs versions newer than 3.2.1 PTF8.
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	<para>このマニュアルページは Samba バージョン 3.0.25用(訳注:4.0?)である。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+	<para>GPFS VFSモジュールはVolker LendeckeとIBMの開発者によって寄贈され、作成された。</para>
+
+	<para>このマニュアルページは、IBM FSCCチームによって作成された。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.1.0 - 4.1.22 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.1.22 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
