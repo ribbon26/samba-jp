@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_tsmsm.8">
+
+<refmeta>
+	<refentrytitle>vfs_tsmsm</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_tsmsm</refname>
+	<refpurpose>Tivoli Storage Manager Space Management を使うオフラインファイルの操作用 VFS モジュール</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = tsmsm</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>tsmsm</command> VFS モジュールは、
+	 Tivoli Storage Manager Space Management と共にオフラインファイルを
+	 操作するための拡張である。
+	</para>
+
+	<para>
+	  これは、オンライン(マイグレートされていない)ファイル用の実際のサイズの
+	  'オンラインレシオ'よりも、512のn倍で計算したファイルサイズで報告された
+	  ブロックの数が大きいという事実に基づいた、ヒューリスティックな手法を使う、
+	  高価なDMAP 呼び出しを行う事を防ごうとする。もしもヒューリスティックな
+	  チェックが失敗した場合、このモジュールはDMAPIを呼び出し、オフライン
+	  (マイグレードされた)ファイルがあるかどうかの特定の属性を問い合わせる。
+	  もしも、この属性が存在した場合、ファイルはオフラインであると推測される。
+	</para>
+	<para>
+		It tries to avoid calling expensive DMAPI calls with some
+		heuristics based on the fact that number of blocks reported of a
+		file multiplied by 512 will be bigger than 'online ratio' of
+		actual size for online (non-migrated) files.
+		If heuristic check fails, the module calls DMAPI and asks for
+		a specific attribute which is present for offline (migrated) files.
+		If this attribute presents, the file is considered offline.
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+
+		<term>tsmsm:hsm script = [ path to hsm script ]</term>
+		<listitem>
+		<para>
+		  hsm スクリプトは、2つの引数: operationとfilepathを受け付ける
+		  小さなスクリプトを指し示す。tsmsmモジュールは、ファイルパスが
+		  オフラインであると、ファイルに設定する、"offline"のみを
+		  使用する。
+		</para>
+		<para>
+			hsm script should point to a shell script which
+			accepts two arguments: operation and filepath.
+			the tsmsm module only uses "offline" for operation
+			to set set the file under filepath offline.
+		</para>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>tsmsm:online ratio = [ number ]</term>
+		<listitem>
+		<para>
+		実際のファイルサイズに対して報告されたサイズをチェックするための割合。
+		既定値は 0.5 である。
+		</para>
+		<para>
+		Ratio to check reported size against actual file size.
+		The default value is 0.5.
+		</para>
+		</listitem>
+
+		</varlistentry>
+
+		<varlistentry>
+
+		<term>tsmsm:dmapi attribute = [ attribute-name ]</term>
+		<listitem>
+		<para>
+		  ファイルがオフラインの時存在する DMAPI 属性の名前。
+		  既定値は "IBMobj"(GPFSが使うものである)。
+		</para>
+		</listitem>
+
+		</varlistentry>
+		<varlistentry>
+
+		<term>tsmsm:dmapi value = [ value for the DMAPI attribute ]</term>
+		<listitem>
+		<para>
+		  ファイルがオフラインであると推測されるために
+		  持っているべきDMAPI 属性の値。既定値は空(値は要求されない)。
+		</para>
+		</listitem>
+
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>TSMサポートを伴うGPFSマウントは以下のように Samba経由でエクスポートされることができる:</para>
+
+<programlisting>
+        <smbconfsection name="[gpfs_tsm_share]"/>
+	<smbconfoption name="vfs objects">tsmsm gpfs</smbconfoption>
+	<smbconfoption name="path">/test/gpfs_mount</smbconfoption>
+</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	<para>このマニュアルページはバージョン4.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.0.3 - 4.1.22 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
