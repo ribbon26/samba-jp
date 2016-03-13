@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.0</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 
@@ -1331,6 +1331,58 @@ DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP
 </refsect2>
 
 <refsect2>
+	<title>ADS ENCTYPES</title>
+
+<para>
+        AD中の、アカウントにおける "msDS-SupportedEncryptionTypes" 属性値の表示、変更あるいは削除	  
+</para>
+
+<para>
+  この属性は、どのKerberos暗号化タイプが、初期およびサービスチケットの生成に使われるかを制御する。その値には、以下で示される整数型のビットマスクを含む:
+</para>
+
+<para>0x00000001 DES-CBC-CRC</para>
+<para>0x00000002 DES-CBC-MD5</para>
+<para>0x00000004 RC4-HMAC</para>
+<para>0x00000008 AES128-CTS-HMAC-SHA1-96</para>
+<para>0x00000010 AES256-CTS-HMAC-SHA1-96</para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES LIST <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
+
+<para>
+        与えられたアカウントの、"msDS-SupportedEncryptionTypes" 属性値を表示する。
+</para>
+
+<para>例: <userinput>net ads enctypes list Computername</userinput></para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES SET <replaceable>&lt;ACCOUNTNAME&gt;</replaceable> <replaceable>[enctypes]</replaceable></title>
+
+<para>
+  ACCOUNTNAME のLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性値に、与えられた値を設定する。値が省略された場合は、すべての、現在サポートされている暗号化タイプを有効にする 31 が設定される。
+</para>
+
+<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES DELETE <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
+
+<para>
+  ACCOUNTNAMEのLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性を削除する。
+</para>
+
+<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
+
+</refsect2>
+
+<refsect2>
 <title>SAM CREATEBUILTINGROUP &lt;NAME&gt;</title>
 
 <para>
@@ -1622,16 +1674,62 @@ idmap_tdbバックエンドによって生成されたマップのダンプに�
 </refsect2>
 
 <refsect2>
-<title>IDMAP SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
+<title>IDMAP SET SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
 
 <para>
-指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
+ 指定したドメインのために、secretを格納し、おもに、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
 </para>
 
 </refsect2>
 
 <refsect2>
-<title>IDMAP DELETE [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
+<title>IDMAP SET RANGE &lt;RANGE&gt; &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベース中に、与えられたドメイン(とインデックス)用のドメイン-レンジマッピングを格納する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP SET CONFIG &lt;config&gt; [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベース中のCONFIGエントリを更新する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET RANGE &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
+
+<para>
+  与えられたドメインとインデックスに対するレンジを、autorid データベースから得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET RANGES [&lt;SID&gt;] [--db=&lt;DB&gt;]</title>
+
+<para>
+  与えられたSIDで識別される1個、あるいはすべてのドメインのレンジを得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET CONFIG [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベースからCONFIGエントリを得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+
+<title>IDMAP DELETE MAPPING [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
 
 <para>
 Delete a mapping sid &lt;-&gt; gid or sid &lt;-&gt; uid from the IDMAP database.
@@ -1649,6 +1747,26 @@ uid: "UID番号"によって与えられる。
   を使う。詳細は、<citerefentry><refentrytitle>smbcontrol</refentrytitle>
   <manvolnum>1</manvolnum></citerefentry>マニュアルページを参照。
 </para>
+</refsect2>
+
+<refsect2>
+<title>IDMAP DELETE RANGE [-f] [--db=&lt;TDB&gt;] &lt;RANGE&gt;|(&lt;SID&gt; [&lt;INDEX&gt;])</title>
+
+<para>
+  autorid データベースから、'レンジ' または 'ドメイン SID とインデックス' で識別されるドメインレンジマッピングを削除する。
+  -f は、不正なマッピングを削除するのに使う。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP DELETE RANGES [-f] [--db=&lt;TDB&gt;] &lt;SID&gt;</title>
+
+<para>
+  SIDで識別されるドメインの、すべてのドメインレンジマッピングを削除する。
+  -f は、不正なマッピングを削除するのに使う。
+</para>
+
 </refsect2>
 
 <refsect2>
@@ -1694,21 +1812,18 @@ uid: "UID番号"によって与えられる。
 
     <varlistentry><term>-T|--test</term>
       <listitem><para>
-	Dry run, show what changes would be made but don't touch anything.
 	試験実行であり、どのような変更が行われるかを表示するが何も変更しない。
       </para></listitem>
     </varlistentry>
 
     <varlistentry><term>-l|--lock</term>
       <listitem><para>
-	Lock the database while doing the check.
 	検査中にデータベースをロックする。
       </para></listitem>
     </varlistentry>
 
     <varlistentry><term>--db &lt;DB&gt;</term>
       <listitem><para>
-	Check the specified database.
 	指定されたデータベースを検査する。
       </para></listitem>
     </varlistentry>
@@ -2639,7 +2754,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.16 - 4.1.22 に対応する。</para>
+	<para>このマニュアルページは Samba 4.2.0 - 4.2.0 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -2649,7 +2764,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4 - 4.1.22 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 - 4.2.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
