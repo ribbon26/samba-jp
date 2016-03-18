@@ -7,7 +7,7 @@
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
-	<refmiscinfo class="version">4.0</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 
@@ -21,13 +21,13 @@
 		<command>smbcacls</command>
 		<arg choice="req">//server/share</arg>
 		<arg choice="req">/filename</arg>
-		<arg choice="opt">-D|--delete acls</arg>
-		<arg choice="opt">-M|--modify acls</arg>
-		<arg choice="opt">-a|--add acls</arg>
-		<arg choice="opt">-S|--set acls</arg>
+		<arg choice="opt">-D|--delete acl</arg>
+		<arg choice="opt">-M|--modify acl</arg>
+		<arg choice="opt">-a|--add acl</arg>
+		<arg choice="opt">-S|--set acl</arg>
 		<arg choice="opt">-C|--chown name</arg>
 		<arg choice="opt">-G|--chgrp name</arg>
-		<arg choice="opt">-I allow|romove|copy</arg>
+		<arg choice="opt">-I allow|remove|copy</arg>
 		<arg choice="opt">--numeric</arg>
 		<arg choice="opt">-t</arg>
 		<arg choice="opt">-U username</arg>
@@ -48,7 +48,10 @@
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para><command>smbcacls</command> は、SMB ファイル共有内の ACL
-	(Access Control Lists) を操作するプログラムである。</para>
+	(Access Control Lists) を操作するプログラムである。
+	ACLはなにもないか、特定のユーザやグループに対するアクセス制限を行う、
+	1つ以上のACE(Access Control Entries)から構成される。
+	</para>
 </refsect1>
 
 
@@ -60,29 +63,30 @@
 
 	<variablelist>
 		<varlistentry>
-		<term>-a acls</term>
-		<listitem><para>ACL リストで指定された ACL を追加する。既存の ACL
+		<term>-a|--add acl</term>
+		<listitem><para>エントリを、指定された ACLに追加する。既存の ACL
 		は変更されない。</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-M acls</term>
-		<listitem><para>コマンドラインで指定された ACL の mask 値
-		(パーミッション) を変更する。ACL リストに指定された ACL が存在しない場合、その ACL 毎にエラーが出力される。
+		<term>-M|--modify acl</term>
+		<listitem><para>コマンドラインで指定された ACE の mask 値
+		(パーミッション) を変更する。オブジェクトのACLに指定された ACE が存在しない場合、
+		その ACL 毎にエラーが出力される。
 		</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-D acls</term>
-		<listitem><para>コマンドラインで指定された ACL を削除する。ACL
-		ACL リストに指定された ACL が存在しない場合、その ACL 毎にエラーが
+		<term>-D|--delete acl</term>
+		<listitem><para>コマンドラインで指定された ACE を削除する。
+		オブジェクトのACLに指定された ACE が存在しない場合、その ACL 毎にエラーが
 		出力される。</para></listitem>
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-S acls</term>
+		<term>-S|--set acl</term>
 		<listitem><para>このコマンドは、コマンドラインで指定された ACL
-		のみをファイルに設定する。その他の全ての ACL は削除される。
+		のみをオブジェクトに設定する。存在する ACL は削除される。
 		呼び出しを成功させるためには、指定する ACL に最低限リビジョン、タイプ、
 		所有者とグループが含まれている必要がある。</para></listitem>
 		</varlistentry>
@@ -199,7 +203,7 @@
 <refsect1>
 	<title>ACL 形式</title>
 
-	<para>ACL の形式は、カンマか改行記号で 1 つ以上の ACL エントリーを区切ったもの
+	<para>ACL の形式は、カンマか改行記号で 1 つ以上の エントリーを区切ったもの
 	である。ACL エントリーは以下のいずれかの形式をとる: </para>
 
 <para><programlisting> 
@@ -218,14 +222,15 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 	それ以外の場合、指定された名前はファイルやディレクトリが存在するサーバーに
 	よって解析される。</para>
 
-	<para>ACL は SID に対して与えられるパーミッションを指定する。この SID も
+	<para>ACE は "ACL:" プレフィックスで指定され、SID に対して与えられるパーミッション
+	を指定する。この SID も
 	S-1-x-y-z の形式で指定するか、名前で指定することが可能で、後者の場合、
 	ファイルやディレクトリが存在するサーバーによって解析される。 type, flag, mask
 	の値は、SIDに対して与えられたアクセスの種類を指定する。</para>
 
 	<para>
 	typeは SID に対する許可および拒否に対応する(訳注: 実際は type は ALLOWED か DENIED を指定し、それぞれ SID に対するアクセス許可および拒否に対応する、が正しい(fumiya))。
-	flag の値はファイルの ACL の場合通常 0 であり、ディレクトリの ACL の場合は通常
+	flag の値はファイルの ACE の場合通常 0 であり、ディレクトリの ACE の場合は通常
 	9 か 2 である。 共通的な flags は以下の通りである: </para>
 
 	<itemizedlist> 
@@ -282,7 +287,7 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルページは Samba バージョン 3用である。</para>
+	<para>このマニュアルページは Samba バージョン 4用である。</para>
 </refsect1>
 
 <refsect1>
@@ -303,8 +308,8 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.4 - 4.1.22 に対応する。</para>
-        <para>このドキュメントの Samba 3.0.0 - Samba 4.1.4 対応の翻訳は
+	<para>このマニュアルページは Samba 4.2.0 - 4.2.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 - Samba 4.2.0対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
