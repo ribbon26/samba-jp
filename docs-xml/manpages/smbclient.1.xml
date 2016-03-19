@@ -7,7 +7,7 @@
 	<manvolnum>1</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
-	<refmiscinfo class="version">4.0</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 <refnamediv>
@@ -356,8 +356,8 @@
 		フラグは以下のとおり。</para>
 		
 		<itemizedlist>
-			<listitem><para><parameter>c</parameter> - UNIX 上で tar
-			ファイルを作成する。このオプションの後には tar
+		  <listitem><para><parameter>c</parameter> - ローカルシステム
+		        上で tarファイルを作成する。このオプションの後には tar
 			ファイルの名前、テープデバイス、もしくは標準出力を意味する
 			"-" のいずれかを指定しなければならない。
 			標準出力を指定した場合、ログレベルを最低の -d0 にして、
@@ -404,7 +404,7 @@
 			<listitem><para><parameter>b</parameter> - ブロックサイズ。
 			このオプションの後には有効な (1 以上の) ブロックサイズを
 			指定しなければならない。このオプションにより、tar ファイルは、
-			ブロックサイズ*TBLOCK (通常 512 バイト) ブロックの単位で
+			ブロックサイズ*TBLOCK (512 バイト) ブロックの単位で
 			書き出されるようになる。</para></listitem>
 			
 			<listitem><para><parameter>g</parameter> - インクリメンタル
@@ -416,14 +416,8 @@
 			動作中の状態メッセージの表示を抑止する。これは、tar モードでも
 			同様である。</para></listitem>
 			
-			<listitem><para><parameter>r</parameter> - 正規表現。
-			HAVE_REGEX_H フラグを設定してコンパイルした場合は、処理対象に
-			含めるか除外するファイルを指定する為に正規表現を使うことができる。
-			(訳注: 原文では "excluding or excluding files" となっているが、
-			"including or excluding files" の誤りだと思われる)
-			しかし、このモードは非常に遅い。HAVE_REGEX_H フラグなしで
-			コンパイルされた場合は、 * と ? を用いる 限定的なワイルドカードが
-			使用できる。</para></listitem>
+			<listitem><para><parameter>r</parameter> - 処理対象に入れるか外すかを
+			ワイルドカードで指定。推奨しない。</para></listitem>
 			
 			<listitem><para><parameter>N</parameter> - 更新(newer)。
 			このオプションの後には、ファイル名を指定する必要がある。
@@ -605,7 +599,7 @@
 		<varlistentry>
 		<term>blocksize &lt;number&gt;</term>
 		<listitem><para>操作時のブロックサイズパラメーターを設定する。既定値は20である。
-		tarファイルの出力をblocksize*TBLOCK(通常512バイト)ユニットごとに行うようにする。
+		tarファイルの出力をblocksize*TBLOCK(512バイト)ユニットごとに行うようにする。
 		</para></listitem>
 		</varlistentry>
 
@@ -1078,15 +1072,27 @@
 		</varlistentry>
 		
 		<varlistentry>
-		<term>tarmode &lt;full|inc|reset|noreset&gt;</term>
-		<listitem><para>アーカイブビットに関する tar の動作を設定する。
-		full (完全) モードでは、tar はアーカイブビットの状態に関わらず、
-		すべてをバックアップする (これがデフォルトのモード)。
-		incremental(増分) モードでは、tar はアーカイブビットが設定された
-		ファイルだけをバックアップする。
-		reset モードでは、tar はバックアップしたファイルのアーカイブビットを
-		クリアする (読み書きできる共有において)。
-		</para></listitem>
+		<term>tarmode &lt;full|inc|reset|noreset|system|nosystem|hidden|nohidden&gt;</term>
+		<listitem><para>DOS アーカイブビットに関する tar の動作を設定する。
+		4つのモードがあり、それぞれon/offできる。</para>
+		<para>Incremental(増分) モード(既定値はoff)。offの場合、
+		(<command>full</command>を使うと)tar は<emphasis>archive</emphasis>
+		ビットの設定にかかわらず、すべてをバックアップする。onの場合、
+		(<command>inc</command>を使うと)tar はアーカイブビットが設定されて
+		いるもののみをバックアップする</para>
+
+		<para>Reset モード(既定値はoff)。onにすると(<command>reset</command>
+		を使うと)、tar はバックアップ先のすべてのファイルにおいてアーカイブビット
+		をクリヤする(読み書きできる共有において)。
+		<command>noreset</command>を使うと off になる。
+		</para>
+
+		<para> System モード(既定値はon)。offにすると、tar はシステムファイルを
+		バックアップしない。<command>nosystem</command>でoffになる。</para>
+
+		<para>Hiddenモード(既定値はon)。offにすると、tar は 隠し(hidden)
+		ファイルをバックアップしない。<command>nohidden</command> で
+		off になる</para></listitem>
 		</varlistentry>
 
                 <varlistentry>
@@ -1248,7 +1254,7 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.4 - 4.1.22 に対応する。</para>
+	<para>このマニュアルページは Samba 4.2.0 - 4.2.0 に対応する。</para>
         <para>このドキュメントの Samba 3.0.0 - 3.0.24 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
@@ -1263,7 +1269,7 @@
 		<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
 	</itemizedlist>	
         によって行なわれた。</para>
-	<para>このドキュメントの Samba 3.6.7 - 4.1.22 対応の翻訳は太田俊哉によって行われた。</para>
+	<para>このドキュメントの Samba 3.6.7 - 4.2.0 対応の翻訳は太田俊哉によって行われた。</para>
 </refsect1>
 
 </refentry>
