@@ -38,50 +38,52 @@
 	<command>vfs_streams_xattr</command> と共に使わなければならない。
 	正しい設定方法は、例 の節を参照のこと。</para>
 
-	<para>The module enables alternate data streams (ADS) support
-	for a share, intercepts the OS X special streams "AFP_AfpInfo"
-	and "AFP_Resource" and handles them in a special way. All
-	other named streams are deferred to
-	<command>vfs_streams_xattr</command> which must be loaded
-	together with <command>vfs_fruit</command>.</para>
+	<para>モジュールは、共有に対して、代替データストリーム(ADS)
+	のサポートと、OS X 特有のストーリム "AFP_AfpInfo" と "AFP_Resource"
+	を横取りし、それを特別な方法で扱う機能を有効にする。
+	その他すべての名前付きストリームは、<command>vfs_fruit</command>
+	といっしょにロードされねばならない<command>vfs_streams_xattr</command>
+	にゆだねられる。</para>
 
-	<para>Having shares with ADS support enabled for OS X client
-	is worthwhile because it resembles the behaviour of Apple's
-	own SMB server implementation and it avoids certain severe
-	performance degradations caused by Samba's case sensitivity
-	semantics.</para>
+	<para>OS Xクライアントに対する、ADSサポートが有効な共有
+	があると言うことは、Apple固有のSMBサーバ実装の動作と似て、
+	Sambaが大文字と小文字を区別することにより引き起こされる
+	深刻なパフォーマンスの低下を回避すると言う点において価値がある。
+	</para>
 
-	<para>The OS X metadata and resource fork stream can be stored
-	in a way compatible with Netatalk 3 by setting
-	<command>fruit:resource = file</command> and
-	<command>fruit:metadata = netatalk</command>.</para>
+	<para>OS X メタデータとリソースフォークストリームは、Netatalk 3 と
+	互換性のある方法で、下記のように設定することにより格納される。
+	<command>fruit:resource = file</command> と
+	<command>fruit:metadata = netatalk</command></para>
 
-	<para>OS X maps NTFS illegal characters to the Unicode private
-	range in SMB requests. By setting <command>fruit:encoding =
-	native</command>, all mapped characters are converted to
-	native ASCII characters.</para>
+	<para>OS X は、NTFS の不正な文字を、SMB要求中で、Unicode
+	のプライベート領域にマップする。
+	<command>fruit:encoding = native</command> を設定することにより、
+	すべてのマップされた文字は ネイティブなASCII文字に変換される。
+	</para>
 
-	<para>Finally, share access modes are optionally checked
-	against Netatalk AFP sharing modes by setting
-	<command>fruit:locking = netatalk</command>.</para>
+	<para>最後に、共有アクセスモードは、
+	<command>fruit:locking = netatalk</command>
+	を設定することにより、Netatalk AFP 共有モードに対して
+	チェックすることもできる。</para>
 
-	<para>This module is not stackable other then described in
-	this manpage.</para>
+	<para>このモジュールは、このマニュアルページで言及されている
+	物以外に対してはスタックできない。</para>
 
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
 	  <varlistentry>
 	    <term>fruit:resource = [ file | xattr | stream ]</term>
 	    <listitem>
-	      <para>Controls where the OS X resource fork is stored:</para>
+	      <para>どこに OSX リソースフォークを格納するかを制御する:</para>
 
 	      <itemizedlist>
-		<listitem><para><command>file (default)</command> - use a ._
+		<listitem><para><command>file (既定値)</command> - use a ._
 		AppleDouble file compatible with OS X and
 		Netatalk</para></listitem>
 
