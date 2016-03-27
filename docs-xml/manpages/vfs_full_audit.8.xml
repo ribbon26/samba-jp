@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.0</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 
@@ -63,6 +63,7 @@
         <member>fstat</member>
         <member>fsync</member>
         <member>ftruncate</member>
+	<member>get_compression</member>
         <member>get_nt_acl</member>
         <member>get_quota</member>
         <member>get_shadow_copy_data</member>
@@ -92,6 +93,7 @@
         <member>rmdir</member>
         <member>seekdir</member>
         <member>sendfile</member>
+	<member>set_compression</member>
         <member>set_nt_acl</member>
         <member>set_quota</member>
         <member>setxattr</member>
@@ -110,9 +112,9 @@
 	</simplelist>
 
 	<para>これらの動作に加え、
-	<command>vfs_full_audit</command>は&quot;all&quot; and &quot;none &quot;という
+	<command>vfs_full_audit</command>は&quot;all&quot; と &quot;none &quot;という
 	オプションを使用することができる。これらはすべてのVFS動作に対し有効になり、
-	ここのVFS動作に対して指定することはできない。
+	個々のVFS動作に対して指定することはできない。
 	</para>
 
 	<para><command>vfs_full_audit</command>は動作を'|'をセパレーターとして
@@ -143,7 +145,7 @@
 	<variablelist>
 
 		<varlistentry>
-		<term>vfs_full_audit:prefix = STRING</term>
+		<term>full_audit:prefix = STRING</term>
 		<listitem>
 		<para>STRINGで監査メッセージを結合する。STRINGは
 		<citerefentry><refentrytitle>smb.conf</refentrytitle>
@@ -199,6 +201,23 @@
                 </listitem>
                 </varlistentry>
 
+                <varlistentry>
+                <term>full_audit:syslog = true/false</term>
+                <listitem>
+                  <para>ログメッセージをsyslog に送るか(既定値)、
+		  デバッグレベル 1 メッセージとするかを指定する。</para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>full_audit:log_secdesc = true/false</term>
+                <listitem>
+                  <para>クライアントがaclを設定したとき、送られてくる
+		  セキュリティ記述子をsddl 形式でログを取る。既定値は false。
+                </para>
+                </listitem>
+                </varlistentry>
+
 	</variablelist>
 </refsect1>
 
@@ -241,7 +260,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このドキュメントは、Samba 4.1.0 - 4.1.22 に対応する。</para>
+	<para>このドキュメントは、Samba 4.2.0 - 4.2.0 に対応する。</para>
     <para>このドキュメントの翻訳は
 	<itemizedlist>
 		<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
