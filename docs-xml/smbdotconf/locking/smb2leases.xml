@@ -1,0 +1,39 @@
+<samba:parameter name="smb2 leases"
+                 context="G"
+				 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>
+	  この真理値オプションは、<command moreinfo="none">smbd</command>に、
+	  ファイルオープン要求時、グローバルにSMB2リースをネゴシエートするかどうかを
+	  通知する。リースはSMB2のみの機能で、クライアントに、より積極的に
+	  ファイルをローカルにキャッシュさせたり、SMB1 oplockによってキャッシュを
+	  許可されたものをキャッシュさせる。この(実験的な)パラメータは、
+	  SMBリースコードが完全に安定すると見なされるまで off に設定される。	</para>
+	<para>
+	This boolean option tells <command moreinfo="none">smbd</command> whether to
+	globally negotiate SMB2 leases on file open requests. Leasing is an SMB2-only
+	feature which allows clients to aggressively cache files locally above and
+	beyond the caching allowed by SMB1 oplocks. This (experimental) parameter is
+	set to off by default until the SMB2 leasing code is declared fully stable.
+	</para>
+
+	<para>
+	これは、<smbconfoption name="oplocks">yes</smbconfoption>と
+	<smbconfoption name="kernel oplocks">no</smbconfoption> の時にのみ有効である。
+	</para>
+
+	<para>smb2 書き込みリースが設定されているファイルハンドルに対しては、
+	書き込みキャッシュは使われないことに注意。</para>
+
+	<para>
+	  リースの Smaba実装は現在実験的である!
+	</para>
+</description>
+
+<related>oplocks</related>
+<related>kernel oplocks</related>
+<related>level2 oplocks</related>
+<related>write cache size</related>
+<value type="default">no</value>
+</samba:parameter>
