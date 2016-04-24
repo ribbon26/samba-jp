@@ -12,7 +12,7 @@
 
 <para>
 このセクションを読み始める前に、<link linkend="samba-pdc">ドメイン制御</link>
-中で説明されているSambaドメインコントローラーの設定に問題がないようにして
+中で説明されている Samba ドメインコントローラーの設定に問題がないようにして
 おくこと。
 </para>
 
@@ -22,7 +22,7 @@
 <para>
 この章は、説明するのが最も困難な章の一つである。何を書いても、誰かがまだ
 実現できていない項目、あるいはまったく異なるアプローチを使った方が遥かに
-効果的に実現できる項目について、実現されたはずだと期待してSambaチームに
+効果的に実現できる項目について、実現されたはずだと期待して Samba チームに
 問い合わせてくることを防止することはできないと思われる。もしこの章で説明
 されているはずなのに、いくら読んでも言及されない事項というのがある場合は、
 要件あるいは質問内容を明確に書いて
@@ -36,13 +36,13 @@
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>LDAP</primary><secondary>slave</secondary></indexterm>
 <indexterm><primary>スケーラビリティ</primary></indexterm>
-Samba-3 は別のSambaプライマリドメインコントローラー(PDC)に対するバックアップ
-ドメインコントローラー(BDC)として機能することができる。Samba-3 PDCは、LDAP
-アカウントバックエンドとともに運用することができる。LDAPバックエンドは、
-共用のマスターLDAPサーバーかスレーブサーバーのどちらでも使える。スレーブLDAPサーバー
+Samba は別の Samba プライマリドメインコントローラー (PDC) に対するバックアップ
+ドメインコントローラー (BDC) として機能することができる。Samba PDCは、LDAP
+アカウントバックエンドとともに運用することができる。LDAP バックエンドは、
+共用のマスターLDAPサーバーかスレーブサーバーのどちらでも使える。スレーブ LDAP サーバー
 を使用する利点は、マスターがダウンしている時でもクライアントがネットワークに
-ログオンできるということである。これによりSambaが高いレベルの拡張性を持つ
-ことになり、大規模な組織のための効果的なソリューションとなり得る。PDCにLDAP
+ログオンできるということである。これにより Samba が高いレベルの拡張性を持つ
+ことになり、大規模な組織のための効果的なソリューションとなり得る。PDC に LDAP
 スレーブサーバーを使用する場合、マスターの継続的な可用性を確保する必要がある。&smbmdash;
 悪い時にスレーブ側から見てマスターがダウンしていると、安定性の問題や運用上の
 問題となる。
@@ -53,11 +53,11 @@ Samba-3 は別のSambaプライマリドメインコントローラー(PDC)に�
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
 <indexterm><primary>propagate</primary></indexterm>
-Samba-3 BDCをLDAPでないバックエンドで運用することは不可能なので、
-バックエンドが何らかの形で「双方向の」伝達を許容し、BDC側からマスター
+Samba BDC を LDAP でないバックエンドで運用することは不可能なので、
+バックエンドが何らかの形で「双方向の」伝達を許容し、BDC 側からマスター
 への変更が可能であるようにしなければならない。現段階でこれをできるのは
-LDAPのみである。PDCが、そのプライマリとしてLDAPマスターサーバーを使うことが
-好ましい間、BDCはスレーブLDAPサーバーを使うことが出来る。
+LDAP のみである。PDC が、そのプライマリとして LDAP マスターサーバーを使うことが
+好ましい間、BDC はスレーブ LDAP サーバーを使うことが出来る。
 </para>
 
 </sect1>
@@ -182,18 +182,18 @@ PDCに対してトリガを送る。PDCは当該ドメインの全BDCに接続�
 <indexterm><primary>SAM</primary><secondary>差分ファイル</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba-3は真のSAM複製に参加できないので、Microsoft Windows NT4で
+Samba は真の SAM 複製に参加できないので、Microsoft Windows NT4で
 使われているのと同じプロトコルを使用することが出来ない。
-Samba-3 BDCはSAM更新差分ファイルを作成できない。BDCが持っている差分
-ファイルからSAMの同期をとるために、PDC(NT4またはSamba)間とやりとりもしない。
+Samba BDC は SAM 更新差分ファイルを作成できない。BDC が持っている差分
+ファイルから SAM の同期をとるために、PDC(NT4またはSamba) 間とやりとりもしない。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba-3 はMicrosoft Windows NT4 BDCとしては動作できず、Samba-3は
-Microsoft Windows NT4 BDCに対するPDCとして正しく動作できない。
-Samba-3とMicrosoft Windows NT4はそれぞれのタイプのPDCへのBDCとして
+Samba はMicrosoft Windows NT4 BDC としては動作できず、Samba は
+Microsoft Windows NT4 BDC に対する PDC として正しく動作できない。
+Samba と Microsoft Windows NT4 はそれぞれのタイプの PDC への BDC として
 機能することは出来る。
 </para>
 
@@ -218,9 +218,9 @@ NT4のPDCを稼働停止しなければならない場合や故障した場合�
 中に行うと、NT4 PDCは自動的に NT4 BDCに降格する。これはドメインコントローラー
 の管理の中で特に重要な一面である。昇格および降格を実行するのに使用される
 ツールはドメインサーバーマネジャーである。ここで注意しなければならない
-ことは、Samba-3 の BDCは同様の方法で格上げすることはできないということである。
-これは、そのような Samba の再設定を行うには&smb.conf;ファイルの変更が必要に
-なるからである。作業は、&smb.conf;ファイルの手動での変更と、Sambaネットワーク
+ことは、Samba の BDCは同様の方法で格上げすることはできないということである。
+これは、そのような Samba の再設定を行うには &smb.conf; ファイルの変更が必要に
+なるからである。作業は、&smb.conf; ファイルの手動での変更と、Samba ネットワーク
 サービスに関連するものの再起動をおこなうだけでよい。
 </para>
 
@@ -659,13 +659,13 @@ BDCは<command>nss_ldap</command>ユーティリティとNSS経由の、ロー�
 <indexterm><primary>ID マッピング</primary></indexterm>
 <indexterm><primary>ドメインメンバーサーバー</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
-Samba-3は新しいIDマッピング機能を導入した。その機能の特徴の1つは、
-NTドメインのユーザーとグループSIDに関してユーザーとグループIDを取り扱うやり方に、
+Samba は新しい ID マッピング機能を導入した。その機能の特徴の1つは、
+NTドメインのユーザーとグループ SID に関してユーザーとグループ ID を取り扱うやり方に、
 より高い柔軟性を備えているということである。新しい機能の1つは、UNIX/Linuxの
-UIDとGIDの値が、PDC、すべてのBDCとすべてのドメインメンバーサーバー上で
+UID と GID の値が、PDC、すべての BDC とすべてのドメインメンバーサーバー上で
 一貫していることを明確に確保する。これを制御
 するパラメーターは、<parameter>idmap backend</parameter>である。その動作
-に関連する詳細な情報は、&smb.conf;マニュアルページを参照してほしい。
+に関連する詳細な情報は、&smb.conf; マニュアルページを参照してほしい。
 </para></note>
 
 <para>
