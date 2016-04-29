@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_linux_xfs_sgid.8">
+
+<refmeta>
+	<refentrytitle>vfs_syncops</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_linux_xfs_sgid</refname>
+	<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = linux_xfs_sgid</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>
+	<command>vfs_linux_xfs_sgid</command>は、まだ存在している、古い Liunx XFS
+	のバグを暫定的に回避するためのVFSモジュールである:すなわち、特定の
+	環境において、SGIDビットが継承されない
+	(<ulink url="http://oss.sgi.com/bugzilla/show_bug.cgi?id=280">
+	http://oss.sgi.com/bugzilla/show_bug.cgi?id=280</ulink>)。
+	<command>vfs_linux_xfs_sgid</command> VFS モジュールは、もしも親
+	ディレクトリでSGIDビットが設定されていた場合、<command>mkdir</command>
+	コマンド処理後にSGIDビットを手動で設定することで、暫定回避を行う。
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>[share]に対するsyncops機能を追加:</para>
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="vfs objects">linux_xfs_sgid</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページはバージョン 4.1.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 4.1.0 - 4.2.11 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

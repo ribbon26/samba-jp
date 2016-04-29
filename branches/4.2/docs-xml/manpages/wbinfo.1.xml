@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="wbinfo.1">
+
+<refmeta>
+	<refentrytitle>wbinfo</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>wbinfo</refname>
+	<refpurpose>winbind デーモンから情報を問い合わせる</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>wbinfo</command>
+		<arg choice="opt">-a user%password</arg>
+		<arg choice="opt">--all-domains</arg>
+		<arg choice="opt">--allocate-gid</arg>
+		<arg choice="opt">--allocate-uid</arg>
+                <arg choice="opt">-c</arg>
+                <arg choide="opt">--ccache-save</arg>
+                <arg choide="opt">--change-user-password</arg>
+		<arg choice="opt">-D domain</arg>
+		<arg choice="opt">--dc-info domain</arg>
+		<arg choice="opt">--domain domain</arg>
+                <arg choide="opt">--dsgetdcname domain</arg>
+		<arg choice="opt">-g</arg>
+		<arg choice="opt">--getdcname domain</arg>
+		<arg choice="opt">--get-auth-user</arg>
+		<arg choice="opt">-G gid</arg>
+                <arg choide="opt">--gid-info group</arg>
+                <arg choide="opt">--group-info group</arg>
+                <arg choice="opt">--help|-?</arg>
+		<arg choice="opt">-i user</arg>
+		<arg choice="opt">-I ip</arg>
+		<arg choice="opt">-K user%password</arg>
+		<arg choice="opt">--krb5ccname cctype</arg>
+                <arg choide="opt">--lanman</arg>
+		<arg choice="opt">--logoff</arg>
+		<arg choice="opt">--logoff-uid uid</arg>
+		<arg choice="opt">--logoff-user username</arg>
+		<arg choice="opt">--lookup-sids</arg>
+		<arg choice="opt">-m</arg>
+		<arg choice="opt">-n name</arg>
+		<arg choice="opt">-N netbios-name</arg>
+                <arg choide="opt">--ntlmv2</arg>
+                <arg choide="opt">--online-status</arg>
+		<arg choice="opt">--own-domain</arg>
+		<arg choice="opt">-p</arg>
+                <arg choice="opt">-P|--ping-dc</arg>
+		<arg choice="opt">--pam-logon user%password</arg>
+		<arg choice="opt">-r user</arg>
+                <arg choide="opt">-R|--lookup-rids</arg>
+		<arg choice="opt">--remove-gid-mapping gid,sid</arg>
+		<arg choice="opt">--remove-uid-mapping uid,sid</arg>
+		<arg choice="opt">-s sid</arg>
+		<arg choice="opt">--separator</arg>
+		<arg choice="opt">--sequence</arg>
+		<arg choice="opt">--set-auth-user user%password</arg>
+		<arg choice="opt">--set-gid-mapping gid,sid</arg>
+		<arg choice="opt">--set-uid-mapping uid,sid</arg>
+		<arg choice="opt">-S sid</arg>
+                <arg choide="opt">--sid-aliases sid</arg>
+                <arg choide="opt">--sid-to-fullname sid</arg>
+		<arg choice="opt">--sids-to-unix-ids sidlist</arg>
+		<arg choice="opt">-t</arg>
+		<arg choice="opt">-u</arg>
+		<arg choice="opt">--uid-info uid</arg>
+                <arg choide="opt">--usage</arg>
+		<arg choice="opt">--user-domgroups sid</arg>
+		<arg choice="opt">--user-sidinfo sid</arg>
+		<arg choice="opt">--user-sids sid</arg>
+		<arg choice="opt">-U uid</arg>
+		<arg choice="opt">-V</arg>
+		<arg choice="opt">--verbose</arg>
+		<arg choice="opt">-Y sid</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+	
+	<para><command>wbinfo</command> プログラムは、<citerefentry><refentrytitle>
+	winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry> 
+	デーモンが生成し使用した情報を、問い合わせて返す。</para>
+
+	<para><command>wbinfo</command> プログラムが情報を取得できるように
+	<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+	デーモンが正しく設定され、動作していなければならない。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>-a|--authenticate <replaceable>username%password</replaceable></term>
+		<listitem><para><citerefentry><refentrytitle>winbindd</refentrytitle>
+		<manvolnum>8</manvolnum></citerefentry>経由でユーザーの認証を試みる。これは、認証の方法をチェックし、その結果をレポートする。
+		</para><note><para>サードパーティアプリケーション中で認証のためにこの機能を使うことを考えて
+		はいけない。その代わりに <citerefentry><refentrytitle>ntlm_auth</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry>を使うこと。</para></note></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--allocate-gid</term>
+		<listitem><para>idmap範囲外の新しいGIDを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--allocate-uid</term>
+		<listitem><para>idmap範囲外の新しいUIDを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--all-domains</term>
+		<listitem><para>すべてのドメインを表示する(信頼されたものと自分自身)。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-c|--change-secret</term>
+		<listitem><para>信頼アカウントパスワードを変更する。ドメイン間信頼
+		アカウントパスワードを変更するために、<option>domain</option>と
+		組み合わせて使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--ccache-save <replaceable>username%password</replaceable></term>
+		<listitem><para>ccacheにユーザー名とパスワードを格納する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--change-user-password <replaceable>username</replaceable></term>
+		<listitem><para>ユーザーのパスワードを変更する。新旧パスワードが要求される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--dc-info <replaceable>domain</replaceable></term>
+		<listitem><para>ドメインの、現在のドメインコントローラに関する情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--domain <replaceable>name</replaceable></term>
+		<listitem><para>このパラメーターで指定された操作が行われるドメインを
+		設定する。特殊なドメイン名である '.' は、現在<citerefentry><refentrytitle>
+		winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>が属する
+		ドメインを表すために使用される。'*' がドメイン名の場合は、すべてのドメイン
+		を列挙することを意味する(注意: これは処理に長い時間と、大量のメモリを使う)。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-D|--domain-info <replaceable>domain</replaceable></term>
+		<listitem><para>指定したドメインに関してのほとんどの情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--dsgetdcname <replaceable>domain</replaceable></term>
+		<listitem><para>ドメインのDCを捜す。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--gid-info <replaceable>gid</replaceable></term>
+		<listitem><para>gidからgroup infoを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--group-info <replaceable>group</replaceable></term>
+		<listitem><para>ユーザーのgroup infoを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-g|--domain-groups</term>
+		<listitem><para>このオプションは 
+		<citerefentry><refentrytitle>Samba</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+		デーモンが動作している、Windows NT ドメイン内で利用できる全グループを
+		一覧表示する。また、--domain='*' オプションを指定すると、
+		すべての信頼されるドメインのグループも一覧表示される。この操作では 
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		で見えないグループの ID は取得できない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--get-auth-user</term>
+		<listitem><para>ドメインコントローラーとのセッションセットアップで、
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		で使用されるユーザー名とパスワードを表示する。ユーザー名と
+		パスワードは <option>--set-auth-user</option>オプションを使って設定できる。
+		root しか使用できない。
+		</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>--getdcname <replaceable>domain</replaceable></term>
+		<listitem><para>指定したドメインのためのDC名を得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-G|--gid-to-sid <replaceable>gid</replaceable></term>
+		<listitem><para>UNIX の group id を Windows NT の SID
+		に変換しようとする。もし指定された gid が idmap gid で指定された
+		範囲に収まらない場合、この操作は失敗する。</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>-?</term>
+                <listitem><para>簡単なヘルプを表示する。
+                </para></listitem>
+                </varlistentry>		
+
+		<varlistentry>
+		<term>-i|--user-info <replaceable>user</replaceable></term>
+		<listitem><para>ユーザー情報を得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-I|--WINS-by-ip <replaceable>ip</replaceable></term>
+		<listitem><para><parameter>-I</parameter> オプションは
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum>
+		</citerefentry> に、<parameter>ip</parameter> パラメーターで指定された
+		IP アドレスと対応する NetBIOS 名を問い合わせるため、node status
+		request を送る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-K|--krb5auth <replaceable>username%password</replaceable></term>
+		<listitem><para>Kerberos経由でユーザーの認証を試みる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--krb5ccname <replaceable>KRB5CCNAME</replaceable></term>
+		<listitem><para>認証に使われる特定のkerberos資格情報キャッシュタイプ
+		要求を許可する。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>--lanman</term>
+                <listitem><para>ユーザーの認証時にlanman暗号化を使用する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+		<term>--logoff</term>
+		<listitem><para>ログオフする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--logoff-uid <replaceable>UID</replaceable></term>
+		<listitem><para>ログオフ要求中に使うユーザのuidを定義する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--logoff-user <replaceable>USERNAME</replaceable></term>
+		<listitem><para>ログオフ要求中に使うユーザ名を定義する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--lookup-sids <replaceable>SID1,SID2...</replaceable></term>
+		<listitem><para>SIDを検索する。SIDは、ASCII文字列で、従来からの
+		Microsoft形式で指定しなければならない。たとえば、
+		S-1-5-21-1455342024-3071081365-2475485837-500 である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-m|--trusted-domains</term>
+		<listitem><para><citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		が名前解決の際に問い合わせを行う、Windows NT サーバーが信頼している
+		ドメインの一覧を提供する。このリストには、
+		サーバーがプライマリドメインコントローラーとなっている Windows NT
+		ドメインは含まれない。
+		</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-n|--name-to-sid <replaceable>name</replaceable></term>
+		<listitem><para><parameter>-n</parameter> オプションは 
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		に対し、指定された名前と対応した SID
+		を問い合わせる。Winbind separator として指定された文字を使用することで
+		ユーザー名の前にドメイン名を指定することができる。
+		たとえば、CWDOM1/Administrator はドメイン CWDOM1 の Administrator
+		ユーザーとなる。もしドメインが指定されていない場合、使用されるドメインは
+		<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5
+		</manvolnum></citerefentry> の <parameter>workgroup</parameter>
+		パラメーターで指定されたものとなる。</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-N|--WINS-by-name <replaceable>name</replaceable></term>
+		<listitem><para><parameter>-N</parameter> オプションは
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8
+		</manvolnum></citerefentry> を使い、<parameter>name</parameter>
+		パラメーターで指定された NetBIOS 名に対応する IP アドレスを WINS
+		サーバーに問い合わせる。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>--ntlmv2</term>
+                <listitem><para>ユーザーの認証時にNTLMv2暗号化を使用する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--online-status <replaceable>domain</replaceable></term>
+                <listitem><para>ドメインがオンライン化オフラインかのどちらかに
+		マークされているかを表示する。オプションのdomain引数は、与えられた
+		ドメインのオンラインステータスのみに出力を制限する。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>--own-domain</term>
+		<listitem><para>所有するドメインを一覧表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--pam-logon <replaceable>username%password</replaceable></term>
+		<listitem><para>pam_winbind が行っているのと同じように、
+		ユーザの認証を試みる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-p|--ping</term>
+		<listitem><para><citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		 が動作中かどうか確認する。'成功' か '失敗' かを表示する。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>-P|--ping-dc</term>
+                <listitem><para>使用するDCに対して何ら作用しないコマンドを
+		発光する。これは、使用するドメインコントローラーに対してセキュア
+		チャネルでの接続が引き続き有効かどうかを調べる。これは、
+		wbinfo -t よりもさらに影響が少ない。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>-r|--user-groups <replaceable>username</replaceable></term>
+		<listitem><para>ユーザーが所属する UNIX の group ids 一覧を表示しようとする。
+		これはドメインコントローラーに登録されているユーザーにのみ動作する。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>-R|--lookup-rids <replaceable>rid1, rid2, rid3...</replaceable></term>
+                <listitem><para>RIDを名前に変換する。カンマで分離されたridの一覧を使う。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>--remove-gid-mapping <replaceable>GID,SID</replaceable></term>
+		<listitem><para>データベースから、存在するGID からSIDへのマッピングを
+		削除する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--remove-uid-mapping <replaceable>UID,SID</replaceable></term>
+		<listitem><para>データベースから、存在するUIDからSIDへのマッピングを
+		削除する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-s|--sid-to-name <replaceable>sid</replaceable></term>
+		<listitem><para><parameter>-s</parameter> を使用して SID から名前を解決
+		することができる。これは前述の <parameter>-n</parameter> オプションの
+		逆である。SID はこれまでどおり Microsoft のフォーマットを用いた ASCII
+		文字列で指定する必要がある。たとえば、
+		S-1-5-21-1455342024-3071081365-2475485837-500 というふうに記述する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--separator</term>
+		<listitem><para>有効なwinbindセパレーターを得る。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>--sid-aliases <replaceable>sid</replaceable></term>
+                <listitem><para>与えられたSIDに対するSIDの別名を得る。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--sid-to-fullname <replaceable>sid</replaceable></term>
+                <listitem><para>SIDを完全なユーザー名(DOMAIN\username)に変換する。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>--sequence</term>
+		<listitem><para>このコマンドは将来廃止予定である。そのかわりに
+		--online-status を使って欲しい。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-auth-user <replaceable>username%password</replaceable></term>
+		<listitem><para>ドメインコントローラーとのセッション確立時に使用される
+		ユーザー名とパスワードを保存する。これは<citerefentry><refentrytitle>winbindd
+		</refentrytitle><manvolnum>8</manvolnum></citerefentry> が Restrict Anonymous
+		が有効となっている Windows 2000 ドメインで動作することを可能にする。
+		(Windows 2000 サーバー互換のパーミッションのみ)
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-gid-mapping <replaceable>GID,SID</replaceable></term>
+		<listitem><para>GIDからSIDへのマッピングをデータベース中に生成する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-uid-mapping <replaceable>UID,SID</replaceable></term>
+		<listitem><para>UIDからSIDへのマッピングをデータベース中に生成する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-S|--sid-to-uid <replaceable>sid</replaceable></term>
+		<listitem><para>SID を UNIX の user id に変換する。もし SID が
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		で UNIX ユーザーにマッピングされていない場合、この操作は失敗する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--sids-to-unix-ids <replaceable>sid1,sid2,sid3...</replaceable></term>
+		<listitem><para>SIDからUnixのIDへの変換を行う。SIDは一般的な
+		ASCII文字列による Microsoft 形式を指定しなければならない。
+		たとえば、S-1-5-21-1455342024-3071081365-2475485837-500 である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-t|--check-secret</term>
+		<listitem><para>Samba サーバーが動作中の Windows NT ドメインに参加時に、
+		ワークステーションの信頼するアカウントが作成されたことを確認する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-u|--domain-users</term>
+		<listitem><para>このオプションは 
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		デーモンが動作している Windows NT domain に存在する全てのユーザー
+		を一覧表示する。--domain='*' オプションを指定すると、
+		全ての信頼されるドメインのユーザー一覧も表示する。
+		この操作は <citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		で見えるユーザー以外にはユーザー ID を割り当てることはない。
+		</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>--uid-info <replaceable>uid</replaceable></term>
+		<listitem><para>ユーザーID UIDとして接続されたユーザーのためのユーザー情報を得る。</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>--usage</term>
+                <listitem><para>簡単なヘルプを表示する。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>--user-domgroups <replaceable>sid</replaceable></term>
+		<listitem><para>ユーザードメイングループを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--user-sidinfo <replaceable>sid</replaceable></term>
+		<listitem><para>SIDによるユーザー情報を得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--user-sids <replaceable>sid</replaceable></term>
+		<listitem><para>ユーザーのユーザーグループSIDを得る。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-U|--uid-to-sid <replaceable>uid</replaceable></term>
+		<listitem><para>UNIX の user id を Windows NT の SID に変換する。
+		もし指定された uid が idmap の範囲に収まらない場合、この操作は
+		失敗する。</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		  <term>--verbose</term>
+		  <listitem><para>
+		      問い合わせの結果に追加の情報を表示する。
+		  </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-Y|--sid-to-gid <replaceable>sid</replaceable></term>
+		<listitem><para>SID を UNIX の group id に変換する。もし SID が
+		<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		によって UNIX の group に関連付けられていない場合、操作は失敗する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--remove-uid-mapping uid,sid</term>
+		<listitem><para>IDmap バックエンドから、存在するuidからsidへの
+		    マッピングを削除する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--remove-gid-mapping gid,sid</term>
+		<listitem><para>IDmap バックエンドから、存在するgidからsidへの
+		    マッピングを削除する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-uid-mapping uid,sid</term>
+		<listitem><para>IDmap バックエンドに、uidからsidへのマッピングを
+		    新規に作成するか、既存のものを変更する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-gid-mapping gid,sid</term>
+		<listitem><para>IDmap バックエンドに、gidからsidへのマッピングを
+                    新規に作成するか、既存のものを変更する。</para></listitem>
+		</varlistentry>
+
+		&stdarg.version;
+		&stdarg.help;
+
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+	<title>終了ステータス</title>
+
+	<para>wbinfo プログラムは操作に成功すると 0 を返し、失敗すると 0 を返す。もし
+	<citerefentry><refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+	デーモンが動作していない場合、<command>wbinfo</command> 
+	は常に失敗を返す。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>この man ページは、Samba システムのバージョン 3(訳注 4.x?) 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>関連項目</title>
+	<para><citerefentry><refentrytitle>winbindd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>と
+<citerefentry><refentrytitle>ntlm_auth</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。Samba は現在 Linux
+	カーネルが開発されているような方法でのオープンソースプロジェクトである
+	Samba Team によって開発されている。</para>
+	
+	<para><command>wbinfo</command> と <command>winbindd</command>
+	は Tim Potter によって書かれた。</para>
+	
+	<para>Samba 2.2 用の DocBook 形式への変換は Gerald Carter が行った。
+	Samba 3.0 用の DocBook XML 4.2 形式への変換は Alexander Bokovoy が行った。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.2.0 - 4.2.11 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 対応の翻訳は
+山田 史朗 (shiro@miraclelinux.com)
+	によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.2.11 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+</refsect1>
+
+</refentry>

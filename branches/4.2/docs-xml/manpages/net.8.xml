@@ -1,0 +1,2770 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="net.8">
+
+<refmeta>
+	<refentrytitle>net</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>net</refname>
+	<refpurpose>Samba およびリモート CIFS サーバーの管理ツール
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>net</command>
+		<arg choice="req">&lt;ads|rap|rpc&gt;</arg>
+		<arg choice="opt">-h|--help</arg>
+		<arg choice="opt">-w|--workgroup workgroup</arg>
+		<arg choice="opt">-W|--myworkgroup myworkgroup</arg>
+		<arg choice="opt">-U|--user user</arg>
+		<arg choice="opt">-I|--ipaddress ip-address</arg>
+		<arg choice="opt">-p|--port port</arg>
+		<arg choice="opt">-n myname</arg>
+		<arg choice="opt">-s conffile</arg>
+		<arg choice="opt">-S|--server server</arg>
+		<arg choice="opt">-l|--long</arg>
+		<arg choice="opt">-v|--verbose</arg>
+		<arg choice="opt">-f|--force</arg>
+		<arg choice="opt">-P|--machine-pass</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-V</arg>
+		<arg choice="opt">--request-timeout seconds</arg>
+		<arg choice="opt">-t|--timeout seconds</arg>
+		<arg choice="opt">-i|--stdin</arg>
+		<arg choice="opt">--tallocreport</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは、<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>Samba の net ユーティリティは Windows や DOS に存在する
+	NET コマンドと同様の位置づけのものである。
+	先頭の引数は、コマンドを実行する際に使用するプロトコルを指定するために用いられる。
+	ADS は Active Directory によって、RAP は従来の (Windows 9x / Windows
+	NT 3.x) クライアントによって、 RPC は Windows NT 4.0 および Windows
+	2000 によって使用されている。
+	この引数が省略された場合、 net コマンドはプロトコルを自動判別しようとする。
+	すべてのコマンドがすべてのプロトコル上で使用できるわけではない。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		&stdarg.help;
+		&stdarg.kerberos;
+		
+		<varlistentry>
+		<term>-w|--workgroup target-workgroup</term>
+		<listitem><para>
+		操作対象とするワークグループやドメインを指定する。
+		このオプションか、サーバーの IP アドレスもしくは名前のいずれかは指定する必要がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-W|--myworkgroup workgroup</term>
+		<listitem><para>
+		クライアントのワークグループやドメインを指定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-U|--user user</term>
+		<listitem><para>
+		アクセスを行なうユーザー名を指定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-I|--ipaddress ip-address</term>
+		<listitem><para>
+		操作対象のサーバーの IP アドレスを指定する。
+		このオプションか、
+		操作対象のワークグループもしくは対象のサーバー名のいずれかを指定する必要がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-p|--port port</term>
+		<listitem><para>
+		操作対象のサーバーに接続する際に用いるポート番号 (通常 139 か 445) を指定する。
+		既定値ではまず 445 を試行し、ついで 139 を試行する。
+		</para></listitem>
+		</varlistentry>
+
+		&stdarg.netbios.name;
+		&stdarg.configfile;
+
+		<varlistentry>
+		<term>-S server</term>
+		<listitem><para>
+		操作対象のサーバー名を指定する。
+		このオプションか、操作対象のワークグループもしくは IP アドレスのいずれかを指定する必要がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-l|--long</term>
+		<listitem><para>
+		情報を表示する際に、各項目の詳細情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+		<term>-v|--verbose</term>
+                <listitem><para>
+		データを一覧表示する時、各アイテムごとに、より詳細な情報を表示する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-f|--force</term>
+                <listitem><para>
+                netコマンドを強制実行する。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>-P</term>
+		<listitem><para>
+		ローカルサーバーのコンピューターアカウントを用いて別のサーバーに対する問い合わせを行なう。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+                <term>--request-timeout 30</term>
+                <listitem><para>
+		クライアントの要求を30秒後にタイムアウトさせる。既定値は10秒。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-t|--timeout 30</term>
+                <listitem><para>
+                クライアント操作のタイムアウト値を30秒に設定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--use-ccache</term>
+                <listitem><para>
+		winbindによってキャッシュされた認証情報を使う事を試みる。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-i|--stdin</term>
+                <listitem><para>
+                標準入力からnetコマンドの入力を受ける。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--tallocreport</term>
+                <listitem><para>
+                netコマンド実行中にtallocの状況を生成する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-T|--test</term>
+                <listitem><para>
+		コマンドシーケンスのテストのみを行う。dry-runである。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-F|--flags FLAGS</term>
+                <listitem><para>
+		net サブコマンドに整数のフラグを渡す。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-C|--comment COMMENT</term>
+                <listitem><para>
+		net サブコマンドにコメント文字列を渡す。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-n|--myname MYNAME</term>
+                <listitem><para>
+		net サブコマンドにおいて、MYNAMEを要求元の名前とする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-c|--container CONTAINER</term>
+                <listitem><para>
+		net ads 操作に対して AD コンテナを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-M|--maxusers MAXUSERS</term>
+                <listitem><para>
+		net rpc 操作に対して maxusersフィールドを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-r|--reboot</term>
+                <listitem><para>
+		コマンドが正常終了した後に、リモートマシンを再起動する(たとえば
+		リモート join操作など)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net rpc vampire -->
+
+                <varlistentry>
+                <term>--force-full-repl</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは
+		生成された keytabファイルの再生成を強制的に行わせる。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--single-obj-repl</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは、
+		生成されたkeytabファイルに対して、単一のオブジェクトとして、
+		置換することを許可する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--clean-old-entries</term>
+                <listitem><para>
+		"net rpc vampire keytab" を呼び出す時、このオプションは、
+		生成されたkeytabファイルから古いエントリを削除することを許可する。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net idmap -->
+
+                <varlistentry>
+                <term>--db</term>
+                <listitem><para>
+		"net idmap" コマンドに対してdbfileを指定する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--lock</term>
+                <listitem><para>
+		"net idmap check" コマンドに対して、dbfileのロックを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-a|--auto</term>
+                <listitem><para>
+		"net idmap check" 中で非対話的モードを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--repair</term>
+                <listitem><para>
+		"net idmap check" 中で修復モードを有効にする。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net rpc share migrate -->
+
+                <varlistentry>
+                <term>--acls</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にACLも含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--attrs</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にファイル属性も含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--timestamps</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、コピー対象にタイムスタンプも含める。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-X|--exclude DIRECTORY</term>
+                <listitem><para>
+		"net rpc share migrate" 操作において、  コピー対象から指定した
+		ディレクトリを除外する。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--destination SERVERNAME</term>
+                <listitem><para>
+		マイグレーション操作において、ターゲットのサーバ名を指定する
+		(既定値はlocalhost)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net groupmap set -->
+
+                <varlistentry>
+                <term>-L|--local</term>
+                <listitem><para>
+		グループマッピングのタイプをlocalに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-D|--domain</term>
+		<listitem><para>
+		グループマッピングのタイプをdomainに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-N|--ntname NTNAME</term>
+                <listitem><para>
+		グループマッピングのタイプをntnameに設定する("net groupmap set" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-R|--rid RID</term>
+                <listitem><para>
+		グループマッピングのタイプをridに設定する("net groupmap set" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+               <!-- Options for net registry check -->
+
+                <varlistentry>
+                <term>--reg-version REG_VERSION</term>
+                <listitem><para>
+		データベースバージョンを {n|1,2,3} と仮定する("net registry check" 中で
+		使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>-o|--output FILENAME</term>
+                <listitem><para>
+		データベースファイル出力先を指定する("net registry check" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>--wipe</term>
+                <listitem><para>
+		新しく一からデータベースを作る("net registry check" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                <!-- Options for net registry import -->
+
+                <varlistentry>
+                <term>--precheck PRECHECK_DB_FILENAME</term>
+                <listitem><para>
+		データベースの事前チェックのためのファイル名を指定する
+		("net registry import" 中で使われる)。
+                </para></listitem>
+                </varlistentry>
+
+                &stdarg.encrypt;
+                &popt.common.samba.client;
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<title>コマンド</title>
+
+<refsect2>
+<title>CHANGESECRETPW</title>
+
+<para>
+このコマンドにより、Samba のコンピューターアカウントのパスワードを外部アプリケーションが Active Directory に格納済のものに（手動で）設定することが可能となる。
+何が行なわれるかを理解しない限り、このコマンドを用いないこと。
+このコマンドを用いるには、強制フラグ (-f) を併せて設定する必要がある。
+コマンドプロンプトのインタフェースは存在しない。
+情報は全て、コマンドラインなどを経由して標準入力経由で引き渡され、コンピューターアカウントのパスワードとして格納される。
+警告無しに以前のコンピューターアカウントのパスワードが上書きされてしまうため、このコマンドは注意して用いること。
+</para>
+
+</refsect2>
+
+<refsect2>
+	<title>TIME</title>
+
+	<para><command>NET TIME</command> コマンドにより、リモートサーバーの時刻を表示させたり、ローカルサーバーの時刻をリモートサーバーの時刻に同期させたりすることが可能となる。
+	</para>
+
+<refsect3>
+<title>TIME</title>
+
+<para>オプションを指定しなかった場合、 <command>NET TIME</command> コマンドはリモートのサーバーの時刻を表示する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>TIME SYSTEM</title>
+
+<para> リモートマシンの時刻を <command>/bin/date</command> が認識できる形式で表示する。
+リモートサーバは -S オプションで指定しなければならない。</para>
+
+</refsect3>
+
+<refsect3>
+<title>TIME SET</title>
+<para>ローカルサーバーの日付と時刻を <command>/bin/date</command> コマンドを用いてリモートサーバーの日付と時刻に設定させる。 
+リモートサーバは -S オプションで指定しなければならない。</para>
+
+</refsect3>
+
+<refsect3>
+<title>TIME ZONE</title>
+
+<para> リモートマシンの時間帯を GMT からの差分で時間単位で表示する。
+リモートサーバは -S オプションで指定しなければならない。</para>
+
+</refsect3>
+</refsect2>
+
+<refsect2>
+<title>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN]
+       [createcomputer=OU] [machinepass=PASS] [osName=string osVer=string] [options]</title>
+
+<para>
+ドメインに参加する。サーバー上にコンピューターアカウントがすでに存在しており、
+[TYPE] が MEMBER の場合、マシンの参加は自動的に行なわれる
+(コンピューターアカウントがサーバーマネージャで作成済の場合)。
+それ以外の場合は、パスワードの入力が求められ、新しいコンピューターアカウントが作成される。
+</para>
+
+<para>
+[TYPE] は、ドメインに参加するコンピューターのタイプを指定するもので、
+PDC, BDC, MEMBER のいずれかの値をとる。
+</para>
+
+<para>
+[UPN] (ADSのみ)ドメインに参加する時のプリンシパル名属性を設定する。既定値の形式は
+host/netbiosname@REALMである。
+</para>
+
+<para>
+[OU] (ADSのみ)指定したOU中にあらかじめコンピューターアカウントを作成する。
+OU文字列はRDNなしで、'/'をデリミタとして、初めから最後まで読まれる。
+シェルとLDAPの両方で'\'がエスケープとして使われるため、その文字その物を
+渡すためには、二重に書くか、4重に書く必要があり、デリミタとしては扱われない。
+</para>
+<para>
+[PASS] (ADS のみ) joinによって作成されたコンピュータアカウントのパスワードを指定する。
+</para>
+<para>
+[osName=string osVer=String] (ADS のみ) join時にOSとOSバージョン属性を指定する。
+両パラメータは、有効にするためにはどちらかを指定する必要がある。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>[RPC] OLDJOIN [options]</title>
+
+<para>ドメインに参加する。従来の方式によるドメイン参加を行なう場合は、
+OLDJOIN オプションを使用すること。
+参加を行なうには、事前にサーバーマネージャでコンピューターアカウントを作成しておくことが必要である。</para>
+</refsect2>
+
+<refsect2>
+<title>[RPC|ADS] USER</title>
+
+<refsect3>
+<title>[RPC|ADS] USER</title>
+
+<para>ユーザーの一覧を出力する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] USER DELETE <replaceable>target</replaceable></title>
+
+<para>指定したユーザーを削除する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] USER INFO <replaceable>target</replaceable></title>
+
+<para>指定したユーザーの所属するグループ一覧を出力する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] USER RENAME <replaceable>oldname</replaceable> <replaceable>newname</replaceable></title>
+
+<para>指定したユーザーの名前を変更する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] USER ADD <replaceable>name</replaceable> [password] [-F user flags] [-C comment]</title>
+
+<para>指定したユーザーを追加する。</para>
+</refsect3>
+</refsect2>
+
+<refsect2>
+<title>[RPC|ADS] GROUP</title>
+
+<refsect3>
+<title>[RPC|ADS] GROUP [misc options] [targets]</title>
+<para>グループの一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] GROUP DELETE <replaceable>name</replaceable> [その他のオプション]</title>
+
+<para>指定したグループを削除する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|ADS] GROUP ADD <replaceable>name</replaceable> [-C comment]</title>
+
+<para>指定したグループを作成する。</para>
+
+</refsect3>
+</refsect2>
+
+<refsect2>
+<title>[RAP|RPC] SHARE</title>
+
+<refsect3>
+<title>[RAP|RPC] SHARE [その他のオプション] [targets]</title>
+
+<para>指定したサーバーが公開しているすべてのリソース(ネットワーク共有)の一覧を出力する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RAP|RPC] SHARE ADD <replaceable>name=serverpath</replaceable> [-C comment] [-M maxusers] [targets]</title>
+
+<para>サーバーに共有を追加する (公開を有効にする)。Maxusers 
+は共有に同時に接続できるユーザーの数を指定する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>SHARE DELETE <replaceable>sharenam</replaceable></title>
+
+<para>指定した共有を削除する。</para>
+</refsect3>
+</refsect2>
+
+<refsect2>
+<title>[RPC|RAP] FILE</title>
+
+<refsect3>
+<title>[RPC|RAP] FILE</title>
+
+<para>リモートサーバー上でオープンされているファイルの一覧を出力する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|RAP] FILE CLOSE <replaceable>fileid</replaceable></title>
+
+<para>リモートサーバー上にある <replaceable>fileid</replaceable> 
+で指定したファイルをクローズする。</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RPC|RAP] FILE INFO <replaceable>fileid</replaceable></title>
+
+<para>
+指定した <replaceable>fileid</replaceable> のファイルの情報を出力する。
+現在表示されるのは、以下の情報である: file-id, username, lock, path, permission
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>[RAP|RPC] FILE USER <replaceable>user</replaceable></title>
+
+<para>
+<replaceable>user</replaceable>で指定した、オープンしているファイルを表示する。
+<command>net rap file user</command>はSambaサーバーに対して動作しない事に注意。
+</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>SESSION</title>
+
+<refsect3>
+<title>RAP SESSION</title>
+
+<para>オプションなしの場合、 SESSION は指定したサーバー上のすべてのアクティブな
+SMB/CIFS セッションの一覧を表示する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>RAP SESSION DELETE|CLOSE <replaceable>CLIENT_NAME</replaceable></title>
+
+<para>指定したセッションをクローズする。</para>
+
+</refsect3>
+
+<refsect3>
+<title>RAP SESSION INFO <replaceable>CLIENT_NAME</replaceable></title>
+
+<para>指定したセッションにおいてオープンされているファイルの一覧を表示する (訳注: 実際はオープンされている共有の一覧その他の情報を表示する)。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>RAP SERVER <replaceable>DOMAIN</replaceable></title>
+
+<para>ドメインもしくはワークグループ内のサーバーの一覧を出力する。
+デフォルトの対象はローカルドメインである。</para>
+
+</refsect2>
+
+<refsect2>
+<title>RAP DOMAIN</title>
+
+<para>現在ネットワークで表示されているドメインおよびワークグループの一覧を出力する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>RAP PRINTQ</title>
+
+<refsect3>
+<title>RAP PRINTQ INFO <replaceable>QUEUE_NAME</replaceable></title>
+
+<para>サーバー上の指定された印刷キューおよび印刷ジョブの一覧を出力する。
+<replaceable>QUEUE_NAME</replaceable> が省略された場合、キューの一覧が出力される。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>RAP PRINTQ DELETE <replaceable>JOBID</replaceable></title>
+
+<para>指定された ID の印刷ジョブを削除する。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>RAP VALIDATE <replaceable>user</replaceable> [<replaceable>password</replaceable>]</title>
+
+<para>
+指定したユーザーがリモートサーバーにログオン可能かどうかを確認する。
+コマンドラインでパスワードが指定されなかった場合は、入力を求められる。
+</para>
+
+&not.implemented;
+
+</refsect2>
+
+<refsect2>
+<title>RAP GROUPMEMBER</title>
+
+<refsect3>
+<title>RAP GROUPMEMBER LIST <replaceable>GROUP</replaceable></title>
+
+<para>指定したグループのメンバー一覧を出力する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>RAP GROUPMEMBER DELETE <replaceable>GROUP</replaceable> <replaceable>USER</replaceable></title>
+
+<para>グループからメンバーを削除する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>RAP GROUPMEMBER ADD <replaceable>GROUP</replaceable> <replaceable>USER</replaceable></title>
+
+<para>グループにメンバーを追加する。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>RAP ADMIN <replaceable>command</replaceable></title>
+
+<para>指定した <replaceable>command</replaceable> をリモートサーバー上で実行する。
+OS/2 サーバーに対してのみ機能する。
+</para>
+
+&not.implemented;
+
+</refsect2>
+
+<refsect2>
+<title>RAP SERVICE</title>
+
+<refsect3>
+<title>RAP SERVICE START <replaceable>NAME</replaceable> [arguments...]</title>
+
+<para>リモートサーバー上の指定したサービスを起動する。現在実装されていない。</para>
+
+&not.implemented;
+
+</refsect3>
+
+<refsect3>
+<title>RAP SERVICE STOP</title>
+
+<para>リモートサーバー上の指定したサービスを停止する。</para>
+
+&not.implemented;
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>RAP PASSWORD <replaceable>USER</replaceable> <replaceable>OLDPASS</replaceable> <replaceable>NEWPASS</replaceable></title>
+
+<para>
+<replaceable>USER</replaceable> のパスワードを <replaceable>OLDPASS</replaceable> から <replaceable>NEWPASS</replaceable> に変更する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>LOOKUP</title>
+
+<refsect3>
+<title>LOOKUP HOST <replaceable>HOSTNAME</replaceable> [<replaceable>TYPE</replaceable>]</title>
+
+<para>
+指定したホスト名およびタイプ(NetBIOS サフィックス)の IP アドレスを検索する。
+タイプの既定値は 0x20 (workstation (訳注: server の誤り)) である。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>LOOKUP LDAP [<replaceable>DOMAIN</replaceable></title>
+
+<para>指定した <replaceable>DOMAIN</replaceable> の LDAP サーバーの IP アドレスを検索する。既定値はローカルドメインが対象となる。</para>
+
+</refsect3>
+
+<refsect3>
+<title>LOOKUP KDC [<replaceable>REALM</replaceable>]</title>
+
+<para>指定した <replaceable>REALM</replaceable> の KDC の IP アドレスを検索する。
+既定値はローカルなレルム(realm)が対象となる。</para>
+
+</refsect3>
+
+<refsect3>
+<title>LOOKUP DC [<replaceable>DOMAIN</replaceable>]</title>
+
+<para>指定した <replaceable>DOMAIN</replaceable> のドメインコントローラーの IP アドレスを検索する。
+既定値はローカルドメインが対象となる。</para>
+
+</refsect3>
+
+<refsect3>
+<title>LOOKUP MASTER <replaceable>DOMAIN</replaceable></title>
+
+<para>指定した <replaceable>DOMAIN</replaceable> もしくはワークグループのマスターブラウザーの IP アドレスを検索する。
+既定値はローカルドメインが対象となる。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>CACHE</title>
+
+<para>Samba は「gencache」という汎用のキャッシュインタフェースを用いている。
+これは 'NET CACHE' コマンドにより制御可能である。</para>
+
+<para>タイムアウトに関するパラメーターはすべて、以下のサフィックスをサポートしている:
+
+<simplelist>
+<member>s - 秒</member>
+<member>m - 分</member>
+<member>h - 時</member>
+<member>d - 日</member>
+<member>w - 週</member>
+</simplelist>
+
+</para>
+
+<refsect3>
+<title>CACHE ADD <replaceable>key</replaceable> <replaceable>data</replaceable> <replaceable>time-out</replaceable></title>
+
+<para>指定した key と data の組合せを time-out の期限でキャッシュに追加する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>CACHE DEL <replaceable>key</replaceable></title>
+
+<para>key をキャッシュから削除する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>CACHE SET <replaceable>key</replaceable> <replaceable>data</replaceable> <replaceable>time-out</replaceable></title>
+
+<para>既存のキャッシュエントリーの data を更新する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>CACHE SEARCH <replaceable>PATTERN</replaceable></title>
+
+<para>キャッシュデータの中から指定されたパターンを検索する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>CACHE LIST</title>
+
+<para>
+現在キャッシュに格納されているアイテムの一覧を表示する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>CACHE FLUSH</title>
+
+<para>現在キャッシュに格納されているアイテムをすべて消去する。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>GETLOCALSID [DOMAIN]</title>
+
+<para>指定されたドメインの SID を表示する。
+パラメーターが省略された場合、ローカルサーバーが所属するドメインの SID を表示する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>SETLOCALSID S-1-5-21-x-y-z</title>
+
+<para>ローカルサーバーが所属するドメインの SID を指定した SID に設定する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>GETDOMAINSID</title>
+
+<para>現在のローカルサーバーのSIDと現在のドメインのSIDを表示する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>SETDOMAINSID</title>
+
+<para>現在のドメインのSIDを設定する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>GROUPMAP</title>
+
+<para>Windows のグループ ID と UNIX のグループ ID との対応づけを行なう。
+共通のオプションを以下に示す:</para>
+
+<itemizedlist>
+<listitem><para>unixgroup - UNIX のグループ名</para></listitem>
+<listitem><para>ntgroup - Windows NT のグループ名 (SID が解決可能である必要がある。)</para></listitem>
+<listitem><para>rid - 符号なし 32 ビット整数</para></listitem>
+<listitem><para>sid - 「S-1-...」形式の完全な SID</para></listitem>
+<listitem><para>type - グループのタイプ。「domain」、「local」もしくは「builtin」のいずれか。
+</para></listitem>
+<listitem><para>comment - 任意の文字列によるグループの説明</para></listitem>
+</itemizedlist>
+
+<refsect3>
+<title>GROUPMAP ADD</title>
+
+<para>新しいグループマップのエントリーを追加する:
+<programlisting>
+net groupmap add {rid=int|sid=string} unixgroup=string \
+      [type={domain|local}] [ntgroup=string] [comment=string]
+</programlisting>
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>GROUPMAP DELETE</title>
+
+<para>グループマップのエントリーを削除する。
+複数のエントリーがマッチした場合、最初にマッチしたエントリーが削除される。</para>
+
+<para>net groupmap delete {ntgroup=string|sid=SID}</para>
+
+</refsect3>
+
+<refsect3>
+<title>GROUPMAP MODIFY</title>
+
+<para>既存のグループマップのエントリーを変更する。</para>
+
+<para>
+<programlisting>
+net groupmap modify {ntgroup=string|sid=SID} [unixgroup=string] \
+       [comment=string] [type={domain|local}]
+</programlisting>
+</para>
+</refsect3>
+
+<refsect3>
+<title>GROUPMAP LIST</title>
+
+<para>存在しているグループマップのエントリーの一覧を表示する。</para>
+
+<para>net groupmap list [verbose] [ntgroup=string] [sid=SID]</para>
+
+</refsect3>
+</refsect2>
+
+
+
+<refsect2>
+<title>MAXRID</title>
+
+<para>ローカルサーバー上で (有効な「passdb backend」パラメーターにより) 現在使用可能な RID の最大値を出力する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>RPC INFO</title>
+
+<para>リモートサーバーが所属するドメインの、ドメイン名、ドメインの SID 、ユーザーおよびグループ数といった情報を出力する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>[RPC|ADS] TESTJOIN</title>
+
+<para>ドメインへの参加が現在可能であるかどうかを確認する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>[RPC|ADS] CHANGETRUSTPW</title>
+
+<para>ドメイン間信頼のパスワードを強制的に変更する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>RPC TRUSTDOM</title>
+
+<refsect3>
+<title>RPC TRUSTDOM ADD <replaceable>DOMAIN</replaceable></title>
+
+<para>
+<replaceable>DOMAIN</replaceable> のドメイン間信頼アカウントをリモートサーバーに追加する。
+これは実際、アカウントフラグ <constant>'I'</constant> (ドメイン間信頼アカウント)を伴う、
+<replaceable>DOMAIN$</replaceable> と言う名のSambaアカウントである。
+もしも、localhostに対してコマンドが使われるならば、
+<command>smbpasswd -a -i DOMAIN</command>と同じ影響を及ぼす。
+両コマンドとも適切なUNIXアカウントを必要とする事に注意。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>RPC TRUSTDOM DEL <replaceable>DOMAIM</replaceable></title>
+
+<para>
+<replaceable>DOMAIN</replaceable> のドメイン間信頼アカウントをリモートサーバーから削除する。
+これは、<command>smbpasswd -x DOMAIN$</command>と同じである。</para>
+
+</refsect3>
+
+<refsect3>
+<title>RPC TRUSTDOM ESTABLISH <replaceable>DOMAIN</replaceable></title>
+
+<para>
+信頼するドメインとの間の信頼関係を締結する。
+ドメイン間信頼アカウントが、リモートの PDC 上にすでに作成されていることが必須である。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>RPC TRUSTDOM REVOKE <replaceable>DOMAIN</replaceable></title>
+<para>信頼されたドメインとの間の信頼関係を破棄する。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>RPC TRUST</title>
+
+<refsect3>
+<title>RPC TRUST CREATE</title>
+
+<para>Create a trust object by calling lsaCreateTrustedDomainEx2.
+The can be done on a single server or on two servers at once with the
+possibility to use a random trust password.</para>
+<para>lsaCreateTrustedDomainEx2を呼び出すことで、trust objectを
+作成する。これは、ランダムなtrustパスワードを使う可能性がある、1つまたは
+2つのサーバー上で同時に行うことが出来る。</para>
+
+<variablelist><title>オプション:</title>
+<varlistentry>
+<term>otherserver</term>
+<listitem><para>2番目のドメインのドメインコントローラー</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otheruser</term>
+<listitem><para>2番目のドメインのAdmin user</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomainsid</term>
+<listitem><para>2番目のドメインのSID</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>other_netbios_domain</term>
+<listitem><para>2番目のドメインの(短い)NetBIOS名</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomain</term>
+<listitem><para>2番目のドメインの(完全な)DNS名</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>trustpw</term>
+<listitem><para>Trust password</para></listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist><title>使用例:</title>
+<varlistentry>
+<term>srv1.dom1.dom上で、ドメイン dom2用のtrust objectを作成</term>
+<listitem><literallayout>
+net rpc trust create \
+    otherdomainsid=S-x-x-xx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxx \
+    other_netbios_domain=dom2 \
+    otherdomain=dom2.dom \
+    trustpw=12345678 \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+<varlistentry>
+<term>dom1とdom2の間での信頼関係を作成</term>
+<listitem><literallayout>
+net rpc trust create \
+    otherserver=srv2.dom2.test \
+    otheruser=dom2adm \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+</variablelist>
+</refsect3>
+
+<refsect3>
+<title>RPC TRUST DELETE</title>
+
+<para>Delete a trust trust object by calling lsaDeleteTrustedDomain.
+The can be done on a single server or on two servers at once.</para>
+<para>lsaDeleteTrustedDomainを呼び出すことで、trust trust objectを削除する。
+これは、1つまたは2つのサーバーで同時に行える。</para>
+
+<variablelist><title>オプション:</title>
+<varlistentry>
+<term>otherserver</term>
+<listitem><para>2番目のドメインのドメインコントローラー</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otheruser</term>
+<listitem><para>2番目のドメインのAdmin user</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>otherdomainsid</term>
+<listitem><para>2番目のドメインのSID</para></listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist><title>使用例:</title>
+<varlistentry>
+<term>srv1.dom1.dom上ドメインdome2用のでtrust obejectを削除する。</term>
+<listitem><literallayout>
+net rpc trust delete \
+    otherdomainsid=S-x-x-xx-xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxx \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+<varlistentry>
+<term>Delete a trust relationship between dom1 and dom2</term>
+<listitem><literallayout>
+net rpc trust delete \
+    otherserver=srv2.dom2.test \
+    otheruser=dom2adm \
+    -S srv1.dom1.dom
+</literallayout></listitem>
+</varlistentry>
+</variablelist>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+
+<refsect3>
+<title>RPC RIGHTS</title>
+
+<para>
+このサブコマンドは(権限として参照もされる)、 Samba のユーザー権利の割当の
+表示、管理に用いられる。現在のところ、以下の 3 つのオプションが利用できる: 
+<parameter>list</parameter>、 <parameter>grant</parameter>、
+<parameter>revoke</parameter>。
+Samba のユーザー権利の実装と利用方法に関する詳細については、 Samba-HOWTO-Collection を参照のこと。</para>
+
+</refsect3>
+
+
+</refsect2>
+
+<refsect2>
+<title>RPC ABORTSHUTDOWN</title>
+
+<para>リモートサーバーのシャットダウンを中止する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>SHUTDOWN [-t timeout] [-r] [-f] [-C message]</title>
+
+<para>リモートサーバーをシャットダウンする。</para>
+
+<variablelist>
+<varlistentry>
+<term>-r</term>
+<listitem><para>
+シャットダウン後に再起動する。
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>-f</term>
+<listitem><para>
+全てのアプリケーションを強制的に終了させる。
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>-t timeout</term>
+<listitem><para>
+システムをシャットダウンさせる前のタイムアウト時間を指定する。システムに対話的ログオンしているユーザーは、この期間にシャットダウンをキャンセルすることができる。
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>-C message</term>
+<listitem><para>シャットダウンの通知を行なう際に、指定したメッセージを画面上に表示する。</para></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect2>
+
+<refsect2>
+<title>RPC SAMDUMP</title>
+
+<para>リモートサーバーの SAM データベースを表示する。
+これは PDC もしくはドメインに参加したSamba BDC 上で実行する必要がある。</para>
+</refsect2>
+
+<refsect2>
+<title>RPC VAMPIRE</title>
+
+<para>リモートサーバーからユーザー、エイリアス、グループをローカルサーバー上にエクスポートする。 ドメインに参加したBDC 上で、PDCに対してのみ実行することが可能である。
+このvampireコマンドは、NT4ドメインコントローラ専用で、Active Directory に対しては使えない。
+</para>
+
+<refsect2>
+<title>RPC VAMPIRE KEYTAB</title>
+
+<para>リモートのSAMデータベースをローカルのKerberos keytabファイルにダンプする。
+</para>
+</refsect2>
+
+<refsect2>
+<title>RPC VAMPIRE LDIF</title>
+
+<para>リモートのSAMデータベースをローカルのLDIFファイルか標準出力にダンプする。
+</para>
+</refsect2>
+
+</refsect2>
+
+<refsect2>
+<title>RPC GETSID</title>
+
+<para>ドメインの SID を取得して、ローカルの <filename>secrets.tdb</filename> (か <filename>secrets.ntdb</filename>)に格納する。</para>
+
+</refsect2>
+
+<refsect2>
+<title>ADS LEAVE</title>
+
+<para>リモートホストを所属しているドメインから外す。</para>
+
+</refsect2>
+
+<refsect2>
+<title>ADS STATUS</title>
+
+<para>Active Directory 環境において、ローカルマシンのコンピューターアカウントの状態を表示する。
+表示内容は、デバッグ情報のようなものであり、開発者向けのものである。
+一般のユーザーは <command>NET ADS TESTJOIN</command> を使うべきである。</para>
+
+</refsect2>
+
+<refsect2>
+<title>ADS PRINTER</title>
+
+<refsect3>
+<title>ADS PRINTER INFO [<replaceable>PRINTER</replaceable>] [<replaceable>SERVER</replaceable>]</title>
+
+<para>
+<replaceable>SERVER</replaceable> 上にある <replaceable>PRINTER</replaceable> を検索する。
+プリンター名の既定値は「*」であり、サーバー名の既定値はローカルホスト名である。</para>
+
+</refsect3>
+
+<refsect3>
+<title>ADS PRINTER PUBLISH <replaceable>PRINTER</replaceable></title>
+
+<para>指定したプリンターを Active Directory に対して公開する。</para>
+
+</refsect3>
+
+<refsect3>
+<title>ADS PRINTER REMOVE <replaceable>PRINTER</replaceable></title>
+
+<para>指定したプリンターを Active Directory のディレクトリから削除する。</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>ADS SEARCH <replaceable>EXPRESSION</replaceable> <replaceable>ATTRIBUTES...</replaceable></title>
+
+<para>Active Directory のサーバーに対して低レベルな LDAP 検索を行ない、その結果を表示する。
+EXPRESSION は標準の LDAP 検索表記で行ない、 ATTRIBUTES は結果中に表示する LDAP 属性型の一覧である。</para>
+
+<para>設定例: <userinput>net ads search '(objectCategory=group)' sAMAccountName</userinput>
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>ADS DN <replaceable>DN</replaceable> <replaceable>(attributes)</replaceable></title>
+
+<para>Active Directory のサーバーに対して低レベルな LDAP 検索を行ない、その結果を表示する。
+DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP属性型の一覧である。</para>
+
+<para>設定例: <userinput>net ads dn 'CN=administrator,CN=Users,DC=my,DC=domain' SAMAccountName</userinput></para>
+
+</refsect2>
+
+<refsect2>
+<title>ADS WORKGROUP</title>
+
+<para>指定された Kerberos レルムのワークグループ名を表示する。</para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES</title>
+
+<para>
+        AD中の、アカウントにおける "msDS-SupportedEncryptionTypes" 属性値の表示、変更あるいは削除	  
+</para>
+
+<para>
+  この属性は、どのKerberos暗号化タイプが、初期およびサービスチケットの生成に使われるかを制御する。その値には、以下で示される整数型のビットマスクを含む:
+</para>
+
+<para>0x00000001 DES-CBC-CRC</para>
+<para>0x00000002 DES-CBC-MD5</para>
+<para>0x00000004 RC4-HMAC</para>
+<para>0x00000008 AES128-CTS-HMAC-SHA1-96</para>
+<para>0x00000010 AES256-CTS-HMAC-SHA1-96</para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES LIST <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
+
+<para>
+        与えられたアカウントの、"msDS-SupportedEncryptionTypes" 属性値を表示する。
+</para>
+
+<para>例: <userinput>net ads enctypes list Computername</userinput></para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES SET <replaceable>&lt;ACCOUNTNAME&gt;</replaceable> <replaceable>[enctypes]</replaceable></title>
+
+<para>
+  ACCOUNTNAME のLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性値に、与えられた値を設定する。値が省略された場合は、すべての、現在サポートされている暗号化タイプを有効にする 31 が設定される。
+</para>
+
+<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
+
+</refsect2>
+
+<refsect2>
+	<title>ADS ENCTYPES DELETE <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
+
+<para>
+  ACCOUNTNAMEのLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性を削除する。
+</para>
+
+<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM CREATEBUILTINGROUP &lt;NAME&gt;</title>
+
+<para>
+BUILTINグループを(再)作成する。
+このコマンドでは通常使われるBUILTINグループのみ作成出来る。以下は、現在設定されるグループ名である: Administrators,
+Users, Guests, Power Users, Account Operators, Server Operators, Print
+Operators, Backup Operators, Replicator, RAS Servers, Pre-Windows 2000
+compatible Access.
+
+このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM CREATELOCALGROUP &lt;NAME&gt;</title>
+
+<para>
+ローカルグループを作成する(別名である)。
+
+このコマンドはidmapの割り当てが適切に構成されているWinbinddが動いている事を要求する。グループのgidはwinbinddのレンジの範囲外に割り当てられる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM DELETELOCALGROUP &lt;NAME&gt;</title>
+
+<para>
+存在するローカルグループを削除する(別名である)。
+
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM MAPUNIXGROUP &lt;NAME&gt;</title>
+
+<para>
+同じ名前を持つドメイングループと、存在するUnixグループをマップし、Domainグループにする。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM UNMAPUNIXGROUP &lt;NAME&gt;</title>
+
+<para>
+存在するグループマップエントリーを削除する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM ADDMEM &lt;GROUP&gt; &lt;MEMBER&gt;</title>
+
+<para>
+ローカルグループへメンバーを追加する。グループは名前でのみ指定でき、メンバーは名前かSIDで指定出来る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM DELMEM  &lt;GROUP&gt; &lt;MEMBER&gt;</title>
+
+<para>
+ローカルグループからメンバーを削除する。グループとメンバーは名前でのみ指定できる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM LISTMEM &lt;GROUP&gt;</title>
+
+<para>
+ローカルグループメンバーを表示する。グループは名前で指定しなければならない。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM LIST &lt;users|groups|localgroups|builtin|workstations&gt; [verbose]</title>
+
+<para>
+名前による一まとまりのアカウントを表示する。もしもverboseが指定されていたら、
+ridとdescriptionも各々のアカウントに対して提供される。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM RIGHTS LIST</title>
+
+<para>
+すべての有効な権限を表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM RIGHTS GRANT &lt;NAME&gt; &lt;PRIVILEGE&gt;</title>
+
+<para>
+ユーザーに対し、1つまたはそれ以上の権限を許可する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM RIGHTS REVOKE &lt;NAME&gt; &lt;PRIVILEGE&gt;</title>
+
+<para>
+ユーザーに対し、1つまたはそれ以上の権限を取り去る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SHOW &lt;NAME&gt;</title>
+
+<para>
+対応するアカウントの、完全な DOMAIN\\NAME のSIDとタイプを表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET HOMEDIR &lt;NAME&gt; &lt;DIRECTORY&gt;</title>
+
+<para>
+アカウントに対するホームディレクトリを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PROFILEPATH &lt;NAME&gt; &lt;PATH&gt;</title>
+
+<para>
+アカウントに対するプロファイルパスを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET COMMENT &lt;NAME&gt; &lt;COMMENT&gt;</title>
+
+<para>
+ユーザーまたはグループアカウントに対するコメントを設定する。
+</para>
+
+</refsect2>
+<refsect2>
+<title>SAM SET FULLNAME &lt;NAME&gt; &lt;FULL NAME&gt;</title>
+
+<para>
+ユーザーアカウントに対するフルネームを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET LOGONSCRIPT &lt;NAME&gt; &lt;SCRIPT&gt;</title>
+
+<para>
+ユーザーアカウントに対するログオンスクリプトを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET HOMEDRIVE &lt;NAME&gt; &lt;DRIVE&gt;</title>
+
+<para>
+ユーザーアカウントに対するホームドライブを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET WORKSTATIONS &lt;NAME&gt; &lt;WORKSTATIONS&gt;</title>
+
+<para>
+ログイン可能なユーザーアカウントをワークステーションに対して設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET DISABLE &lt;NAME&gt;</title>
+
+<para>
+ユーザーアカウントに対して"無効"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PWNOTREQ &lt;NAME&gt;</title>
+
+<para>
+ユーザーアカウントに対して"パスワード不要"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET AUTOLOCK &lt;NAME&gt;</title>
+
+<para>
+ユーザーアカウントに対して"autolock"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PWNOEXP &lt;NAME&gt;</title>
+
+<para>
+ユーザーアカウントに対して"無期限のパスワード"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM SET PWDMUSTCHANGENOW &lt;NAME&gt; [yes|no]</title>
+
+<para>
+ユーザーアカウントに対して"パスワードの変更が必要"フラグを設定する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM POLICY LIST</title>
+
+<para>
+有効なアカウントポリシーを表示する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM POLICY SHOW &lt;account policy&gt;</title>
+
+<para>
+アカウントポリシーの値を表示する。.
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM POLICY SET &lt;account policy&gt; &lt;value&gt;</title>
+
+<para>
+アカウントポリシーに値を設定する。
+有効な値は、 "forever", "never", "off", か数字である。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>SAM PROVISION</title>
+
+<para>
+もしも、ldapsam:editposixが設定されて、winbinddが動作中の時有効である。
+ldapのDIT上の、基本的なアカウント(Administrator)とグループ(Domain Users, Domain Admins, Domain Guests)とともに、ldap DITを 適切にpopulateする。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP DUMP &lt;local tdb file name&gt;</title>
+
+<para>
+指定したローカルのtdbファイル中にあるマッピングをダンプする。このコマンドは、
+idmap_tdbバックエンドによって生成されたマップのダンプにのみ有用である。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP RESTORE [input file]</title>
+
+<para>
+指定したファイルか標準入力からマッピングをリストアする。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP SET SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
+
+<para>
+ 指定したドメインのために、secretを格納し、おもに、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP SET RANGE &lt;RANGE&gt; &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベース中に、与えられたドメイン(とインデックス)用のドメイン-レンジマッピングを格納する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP SET CONFIG &lt;config&gt; [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベース中のCONFIGエントリを更新する。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET RANGE &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
+
+<para>
+  与えられたドメインとインデックスに対するレンジを、autorid データベースから得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET RANGES [&lt;SID&gt;] [--db=&lt;DB&gt;]</title>
+
+<para>
+  与えられたSIDで識別される1個、あるいはすべてのドメインのレンジを得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP GET CONFIG [--db=&lt;DB&gt;]</title>
+
+<para>
+  autorid データベースからCONFIGエントリを得る。
+</para>
+
+</refsect2>
+
+<refsect2>
+
+<title>IDMAP DELETE MAPPING [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
+
+<para>
+Delete a mapping sid &lt;-&gt; gid or sid &lt;-&gt; uid from the IDMAP database.
+The mapping is given by &lt;ID&gt; which may either be a sid: S-x-..., a gid: "GID number
+" or a uid: "UID number".
+Use -f to delete an invalid partial mapping &lt;ID&gt; -&gt; xx
+IDMAPデータベースから、マップされたsid &lt;-&gt; gid あるいは sid &lt;-&gt; uid を
+削除する。マップはsid: S-x-....よりもより簡単な &lt;ID&gt; 、gid: "GID番号" あるいは
+uid: "UID番号"によって与えられる。
+不正な部分的なマッピング &lt;ID&gt; -&gt; xx を削除するには -f を使う。
+</para>
+<para>
+  Use "smbcontrol all idmap ..." to notify running smbd instances.
+  動作しているsmbdインスタンスに通知をするためには"smbcontrol all idmap ..."
+  を使う。詳細は、<citerefentry><refentrytitle>smbcontrol</refentrytitle>
+  <manvolnum>1</manvolnum></citerefentry>マニュアルページを参照。
+</para>
+</refsect2>
+
+<refsect2>
+<title>IDMAP DELETE RANGE [-f] [--db=&lt;TDB&gt;] &lt;RANGE&gt;|(&lt;SID&gt; [&lt;INDEX&gt;])</title>
+
+<para>
+  autorid データベースから、'レンジ' または 'ドメイン SID とインデックス' で識別されるドメインレンジマッピングを削除する。
+  -f は、不正なマッピングを削除するのに使う。
+</para>
+
+</refsect2>
+
+<refsect2>
+<title>IDMAP DELETE RANGES [-f] [--db=&lt;TDB&gt;] &lt;SID&gt;</title>
+
+<para>
+  SIDで識別されるドメインの、すべてのドメインレンジマッピングを削除する。
+  -f は、不正なマッピングを削除するのに使う。
+</para>
+
+</refsect2>
+
+<refsect2>
+
+<title>IDMAP CHECK [-v] [-r] [-a] [-T] [-f] [-l] [--db=&lt;DB&gt;]</title>
+
+<para>
+  Check and repair the IDMAP database. If no option is given a read only check
+  of the database is done. Among others an interactive or automatic repair mode
+  may be chosen with one of the following options:
+  IDMAPデータベースの検査と修復を行う。もしも、オプションが何も指定されないと、
+  データベースに対するリードオンリのチェックが行われる。とりわけ、対話的または
+  自動修復モードでは以下のオプションの1つを選んでも良い:
+
+  <variablelist>
+    <varlistentry><term>-r|--repair</term>
+    <listitem><para>
+      Interactive repair mode, ask a lot of questions.
+      対話的修復モードで、数多くの質問を要求してくる。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-a|--auto</term>
+    <listitem><para>
+      Noninteractive repair mode, use default answers.
+      非対話的修復モードで、既定値を利用する。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-v|--verbose</term>
+      <listitem><para>
+	Produce more output.
+	より多くの出力を生成する。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-f|--force</term>
+      <listitem><para>
+	Try to apply changes, even if they do not apply cleanly.
+	もしも、きれいに適用されなくても、変更を適用する。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-T|--test</term>
+      <listitem><para>
+	試験実行であり、どのような変更が行われるかを表示するが何も変更しない。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-l|--lock</term>
+      <listitem><para>
+	検査中にデータベースをロックする。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>--db &lt;DB&gt;</term>
+      <listitem><para>
+	指定されたデータベースを検査する。
+      </para></listitem>
+    </varlistentry>
+    <varlistentry><term></term>
+      <listitem><para>
+      </para></listitem>
+    </varlistentry>
+  </variablelist>
+
+  It reports about the finding of the following errors:
+  これは、見つかった以下のエラーを報告する:
+
+  <variablelist>
+    <varlistentry><term>Missing reverse mapping:</term>
+    <listitem><para>
+      A record with mapping A-&gt;B where there is no B-&gt;A. Default action
+      in repair mode is to "fix" this by adding the reverse mapping.</para><para>
+      B-&gt;A が無いのにA-&gt;Bがマッピングされているレコード。修復モードにおける
+      既定値の動作は、逆方向のマッピングを追加することでこれを"修復"する。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>Invalid mapping:</term>
+    <listitem><para>
+      A record with mapping A-&gt;B where B-&gt;C. Default action
+      is to "delete" this record.</para><para>
+      B-&gt;C なのにA-&gt;Bというマッピングがあるレコード。既定値の動作は
+      このレコードを"削除"する。
+    </para></listitem>
+  </varlistentry>
+
+  <varlistentry><term>Missing or invalid HWM:</term>
+    <listitem><para>
+      A high water mark is not at least equal to the largest ID in the
+      database. Default action is to "fix" this by setting it to the
+      largest ID found +1.</para><para>
+      データベース中で最も大きなIDに対して、少なくともwater markが等しくない。
+      既定値の動作は見つかった、最も大きなID+1にこれを設定することで
+      修復する。
+    </para></listitem>
+  </varlistentry>
+
+  <varlistentry><term>Invalid record:</term>
+    <listitem><para>
+      Something we failed to parse. Default action is to "edit" it
+      in interactive and "delete" it in automatic mode.</para><para>
+      何らかの理由で解析に失敗した。既定値の動作は、対話モードでは
+      "編集"で、自動モードでは"削除"である。      
+    </para></listitem>
+  </varlistentry>
+</variablelist>
+</para>
+</refsect2>
+
+
+<refsect2>
+<title>USERSHARE</title>
+
+<para>
+Samba 3.0.23 より、root 以外のユーザーが「net usershare」コマンドを用いてユーザー定義共有を公開する機能が追加された。
+</para>
+
+<para>
+これを行なうには、まず smb.conf の [global] セクションに以下を追加する必要がある:
+
+usershare path = /usr/local/samba/lib/usershares
+
+ついで /usr/local/samba/lib/usershares ディレクトリを作成し、所有者を root に、所有グループをユーザー定義共有の作成を許可したい UNIX グループ、例えば「serverops」とする。
+
+/usr/local/samba/lib/usershares のパーミッションは 01770 に設定する。
+
+(所有者と所有グループには完全なアクセス権があり、その他にはアクセス権が全くない。さらにスティッキービットにより、ディレクトリ中のファイルについて、名前の変更や削除が行なえるのはファイルの所有者のみとなる)
+
+最後に、smb.conf の [global] セクションに以下のような行を追加することで、作成可能なユーザー定義共有の最大数を smbd に設定する:
+
+usershare max shares = 100
+
+これにより、最大 100 のユーザー定義共有を設定可能となる。
+これにより、「serverops」という UNIX グループのメンバーは必要に応じて以下のコマンドを実行することで、ユーザー定義共有を作成することが可能となる。
+</para>
+
+<para>ユーザー定義共有に関するコマンドを以下に示す:
+
+<simplelist>
+<member>net usershare add sharename path [comment [acl] [guest_ok=[y|n]]] - ユーザー定義の共有の追加または変更</member>
+<member>net usershare delete sharename - ユーザー定義の共有の削除</member>
+<member>net usershare info [-l|--long] [wildcard sharename] - ユーザー定義の共有の情報の出力</member>
+<member>net usershare list [-l|--long] [wildcard sharename] - ユーザー定義の共有の一覧出力</member>
+</simplelist>
+
+</para>
+
+<refsect3>
+<title>USERSHARE ADD <replaceable>sharename</replaceable> <replaceable>path</replaceable> <replaceable>[comment]</replaceable> <replaceable>[acl]</replaceable> <replaceable>[guest_ok=[y|n]]</replaceable></title>
+
+<para>
+sharename というユーザー定義共有の新規作成もしくは修正(上書き)を行なう。
+</para>
+
+<para>
+「path」には、公開するディレクトリのシステム上での絶対パス名を指定する。
+公開可能なディレクトリには幾つかの制約がある。
+グローバルな smb.conf のパラメーターである「usershare owner only」、「usershare prefix allow list」、「usershare prefix deny list」を参照のこと。
+</para>
+
+<para>
+オプションの「comment」パラメーターは、クライアントから共有を参照した際に表示されるコメント文字列を指定する。
+</para>
+
+<para>
+オプションの「acl」フィールドは、共有単位でどのユーザーに読み取りや書き込みのアクセス許可を与えるかを指定する。
+ゲストアクセスは、 smb.conf の「usershare allow guests」パラメーターを有効にしない限り行なえない。
+ユーザー定義共有の ACL の指定は「user:permission」という形式で行なわれる。user はシステムで有効なユーザー名であり、permission は「F」、「R」、「D」のいずれかである。
+「F」は「フルコントロール」、すなわち読み取りと書き込み権を示す。「D」は「拒否」を示し、ユーザーの共有へのアクセスを許可しない。「R」は「読み取り専用」、すなわちこの共有への読み取りアクセスのみの許可を示す (ファイルへの書き込みやファイルやディレクトリの新規作成は行なえない)。
+</para>
+
+<para>
+「acl」オプションが指定されなかった場合のデフォルトは「Everyone:R」である。これは、認証された全てのユーザーが読み取り専用のアクセス権を有することを意味する。
+</para>
+
+<para>
+オプションの「guest_ok」パラメーターは、smb.conf 中の同名のパラメーターと同じ意味を持ち、該当のユーザー定義共有に対するゲストアクセスを許可する。
+このパラメーターは、 smb.conf 中でグローバルパラメーターの「usershare allow guests」が有効になっている時のみ設定できる。
+</para>
+既存のユーザー定義共有を修正するコマンドは個別に用意されておらず、
+「net usershare add [sharename]」コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
+Samba の smbd デーモンは、接続のあったタイミングでユーザー定義共有の変更を検知するのため、変更は即座に反映される。ユーザー定義共有の追加、削除、変更により、smbd の再起動を行なう必要はない。
+</refsect3>
+
+<refsect3>
+<title>USERSHARE DELETE <replaceable>sharename</replaceable></title>
+
+<para>
+指定されたユーザー定義共有を削除する。
+Samba smbd デーモンは即座にこの変更を検知するが、削除された共有にその時点で接続中のユーザーが切断されることはない。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>USERSHARE INFO <replaceable>[-l|--long]</replaceable> <replaceable>[wildcard sharename]</replaceable></title>
+
+<para>
+指定されたパターンに合致するユーザーによって所有されている、もしくは全てのユーザー定義共有の情報が表示される。
+</para>
+
+<para>
+net usershare info は、実行したユーザーが作成したユーザー定義共有の詳細情報を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。
+「-l」もしくは「--long」オプションが指定されていた場合、他のユーザーが作成したユーザー定義共有の情報も表示する。
+</para>
+
+<para>
+各共有についての情報は以下のような形式で設定される:
+
+[foobar]
+path=/home/jeremy
+comment=testme
+usershare_acl=Everyone:F
+guest_ok=n
+
+これは、「net usershare add」コマンドで現状設定可能なユーザー定義共有の設定一覧である。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>USERSHARE LIST <replaceable>[-l|--long]</replaceable> <replaceable>wildcard sharename</replaceable></title>
+
+<para>
+実行したユーザーが所有し、指定されたワイルドカードにマッチする、もしくは全てのユーザーのユーザー定義共有の一覧を表示する。
+</para>
+
+<para>
+net usershare list は、実行したユーザーが作成したユーザー定義共有の一覧を表示するが、ワイルドカード情報 (「*」は1文字以上の文字にマッチし、「?」は1文字のみにマッチする) が指定されている場合は、それにマッチした共有のみを表示する。
+
+「-l」もしくは「--long」オプションが指定されていた場合、他のユーザーが作成したユーザー定義共有の情報も表示する。
+</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>[RPC] CONF</title>
+
+<para>バージョン 3.2.0から、Sambaサーバーはレジストリにデータを格納することにより
+設定する事が出来るようになった。この設定データは新しい"net conf"コマンドで編集できる。
+また、RPC confモードを有効にすることと、リモートサーバーのアドレスを指定することによって、
+リモートのSambaサーバーを設定することもできる。
+</para>
+
+<para>
+この設定データの配布は
+<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
+レジストリからの共有定義は[global]セクション中で<parameter>registry shares</parameter>を<quote>yes</quote>にすることで有効にでき、
+グローバルオプションは、複合設定の場合、[global]セクション中で<smbconfoption name="include">registry</smbconfoption>を設定することで、
+レジストリのみの設定の場合は、[global]セクション中で、<smbconfoption name="config backend">registry</smbconfoption>を設定することで有効になる。
+詳細は<citerefentry><refentrytitle>smb.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>マニュアルページを参照のこと。 </para>
+
+<para>conf コマンドは以下のとおり:
+<simplelist>
+<member>net [rpc] conf list - smb.conf風の形式で完全な設定をダンプ</member>
+<member>net [rpc] conf import - smb.conf形式で設定をインポート</member>
+<member>net [rpc] conf listshares - レジストリ共有のリスト</member>
+<member>net [rpc] conf drop - レジストリから全部の設定を削除</member>
+<member>net [rpc] conf showshare - レジストリ共有の定義を表示</member>
+<member>net [rpc] conf addshare - 新しいレジストリ共有を作成</member>
+<member>net [rpc] conf delshare - レジストリ共有を削除</member>
+<member>net [rpc] conf setparm - パラメーターを格納</member>
+<member>net [rpc] conf getparm - パラメーターの値を検索</member>
+<member>net [rpc] conf delparm - パラメーターを削除</member>
+<member>net [rpc] conf getincludes - 共有定義のインクルードを表示</member>
+<member>net [rpc] conf setincludes - 共有のためのインクルードを設定</member>
+<member>net [rpc] conf delincludes - 共有定義からインクルードを削除</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>[RPC] CONF LIST</title>
+
+<para>
+smb.conf風の形式でレジストリ中にある設定データを標準出力に出力する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF IMPORT <replaceable>[--test|-T]</replaceable> <replaceable>filename</replaceable> <replaceable>[section]</replaceable></title>
+
+<para>
+このコマンドは、smb.conf形式で、ファイルから設定情報をインポートする。もしも、
+レジストリ中に存在するセクションが入力ファイル中に存在するならば、その内容は
+置き換えられる。入力ファイル中に対となるものがない、レジストリ中のセクションは
+何ら影響はない。もしも、それらを削除したいならば、"net conf drop" か
+ "net conf delshare"を使うこと。
+任意ではあるが、その、指定したセクションに対するimportコマンドの影響を避けるためにあるセクションを指定してもよい。テストモードはパラメーター"-T"をコマンド行に
+指定することで有効に出来る。テストモードでは、レジストリに対する変更は行われず、
+設定の結果が代わりに標準出力に出力される。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF LISTSHARES</title>
+
+<para>
+レジストリ中で定義された共有名の一覧を表示する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF DROP</title>
+
+<para>
+レジストリから完全に設定データを削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF SHOWSHARE <replaceable>sharename</replaceable></title>
+
+<para>
+指定したセクションまたは共有の定義を表示する。レジストリから、global設定オプションを検索するために、"global"を共有名として指定するのは有効である。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF ADDSHARE <replaceable>sharename</replaceable> <replaceable>path</replaceable> [<replaceable>writeable={y|N}</replaceable> [<replaceable>guest_ok={y|N}</replaceable> [<replaceable>comment</replaceable>]]] </title>
+
+<para>レジストリ中に新しい共有定義を作成する。
+共有名とパス両方が必要である。共有名は"global"としては<emphasis>いけない</emphasis> 。
+そのほか、とても一般的なオプション、"writeable", "guest ok" と "comment"
+も指定出来る。同じ結果は、一連の"net conf setparm"コマンドによって得てもよい。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF DELSHARE <replaceable>sharename</replaceable></title>
+
+<para>
+レジストリから共有定義を削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF SETPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable> <replaceable>value</replaceable></title>
+
+<para>
+パラメーターをレジストリに格納する。セクションはglobalか共有名である。
+セクションは、模試も存在しないならば、作成される。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF GETPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable></title>
+
+<para>
+レジストリ中のパラメーターを表示する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF DELPARM <replaceable>section</replaceable> <replaceable>parameter</replaceable></title>
+
+<para>
+レジストリ中のパラメーターを削除する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF GETINCLUDES <replaceable>section</replaceable></title>
+
+<para>
+(globalまたは共有の)提供されたセクションの、includeのリストを得る。
+</para>
+
+<para>
+データベースとincludeディレクティブの種類により、includeは特別の扱いが必要である。パラメーター名が値の名前として、パラメーターがレジストリに格納されるので、
+共有ごとにパラメーターのインスタンスは1つだけである。
+また、テキストファイル中の指定したような順番は認められない。すべての真の
+パラメーターに対して、これは完全に問題がないが、includeディレクティブは
+smb.confテキストファイル中では、むしろメタパラメーターであるので、他のパラメーター
+との間での場所の指定はとても重要である。これは単純なsmbconfデータモデルによって
+は実現できないので、共有後とに1つの順番のリストがあり、このリストはすべての
+共有パラメーターの後に評価される。
+</para>
+
+<para>
+さらに、現在、レジストリ構成からファイルのみインクルード出来る。将来は、
+他のレジストリキーから設定データをインクルード出来る予定である。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF SETINCLUDES <replaceable>section</replaceable> [<replaceable>filename</replaceable>]+</title>
+
+<para>
+(globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。
+ファイル名は %Iのような通常のsmb.confマクロを含んでいてもよい。
+</para>
+</refsect3>
+
+<refsect3>
+<title>[RPC] CONF DELINCLUDES <replaceable>section</replaceable></title>
+
+<para>
+(globalか共有の)提供されたセクションからincludeリストを削除する。
+</para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>REGISTRY</title>
+<para>
+Manipulate Samba's registry.
+Sambaのレジストリを操作する。
+</para>
+
+<para>レジストリコマンドは以下の通り:
+<simplelist>
+<member>net registry enumerate   - numerate registry keys and values.レジストリキーと値に番号を振る。</member>
+<member>net registry enumerate_recursive - Enumerate registry key and its subkeys.レジストリキーとそのサブキーに番号を振る。</member>
+<member>net registry createkey   - Create a new registry key.新しいレジストリキーを作成する。</member>
+<member>net registry deletekey   - Delete a registry key.レジストリキーを削除する。</member>
+<member>net registry deletekey_recursive - Delete a registry key with subkeys.レジストリキーとそのサブキーを削除する。</member>
+<member>net registry getvalue    - Print a registry value.レジストリキーの値を印刷する。</member>
+<member>net registry getvalueraw - Print a registry value (raw format).レジストリキーの値を印刷する(生の値で)。</member>
+<member>net registry setvalue    - Set a new registry value.新しいレジストリ値を設定する。</member>
+<member>net registry increment   - Increment a DWORD registry value under a lock.ロックしている状態で、DWORDレジストリ値を増やす。
+</member>
+<member>net registry deletevalue - Delete a registry value.レジストリ値を削除する。</member>
+<member>net registry getsd       - Get security descriptor.セキュリティ識別子を得る。</member>
+<member>net registry getsd_sdd1  - Get security descriptor in sddl format.sddl形式でセキュリティ識別子を得る。
+</member>
+<member>net registry setsd_sdd1  - Set security descriptor from sddl format
+string.sddl形式文字列でセキュリティ識別子を設定する。</member>
+<member>net registry import      - Import a registration entries (.reg) file.レジストリエントリー(.reg)ファイルをインポートする。
+</member>
+<member>net registry export      - Export a registration entries (.reg) file.レジストリエントリー(.reg)ファイルをエクスポートする。
+</member>
+<member>net registry convert     - Convert a registration entries (.reg) file.レジストリエントリー(.reg)ファイルを変換する。
+</member>
+<member>net registry check       - Check and repair a registry database. レジストリデータベースを検査し修復する。
+</member>
+</simplelist>
+</para>
+
+<refsect3>
+  <title>REGISTRY ENUMERATE <replaceable>key</replaceable> </title>
+  <para>Enumerate subkeys and values of <emphasis>key</emphasis>
+  サブキーと<emphasis>key</emphasis>の値に番号を振る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY ENUMERATE_RECURSIVE <replaceable>key</replaceable> </title>
+  <para>Enumerate values of <emphasis>key</emphasis> and its subkeys.
+  <emphasis>key</emphasis>とそのサブキーの値に番号を振る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY CREATEKEY <replaceable>key</replaceable> </title>
+  <para>Create a new <emphasis>key</emphasis> if not yet existing.
+  もしもまだ存在しないならば、新しい<emphasis>key</emphasis>を作成する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY DELETEKEY <replaceable>key</replaceable> </title>
+  <para>Delete the given <emphasis>key</emphasis> and its
+   values from the registry, if it has no subkeys.
+  もしもサブキーがない場合、与えられた<emphasis>key</emphasis>とその値を
+  レジストリから削除する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY DELETEKEY_RECURSIVE <replaceable>key</replaceable> </title>
+  <para>Delete the given <emphasis>key</emphasis> and all of its
+  subkeys and values from the registry.
+  与えられた<emphasis>key</emphasis>とそのサブキーとその値をレジストリから削除する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+
+  <para>Output type and actual value of the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.
+  </para><para>
+  与えられた<emphasis>key</emphasis>に対する<emphasis>name</emphasis>の、
+  タイプと実際の値を出力する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETVALUERAW <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+  <para>Output the actual value of the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.</para><para>
+  与えられた<emphasis>key</emphasis>に対する<emphasis>name</emphasis>の、
+  実際の値を出力する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY SETVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable> <replaceable>type</replaceable> <!--
+  --><replaceable>value</replaceable> ...<!--
+  --></title>
+
+  <para>Set the value <emphasis>name</emphasis>
+  of an existing <emphasis>key</emphasis>.
+  <emphasis>type</emphasis> may be one of
+  <emphasis>sz</emphasis>, <emphasis>multi_sz</emphasis> or
+  <emphasis>dword</emphasis>.
+  In case of <emphasis>multi_sz</emphasis> <replaceable>value</replaceable> may
+  be given multiple times.</para><para>
+  存在する<emphasis>key</emphasis>に対する<emphasis>name</emphasis>の値を設定する。
+  <emphasis>type</emphasis>は、<emphasis>sz</emphasis>、
+  <emphasis>multi_sz</emphasis> か <emphasis>dword</emphasis>のうちのどれかが選べる。
+  <emphasis>multi_sz</emphasis> <replaceable>値</replaceable>の場合は、
+  複数個設定できる。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY INCREMENT <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable> <replaceable>[inc]</replaceable><!--
+  --></title>
+
+  <para>Increment the DWORD value <emphasis>name</emphasis>
+  of <emphasis>key</emphasis> by <replaceable>inc</replaceable>
+  while holding a g_lock.
+  <emphasis>inc</emphasis> defaults to 1.</para><para>
+  g_lockを行う間、<replaceable>inc</replaceable>だけ増やすことで
+  <emphasis>key</emphasis>の<emphasis>name</emphasis>のDWORD値を増加させる。
+  <emphasis>inc</emphasis> 
+  の既定値は1である。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY DELETEVALUE <replaceable>key</replaceable> <!--
+  --><replaceable>name</replaceable></title>
+
+  <para>Delete the value <emphasis>name</emphasis>
+  of the given <emphasis>key</emphasis>.</para><para>
+  与えられた<emphasis>key</emphasis>の<emphasis>name</emphasis>の
+  値を削除する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETSD <replaceable>key</replaceable></title>
+
+  <para>Get the security descriptor of the given <emphasis>key</emphasis>.
+  </para><para>
+  与えられた<emphasis>key</emphasis>のセキュリティ識別子を得る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY GETSD_SDDL <replaceable>key</replaceable></title>
+
+  <para>Get the security descriptor of the given <emphasis>key</emphasis> as a
+  Security Descriptor Definition Language (SDDL) string.</para><para>
+  セキュリティ記述子定義言語(SDDL)文字列として与えられた
+  <emphasis>key</emphasis>のセキュリティ記述子を得る。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY SETSD_SDDL <replaceable>key</replaceable><!--
+  --><replaceable>sd</replaceable></title>
+
+  <para>Set the security descriptor of the given <emphasis>key</emphasis> from a
+  Security Descriptor Definition Language (SDDL) string <emphasis>sd</emphasis>.
+  </para><para>
+  セキュリティ記述子定義言語(SDDL) <emphasis>sd</emphasis>から
+  与えられた<emphasis>key</emphasis>のセキュリティ記述子を設定する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY IMPORT <replaceable>file</replaceable><!--
+  --><replaceable> [--precheck &lt;check-file&gt;] [opt]</replaceable></title>
+  <para>レジストリエントリー(.reg)<emphasis>file</emphasis>ファイルをインポートする。</para>
+  <para>以下のオプションが存在する:</para>
+  <variablelist>
+    <varlistentry><term>--precheck <replaceable>ファイルを検査</replaceable></term>
+    <listitem><para>
+      This is a mechanism to check the existence or non-existence of
+      certain keys or values specified in a precheck file before applying
+      the import file.
+      The import file will only be applied if the precheck succeeds.
+    </para>
+    <para>
+      これは、インポートファイルを適用する前に、事前チェックファイル中で指定された、
+      特定のキーまたは値の存在(あるいは非存在)を検査するメカニズムである。
+      インポートファイルは、もしも事前チェックが成功した場合にのみ適用される。
+    </para>
+    <para>
+      The check-file follows the normal registry file syntax with the
+      following semantics:
+    </para>
+    <para>
+      チェックファイルは以下の文法を使う、通常のレジストリファイル文法に従う。
+    </para>
+      <itemizedlist>
+       <listitem><para>&lt;value name&gt;=&lt;value&gt; checks whether the
+         value exists and has the given value.</para>
+         <para>&lt;value name&gt;=&lt;value&gt; は、値が存在して、与えられた
+               値かどうかを検査する。</para></listitem>
+       <listitem><para>&lt;value name&gt;=- checks whether the value does
+         not exist.</para>
+         <para>&lt;value name&gt;=- は、値が存在しないかを検査する。</para></listitem>
+       <listitem><para>[key] は、キーが存在するかを検査する。</para>
+       </listitem>
+       <listitem><para>[-key] は、キーが存在しないかを検査する。</para>
+       </listitem>
+      </itemizedlist>
+    </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY EXPORT <replaceable>key</replaceable><!--
+  --><replaceable>file</replaceable><!--
+  --><replaceable>[opt]</replaceable></title>
+
+  <para>Export a <emphasis>key</emphasis> to a registration entries (.reg)
+  </para><para>
+  レジストリエントリー(.reg)<emphasis>file</emphasis>に<emphasis>key</emphasis>
+  をエクスポートする。
+  <emphasis>file</emphasis>.
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY CONVERT <replaceable>in</replaceable> <!--
+  --><replaceable>out</replaceable> <!--
+  --><replaceable>[[inopt] outopt]</replaceable></title>
+
+  <para>Convert a registration entries (.reg) file <emphasis>in</emphasis>.
+  </para><para>
+  レジストリエントリー(.reg)ファイル<emphasis>中に</emphasis>変換する。
+  </para>
+</refsect3>
+
+<refsect3>
+  <title>REGISTRY CHECK [-ravTl] [-o &lt;ODB&gt;] [--wipe] [&lt;DB&gt;]</title>
+  <para>
+  レジストリデータベースの検査と修復を行う。もしもオプションが指定されなければ、
+  リードオンリのデータベース検査が行われる。特に、対話的あるいは自動での
+  修復モードは以下のオプションのどれかを選択できる。
+
+  <variablelist>
+    <varlistentry><term>-r|--repair</term>
+    <listitem><para>
+      対話的な修復モードで、数多くの質問に答える必要がある。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-a|--auto</term>
+    <listitem><para>
+      非対話修復モードで、既定値の回答を使用する。
+    </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-v|--verbose</term>
+      <listitem><para>
+	より詳細な出力を行う。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-T|--test</term>
+      <listitem><para>
+	テストモードであり、どのような変更が行われるかを表示するが、何らの
+	変更も行わない。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-l|--lock</term>
+      <listitem><para>
+	検査中にデータベースをロックする。
+      </para></listitem>
+    </varlistentry>
+
+   <varlistentry><term>--reg-version={1,2,3}</term>
+      <listitem><para>
+	レジストリデータベースの形式を指定する。指定されなかった場合、
+	バイナリの値を既定値とするか、もしも registry.tdb がコマンドラインで
+	明確に起動した場合、INFO/versionレコード中に見つかった値に設定される。
+	Specify the format of the registry database. If not given it defaults to
+	the value of the binary or, if an registry.tdb is explizitly stated at
+	the commandline, to the value found in the INFO/version record.
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>[--db] &lt;DB&gt;</term>
+      <listitem><para>
+	指定されたデータベースを検査する。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term>-o|--output &lt;ODB&gt;</term>
+      <listitem><para>
+	入力を変更する代わりに新しいレジストリデータベース &lt;ODB&gt; を作成する。
+	もしも、&lt;ODB&gt; がすでに存在する場合は、--wipe を指定して、それを
+	上書きすることもできる。
+      </para></listitem>
+    </varlistentry>
+
+   <varlistentry><term>--wipe</term>
+      <listitem><para>
+	入力を変更する代わりに、レジストリデータベースを置き換えるか、
+	存在する出力データベースを上書きする。
+      </para></listitem>
+    </varlistentry>
+
+    <varlistentry><term></term>
+      <listitem><para>
+      </para></listitem>
+    </varlistentry>
+  </variablelist>
+  </para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>EVENTLOG</title>
+
+<para>Samba 3.4.3 から、net コマンドはネイティブな WIN32 イベントログファイル
+(通常 *.evt) の読み取り、ダンプ、インポート、エクスポートが可能となった。
+evt ファイルはネイティブな Windows のイベントビューワツールによって使われる。
+</para>
+
+<para>
+evtファイルのインポートとエクスポートは、<emphasis>smb.conf</emphasis>
+ファイル中で<parameter>eventlog list</parameter>が定義されている時のみ
+行える。詳細は <citerefentry><refentrytitle>smb.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> マニュアルページを参照のこと。
+</para>
+
+<para>eventlog のサブコマンドは以下の通り:
+<simplelist>
+<member>net eventlog dump - イベントログファイル *.evt の内容を画面上にダンプする。</member>
+<member>net eventlog import - イベントログファイル *.evt を、イベントログを保持する Samba 内部の tdb ファイルにインポートする。</member>
+<member>net eventlog export - Samba内部の tdb 形式によるイベントログをイベントログファイル *.evt にエクスポートする。</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>EVENTLOG DUMP <replaceable>filename</replaceable></title>
+
+<para>
+標準出力にイベントログファイル *.evt を出力する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>EVENTLOG IMPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
+
+<para>
+<replaceable>filename</replaceable>によって定義されたイベントログファイル *.evt 
+を、<replaceable>eventlog</replaceable>で定義した Samba 内部の tdb 形式によるイベン
+トログファイルにインポートする。
+<replaceable>eventlog</replaceable> には smb.conf 中で定義されている
+<parameter>eventlog list</parameter> が一部必要となる。詳細は、
+<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+マニュアルページを参照のこと。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>EVENTLOG EXPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
+
+<para>
+<replaceable>eventlog</replaceable>で定義されている、Samba内部のtdb形式によるイベントログを
+<replaceable>filename</replaceable>で定義されているイベントログファイル *.evt にエクスポートする。
+<replaceable>eventlog</replaceable>はsmb.conf中で定義されている
+<parameter>eventlog list</parameter>の一部を必要とする。詳細は、
+<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+マニュアルページを参照のこと。
+</para>
+
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>DOM</title>
+
+<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバーサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバーに参加させる機能はWindows 2000からサポートされていた。
+</para>
+<para>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバーか、「Administrators group」グループのメンバーか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
+</para>
+
+<para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+<simplelist>
+<member>net dom join - リモートでマシンをドメインに参加させる</member>
+<member>net dom unjoin -リモートでマシンをドメインから削除する</member>
+<member>net dom renamecomputer - ドメインに参加しているリモートコンピューターの名前を変更する。</member>
+</simplelist>
+</para>
+
+<refsect3>
+<title>DOM JOIN	<replaceable>domain=DOMAIN</replaceable> <replaceable>ou=OU</replaceable> <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+リモートでマシンをドメインに参加させる。このコマンドがサポートするパラメーターは以下のとおり：
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>DOMAIN</replaceable>には、NetBIOS名(ショートドメイン名とも言う)又はActiveDirectoryのDNSドメイン名を指定する。Windows の場合、使用するドメインコントローラーを選択できる。その場合「\」で区切ってドメインコントローラーの名前を指定する（例：MYDOM\MYDC）。<replaceable>DOMAIN</replaceable>に空白は指定できない。
+</para></listitem>
+
+<listitem><para><replaceable>OU</replaceable>には、既定値ではないLDAPコンテナーにマシンアカウントを作成する場合、RFC 1779のLDAP DN(例:<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis>)で指定する。この、任意のパラメーターは、リモートマシンをActiveDirectoryドメインに参加する場合のみサポートされる。</para></listitem>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、参加させるマシンのドメインアカウントを指定する。このドメインアカウントには、マシンを追加できる適切な権限が付与されている必要がある。
+</para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定されたドメインアカウントのパスワードを指定する。</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンが正しくドメインに参加できたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインに参加させたいマシンに接続して認証を行う場合、-S コンピューター や-U ユーザー のように net で標準的に使用されるパラメーターを別途指定する必要があることに注意。
+</para>
+<para>
+	例:
+	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>DOM UNJOIN <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+ドメインからマシンを削除する。このコマンドでは次のパラメーターを指定する。
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>ACCOUNT</replaceable>には、削除するマシンのドメインアカウント名を指定する。このドメインアカウントには、マシンを削除できる権限が付与されている必要がある。
+ </para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable>には、<replaceable>ACCOUNT</replaceable>で指定したドメインアカウントのパスワードを指定する。
+</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable>は任意のオプションで、マシンがドメインから削除されたときに再起動させたいときに指定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメインから削除したいマシンに接続して認証を行う場合、-S コンピューター や-U ユーザー のようにnetで標準的に使用されるパラメーターを別途指定する必要があることに注意。
+</para>
+<para>
+	例:
+	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
+</para>
+
+</refsect3>
+
+<refsect3>
+<title>DOM RENAMECOMPUTER <replaceable>newname=NEWNAME</replaceable> <replaceable>account=ACCOUNT</replaceable> <replaceable>password=PASSWORD</replaceable> <replaceable>reboot</replaceable></title>
+
+<para>
+ドメインに参加しているコンピューターの名前を変更する。このコマンドは以下のサブパ
+ラメータをサポートする:
+</para>
+
+<itemizedlist>
+
+<listitem><para><replaceable>NEWNAME</replaceable> ドメイン中の新しいマシンの名前を定義する。</para></listitem>
+
+<listitem><para><replaceable>ACCOUNT</replaceable> ドメイン中でマシンの名前を変
+更する時に使うドメインアカウントを定義する。このドメインアカウントはマシン名を
+変更するために必要な権限を持つ必要がある。</para></listitem>
+
+<listitem><para><replaceable>PASSWORD</replaceable> <replaceable>ACCOUNT</replaceable>で定義されるドメインアカウントのパスワードを定義する。</para></listitem>
+
+<listitem><para><replaceable>REBOOT</replaceable> はオプションのパラメーターで、ドメイン中で名前の変更が成功した後にマシンをリブートするように設定する。</para></listitem>
+
+</itemizedlist>
+
+<para>
+ドメイン中で名前を変更したいリモートマシンに、標準のnetパラメーターを使って接続と
+認証を行う必要があることに注意。それらの追加のパラメーターには -S コンピューター名
+と-U ユーザー名を含む。
+</para>
+<para>
+	例:
+	net dom renamecomputer -S xp -U XP\\administrator%secret newname=XPNEW account=MYDOM\\administrator password=topsecret reboot.
+</para>
+<para>
+この例では、XPという名前のコンピューターに、パスワードがsecretのローカルの
+Administratorとして接続し、ドメインに参加しているコンピューターの名前を、
+MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、
+XPNEWに変更している。変更が成功したら、コンピューターをリブートする。
+</para>
+
+</refsect3>
+
+</refsect2>
+
+
+<refsect2>
+<title>G_LOCK</title>
+
+<para>グローバルロックの管理</para>
+
+<refsect3>
+<title>G_LOCK DO <replaceable>lockname</replaceable> <replaceable>timeout</replaceable> <replaceable>command</replaceable></title>
+
+<para>
+グローバルロック配下でシェルを実行する。これはいくつかのシェルコマンドが実行される
+順番を定義するのに便利かもしれない。ロック情報は<filename>g_lock.tdb</filename>
+というファイルに格納される。CTDBが動作しているセットアップ時には、ロック情報は
+すべてのクラスターノードで有効である。
+</para>
+
+<itemizedlist>
+<listitem><para><replaceable>LOCKNAME</replaceable>はグローバルロックの名前を定義する。</para></listitem>
+<listitem><para><replaceable>TIMEOUT</replaceable>はタイムアウトを定義する。</para></listitem>
+<listitem><para><replaceable>COMMAND</replaceable>は実行するシェルコマンドを定義する。</para></listitem>
+</itemizedlist>
+</refsect3>
+
+<refsect3>
+<title>G_LOCK LOCKS</title>
+
+<para>
+現在存在するすべてのロック名を表示する。
+</para>
+</refsect3>
+
+<refsect3>
+<title>G_LOCK DUMP <replaceable>lockname</replaceable></title>
+
+<para>
+特定のグローバルロックのロックテーブルをダンプする。
+</para>
+</refsect3>
+
+</refsect2>
+
+<refsect2>
+<title>HELP [COMMAND]</title>
+
+<para>指定されたコマンドの使用方法の情報を提供する。</para>
+
+</refsect2>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba 3 用のものである。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。Samba は現在 Linux カーネルが
+	開発されているような方法でのオープンソースプロジェクトである
+	Samba Team によって開発された。</para>
+
+	<para>net マニュアルページは Jelmer Vernoij によって執筆された。</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.2.0 - 4.2.11 に対応する。</para>
+
+        <para>このドキュメントの Samba 3.0.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>たかはし もとのぶ (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+       によって行なわれた。</para>
+
+	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 - 4.2.11 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+</refsect1>
+
+</refentry>

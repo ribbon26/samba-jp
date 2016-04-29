@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_recycle.8">
+
+<refmeta>
+	<refentrytitle>vfs_recycle</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_recycle</refname>
+	<refpurpose>Samba VFS ごみ箱</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = recycle</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>vfs_recycle</command> はファイル削除要求に介入し、
+	直接ファイルを削除するのではなく、一時エリアに移動させる。
+	これにより Windows のごみ箱と同様の機能を提供する。
+	</para>
+
+        <para>ごみ箱 (Recycle Bin) は Windows のエクスプローラーのネットワークファイルシステム (共有) や<!-- 割り当てられた -->ドライブには表示されない。
+        その代わり、.recycle という名前のディレクトリが<!-- 初めてファイルを削除したときに -->自動的に作成される。<!-- (recycle:repositoryが指定されていない場合) -->
+        recycle:repository が設定されている場合は、
+        作成されるディレクトリ名は .recycle ではなく
+        recycle:repository で指定された名前になる。
+        recycle:keeptree オプションが設定されている場合、
+        パスとともに保存される。
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>recycle:repository = PATH</term>
+		<listitem>
+		<para>削除されたファイルをどこに移動するかを指定する。
+		</para>
+		<para>オプションが指定されていない場合の既定値は .recycle である。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:directory_mode = MODE</term>
+		<listitem>
+		<para>
+		ごみ箱ディレクトリを作成する場合のモードを 8 進数で指定する。
+		ごみ箱ディレクトリは初めてファイルが削除されたときに作成される。
+		</para>
+		<para>
+		既定値は 0700 である。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:subdir_mode = MODE</term>
+		<listitem>
+		<para>
+                  ごみ箱の中のサブディレクトリを作成する場合のモードを
+                  8 進数で指定する。
+		</para>
+		<para>
+		既定値は recycle:directory_mode の値である。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:keeptree = BOOL</term>
+		<listitem>
+		<para>
+                ディレクトリ構造を残したままファイルを削除するかどうかを指定する。
+                有効にすると、ディレクトリ中のファイルが削除されたとき、
+                ごみ箱内の個別のディレクトリに移動される。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:versions = BOOL</term>
+		<listitem>
+		<para>
+                このオプションに true を指定すると、
+                同一の名前を持つ 2 つのファイルが削除されたとき、
+                ごみ箱の中に両方のファイルを保存する。
+		新しく削除したファイルの名前は
+		&quot;Copy #番号 of 元のファイル名&quot;
+		となる。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:touch = BOOL</term>
+		<listitem>
+		<para>
+		ファイルをごみ箱に移動するときにのアクセス日時を更新するか否かを指定する。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:touch_mtime = BOOL</term>
+		<listitem>
+		<para>
+		ファイルをごみ箱に移動するときに最終変更日時を更新するか否かを指定する。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:minsize = BYTES</term>
+		<listitem>
+		<para>
+		ごみ箱に移動するファイルサイズの下限を指定する。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:maxsize = BYTES</term>
+		<listitem>
+		<para>
+		ごみ箱に移動するファイルサイズの上限を指定する。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:exclude = LIST</term>
+		<listitem>
+		<para>
+		ごみ箱に移動せず通常のように削除するファイルを指定する。
+		* や ? といったワイルドカードをサポートする。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:exclude_dir = LIST</term>
+		<listitem>
+		<para>
+		ごみ箱に移動せず通常のように削除するディレクトリを指定する。
+		* や ? といったワイルドカードをサポートする。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recycle:noversions = LIST</term>
+		<listitem>
+		<para>
+                バージョン管理せずに直接削除すべきパスを指定する。
+                recycle:versions が有効のときだけ使用される。
+		* や ? といったワイルドカードをサポートする。
+		</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>
+        共有 <parameter>share</parameter> 内の削除要求されたファイルを実際に削除する代わりに
+        <parameter>/data/share/.recycle</parameter>
+        に移動する:
+	</para>
+
+<programlisting>
+    <smbconfsection name="[share]"/>
+    <smbconfoption name="path">/data/share</smbconfoption>
+    <smbconfoption name="vfs objects">recycle</smbconfoption>
+    <smbconfoption name="recycle:repository">.recycle</smbconfoption>
+    <smbconfoption name="recycle:keeptree">yes</smbconfoption>
+    <smbconfoption name="recycle:versions">yes</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	<para>このマニュアルは Samba 3.6.0 - 4.1.22 に対応する。</para>
+        <!-- 英文では 3.0.25 と記載されている -->
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+        <para>Samba 3.3.6 - 4.2.11 対応の翻訳者は:
+        <itemizedlist>
+                <listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+                <listitem><para>堀田 倫英 (hotta@net-newbie.com)</para></listitem>
+		<listitem><para>さとうふみやす (fumiyas @ OSS Technology Corp.)</para></listitem>
+        </itemizedlist>
+	によって行われた。
+        </para>
+</refsect1>
+
+</refentry>

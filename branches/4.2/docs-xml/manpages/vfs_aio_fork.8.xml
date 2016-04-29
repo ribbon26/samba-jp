@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_aio_fork.8">
+
+<refmeta>
+	<refentrytitle>vfs_aio_fork</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_aio_fork</refname>
+	<refpurpose>非同期 I/O を実装する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = aio_fork</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+  <title>説明</title>
+  <para>
+    この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+  <para>
+    <command>aio_fork</command> VFS モジュールは、 システムの POSIX AIO
+    インターフェイスに問題があるプラットフォームで Samba の非同期 I/O を
+    有効にするためのものである。
+    POSIX AIO は、致命的な制約に悩まされることが多い。たとえば、ある
+    バージョンの Linux では、高負荷な環境でリアルタイムのシグナルを
+    使用すると、問題が発生する。別のシステムでは、 AIO の使用に際して
+    特殊なカーネルモジュールのロードが必要であったり、システム全体で
+    スケジュールされている非同期リクエスト数に制約があったりする。
+    glibc ベースのシステム (大半の Linux システム) では、ファイル記述子
+    あたり、 1 つの処理待ちリクエストしか許可されない。
+  </para>
+
+  <para>
+    こうした制約を回避するために、 aio_folk モジュールが作られた。
+    このモジュールは、読み取りと書き込みの呼び出しを非同期に生成するため、
+    内蔵の POSIX AIO インターフェイスに代わって、フォークされたヘルパー
+    プロセスを使用する。
+    このモジュールにパラメーターはなく、非同期リクエストが行われた際に、
+    必要に応じてヘルパープロセスを生成する。
+    アイドル状態のヘルパープロセスは 30 秒で消滅する。
+  </para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>簡単な使い方:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="vfs objects">aio_fork</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、バージョン 4.0.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+        <para>このドキュメントは、Samba 3.5.12 - 4.2.11 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

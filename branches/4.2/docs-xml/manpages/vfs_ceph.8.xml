@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_ceph.8">
+
+<refmeta>
+	<refentrytitle>vfs_ceph</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_ceph</refname>
+	<refpurpose>
+	  CephFSによって提供される機能を利用する
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = ceph</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+  <title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>
+	  <command>vfs_ceph</command> VFS モジュールは、
+	  Sambaによって使われる CephFS固有の機能を提供する。
+	  </para>
+
+	<para>
+	  Ceph は、優れた性能、信頼性、スケーラビリティを提供するように設計された、
+	  分散ネットワークファイルシステムである。これは、アプリケーションが、
+	  POSIX風のインタフェース経由で、Ceph分散ファイルシステムへのアクセスを行うための、
+	  共有ライブラリである。
+	</para>
+
+	<para>
+	  このモジュールは、他のモジュールといっしょに使えるが、<command>vfs objects</command>
+	  リスト中では、最後に位置するモジュールでなければならない。このリストの、
+	  ceph エントリより右にあるモジュールは無意味である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para>
+	  <command>vfs_ceph</command> は、ベースとなる共有パスが Cephファイルシステム
+	  であることを要求する。
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">ceph</smbconfoption>
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>ceph:config_file = path</term>
+		<listitem>
+		<para>
+			ceph 構成ファイル(configfile)を使う。空白の既定値である。
+		</para>
+		<para>
+			例: ceph:config_file =
+			/etc/ceph/ceph.conf
+		</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>
+	このマニュアルはSambaシステムバージョン4.2.0に対応している
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.2.0 - 4.2.11 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

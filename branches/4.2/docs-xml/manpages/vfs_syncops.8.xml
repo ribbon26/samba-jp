@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_syncops.8">
+
+<refmeta>
+	<refentrytitle>vfs_syncops</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.2</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_syncops</refname>
+	<refpurpose>メタデータ操作を同期的に実行させる</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = syncops</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>
+	  ある種のファイルシステム(いくつかなジャーナルファイルシステムなど)
+	  では、電源失効後にファイルシステム中に残っていることをオペレーション
+	  が保障するために、多くのメタデータ操作に対してfsync()が実行される
+	  事を要求する。これは、クラスタ化されたSambaにおいて、
+	  ノードフェイルオーバシステム中に参加している、いくつかのクラスタ
+	  ファイルシステムにおいては特に重要である。それらのファイルシステム
+	  に対して、<command>vfs_syncops</command> VFSモジュールは、それらの操作を
+	  安全に実行する方法を提供する。</para>
+	<para>  
+	Some filesystems (even some journaled filesystems) require that a
+	fsync() be performed on many meta data operations to ensure that the
+	operation is guaranteed to remain in the filesystem after a power
+	failure. This is particularly important for some cluster filesystems
+	which are participating in a node failover system with clustered
+	Samba. On those filesystems the <command>vfs_syncops</command> VFS module
+	provides a way to perform those	operations safely.
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para>
+	  <command>vfs_syncops</command> VFSモジュールをによる、多くの
+	  パフォーマンス低下は、close() 中のfsync である。これは、グローバル
+	  または共有単位のどちらかで、<command>syncops:onclose = no</command>
+	  を使う事によって無効に出来る。
+	</para>
+
+	<para>
+	  最後のデータがfsync()で書かれる事のみを要求する特定のファイルシステムでは、
+	  <command>syncops:onmeta = no</command>を使ってこのモジュールのメタデータ
+	  同期を無効にすることが出来る。このオプションはグローバル又は共有単位で
+	  設定出来る。</para><para>
+	On certain filesystems that only require the last data written to be
+	fsync()'ed, you can disable the metadata synchronization of this module with
+	<command>syncops:onmeta = no</command>. This option can be set either
+	globally or per share.
+	</para>
+
+	<para>
+	  <command>vfs_syncops</command> VFSモジュールは、
+	  <command>syncops:disable = true</command>を使って共有に対して、
+	  完全に無効化することも出来る。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>[share]に対してsyncops機能を追加する:</para>
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="path">/data/share</smbconfoption>
+	<smbconfoption name="vfs objects">syncops</smbconfoption>
+	<smbconfoption name="syncops:onclose">no</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページはSambaシステムバージョン4.1.0用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.1.0 - 4.2.11 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
