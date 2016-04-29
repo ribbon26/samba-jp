@@ -26,10 +26,14 @@
   <para>
     このパラメータはグローバルにも、共有ごとにも設定出来る。
     取り得る値は
-    <emphasis>off</emphasis> 又は <emphasis>disabled</emphasis>,
-    <emphasis>auto</emphasis> 又は <emphasis>enabled</emphasis>, と
-    <emphasis>mandatory</emphasis> 又は <emphasis>required</emphasis> である。
-    特別な値 <emphasis>default</emphasis> は、暗黙の既定値設定である。
+    <emphasis>off</emphasis> (又は <emphasis>disabled</emphasis>),
+    <emphasis>enabled</emphasis> (又は <emphasis>auto</emphasis>),
+    <emphasis>if_required</emphasis>),
+    <emphasis>desired</emphasis>, と
+    <emphasis>required</emphasis> (又は <emphasis>mandatory</emphasis>) である。
+    特別な値 <emphasis>default</emphasis> は、暗黙の既定値で、実体は
+    <emphasis>enabled</emphasis> ある。
+    
   </para>
 
   <variablelist>
@@ -137,8 +141,8 @@
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      明示的に<emphasis>default</emphasis>を設定して
-	      既定値のままにするか、グローバルに<emphasis>default</emphasis>
+	      そのままで既定値とするか、明示的に<emphasis>default</emphasis>を設定
+	      するか、グローバルに<emphasis>enabled</emphasis>
 	      と設定すると、暗号化のネゴシエーションを有効にするが、
 	      グローバルあるいは共有単位のデータ暗号化を有効にはしない。
 	    </para>
@@ -146,17 +150,18 @@
 
 	  <listitem>
 	    <para>
-	      グローバルに <emphasis>enabled</emphasis> と設定すると、
-	      ネゴシエーションを有効化し、グローバルにデータの暗号化を有効に
-	      する。
+	      グローバルに <emphasis>desired</emphasis> と設定すると、
+	      ネゴシエーションを有効化し、それをサポートしているクライアントに
+	      対して、セッションと共有接続上におけるデータの暗号化を有効にする。
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      グローバルに<emphasis>required</emphasis>を設定すると、
-	      ネゴシエーションを有効にし、グローバルに、データ暗号化を
-	      強制にする。
+	      ネゴシエーションを有効にし、セッションと共有接続上におけるデータの暗号化を
+	      有効にする。暗号化をサポートしないクライアントはサーバへのアクセスを
+	      拒否される。
 	    </para>
 	  </listitem>
 
@@ -169,8 +174,9 @@
 
 	  <listitem>
 	    <para>
-	      共有上で<emphasis>enabled</emphasis>を設定すると、
+	      共有上で<emphasis>desired</emphasis>を設定すると、
 	      ネゴシエーションがグローバルに有効になっている場合、
+	      クライアントが暗号化をサポートしていると、
 	      この共有に対するデータの暗号化を有効にする。
 	    </para>
 	  </listitem>
@@ -179,16 +185,29 @@
 	    <para>
 	      共有上で<emphasis>required</emphasis>を設定すると、
 	      ネゴシエーションがグローバルで有効になっている場合、
-	      この共有に対する暗号化が強制される。これは、Samba では
-	      Windows 上よりもよりきめ細かく制御を強制することが
-	      出来ると言うことに注意。これは MS-SMB2 プロトコルドキュメント
-	      の記載からは若干異なる。
+	      この共有に対する暗号化が強制される。すなわち、
+	      暗号化をサポートしないクライアントは共有へのアクセスを
+	      拒否される。
+	    </para>
+	    <para>
+	      このことは、Sambaで制御される共有ごとの強制操作は Windows と
+	      比べて違うと言うことに注意: Windows では、
+	      <emphasis>RejectUnencryptedAccess</emphasis>はグローバルの
+	      設定で、それが設定された場合、データ暗号化が有効になっている
+	      すべての共有は自動的に暗号化が強制される。Samba 上でそれと同じ効果を
+	      得るためには、グローバルに<emphasis>smb encrypt</emphasis> を
+	      <emphasis>enabled</emphasis>に設定し、暗号化したいすべての
+	      共有に<emphasis>required</emphasis> を設定する。
+	      さらに、Windows では不可能な、いくつかの共有において、
+	      暗号化が <emphasis>required</emphasis>と、いくつかの
+	      共有において暗号化か<emphasis>desired</emphasis> のみという構成が、
+	      Samba 上で可能である。
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      共有に対して<emphasis>off</emphasis>に設定するか、
+	      <emphasis>off</emphasis>を設定するか、共有に対して
 	      <emphasis>enabled</emphasis>しても何の影響もない。
 	    </para>
 	  </listitem>
