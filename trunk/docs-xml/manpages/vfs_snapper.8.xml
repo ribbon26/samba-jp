@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.2</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
 </refmeta>
 
 
@@ -40,6 +40,12 @@
 	</para>
 
 	<para>
+	  スナップショットはファイルサーバリモートVSSプロトコル (FSRVP)を使う事で、
+	  リモートから作成/削除出来る。スナップショット作成と削除の要求は、DBus 経由で
+	  snapper に送られる。
+	</para>
+	
+	<para>
 		このモジュールはスタック可能である。
 	</para>
 </refsect1>
@@ -57,6 +63,18 @@
 		<smbconfsection name="[share]"/>
 		<smbconfoption name="vfs objects">snapper</smbconfoption>
 	</programlisting>
+
+	<para>
+	  リモートからのスナップショット作成と削除のために、Samba の FSRVP
+	  サーバは [global] セクション中で設定されねばならない:
+	</para>
+
+	<programlisting>
+	  <smbconfsection name="[global]"/>
+	  <smbconfoption name="rpc_daemon:fssd">fork</smbconfoption>
+	  <smbconfoption name="registry shares">yes</smbconfoption>
+	  <smbconfoption name="include">registry</smbconfoption>
+	</programlisting>
 </refsect1>
 
 <refsect1>
@@ -73,13 +91,20 @@
 	  .snapshots 内へのアクセスを、ユーザとグループに対して自動的に許可
 	  することができる。
 	</para>
+	<para>
+	  リモートからのスナップショット作成と削除は、Active Directory の
+	  administrator、backup operators 又は 明示的に SeBackupPrivilege
+	  権限を付与された users のみ、Samba によって許可される。Snapper は
+	  snapper のALLOW_USERS 又は ALLOW_GROUPS オプションによって、適切な
+	  ユーザに対して許可されねばならない。
+	</para>
 </refsect1>
 
 <refsect1>
 	<title>VERSION</title>
 
 	<para>
-		このマニュアルページは Samba  4.2.0 用のものである。
+		このマニュアルページは Samba  4.3.0 用のものである。
 	</para>
 </refsect1>
 
