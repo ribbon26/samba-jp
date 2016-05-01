@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.2</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
 </refmeta>
 
 
@@ -54,7 +54,7 @@
 	</para>
 
        <para>このモジュールは、smb.confのパラメータ
-       <smbconfoption name="acl map full control"></smbconfoption>
+       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
        を使用する。これをyesに設定した場合(既定値)、このパラメータは、
        FILE_DELETE と FILE_DELETE_CHILDを除いた、すべてのファイルのパーミッション
        に、すでに含まれている(ディレクトリではなく)ファイルに対する、戻り値内の
@@ -340,18 +340,10 @@
 		<para>
 		  quotaによる共有の残量と使用量の報告を調整する。これを"yes"に
 		  設定すると、使用量と残量の要求は、ユーザーが要求したデータの
-		  ユーザークォータ、ユーザーのプライマリグループのグループクォータと
-		  共有の最上位ディレクトリが持っているファイルセットに対する
-		  ファイルセットクォータも評価される。
-		</para>
-		<para>
-		Adjust reporting of the size and free space of a share
-		according to quotas. If this setting is "yes", a
-		request for size and free space will also evaluate the
-		user quota of the user requesting the data, the group
-		quota of the primary group of the user and the fileset
-		quota for the fileset containing the top level
-		directory of the share.
+		  ユーザークォータ、ユーザーのプライマリグループのグループクォータ
+		  も評価する。残量問い合わせ中のファイルセットクォータを反映する
+		  ために --dfreequota オプション をGPFSがすでに提供しているとしても、
+		  ファイルセットクォータは問合せされない。
 		</para>
 
 		<para>
