@@ -1,7 +1,6 @@
 <samba:parameter name="rpc_server:SERVER"
                  context="G"
 		 type="string"
-		 advanced="1" print="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 	<para>
@@ -33,6 +32,7 @@
 		<listitem><para>ntsvcs       - Plug and Play Services</para></listitem>
 		<listitem><para>eventlog     - Event Logger</para></listitem>
 		<listitem><para>initshutdown - Init Shutdown Service</para></listitem>
+		<listitem><para>mdssvc       - Spotlight</para></listitem>
 	</itemizedlist>
 
 	<para>
@@ -55,11 +55,10 @@
 	</para>
 
 	<para>
-	現在、Samba3では、spoolssd,epmdとlsasdという3つのデーモンをサポートしている。
-	3つのデーモンは<emphasis>rpc_daemon</emphasis>オプションを使う事で
-	有効にできる。spoolssdに対しては、以下のように、デーモンを有効にし、
+	  現在、Samba3 では、spoolssd、epmd、lsasd と mdssd という4つのデーモンをサポートしている。
+	それらのデーモンは<emphasis>rpc_daemon</emphasis>オプションを使う事で
+	有効にできる。spoolssd に対しては、以下のように、デーモンを有効にし、
 	名前付きパイプをプロキシする必要がある:
-	you have to to enable the daemon and proxy the named pipe with:
 	</para>
 
 	<para>
@@ -72,12 +71,15 @@
 
 			rpc_server:spoolss = external
 			rpc_server:epmapper = disabled
+
+			rpc_daemon:mdssd = fork
+			rpc_server:mdssvc = external
 		</programlisting>
 
 	</para>
 
 	<para>
-	  ncacn_ip_tcpコネクションもリッスンする為にrpc サービスを有効にするための
+	  ncacn_ip_tcp コネクションもリッスンする為にrpc サービスを有効にするための
 	  特別なオプションがある。現在、これは、テスト用にのみ使われ、スケールしない!
 
 		<programlisting>
