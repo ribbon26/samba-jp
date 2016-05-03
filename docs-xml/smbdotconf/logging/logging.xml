@@ -1,0 +1,39 @@
+<samba:parameter name="logging"
+		 type="string"
+		 context="G"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+  <para>このパラメータはロギングバックエンドを設定する。おのおののバックエンドに
+  対して、異なったログレベルを同時に指定する、バックエンドを複数指定出来る。
+  パラメータは、バックエンドのリストであり、おのおののバックエンドは
+  backend[:option][@loglevel] という形で指定する。</para>
+
+  <para>'option' パラメータは、バックエンド固有のオプションが使える。</para>
+
+  <para>バックエンドに対する log level はオプションであり、それがバックエンドに
+  対して設定されていない場合、すべてのメッセージがそのバックエンドに送られる。
+  ここで指定したログレベルは個別のバックエンドに送られるが、
+  <smbconfoption name="log level"/>パラメータは、全体でのログレベルを
+  決定する。</para>
+  
+  <para><smbconfoption name="logging"/>が設定された場合、これは、
+  <smbconfoption  name="syslog"/>と<smbconfoption  name="syslog only"/>
+  パラメータを上書きする。</para>
+  
+  <para>いくつかのバックエンドは、追加のライブラリを指定した状態でSamba が
+  コンパイルされたときにのみ有効である。logging backendsの全リストは以下の通り:
+  </para>
+
+  <itemizedlist>
+    <listitem><para><parameter moreinfo="none">syslog</parameter></para></listitem>
+    <listitem><para><parameter moreinfo="none">file</parameter></para></listitem>
+    <listitem><para><parameter moreinfo="none">systemd</parameter></para></listitem>
+    <listitem><para><parameter moreinfo="none">lttng</parameter></para></listitem>
+    <listitem><para><parameter moreinfo="none">gpfs</parameter></para></listitem>
+  </itemizedlist>
+
+</description>
+<value type="default"></value>
+<value type="example">syslog@1 file</value>
+</samba:parameter>
