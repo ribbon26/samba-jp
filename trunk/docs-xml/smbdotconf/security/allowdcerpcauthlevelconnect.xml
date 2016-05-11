@@ -1,0 +1,40 @@
+<samba:parameter name="allow dcerpc auth level connect"
+                 context="G"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>このオプションは、DCERPC サービスが 認証を提供するが、メッセージ単位の完全性もしない
+  DCERPC_AUTH_LEVEL_CONNECT で 使用することが許可されるかを制御する。</para>
+  
+  <para>This option controls whether DCERPC services are allowed to
+	be used with DCERPC_AUTH_LEVEL_CONNECT, which provides authentication,
+	but no per message integrity nor privacy protection.</para>
+
+	<para>samr、lsarpc と netlogon のような、いくつかのインタフェースでは、既定値が
+	<constant>no</constant> にハードコートされていて、epmapper、 mgmt と rpcecho
+	では、既定値が<constant>yes</constant>にハードコートされている。</para>
+	
+	<para>Some interfaces like samr, lsarpc and netlogon have a hard-coded default of
+	<constant>no</constant> and epmapper, mgmt and rpcecho have a hard-coded default of
+	<constant>yes</constant>.
+	</para>
+
+	<para>動作は、'allow dcerpc auth level connect:interface = yes' というオプションを
+	使う事で、インタフェース名ごとに上書き出来る(すなわち、	lsarpc、 netlogon、 samr、
+	srvsvc、winreg、 wkssvc など)。</para>
+	<para>The behavior can be overwritten per interface name (e.g. lsarpc, netlogon, samr, srvsvc,
+	winreg, wkssvc ...) by using 'allow dcerpc auth level connect:interface = yes' as option.</para>
+
+	<para>このオプションでは、実装固有の制限が優先される。すなわち、
+	drsuapi と backupkey プロトコルは、DCERPC_AUTH_LEVEL_PRIVACY を必要とする。
+	dnsserver プロトコルは DCERPC_AUTH_LEVEL_INTEGRITY を必要とする。</para>
+	<para>This option yields precedence to the implementation specific restrictions.
+	E.g. the drsuapi and backupkey protocols require DCERPC_AUTH_LEVEL_PRIVACY.
+	The dnsserver protocol requires DCERPC_AUTH_LEVEL_INTEGRITY.
+	</para>
+</description>
+
+<value type="default">no</value>
+<value type="example">yes</value>
+
+</samba:parameter>
