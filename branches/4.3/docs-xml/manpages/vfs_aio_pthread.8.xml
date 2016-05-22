@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_aio_pthread.8">
+
+<refmeta>
+	<refentrytitle>vfs_aio_pthread</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_aio_pthread</refname>
+	<refpurpose>pthread pool を使って 非同期 I/O を実装する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = aio_pthread</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+  <para>
+    <command>vfs_aio_pthread</command> VFS モジュールは、 pthread API が
+    有効なプラットフォーム上で、 POSIX AIO インターフェイスを使用せずに
+    Samba の非同期 I/O を有効にするためのものである。
+    POSIX AIO は、致命的な制約に悩まされることが多い。たとえば、ある
+    バージョンの Linux では、高負荷な環境でリアルタイムのシグナルを
+    使用すると、問題が発生する。別のシステムでは、 AIO の使用に際して
+    特殊なカーネルモジュールのロードが必要であったり、システム全体で
+    スケジュールされている非同期リクエスト数に制約があったりする。
+    glibc ベースのシステム (大半の Linux システム) では、ファイル記述子
+    あたり、 1 つの処理待ちリクエストしか許可されないため、 glibc の
+    実装を使用しているシステムでは POSIX AIO が無意味になってしまう。
+  </para>
+
+  <para>
+    こうした制約を回避するために、 aio_pthread モジュールが作られた。
+    このモジュールは、読み取りと書き込みの呼び出しを非同期に処理するため、
+    内蔵の POSIX AIO インターフェイスに代わって、 pthread pool を使用する。
+    pthread pool は新しいスレッドを作成することにより生成され、タスクの
+    割り当てに伴い、 最大で smbd プロセスあたり 100 スレッドまで動的に
+    拡張される。
+    この制限を変更する際には、以下で説明する aio num threads パラメーターを
+    設定すること。
+    新規の読み取りや書き込みの呼び出しを受信した際にアイドル状態の
+    スレッドが存在した場合、新しいスレッドは作成されず、タスクは既存の
+    アイドル状態のスレッドに割り当てられる。スレッドは 1 秒間アイドル
+    状態が続くと終了する。
+  </para>
+
+	<para>
+    このモジュールを有効にする際には、 smb.conf パラメーターの 
+    <command>aio read size</command> と <command>aio write size</command>
+    も適切に設定する必要がある。
+	</para>
+
+	<para>
+    このモジュールは、 Samba VFS の pread と pwrite インターフェイスが
+    スレッドセーフでないため、モジュールスタックの最後に配置すること。
+    このモジュールは、 pread と pwrite システムコールを直接呼び出し、
+    Samba VFS の pread と pwrite インターフェイスは使用しない。
+  </para>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>簡単な使い方:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="aio read size">1024</smbconfoption>
+	<smbconfoption name="aio write size">1024</smbconfoption>
+	<smbconfoption name="vfs objects">aio_pthread</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>aio_pthread:aio num threads = INTEGER</term>
+		<listitem>
+		<para>I/O 要求を処理するために thread pool 内に作成される
+		smbd 毎のスレッドの最大数を設定する。
+		</para>
+		<para>デフォルトの値は 100である。</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページはバージョン 4.0 のSambaシステム用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 3.6.6 - 4.3.9 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

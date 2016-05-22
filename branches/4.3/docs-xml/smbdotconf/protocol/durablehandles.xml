@@ -1,0 +1,26 @@
+<samba:parameter name="durable handles"
+                 context="S"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+      この真偽値パラメーターは、Samba が共有上で SMB2 の永続的ファイルハンドル
+      (durable file handle) の取得を許可するかどうかを制御する。
+    </para>
+    <para>
+    永続的ファイルハンドルは、
+    <smbconfoption name="kernel oplocks">no</smbconfoption>、
+    <smbconfoption name="kernel share modes">no</smbconfoption>、
+    <smbconfoption name="posix locking">no</smbconfoption>の場合、すなわち
+    共有が CIFS/SMB2 によるアクセス専用に設定され、ローカルの UNIX プロセスや
+    NFS 経由での操作との相互運用性をサポートしない設定となっている場合に
+    限り有効となる点に注意すること。
+    </para>
+    <para>
+    また、永続性は、delete on close フラグが設定されている
+    ファイルハンドルに対しては許可されないことにも注意すること。
+    </para>
+</description>
+
+<value type="default">yes</value>
+</samba:parameter>

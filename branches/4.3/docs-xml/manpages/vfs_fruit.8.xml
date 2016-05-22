@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_fruit.8">
+
+<refmeta>
+	<refentrytitle>vfs_fruit</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_fruit</refname>
+	<refpurpose>OS X と Netatalk との相互運用性を強化する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = fruit</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>The <command>vfs_fruit</command> モジュールは、Apple SMB クライアント
+	との互換性向上と、Netatalk 3 AFP ファイルサーバとの相互運用性を提供する。
+	</para>
+
+	<para>このモジュールは、もしも文字変換をするのであれば、
+	<command>vfs_catia</command> といっしょに使うべきであり、さらに、
+	<command>vfs_streams_xattr</command> と共に使わなければならない。
+	正しい設定方法は、例 の節を参照のこと。</para>
+
+	<para>モジュールは、共有に対して、代替データストリーム(ADS)
+	のサポートと、OS X 特有のストーリム "AFP_AfpInfo" と "AFP_Resource"
+	を横取りし、それを特別な方法で扱う機能を有効にする。
+	その他すべての名前付きストリームは、<command>vfs_fruit</command>
+	といっしょにロードされねばならない<command>vfs_streams_xattr</command>
+	にゆだねられる。</para>
+
+	<para>OS Xクライアントに対する、ADSサポートが有効な共有
+	があると言うことは、Apple固有のSMBサーバ実装の動作と似て、
+	Sambaが大文字と小文字を区別することにより引き起こされる
+	深刻なパフォーマンスの低下を回避すると言う点において価値がある。
+	</para>
+
+	<para>OS X メタデータとリソースフォークストリームは、Netatalk 3 と
+	互換性のある方法で、下記のように設定することにより格納される。
+	<command>fruit:resource = file</command> と
+	<command>fruit:metadata = netatalk</command></para>
+
+	<para>OS X は、NTFS の不正な文字を、SMB要求中で、Unicode
+	のプライベート領域にマップする。
+	<command>fruit:encoding = native</command> を設定することにより、
+	すべてのマップされた文字は ネイティブなASCII文字に変換される。
+	</para>
+
+	<para>最後に、共有アクセスモードは、
+	<command>fruit:locking = netatalk</command>
+	を設定することにより、Netatalk AFP 共有モードに対して
+	チェックすることもできる。</para>
+
+	<para>このモジュールは、このマニュアルページで言及されている
+	物以外に対してはスタックできない。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>fruit:resource = [ file | xattr | stream ]</term>
+	    <listitem>
+	      <para>どこに OSX リソースフォークを格納するかを制御する:</para>
+
+	      <itemizedlist>
+		<listitem><para><command>file (既定値)</command> -
+		OS X と Netatalk 互換の ._ AppleDouble ファイル
+		を使う。</para></listitem>
+
+		<listitem><para><command>xattr</command> - use a
+		xattr, requires a filesystem with large xattr support
+		and a file IO API compatible with xattrs, this boils
+		down to Solaris and derived platforms and
+		ZFS
+		拡張属性(xattr)を使用する。これは、大きなサイズの拡張属性をサポート
+		するファイルシステムと、拡張属性に準拠した
+		ファイルIO APIが必要となる。つまり、
+		Solaris と Solaris派生プラットフォームのZFSが必須である。
+		</para></listitem>
+
+		<listitem><para><command>stream</command> - 
+		VFSスタックの、次のモジュールに、ストリームを渡す</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:metadata = [ stream | netatalk ]</term>
+	    <listitem>
+	      <para>OS X メタデータストリームが格納される場所を指定する:</para>
+
+	      <itemizedlist>
+		<listitem><para><command>netatalk (既定値)</command> - 
+		Netatalk 互換の xattr を使う</para></listitem>
+
+		<listitem><para><command>stream</command> - 
+		VFSスタックの次のモジュールにストリームを渡す</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:locking = [ netatalk | none ]</term>
+	    <listitem>
+	      <para></para>
+	      <itemizedlist>
+		<listitem><para><command>none (既定値)</command> - 
+		cross protocol lockingを使わない</para></listitem>
+
+		<listitem><para><command>netatalk</command> - 
+		Netatalk で cross protocol locking を使う</para></listitem>
+
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:encoding = [ native | private ]</term>
+	    <listitem>
+
+	      <para>ファイルシステムに格納される、OS X クライアントで一般的に
+	      使われる、不正なNTFS ASCII文字セットを制御:</para>
+
+	      <itemizedlist>
+
+		<listitem><para><command>private (規定値)</command> -
+		OS Xクライアントによってエンコードされた形で文字を格納:
+		Unicodeプライベート領域にマップされる</para></listitem>
+
+		<listitem><para><command>native</command> - 
+		そのままのASCII値として文字を格納</para></listitem>
+
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:aapl = yes | no</term>
+	    <listitem>
+	      <para>グローバルオプションで、Appleの コードネーム AAPLの、SMB2+拡張を
+	      有効にするかどうかを指定する。規定値では、
+	      <emphasis>yes</emphasis>である。この拡張は、Macからの接続時に
+	      いくつかの足らない機能を補う:</para>
+
+	      <itemizedlist>
+		<listitem><para>ディレクトリ一覧表示は、Macのファイルシステム
+		メタデータで強化され(UNIXモード、FinderInfo、リソースフォーク
+		サイズと実行パーミッション)、その結果、驚異的な性能向上が得られ
+		るので、Mac クライアントは、ディレクトリエントリごとに、個別に
+		このメタデータをフェッチする必要がない。
+		</para></listitem>
+
+		<listitem><para>ディレクトリエントリのUNIX モードを問い合わせ/
+		変更する機能。</para></listitem>
+	      </itemizedlist>
+
+	      <para>ディレクトリ一覧表示時に、特定のMacメタデータの計算を無効
+	      にするときに使う、共有単位のオプション群がある。規定値では
+	      すべて有効である:</para>
+
+	      <itemizedlist>
+		<listitem><para>readdir_attr:aapl_rsize = true | false</para></listitem>
+		<listitem><para>readdir_attr:aapl_finder_info = true | false</para></listitem>
+		<listitem><para>readdir_attr:aapl_max_access = true | false</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:nfs_aces = yes | no</term>
+	    <listitem>
+	      <para>NFS ACE 経由での、ディレクトリエントリのUNIX モードを問合せ/変更する
+	      機能を有効にするかどうかの指定で、既定値は <emphasis>yes</emphasis>。 </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:veto_appledouble = yes | no</term>
+	    <listitem>
+	    <para> Mac リソースフォークを格納する目的のため、 vfs_fruit それ自身に
+	    よって作成された、内部 AppleDouble ファイルの閲覧と変更を、クライアントから
+	    防止するため、._ AppleDouble ファイルを見せなくするかどうかの指定。</para>
+	    <para> ._ ファイルを見せなくすると、いくつかのアプリケーションが動かなくなる
+	    ことがある。たとえば、 ._ ファイルを含むため、Mac クライアントからの Mac ZIP
+	    の回答は失敗する。このオプションを false に設定すると、これを修正するが、
+	    内部的に作成された ._ ファイルの露出をリークする概念は、他の不明な
+	    副作用を引き起こすかもしれない。</para>
+	    <para>既定値は<emphasis>yes</emphasis>である。</para>
+	  </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:copyfile = yes | no</term>
+	  <listitem>
+	    <para>OS X 固有の、すべての付属するメタデータと一緒にファイル全体
+	    コピーを要求する copychunk ioctl を有効にするかの指定。</para>
+	    <para>注意: copyfile 要求は、サーバがコピーを行っている間は
+	    クライアントに対してブロックされることに注意。</para>
+	    <para>規定値は<emphasis>no</emphasis>である。</para>
+	  </listitem>
+	  </varlistentry>
+	  
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="vfs objects">catia fruit streams_xattr</smbconfoption>
+	<smbconfoption name="fruit:resource">file</smbconfoption>
+	<smbconfoption name="fruit:metadata">netatalk</smbconfoption>
+	<smbconfoption name="fruit:locking">netatalk</smbconfoption>
+	<smbconfoption name="fruit:encoding">native</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>
+    オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+    Tridgell によって作成された。現在 Samba は Samba Team に
+    よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+    として開発が行なわれている。
+	</para>   
+
+</refsect1>
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 4.2.4 - 4.3.9 に対応する。</para>
+    <para>このドキュメントの Samba 4.2.0 - 4.3.9 対応の翻訳は
+    <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+    </itemizedlist>
+    によって行なわれた。</para>
+</refsect1>
+
+</refentry>

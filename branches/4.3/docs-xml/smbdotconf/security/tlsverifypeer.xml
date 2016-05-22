@@ -1,0 +1,49 @@
+<samba:parameter name="tls verify peer"
+                 context="G"
+                 type="enum"
+                 enumlist="enum_tls_verify_peer_vals"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+  <description>
+    <para>これは、クライアントが、厳格にピアの証明書と名前を検査するか、
+    行う場合はどのように行うかを制御する。
+    設定可能な値は(昇順に)以下の通り:
+	<constant>no_check</constant>、
+	<constant>ca_only</constant>、
+	<constant>ca_and_name_if_available</constant>、
+	<constant>ca_and_name</constant>
+	と
+	<constant>as_strict_as_possible</constant>。</para>
+
+	<para><constant>no_check</constant>に設定した場合、証明書は全く検査されず、
+	そのため、典型的な中間者攻撃を許してしまう。
+	</para>
+
+	<para><constant>ca_only</constant>に設定した場合、証明書は
+	<smbconfoption name="tls ca file"/>オプション中で指定された CA からの署名で
+	検証される。
+	有効なファイルに<smbconfoption name="tls ca file"/>を設定することが要求される。
+	証明書の有効期間も検証される。もしも、<smbconfoption name="tls crl file"/>
+	オプションが設定されている場合、証明書は CA CRL に対しても検証される。
+	</para>
+
+	<para><constant>ca_and_name_if_available</constant>に設定した場合、
+	<constant>ca_only</constant>が規定するすべての検査が実行される。更に追加で、
+	アプリケーションレイヤで提供され、IPアドレス文字列として与えられてない場合、
+	証明書の名前に対するピアのホスト名が検証される。
+	</para>
+
+	<para><constant>ca_and_name</constant>に設定した場合、
+	<constant>ca_and_name_if_available</constant>が規定するすべての検査が実行される。
+	更に追加で、IP アドレスが、証明書の名前として検査されたとしても、
+	ピアのホスト名が提供されることが要求される。
+	</para>
+
+	<para><constant>as_strict_as_possible</constant>に設定した場合、
+	<constant>ca_and_name</constant>が規定するすべての検査が実行される。
+	更に追加で、<smbconfoption name="tls crl file"/> が設定されていることが
+	要求される。将来の Samba のバージョンでは、更に追加の検査が実装されるかもしれない。
+	</para>
+</description>
+
+<value type="default">as_strict_as_possible</value>
+</samba:parameter>

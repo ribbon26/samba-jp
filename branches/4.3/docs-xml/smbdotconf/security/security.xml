@@ -1,0 +1,122 @@
+<samba:parameter name="security"
+                 context="G"
+				 type="enum"
+		 function="_security"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+		 <when_value value="security">
+		 <requires option="encrypted passwords">/(yes|true)/</requires>
+		 </when_value>
+<description>
+    <para> このオプションは、
+    クライアントがどのように Samba に応答するかを決めるものであり、
+    <filename moreinfo="none">smb.conf</filename> 中でもっとも重要な設定の 1 つである。</para>
+
+    <para>既定値は<command moreinfo="none">security = user</command> であり、
+    これは、スタンドアロンファイルサーバーあるいはDCで使われる、もっとも一般的な設定である。
+    </para>
+
+    <para>その他に Samba を Windows ドメインに参加させることが出来る、
+    <command moreinfo="none"> security = ads </command>か
+    <command moreinfo="none">security = domain</command> がある。</para>
+
+    <para>パスワードなしの共有(ゲスト共有)の作成が主目的である場合は、
+    <command moreinfo="none">security = user</command>と、
+    <smbconfoption name="map to guest"/>を使うべきである。
+    この設定は、通常共有プリンターサーバーで使われることが多い。</para>
+
+    <para>以下、それ以外の設定について説明する。</para>
+
+    <para><anchor id="SECURITYEQUALSAUTO"/><emphasis>SECURITY = AUTO</emphasis></para>
+
+    <para>これは Samba のセキュリティ設定の既定値であり、Samba が、
+    security モードを決める<smbconfoption name="server role"/>パラメーター
+    (もしも設定されていれば)を調べるようにさせる。
+    </para>
+
+    <para><anchor id="SECURITYEQUALSUSER"/><emphasis>SECURITY = USER</emphasis></para>
+
+    <para>もしも<smbconfoption name="server role"/>が指定されていない場合、これは
+    Samba セキュリティ設定の既定値である。ユーザーレベルのセキュリティでは、
+    クライアントは最初に正しい(<smbconfoption name="username map"/>を使うことによって
+    マップ可能な)ユーザー名とパスワードで最初に&quot;ログオン&quot;する必要がある。
+    暗号化パスワード(<smbconfoption name="encrypted passwords"/>パラメーター参照)も
+    このセキュリティモードで使うことが出来る。<smbconfoption name="user"/>と
+    <smbconfoption name="guest only"/>のようなパラメーターは、もしも設定された場合、
+    有効となり、この接続上で使用するために、UNIX ユーザーを変更できるが、それは、
+    そのユーザーが正しく認証されたあとである。</para>
+
+    <para>要求されたリソースの名前は、サーバーによるクライアントの認証が
+    正しく完了するまでサーバーに<emphasis>送られない</emphasis>ことに
+    <emphasis>注意</emphasis>。これは、なぜ、ゲスト共有が、不明なユーザーを
+    <smbconfoption name="guest account"/>に、自動的にマップする事を許可しないと
+    ユーザーレベルのセキュリティが動作しないかという事の理由である。これの動作
+    詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
+
+    <para><anchor id="SECURITYEQUALSDOMAIN"/><emphasis>SECURITY = DOMAIN</emphasis></para>
+
+    <para>このモードは、もしも、<citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>によって、このマシンをWindows NT ドメインに
+    追加するのに使った後にのみ正しく動作する。これは、
+    <smbconfoption name="encrypted passwords"/>パラメーターが、<constant>yes</constant>
+    に設定されていることを前提とする。このモードにおいては、Windows NT サーバーが
+    行うのと正確に同じ方法で、Samba はユーザー名/パスワードを
+    Windows NT プライマリあるいはバックアップドメインコントローラーに送ることで
+    検証しようとする。</para>
+
+    <para>有効な UNIX ユーザーは、ファイルにアクセスするためにマップ
+    するための有効な UNIX アカウントを Samba が得られるようにするため、
+    ドメインコントローラー上でのアカウントと同様に存在する必要があることに
+    <emphasis>注意</emphasis>。</para>
+
+    <para>クライアントの観点からは、
+    <command moreinfo="none">security = domain</command>は、
+    <command moreinfo="none">security = user</command>と同じである
+    ことに<emphasis>注意</emphasis>。これは認証をサーバーがどのように扱うか
+    にのみ影響し、クライアントからのやりとりには何も影響しない。</para>
+
+    <para>要求されたリソースの名前は、サーバーによるクライアントの認証が
+    正しく完了するまでサーバーに<emphasis>送られない</emphasis>ことに
+    <emphasis>注意</emphasis>。これは、なぜ、ゲスト共有が、不明なユーザーを
+    <smbconfoption name="guest account"/>に、自動的にマップする事を許可しないと
+    ユーザーレベルのセキュリティが動作しないかという事の理由である。これの動作
+    詳細については、<smbconfoption name="map to guest"/>を参照のこと。</para>
+
+    <para><smbconfoption name="password server"/>パラメーターと
+	  <smbconfoption name="encrypted passwords"/>パラメーターも参照のこと。</para>
+
+
+    <para><emphasis>注意</emphasis> : 要求されたリソース名は、
+    サーバーがクライアントの認証に成功するまでサーバーに<emphasis>送られない</emphasis>。
+    そのため、ユーザーレベルのセキュリティでは、サーバー上で不明なユーザーを自動的に
+    <smbconfoption name="guest account"/>. 
+    として処理するようにしない限り、ゲスト共有がうまく動作しない。
+    上記処理の詳細については、<smbconfoption name="map to guest"/>
+    パラメーターを参照のこと。</para>
+
+    <para>
+    <smbconfoption name="password server"/>
+    パラメーターおよび
+    <smbconfoption name="encrypted passwords"/>
+    パラメーターも参照のこと。</para>
+
+    <para><anchor id="SECURITYEQUALSADS"/><emphasis>SECURITY = ADS</emphasis></para>
+
+    <para>このモードの場合、Samba は ADS レルムのドメインメンバーとして振舞う。
+    このモードで動作させるためには、Samba が実行されているマシンに Kerberos が
+    インストールされて構成されていることが必要であり、Samba は net ユーティリティを
+    使用して ADS レルムに参加する必要がある。</para>
+	
+    <para>このモードは Samba を Active Ditectory のドメインコントローラーとして動作さ
+      せるものではないことに注意。</para>
+
+      <para>これは、プライマリドメインに対して、
+      <smbconfoption name="require strong key">yes</smbconfoption>と
+      <smbconfoption name="client schannel">yes</smbconfoption>を強制することに注意。</para>
+      
+    <para>詳細については、HOWTO の Domain Membership の章を熟読のこと。</para>
+</description>
+<related>realm</related>
+<related>encrypt passwords</related>
+<value type="default">AUTO</value>
+<value type="example">DOMAIN</value>
+</samba:parameter>

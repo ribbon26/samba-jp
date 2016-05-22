@@ -1,0 +1,37 @@
+<samba:parameter name="winbind nss info"
+                 context="G"
+				 type="list"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>
+    このパラメーターは、Winbind が Name Service Information からユーザーの
+    ホームディレクトリやログインシェルの情報を取得する方法を指定する。 
+    現在のところ、以下の値が利用できる:
+	<itemizedlist>
+		<listitem>
+		  <para><parameter moreinfo="none">template</parameter> 
+		    - 既定値であり、<parameter moreinfo="none">template shell</parameter> および <parameter moreinfo="none">template homedir</parameter>パラメーターの値を用いる。
+		  </para>
+		</listitem>
+			
+		<listitem>
+		  <para><parameter moreinfo="none">&lt;sfu | sfu20 | rfc2307 &gt;</parameter>
+		    - Samba が security = ads で実行されており、
+		    Active Directory の DC が Microsoft Services for Unix (SFU)
+		    の LDAP スキーマをサポートしている場合、Winbind 機構は
+		    ログインシェルおよびホームディレクトリ属性を DC から
+		    直接取得する。 SFU 3.0 あるいは 3.5 の場合は単純に "sfu" を
+		    選択し、 SFU 2.0 の場合は "sfu20" を選択すること。
+		    UID や GID 情報を DC から取得したい場合は、 
+		    <parameter moreinfo="none">idmap config DOMAIN:backend</parameter> = ad も設定すること。 
+		    プライマリグループメンバーシップは現在常時 "primaryGroupID"
+		    LDAP 属性経由で計算される。
+		  </para>
+		</listitem>
+	</itemizedlist>
+</para>
+</description>
+
+<value type="default">template</value>
+<value type="example">sfu</value>
+</samba:parameter>

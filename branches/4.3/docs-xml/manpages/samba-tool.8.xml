@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="samba-tool.8">
+
+<refmeta>
+	<refentrytitle>samba-tool</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>samba-tool</refname>
+	<refpurpose>Samba管理のためのメインツール。
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>samba-tool</command>
+		<arg choice="opt">-h</arg>
+		<arg choice="opt">-W myworkgroup</arg>
+		<arg choice="opt">-U user</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">--v</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+	<para>このツールは<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+	<varlistentry>
+	<term>-h|--help</term>
+	<listitem><para>
+	このヘルプメッセージを表示して終了する
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--realm=REALM</term>
+	<listitem><para>
+	realm名を設定する
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--simple-bind-dn=DN</term>
+	<listitem><para>
+	シンプルバインドで使うためのDN
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--password=PASSWORD</term>
+	<listitem><para>
+	パスワード
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-U USERNAME|--username=USERNAME</term>
+	<listitem><para>
+	ユーザー名
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-W WORKGROUP|--workgroup=WORKGROUP</term>
+	<listitem><para>
+	ワークグループ
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-N|--no-pass</term>
+	<listitem><para>
+	パスワードを問い合わせしない
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-k KERBEROS|--kerberos=KERBEROS</term>
+	<listitem><para>
+	Kerberosを使う
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--ipaddress=IPADDRESS</term>
+	<listitem><para>
+	サーバーのIPアドレス
+	</para></listitem>
+	</varlistentry>
+
+	&popt.common.samba.client;
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<title>コマンド</title>
+
+<refsect2>
+	<title>dbcheck</title>
+	<para>ローカルのADデータベースでエラーを検査する。</para>
+</refsect2>
+
+<refsect2>
+	<title>委任(delegation)</title>
+	<para>委任の管理</para>
+</refsect2>
+
+<refsect3>
+	<title>delegation add-service <replaceable>accountname</replaceable> <replaceable>principal</replaceable> [options]</title>
+	<para>msDS-AllowedToDelegateTo としてサービスプリンシパルを追加。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation del-service <replaceable>accountname</replaceable> <replaceable>principal</replaceable> [options]</title>
+	<para>msDS-AllowedToDelegateTo としてサービスプリンシパルを削除。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation for-any-protocol <replaceable>accountname</replaceable> [(on|off)] [options]</title>
+	<para>1つのアカウントに対して UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION (S4U2Proxy) を設定/解除。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation for-any-service <replaceable>accountname</replaceable> [(on|off)] [options]</title>
+	<para>1つのアカウントに対してUF_TRUSTED_FOR_DELEGATION を設定/解除</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation show <replaceable>accountname</replaceable> [options]	</title>
+	<para>アカウントの委任設定を表示。</para>
+	<para>Show the delegation setting of an account.</para>
+</refsect3>
+
+<refsect2>
+	<title>dns</title>
+	<para>ドメインネームシステム(DNS)を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>dns add <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>data</replaceable></title>
+	<para>DNSレコードを追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns delete <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>data</replaceable></title>
+	<para>DNSレコードを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns query <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT|ALL</replaceable> [options] <replaceable>data</replaceable></title>
+	<para>名前を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns roothints <replaceable>server</replaceable> [<replaceable>name</replaceable>] [options]</title>
+	<para>root hints を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns serverinfo <replaceable>server</replaceable> [options]</title>
+	<para>サーバー情報を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns update <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>olddata</replaceable> <replaceable>newdata</replaceable></title>
+	<para>DNS レコードを更新する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonecreate <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+	<para>ゾーンを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonedelete <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+	<para>ゾーンを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zoneinfo <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+	<para>ゾーン情報を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonelist <replaceable>server</replaceable> [options]</title>
+	<para>ゾーンを一覧表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>domain</title>
+	<para>ドメインを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>domain classicupgrade [options] <replaceable>classic_smb_conf</replaceable></title>
+	<para>旧形式(NT4風)のSambaデータベースからSamba AD DCデータベースにアップグレードする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain dcpromo <replaceable>dnsdomain</replaceable> [DC|RODC] [options]</title>
+	<para>Promote an existing domain member or NT4 PDC to an AD DC.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain demote</title>
+	<para>Demote ourselves from the role of domain controller.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain exportkeytab <replaceable>keytab</replaceable> [options]</title>
+	<para>Dumps Kerberos keys of the domain into a keytab.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain info <replaceable>ip_address</replaceable> [options]</title>
+	<para>ドメインと特定のDCについての、基本情報を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain join <replaceable>dnsdomain</replaceable> [DC|RODC|MEMBER|SUBDOMAIN] [options]</title>
+	<para>メンバーまたはバックアップドメインコントローラーのどちらかとしてドメインに参加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain level <replaceable>show|raise</replaceable> <replaceable>options</replaceable> [options]</title>
+	<para>Show/raise domain and forest function levels.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings <replaceable>show|set</replaceable> <replaceable>options</replaceable> [options]</title>
+	<para>パスワード設定を表示、変更する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain provision</title>
+	<para>Promote an existing domain member or NT4 PDC to an AD DC.</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust</title>
+       <para>ドメインおよびフォレストの信頼管理。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust create <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+       <para>ドメイン又はフォレストの信頼関係を作成。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust delete <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+       <para>ドメイン信頼関係の削除。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust list <replaceable>options</replaceable> [options]</title>
+       <para>ドメイン信頼関係の一覧表示。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust namespaces [<replaceable>DOMAIN</replaceable>] <replaceable>options</replaceable> [options]</title>
+       <para>フォレスト信頼関係名前空間の管理。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust show <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+       <para>信頼されているドメインの詳細情報を表示。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust validate <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+       <para>ドメイン信頼関係の検査</para>
+</refsect3>
+
+<refsect2>
+	<title>drs</title>
+	<para>ディレクトリ複製サービス(DRS)を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>drs bind</title>
+	<para>Show DRS capabilities of a server.</para>
+</refsect3>
+
+<refsect3>
+	<title>drs kcc</title>
+	<para>Trigger knowledge consistency center run.</para>
+</refsect3>
+
+<refsect3>
+	<title>drs options</title>
+	<para>Query or change <replaceable>options</replaceable> for NTDS Settings
+	object of a domain controller.</para>
+</refsect3>
+
+<refsect3>
+	<title>drs replicate <replaceable>destination_DC</replaceable> <replaceable>source_DC</replaceable> <replaceable>NC</replaceable> [options]</title>
+	<para>Replicate a naming context between two DCs.</para>
+</refsect3>
+
+<refsect3>
+	<title>drs showrepl</title>
+	<para>複製ステータスを表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>dsacl</title>
+	<para>Administer DS ACLs</para>
+</refsect2>
+
+<refsect3>
+	<title>dsacl set</title>
+	<para>ディレクトリオブジェクトのアクセスリストを修正する。</para>
+</refsect3>
+
+<refsect2>
+	<title>fsmo</title>
+	<para>Manage Flexible Single Master Operations (FSMO).</para>
+</refsect2>
+
+<refsect3>
+	<title>fsmo seize [options]</title>
+	<para>Seize the role.</para>
+</refsect3>
+
+<refsect3>
+	<title>fsmo show</title>
+	<para>Show the roles.</para>
+</refsect3>
+
+<refsect3>
+	<title>fsmo transfer [options]</title>
+	<para>Transfer the role.</para>
+</refsect3>
+
+<refsect2>
+	<title>gpo</title>
+	<para>グループポリシーオブジェクト(GPO)を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>gpo create <replaceable>displayname</replaceable> [options]</title>
+	<para>空のGPOを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo del <replaceable>gpo</replaceable> [options]</title>
+	<para>GPOを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo dellink <replaceable>container_dn</replaceable> <replaceable>gpo</replaceable> [options]</title>
+	<para>コンテナーからGPOリンクを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo fetch <replaceable>gpo</replaceable> [options]</title>
+	<para>GPOをダウンロードする。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo getinheritance <replaceable>container_dn</replaceable> [options]</title>
+	<para>Get inheritance flag for a container.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo getlink <replaceable>container_dn</replaceable> [options]</title>
+	<para>List GPO Links for a container.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo list <replaceable>username</replaceable> [options]</title>
+	<para>List GPOs for an account.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo listall</title>
+	<para>すべてのGPOを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo listcontainers <replaceable>gpo</replaceable> [options]</title>
+	<para>List all linked containers for a GPO.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo setinheritance <replaceable>container_dn</replaceable> <replaceable>block|inherit</replaceable> [options]</title>
+	<para>Set inheritance flag on a container.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo setlink <replaceable>container_dn</replaceable> <replaceable>gpo</replaceable> [options]</title>
+	<para>Add or Update a GPO link to a container.</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo show <replaceable>gpo</replaceable> [options]</title>
+	<para>Show information for a GPO.</para>
+</refsect3>
+
+<refsect2>
+	<title>group</title>
+	<para>グループを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>group add <replaceable>groupname</replaceable> [options]</title>
+	<para>新しいAD グループを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group addmembers <replaceable>groupname</replaceable> <replaceable>members</replaceable> [options]</title>
+	<para>AD グループにメンバーを追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group delete <replaceable>groupname</replaceable> [options]</title>
+	<para>AD グループを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group list</title>
+	<para>すべてのグループを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group listmembers <replaceable>groupname</replaceable> [options]</title>
+	<para>指定されたADグループのメンバーを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group removemembers <replaceable>groupname</replaceable> <replaceable>members</replaceable> [options]</title>
+	<para>指定されたADグループからメンバーを削除する。</para>
+</refsect3>
+
+<refsect2>
+	<title>ldapcmp <replaceable>URL1</replaceable> <replaceable>URL2</replaceable> <replaceable>domain|configuration|schema|dnsdomain|dnsforest</replaceable> [options] </title>
+	<para>2つのLDAPデータベースを比較する。</para>
+</refsect2>
+
+<refsect2>
+	<title>ntacl</title>
+	<para>NT ACLを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>ntacl get <replaceable>file</replaceable> [options]</title>
+	<para>Get ACLs on a file.</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl set <replaceable>acl</replaceable> <replaceable>file</replaceable> [options]</title>
+	<para>Set ACLs on a file.</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl sysvolcheck</title>
+	<para>Check sysvol ACLs match defaults (including correct ACLs on GPOs).</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl sysvolreset</title>
+	<para>Reset sysvol ACLs to defaults (including correct ACLs on GPOs).</para>
+</refsect3>
+
+<refsect2>
+	<title>rodc</title>
+	<para>リードオンリドメインコントローラー(RODC)を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>rodc preload <replaceable>SID</replaceable>|<replaceable>DN</replaceable>|<replaceable>accountname</replaceable> [options]</title>
+	<para>Preload one account for an RODC.</para>
+</refsect3>
+
+<refsect2>
+	<title>sites</title>
+	<para>サイトを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>sites create <replaceable>site</replaceable> [options]</title>
+	<para>新しいサイトを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>sites remove <replaceable>site</replaceable> [options]</title>
+	<para>存在するサイトを削除する。</para>
+</refsect3>
+
+<refsect2>
+	<title>spn</title>
+	<para>Manage Service Principal Names (SPN).</para>
+</refsect2>
+
+<refsect3>
+	<title>spn add <replaceable>name</replaceable> <replaceable>user</replaceable> [options]</title>
+	<para>新しい SPN を作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>spn delete <replaceable>name</replaceable> [<replaceable>user</replaceable>] [options]</title>
+	<para>存在するSPNを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>spn list <replaceable>user</replaceable> [options]</title>
+	<para>指定されたユーザーのSPNを一覧表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>testparm</title>
+	<para>設定ファイルの文法を検査する。</para>
+</refsect2>
+
+<refsect2>
+	<title>time</title>
+	<para>サーバー上の時刻を調べる。</para>
+</refsect2>
+
+<refsect2>
+	<title>user</title>
+	<para>ユーザーを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>user add <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
+	<para>新しいユーザーを追加する。このサブコマンドはあくまでも互換のためにのみ存在していることに注意。代わりに
+	<command>samba-tool user create</command>コマンドを使うように。</para>
+</refsect3>
+
+<refsect3>
+	<title>user create <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
+	<para>Active Directory ドメインでの新しいユーザーを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user delete <replaceable>username</replaceable> [options]</title>
+	<para>存在するユーザーアカウントを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user disable <replaceable>username</replaceable></title>
+	<para>ユーザーアカウントを無効にする。</para>
+</refsect3>
+
+<refsect3>
+	<title>user enable <replaceable>username</replaceable></title>
+	<para>Enable an user account.</para>
+</refsect3>
+
+<refsect3>
+	<title>user list</title>
+	<para>すべてのユーザーを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user password [options]</title>
+	<para>ユーザーアカウントのパスワードを変更する(the one provided in
+	authentication).</para>
+</refsect3>
+
+<refsect3>
+	<title>user setexpiry <replaceable>username</replaceable> [options]</title>
+	<para>ユーザーアカウントの満了日を設定する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user setpassword <replaceable>username</replaceable> [options]</title>
+	<para>ユーザーアカウントのパスワードを設定したりリセットする。</para>
+</refsect3>
+
+<refsect2>
+	<title>vampire [options] <replaceable>domain</replaceable></title>
+	<para>リモートのADドメインに参加し、ローカルサーバーへ同期する。
+	<command>samba-tool vampire</command>は古い形式であることに注意。
+	代わりに<command>samba-tool domain join</command>を使ってほしい。</para>
+</refsect2>
+
+<refsect2>
+<title>ヘルプ</title>
+<para>使用方法を提示する。</para>
+</refsect2>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページはSamba バージョン4用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、
+	Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が
+	行なわれている。</para>
+
+	<para>samba-tool マニュアルページは Karolin Seeger によって書かれた。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.3.0 - 4.3.9 に対応する。</para>
+
+	<para>Samba 4.0.0 - 4.3.9  対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+
+</refsect1>
+
+</refentry>

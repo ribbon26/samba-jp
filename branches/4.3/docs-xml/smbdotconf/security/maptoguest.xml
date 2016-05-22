@@ -1,0 +1,59 @@
+<samba:parameter name="map to guest"
+				 type="enum"
+                 context="G"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para> このパラメーターの値には、
+    <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が
+    何らかの方法で有効なUNIXユーザーとして認証されなかったユーザーのログイン要求をどのように扱うかを指定するための
+    4 つの値のいずれかを設定することが可能である。</para>
+
+    <para>4 つの値を以下に示す:</para>
+
+    <itemizedlist>
+	<listitem><para><constant>Never</constant> - 
+            不正なパスワードによるユーザーのログイン要求を拒否する。
+            これがデフォルトである。</para>
+	</listitem>
+
+	<listitem><para><constant>Bad User</constant> - 
+        存在するユーザーに対する不正なパスワードによるログイン要求は拒否する。
+        指定されたユーザーが存在しなかった場合はゲストログインとして扱い、
+        <smbconfoption name="guest account"/>
+        で指定されたアカウントにマッピングする。</para>
+        </listitem>
+
+	<listitem>
+	    <para><constant>Bad Password</constant> -
+            不正なパスワードによるユーザーのログイン要求は、ゲストログインとして扱い、
+	    <smbconfoption name="guest account"/> 
+            で指定されたアカウントにマッピングする。
+            この場合、パスワードをタイプミスすると、
+            なにも言われずに&quot;guest&quot;としてログインしてしまう。
+            パスワードをタイプミスしたというメッセージがないため、
+            アクセス可能である筈のファイルにできないが理由がわからないという問題が発生する。
+            <parameter moreinfo="none">map to guest</parameter> パラメーターをこの設定にすると、
+            ヘルプディスクサービスからは <emphasis>憎まれる</emphasis> ことになるだろう:-)。</para>
+	</listitem>
+
+	<listitem>
+	    <para><constant>Bad Uid</constant> - 
+            これは、Sambaがドメインモードのセキュリティ (security = {domain|ads}) で構成されている環境でのみ意味を持つ。
+            この環境において、認証が成功したにも関わらず UNIX側のユーザーアカウントが存在しない (smbdが作成することもできない) 場合に、定義されたゲストアカウントへのマッピングを行う。これは Samba 2.2 系列におけるデフォルトの挙動である。
+            メンバーサーバーで winbindd が実行されている場合、nss_winbind ライブラリが Windows ドメインのユーザーやグループを NSS インタフェース経由で Samba を実行する OS に対して提供するため、このパラメーターが必要となる事態は発生し得ない。
+            </para>
+	</listitem>
+    </itemizedlist>
+
+    <para>このパラメーターは&quot;ゲスト&quot;共有とサーバーを設定する場合には
+    必須であることに注意。
+    これは、サーバーがクライアントの認証に成功しない限り、
+    要求されるリソースの名前がサーバーに送られることは<emphasis>決して</emphasis>なく、
+    サーバーが&quot;ゲスト&quot;共有に対する認証の成否を、
+    適切な時点(共有への接続時)に行なうことができないためである。</para>
+</description>
+
+<value type="default">Never</value>
+<value type="example">Bad User</value>
+</samba:parameter>

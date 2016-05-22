@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_btrfs.8">
+
+<refmeta>
+	<refentrytitle>vfs_btrfs</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.3</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_btrfs</refname>
+	<refpurpose>
+		Btrfs ファイルシステムで提供される機能の利用
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = btrfs</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは、
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>
+    <command>vfs_btrfs</command> VFS モジュールは、 Btrfs 固有の機能を
+    Samba によって使用可能とする。
+	</para>
+
+	<para>
+    Btrfs では、 clone range を使用することで、複数のファイルがディスク
+    上の同じデータを共有することが可能となる。 SMB クライアントが重複
+    データをコピーするリクエストを (FSCTL_SRV_COPYCHUNK により) 発行する
+    と、このモジュールは、そのリクエストを従来のコピー処理で必要とされる
+    読み取りと書き込みの実行に変換する代わりに、 Btrfs の clone range 
+    IOCTL に変換する。
+    これによりディスク容量を節約するとともに、ディスク I/O を劇的に低減する。
+  </para>
+
+    <para>
+      このモジュールはまた、get/set 圧縮 fsctl() 経由で、SMBクライアントへ、
+      Btrfs ファイル単位圧縮機能を提供する。
+    </para>
+
+    <para>
+      Btrfs スナップショットは Samba の FSRVP サーバによって操作出来る。
+      このモジュールを使うスナップショット操作は現在実験的な位置づけであり、
+      そのため、既定値では無効になっている。この目的のためには、
+      代替として、<command>vfs_snapper</command>モジュールを使う事を推奨する。
+    </para>
+    <para>
+	このモジュールはスタック可能である。
+    </para>
+</refsect1>
+
+<refsect1>
+       <title>オプション</title>
+
+       <variablelist>
+               <varlistentry>
+               <term>btrfs: manipulate snapshots = [yes|no]</term>
+               <listitem>
+		 <para>
+		   <emphasis>yes</emphasis>に設定する場合、対応する Btrfs IOCTL
+		   経由による、実験的なスナップショットの作成と削除サポート
+		   が有効になる。既定値は<emphasis>no</emphasis>で、これは、
+		   そのような要求は、他の、下位にある VFS モジュールにパススルー
+		   されることを意味する。
+                </para>
+                </listitem>
+                </varlistentry>
+        </variablelist>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para>
+    <command>vfs_btrfs</command> を使用する際は、共有のパスが
+    Btrfs サブボリューム上に存在している必要がある。
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">btrfs</smbconfoption>
+		<smbconfoption name="btrfs: manipulate snapshots">no</smbconfoption>
+	</programlisting>
+	<para>
+	  このモジュールで提供される、実験的なスナップショット操作機能を使うために、
+	  これを明確に有効にし、Samba の FSRVP サーバを動かさなければならない。
+	</para>
+	<para>
+	  <command>vfs_shadow_copy</command>モジュールは、<command>vfs_btrfs</command>
+	  によって作成されたスナップショットを、Windows エクスプローラで、
+	  ファイルまたはディレクトリに対し、「以前のバージョン」という形で見せるのに
+	  使う事ができる。
+	</para>
+
+	<programlisting>
+	  <smbconfsection name="[global]"/>
+	  <smbconfoption name="rpc_daemon:fssd">fork</smbconfoption>
+	  <smbconfoption name="registry shares">yes</smbconfoption>
+	  <smbconfoption name="include">registry</smbconfoption>
+
+	  <smbconfsection name="[share]"/>
+	  <smbconfoption name="vfs objects">btrfs shadow_copy</smbconfoption>
+	  <smbconfoption name="btrfs: manipulate snapshots">yes</smbconfoption>
+	  
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>
+	  このマニュアルページは Samba 4.3.0 システムのために用意された。
+	</para>
+</refsect1>
+
+<refsect1>
+
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.3.0 - 4.3.9 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@ribbon.samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
