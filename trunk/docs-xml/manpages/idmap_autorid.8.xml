@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.3</refmiscinfo>
+	<refmiscinfo class="version">4.4</refmiscinfo>
 </refmeta>
 
 
@@ -24,12 +24,6 @@
 	<para>idmap_autoridバックエンドは、idmap_tdbよりもより決定論的な、UID/GID と
 	SIDをマップするためのアルゴリズムによるマッピング方法を提供し、idmap_rid
 	よりもより簡単に設定できる。</para>
-	<para>The module works similar to idmap_rid, but it automatically
-	configures the range to be used for each domain, so there is no need
-	to specify a specific range for each domain in the forest, the only
-	configuration that is needed is the range of uid/gids that shall
-	be used for user/group mappings and an optional size of the ranges
-	to be used.</para>
 	<para>モジュールはidmap_ridと同じように動作するが、各ドメインに対して使われる
 	レンジを自動的に設定するので、フォレスト中の各ドメインに対しては、
 	特定のレンジを指定する必要がなく、唯一設定できる項目は、
@@ -50,7 +44,29 @@
 	<title>IDMAP オプション</title>
 
 	<variablelist>
-		<varlistentry>
+          <varlistentry>
+	    <term>range = low - high</term>
+	    <listitem><para>
+	      バックエンドが権威を持つ有効な uid と gid に一致する範囲を
+	      定義する。レンジはフィルタとして振る舞うことに注意。
+	      もしも、アルゴリズム的に決定された UID 又は GID がレンジ外に
+	      なると、それらは無視され、対応するマップは破棄される。
+	      これは、ローカルとリモートで定義された ID の間で偶然に UID/GID
+	      が重なってしまうことを防ぐ方法として用意されている。
+	    </para>
+	    <para>
+	      Defines the available matching uid and gid
+	                           range for which the backend is
+	                           authoritative. Note that the range acts as a
+	                           filter.  If algorithmically determined UID or
+	                           GID fall outside the range, they are ignored
+	                           and the corresponding map is discarded.  It is
+	                           intended as a way to avoid accidental UID/GID
+	                           overlaps between local and remotely defined
+	                           IDs.
+	                   </para></listitem>
+	              </varlistentry>
+	  <varlistentry>
 		<term>rangesize = numberofidsperdomain</term>
 		<listitem>
 			<para>ドメインレンジ毎のuid/gidの有効範囲を定義する。最小値は2000
@@ -191,7 +207,7 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.1.0 - 4.3.9 に対応する。</para>
+    <para>このマニュアルページは Samba 4.4.0 - 4.4.0 に対応する。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
