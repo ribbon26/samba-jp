@@ -238,6 +238,31 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</listitem>
 		</varlistentry>
 
+                <varlistentry>
+		  <term>-M|'--machine SID' SID|rid</term>
+		  <listitem><para>
+		  ユーザの追加および変更を行う際に、マシンの新しいプライマリ
+		  グループ SID (セキュリティ識別子) または RID を指定する。
+		  </para>
+
+		  <para>例: <command>-M S-1-5-21-2447931902-1787058256-3961074038-1201</command></para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-U SID||'--user SID'|rid</term>
+		<listitem><para>
+		ユーザーの追加および変更を行なう際に、
+		ユーザーの 新しい SID
+		(セキュリティ識別子) または RID を指定する。</para>
+
+		<para>例: <command>-U S-1-5-21-2447931902-1787058256-3961074038-5004</command></para>
+                <para>例: <command>'--user SID' S-1-5-21-2447931902-1787058256-3961074038-5004</command></para>
+		<para>例: <command>-U 5004</command></para>
+		<para>例: <command>'--user SID' 5004</command></para>
+		</listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>-G SID|rid</term>
 		<listitem><para>
@@ -250,18 +275,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</varlistentry>
 
 		<varlistentry>
-		<term>-U SID|rid</term>
-		<listitem><para>
-		ユーザーの追加および変更を行なう際に、
-		ユーザーの SID
-		(セキュリティ識別子) または RID を指定する。</para>
-
-		<para>例: <command>-U S-1-5-21-2447931902-1787058256-3961074038-5004</command></para>
-		</listitem>
-		</varlistentry>
-
-		<varlistentry>
-		<term>-c account-control</term>
+		<term>-c|--account-control account-control</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ユーザーのアカウント制御プロパティを指定する。
@@ -298,7 +312,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
                 </varlistentry>
 
 		<varlistentry>
-		<term>-a</term>
+		<term>-a|--create</term>
 		<listitem><para>
 		ユーザーをデータベースに追加する際に指定する。
 		ユーザー名を
@@ -326,7 +340,7 @@ retype new password
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-t, --password-from-stdin</term>
+		<term>-t|--password-from-stdin</term>
 		<listitem><para>
 		パスワードを		
 		(<command>passwd(1)</command> プログラムのように)
@@ -337,11 +351,10 @@ retype new password
 		</varlistentry>
 
 		<varlistentry>
-		<term>-r</term>
+		<term>-r|--modify</term>
 		<listitem><para>
-		データベースの既存のユーザーの情報を変更する際に指定する。
-		ユーザー名は
-		<parameter>-u</parameter> オプションで指定する必要がある。
+		データベース中の既存ユーザーの情報を変更する際に指定する。
+		ユーザー名は -u オプションで指定する必要がある。
 		これ以外のオプションは、
 		指定したユーザーのプロパティを変更するために用いられる。
 		このオプションは過去との互換性を保つために残されているだけで、
@@ -350,7 +363,7 @@ retype new password
 		</varlistentry>
 			
 		<varlistentry>
-		<term>-m</term>
+		<term>-m|--machine</term>
 		<listitem><para>このオプションは
 		<parameter>-a</parameter>
 		オプションと組み合わせて利用する。
@@ -365,11 +378,10 @@ retype new password
 		
 		
 		<varlistentry>
-		<term>-x</term>
+		<term>-x|--delete</term>
 		<listitem><para>
 		データベースからユーザーを削除する際に指定する。
-		ユーザー名は
-		<parameter>-u</parameter> オプションで指定する必要がある。</para>
+		ユーザー名は -u オプションで指定する必要がある。</para>
 
 		<para>例: <command>pdbedit -x -u bob</command></para>
 		</listitem>
@@ -377,7 +389,7 @@ retype new password
 		
 
 		<varlistentry>
-		<term>-i passdb-backend</term>
+		<term>-i|--import passdb-backend</term>
 		<listitem><para>
 		ユーザー情報の取得元となるパスワードデータベースとして、
 		smb.conf で指定したものとは別のものを指定する。
@@ -395,7 +407,7 @@ retype new password
 		</varlistentry>
 
 		<varlistentry>
-		<term>-e passdb-backend</term>
+		<term>-e|--export passdb-backend</term>
 		<listitem><para>指定したパスワードデータベースに存在するすべてのユーザーを転送 (エクスポート) する。</para>
 
 		<para>このオプションにより、
@@ -406,7 +418,7 @@ retype new password
 		</varlistentry>
 
 		<varlistentry>
-		<term>-g</term>
+		<term>-g|--group</term>
 		<listitem><para><parameter>-g</parameter> オプションを指定すると、
 		<parameter>-i in-backend -e out-backend</parameter>
 		オプションはユーザーデータベースではなく、
@@ -419,15 +431,15 @@ retype new password
 		</varlistentry>
 
 		<varlistentry>
-		<term>-b passdb-backend</term>
-		<listitem><para>デフォルト以外のパスワードデータベースを指定する。</para>
+		<term>-b|--backend passdb-backend</term>
+		<listitem><para>既定値以外のパスワードデータベースを指定する。</para>
 
 		<para>例: <command>pdbedit -b xml:/root/pdb-backup.xml -l</command></para>
 		</listitem>
 		</varlistentry>
 
 		<varlistentry>
-		<term>-P account-policy</term>
+		<term>-P|--account-policy account-policy</term>
 		<listitem><para>アカウントポリシーを表示する。</para>
 		<para>有効なポリシーは、
 		「minimum password age」、「reset count minutes」、
@@ -446,7 +458,7 @@ account policy value for bad lockout attempt is 0
 
 
 		<varlistentry>
-		<term>-C account-policy-value</term>
+		<term>-C|--value account-policy-value</term>
 		<listitem><para>アカウントポリシーを指定した値に設定する。
 		このオプションは、<parameter>-P</parameter>
 		オプションと組み合わせて使用する。</para>
@@ -460,7 +472,7 @@ account policy value for bad lockout attempt is now 3
 		</varlistentry>
 
 		<varlistentry>
-		<term>-y</term>
+		<term>-y|--policies</term>
 		<listitem><para> <parameter>-y</parameter> オプションを指定すると、
 		<parameter>-i in-backend -e out-backend</parameter>
 		オプションはユーザーデータベースではなく、
@@ -474,6 +486,72 @@ account policy value for bad lockout attempt is now 3
 		</listitem>
 		</varlistentry>
 
+                <varlistentry>
+		  <term>--force-initialized-passwords</term>
+		  <listitem><para>このオプションは、すべてのユーザに、次のログオン時に
+		  パスワードの変更を強制する。
+		</para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>-N|--account-desc description</term>
+		  <listitem><para>ユーザアカウントの追加およびは変更を行う時に、
+		  ユーザの説明フィールドを指定する。</para>
+
+		  <para>例: <command>-N "test description"</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>-Z|--logon-hours-reset</term>
+		  <listitem><para>ユーザの追加又は変更を行うときに、
+		  ユーザに許可されているログオン時間を初期化する。
+		  処理後、ユーザは任意の時間にログオンできる。</para>
+
+		  <para>例: <command>-Z</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+
+                <varlistentry>
+		  <term>-z|--bad-password-count-reset</term>
+		  <listitem><para>ユーザの追加又は変更を行うときに、
+		  指定されたユーザの、記録されている不正ログインカウンタをリセットする。
+		  </para>
+
+		  <para>例: <command>-z</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>--policies-reset</term>
+		  <listitem><para>このオプションは、既定値としてドメインに格納されている
+		  一般のパスワードポリシーをリセットするのに使う。</para>
+		  <para>例: <command>--policies-reset</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>-I|--domain</term>
+		  <listitem><para>ユーザの追加又は変更を行うときに、
+		  ユーザのドメインフィールドを指定する。</para>
+
+		  <para>例: <command>-I "MYDOMAIN"</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>--time-format</term>
+		  <listitem><para>このオプションは現在使われていない。</para>
+		  </listitem>
+		</varlistentry>
+		
+		
 		&popt.autohelp;
 		&stdarg.server.debug;
 		&popt.common.samba;
@@ -515,10 +593,10 @@ account policy value for bad lockout attempt is now 3
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.4 - 4.3.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.4.0 - 4.4.0 に対応する。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.3.9 対応の翻訳は
+        <para>このドキュメントの Samba 3.2.4 - 4.4.0 対応の翻訳は
 太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 
 </refsect1>
