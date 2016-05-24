@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.3</refmiscinfo>
+	<refmiscinfo class="version">4.4</refmiscinfo>
 </refmeta>
 
 
@@ -393,6 +393,13 @@
                 </para></listitem>
                 </varlistentry>
 
+		<varlistentry>
+		<term>--no-dns-updates</term>
+		<listitem><para>
+		"net ads join" の一部として DNS 更新を実行しない。
+		</para></listitem>
+		</varlistentry>
+
                 &stdarg.encrypt;
                 &popt.common.samba.client;
 
@@ -455,8 +462,9 @@
 </refsect2>
 
 <refsect2>
-<title>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN]
-       [createcomputer=OU] [machinepass=PASS] [osName=string osVer=string] [options]</title>
+<title>[RPC|ADS] JOIN [TYPE] [--no-dns-updates] [-U username[%password]]
+[createupn=UPN] [createcomputer=OU] [machinepass=PASS]
+[osName=string osVer=string] [options]</title>
 
 <para>
 ドメインに参加する。サーバー上にコンピューターアカウントがすでに存在しており、
@@ -2369,10 +2377,6 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
       インポートファイルは、もしも事前チェックが成功した場合にのみ適用される。
     </para>
     <para>
-      The check-file follows the normal registry file syntax with the
-      following semantics:
-    </para>
-    <para>
       チェックファイルは以下の文法を使う、通常のレジストリファイル文法に従う。
     </para>
       <itemizedlist>
@@ -2459,11 +2463,8 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
    <varlistentry><term>--reg-version={1,2,3}</term>
       <listitem><para>
 	レジストリデータベースの形式を指定する。指定されなかった場合、
-	バイナリの値を既定値とするか、もしも registry.tdb がコマンドラインで
-	明確に起動した場合、INFO/versionレコード中に見つかった値に設定される。
-	Specify the format of the registry database. If not given it defaults to
-	the value of the binary or, if an registry.tdb is explizitly stated at
-	the commandline, to the value found in the INFO/version record.
+	バイナリの値を既定値とするか、もしもコマンドラインで registry.tdb を
+	明確指定して起動した場合、INFO/versionレコード中で見つかった値に設定される。
       </para></listitem>
     </varlistentry>
 
@@ -2563,12 +2564,12 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 <refsect2>
 <title>DOM</title>
 
-<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバーサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバーに参加させる機能はWindows 2000からサポートされていた。
+<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバーサイドから、リモートでマシンをドメインに参加・削除させる API がサポートされた。Windowsでは、リモートでマシンをメンバーに参加させる機能はWindows 2000 からサポートされていた。
 </para>
 <para>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバーか、「Administrators group」グループのメンバーか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
 </para>
 
-<para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
+<para>クライアント側でリモートでマシンをドメインに参加させる net dom コマンドは以下の通り：
 <simplelist>
 <member>net dom join - リモートでマシンをドメインに参加させる</member>
 <member>net dom unjoin -リモートでマシンをドメインから削除する</member>
@@ -2607,7 +2608,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+この例では、XP というマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
 </para>
 
 </refsect3>
@@ -2639,7 +2640,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
+この例では、XP というマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
 </para>
 
 </refsect3>
@@ -2667,7 +2668,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 </itemizedlist>
 
 <para>
-ドメイン中で名前を変更したいリモートマシンに、標準のnetパラメーターを使って接続と
+ドメイン中で名前を変更したいリモートマシンに、標準の net パラメーターを使って接続と
 認証を行う必要があることに注意。それらの追加のパラメーターには -S コンピューター名
 と-U ユーザー名を含む。
 </para>
@@ -2676,10 +2677,10 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom renamecomputer -S xp -U XP\\administrator%secret newname=XPNEW account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XPという名前のコンピューターに、パスワードがsecretのローカルの
-Administratorとして接続し、ドメインに参加しているコンピューターの名前を、
-MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、
-XPNEWに変更している。変更が成功したら、コンピューターをリブートする。
+この例では、XP という名前のコンピューターに、パスワードが secret のローカルの
+Administrator として接続し、ドメインに参加しているコンピューターの名前を、
+MYDOM というドメインの管理者のアカウントとパスワード topsecret を使って、
+XPNEW に変更している。変更が成功したら、コンピューターをリブートする。
 </para>
 
 </refsect3>
@@ -2698,7 +2699,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
 <para>
 グローバルロック配下でシェルを実行する。これはいくつかのシェルコマンドが実行される
 順番を定義するのに便利かもしれない。ロック情報は<filename>g_lock.tdb</filename>
-というファイルに格納される。CTDBが動作しているセットアップ時には、ロック情報は
+というファイルに格納される。CTDB が動作しているセットアップ時には、ロック情報は
 すべてのクラスターノードで有効である。
 </para>
 
@@ -2754,7 +2755,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.3.0 - 4.3.9 に対応する。</para>
+	<para>このマニュアルページは Samba 4.4.0 - 4.4.0 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -2764,7 +2765,7 @@ XPNEWに変更している。変更が成功したら、コンピューターを
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4 - 4.3.9 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 - 4.4.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
