@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.3</refmiscinfo>
+	<refmiscinfo class="version">4.4</refmiscinfo>
 </refmeta>
 
 
@@ -19,31 +19,41 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>pdbedit</command>
+		<arg choice="opt">-a</arg>
+		<arg choice="opt">-b passdb-backend</arg>
+		<arg choice="opt">-c account-control</arg>
+		<arg choice="opt">-C value</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-D drive</arg>
+		<arg choice="opt">-e passdb-backend</arg>
+		<arg choice="opt">-f fullname</arg>
+		<arg choice="opt">--force-initialized-passwords</arg>
+		<arg choice="opt">-g</arg>
+		<arg choice="opt">-h homedir</arg>
+		<arg choice="opt">-i passdb-backend</arg>
+		<arg choice="opt">-I domain</arg>
+		<arg choice="opt">-K</arg>
 		<arg choice="opt">-L</arg>	
+		<arg choice="opt">-m</arg>	
+                <arg choice="opt">-M SID|RID</arg>
+		<arg choice="opt">-N description</arg>
+		<arg choice="opt">-P account-policy</arg>
+		<arg choice="opt">-p profile</arg>	
+                <arg choice="opt">--policies-reset</arg>
+		<arg choice="opt">-r</arg>	
+		<arg choice="opt">-s configfile</arg>
+		<arg choice="opt">-S script</arg>
+                <arg choice="opt">--set-nt-hash</arg>
+		<arg choice="opt">-t</arg>
+		<arg choice="opt">--time-format</arg>
+		<arg choice="opt">-u username</arg>	
+                <arg choice="opt">-U SID|RID</arg>
 		<arg choice="opt">-v</arg>	
 		<arg choice="opt">-w</arg>	
-		<arg choice="opt">-u username</arg>	
-		<arg choice="opt">-f fullname</arg>	
-		<arg choice="opt">-h homedir</arg>	
-		<arg choice="opt">-D drive</arg>	
-		<arg choice="opt">-S script</arg>
-		<arg choice="opt">-p profile</arg>	
-                <arg choice="opt">-K</arg>
-		<arg choice="opt">-a</arg>	
-		<arg choice="opt">-t, --password-from-stdin</arg>
-		<arg choice="opt">-m</arg>	
-		<arg choice="opt">-r</arg>	
 		<arg choice="opt">-x</arg>	
-		<arg choice="opt">-i passdb-backend</arg>	
-		<arg choice="opt">-e passdb-backend</arg>   
-		<arg choice="opt">-b passdb-backend</arg>
-		<arg choice="opt">-g</arg>
-		<arg choice="opt">-d debuglevel</arg>
-		<arg choice="opt">-s configfile</arg>
-		<arg choice="opt">-P account-policy</arg>
-		<arg choice="opt">-C value</arg>
-		<arg choice="opt">-c account-control</arg>
 		<arg choice="opt">-y</arg>
+                <arg choice="opt">-z</arg>
+	        <arg choice="opt">-Z</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -75,7 +85,7 @@
 	<title>オプション</title>
 	<variablelist>
 		<varlistentry>
-		<term>-L</term>
+		<term>-L|--list</term>
 		<listitem><para>
 		データベースのすべてのユーザーアカウントを一覧表示する。
 		ユーザー名と UID の組み合わせが「:」で区切られて一覧表示される。</para>
@@ -90,11 +100,12 @@ samba:45:Test User
 		
 		
 		<varlistentry>
-		<term>-v</term>
+		<term>-v|--verbose</term>
 		<listitem><para>
 		冗長な一覧表示形式を有効にする。
 		データベース内のユーザーを一覧表示する際には、
-		アカウントの各項目を詳細に表示する。</para>
+		アカウントの各項目を詳細に表示する。-w といっしょに使う場合は
+	        パスワードハッシュも表示する。</para>
 
 		<para>例: <command>pdbedit -L -v</command></para>
 		<para><programlisting>
@@ -123,7 +134,7 @@ Profile Path:   \\BERSERKER\profile
 		
 		
 		<varlistentry>
-		<term>-w</term>
+		<term>-w|--smbpasswd-style</term>
 		<listitem><para>
 		一覧表示を「smbpasswd」形式にする。
 		データベース内のユーザーを一覧表示する際、<!--pdbedit は-->
@@ -133,7 +144,8 @@ Profile Path:   \\BERSERKER\profile
 		(詳細は
 		<citerefentry><refentrytitle>smbpasswd</refentrytitle>
 		<manvolnum>5</manvolnum></citerefentry> を参照のこと)
-		で表示される。	
+		で表示される。(-v)の代わりに使う場合、詳細表示中に
+		パスワードハッシュも表示する。
 		</para>
 		<para>例: <command>pdbedit -L -w</command></para>
 		<programlisting>
@@ -149,7 +161,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		
 		
 		<varlistentry>
-		<term>-u username</term>
+		<term>-u|--user username</term>
 		<listitem><para>
 		操作 (表示・追加・削除など) の対象とするユーザー名を指定する。
 		追加・削除・変更操作においては<emphasis>必須</emphasis>であり、
@@ -158,7 +170,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</varlistentry>
 
 		<varlistentry>
-		<term>-f fullname</term>
+		<term>-f|--fullname fullname</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ユーザーのフルネームを指定する。</para>
@@ -168,7 +180,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-h homedir</term>
+		<term>-h|--homedir homedir</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ユーザーのホームディレクトリとなるネットワークパスを指定する。</para>
@@ -179,7 +191,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</varlistentry>
 		
 		<varlistentry>
-		<term>-D drive</term>
+		<term>-D|--drive drive</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ホームディレクトリの割り当て先とする
@@ -192,7 +204,7 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		
 		
 		<varlistentry>
-		<term>-S script</term>
+		<term>-S|--script script</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ユーザーのログオンスクリプトのパスを指定する。</para>
@@ -202,9 +214,21 @@ samba:45:0F2B255F7B67A7A9AAD3B435B51404EE:
 		</listitem>
 		</varlistentry>
 		
+
+                <varlistentry>
+		  <term>--set-nt-hash</term>
+		  <listitem><para>ユーザの変更を行う際に、16進文字列で与えられた
+		  NT ハッシュ値を使って、ユーザのパスワードを設定する。
+		  パスワードの同期を行う場合に便利である。</para>
+
+		  <para>例: <command>--set-nt-hash 8846F7EAEE8FB117AD06BDD830B7586C</command>
+		  </para>
+		  </listitem>
+		</varlistentry>
+		
 		
 		<varlistentry>
-		<term>-p profile</term>
+		<term>-p|--profile profile</term>
 		<listitem><para>
 		ユーザーの追加および変更を行なう際に、
 		ユーザーのプロファイルパスを指定する。</para>
