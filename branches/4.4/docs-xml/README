@@ -1,0 +1,215 @@
+		Sambaドキュメントの日本語訳版について
+
+						2016/06/19
+						日本Sambaユーザー会
+
+
+1. はじめに
+======================================================================
+
+1.1 概要
+----------------------------------------------------------------------
+
+ここにあるファイルは、Sambaのドキュメントを日本語訳したファイルです。
+訳していないものについては、英語版をそのまま取り込んでいます。
+Samba-JP MLとsugj-tech MLのメンバーのご協力のもとに、多くの修正を行ない
+ましたが、訳についてはまだまだ不十分なところが多数あります。そのことを
+ご理解の上、ご利用ください。
+
+1.2 リリース形式
+----------------------------------------------------------------------
+
+3.5系列からは、man形式、HTML形式およびSamba3-HOWTO、Samba3-Developers-Guideを
+1つのアーカイブとして提供するほか、man形式のみのファイルも提供します。
+man形式のみのアーカイブでは、再構築は出来ません。
+
+2. バク
+======================================================================
+
+ かなり見直しましたが、まだまだ潜んでいるはずです。細かな検証を行なって
+おりません。また、一部の部分はオリジナルと併記してある箇所があります。
+誤訳等がありましたら、日本Sambaユーザー会のメーリングリスト(samba-jp@
+samba.gr.jp)かスタッフまでご連絡ください。
+
+3. 利用にあたって
+======================================================================
+
+3.1 配布について
+----------------------------------------------------------------------
+
+配布については、Sambaの配布条件と同じです(GPLv3)。同梱している
+COPYINGファイルを参照してください。また、ドキュメントを作成(XMLから
+の変換)するための補助スクリプト setupjp(xx).sh なども同梱しています。
+
+3.2 更新条件
+----------------------------------------------------------------------
+
+原則として、オリジナルSambaが更新対象となっているものについて
+翻訳を行います。
+
+・4.1.x系列以前:	翻訳終了
+・4.2.x系列:		翻訳中
+・4.3.x系列:		翻訳中
+・4.4.x系列:		翻訳中
+
+
+Sambaのバージョンが変更になってもドキュメントの修正がない場合には、
+日本語訳は変更しません。その場合にはSambaの旧バージョンに対応した
+日本語マニュアルをそのままお使いください。更新状況については、
+日本Sambaユーザー会のWebページか、Samba-JPメーリングリストを参照
+してください。
+
+3.3 文字コード
+----------------------------------------------------------------------
+
+HTML形式、およびman形式のファイル両方ともUTF-8でエンコードしています。
+必要に応じて他の文字コードに変換してください。
+
+4. ビルド方法
+======================================================================
+4.1 準備
+
+4.1.1 プロキシの設定
+
+XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
+ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
+かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
+使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
+を使う/使わないでかなり差が付きます。
+
+4.1.2 カタログファイルの準備
+
+docs-xml/build配下にあるREADMEファイルに記載のように、catalog.xmlファイルを
+作成します。具体的には、 docs-xml ディレクトリで、
+
+% export XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
+
+と、
+
+% cat $(pwd)/build/catalog.xml.in | sed -e "s|@abs_top_srcdir@|$(pwd)|g" |sed -e
+"s|@abs_top_builddir@|$(pwd)|g"> $(pwd)/build/catalog.xml
+
+を実行します。README中の上記行は間違っていますので、上記のように指定してください。
+
+4.2 Samba 4.x.y の場合
+
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
+
+  $ cd /srv/build
+  $ tar xzf /srv/source/samba-4.X.Y.tar.gz
+
+(2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
+
+  $ cd /srv/build
+  $ mkdir samba-ja-docs-4.X.Y-Z
+  $ cd /srv/source/samba-ja-docs-4.X.Y-Z
+  $ tar xzf samba-ja-docs-4.X.Y-Z.tar.gz
+
+(3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
+    リンクを翻訳文書ディレクトリ内に作成
+
+  $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
+  $ ln -s /srv/build/samba-4.X.Y-Z/docs-xml samba-docs-xml
+
+(4) ビルドを実行
+
+  $ make clean
+  $ make manpages (manpagesの作成)
+  $ make htmlman  (html化したmanpagesの作成)
+  $ make html     (Samba3-HOWTO等のhtml文書の作成)
+
+
+5. 変更履歴
+======================================================================
+
+4.3系列以前については README.43 として変更履歴を分離しました。
+
+2016/06/19 Ver 4.4.4-1 4.4.4対応
+		     build/DTD/samba-doc,
+		     idmap_autorid.8.xml,idmap_rfc2307.8.xml,
+		     net.8.xml,ntlm_auth.1.xml,pdbedit.8.xml,
+		     vfs_fruit.8.xml,vfs_ceph.8.xml,vfs_shadow_copy2.8.xml
+		     base/doscharset.xml,base/interfaces.xml,
+		     base/netbiosaliases.xml,base/netbiosname.xml,
+		     base/realm.xml,base/unixcharset.xml,
+		     base/workgroup.xml,
+		     browse/domainmaster.xml,browse/lmannounce.xml,
+		     browse/preferredmaster.xml,
+		     domain/allowdnsupdates.xml,domain/dnsupdatecommand.xml,
+		     domain/machinepasswordtimeout.xml,
+		     domain/nsupdatecommand.xml,domain/rndccommand.xml,
+		     domain/spnupdatecommand.xml,
+		     filename/casesensitive.xml,filename/defaultcase.xml,
+		     ldap/clientldapsaslwrapping.xml,ldap/ldapderef.xml,
+		     ldap/ldapfollowreferral.xml,ldap/ldapgroupsuffix.xml,
+		     ldap/ldapidmapsuffix.xml,ldap/ldapmachinesuffix.xml,
+		     ldap/ldappagesize.xml,ldap/ldappasswdsync.xml,
+		     ldap/ldapssl.xml,
+		     locking/cscpolicy.xml,locking/strictlocking.xml,
+		     logging/ldapdebuglevel.xml,logging/logfile.xml,
+		     logging/syslog.xml,logging/syslogonly.xml,
+		     logon/enableprivileges.xml,logon/initlogondelayedhosts.xml,
+		     misc/copy.xml,misc/fstype.xml,misc/include.xml,
+		     misc/nbtclientsocketaddress.xml,
+		     misc/usershareprefixallowlist.xml,
+		     misc/usershareprefixdenylist.xml,misc/valid.xml,
+		     misc/widelinks.xml,
+		     printing/cupsencrypt.xml,printing/enablespoolss.xml,
+		     printing/maxprintjobs.xml,printing/printcapname.xml,
+		     printing/printing.xml,
+		     protocol/aclcheckpermissions.xml,
+		     protocol/clientmaxprotocol.xml,
+		     protocol/clientminprotocol.xml,
+		     protocol/clientusespnego.xml,protocol/eventloglist.xml,
+		     protocol/readraw.xml,protocol/servermaxprotocol.xml,
+		     protocol/smb2maxcredits.xml,protocol/smb2maxread.xml,
+		     protocol/smb2maxtrans.xml,protocol/smb2maxwrite.xml,
+		     protocol/smbports.xml,protocol/svcctllist.xml,
+		     protocol/writeraw.xml,
+		     security/clientntlmv2auth.xml,security/clientschannel.xml,
+		     security/clientsigning.xml,
+		     security/clientusepsnegoprincipal.xml
+		     security/createmask.xml,security/directorymask.xml,
+		     security/forcecreatemode.xml,
+		     security/forcedirectorymode.xml,security/hostsallow.xml,
+		     security/hostsdeny.xml,security/kerberosmethod.xml,
+		     security/maptoguest.xml,security/nullpasswords.xml,
+		     security/onlyuser.xml,security/preloadmodules.xml,
+		     security/sambakcccommand.xml,security/security.xml,
+		     security/serverrole.xml,security/serverschannel.xml,
+		     security/serversigning.xml,security/smbencrypt.xml,
+		     security/username.xml,security/writeable.xml,
+		     tuning/aioreadsize.xml,tuning/aiowritesize.xml,
+		     tuning/allocationroundupsize.xml,tuning/blocksize.xml,
+		     tuning/maxdisksize.xml,tuning/strictrename.xml,
+		     tuning/strictsync.xml,tuning/writecachesize.xml,
+		     vfs/vfsobjects.xml,
+		     winbind/idmapbackend.xml,winbind/idmapconfig.xml,
+		     winbind/idmapgid.xml,winbind/idmapuid.xml,
+		     winbind/winbindmaxdomainconnections.xml,
+		     winbind/winbindnssinfo.xml,
+		     wins/winsserver.xml
+		     修正
+		     cifsdd.8.xml,vfs_offline.8.xml,
+		     logging/timestamplogs.xml,misc/auto_services.xml,
+		     protocol/servermultichannelsupport.xml,
+		     tuning/aioreadsize.xml
+		     追加
+		     vfs_scannedonly.8.xml,vfs_smb_traffic_analyzer.8.xml,
+		     logging/debugtimestamp.xml,
+		     misc/preload.xml
+		     削除
+
+======================================================================
+
+翻訳者は、当訳文の正当性、信頼性、先進性、妥当性、可読性、その他いかなるこ
+とについて責任を負いません。
+ 
+7.ご協力いただいた方々(順不同)
+======================================================================
+
+  佐藤文優,太田俊哉,千秋広幸,山口一郎,中野武雄,細川達己,たかはしもとのぶ、
+  堀田倫英,武田保真,でん,山田史朗,はせがわようすけ,ちかましゅうへい,
+  しらいたかし,平田祥司、海老澤
+  Samba-JP/sugj-tech メーリングリストのメンバー
+  (有)トップスタジオ/(株)翔泳社
