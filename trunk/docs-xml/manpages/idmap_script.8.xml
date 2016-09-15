@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.4</refmiscinfo>
+	<refmiscinfo class="version">4.5</refmiscinfo>
 </refmeta>
 
 
@@ -148,6 +148,25 @@
 	  SID から UID へのマッピングなどのための、他のいくつかのメカニズムを使う
 	  ので、このスクリプトは、完全ではない。
 	</para>
+
+	<para>
+	  スクリプトは _NO_WINBINDD 環境変数を 1 に設定して呼び出されることに
+	  気づいておくこと。これは、wbinfo への明示的な呼び出し経由と、
+	  nss_winbind 経由による暗黙の呼び出し経由両方のスクリプトから
+	  の、winbind への再帰呼び出しを防ぐ。
+	  たとえば、 <command>ls -l</command> の呼び出しは、そのような無限の再帰
+	  を引き起こす。
+	</para>
+
+	<para>
+	  <command>wbinfo -n</command> と、 idmap script 内で
+	  <command>wbinfo -s</command> を呼び出すことは安全である。
+	  これを行うため、スクリプトは、正しく <command>wbinfo</command>
+	  を呼び出す前に、_NO_WINBINDD 環境変数を 設定解除するようにし、
+	  <command>wbinfo</command>が再帰から保護するために戻ってきたあと、
+	  再度値を 1 にしなければならない。
+	</para>
+	
 </refsect1>
 
 <refsect1>
