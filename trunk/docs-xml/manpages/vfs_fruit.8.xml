@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.4</refmiscinfo>
+	<refmiscinfo class="version">4.5</refmiscinfo>
 </refmeta>
 
 
@@ -44,6 +44,14 @@
 	その他すべての名前付きストリームは、<command>vfs_fruit</command>
 	といっしょにロードされねばならない<command>vfs_streams_xattr</command>
 	にゆだねられる。</para>
+
+	<para>vfs_fruit は、"ea support = yes" が必要である。</para>
+
+	<para>vfs_fruit を使う共有と使わない共有とを混ぜる時は注意すること。
+	OS X クライアントは、最初の tcon で、SMB2 AAPL プロトコル拡張
+	でネゴシエートするので、fruitがある共有と、無い共有を混ぜると、
+	最初の tcon が fruit なしの場合、全体として AAPL を無効にする。
+	</para>
 
 	<para>OS Xクライアントに対する、ADSサポートが有効な共有
 	があると言うことは、Apple固有のSMBサーバ実装の動作と似て、
@@ -242,6 +250,7 @@
 
 <programlisting>
         <smbconfsection name="[share]"/>
+        <smbconfoption name="ea support">yes</smbconfoption>
 	<smbconfoption name="vfs objects">catia fruit streams_xattr</smbconfoption>
 	<smbconfoption name="fruit:resource">file</smbconfoption>
 	<smbconfoption name="fruit:metadata">netatalk</smbconfoption>
@@ -264,7 +273,7 @@
 </refsect1>
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.4.4 - 4.5.0 に対応する。</para>
+    <para>このマニュアルページは Samba 4.5.0 - 4.5.0 に対応する。</para>
     <para>このドキュメントの Samba 4.2.0 - 4.5.0 対応の翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
