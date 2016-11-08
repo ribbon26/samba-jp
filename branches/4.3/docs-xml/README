@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2016/06/21
+						2016/11/08
 						日本Sambaユーザー会
 
 
@@ -19,7 +19,6 @@ Samba-JP MLとsugj-tech MLのメンバーのご協力のもとに、多くの修
 1.2 リリース形式
 ----------------------------------------------------------------------
 
-3.4系列までは、man形式およびHTML形式を1つのアーカイブとして提供しています。
 3.5系列からは、man形式、HTML形式およびSamba3-HOWTO、Samba3-Developers-Guideを
 1つのアーカイブとして提供するほか、man形式のみのファイルも提供します。
 man形式のみのアーカイブでは、再構築は出来ません。
@@ -32,17 +31,6 @@ man形式のみのアーカイブでは、再構築は出来ません。
 誤訳等がありましたら、日本Sambaユーザー会のメーリングリスト(samba-jp@
 samba.gr.jp)かスタッフまでご連絡ください。
 
-2.1 4.2系列の翻訳について
---------------------------------------------------------------------
-
-4.2系列では smb.conf 中の
-ldapserverrequirestrongauth,clientipcmaxprotocol,
-clientipcminprotocol,allowdcerpcauthlevelconnect,
-allowdcerpcauthlevelconnect,rawntlmv2auth
-パラメータについて、翻訳が抜けています。
-ただ、翻訳が抜けているパラメータについては、4.3系列で削除となっています。
-そのため、翻訳を追加する予定はありません。
-
 3. 利用にあたって
 ======================================================================
 
@@ -51,7 +39,7 @@ allowdcerpcauthlevelconnect,rawntlmv2auth
 
 配布については、Sambaの配布条件と同じです(GPLv3)。同梱している
 COPYINGファイルを参照してください。また、ドキュメントを作成(XMLから
-の変換)するための補助スクリプト setupjp(xx).sh も同梱しています。
+の変換)するための補助スクリプト setupjp(xx).sh なども同梱しています。
 
 3.2 更新条件
 ----------------------------------------------------------------------
@@ -59,14 +47,17 @@ COPYINGファイルを参照してください。また、ドキュメントを�
 原則として、オリジナルSambaが更新対象となっているものについて
 翻訳を行います。
 
-・4.1.x系列以前:	翻訳終了
-・4.2.x系列:		翻訳中
+・4.2.x系列以前:	翻訳終了
 ・4.3.x系列:		翻訳中
+・4.4.x系列:		翻訳中
+・4.5.x系列:		翻訳中
+
 
 Sambaのバージョンが変更になってもドキュメントの修正がない場合には、
 日本語訳は変更しません。その場合にはSambaの旧バージョンに対応した
 日本語マニュアルをそのままお使いください。更新状況については、
-日本Sambaユーザー会のWebページか、メーリングリストを参照してください。
+日本Sambaユーザー会のWebページか、Samba-JPメーリングリストを参照
+してください。
 
 3.3 文字コード
 ----------------------------------------------------------------------
@@ -127,809 +118,112 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
   $ make htmlman  (html化したmanpagesの作成)
   $ make html     (Samba3-HOWTO等のhtml文書の作成)
 
-4.3 Samba 3.5.x および 3.6.x の場合
-
-(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
-
-  $ cd /srv/build
-  $ tar xzf /srv/source/samba-3.X.Y.tar.gz
-
-(2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
-
-  $ cd /srv/build
-  $ mkdir samba-ja-docs-3.X.Y-Z
-  $ cd /srv/source/samba-ja-docs-3.X.Y-Z
-  $ tar xzf samba-ja-docs-3.X.Y-Z.tar.gz
-
-(3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
-    リンクを翻訳文書ディレクトリ内に作成
-
-  $ cd /srv/source/samba-ja-docs-3.X.Y-Z/docs-xml
-  $ ln -s /srv/build/samba-3.X.Y/docs-xml samba-docs-xml
-
-(4) ビルドを実行
-
-  $ make clean
-  $ make manpages3 (manpagesの作成)
-  $ make htmlman3  (html化したmanpagesの作成)
-  $ make html      (Samba3-HOWTO等のhtml文書の作成)
-
-4.4 Samba 3.4.x以前の場合
-
-  svnからまずsetup3x.shダウンロードしてください。次に、オリジナルのSamba-
-3.x.y のベースディレクトリに移してください。その後、この
-スクリプトを実行すると、soucreforge.jpのsvnからデータをダウンロードし、
-必要なファイルをコピーして初期セットアップを行います。
-次に、docs-xmlディレクトリに移動し、
-
-export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
-
-を実行してください。その後、make htmlman3,make manpages3を実行してください。
-
-Samba 3.5.x 以降はopenSUSE 12.2-13.2、CentOS 6.4でしかテストしていません。
-Samba 4.x 以降は openSUSE 13.2でしかテストしていません。なお、記載した
-すべてのバージョンでテストしているわけではありません。
-
-
 
 5. 変更履歴
 ======================================================================
 
-3.2系列から4.3系列までを一緒に管理しています。そのため、バージョン番号と
-変更日付が前後する場合があります。
+4.3系列以前については README.43 として変更履歴を分離しました。
 
-2008/11/08 ver 0.1	3.2.4対応版を初期リリース
-
-2008/11/12 Ver 0.1.1	smbclient.1.htmlの文字コード指定がおかし
-			かったので修正。
-
-2008/11/22 Ver 0.1.2	この日までに出来上がったところを纏めてリリース。
-
-2008/12/01 Ver 0.2	この日までに出来上がったところを纏めてリリース。
-			smb.conf以外は一通り訳出。
-
-2008/12/08 Ver 0.3	3.2.5対応、全マニュアル訳出。
-
-2008/12/17 Ver 0.4	3.2.6対応、若干の修正。
-
-2009/01/10 Ver 0.4.1	3.2.7対応、若干の修正。
-
-2009/02/24 Ver 0.4.2	3.2.8対応、若干の修正。
-
-2009/04/01 Ver 0.4.3	3.2.9対応、若干の追加と修正。
-			manpages-3/cifs.upcall.8.xml 字句修正
-			manpages-3/vfs_smb_traffic_analyzer.8.xml 記述追加
-                        smbdotconf/browse/enhancedbrowsing.xml typo修正なので変更せず
-			smbdotconf/locking/strictlocking.xml typo修正なので変更せず
-			smbdotconf/misc/remoteannounce.xml typo修正なので変更せず
-			smbdotconf/misc/usershareallowguests.xml typo修正なので変更せず
-			smbdotconf/misc/usersharetemplateshare.xml typo修正なので変更せず
-			smbdotconf/printing/useclientdriver.xml typo修正なので変更せず
-			smbdotconf/protocol/aclcheckpermissions.xml typo修正なので変更せず
-			smbdotconf/protocol/enableasusupport.xml typo修正なので変更せず
-			smbdotconf/security/clientlanmanauth.xml typo修正なので変更せず
-			smbdotconf/security/lanmanauth.xml typo修正なので変更せず
-			smbdotconf/security/passwordserver.xml typo修正なので変更せず
-			smbdotconf/security/security.xml typo修正なので変更せず
-			smbdotconf/security/serverschannel.xml typo修正なので変更せず
-			smbdotconf/security/serversigning.xml typo修正なので変更せず
-			smbdotconf/security/smbencrypt.xml typo修正なので変更せず
-			smbdotconf/security/updateencrypted.xml typo修正なので変更せず
-
-2009/04/16 Ver 0.4.4	3.2.10対応、用語の統一、若干の修正。
-	       		setupjp32.shを追加。
-			manpages-3/cifs.upcall.8.xml 用語の統一。
-			manpages-3/eventlogadm.8.xml 用語の統一。
-			manpages-3/findsmb.1.xml 用語の統一。
-			manpages-3/idmap_ldap.8.xml 用語の統一。
-			manpages-3/idmap_nss.8.xml 用語の統一。
-			manpages-3/idmap_tdb.8.xml 用語の統一。
-			manpages-3/ldb.3.xml 用語の統一。
-			manpages-3/ldbadd.1.xml 用語の統一。
-			manpages-3/ldbdel.1.xml 用語の統一。
-			manpages-3/ldbedit.1.xml 用語の統一。
-			manpages-3/ldbmodify.1.xml 用語の統一。
-			manpages-3/ldbsearch.1.xml 用語の統一。
-			manpages-3/libsmbclient.7.xml 用語の統一。
-			manpages-3/lmhosts.5.xml 用語の統一。
-			manpages-3/log2pcap.1.xml 用語の統一。
-			manpages-3/mount.cifs.8.xml 用語の統一。
-			manpages-3/net.8.xml 用語の統一。
-			manpages-3/nmbd.8.xml 用語の統一。
-			manpages-3/nmblookup.8.xml 用語の統一。
-			manpages-3/pam_winbind.7.xml 用語の統一。
-			manpages-3/pdbedit.8.xml 用語の統一。
-			manpages-3/profiles.1.xml 用語の統一。
-			manpages-3/rpcclient.1.xml 用語の統一。
-			manpages-3/samba.7.xml 用語の統一。
-			manpages-3/smb.conf.5.xml 用語の統一。
-			manpages-3/smbcacls.1.xml 用語の統一。
-			manpages-3/smbclient.1.xml 用語の統一。
-			manpages-3/smbcontrol.1.xml 用語の統一。
-			manpages-3/smbcquotas.1.xml 用語の統一。
-			manpages-3/smbd.8.xml 用語の統一。
-			manpages-3/smbget.1.xml 用語の統一。
-			manpages-3/smbgetrc.5.xml 用語の統一。
-			manpages-3/smbpasswd.5.xml 用語の統一。
-			manpages-3/smbpasswd.8.xml 用語の統一。
-			manpages-3/smbspool.8.xml 用語の統一。
-			manpages-3/smbstatus.1.xml 用語の統一。
-			manpages-3/smbtar.1.xml 用語の統一。
-			manpages-3/smbtree.1.xml 用語の統一。
-			manpages-3/swat.8.xml 用語の統一。
-			manpages-3/tdbbackup.8.xml 用語の統一。
-			manpages-3/tdbdump.8.xml 用語の統一。
-			manpages-3/tdbdump.8.xml 用語の統一。
-			manpages-3/tdbtool.8.xml 用語の統一。
-			manpages-3/testparm.1.xml 用語の統一。
-			manpages-3/vfs_fileid.8.xml 用語の統一。
-			manpages-3/vfs_prealloc.8.xml 用語の統一。
-			manpages-3/vfs_recycle.8.xml 用語の統一。
-			manpages-3/vfs_shadow_copy.8.xml 用語の統一。
-			manpages-3/wbinfo.1.xml 用語の統一。
-			manpages-3/winbind.8.xml 用語の統一。
-			smbdotconf/winbind/idmapallocbackend.xml 訳修正。
-
-2009/04/20 Ver 0.5	3.3.2対応、用語の統一、若干の修正。
-	       		setup.shを追加。
-
-2009/05/06 Ver 0.5.1	3.3.4対応、若干の追加と修正。
-
-2009/07/15 Ver 0.5.2	3.3.6対応、若干の追加と修正。 抜けていたファイルを追加。
-
-2009/07/18 Ver 0.4.5    3.2.13対応、若干の追加と修正。抜けていたファイルを追加。
-
-2009/07/30 Ver 0.5.3 	3.3.7対応、若干の修正。
-	       		manpages-3/idmap_tdb2.8.xml 用語の統一。
-			manpages-3/net.8.xml 訳追加。
-			manpages-3winbind_krb5_locator.7.xml 訳修正。
-			smbdotconf/security/checkpasswordscript.xml 訳変更。
-
-2009/08/01 Ver 3.4.0-1	3.4.0対応、若干の追加と修正。バージョン番号体系を
-	       		変更。
-
-2009/08/13 Ver 0.4.6    3.2.14対応、若干の修正。
-
-2009/11/03 Ver 3.4.3-1  3.4.3対応。若干の追加と修正。
-
-2010/01/16 Ver 0.5.4	3.3.10対応。若干の追加と修正。
-	       		manpages-3/cifs.upcall.8.xml 訳変更。
-			smbdotconf/base/enablecorefiles.xml 訳追加。
-			smbdotconf/locking/posixlocking.xml 訳変更。
-			smbdotconf/tuning/aiowritebehind.xml 訳追加。
-
-2010/02/25 Ver 3.4.6-1  3.4.6対応。若干の追加と修正。
-	       		manpages-3/mount.cifs.8.xml 訳修正。
-			manpages-3/pdbedit.8.xml 訳修正。
-			smbdotconf/base/enablecorefiles.xml 訳追加。
-			smbdotconf/filename/manglednames.xml 訳修正。
-			smbdotconf/locking/oplocks.xml 訳修正。
-			smbdotconf/locking/posixlocking.xml 訳修正。
-			smbdotconf/misc/cachedirectory.xml 訳追加。
-			smbdotconf/misc/directorynamecachesize.xml 訳追加。
-			smbdotconf/misc/statedirectory.xml 訳追加。
-			smbdotconf/misc/widelinks.xml 訳修正。
-			smbdotconf/printing/enablespoolss.xml 訳追加。
-			smbdotconf/protocol/unixextensions.xml 訳修正。
-			smbdotconf/tuning/aiowritebehind.xml 訳追加。
-
-2010/02/27 Ver 0.5.5	3.3.11対応。若干の追加と修正。
-	       		manpages-3/mount.cifs.8.xml 訳修正。
-	       		smbdotconf/misc/widelinks.xml 訳変更。
-			smbdotconf/protocol/unixextensions.xml 訳変更。
-
-2010/03/26 Ver 0.4.7    3.2.15対応。
-	       		smbdotconf/printing/printing.xml 訳追加。
-			html形式のテキストをutf-8に変更。
-			xslt/html.xsl修正。
-			READMEを大幅に変更。
-
-2010/03/26 Ver 0.5.6	3.3.12対応。
-	       		欠損していた翻訳の追加。
-	       		smbdotconf/printing/printing.xml 訳追加。
-	       		smbdotconf/tuning/aiowritebehind.xml 訳追加。
-			html形式のテキストをutf-8に変更。
-			xslt/html.xsl修正。
-			READMEを大幅に変更。
-
-2010/03/26 Ver 3.4.7-1  3.4.7対応。
-	       		欠損していた翻訳の追加。
-	       		smbdotconf/printing/printing.xml 訳追加。
-			html形式のテキストをutf-8に変更。
-			xslt/html.xsl修正。
-			READMEを大幅に変更。
-
-2010/03/26 Ver 3.5.1-1  3.5.1対応(3.5系列新規)。
-	       		smbdotconf/printing/printing.xml 訳追加。
-			html形式のテキストをutf-8に変更。
-			xslt/html.xsl修正。
-			Samba3-HOWTO追加。
-			リリース形式を変更。
-			READMEを大幅に変更。
-
-2010/06/11 Ver 3.5.3-1	3.5.3対応
-	       		manpages/pam_winbind.conf.5.xml 訳追加
-			manpages/vfs_scanreadonly.8.xml 訳追加
-			smbdotconf/tuning/changenotifytimeout.xml 訳削除(trunk/3.4,3.3,3.2)
-			smbdotconf/protocol/readbmpx.xml 訳削除(trunk/3.4,3.3,3.2)
-			smbdotconf/misc/famchangenotify.xml 訳削除(trunk/3.4,3.3,3.2)
-			smbdotconf/filename/mangledmap.xml 訳削除(trunk/3.4,3.3,3.2)
-			Samba3-HOWTO/TOSHARG-Support.xml 訳変更
-			Samba3-Developers-Guide 訳追加
-
-2010/06/11 Ver 3.4.8-1  3.4.8対応
-                        smbdotconf/tuning/changenotifytimeout.xml 訳削除(trunk/3.4,3.3,3.2)
-                        smbdotconf/protocol/readbmpx.xml 訳削除(trunk/3.4,3.3,3.2)
-                        smbdotconf/misc/famchangenotify.xml 訳削除(trunk/3.4,3.3,3.2)
-                        smbdotconf/filename/mangledmap.xml 訳削除(trunk/3.4,3.3,3.2)
-
-2010/11/15 Ver 3.5.6-1  3.5.6対応
-	       		コンパイル環境をopenSUSE 11.3に変更。
-	       		Samba3-HOWTO/TOSHARG-Support.xml 訳変更
-			Samba3-HOWTO/TOSHARG-FastStart.xml 訳変更
-			Samba3-HOWTO/TOSHARG-Install.xml 訳変更
-			build/DTD/samba.entities XML記述修正、およびこれを利用
-	       		するファイルの再作成
-
-2011/01/25 Ver 3.4.11-1 3.4.11対応
-                        manpages-3/ntlm_auth.1.xml 訳修正(3.4)
-                        manpages-3/mount.cifs.8.xml 誤訳修正(3.4)
-
-2011/06/22 Ver 3.5.9-1  3.5.9対応
-                        manpages-3/wbinfo.1.xml 訳変更
-                        make方式変更
-
-2011/08/10 Ver 0.5.7    3.3.16対応(3.3系列最終)。
-                        smbclient.1.xml 訳修正。
-
-2011/08/17 Ver 3.5.11-1 3.5.11対応
-                        smbdotconf/security/clientusepsnegoprincipal.xml 訳追加。
-			makefile修正。
-			xslt/html.xsl削除。
-
-2012/04/02 Ver 3.4.15-1 3.4.15対応
-	       		smbclient.1.xml,winbind_krb5_locator.7 訳修正。
-
-2012/05/22 Ver 3.5.15-1 3.5.15対応。
-	       		manpages/vfs_*.xmlに関して翻訳の一部修正。
-
-2012/06/02 Ver 3.6.5-1  3.6.5対応。
-	       		manpages/vfs_*.xmlに関して翻訳の一部修正。
-			3.6から追加になったドキュメントの訳追加。
-			3.6でなくなったマニュアル類の削除。
-
-2012/07/11 Ver 3.5.16-1 3.5.16対応。
-	       		casesensitive.xml,nameresolveorder.xml,profileacls.xml
-			修正。
-
-2012/08/08 Ver 3.6.7-1 3.6.7対応。
-	       	        ntlm_auth.1.xml,smbcacls.1.xml,smbclient.1.xml,
-			smbcquotas.1.xml,vfs_shadow_copy2.8,
-	       		casesensitive.xml,nameresolveorder.xml,profileacls.xml
-			修正。
-			vfs_aio_pthread.8.xml追加
-
-2012/09/27 Ver 3.5.18-1 3.5.18対応。
-	       		idmap_rid.8.xml修正。
-
-2012/11/04 Ver 3.6.9-1 3.6.9対応。
-
-2013/01/01 Ver 3.5.20-1 3.5.20対応。
-	       		vfs_aio_fork.8.xml追加,
-			cifs_upcall.8.xml,mount.cifs.8.xml微修正,
-			"このドキュメントは"->"このマニュアルページは"に修正。
-
-2013/01/02 Ver 3.6.10-1 3.6.10対応。
-	       		vfs_aio_fork.8.xml追加,smbcacls.1.xml,smbclient.1.xml,
-			smbcquotas.1.xmlvfs_aio_pthread.8.xml,
-			vfs_default_quota.8.xml,vfs_dirsort.8.xml,
-			vfs_fake_perms.8.xml,
-			vfs_full_audit.8.xml,fix vfs_xattr_tdb.8.xml訳微修正,
-			"このドキュメントは"->"このマニュアルページは"に修正。
-
-2013/01/11 Ver 4.0.0-alpha1 4.0.0暫定対応
-	       		manpages配下を翻訳(smb.conf.5は未翻訳)。
-			それ以外のドキュメントについては3.xのまま。
-
-2013/02/17 Ver 4.0.0-beta1 4.0.0暫定対応
-	       		smbdotconf配下も翻訳。
-			それ以外のドキュメントについては3.xのまま。
-
-2013/02/17 Ver 4.0.0-1 4.0.0対応
-	       	        Samba3-Howtoも翻訳。
-
-2013/03/25 Ver 3.6.13-1 3.6.13対応
-	       		vfs_catia.8.xml修正、dbwrap_tool.1.xml追加。
-
-2013/07/11 Ver 4.0.7-1 4.0.7対応
-	       	       Samba3-HOWTO/TOSHARG-Speed.xml,
-		       Samba3-HOWTO/TOSHARG-HighAvailability.xml 削除
-		       smbdotconf/domain/allowdnsupdates.xml,
-		       smbdoctonf/protocol/smb2maxtrans,
-		       smbdoctonf/protocol/smb2maxwrite,
-		       smbdoctonf/protocol/smb2maxread,
-		       smbdoctonf/protocol/serverminprotocol,
-		       smbdoctonf/protocol/servermaxprotocol  修正,
-		       vfs_time_audit.8,wbinfo.1,vfs_streams_depot.8,
-		       vfs_shadow_copy2,vfs_smb_traffic_analyzer.8,
-		       vfs_catia.8.xml,smb.conf.5.xml,ntlm_auth.1.xml,
-		       修正,
-		       dbwrap_tool.1,追加,
-		       build/DTD/samba.entities 修正
-
-2013/08/27 Ver 4.0.9-1 4.0.9対応
-	       	       pam_winbind.conf.5.xml修正
-		       
-2013/12/29 Ver 3.6.22-1 3.6.22対応
-	       	       ntlm_auth.xml,idmap_ad.8.xml,vfs_crossrename.8.xml修正
-
-2014/01/08 Ver 4.0.14-1 4.0.14対応
-	       	       pam_winbind.conf.5.xml,vfs_crossrename.8.xml,
-		       smbdotconf/security/validusers修正
-
-2014/06/20 Ver 4.1.8-1 4.1.8対応
-	       	       build/DTD/samba.entities修正,
-	       	       dbwrap_tool.1.xml,idmap_autorid.8.xml,net.8.xml,nmbd.8.xml,
-		       nmblookup.1.xml,ntlm_auth.1.xml,pdbedit.8.xml,profiles.1.xml,
-		       rpcclient.1.xml,samba-tool.8.xml,samba-regedit.8.xml,
-		       samba.7.xml,samba.8.xml,sharesec.1.xml,smb.conf.5.xml,
-		       smbcacls.1.xml,smbclient.1.xml,smbcontrol.1.xml,
-		       smbcquotas.1.xml,smbd.8.xml,smbget.1.xml,smbpasswd.8.xml,
-		       smbstatus.1.xml,smbta-util.8.xml,smbtree.1.xml,
-		       testparm.1.xml,vfs_catia.8.xml,vfs_full_audit.8.xml,
-		       vfs_gpfs.8.xml,vfs_shadow_copy2.8.xml,
-		       vfs_smb_traffic_analyzer.8.xml,vfstest.1.xml,wbinfo.1.xml,
-		       winbindd.8.xml修正
-		       idmap_rfc2307.8.xml,samba-regedit.8,vfs_btrfs.8.xml
-		       vfs_linux_xfs_sgid.8.xml,vfs_syncops.8.xml,
-		       vfs_zfsacl.8.xml追加
-		       swat.8.xml削除
-		       base/bindinterfacesonly.xml,
-		       domain/machinepasswordtimeout.xml,
-		       filename/hideunreadable.xml,filename/maparchive.xml,
-		       filename/maphidden.xml,filename/mapreadonly.xml,
-		       filename/mapsystem.xml,filename/storedosattirbutes.xml,
-		       ldap/ldapadmindn.xml,misc/rpcdaemon.xml,
-		       printing/showaddprinterwizard.xml,
-		       protocol/clientminprotocol.xml,
-		       protocol/serverminprotocol.xml,
-		       security/kerberosmethod.xml,
-		       security/privatedir.xml,
-		       tuning/socketoptions.xml,tuning/usentdb.xml,
-		       vfs/ntvfshandler.xml,
-		       Samba3-HOWTO/TOSHARG-Diagnosis.xml,
-		       Samba3-HOWTO/TOSHARG-ServerType.xml,
-		       Samba3-HOWTO/TOSHARG-TDBFiles.xml,
-		       Samba3-Developers-Guide/unix-smb.xml修正
-		       misc/setdirectory.xml,security/passwordlevel.xml削除
-		       printing/spoolssarchitecture.xml 追加
-
-2014/06/20 Ver 4.1.10-1 4.1.10対応
-	       	       net.8.xml修正
-
-2014/10/02 Ver 4.1.12-1 4.1.12対応
-	       	      winbindrequesttimeout.xml 追加
-		      net.8.xml修正
-
-2015/01/06 Ver 4.1.13-1 4.1.13対応
-	              domain/spnupdatecommand.xml,
-		      protocol/aclallowexecutealways.xml 追加
-	       	      dbwrap_tool.1.xml,
-		      locking/kernelsharemodes.xml,
-		      misc/nbtclientsocketaddress.xml,
-		      vfs/ntvfshandler.xml,
-		      protocol/durablehandles.xml,protocol/nbtport.xml,
-		      protocol/dgramport.xml,protocol/clientminprotocol.xml,
-		      protocol/clientmaxprotocol.xml,
-		      protocol/dcerpcendpointservers.xml,protocol/cldapport.xml,
-		      protocol/serverminprotocol.xml,
-		      protocol/servermaxprotocol.xml,
-		      protocol/rpcbigendian.xml,protocol/unicode.xml,
-		      protocol/webport.xml,
-		      domain/dnsforwarder.xml,domain/dnsupdatecommand.xml,
-		      domain/rndccommand.xml,
-		      security/ntpsigndsocketdirectory.xml,
-		      security/krb5port.xml,security/privatedir.xml,
-		      security/kpasswdport.xml,security/sambakcccommand.xml,
-		      security/serverrole.xml,security/tlsdhparamsfile.xml,
-		      security/tlskeyfile.xml,security/tlscrlfile.xml,
-		      security/tlscertfile.xml,security/tlscafile.xml,
-		      security/tlsenabled.xml,security/usernamemapcachetime.xml,
-		      tuning/usentdb.xml,
-		      base/serverservices.xml,base/sharebackend.xml
-		      winbind/winbinddprivilegedsocketdirectory.xml,
-		      winbind/winbindmaxclients.xml,
-		      winbind/winbindmaxdomainconnections.xml,
-		      winbind/winbindrequesttimeout.xml,
-		      winbind/winbindsealedpipes.xml,
-		      winbind/winbinddsocketdirectory.xml
-		      修正
-
-2015/01/06 Ver 4.0.23-1 4.0.23対応
-	       	      protocol/aclallowexecutealways.xml 追加
-	       	      misc/setdirectory.xml,
-		      winbind/winbindrequesttimeout.xml,
-		      protocol/unicode.xml,smbdotconf/protocol/webport.xml,
-		      security/tlscertfile.xml,security/tlscafile.xml,
-		      security/tlsenabled.xml,security/tlsdhparamsfile.xml,
-		      security/tlskeyfile.xml,security/tlscrlfile.xml
-
-2015/07/03 Ver 3.6.25-1 3.6.25対応
-	              数多くのドキュメントを修正。3.6系最終版。
-
-2016/03/05 Ver 4.1.22-1 4.1.22対応
-                      vfs_streams_xattr.8.xml,clientusepsnegoprincipal.xml 更新。
-		      vfs_glusterfs.8.xml,smbencrypt.xml  追加。
-		      4.1系最終版。
-
-2016/04/29 Ver 4.2.11-1 4.2.11対応
-	       	      dbwrap_tool.1.xml,idmap_rid.8.xml,net.8.xml,pam_winbind.8.xml,
-		      pam_winbind.conf.5.xml,smb.conf.5.xml,smbcacls.1.xml,
-		      smbclient.1.xml,smbcontrol.1.xml,vfs_btrfs.8.xml,
-		      vfs_full_audit.8.xml,vfs_gpfs.8.xml,vfs_streams_xattr.8.xml,
-		      wbinfo.1.xml,
-		      base/doscharset,base/enablecorefiles.xml,base/netbiosname.xml,
-		      base/netbiosscope.xml,base/path.xml,base/realm.xml,
-		      base/serverservices.xml,base/serverstring.xml,
-		      base/serverstring.xml,base/sharebackend.xml,
-		      base/unixcharset.xml,base/workgroup.xml,
-		      browse/domainmaster.xml,browse/lmannounce.xml,
-		      browse/localmaster.xml,browse/preferredmaster.xml,
-		      domain/dnsforwarder.xml,domain/dnsupdatecommand.xml
-		      domain/nsupdatecommand.xml,domain/rndccommand.xml,
-		      domain/spnupdatecommand.xml,
-		      filename/casesensitive.xml,filename/defaultcase.xml,
-		      filename/manglednames.xml,filename/mangleprefix.xml,
-		      filename/manglingchar.xml,filename/maphidden.xml,
-		      filename/vetofiles.xml,
-		      ldap/clientldapsaslwrapping.xml,ldap/ldapgroupsuffix.xml,
-		      ldap/ldapidmapsuffix.xml,ldap/ldapmachinesuffix.xml,
-		      ldap/ldapmachinesuffix.xml,ldap/ldapusersuffix.xml,
-		      locking/kerneloplocks.xml,locking/locking.xml,
-		      locking/oplocks.xml,locking/posixlocking.xml,
-		      locking/strictlocking.xml,
-		      logging/debugtimestamp.xml,logging/logfile.xml,
-		      logon/domainlogons.xml,logon/logondrive.xml,
-		      logon/logonhome.xml,logon/logonpath.xml,
-		      logon/logonscript.xml,
-		      misc/afsusernamemap.xml,misc/available.xml,
-		      misc/cachedirectory.xml,misc/changenotify.xml,
-		      misc/changesharecommand.xml,misc/configfile.xml,
-		      misc/copy.xml,misc/ctdbdsocket.xml,
-		      misc/defaultservice.xml,misc/dontdescend.xml,
-		      misc/fstype.xml,misc/include.xml,
-		      misc/kernelchangenotify.xml,misc/lockdirectory.xml,
-		      misc/magicoutput.xml,misc/nbtclientsocketaddress.xml,
-		      misc/ncalrpcdir.xml,misc/piddirectory.xml,
-		      misc/preload.xml,misc/registryshares.xml,
-		      misc/remoteannounce.xml,misc/remotebrowsesync.xml,
-		      misc/statedirectory.xml,misc/usershareowneronly.xml,
-		      misc/usersharepath.xml,misc/usershareprefixallowlist.xml,
-		      misc/usershareprefixdenylist.xml,
-		      misc/usersharetemplateshare.xml,misc/utmpdirectory.xml,
-		      misc/valid.xml,misc/widelinks.xml,misc/wtmpdirectory.xml,
-		      printing/cupsencrypt.xml,printing/disablespoolss.xml,
-		      printing/lppausecommand.xml,printing/enablespoolss.xml,
-		      printing/lppausecommand.xml,printing/lpqcommand.xml,
-		      printing/lpresumecommand.xml,printing/maxprintjobs.xml,
-		      printing/printcapname.xml,printing/printername.xml,
-		      printing/printing.xml,printing/printjobusername.xml,
-		      printing/printnotifybackchannel.xml,printing/queuepausecommand.xml,
-		      printing/queueresumecommand.xml,
-		      protocol/aclcheckpermissions.xml,protocol/aclmapfullcontrol.xml,
-		      protocol/clientmaxprotocol.xml,protocol/dcerpcendpointservers.xml,
-		      protocol/defersharingviolations.xml,protocol/eventloglist.xml,
-		      protocol/minreceivefilesize.xml,protocol/nbtport.xml,
-		      protocol/readraw.xml,protocol/rpcbigendian.xml,
-		      protocol/smb2maxcredits.xml,protocol/smb2maxread.xml,
-		      protocol/smb2maxtrans.xml,protocol/smb2maxwrite.xml,
-		      protocol/svcctllist.xml,protocol/unicode.xml,
-		      protocol/webport.xml,protocol/writeraw.xml,
-		      security/checkpasswordscript.xml,security/clientschannel.xml,
-		      security/clientsigning.xml,
-		      security/clientusepsnegoprincipal.xml,security/createmask.xml,
-		      security/dedicatedkeytabfile.xml,security/directorymask.xml,
-		      security/forcecreatemode.xml,security/forcedirectorymode.xml,
-		      security/guestaccount.xml,security/kerberosmethod.xml,
-		      security/krb5port.xml,security/ntpsigndsocketdirectory.xml,
-		      security/passdbbackend.xml,security/passwdchat.xml,
-		      security/passwordserver.xml,security/privatedir.xml,
-		      security/renameuserscript.xml,security/rootdirectory.xml,
-		      security/sambakcccommand.xml,security/security.xml,
-		      security/serverrole.xml,security/serverschannel.xml
-		      security/serversigning.xml,security/smbencrypt.xml,
-		      security/smbpasswdfile.xml,security/tlscafile.xml,
-		      security/tlscertfile.xml,security/tlsdhparamsfile.xml,
-		      security/tlskeyfile.xml,security/writeable.xml,
-		      tuning/getwdcache.xml,tuning/maxopenfiles.xml,
-		      tuning/socketoptions.xml,tuning/usentdb.xml,
-		      tuning/usesendfile.xml,tuning/writecachesize.xml
-		      vfs/msdfsproxy.xml,vfs/msdfsroot.xml,
-		      vfs/ntvfshandler.xml,
-		      winbind/createkrb5conf.xml,winbind/idmapbackend.xml,
-		      winbind/idmapcachetime.xml,winbind/idmapconfig.xml,
-		      winbind/idmapgid.xml,winbind/idmapuid.xml,
-		      winbind/templatehomedir.xml,winbind/templateshell.xml,
-		      winbind/winbinddprivilegedsocketdirectory.xml,
-		      winbind/winbinddsocketdirectory.xml,
-		      winbind/winbindenumusers.xml,
-		      wins/dnsproxy.xml,wins/winsserver.xml,
-		      wins/winssupport.xml,
-		      Samba3-HOWTO/TOSHARG-AccessControls.xml,
-		      Samba3-HOWTO/TOSHARG-BDC.xml,
-		      Samba3-HOWTO/TOSHARG-ConfigSmarts.xml,
-		      Samba3-HOWTO/TOSHARG-DomainMember.xml,
-		      Samba3-HOWTO/TOSHARG-FastStart.xml,
-		      Samba3-HOWTO/TOSHARG-Group-Mapping.xml,
-		      Samba3-HOWTO/TOSHARG-IDMAP.xml,Samba3-HOWTO/TOSHARG-Install.xml,
-		      Samba3-HOWTO/TOSHARG-InterdomainTrusts.xml,
-		      Samba3-HOWTO/TOSHARG-IntroSMB.xml,
-		      Samba3-HOWTO/TOSHARG-NT4Migration.xml,
-		      Samba3-HOWTO/TOSHARG-NetworkBrowsing.xml,
-		      Samba3-HOWTO/TOSHARG-PDC.xml,Samba3-HOWTO/TOSHARG-Passdb.xml,
-		      Samba3-HOWTO/TOSHARG-Printing.xml,
-		      Samba3-HOWTO/TOSHARG-ProfileMgmt.xml,
-		      Samba3-HOWTO/TOSHARG-RightsAndPriviliges.xml,
-		      Samba3-HOWTO/TOSHARG-ServerType.xml,
-		      Samba3-HOWTO/TOSHARG-TheNetCommand.xml,
-		      Samba3-HOWTO/TOSHARG-Unicode.xml,Samba3-HOWTO/TOSHARG-VFS.xml,
-		      Samba3-HOWTO/TOSHARG-Winbind.xml,
-		      Samba3-HOWTO/TOSHARG-WindowsClientConfig.xml,
-		      Samba3-HOWTO/TOSHARG-preface.xml,/Samba3-HOWTO/index.xml
-		      修正
-		      vfs_ceph.8,vfs_fruit.8,vfs_snapper.8,vfs_worm.8.xml,
-		      domain/spnupdatecommand.xml,locking/smb2leases.xml,
-		      logon/allownt4crypto.xml,logon/rejectmd5clients.xml,
-		      printing/spoolssosversion.xml,
-		      protocol/aclcheckpermissions.xml,
-		      security/oldpasswordallowedperiod.xml,
-		      tuning/strictrename.xml,
-		      winbind/netutralizent4emulation.xml,
-		      winbind/rejectmd5servers.xml,
-		      winbind/requirestrongkey.xml,winbind/winbindexpandgroups.xml,
-		      winbind/winbindmaxdomainconnections.xml,
-		      winbind/winbindnssinfo.xml,winbind/winbindofflinelogon.xml,
-		      winbind/winbindrefreshtickets.xml,winbind/winbindrpconly.xml,
-		      winbind/winbindsealedpipes.xml,winbind/winbindseparator.xml
-		      追加
-		      Samba3-HOWTO/TOSHARG-SWAT.xml
-		      削除
-
-2016/05/18 Ver 4.3.9-1 4.3.9対応
-	       	     Samba3-Developers-Guide/contributing.xml,
-		     Samba3-Developers-Guide/encryption.xml,
-		     Samba3-HOWTO/TOSHARG-CUPS-printing.xml,
-		     Samba3-HOWTO/TOSHARG-Support.xml,
-		     Samba3-HOWTO/TOSHARG-TDBFiles.xml,
-		     Samba3-HOWTO/TOSHARG-msdfs.xml,Samba3-HOWTO/manpages.xml
+2016/06/19 Ver 4.4.4-1 4.4.4対応
 		     build/DTD/samba-doc,
-		     idmap_rfc2307.8.xml,net.8.xml,rpcclient.1.xml,
-		     samba-tool.8.xml,smb.conf.5.xml,smbclient.1.xml,
-		     smbpasswd.8.xml,smbspool.8.xml,vfs_btrfs.8.xml,
-		     vfs_full_audit.8.xml,vfs_gpfs.8.xml,
-		     vfs_smb_traffic_analyzer.8.xml,
-		     vfs_snapper.8.xml,vfstest.1.xml,
-		     base/bindinterfacesonly.xml,base/comment.xml,
-		     base/configbackend.xml,base/doscharset.xml,
-		     base/enablecorefiles.xml,base/interfaces.xml,
-		     base/multicastdnsregister.xml,base/netbiosaliases.xml,
-		     base/netbiosname.xml,base/netbiosscope.xml,
-		     base/path.xml,base/realm.xml,base/serverservices.xml,
-		     base/serverstring.xml,base/unixcharset.xml,
-		     base/workgroup.xml
-		     browse/browseable.xml,browse/browselist.xml,
-		     browse/domainmaster.xml,browse/enhancedbrowsing.xml,
-		     browse/lmannounce.xml,browse/lminterval.xml,
-		     browse/localmaster.xml,browse/oslevel.xml,
+		     idmap_autorid.8.xml,idmap_rfc2307.8.xml,
+		     net.8.xml,ntlm_auth.1.xml,pdbedit.8.xml,
+		     vfs_fruit.8.xml,vfs_ceph.8.xml,vfs_shadow_copy2.8.xml
+		     base/doscharset.xml,base/interfaces.xml,
+		     base/netbiosaliases.xml,base/netbiosname.xml,
+		     base/realm.xml,base/unixcharset.xml,
+		     base/workgroup.xml,
+		     browse/domainmaster.xml,browse/lmannounce.xml,
 		     browse/preferredmaster.xml,
-		     domain/dnsupdatecommand.xml,domain/machinepasswordtimeout.xml,
+		     domain/allowdnsupdates.xml,domain/dnsupdatecommand.xml,
+		     domain/machinepasswordtimeout.xml,
 		     domain/nsupdatecommand.xml,domain/rndccommand.xml,
 		     domain/spnupdatecommand.xml,
-		     filename/mangleprefix.xml,filename/manglingmethod.xml,
-		     filename/maxstatcachesize.xml,filename/statcache.xml,
-		     ldap/clientldapsaslwrapping.xml,ldap/ldapadmindn.xml,
-		     ldap/ldapconnectiontimeout.xml,ldap/ldapdeletedn.xml,
-		     ldap/ldapderef.xml,ldap/ldapfollowreferral.xml,
-		     ldap/ldapgroupsuffix.xml,ldap/ldapidmapsuffix.xml,
-		     ldap/ldapmachinesuffix.xml,ldap/ldappagesize.xml,
-		     ldap/ldapreplicationsleep.xml,ldap/ldapsameditposix.xml,
-		     ldap/ldapsamtrusted.xml,ldap/ldapssl.xml,
-		     ldap/ldapsslads.xml,ldap/ldapsuffix.xml,
-		     ldap/ldaptimeout.xml,ldap/ldapusersuffix.xml,
-		     logging/debugclass.xml,logging/debughirestimestamp.xml,
-		     logging/debugpid.xml,logging/debugprefixtimestamp.xml,
-		     logging/debugtimestamp.xml,logging/debuguid.xml,
-		     logging/ldapdebuglevel.xml,logging/ldapdebugthreshold.xml,
-		     logging/logfile.xml,logging/loglevel.xml,
-		     logging/maxlogsize.xml,logging/syslog.xml,
-		     logging/syslogonly.xml,
-		     logon/abortshutdownscript.xml,logon/addgroupscript.xml,
-		     logon/addmachinescript.xml,logon/adduserscript.xml,
-		     logon/allownt4crypto.xml,logon/deletegroupscript.xml,
-		     logon/deleteuserfromgroupscript.xml,
-		     logon/deleteuserscript.xml,logon/domainlogons.xml,
-		     logon/enableprivileges.xml,logon/initlogondelay.xml,
-		     logon/initlogondelayedhosts.xml,logon/logondrive.xml,
-		     logon/logonhome.xml,logon/logonpath.xml,
-		     logon/logonscript.xml,logon/rejectmd5clients.xml,
-		     logon/setprimarygroupscript.xml,logon/shutdownscript.xml,
-		     misc/addsharecommand.xml,misc/afsshare.xml,
-		     misc/afstokenlifetime.xml,misc/afsusernamemap.xml,
-		     misc/asyncsmbechohandler.xml,misc/available.xml,
-		     misc/cachedirectory.xml,misc/changenotify.xml,
-		     misc/changesharecommand.xml,misc/clusteraddresses.xml,
-		     misc/clustering.xml,misc/configfile.xml,misc/copy.xml,
-		     misc/ctdbdsocket.xml,misc/ctdblocktimewarnthreshold.xml,
-		     misc/ctdbtimeout.xml,misc/defaultservice.xml,
-		     misc/deletesharecommand.xml,misc/dfreecachetime.xml,
-		     misc/dfreecommand.xml,misc/directorynamecachesize.xml,
-		     misc/dmapisupport.xml,misc/include.xml,
-		     misc/kernelchangenotify.xml,misc/lockdirectory.xml,
-		     misc/logwriteablefilesonexit.xml,misc/messagecommand.xml,
-		     misc/nbtclientsocketaddress.xml,/misc/ncalrpcdir.xml,
-		     misc/nishomedir.xml,misc/nmbdbindexplicitbroadcast.xml,
-		     misc/panicaction.xml,misc/perfcountmodule.xml,
-		     misc/piddirectory.xml,misc/postexec.xml,
-		     misc/preexec.xml,misc/preexecclose.xml,
-		     misc/preload.xml,misc/registryshares.xml,
-		     misc/remoteannounce.xml,misc/remotebrowsesync.xml,
-		     misc/resetonzerovc.xml,misc/rootpostexec.xml,
-		     misc/rootpreexec.xml,misc/rootpreexecclose.xml,
-		     misc/rpcdaemon.xml,misc/rpcserver.xml,
-		     misc/smbdprofilinglevel.xml,
-		     misc/statedirectory.xml,misc/usershareallowguests.xml,
-		     misc/usersharemaxshares.xml,misc/usershareowneronly.xml,
-		     misc/usersharepath.xml,misc/usershareprefixallowlist.xml,
-		     misc/usershareprefixdenylist.xml,
-		     misc/usersharetemplateshare.xml,misc/utmp.xml,
-		     misc/utmpdirectory.xml,misc/wtmpdirectory.xml,
-		     printing/addportcommand.xml,printing/addprintercommand.xml,
-		     printing/cupsconnectiontimeout.xml,printing/cupsencrypt.xml,
-		     printing/cupsoptions.xml,printing/cupsserver.xml,
-		     printing/defaultdevmode.xml,
-		     printing/deleteprintercommand.xml,
-		     printing/disablespoolss.xml,printing/enumportscommand.xml,
-		     printing/forceprintername.xml,printing/iprintserver.xml,
-		     printing/loadprinters.xml,printing/lppausecommand.xml,
-		     printing/lpqcachetime.xml,printing/lpqcommand.xml,
-		     printing/lpresumecommand.xml,printing/lprmcommand.xml,
-		     printing/maxprintjobs.xml,printing/maxreportedprintjobs.xml,
-		     printing/os2drivermap.xml,printing/printable.xml,
-		     printing/printcapcachetime.xml,printing/printcapname.xml,
-		     printing/printcommand.xml,printing/printername.xml,
-		     printing/printing.xml,printing/printjobusername.xml,
-		     printing/printnotifybackchannel.xml,
-		     printing/queuepausecommand.xml,
-		     printing/queueresumecommand.xml,
-		     printing/showaddprinterwizard.xml,
-		     printing/spoolssarchitecture.xml,
-		     printing/spoolssosversion.xml,
-		     printing/useclientdriver.xml,
-		     protocol/aclallowexecutealways.xml,
+		     filename/casesensitive.xml,filename/defaultcase.xml,
+		     ldap/clientldapsaslwrapping.xml,ldap/ldapderef.xml,
+		     ldap/ldapfollowreferral.xml,ldap/ldapgroupsuffix.xml,
+		     ldap/ldapidmapsuffix.xml,ldap/ldapmachinesuffix.xml,
+		     ldap/ldappagesize.xml,ldap/ldappasswdsync.xml,
+		     ldap/ldapssl.xml,
+		     locking/cscpolicy.xml,locking/strictlocking.xml,
+		     logging/ldapdebuglevel.xml,logging/logfile.xml,
+		     logging/syslog.xml,logging/syslogonly.xml,
+		     logon/enableprivileges.xml,logon/initlogondelayedhosts.xml,
+		     misc/copy.xml,misc/fstype.xml,misc/include.xml,
+		     misc/nbtclientsocketaddress.xml,
+		     misc/usershareprefixallowlist.xml,
+		     misc/usershareprefixdenylist.xml,misc/valid.xml,
+		     misc/widelinks.xml,
+		     printing/cupsencrypt.xml,printing/enablespoolss.xml,
+		     printing/maxprintjobs.xml,printing/printcapname.xml,
+		     printing/printing.xml,
 		     protocol/aclcheckpermissions.xml,
-		     protocol/aclmapfullcontrol.xml,protocol/cldapport.xml,
 		     protocol/clientmaxprotocol.xml,
-		     protocol/clientminprotocol.xml,protocol/clientusespnego.xml,
-		     protocol/dcerpcendpointservers.xml,
-		     protocol/defersharingviolations.xml,
-		     protocol/dgramport.xml,protocol/disablenetbios.xml,
-		     protocol/durablehandles.xml,protocol/easupport.xml,
-		     protocol/enableasusupport.xml,protocol/largereadwrite.xml,
-		     protocol/mapaclinherit.xml,protocol/maxmux.xml,
-		     protocol/maxttl.xml,protocol/maxwinsttl.xml,
-		     protocol/maxxmit.xml,protocol/minreceivefilesize.xml,
-		     protocol/minwinsttl.xml,protocol/nameresolveorder.xml,
-		     protocol/nbtport.xml,protocol/ntaclsupport.xml,
-		     protocol/ntpipesupport.xml,protocol/ntstatussupport.xml,
-		     protocol/profileacls.xml,protocol/readraw.xml,
-		     protocol/rpcbigendian.xml,protocol/servermaxprotocol.xml,
-		     protocol/serverminprotocol.xml,protocol/sharefakefscaps.xml,
+		     protocol/clientminprotocol.xml,
+		     protocol/clientusespnego.xml,protocol/eventloglist.xml,
+		     protocol/readraw.xml,protocol/servermaxprotocol.xml,
 		     protocol/smb2maxcredits.xml,protocol/smb2maxread.xml,
 		     protocol/smb2maxtrans.xml,protocol/smb2maxwrite.xml,
-		     protocol/smbports.xml,protocol/timeserver.xml,
-		     protocol/unicode.xml,protocol/unixextensions.xml,
-		     protocol/usespnego.xml,protocol/webport.xml,
+		     protocol/smbports.xml,protocol/svcctllist.xml,
 		     protocol/writeraw.xml,
-		     security/accessbasedshareenum.xml,
-		     security/aclgroupcontrol.xml,
-		     security/algorithmicridbase.xml,
-		     security/allowtrusteddomains.xml,security/authmethods.xml,
-		     security/checkpasswordscript.xml,
-		     security/clientlanmanauth.xml,security/clientntlmv2auth.xml,
-		     security/clientplaintextauth.xml,
-		     security/clientschannel.xml,security/clientsigning.xml,
-		     security/clientusepsnegoprincipal.xml,
-		     security/dedicatedkeytabfile.xml,
-		     security/encryptpasswords.xml,security/guestaccount.xml,
-		     security/guestok.xml,security/hostsallow.xml,
+		     security/clientntlmv2auth.xml,security/clientschannel.xml,
+		     security/clientsigning.xml,
+		     security/clientusepsnegoprincipal.xml
+		     security/createmask.xml,security/directorymask.xml,
+		     security/forcecreatemode.xml,
+		     security/forcedirectorymode.xml,security/hostsallow.xml,
 		     security/hostsdeny.xml,security/kerberosmethod.xml,
-		     security/kpasswdport.xml,security/krb5port.xml,
-		     security/lanmanauth.xml,security/lognttokencommand.xml,
-		     security/maptoguest.xml,security/mapuntrustedtodomain.xml,
-		     security/ntlmauth.xml,security/ntpsigndsocketdirectory.xml
-		     security/nullpasswords.xml,security/obeypamrestrictions.xml,
-		     security/oldpasswordallowedperiod.xml,
-		     security/pampasswordchange.xml,security/passdbbackend.xml,
-		     security/passdbexpandexplicit.xml,security/passwdchat.xml,
-		     security/passwdchatdebug.xml,security/passwdchattimeout.xml,
-		     security/passwdprogram.xml,security/passwordserver.xml,
-		     security/preloadmodules.xml,security/privatedir.xml,
-		     security/readonly.xml,security/renameuserscript.xml,
-		     security/restrictanonymous.xml,security/rootdirectory.xml,
+		     security/maptoguest.xml,security/nullpasswords.xml,
+		     security/onlyuser.xml,security/preloadmodules.xml,
 		     security/sambakcccommand.xml,security/security.xml,
 		     security/serverrole.xml,security/serverschannel.xml,
 		     security/serversigning.xml,security/smbencrypt.xml,
-		     security/smbpasswdfile.xml,security/tlscafile.xml,
-		     security/tlscertfile.xml,security/tlscrlfile.xml,
-		     security/tlsdhparamsfile.xml,security/tlsenabled.xml,
-		     security/tlskeyfile.xml,security/unixpasswordsync.xml,
-		     security/usernamelevel.xml,security/usernamemap.xml,
-		     security/usernamemapcachetime.xml,
-		     security/usernamemapscript.xml,
-		     tuning/deadtime.xml,tuning/getwdcache.xml,
-		     tuning/hostnamelookups.xml,tuning/keepalive.xml,
-		     tuning/maxdisksize.xml,tuning/maxopenfiles.xml,
-		     tuning/maxsmbdprocesses.xml,tuning/minprintspace.xml,
-		     tuning/namecachetimeout.xml,tuning/socketoptions.xml,
-		     tuning/usemmap.xml,
-		     vfs/getquotacommand.xml,vfs/hostmsdfs.xml,
-		     vfs/ntvfshandler.xml,vfs/setquotacommand.xml,
-		     winbind/createkrb5conf.xml,winbind/idmapbackend.xml,
-		     winbind/idmapcachetime.xml,winbind/idmapconfig.xml,
-		     winbind/idmapgid.xml,winbind/idmapnegativecachetime.xml,
-		     winbind/idmapuid.xml,winbind/netutralizent4emulation.xml,
-		     winbind/rejectmd5servers.xml,winbind/requirestrongkey.xml,
-		     winbind/templatehomedir.xml,winbind/templateshell.xml,
-		     winbind/winbindcachetime.xml,
-		     winbind/winbinddprivilegedsocketdirectory.xml,
-		     winbind/winbindenumgroups.xml,
-		     winbind/winbindenumusers.xml,
-		     winbind/winbindexpandgroups.xml,
-		     winbind/winbindmaxclients.xml,
+		     security/username.xml,security/writeable.xml,
+		     tuning/aioreadsize.xml,tuning/aiowritesize.xml,
+		     tuning/allocationroundupsize.xml,tuning/blocksize.xml,
+		     tuning/maxdisksize.xml,tuning/strictrename.xml,
+		     tuning/strictsync.xml,tuning/writecachesize.xml,
+		     vfs/vfsobjects.xml,
+		     winbind/idmapbackend.xml,winbind/idmapconfig.xml,
+		     winbind/idmapgid.xml,winbind/idmapuid.xml,
 		     winbind/winbindmaxdomainconnections.xml,
-		     winbind/winbindnestedgroups.xml,
-		     winbind/winbindnormalizenames.xml,
 		     winbind/winbindnssinfo.xml,
-		     winbind/winbindofflinelogon.xml,
-		     winbind/winbindreconnectdelay.xml,
-		     winbind/winbindrefreshtickets.xml,
-		     winbind/winbindrequesttimeout.xml,
-		     winbind/winbindrpconly.xml,
-		     winbind/winbindsealedpipes.xml,
-		     winbind/winbindseparator.xml,
-		     winbind/winbindtrusteddomainsonly.xml,
-		     winbindusedefaultdomain.xml,
-		     wins/dnsproxy.xml,wins/winshook.xml,wins/winsproxy.xml,
-		     wins/winsserver.xml,wins/winssupport.xml
+		     wins/winsserver.xml
 		     修正
-		     idmap_script.8.xml,smbspool_krb5_wrapper.8.xml,
-		     vfs_shell_snap.8.xml,vfs_unityed_media.8.xml,
-		     ldap/ldapserverrequirestrongauth.xml,
-		     logging/logging.xml,
-		     misc/fssprunestale.xml,misc/fsssequencetimeout.xml,
-		     misc/smbdprofilinglevel.xml,misc/spotlight.xml,
-		     protocol/clientipcmaxprotocol.xml,
-		     protocol/clientipcminprotocol.xml,
-		     vfs/msdfsshufflereferrals.xml,
-		     security/allowdcerpcauthlevelconnect.xml,
-		     security/clientipcsigning.xml,security/rawntlmv2auth.xml,
-		     security/tlspriority.xml,security//tlsverifypeer.xml
+		     cifsdd.8.xml,vfs_offline.8.xml,
+		     logging/timestamplogs.xml,misc/auto_services.xml,
+		     protocol/servermultichannelsupport.xml,
+		     tuning/aioreadsize.xml
 		     追加
-		     vfs_notify_fam.8.xml,
-		     security/tlsverifypeer.xml
-		     tuning/usentdb.xml
+		     vfs_scannedonly.8.xml,vfs_smb_traffic_analyzer.8.xml,
+		     logging/debugtimestamp.xml,
+		     misc/preload.xml
 		     削除
 
-2016/05/21 Ver 4.2.12-1 4.2.12対応
-	       	     smbspool.8.xml
+2016/10/24 Ver 4.5.0-1 4.5.0対応
+	       	     idmap_script.8.xml,libsmbclient.7.xml,idmap_script.8.xml,
+		     ntlm_auth.1.xml,samba-tool.8.xml,smbclient.1.xml,
+		     smbspool.8.xml,vfs_acl_tdb.8.xml,vfs_acl_xattr.8.xml,
+		     vfs_fruit.8.xml,vfs_glusterfs.8.xml,vfs_gpfs.8.xml,
+		     vfs_tsmsm.8.xml,
+		     domain/dnsforwarder.xml,ldap/ldapssl.xml,
+		     locking/smb2leases.xml,protocol/dcerpcendpointservers.xml,
+		     security/checkpasswordscript.xml,
+		     security/ntlmauth.xml,security/unixpasswordsync.xml
 		     修正
-		     smbspool_krb5_wrapper.8.xml,
-		     security/tlspriority.xml
+		     security/passwordhashgpgkeyids.xml
 		     追加
+		     security/onlyuser.xml,security/unixpasswordsync.xml 
+		     削除
 
-2016/06/21 Ver 4.3.10-1 4.3.10対応
-		     vfs_fruit.8.xml
+2016/10/28 Ver 4.4.7-1 4.4.7対応
+	       	     vfs_acl_xattr.8.xml
 		     修正
+
+2016/11/08 Ver 4.3.12-1 4.3.12対応
+	       	     vfs_acl_tdb.8.xml,vfs_acl_xattr.8.xml
+		     修正
+
 ======================================================================
 
 翻訳者は、当訳文の正当性、信頼性、先進性、妥当性、可読性、その他いかなるこ
