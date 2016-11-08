@@ -46,6 +46,15 @@
 	</command>) 。
 	</para>
 
+	<para>
+	このモジュールは以下のパラメータを強制的に設定する。
+	<itemizedlist>
+	<listitem><para>inherit acls = true</para></listitem>
+	<listitem><para>dos filemode = true</para></listitem>
+	<listitem><para>force unknown acl user = true</para></listitem>
+	</itemizedlist>
+	</para>
+
 	<para>このモジュールはスタック可能である。</para>
 </refsect1>
 
@@ -58,7 +67,7 @@
                <term>acl_tdb:ignore system acls = [yes|no]</term>
                <listitem>
                <para>
-    このパラメーターが <emphasis>yes</emphasis> に設定された場合、
+    このパラメーターを <emphasis>yes</emphasis> に設定した場合、
     このモジュールは、可能な範囲で実施しているシステムの ACL とのマッピング
     処理を<emphasis>無効化</emphasis>する。デフォルトの <emphasis>no
     </emphasis> の場合、 Samba はシステムの ACL と NTFS のアクセス許可の
@@ -68,9 +77,50 @@
     Samba 経由以外でファイルアクセスを行わない場合は、このパラメーターを
     yes にすることで、 NTFS のアクセス許可との互換性を高めることができる。
   </para>
-	     </listitem>
-	   </varlistentry>
-       </variablelist>
+
+  <para>
+    もしも、<emphasis>acl_xattr:ignore system acls</emphasis>を
+    <emphasis>yes</emphasis>に設定した場合、以下の設定が、
+    強制的に追加される。
+    <itemizedlist>
+    <listitem><para>create mask = 0666</para></listitem>
+    <listitem><para>directory mask = 0777</para></listitem>
+    <listitem><para>map archive = no</para></listitem>
+    <listitem><para>map hidden = no</para></listitem>
+    <listitem><para>map readonly = no</para></listitem>
+    <listitem><para>map system = no</para></listitem>
+    <listitem><para>store dos attributes = yes</para></listitem>
+    </itemizedlist>
+  </para>
+  </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>acl_xattr:default acl style = [posix|windows]</term>
+    <listitem>
+      <para>
+	このパラメータは、 ファイルまたはディレクトリ が、
+	<emphasis>security.NTACL</emphasis> xattr を持っていないときに
+	合成する ACL のタイプを決定する。
+      </para>
+      <para>
+	<emphasis>posix</emphasis>に設定した場合、
+	<emphasis>NT Authority\SYSTEM</emphasis> がすべての権限を持つ
+	追加の ACE を付けた形で、ユーザ、グループとその他の、
+	POSIX モードパーミッションに基づいた ACL が合成される。
+      </para>
+      <para>
+	<emphasis>windows</emphasis>に設定した場合、Windows が行うのと
+	同じ方法で ACL は合成されるが、所有者と、
+	<emphasis>NT Authority\SYSTEM</emphasis> に対するパーミッション
+	のみを含む。
+      </para>
+      <para>
+	このオプションの既定値は <emphasis>posix</emphasis>である。
+      </para>
+      </listitem>
+     </varlistentry>
+    </variablelist>
 </refsect1>
 
 <refsect1>
@@ -84,7 +134,7 @@
 
 <refsect1>
         <title>日本語訳</title>
-        <para>このドキュメントは、Samba 3.6.3 - 4.3.10 に対応する。</para>
+        <para>このドキュメントは、Samba 4.3.12 - 4.3.12 に対応する。</para>
     <para>このドキュメントの翻訳は
         <itemizedlist>
         <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
