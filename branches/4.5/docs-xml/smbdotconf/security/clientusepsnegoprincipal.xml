@@ -1,0 +1,34 @@
+<samba:parameter name="client use spnego principal"
+                 context="G"
+		 type="boolean"
+		 deprecated="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このパラメーターは、<citerefentry><refentrytitle>smbclient</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>をはじめとする、Samba のコンポーネントが、
+    クライアントとして動作する時に、SPNEGO 交換の際にサーバーから提供されることが
+    あるプリンシパルを使うかどうかを制御する。</para>
+
+    <para>これを有効にした場合、Samba は IP アドレスのみで定義されている
+    サーバーへ接続する際にも Kerberos を使うことを試行する。しかし、Kerberos
+    は名前に依存したプロトコルなので、通常こうした状況においては機能しない。</para>
+
+    <para>セキュリテイの観点から、これは *とても悪いアイデア* であり、
+    このパラメータは *使うべきではない* 。将来の Samba のバージョンでは
+    これは削除される予定である。</para>
+    
+    <para>これを無効にした場合、Samba はチケットを KDC に問い合わせる時、
+    サーバーを検索する時に用いた名前を使う。これにより、あるサーバーが
+    ネットワーク上で用いられている名前とは別のプリンシパルとして認証を
+    要求することで、別のサーバーになりすましてしまうという事態を避ける
+    ことができる。</para>
+
+    <para>Windows XP SP2 以降のバージョンは後者の動作を行うように変更されている。
+    また、Windows Vista 以降がサーバーとして機能する際にも、この
+    'rfc4178 hint' プリンシパルを提供しないようになっている。</para>
+
+    <para>このパラメータは Samba 4.2.1 では 無視され、この後の Samba
+    リリースで(その機能と一緒に)削除予定である。</para>
+</description>
+<value type="default">no</value>
+</samba:parameter>

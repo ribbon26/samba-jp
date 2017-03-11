@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_rid.8">
+
+<refmeta>
+	<refentrytitle>idmap_rid</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_rid</refname>
+	<refpurpose>SambaのWinbind用idmap_ridバックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+	<para>idmap_rid バックエンドは、UID や GID と SID を対応付けるための
+	方法のひとつとして、アルゴリズム的なマッピングの仕組みを提供する。
+	このケースでは決定論的なマッピングを行うため、データベースを必要
+	としない。</para>
+
+       <para>
+       Note that the idmap_rid module has changed considerably since Samba
+       versions 3.0. and 3.2.
+       Currently, there should to be an explicit idmap configuration for each
+       domain that should use the idmap_rid backend, using disjoint ranges.
+       One usually needs to define a writeable default idmap range, using
+       a backend like <parameter>tdb</parameter> or <parameter>ldap</parameter>
+       that can create unix ids, in order to be able to map the BUILTIN sids
+       and other domains, and also in order to be able to create group mappings.
+       See the example below.</para>
+       <para>idmap_ridモジュールはSambaバージョン3.0と3.2からかなり変更されている
+       事に注意。
+       現在、それらはdisjointレンジを使うidmap_ridバックエンドを使うべき各ドメインの
+       ための明示的なidmap設定であるべきである。通常、BUILTIN sidと他のドメインを
+       マップスル事が出来るようにするためと、グループマッピングを作成できるように
+       するために、unix idを作成できる、
+       <parameter>tdb</parameter>か<parameter>ldap</parameter>のような
+       バックエンドを使う、書き込み可能な既定値のidmapレンジを定義する必要がある。
+       以下の例を参照のこと。
+       </para>
+
+       <para>
+       <parameter>idmap backend = rid:"DOM1=range DOM2=range2 ..."</parameter>
+       という昔の文法は、Sambaバージョン3.0.25以降サポートされていないことに注意。
+       </para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>range = low - high</term>
+		<listitem><para>
+			バックエンドが権威を持つと規定されている、uid と gid の利用可能な
+			マッチング範囲を定義する。この範囲はフィルターとして動作することに
+			注意されたい。UID と GID の計算結果がアルゴリズム的にこの範囲外
+			になってしまった場合、これらは無視され、対応するマップは破棄される。
+			このオプションは、UID や GID がたまたまローカルとリモートでそれぞれ
+			定義された ID と重複してしまうのを避けるために用意されている。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>base_rid = 数字</term>
+		<listitem><para>
+			UID や GID から SID を生成したり、取得したSID から UID や GID を
+			求めたりするためのベースとなる整数を指定する。
+			これは、base ridよりも小さい、RIDベースのSIDがフィルターされることを
+			意味する。既定値は許されているRIDに制限されておらず、すなわち、
+			base_rid の値は0である。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+        <title>マッピング形式</title>
+        <para>
+	  RID用のUnix IDは以下の方法で計算される:
+                <programlisting>
+                        ID = RID - BASE_RID + LOW_RANGE_ID.
+                </programlisting>
+        </para>
+        <para>
+	  それに対応して、与えられたUnix IDからRIDを計算する方法は下記の通り:
+                <programlisting>
+                        RID = ID + BASE_RID - LOW_RANGE_ID.
+                </programlisting>
+        </para>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+	<para>この例では idmap_rid で２つのドメインを設定し、それは、
+	  基本的なドメインと信頼するドメインであり、tdbへの既定値の
+	  idマッピングスキームを残してある。この例はまた、信頼する
+	  ドメインに対してのbase_ridパラメーターの使用方法も説明している。
+	</para>
+
+	<programlisting>
+	[global]
+	security = domain
+	workgroup = MAIN
+
+        idmap config * : backend        = tdb
+        idmap config * : range          = 1000000-1999999
+
+        idmap config MAIN : backend     = rid
+        idmap config MAIN : range       = 10000 - 49999
+
+        idmap config TRUSTED : backend  = rid
+        idmap config TRUSTED : range    = 50000 - 99999
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.1.18 - 4.1.20 に対応する。</para>
+		<para>このドキュメントの Samba 3.4.0 - 4.1.20 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>
+		によって行なわれた。</para>
+</refsect1>
+
+</refentry>
