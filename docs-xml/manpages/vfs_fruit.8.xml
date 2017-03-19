@@ -91,11 +91,11 @@
 
               <itemizedlist>
                 <listitem><para>ディレクトリ一覧表示において、
-		Mac に関連するファイルシステムメタデータ(UNIX モード、
+		Mac に関連したファイルシステムメタデータ(UNIX モード、
 		ファインダ情報、リソースフォークと実行パーミッション)
 		が強化されているため、その結果として、Mac クライアントは
 		このメタデータを、個々ののディレクトリエントリごと個別に
-		取得する必要はなく、その結果、しばしばものすごくパフォーマンス
+		取得する必要はなく、その結果、しばしば大幅にパフォーマンス
 		が向上する。
 		</para></listitem>
 
@@ -105,9 +105,9 @@
 
 	      <para><emphasis>fruit:aapl</emphasis>が有効になっているときに
 	      使える、共有単位のオプションがある。以下で説明する、それらの
-	      オプションは、ディレクトリ一覧表示の場面において、特定の Mac
+	      オプションは、ディレクトリ一覧表示時に、特定の Mac
 	      メタデータの処理を無効にする。なお、それらのオプションにおける
-	      既定値は 有効 となっている: </para>
+	      既定値は 有効 である: </para>
 
               <itemizedlist>
                 <listitem><para>readdir_attr:aapl_rsize = yes | no</para></listitem>
@@ -123,6 +123,10 @@
           <varlistentry>
             <term>fruit:nfs_aces = yes | no</term>
             <listitem>
+	      <para><emphasis>グローバル</emphasis>オプションであり、NFS ACE 経由の、
+	      ディレクトリエントリに対する UNIX モードの問合せと変更のサポートが有効化か
+	      どうかを指定する。既定値は<emphasis>yes</emphasis>である。
+	      </para>
               <para>A <emphasis>global</emphasis> option whether support for
               querying and modifying the UNIX mode of directory entries via NFS
               ACEs is enabled, default <emphasis>yes</emphasis>.</para>
@@ -132,12 +136,16 @@
           <varlistentry>
             <term>fruit:copyfile = yes | no</term>
             <listitem>
+	      <para><emphasis>グローバル</emphasis>オプションであり、
+	      すべての添付されたメタデータとともに、すべてのファイルの
+	      コピーを要求する、OS X 固有の copychunk ioctl を有効にするかの
+	      指定。</para>
               <para>A <emphasis>global</emphasis> option whether to enable OS X
               specific copychunk ioctl that requests a copy of a whole file
               along with all attached metadata.</para>
-              <para>WARNING: the copyfile request is blocking the
-              client while the server does the copy.</para>.
-              <para>The default is <emphasis>no</emphasis>.</para>
+              <para>注意: サーバがコピー実行中、copyfile 要求は、
+	      クライアントをブロックする。</para>.
+              <para>既定値は<emphasis>no</emphasis>である。</para>
             </listitem>
           </varlistentry>
 
@@ -147,6 +155,9 @@
 <refsect1>
 	<title>オプション</title>
 
+	<para>以下のオプションは、smb.conf のグローバルセクションか、
+	個々の共有セクションに設定出来る。</para>
+	
 	<variablelist>
 
 	  <varlistentry>
