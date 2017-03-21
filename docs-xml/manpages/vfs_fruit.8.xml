@@ -268,35 +268,37 @@
 	  </varlistentry>
 
 	  <varlistentry>
-	    <term>fruit:aapl = yes | no</term>
+	    <term>fruit:veto_appledouble = yes | no</term>
+
 	    <listitem>
-	      <para>グローバルオプションで、Appleの コードネーム AAPLの、SMB2+拡張を
-	      有効にするかどうかを指定する。規定値では、
-	      <emphasis>yes</emphasis>である。この拡張は、Macからの接続時に
-	      いくつかの足らない機能を補う:</para>
+              <para><emphasis>参考:</emphasis>このオプションは、
+	      <parameter>fruit:resource</parameter>が
+	      <parameter>file</parameter>(既定値)に設定されている
+	      場合にのみ適用される。</para>
 
-	      <itemizedlist>
-		<listitem><para>ディレクトリ一覧表示は、Macのファイルシステム
-		メタデータで強化され(UNIXモード、FinderInfo、リソースフォーク
-		サイズと実行パーミッション)、その結果、驚異的な性能向上が得られ
-		るので、Mac クライアントは、ディレクトリエントリごとに、個別に
-		このメタデータをフェッチする必要がない。
-		</para></listitem>
-
-		<listitem><para>ディレクトリエントリのUNIX モードを問い合わせ/
-		変更する機能。</para></listitem>
-	      </itemizedlist>
-
-	      <para>ディレクトリ一覧表示時に、特定のMacメタデータの計算を無効
-	      にするときに使う、共有単位のオプション群がある。規定値では
-	      すべて有効である:</para>
-
-	      <itemizedlist>
-		<listitem><para>readdir_attr:aapl_rsize = true | false</para></listitem>
-		<listitem><para>readdir_attr:aapl_finder_info = true | false</para></listitem>
-		<listitem><para>readdir_attr:aapl_max_access = true | false</para></listitem>
-	      </itemizedlist>
-
+	      <para><parameter>fruit:resource</parameter>が
+	      <parameter>file</parameter>に設定された場合、
+	      vfs_fruit は ._ AppleDouble ファイルを生成できる。
+	      このオプションは、クライアントからファイルに対するアクセスを
+	      防ぐために、._ AppleDouble を見えなくする(veto)
+	      かを制御する。</para>
+              <para>When <parameter>fruit:resource</parameter> is set to
+              <parameter>file</parameter>, vfs_fruit may create ._ AppleDouble
+              files. This options controls whether these ._ AppleDouble files
+              are vetoed which prevents the client from accessing them.</para>
+	      <para> ._ ファイルを見えなくすると、いくつかのアプリケーションで
+	      誤動作を引き起こすことがある。たとえば、Mac クライアントからの
+	      Mac ZIP アーカイブの解凍は、._ ファイルが含まれているために失敗する。
+	      このオプションを 偽 にすることでこの問題は解決するが、
+	      内部的に作成された ._ ファイルの abstraction leak of
+              exposing は、その他の副作用を引き起こすかもしれない。</para>
+              <para>Vetoing ._ files may break some applications, eg
+              extracting Mac ZIP archives from Mac clients failes,
+              because they contain ._ files. Setting this option to
+              false will fix this, but the abstraction leak of
+              exposing the internally created ._ files may have other
+              unknown side effects.</para>
+              <para>The default is <emphasis>yes</emphasis>.</para>	      
 	    </listitem>
 	  </varlistentry>
 
