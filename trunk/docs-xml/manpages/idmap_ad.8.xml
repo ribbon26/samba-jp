@@ -7,7 +7,7 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.5</refmiscinfo>
+	<refmiscinfo class="version">4.6</refmiscinfo>>
 </refmeta>
 
 
@@ -71,9 +71,35 @@
 		使うべきであるスキーマを定義する。これは、Windows 2003 R2またはService for Unix(SFU)
 スキーマ中に含まれているRFC2307スキーマサポートよりも簡単である。
     SFU 3.0と3.5は、"sfu" を、SFU 2.0は、"sfu20"を選択すること。
-    プライマルグループのメンバーシップは現在常時"primaryGroupID" LDAP属性から計算されることに注意。
+    プライマルグループメンバーシップの動作は、<emphasis>unix_primary_group</emphasis>
+    オプションによって制御されることに注意。
 		</para></listitem>
 		</varlistentry>
+                <varlistentry>
+                <term>unix_primary_group = yes/no</term>
+                <listitem><para>
+		ユーザのプライマリグループを、SFU属性か、あるいはADのプライマリグループ
+		から取り出すかの定義。これが<parameter>yes</parameter>に設定された
+		場合、プライマリグループメンバシップは LDAP属性 (gidNumber)から
+		取り出される。
+		<parameter>no</parameter>に設定された場合には、プライマリグループ
+		メンバシップは "primaryGroupID" LDAP 属性から計算される。
+               </para>
+               <para>既定値: no</para>
+               </listitem>
+               </varlistentry>
+               <varlistentry>
+★★               <term>unix_nss_info = yes/no</term>
+               <listitem><para>
+                 If set to <parameter>yes</parameter> winbind will retrieve the login
+                 shell and home directory from the LDAP attributes. If set to
+                 <parameter>no</parameter> the or the AD LDAP entry lacks the SFU
+                 attributes the options <emphasis>template shell</emphasis> and
+                 <emphasis>template homedir</emphasis> are used.
+               </para>
+               <para>Default: no</para>
+                </listitem>
+               </varlistentry>
 	</variablelist>
 </refsect1>
 
