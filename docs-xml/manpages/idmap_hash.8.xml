@@ -7,23 +7,42 @@
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.5</refmiscinfo>
+	<refmiscinfo class="version">4.6</refmiscinfo>>
 </refmeta>
 
 
 <refnamediv>
 	<refname>idmap_hash</refname>
-	<refpurpose>Samba の Winbind 用 idmap_hash バックエンド</refpurpose>
+	<refpurpose>このバックエンドは使ってはいけない</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 	<title>説明</title>
-	<para>idmap_hash プラグインは、ドメインのユーザーやグループの SID を
+	<para>このプラグインを使ってはいけない
+	
+	idmap_hash プラグインは、ドメインのユーザーやグループの SID を
         31 ビットの uid と gid に対応付けるためのハッシュアルゴリズムを
         実装している。このプラグインは nss_info API も実装しているので、
         smb.conf で &quot;winbind normlaize names&quot; と
         &quot;winbind nss info&quot; パラメーター経由で有効になっていれば、
         ローカル名のマッピングファイルをサポートするのにも使える。
+	モジュールは、idmap config で指定されている各ドメイン用に、
+	レンジをサブレンジに分割する。
+	
+	このモジュールでは、すべての SID をマップするために、完全な
+	UID と GID レンジを必要とする。レンジの最下位値は、システムで
+	有効な ID でもっとも小さい値にすべきである。通常この値は 1000 である。
+	ID の最大値は 2147483647 にすべきである。
+
+	レンジが小さい場合、ハッシュアルゴリズムが使われることによって
+	問題が発生する事がある。すべての SID をマップするための、レンジの
+	全体は 0 - 2147483647 である。 0 - 2147483647 より小さい範囲の
+	レンジは、いくつかの SID をフィルタする事になる。通常は 1000 から
+	のみ開始するので、1000 個の SID はマップ出来ない。これは、
+	すでに問題を発生させている。レンジがより小さければ、SIDのマップは
+	小さくなる。
+
+	
 	</para>
 </refsynopsisdiv>
 
