@@ -739,7 +739,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 </refsect1>
 
 <refsect1 ID="IDMAPCONSIDERATIONS">
-        <title>IDENTITY マッピングの検討項目</title>
+        <title>識別情報マッピングの検討項目</title>
 
         <para>
 	SMBプロトコル中では、ユーザ、グループとコンピュータは、それぞれのセキュリティ識別子(SID)
@@ -750,12 +750,28 @@ chmod 1770 /usr/local/samba/lib/usershares
         </para>
 
         <para>
-        Samba supports multiple ways to map SIDs to POSIX users and groups. The configuration is driven by
-        the <smbconfoption name="idmap config DOMAIN : OPTION"/> option which allows one to specify identity
-        mapping (idmap) options for each domain separately.
+	Samba は、複数の、SID から POSIX ユーザとグループへのマッピング方法をサポートしている。
+	設定は、各ドメインごとに分離された、識別情報マッピング (idmap) オプションを指定できる
+	<smbconfoption name="idmap config DOMAIN : OPTION"/> オプションによって行う。
         </para>
 
         <para>
+	SID を POSIX ユーザとグループ情報ににマッピングする識別情報マッピングモジュールには、
+	複数の変換方式がある。  それらは、異なったユースケースとシナリオに対して適用出来る。
+	使用する際の、個別のシナリオを選ぶ前に、各識別情報マッピングモジュールのドキュメント
+	を読むことを推奨する。各識別情報管理モジュールは、個別のマニュアルページとして用意
+	されている。標準の idmap バックエンドは
+	tdb (<citerefentry><refentrytitle>idmap_tdb</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	tdb2 (<citerefentry><refentrytitle>idmap_tdb2</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	ldap (<citerefentry><refentrytitle>idmap_ldap</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	rid (<citerefentry><refentrytitle>idmap_rid</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	hash (<citerefentry><refentrytitle>idmap_hash</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	autorid (<citerefentry><refentrytitle>idmap_autorid</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
+	ad (<citerefentry><refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+	nss (<citerefentry><refentrytitle>idmap_nss</refentrytitle> <manvolnum>8</manvolnum></citerefentry>), and
+	rfc2307 (<citerefentry><refentrytitle>idmap_rfc2307</refentrytitle> <manvolnum>8</manvolnum></citerefentry>)
+	である。
+	</para><para>
         Identity mapping modules implement different strategies for mapping of SIDs to POSIX user and group
         identities. They are applicable to different use cases and scenarios. It is advised to read the documentation
         of the individual identity mapping modules before choosing a specific scenario to use. Each identity
