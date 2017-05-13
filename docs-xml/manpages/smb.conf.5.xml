@@ -739,7 +739,7 @@ chmod 1770 /usr/local/samba/lib/usershares
 </refsect1>
 
 <refsect1 ID="IDMAPCONSIDERATIONS">
-        <title>識別情報マッピングの検討項目</title>
+        <title>ID マッピングの検討項目</title>
 
         <para>
 	SMBプロトコル中では、ユーザ、グループとコンピュータは、それぞれのセキュリティ識別子(SID)
@@ -751,15 +751,15 @@ chmod 1770 /usr/local/samba/lib/usershares
 
         <para>
 	Samba は、複数の、SID から POSIX ユーザとグループへのマッピング方法をサポートしている。
-	設定は、各ドメインごとに分離された、識別情報マッピング (idmap) オプションを指定できる
+	設定は、各ドメインごとに分離された、ID マッピング (idmap) オプションを指定できる
 	<smbconfoption name="idmap config DOMAIN : OPTION"/> オプションによって行う。
         </para>
 
         <para>
-	SID を POSIX ユーザとグループ情報にマッピングする識別情報マッピングモジュールには、
+	SID を POSIX ユーザとグループ情報にマッピングするID マッピングモジュールには、
 	複数の変換方式がある。  それらは、異なった事例と想定に対して適用出来る。
-	使用する際の、個別の想定を選ぶ前に、各識別情報マッピングモジュールのドキュメント
-	を読むことを推奨する。各識別情報管理モジュールは、個別のマニュアルページとして用意
+	使用する際の、個別の想定を選ぶ前に、各IDマッピングモジュールのドキュメント
+	を読むことを推奨する。各IDモジュールは、個別のマニュアルページとして用意
 	されている。標準の idmap バックエンドは
 	tdb (<citerefentry><refentrytitle>idmap_tdb</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
 	tdb2 (<citerefentry><refentrytitle>idmap_tdb2</refentrytitle><manvolnum>8</manvolnum></citerefentry>),
@@ -782,7 +782,8 @@ I	autorid (<citerefentry><refentrytitle>idmap_autorid</refentrytitle><manvolnum>
         <para>
 	以下の例は、既定値の ID マッピング方法を tdb のままにしつつ、
 	<citerefentry><refentrytitle>idmap_rid</refentrytitle><manvolnum>8</manvolnum> </citerefentry>
-	を使って2つのドメインを設定する方法を示す。
+	を使って、プリンシパルドメイン(principal domain) と、信頼されたドメイン
+	( trusted domain) という2つのドメインを設定する方法を示す。
 	</para><para>
         This example shows how to configure two domains with <citerefentry><refentrytitle>idmap_rid</refentrytitle>
         <manvolnum>8</manvolnum> </citerefentry>, the principal domain and a trusted domain,
