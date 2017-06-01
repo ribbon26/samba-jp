@@ -3,12 +3,17 @@
                  type="integer"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+        <para>サーバが、DCP/RPC over TCP/IPトラフィックについて、どのポートをリッスンすべきかの指定。</para>
 	<para>Specifies which port the server should listen on for DCE/RPC over TCP/IP traffic.</para>
+	<para>これは、NETLOGON以外のすべてのプロトコルに対しての、既定値のポートを制御する。設定されない場合、1024以降で最初に有効なポートが使われる。</para>
 	<para>This controls default port for all protocols, except for NETLOGON.  If unset, the first available port after 1024 is used.</para>
+	<para>NETLOGONサーバは次の有効なポート、たとえば1025を使う。このポートを変更する場合、rpc server port:netlogon = 4000 などとする。</para>
 	<para>The NETLOGON server will use the next available port, eg 1025.  To change this port use (eg) rpc server port:netlogon = 4000.</para>
+	<para>さらに、すべてのRPCサーバは、(たとえば) rpc server port:drsuapi = 5000 とすることで、独立したポートを指定できる。</para>
 	<para>Furthermore, all RPC servers can have the port they use specified independenty, with (for example) rpc server port:drsuapi = 5000.</para>
 
 </description>
+<para>既定値 0 は Samba に、1024以降で最初に有効なポートを選択させる。</para>
 <para>The default value 0 causes Samba to select the first available port after 1024.</para>
 <value type="default">0</value>
 </samba:parameter>
