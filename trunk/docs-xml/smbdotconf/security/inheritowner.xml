@@ -1,6 +1,7 @@
 <samba:parameter name="inherit owner"
                  context="S"
-		 type="boolean"
+		 type="enum"
+		 enumlist="enum_inherit_owner_vals"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
     <para> 新規作成したファイルやディレクトリの所有者としては、
@@ -8,6 +9,13 @@
     このパラメーターにより、Samba の管理者は、
     新規作成したファイルやディレクトリの所有者を
     親ディレクトリの所有者と同一にすることが可能となる。</para>
+
+    <para>有効なオプションは以下の通り:</para>
+    <itemizedlist>
+      <listitem><para><constant>no</constant> -
+      あるファイルの Windows (SID)所有者と UNIX (uid) 所有者の両方は
+      ファイルを作成した時の利用者の ID に設定される。
+      </para></listitem>
 
     <para>この動作が有用な状況としては、
     ユーザーがファイルの作成や修正はできるが、削除はできないようにした drop box や、
