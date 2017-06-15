@@ -37,7 +37,16 @@
     あるユーザーの移動プロファイルのディレクトリ内に新規作成されたファイルの所有者が
     そのユーザーとなるようにしたい場合などが挙げられる。</para>
 
-
+    <para><constant>unix only</constant>オプションはファイルのWindowsでの所有者と
+    UNIX での所有者の間の結合を事実上断ち切る。その結果、このモードでは、
+    ファイルのWindowsでの所有者を設定しても、UNIXの所有者を変更しない。
+    このモードを使用するには、<smbconfoption name="acl_xattr:ignore system acls">yes</smbconfoption>
+    といっしょの acl_xattr VFS モジュールのような、完全な NT ACL モデルをエミュレートできる
+    バッキングストアをいっしょに使うべきである。また、(UNIX拡張なしで) SMB 経由でのみ
+    ファイルが公開される時に、フォルダのquota をエミュレートする事にも使用できる。
+    ディレクトリの UNIX 所有者はローカルに設定され、すべてのサブディレクトリに継承され、
+    それらはすべて同じ quota を消費する。</para>
+    
 </description>
 
 <related>inherit permissions</related>
