@@ -91,7 +91,7 @@
 	  <varlistentry>
 	    <term>fruit:aapl = yes | no</term>
 	    <listitem>
-	      <para>グローバルオプションで、Appleの コードネーム AAPLの、SMB2+拡張を
+	      <para>グローバルオプション。Appleの コードネーム AAPLの、SMB2+拡張を
 	      有効にするかどうかを指定する。規定値では、
 	      <emphasis>yes</emphasis>である。この拡張は、Macからの接続時に
 	      いくつかの足らない機能を補う:</para>
@@ -156,17 +156,16 @@
 	      file id returned from the server.</para>
 	      <para>The default is <emphasis>yes</emphasis>.</para>
 原文END-->
-	      <para>グローバルオプションであり、クライアントが AAPL の調停を
-              行っている場合に、ディスク上のファイル識別子を検出するならば
-              ゼロを返すかどうかを設定する。</para>
-	      <para>Mac アプリケーションや Mac SMB クライントコードはディスク
-              上のファイル識別子を前提としていて、HFS+ カタログノード識別子
-              （HFS+ Catalog Node Identifier; CNID）の意味を持たせている。
-	      Samba ではこの意味を持たせるようなことはしていないため、有用性
-              の問題を引き起こすことがあり、データ消失の可能性さえある。
-	      ファイル識別子としてゼロが返ると、Mac クライアントはサーバから
-	      返るファイル識別子を信用しなくなり、使わなくなる。
-              </para>
+	      <para>グローバルオプション。クライアントによる AAPL ネゴシエート
+              後に、ディスク上のファイル識別子の問い合わせに対してゼロを返すか
+              どうかを指定する。</para>
+	      <para>Mac アプリケーションや Mac SMB クライアントコードは、
+	      ディスク上のファイル識別子が HFS+ カタログノード識別子（HFS+
+	      Catalog Node Identifier; CNID）として機能することを想定しているが、
+	      Samba はこうした機能を提供していない。これは利便性の問題を
+	      引き起こすだけでなく、データ損失を引き起こすことすらある。
+	      ファイル識別子としてゼロが返ると、Mac クライアントはサーバーから
+	      返るファイル識別子を信用しなくなり、使わなくなる。</para>
 	      <para>既定値は <emphasis>yes</emphasis> である。</para>
 	    </listitem>
 	  </varlistentry>
@@ -296,7 +295,7 @@
 	    <term>readdir_attr:aapl_rsize = yes | no</term>
 	    <listitem>
 
-	      <para>SMB2 FIND レスポンス内でリソースフォークサイズを返す。</para>
+	      <para>SMB2 FIND レスポンスにおいてリソースフォークサイズを返す。</para>
 	      <para>既定値は <emphasis>yes</emphasis> である。</para>
 	    </listitem>
 	  </varlistentry>
@@ -305,7 +304,7 @@
 	    <term>readdir_attr:aapl_finder_info = yes | no</term>
 	    <listitem>
 
-	      <para>SMB2 FIND レスポンス内で FinderInfo を返す。</para>
+	      <para>SMB2 FIND レスポンスにおいて FinderInfo を返す。</para>
 	      <para>既定値は <emphasis>yes</emphasis> である。</para>
 	    </listitem>
 	  </varlistentry>
@@ -319,10 +318,9 @@
 	      pretends the use has maximum effective permissions.</para>
 	      <para>The default is <emphasis>yes</emphasis>.</para>
 原文END-->
-	      <para>SMB2 FIND レスポンス内で、ユーザーに対する実効最大
-              パーミッションを返す。これを求める処理にはコストが
-              かかる。これをオフにした場合は、実効最大パーミッション
-              が用いるものとして扱われる。</para>
+	      <para>SMB2 FIND レスポンスにおいて、ユーザーにとって有効な
+	      アクセス許可の最大値を返す。これを求める処理には時間を要する。
+	      no に設定した場合は、アクセス許可は最大とみなされる。</para>
 	      <para>既定値は <emphasis>yes</emphasis> である。</para>
 	    </listitem>
 	  </varlistentry>
