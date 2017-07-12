@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2017/06/26
+						2017/07/12
 						日本Sambaユーザー会
 
 
@@ -95,7 +95,7 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
 
 を実行します。README中の上記行は間違っていますので、上記のように指定してください。
 
-4.2 Samba 4.x.y の場合
+4.2 コンパイル方法
 
 (1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
 
@@ -115,6 +115,27 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
   $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
   $ ln -s /srv/build/samba-4.X.Y-Z/docs-xml samba-docs-xml
 
+(4) Makefileの修正
+    4.6.5までの、オリジナルのdocs-xml/Makefile には不具合があり、
+    生成されるマニュアルページがアルファベット順になりません。
+    以下のように修正をしてください。
+
+----------------------------------------------------------------------------------
+
+--- Makefile.orig       2017-01-11 16:55:14.000000000 +0900
++++ Makefile    2017-06-20 20:29:21.123498429 +0900
+@@ -8,7 +8,7 @@
+
+ # Docs to build
+ MAIN_DOCS = $(patsubst %/index.xml,%,$(wildcard */index.xml))
+-MANPAGES = $(wildcard $(MANPAGEDIR)/*.?.xml)
++MANPAGES = $(sort $(wildcard $(MANPAGEDIR)/*.?.xml))
+
+ # Lists of files to process
+ MANPAGES_PLUCKER = $(patsubst $(MANPAGEDIR)/%.xml,$(PLUCKERDIR)/%.pdb,$(MANPAGES))
+
+-----------------------------------------------------------------------------------
+
 (4) ビルドを実行
 
   $ make clean
@@ -129,7 +150,7 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
 4.3系列以前については README.43X として変更履歴を分離しました。
 4.4系列、4.5系列については README.45X としてREADME(および変更履歴)を分離しました。
 
-2017/06/28 Ver 4.6.5-1 4.6.5対応
+2017/07/12 Ver 4.6.5-1 4.6.5対応
 	       	     マニュアルページ全面的な見直し、コンパイル方法変更。
 
 ======================================================================
