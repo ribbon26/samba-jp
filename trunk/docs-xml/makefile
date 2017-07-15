@@ -62,7 +62,7 @@ html html-single htmlman manpages:: config.stamp $(SAMBA_DOCS_XML_CATALOG_FILE)
 	XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/$(SAMBA_DOCS_XML_CATALOG_FILE)" \
 	 $(MAKE) -f Makefile $@
 
-config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL)
+config.stamp: $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl
 	touch $@
 
 $(SAMBA_DOCS_XML_BUILD_FILES):
@@ -81,15 +81,17 @@ $(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
 
 
 $(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
-	awk '/<\/xsl:stylesheet>/ {print "<xsl:output method=\"html\" encoding=\"UTF-8\"/>"} {print}' $< >$@.tmp
-	mv $@.tmp $@
+	sed -e "/base\.dir/i   <xsl:import href=\"sj.html-common.xsl\"\/>" $< > $@
+
+xslt/man.xsl: $(SAMBA_DOCS_XML_DIR)/xslt/man.xsl
+	sed -e "/xsl:import/a   <xsl:import href=\"sj.man.xsl\"\/>" $< > $@
 
 clean::
 	[ -f Makefile.settings ] || exit 0; $(MAKE) -f Makefile $@
 
 distclean::
 	[ -f Makefile.settings ] || exit 0; $(MAKE) -f Makefile $@
-	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) */*.tmp
+	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl */*.tmp
 	rm -rf $(SAMBA_DOCS_XML_CONFIGURED_FILES)
 	rm -rf configure autom4te.cache
 	rm -rf config.stamp output
