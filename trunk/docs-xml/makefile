@@ -1,7 +1,7 @@
 ## makefile for building samba-ja documentation
 ## ======================================================================
 
-TARFILE= 4.0.0-alpha1
+TARFILE= 4.6.6
 
 SAMBA_DOCS_XML_DIR=	samba-docs-xml
 
@@ -31,7 +31,6 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	xslt/html-chunk.xsl \
 	xslt/html.xsl \
 	xslt/latex.xsl \
-	xslt/man.xsl \
 	xslt/manpage-summary.xsl \
 	xslt/strip-references.xsl \
 	smbdotconf/generate-context.xsl \
