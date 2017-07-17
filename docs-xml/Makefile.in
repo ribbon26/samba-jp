@@ -21,7 +21,9 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	xslt/html \
 	xslt/html-chunk.xsl \
 	xslt/html.xsl \
+	xslt/latex \
 	xslt/latex.xsl \
+	xslt/latex.overrides.xml \
 	xslt/manpage-summary.xsl \
 	xslt/strip-references.xsl \
 	smbdotconf/generate-context.xsl \
@@ -29,8 +31,6 @@ SAMBA_DOCS_XML_BUILD_FILES= \
 	templates
 
 # FIXME: Remove?
-#	xslt/latex \
-#	xslt/latex.overrides.xml \
 #	xslt/sambadoc2pearson.xsl \
 #	xslt/smb.conf-html.xsl \
 #	xslt/yodl.xsl \
@@ -58,7 +58,7 @@ help: config.stamp
 	@echo " htmlman - Build HTML version of manpages"
 #	@echo " samples - Extract examples"
 
-html html-single htmlhelp htmlman manpages texiinfo:: config.stamp build/catalog.xml $(SAMBA_DOCS_XML_BUILD_FILES)
+html html-single htmlhelp htmlman manpages pdf ps tex texiinfo txt:: config.stamp build/catalog.xml $(SAMBA_DOCS_XML_BUILD_FILES)
 	XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/build/catalog.xml" \
 	 $(MAKE) -f Makefile.orig $@
 
@@ -67,6 +67,8 @@ config.stamp: Makefile.orig $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_
 
 Makefile.orig: $(SAMBA_DOCS_XML_DIR)/Makefile
 	cp -p $< $@
+	sed -i "/^DBLATEX_OPTIONS/s/$$/ -b xetex/" $@
+	sed -i "s/xslt\/latex\.xsl/xslt\/sj.latex.xsl/g" $@
 	sed -i "s/^\thttp:[a-z\./]*htmlhelp\.xsl /\txslt\/sj.htmlhelp.xsl /" $@
 	sed -i "s/\(\$$(DB2TEXI)\).*$$/\1 --encoding 'UTF-8' --to-stdout $$\(shell pwd\)\/$$\< \>..\/..\/$$\@/" $@
 
@@ -85,11 +87,14 @@ xslt/man.xsl: $(SAMBA_DOCS_XML_DIR)/xslt/man.xsl
 	sed -e "/xsl:import/a   <xsl:import href=\"sj.man.xsl\"\/>" $< > $@
 
 clean::
+	rm -f *-attributions.xml *.d
+	rm -f *.aux *.cb *.glo *.idx *.log *.out.ps *.toc
 
-distclean::
+distclean:: clean
 	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl */*.tmp
 	rm -fr Makefile Makefile.orig Makefile.settings
 	rm -rf $(SAMBA_DOCS_XML_CONFIGURED_FILES)
+	rm -fr Samba3-*.tex Samba3-*.dvi Samba3-*.ps Samba3-*.pdf
 	rm -rf autom4te.cache
 	rm -rf config.log config.stamp output
 
