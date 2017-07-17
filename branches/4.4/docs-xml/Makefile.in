@@ -58,7 +58,7 @@ help: config.stamp
 	@echo " htmlman - Build HTML version of manpages"
 #	@echo " samples - Extract examples"
 
-html html-single htmlman manpages texinfo:: config.stamp build/catalog.xml $(SAMBA_DOCS_XML_BUILD_FILES)
+html html-single htmlhelp htmlman manpages texiinfo:: config.stamp build/catalog.xml $(SAMBA_DOCS_XML_BUILD_FILES)
 	XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/build/catalog.xml" \
 	 $(MAKE) -f Makefile.orig $@
 
@@ -67,6 +67,7 @@ config.stamp: Makefile.orig $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_
 
 Makefile.orig: $(SAMBA_DOCS_XML_DIR)/Makefile
 	cp -p $< $@
+	sed -i "s/^\thttp:[a-z\./]*htmlhelp\.xsl /\txslt\/sj.htmlhelp.xsl /" $@
 	sed -i "s/\(\$$(DB2TEXI)\).*$$/\1 --encoding 'UTF-8' --to-stdout $$\(shell pwd\)\/$$\< \>..\/..\/$$\@/" $@
 
 $(SAMBA_DOCS_XML_BUILD_FILES):
@@ -75,7 +76,7 @@ $(SAMBA_DOCS_XML_BUILD_FILES):
 $(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
 	rm -f $(SAMBA_DOCS_XML_CONFIGURED_FILES)
 	$(MAKE) -f Makefile.orig Makefile.settings
-	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
+#	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
 
 $(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
 	sed -e "/base\.dir/i   <xsl:import href=\"sj.html-common.xsl\"\/>" $< > $@
