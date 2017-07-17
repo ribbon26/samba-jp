@@ -43,7 +43,8 @@ all: html html-single htmlman3 manpages3
 
 tar::
 	tar -cvzf samba-ja-docs-manpages-$(TARFILE).tar.gz output/manpages COPYING README
-	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING makefile README
+	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING Makefile.in README \
+	  aclocal.m4 configure configure.ac Makefile.settings.in
 
 help: config.stamp
 	@echo "Supported make targets:"
@@ -86,8 +87,8 @@ clean::
 
 distclean::
 	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl */*.tmp
-	rm -fr Makefile.orig
+	rm -fr Makefile Makefile.orig Makefile.settings
 	rm -rf $(SAMBA_DOCS_XML_CONFIGURED_FILES)
-	rm -rf configure autom4te.cache
-	rm -rf config.stamp output
+	rm -rf autom4te.cache
+	rm -rf config.log config.stamp output
 
