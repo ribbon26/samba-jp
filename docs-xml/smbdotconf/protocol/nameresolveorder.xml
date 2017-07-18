@@ -1,6 +1,7 @@
 <samba:parameter name="name resolve order"
                  context="G"
-		 type="list"
+				 type="list"
+                 advanced="1" wizard="1" developer="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc"> 
 <description>
     <para> このオプションは、どの名前サービスを用いて、またどのような順番で、
@@ -30,7 +31,7 @@
             名前解決の方法は、OSに依存する。 IRIX や Solaris の場合、
             <filename moreinfo="none">/etc/nsswitch.conf</filename> 
             ファイルにより制御される。この方法は、問い合わせされた NetBIOS
-            のサフィックスが 0x20(サーバー) か 0x1c(ドメインコントローラー) 
+            のサフィックスが 0x20(サーバ) か 0x1c(ドメインコントローラ) 
             の時のみ利用され、それ以外は無効であることに注意。
             後者は、アクティブディレクトリドメインでのみ有効である。
             この場合、_ldap._tcp.domain に対応する　SRV RR エントリを検索するための DNS クエリが行われる。
@@ -40,15 +41,15 @@
 	<listitem>
 	    <para><constant>wins</constant> :
 	    <smbconfoption name="WINSSERVER"><parameter moreinfo="none">
-	    wins server</parameter></smbconfoption> パラメーターで指定された IP
+	    wins server</parameter></smbconfoption> パラメータで指定された IP
             アドレスに対して名前の問い合わせが行なわれる。
-            WINS サーバーが指定されていない場合、この方法は無視される。</para>
+            WINS サーバが指定されていない場合、この方法は無視される。</para>
 	</listitem>
 
 	<listitem>
             <para><constant>bcast</constant> : 
 	    <smbconfoption name="interfaces"/> 
-            パラメーターで設定された各インタフェースに対してブロードキャストが実行される。
+            パラメータで設定された各インタフェースに対してブロードキャストが実行される。
             これは解決したいホストがローカルサブネットに接続されていることを前提とするため、
             もっとも信頼性の低い名前解決の方法である。</para>
 	</listitem>
@@ -66,6 +67,6 @@
     <para>この 場合でも、DC は DNS への問い合わせを行なう。
     失敗した場合に NetBIOS 名の問い合わせを行なうが、その際無意味な DNS への「DOMAIN&lt;0x1c&gt;」の問い合わせが抑止される。</para>
 </description>
-<value type="default">lmhosts wins host bcast</value>
+<value type="default">lmhosts host wins bcast</value>
 <value type="example">lmhosts bcast host</value>
 </samba:parameter>

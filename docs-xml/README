@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2017/07/16
+						2012/04/02
 						日本Sambaユーザー会
 
 
@@ -19,6 +19,7 @@ Samba-JP MLとsugj-tech MLのメンバーのご協力のもとに、多くの修
 1.2 リリース形式
 ----------------------------------------------------------------------
 
+3.4系列までは、man形式およびHTML形式を1つのアーカイブとして提供しています。
 3.5系列からは、man形式、HTML形式およびSamba3-HOWTO、Samba3-Developers-Guideを
 1つのアーカイブとして提供するほか、man形式のみのファイルも提供します。
 man形式のみのアーカイブでは、再構築は出来ません。
@@ -27,9 +28,8 @@ man形式のみのアーカイブでは、再構築は出来ません。
 ======================================================================
 
  かなり見直しましたが、まだまだ潜んでいるはずです。細かな検証を行なって
-おりません。また、一部の部分はオリジナルと併記してある箇所があります。
-誤訳等がありましたら、日本Sambaユーザー会のメーリングリスト(samba-jp@
-samba.gr.jp)かスタッフまでご連絡ください。
+おりません。誤訳等がありましたら、日本Sambaユーザー会のメーリングリスト
+(samba-jp@samba.gr.jp)かスタッフまでご連絡ください。
 
 3. 利用にあたって
 ======================================================================
@@ -38,30 +38,16 @@ samba.gr.jp)かスタッフまでご連絡ください。
 ----------------------------------------------------------------------
 
 配布については、Sambaの配布条件と同じです(GPLv3)。同梱している
-COPYINGファイルを参照してください。
+COPYINGファイルを参照してください。また、ドキュメントを作成(XMLから
+の変換)するための補助スクリプト setupjp(xx).sh も同梱しています。
 
 3.2 更新条件
 ----------------------------------------------------------------------
 
-原則として、オリジナルSambaが更新対象となっているものについて
-翻訳を行います。
-
-・4.3.x系列以前:	翻訳終了
-・4.4.x系列:		翻訳中
-・4.5.x系列:		翻訳中
-・4.6.x系列:		翻訳中
-
-
 Sambaのバージョンが変更になってもドキュメントの修正がない場合には、
 日本語訳は変更しません。その場合にはSambaの旧バージョンに対応した
 日本語マニュアルをそのままお使いください。更新状況については、
-日本Sambaユーザー会のWebページか、Samba-JPメーリングリストを参照
-してください。
-
-また、新しいバージョンから古いバージョンへのバックポートを行う場合が
-あります。ただし、バックポートをしてもリリースされない場合があります。
-各系列の最新版が必要な場合はプロジェクトページからダウンロードしてく
-ださい。
+日本Sambaユーザー会のWebページか、メーリングリストを参照してください。
 
 3.3 文字コード
 ----------------------------------------------------------------------
@@ -71,111 +57,267 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 
 4. ビルド方法
 ======================================================================
-4.1 準備
+4.1 Samba 3.5.x 以降
 
-4.1.1 プロキシの設定
-
-XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
-ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
-かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
-使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
-を使う/使わないでかなり差が付きます。
-
-4.1.2 カタログファイルの準備
-
-docs-xml/build配下にあるREADMEファイルに記載のように、catalog.xmlファイルを
-作成します。具体的には、 docs-xml ディレクトリで、
-
-% export XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
-
-と、
-
-% cat $(pwd)/build/catalog.xml.in | sed -e "s|@abs_top_srcdir@|$(pwd)|g" |sed -e
-"s|@abs_top_builddir@|$(pwd)|g"> $(pwd)/build/catalog.xml
-
-を実行します。README中の上記行は間違っていますので、上記のように指定してください。
-
-4.2 コンパイル方法
-
-(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
+(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開。
 
   $ cd /srv/build
-  $ tar xzf /srv/source/samba-4.X.Y.tar.gz
+  $ tar xzf /srv/source/samba-3.X.Y.tar.gz
 
 (2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
 
   $ cd /srv/build
-  $ mkdir samba-ja-docs-4.X.Y-Z
-  $ cd /srv/source/samba-ja-docs-4.X.Y-Z
-  $ tar xzf samba-ja-docs-4.X.Y-Z.tar.gz
+  $ mkdir samba-ja-docs-3.X.Y-Z
+  $ cd /srv/source/samba-ja-docs-3.X.Y-Z
+  $ tar xzf samba-ja-docs-3.X.Y-Z.tar.gz
 
 (3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
     リンクを翻訳文書ディレクトリ内に作成
 
-  $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
-  $ ln -s /srv/build/samba-4.X.Y-Z/docs-xml samba-docs-xml
-
-(4) Makefileの修正
-    4.6.6 までの、オリジナルのdocs-xml/Makefile には不具合があり、
-    生成されるマニュアルページがアルファベット順になりません。
-    以下のように修正をしてください。
-
-----------------------------------------------------------------------------------
-
---- Makefile.orig       2017-01-11 16:55:14.000000000 +0900
-+++ Makefile    2017-06-20 20:29:21.123498429 +0900
-@@ -8,7 +8,7 @@
-
- # Docs to build
- MAIN_DOCS = $(patsubst %/index.xml,%,$(wildcard */index.xml))
--MANPAGES = $(wildcard $(MANPAGEDIR)/*.?.xml)
-+MANPAGES = $(sort $(wildcard $(MANPAGEDIR)/*.?.xml))
-
- # Lists of files to process
- MANPAGES_PLUCKER = $(patsubst $(MANPAGEDIR)/%.xml,$(PLUCKERDIR)/%.pdb,$(MANPAGES))
-
------------------------------------------------------------------------------------
+  $ cd /srv/source/samba-ja-docs-3.X.Y-Z/docs-xml
+  $ ln -s /srv/build/samba-3.X.Y/docs-xml samba-docs-xml
 
 (4) ビルドを実行
 
   $ make clean
-  $ make manpages (manpagesの作成)
-  $ make htmlman  (html化したmanpagesの作成)
-  $ make html     (Samba3-HOWTO等のhtml文書の作成)
+  $ make manpages3 (manpagesの作成)
+  $ make htmlman3  (html化したmanpagesの作成)
+  $ make html      (Samba3-HOWTO等のhtml文書の作成)
+
+4.2 Samba 3.4.x以前
+
+  svnからまずsetup3x.shダウンロードしてください。次に、オリジナルのSamba-
+3.x.y のベースディレクトリに移してください。その後、この
+スクリプトを実行すると、soucreforge.jpのsvnからデータをダウンロードし、
+必要なファイルをコピーして初期セットアップを行います。
+次に、docs-xmlディレクトリに移動し、
+
+export  XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
+
+を実行してください。その後、make htmlman3,make manpages3を実行してください。
+OpenSUSE 12.1でしかテストしていません。
+
 
 
 5. 変更履歴
 ======================================================================
 
-4.3系列以前については README.43X として変更履歴を分離しました。
-4.4系列、4.5系列については README.45X としてREADME(および変更履歴)を分離しました。
+3.2系列から3.5系列を一緒に管理しています。そのため、バージョン番号と
+変更日付が前後する場合があります。
 
-2017/07/16 Ver 4.6.6-1 4.6.6対応
-	   マニュアルページ全面的な見直し、コンパイル方法変更。
-	   cifsdd.8.xml,idmap_ad.8.xml,idmap_hash.8.xml,net.8.xml,
-	   nmbd.8.xml,samba.7.xml,samba-regedit.8.xml,
-	   smb.conf.5.xml,smbcontrol.1.xml,smbcquotas.1.xml,smbd.8.xml,
-	   vfs_fruit.8.xml,vfs_glusterfs.8.xml,wbinfo.1.xml,
-	   logon/logonscript.xml,misc/allowinsecurewidelinks.xml,
-	   misc/cachedirectory.xml,misc/fssprunestale.xml,
-	   misc/fsssequencetimeout.xml,misc/lockdirectory.xml,
-	   misc/resetonzerovc.xml,misc/rpcdaemon.xml,misc/statedirectory.xml,
-	   security/dedicatedkeytabfile.xml,security/inheritowner.xml,
-	   security/security.xml,
-	   Samba3-HOWTO/TOSHARG-BDC.xml,Samba3-HOWTO/TOSHARG-Bugs.xml,
-	   Samba3-HOWTO/TOSHARG-Compiling.xml,
-	   Samba3-HOWTO/TOSHARG-Further-Resources.xml,
-	   Samba3-HOWTO/TOSHARG-Install.xml,Samba3-HOWTO/TOSHARG-Problems.xml,
-	   Samba3-HOWTO/TOSHARG-Winbind.xml,Samba3-HOWTO/index.html,
-	   Samba3-Developers-Guide/index.xml
-	   makefile 変更
-	   mvxattr.1.xml,
-	   protocol/lsaovernetlogon.xml,protocol/rpcserverport.xml,
-	   security/kerberosencryptiontypes.xml,
-	   xslt/local.ja.xml,xslt/sj.html-common.xsl,xslt/sj.man.xsl
-	   追加
-		     
+2008/11/08 ver 0.1	3.2.4対応版を初期リリース
 
+2008/11/12 Ver 0.1.1	smbclient.1.htmlの文字コード指定がおかし
+			かったので修正。
+
+2008/11/22 Ver 0.1.2	この日までに出来上がったところを纏めてリリース。
+
+2008/12/01 Ver 0.2	この日までに出来上がったところを纏めてリリース。
+			smb.conf以外は一通り訳出。
+
+2008/12/08 Ver 0.3	3.2.5対応、全マニュアル訳出。
+
+2008/12/17 Ver 0.4	3.2.6対応、若干の修正。
+
+2009/01/10 Ver 0.4.1	3.2.7対応、若干の修正。
+
+2009/02/24 Ver 0.4.2	3.2.8対応、若干の修正。
+
+2009/04/01 Ver 0.4.3	3.2.9対応、若干の追加と修正。
+			manpages-3/cifs.upcall.8.xml 字句修正
+			manpages-3/vfs_smb_traffic_analyzer.8.xml 記述追加
+                        smbdotconf/browse/enhancedbrowsing.xml typo修正なので変更せず
+			smbdotconf/locking/strictlocking.xml typo修正なので変更せず
+			smbdotconf/misc/remoteannounce.xml typo修正なので変更せず
+			smbdotconf/misc/usershareallowguests.xml typo修正なので変更せず
+			smbdotconf/misc/usersharetemplateshare.xml typo修正なので変更せず
+			smbdotconf/printing/useclientdriver.xml typo修正なので変更せず
+			smbdotconf/protocol/aclcheckpermissions.xml typo修正なので変更せず
+			smbdotconf/protocol/enableasusupport.xml typo修正なので変更せず
+			smbdotconf/security/clientlanmanauth.xml typo修正なので変更せず
+			smbdotconf/security/lanmanauth.xml typo修正なので変更せず
+			smbdotconf/security/passwordserver.xml typo修正なので変更せず
+			smbdotconf/security/security.xml typo修正なので変更せず
+			smbdotconf/security/serverschannel.xml typo修正なので変更せず
+			smbdotconf/security/serversigning.xml typo修正なので変更せず
+			smbdotconf/security/smbencrypt.xml typo修正なので変更せず
+			smbdotconf/security/updateencrypted.xml typo修正なので変更せず
+
+2009/04/16 Ver 0.4.4	3.2.10対応、用語の統一、若干の修正。
+	       		setupjp32.shを追加。
+			manpages-3/cifs.upcall.8.xml 用語の統一。
+			manpages-3/eventlogadm.8.xml 用語の統一。
+			manpages-3/findsmb.1.xml 用語の統一。
+			manpages-3/idmap_ldap.8.xml 用語の統一。
+			manpages-3/idmap_nss.8.xml 用語の統一。
+			manpages-3/idmap_tdb.8.xml 用語の統一。
+			manpages-3/ldb.3.xml 用語の統一。
+			manpages-3/ldbadd.1.xml 用語の統一。
+			manpages-3/ldbdel.1.xml 用語の統一。
+			manpages-3/ldbedit.1.xml 用語の統一。
+			manpages-3/ldbmodify.1.xml 用語の統一。
+			manpages-3/ldbsearch.1.xml 用語の統一。
+			manpages-3/libsmbclient.7.xml 用語の統一。
+			manpages-3/lmhosts.5.xml 用語の統一。
+			manpages-3/log2pcap.1.xml 用語の統一。
+			manpages-3/mount.cifs.8.xml 用語の統一。
+			manpages-3/net.8.xml 用語の統一。
+			manpages-3/nmbd.8.xml 用語の統一。
+			manpages-3/nmblookup.8.xml 用語の統一。
+			manpages-3/pam_winbind.7.xml 用語の統一。
+			manpages-3/pdbedit.8.xml 用語の統一。
+			manpages-3/profiles.1.xml 用語の統一。
+			manpages-3/rpcclient.1.xml 用語の統一。
+			manpages-3/samba.7.xml 用語の統一。
+			manpages-3/smb.conf.5.xml 用語の統一。
+			manpages-3/smbcacls.1.xml 用語の統一。
+			manpages-3/smbclient.1.xml 用語の統一。
+			manpages-3/smbcontrol.1.xml 用語の統一。
+			manpages-3/smbcquotas.1.xml 用語の統一。
+			manpages-3/smbd.8.xml 用語の統一。
+			manpages-3/smbget.1.xml 用語の統一。
+			manpages-3/smbgetrc.5.xml 用語の統一。
+			manpages-3/smbpasswd.5.xml 用語の統一。
+			manpages-3/smbpasswd.8.xml 用語の統一。
+			manpages-3/smbspool.8.xml 用語の統一。
+			manpages-3/smbstatus.1.xml 用語の統一。
+			manpages-3/smbtar.1.xml 用語の統一。
+			manpages-3/smbtree.1.xml 用語の統一。
+			manpages-3/swat.8.xml 用語の統一。
+			manpages-3/tdbbackup.8.xml 用語の統一。
+			manpages-3/tdbdump.8.xml 用語の統一。
+			manpages-3/tdbdump.8.xml 用語の統一。
+			manpages-3/tdbtool.8.xml 用語の統一。
+			manpages-3/testparm.1.xml 用語の統一。
+			manpages-3/vfs_fileid.8.xml 用語の統一。
+			manpages-3/vfs_prealloc.8.xml 用語の統一。
+			manpages-3/vfs_recycle.8.xml 用語の統一。
+			manpages-3/vfs_shadow_copy.8.xml 用語の統一。
+			manpages-3/wbinfo.1.xml 用語の統一。
+			manpages-3/winbind.8.xml 用語の統一。
+			smbdotconf/winbind/idmapallocbackend.xml 訳修正。
+
+2009/04/20 Ver 0.5	3.3.2対応、用語の統一、若干の修正。
+	       		setup.shを追加。
+
+2009/05/06 Ver 0.5.1	3.3.4対応、若干の追加と修正。
+
+2009/07/15 Ver 0.5.2	3.3.6対応、若干の追加と修正。 抜けていたファイルを追加。
+
+2009/07/18 Ver 0.4.5    3.2.13対応、若干の追加と修正。抜けていたファイルを追加。
+
+2009/07/30 Ver 0.5.3 	3.3.7対応、若干の修正。
+	       		manpages-3/idmap_tdb2.8.xml 用語の統一。
+			manpages-3/net.8.xml 訳追加。
+			manpages-3winbind_krb5_locator.7.xml 訳修正。
+			smbdotconf/security/checkpasswordscript.xml 訳変更。
+
+2009/08/01 Ver 3.4.0-1	3.4.0対応、若干の追加と修正。バージョン番号体系を
+	       		変更。
+
+2009/08/13 Ver 0.4.6    3.2.14対応、若干の修正。
+
+2009/11/03 Ver 3.4.3-1  3.4.3対応。若干の追加と修正。
+
+2010/01/16 Ver 0.5.4	3.3.10対応。若干の追加と修正。
+	       		manpages-3/cifs.upcall.8.xml 訳変更。
+			smbdotconf/base/enablecorefiles.xml 訳追加。
+			smbdotconf/locking/posixlocking.xml 訳変更。
+			smbdotconf/tuning/aiowritebehind.xml 訳追加。
+
+2010/02/25 Ver 3.4.6-1  3.4.6対応。若干の追加と修正。
+	       		manpages-3/mount.cifs.8.xml 訳修正。
+			manpages-3/pdbedit.8.xml 訳修正。
+			smbdotconf/base/enablecorefiles.xml 訳追加。
+			smbdotconf/filename/manglednames.xml 訳修正。
+			smbdotconf/locking/oplocks.xml 訳修正。
+			smbdotconf/locking/posixlocking.xml 訳修正。
+			smbdotconf/misc/cachedirectory.xml 訳追加。
+			smbdotconf/misc/directorynamecachesize.xml 訳追加。
+			smbdotconf/misc/statedirectory.xml 訳追加。
+			smbdotconf/misc/widelinks.xml 訳修正。
+			smbdotconf/printing/enablespoolss.xml 訳追加。
+			smbdotconf/protocol/unixextensions.xml 訳修正。
+			smbdotconf/tuning/aiowritebehind.xml 訳追加。
+
+2010/02/27 Ver 0.5.5	3.3.11対応。若干の追加と修正。
+	       		manpages-3/mount.cifs.8.xml 訳修正。
+	       		smbdotconf/misc/widelinks.xml 訳変更。
+			smbdotconf/protocol/unixextensions.xml 訳変更。
+
+2010/03/26 Ver 0.4.7    3.2.15対応。
+	       		smbdotconf/printing/printing.xml 訳追加。
+			html形式のテキストをutf-8に変更。
+			xslt/html.xsl修正。
+			READMEを大幅に変更。
+
+2010/03/26 Ver 0.5.6	3.3.12対応。
+	       		欠損していた翻訳の追加。
+	       		smbdotconf/printing/printing.xml 訳追加。
+	       		smbdotconf/tuning/aiowritebehind.xml 訳追加。
+			html形式のテキストをutf-8に変更。
+			xslt/html.xsl修正。
+			READMEを大幅に変更。
+
+2010/03/26 Ver 3.4.7-1  3.4.7対応。
+	       		欠損していた翻訳の追加。
+	       		smbdotconf/printing/printing.xml 訳追加。
+			html形式のテキストをutf-8に変更。
+			xslt/html.xsl修正。
+			READMEを大幅に変更。
+
+2010/03/26 Ver 3.5.1-1  3.5.1対応(3.5系列新規)。
+	       		smbdotconf/printing/printing.xml 訳追加。
+			html形式のテキストをutf-8に変更。
+			xslt/html.xsl修正。
+			Samba3-HOWTO追加。
+			リリース形式を変更。
+			READMEを大幅に変更。
+
+2010/06/11 Ver 3.5.3-1	3.5.3対応
+	       		manpages/pam_winbind.conf.5.xml 訳追加
+			manpages/vfs_scanreadonly.8.xml 訳追加
+			smbdotconf/tuning/changenotifytimeout.xml 訳削除(trunk/3.4,3.3,3.2)
+			smbdotconf/protocol/readbmpx.xml 訳削除(trunk/3.4,3.3,3.2)
+			smbdotconf/misc/famchangenotify.xml 訳削除(trunk/3.4,3.3,3.2)
+			smbdotconf/filename/mangledmap.xml 訳削除(trunk/3.4,3.3,3.2)
+			Samba3-HOWTO/TOSHARG-Support.xml 訳変更
+			Samba3-Developers-Guide 訳追加
+
+2010/06/11 Ver 3.4.8-1  3.4.8対応
+                        smbdotconf/tuning/changenotifytimeout.xml 訳削除(trunk/3.4,3.3,3.2)
+                        smbdotconf/protocol/readbmpx.xml 訳削除(trunk/3.4,3.3,3.2)
+                        smbdotconf/misc/famchangenotify.xml 訳削除(trunk/3.4,3.3,3.2)
+                        smbdotconf/filename/mangledmap.xml 訳削除(trunk/3.4,3.3,3.2)
+
+2010/11/15 Ver 3.5.6-1  3.5.6対応
+	       		コンパイル環境をopenSUSE 11.3に変更。
+	       		Samba3-HOWTO/TOSHARG-Support.xml 訳変更
+			Samba3-HOWTO/TOSHARG-FastStart.xml 訳変更
+			Samba3-HOWTO/TOSHARG-Install.xml 訳変更
+			build/DTD/samba.entities XML記述修正、およびこれを利用
+	       		するファイルの再作成
+
+2011/01/25 Ver 3.4.11-1 3.4.11対応
+                        manpages-3/ntlm_auth.1.xml 訳修正(3.4)
+                        manpages-3/mount.cifs.8.xml 誤訳修正(3.4)
+
+2011/06/22 Ver 3.5.9-1  3.5.9対応
+                        manpages-3/wbinfo.1.xml 訳変更
+                        make方式変更
+
+2011/08/10 Ver 0.5.7    3.3.16対応(3.3系列最終)。
+                        smbclient.1.xml 訳修正。
+
+2011/08/17 Ver 3.5.11-1 3.5.11対応
+                        smbdotconf/security/clientusepsnegoprincipal.xml 訳追加。
+			makefile修正。
+			xslt/html.xsl削除。
+
+2012/04/02 Ver 3.4.15-1 3.4.15対応
+	       		smbclient.1.xml,winbind_krb5_locator.7 訳修正。
+
+6.責任の放棄
 ======================================================================
 
 翻訳者は、当訳文の正当性、信頼性、先進性、妥当性、可読性、その他いかなるこ
@@ -186,6 +328,6 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
 
   佐藤文優,太田俊哉,千秋広幸,山口一郎,中野武雄,細川達己,たかはしもとのぶ、
   堀田倫英,武田保真,でん,山田史朗,はせがわようすけ,ちかましゅうへい,
-  しらいたかし,平田祥司、海老澤、Michio Matsuyama
+  しらいたかし,平田祥司、海老澤
   Samba-JP/sugj-tech メーリングリストのメンバー
   (有)トップスタジオ/(株)翔泳社
