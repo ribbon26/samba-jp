@@ -20,6 +20,16 @@
 <title>アカウント情報データベース</title>
 
 <para>
+<indexterm><primary>アカウントバックエンド</primary></indexterm>
+<indexterm><primary>パスワードバックエンド</primary></indexterm>
+<indexterm><primary>拡張性</primary></indexterm>
+<indexterm><primary>ADS</primary></indexterm>
+以前のSamba3リリースでは複数のアカウント情報バックエンドを同時に動作させることが
+できた。この機能はSamba3.0.23からなくなった。Samba3.0.23からは、passdbバックエンド
+は1つのみ指定できる。
+</para>
+
+<para>
 <indexterm><primary>passdb backend</primary></indexterm>
 <indexterm><primary>smbpasswd</primary></indexterm>
 <indexterm><primary>tdbsam</primary></indexterm>
@@ -47,18 +57,25 @@
 <indexterm><primary>account storage system</primary></indexterm>
 <indexterm><primary>ユーザーと信頼アカウント</primary></indexterm>
 <indexterm><primary>マシン信頼アカウント</primary></indexterm>
-<indexterm><primary>コンピューターアカウント</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
 <indexterm><primary>ドメイン間信頼アカウント</primary></indexterm>
 厳格かつ文字通りの意味で、passdbバックエンドはアカウント格納メカニズム(あるいは方法)
 のみである。技術の選択はミスリードの可能性があるが、言い回しの選択で困っている。
 この章では、ユーザーと信頼アカウントにフォーカスをあてたアカウント格納システムの
 本質について記述する。信頼アカウントは2つの形式があり、それはマシン信頼アカウント
-(コンピューターアカウント)とドメイン間信頼アカウントである。それらはユーザーのような
+(コンピュータアカウント)とドメイン間信頼アカウントである。それらはユーザーのような
 エントリとして扱われる。
 </para>
 
 <sect1>
 <title>機能と利便性</title>
+
+<para>
+Samba-3 は Samba-2.2.x の以下の機能について完全な下位互換性を提供する:
+<indexterm><primary>SAM backend</primary><secondary>smbpasswd</secondary></indexterm>
+<indexterm><primary>SAM backend</primary><secondary>ldapsam_compat</secondary></indexterm>
+<indexterm><primary>暗号化パスワード</primary></indexterm>
+</para>
 
 <sect2>
 	<title>下位互換性のあるバックエンド</title>
@@ -107,6 +124,21 @@
 			</para>
 		</listitem>
 	</varlistentry>
+
+	<varlistentry><term>ldapsam_compat (Samba-2.2 LDAP互換)</term>
+		<listitem>
+			<para>
+<indexterm><primary>ldapsam_compat</primary></indexterm>
+<indexterm><primary>Samba-2.2.x LDAPスキーマ</primary></indexterm>
+<indexterm><primary>OpenLDAPバックエンド</primary></indexterm>
+		これは、Samba-2.2.x LDAP スキーマ拡張を使用する、既存のOpenLDAP
+		バックエンドとの継続的運用を可能にするパスワードバックエンドの
+		オプションである。このオプションはマイグレーションツールとして
+		提供されているが、この時点で強制的にマイグレーションする意味はない。
+		このツールは最終的には切り捨てられることになる。
+			</para>
+		</listitem>
+	</varlistentry>
 </variablelist>
 
 </sect2>
@@ -115,7 +147,7 @@
 <title>新しいアカウント格納システム</title>
 
 <para>
-Samba では多数の新しいパスワードバックエンド機能が導入された。
+Samba-3では多数の新しいパスワードバックエンド機能が導入された。
 <indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
 <indexterm><primary>SAM backend</primary><secondary>ldapsam</secondary></indexterm>
 </para>
@@ -141,8 +173,8 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>MS Windows NT4/200x</primary></indexterm>
 		<emphasis>tdbsam</emphasis>パスワードバックエンドは古い
 		<emphasis>smbpasswd</emphasis>情報のほかに、拡張された
-		Microsoft Windows NT/200x の SAM 情報をバイナリ形式のTDB(trivial database)
-		ファイルに格納する。拡張情報を含むことで、Samba が、Microsoft Windows NT4/200x
+		Microsoft Windows NT/200xのSAM情報をバイナリ形式のTDB(トリビアルデータベース)
+		ファイルに格納する。拡張情報を含むことで、Samba-3が、Microsoft Windows NT4/200x
 		ベースのシステムと同様のアカウントアクセス及びシステムアクセス制御を実現する
 		ことを可能にする。
 			</para>
@@ -176,8 +208,8 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>Sambaスキーマ</primary></indexterm>
 <indexterm><primary>スキーマファイル</primary></indexterm>
 <indexterm><primary>examples/LDAP</primary></indexterm>
-		Samba では LDAP 用拡張の実装が新しくなり、これにより新しい形式の Samba スキーマを
-		使う OpenLDAP の設定が必要である。新しい形式のスキーマファイルは、Samba
+		Samba-3ではLDAP用拡張の実装が新しくなり、これにより新しい形式のSambaスキーマを
+		持つOpenLDAPの設定を必要とする。新しい形式のスキーマファイルは、Samba
 		ディストリビューションの
 		<filename class="directory">examples/LDAP</filename>のディレクトリにある。
 			</para>
@@ -327,10 +359,10 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 
 		<note>
 		<para>
-<indexterm><primary>Windows Home Edition</primary></indexterm>
+<indexterm><primary>Windows XP Home</primary></indexterm>
 <indexterm><primary>ドメインメンバー</primary></indexterm>
 <indexterm><primary>ドメインログオン</primary></indexterm>
- 	MS Windows Home Edition は、ドメインメンバーになる機能はなく、ドメインログオンは実行できない。
+ 	MS Windows XP Home は、ドメインメンバーになる機能はなく、ドメインログオンは実行できない。
 		</para>
 		</note>
 
@@ -341,8 +373,9 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 		<itemizedlist>
 			<listitem><para>Windows NT 3.5x.</para></listitem>
 			<listitem><para>Windows NT 4.0.</para></listitem>
-			<listitem><para>Professional と名の付く Windows エディション</para></listitem>
-			<listitem><para>Server/Advanced Server と名の付く Windows エディション</para></listitem>
+			<listitem><para>Windows 2000 Professional.</para></listitem>
+			<listitem><para>Windows 200x Server/Advanced Server.</para></listitem>
+			<listitem><para>Windows XP Professional.</para></listitem>
 		</itemizedlist>
 
 		<para>
@@ -398,7 +431,8 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>パスワードプロンプト</primary></indexterm>
 <indexterm><primary>SMB暗号化</primary></indexterm>
 		Windows NTは暗号化パスワードをサポートしないサーバーとやりとりする
-		ことを好まない。そのサーバーを ブラウズすることを拒否する。そのため、
+		ことを好まない。また、サーバーが「userレベル」のセキュリティモード
+		になっているとき、そのサーバーを ブラウズすることを拒否する。そのため、
 		接続の度に、ユーザーにパスワードを入力するように要求するので、大変厄介
 		である。 これを止めさせる唯一の方法は、SMB暗号を使用することである。
 				</para></listitem>
@@ -497,11 +531,11 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>ドメインメンバーサーバー</primary></indexterm>
 <indexterm><primary>NFS</primary></indexterm>
 <indexterm><primary>rsync</primary></indexterm>
-	Samba は、分散ネットワーク環境中で、すべてのサーバー上で同一の UID と GID が使える
-	特別な機能を用意している。分散ネットワークとは、PDC が存在するもの、一つ以上の
-	BDC があるもの、あるいは1つ以上のドメインメンバーサーバーがあるものである。なぜこれが
-	重要かというと、ファイルが1つ以上のプロトコル(たとえば NFS )で共有され、たとえば
-	<command>rsync</command>のようなツールを使って UNIX/Linux システム間で、ユーザーが
+	Samba-3は、分散ネットワーク環境中で、すべてのサーバー上で同一のUIDとGIDを使うことを
+	可能にする特別な機能を持っている。分散ネットワークとは、PDCが存在するもの、一つ以上の
+	BDCがあるもの、あるいは1つ以上のドメインメンバーサーバーがあるものである。なぜこれが
+	重要かというと、ファイルが1つ以上のプロトコル(たとえばNFS)で共有され、たとえば
+	<command>rsync</command>のようなツールを使ってUNIX/Linuxシステム間で、ユーザーが
 	ファイルをコピーすることがあるからである。
 	</para>
 
@@ -722,7 +756,7 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 	</sect2>
 
 	<sect2>
-	<title>LDAPディレクトリとWindowsのコンピューターアカウント</title>
+	<title>LDAPディレクトリとWindowsのコンピュータアカウント</title>
 
 		<para>
 <indexterm><primary>turnkey solution</primary></indexterm>
@@ -735,22 +769,22 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 		</para>
 
 		<para>
-<indexterm><primary>コンピューターアカウント</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
 <indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>LDAP</primary></indexterm>
-	コンピューター(マシン)アカウントは、この章で説明されている、若干の制約を
+	コンピュータ(マシン)アカウントは、この章で説明されている、若干の制約を
 	受けるLDAPディレクトリサブジェクト中の好みの位置に配置できる。
 		</para>
 
 		<para>
 <indexterm><primary>POSIX</primary></indexterm>
 <indexterm><primary>sambaSamAccount</primary></indexterm>
-<indexterm><primary>コンピューターアカウント</primary></indexterm>
+<indexterm><primary>コンピュータアカウント</primary></indexterm>
 <indexterm><primary>マシンアカウント</primary></indexterm>
 <indexterm><primary>Windows NT4/200X</primary></indexterm>
 <indexterm><primary>ユーザーアカウント</primary></indexterm>
 <indexterm><primary>信頼アカウント</primary></indexterm>
-	コンピューター(マシン)アカウントのPOSIXとsambaSamAccountコンポーネントは、
+	コンピュータ(マシン)アカウントのPOSIXとsambaSamAccountコンポーネントは、
 	両者ともSambaによって使われる。そのため、マシンアカウントは、Windows 
 	NT/200xが扱うのと同じ方法で、Samba内部で扱われる。ユーザーアカウントと
 	マシンアカウントは、マシンアカウントが$文字で終わることを除いてお互い
@@ -801,7 +835,7 @@ Samba では多数の新しいパスワードバックエンド機能が導入�
 <indexterm><primary>LDAP</primary></indexterm>
 <indexterm><primary>documentation</primary></indexterm>
 	多くの人に対して、良い選択肢は、PADL nss_ldapライブラリを使うことである。
-	このユーティリティは、コンピューターアカウントがPOSIX/UNIXアカウントのUID
+	このユーティリティは、コンピュータアカウントがPOSIX/UNIXアカウントのUID
 	に解決できるように設定されねばならない。これは基本的にLDAPのデザインの問題
 	である。Sambaメーリングリストとドキュメントで提供される情報は役に立つ例だけ
 	を提供するようになっている。LDAPディレクトリのデザインは複雑な問題であり、
@@ -1001,10 +1035,10 @@ Sambaはユーザーとマシンアカウントを管理するための2つの�
 		<indexterm><primary>pdbedit</primary></indexterm>
 		<indexterm><primary>アクセス制御</primary></indexterm>
 		<indexterm><primary>アカウント管理</primary></indexterm>
-		政府の法律に従って情報システム操作を許可する Samba のツールと機能に
+		政府の法律に従って情報システム操作を許可するSambaのツールと機能に
 		精通している必要性は明らかである。<command>pdbedit</command>は
 		アカウントとシステムアクセス制御とポリシーを管理する能力を提供する
-		唯一の Samba ツールである。Samba シリーズの残存ライフサイクル中、
+		唯一のSambaツールである。Samba-3シリーズの残存ライフサイクル中、
 		この重要な領域で新しいツールが実装されることはあり得る。
 		</para>
 
@@ -1642,10 +1676,10 @@ account policy value for lockout duration is now 4294967295
 </para></note>
 
 <warning><para>
-アカウントポリシーは各 PDC と BDC 上で個別にに設定する必要がある。この時点
+アカウントポリシーはおのおののPDCとBDC上で個別にに設定する必要がある。この時点
 (Samba 3.0.11からSamba3.0.14a)で、アカウントポリシーは自動的に複製されない。
 これはSamba3.0.20がリリースされるか、それより少し後に修正される予定である。
-Samba リリースファイル中の、この機能に関する特定の更新情報がある WHATSNEW.txt
+Samba-3リリースファイル中の、この機能に関する特定の更新情報がある WHATSNEW.txt
 ファイルをチェックしてみること。
 </para></warning>
 
@@ -1689,6 +1723,24 @@ Samba リリースファイル中の、この機能に関する特定の更新�
 
 <sect1>
 <title>パスワードバックエンド</title>
+
+<para>
+<indexterm><primary>アカウントデータベース</primary></indexterm>
+<indexterm><primary>SMB/CIFSサーバー</primary></indexterm>
+Sambaはバックエンドアカウントデータベースのデザインに柔軟性を提供する。この柔軟性
+は探せばすぐに見つかる。Sambaにおける最近の変更(Samba 3.0.23以降)はいくつかのインストール時
+にうまくいかなくなる問題を単純化するために複数バックエンド機能が削除された。この
+削除によりSamba-3の内部動作はより首尾一貫し安定した。
+</para>
+
+<para>
+<indexterm><primary>複数のバックエンド</primary></indexterm>
+<indexterm><primary>tdbsam データベース</primary></indexterm>
+Samba 3.0.23から、もはや複数のpassdbバックエンドを指定して使うことは出来なくなった。
+それ以前のSamba-3では、同じタイプのバックエンドを含む複数のpassdbバックエンドが指定できた。
+複数のpassdbバックエンド機能は名前->SID変換とSID->名前解決で多くの問題を引き起こした。
+Sambaチームはいろいろと検討した結果この機能を取り除く必要があると決定した。
+</para>
 
 	<sect2>
 	<title>平文</title>
@@ -2119,7 +2171,7 @@ index   default               sub
 <indexterm><primary>LDIF file</primary></indexterm>
 <indexterm><primary>DNS</primary></indexterm>
 		LDAPデータベースにアカウントが追加できる前に、格納するためのアカウント
-		コンテナーを作成する必要がある。以下のLDIFファイルは必要に応じて変更
+		コンテナを作成する必要がある。以下のLDIFファイルは必要に応じて変更
 		する必要がある(DNSエントリなど):
 <programlisting>
 # Organization for Samba Base
@@ -2128,7 +2180,7 @@ objectclass: dcObject
 objectclass: organization
 dc: quenya
 o: Quenya Org Network
-description: The Samba Network LDAP Example
+description: The Samba-3 Network LDAP Example
 
 # Organizational Role for Directory Management
 dn: cn=Manager,dc=quenya,dc=org
@@ -2203,8 +2255,8 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 
 		<note><para>
 <indexterm><primary>secrets.tdb</primary></indexterm>
-		Samb aが LDAP サーバーにアクセスできる前に、Samba の
-		<filename>secrets.tdb</filename>データベース中に LDAP admin パスワード
+		SambaがLDAPサーバーにアクセスできる前に、Samba-3の
+		<filename>secrets.tdb</filename>データベース中にLDAP adminパスワード
 		を以下のようにして格納する必要がある:
 <indexterm><primary>smbpasswd</primary></indexterm>
 <screen>
@@ -2340,12 +2392,12 @@ userPassword: {SSHA}c3ZM9tBaBo9autm1dL3waDS21+JSfQVz
 <indexterm><primary>posixGroup</primary></indexterm>
 <indexterm><primary>Domain Groups</primary></indexterm>
 <indexterm><primary>ADS</primary></indexterm>
-			Samba では、グループ管理システムは POSIX グループをベースにして
-			いる。これは、Samba は posixGroup オブジェクトクラスを使うという
-			ことを意味する。今の所、NT 風のグループシステム管理はない(
-			グローバルとローカルグループという)。Samba は
+			Samba-3では、グループ管理システムはPOSIXグループをベースにして
+			いる。これは、SambaはposixGroupオブジェクトクラスを使うという
+			ことを意味する。今の所、NT風のグループシステム管理はない(
+			グローバルとローカルグループという)。Samba-3は
 			<constant>Domain Groups</constant>のみを認識し、Microsoft
-			Windows 2000と Active Directoryとは異なり、Samba はネスト
+			Windows 2000と Active Directoryとは異なり、Samba-3はネスト
 			されたグループをサポートしない。
 			</para>
 
@@ -2631,8 +2683,8 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 		<title>パスワードの同期</title>
 
 		<para>
-		Samba 以降のバージョンは、アカウントとして格納される非 Samba(LDAP) パスワード
-		を更新できる。pam_ldap を使う場合、UNIX と Windows パスワードを同時に変更できる。
+		Samba-3以降のバージョンは、アカウントとして格納される非Samba(LDAP)パスワード
+		を更新できる。pam_ldapを使う場合、UNIXとWindowsパスワードを同時に変更できる。
 		</para>
 
 		<para>
@@ -2705,6 +2757,18 @@ sambaNTPassword: 878D8014606CDA29677A44EFA1353FC7
 		<link linkend="acctmgmttools">アカウント管理ツール</link>を読むこと。</para>
 
 	</sect2>
+
+	<sect2>
+	<title><parameter>auth methods</parameter>の設定</title>
+
+	<para>
+	明示的に<smbconfoption name="auth methods"/>パラメーターを設定する場合、
+	<parameter>guest</parameter>はエントリの最初の行に指定しなければならない &smbmdash;
+	例えば、<smbconfoption name="auth methods">guest sam</smbconfoption>である。
+	</para>
+
+	</sect2>
+
 </sect1>
 
 </chapter>

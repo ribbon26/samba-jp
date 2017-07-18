@@ -138,20 +138,20 @@
 	<title>TDBデータベースファイルの情報</title>
 
 	<para>
-        この節では、Samba で使われるデータベースの簡単な説明を含む。
+        この節では、Samba-3で使われるデータベースの簡単な説明を含む。
 	</para>
 
 	<para>
 <indexterm><primary>tdbファイルの位置</primary></indexterm>
-        Samba が格納する tdb ファイルのディレクトリの位置は、コンパイル時オプ
-        ションによって変わる。Samba は2つの場所に tdb ファイルを格納する。
+        Sambaが格納するtdbファイルのディレクトリの位置は、コンパイル時オプ
+        ションによって変わる。Samba-3は2つの場所にtdbファイルを格納する。
         その位置を決める最も良い方法は、以下のコマンドを実行する:
 <screen>
 &rootprompt; smbd -b | grep PRIVATE_DIR
    PRIVATE_DIR: /etc/samba/private
 </screen>
         これは、秘密のtdbファイルが<filename>/etc/samba/private</filename>
-        ディレクトリに格納されることを意味している。Samba はまた、より
+        ディレクトリに格納されることを意味している。Samba-3はまた、より
         ありふれたデータを含むいくつかのtdbファイルを使う。それらのファイルの
         位置は以下を実行することで見つけられる:
 <screen>
@@ -303,7 +303,7 @@
 		</row>
 		<row>
 			<entry>perfmon/*.tdb</entry>
-			<entry><para>パフォーマンスカウンター情報。</para></entry>
+			<entry><para>パフォーマンスカウンタ情報。</para></entry>
 			<entry>no</entry>
 		</row>
 		<row>
@@ -403,7 +403,7 @@
 
 	<para>
 	<indexterm><primary>process</primary><secondary>の開始</secondary></indexterm>
-        SambaがOSベンダーによってパッケージ化されている時、開始プロセスは通常プラッ
+        SambaがOSベンダによってパッケージ化されている時、開始プロセスは通常プラッ
         トフォーム全体に渡って統合された固有の機能となっている。Sambaの起動の正
         しい管理に関する特定の情報のためにOSプラットフォームの管理マニュアルを
         参照してほしい。
@@ -542,7 +542,7 @@
         SWATを起動するために、好みのブラウザーを起動し、
 	<ulink url="http://localhost:901/" noescape="1">http://localhost:901/</ulink>
         を指定する。
-        Sambaを動かしているコンピューターがブラウザーが動いているコンピューターと異な
+        Sambaを動かしているコンピュータがブラウザーが動いているコンピュータと異な
         るならば、<replaceable>localhost</replaceable>の部分を置き換えること。
 	</para>
 
@@ -725,7 +725,26 @@
 	</para>
 
 	<para>
-	&winbindd;は接続するドメインの数に依存して、数多くのプロセスが起動する。
+	&winbindd;は1つまたは2つのdaemonで動作し、
+        <emphasis>split mode</emphasis>(2つのインスタンスの場合)かどうかによる。
+	</para>
+
+	</sect2>
+
+	<sect2>
+		<title>エラーメッセージ: open_oplock_ipc</title>
+
+	<para>
+        &smbd;が起動した時にログファイル中に以下のエラーメッセージが出ることがある:
+	<quote>open_oplock_ipc: Failed to
+	get local UDP socket for address 100007f. Error was Cannot assign requested.</quote>
+	</para>
+
+	<para>
+        これは、loopbackデバイスが正しく動作していない。正しく設定し直すこと。
+        ループバックデバイスは内部(仮想の)ネットワークデバイスで、IPアドレスが
+        <emphasis>127.0.0.1</emphasis>である。システム上でどのようにloopback
+        デバイスを設定するかはOSのドキュメントを読むこと。
 	</para>
 
 	</sect2>

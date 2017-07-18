@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!-- 
 	smb.conf-documentation specific stylesheets
-	Published under the GNU GPL
+	Published under the GNU GPL or later
 
 	(C) Jelmer Vernooij 					2002-2004
 	(C) Alexander Bokovoy 					2002-2004
@@ -150,7 +150,7 @@
 					<xsl:element name="varlistentry">
 						<xsl:element name="listitem">
 							<xsl:element name="para">
-								<xsl:text>このパラメーターは右記のパラメーターの別名である：</xsl:text>
+								<xsl:text>このパラメータは右記のパラメータの別名である：</xsl:text>
 								<xsl:element name="link">
 									<xsl:attribute name="linkend">
 										<xsl:value-of select="translate(translate(string($name),' ',''), 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
