@@ -8,13 +8,16 @@
 
   <xsl:variable name="l10n.gentext.default.language" select="'ja'"/>
   <xsl:variable name="latex.babel.language">japanese</xsl:variable>
+  <!--
   <xsl:variable name="latex.class.book">jreport</xsl:variable>
+  -->
 
   <!-- samba-ja: XeTeX 出力のフォントを設定する -->
   <xsl:param name="xetex.font">
-    <xsl:text>\setmainfont{MS PMincho}&#10;</xsl:text>
-    <xsl:text>\setmonofont{MS PGothic}&#10;</xsl:text>
-    <xsl:text>\setmonofont{MS Gothic}&#10;</xsl:text>
+    <xsl:text>\usepackage{xeCJK}</xsl:text>
+    <xsl:text>\setCJKmainfont{IPAPMincho}&#10;</xsl:text>
+    <xsl:text>\setCJKsansfont{IPAPGothic}&#10;</xsl:text>
+    <xsl:text>\setCJKmonofont{IPAGothic}&#10;</xsl:text>
   </xsl:param>
 
   <!-- samba-ja: 出力エンコーディングを定める -->
