@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="vfs_shadow_copy2.8" lang="ja">
+<refentry id="vfs_shadow_copy2.8">
 
 <refmeta>
 	<refentrytitle>vfs_shadow_copy2</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.3</refmiscinfo>
 </refmeta>
 
 
@@ -53,9 +53,14 @@
 	ディレクトリツリー中のあらゆる場所置くことが出来る。このモードは、
 	たとえばGPFSの独立ファイルセットのような、任意のサブツリーでスナップショットを
 	取ることができるファイルシステムのサポートに有用である。</para>
-	</listitem>
+	<para>
+        Snapshot directories need not be in one fixed central place but
+        can be located anywhere in the directory tree. This mode helps to
+        support file systems that offer snapshotting of particular
+        subtrees, for example the GPFS independent file sets.
+        </para></listitem>
         <listitem><para>
-	スナップショット名の目立たせ方: スナップショットは
+	目立つスナップショットのネーミング: スナップショットは
 	str[fp]time 変換結果と互換のある任意の形式で名前を付けることができる。
         </para><para>
         Vanity naming for snapshots: snapshots can be named in any format
@@ -145,6 +150,13 @@
 	  ポイントを指定できる。通常このマウントポイントは自動的に検出される。
 	  しかし、特にテストのような、ある種の場面においては、
 	  このように指定できることが好都合である。</para>
+        <para>
+        With this parameter, one can specify the mount point
+        of the filesystem that contains the share path.
+        Usually this mount point is automatically detected.
+        But for some constellations, in particular tests,
+        it can be convenient to be able to specify it.
+        </para>
 	<para>例: shadow:mountpoint = /path/to/filesystem</para>
 	<para>既定値: shadow:mountpoint = 未定義</para>
 	</listitem>
@@ -221,56 +233,6 @@
         </varlistentry>
 
 		<varlistentry>
-		<term>shadow:snapsharepath = SNAPSHAREPATH
-		</term>
-		<listitem>
-		  <para>
-		    このパラメータを使うと、スナップショットのルートディレクトリ
-		    からの相対で、スナップショット中における共有のルートディレクトリ
-		    のパスを指定出来る。これは、<command>shadow:basedir</command>
-		    の代替方法であり、より多くの制御が出来る。
-		  </para><para>
-		With this parameter, one can specify the path of the share's
-		root directory in snapshots, relative to the snapshot's
-		root directory. It is an alternative method to
-		<command>shadow:basedir</command>, allowing greater control.
-		</para>
-		<para>
-		  たとえば、もしも各スナップショット中で、共有中のファイルが
-		  <command>path/to/share/</command>というパスを持つ場合、
-		  <command>shadow:snapsharepath</command>は、
-		  <command>path/to/share</command> に設定出来る。
-		</para>
-		<para>
-		  このパラメータを使うと、スナップショットがオリジナルの
-		  ファイルシステムのイメージかその一部かを意味しなくなる。
-		  たとえば、あるシステムが、共有中に含まれるファイルのみの
-		  バックアップを実行し、論理構造でバックアップ
-		  ファイルを公開できるようになる。</para><para>
-		With this parameter, it is no longer assumed that a
-		snapshot represents an image of the original file system or
-		a portion of it. For example, a system could perform
-		backups of only files contained in shares, and then
-		expose the backup files in a logical structure:
-		</para>
-		<itemizedlist>
-		<listitem><para>share1/</para></listitem>
-		<listitem><para>share2/</para></listitem>
-		<listitem><para>.../</para></listitem>
-		</itemizedlist>
-		<para>
-		  <command>shadow:snapdirseverywhere</command>と
-		  <command>shadow:basedir</command>オプションは、
-		  <command>shadow:snapsharepath</command>と、
-		  <command>shadow:snapsharepath</command>を無効にする
-		  設定とは非互換であることに注意。
-		</para>
-		<para>Example: shadow:snapsharepath = path/to/share</para>
-		<para>Default: shadow:snapsharepath = NOT SPECIFIED</para>
-                </listitem>
-		</varlistentry>
-
-		<varlistentry>
                  <term>shadow:sort = asc/desc
                  </term>
                  <listitem>
@@ -315,10 +277,16 @@
 		<term>shadow:sscanf = yes/no</term>
 		<listitem>
 		<para>
-                このパラメータは、書式文字列中での時間が、
-		符号なしの long integer (%lu)ではなく、
-		strptime() が認識できる時間とする場合に使用する。
+		このパラメータは、strptime() が認識できる時間ではなく、
+		符号なしの long integer (%lu)として提供される書式での時間で
+		指定することができるようにする。
 		結果はunix time_t時間でなければならない。</para>
+		<para>
+		This paramter can be used to specify that the time in
+		format string is given as an unsigned long integer (%lu)
+		rather than a time strptime() can parse.
+		The result must be a unix time_t time.
+		</para>
 		<para>既定値: shadow:sscanf = no</para>
 		</listitem>
 		</varlistentry>
@@ -407,10 +375,10 @@
 		only particular subtrees of the filesystem as well.
 		</para>
 		<para>
-		<command>shadow:crossmountpoints</command>は
+		<command>shadow:snapdirseverywhere</command>は
 		<command>shadow:snapdir</command>に依存し、それは相対パスが
                 必要なことに注意。絶対パスを設定すると、
-                <command>shadow:crossmountpoints</command>は無効になる。
+                <command>shadow:snapdirseverywhere</command>は無効になる。
 		</para>
 		<para>
 		このオプションは、<command>shadow:basedir</command>
@@ -422,44 +390,6 @@
 		 </listitem>
 		 </varlistentry>
 
-		 <varlistentry>
-		 <term>shadow:snapprefix
-		 </term>
-		 <listitem>
-		 <para>
-		 スナップショットがどんどん増えるため、ファイルシステムには、
-		 あるスナップショットを、たとえば、月次、週次、マニュアル、
-		 特別なイベントのようなものから、他と区別するような仕組みが
-		 必要である。そのため、そのようなファイルシステムでは、
-		 たとえば、時間ベースでない、変更可能な名前をスナップショットに
-		 つけるしくみのような、異なった方法でスナップショットにタグを
-		 つける方法を提供する。<command>shadow:format</command>
-		 のみでは、そのようなスナップショットを区別するのは困難である。
-		 このオプションパラメータを使うことにより、ファイルシステム中
-		 のスナップショットディレクトリの名前に対して、いろいろな
-		 プレフィックスを指定することができるようになる。
-		 <command>shadow:format</command>と、<command>shadow:delimiter</command>
-		 パラメータと一緒に、このパラメータが設定された場合、
-		 ファイルシステム中のスナップショットディレクトリがとり得る
-		 名前を決定する。オプションは、基本的な正規表現(BRE)のみを
-		 サポートする。
-		 </para>
-		 </listitem>
-		 </varlistentry>
-
-		 <varlistentry>
-		 <term>shadow:delimiter
-		 </term>
-		 <listitem>
-		 <para>
-		 このオプションパラメータは、<command>shadow:snapprefix</command>と
-		 <command>shadow:format</command> 間のデリミタとして
-		 使われる。このパラメータは、<command>shadow:snapprefix</command>
-		 が設定されているときにのみ使われる。
-		 </para>
-		 <para>既定値: shadow:delimiter = "_GMT"</para>
-		 </listitem>
-		 </varlistentry>
 		</variablelist>
 </refsect1>
 
@@ -513,8 +443,8 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.5.0 - 4.6.6 に対応する。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.6.6 対応の翻訳は
+    <para>このマニュアルページは Samba 4.1.8 - 4.3.12 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.3.12 対応の翻訳は
     <itemizedlist>
         <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
         <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>

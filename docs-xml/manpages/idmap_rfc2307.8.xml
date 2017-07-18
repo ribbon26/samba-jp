@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="idmap_rfc2307.8" lang="ja">
+<refentry id="idmap_rfc2307.8">
 
 <refmeta>
 	<refentrytitle>idmap_rfc2307</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.3</refmiscinfo>
 </refmeta>
 
 <refnamediv>
@@ -84,11 +84,11 @@
 			</para></listitem>
 		</varlistentry>
 		<varlistentry>
-			<term>realm</term>
-			<listitem><para>LDAP クエリ中のグループ
+			<term>cn_realm = &lt;yes | no&gt;</term>
+			<listitem><para>LDAP中のグループ
 			(と、もしも user_cnが設定された場合はusersも)
 			のために、 cn に@realm を追加する。このオプションは
-			必須ではないので、既定では realm にはなにも追加されない。
+			必須ではないので、既定値は no である。
 			</para></listitem>
 		</varlistentry>
 		<varlistentry>
@@ -96,7 +96,7 @@
 			<listitem><para>Active Directory サーバ中の
 			LDAPサーバを使う時、これは、Active Directory
 			サーバにアクセスするためのドメインを指定出来るようにする。
-			これはまた、一箇所で、すべてのRFC 2307レコードを
+			これはまた、1つの場所にすべてのRFC 2307レコードを
 			保持している間、信頼関係を使えるようにする。
 			このパラメータはオプションであり、既定値は、LDAP
 			レコードを問い合わせるために、現在のドメイン中の
@@ -128,17 +128,28 @@
 			もしも存在しない場合、匿名バインドが実行される。
 			</para></listitem>
 		</varlistentry>
+		<varlistentry>
+			<term>ldap_realm</term>
+			<listitem><para>ユーザおよびグループ名で使うrealm
+			を定義する。これは、cn_realmをスタンドアロンLDAPサーバ
+			と共に使う時にのみ必要とされる。
+			</para></listitem>
+		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
 	<title>使用例</title>
 
-	<para>以下の例は、スタンドアロン LDAP サーバから id マッピングを
+	<para>以下の例は、スタンドアロンLDAPサーバからidマッピングを
 	どのように検索するかを示す例である。この例は又、どのように、
-	BUILTIN のような、内部バックエンド中で使用されうる
-	ローカル id 割り当てにとは競合しない、小さなレンジを確保することも
+	BUILTINのような、内部バックエンド中で使われてるかもしれない
+	ローカルid割り当てのから、非競合しない小さなレンジを確保することも
 	示す。</para>
+	<para>The following example shows how to retrieve id mappings
+	from a stand-alone LDAP server.  This example also shows how
+	to leave a small non conflicting range for local id allocation
+	that may be used in internal backends like BUILTIN.</para>
 
 	<programlisting>
 	[global]
@@ -169,8 +180,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.4.0 - 4.6.6 に対応する。</para>
-		<para>このドキュメントの Samba 4.1.0 - 4.6.6 対応の翻訳は
+	<para>このマニュアルページは Samba 4.3.0 - 4.3.12 に対応する。</para>
+		<para>このドキュメントの Samba 4.1.0 - 4.3.12 対応の翻訳は
 	<itemizedlist>
 	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
 	</itemizedlist>
