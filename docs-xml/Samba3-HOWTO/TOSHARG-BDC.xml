@@ -12,7 +12,7 @@
 
 <para>
 このセクションを読み始める前に、<link linkend="samba-pdc">ドメイン制御</link>
-中で説明されている Samba ドメインコントローラーの設定に問題がないようにして
+中で説明されているSambaドメインコントローラーの設定に問題がないようにして
 おくこと。
 </para>
 
@@ -22,7 +22,7 @@
 <para>
 この章は、説明するのが最も困難な章の一つである。何を書いても、誰かがまだ
 実現できていない項目、あるいはまったく異なるアプローチを使った方が遥かに
-効果的に実現できる項目について、実現されたはずだと期待して Samba チームに
+効果的に実現できる項目について、実現されたはずだと期待してSambaチームに
 問い合わせてくることを防止することはできないと思われる。もしこの章で説明
 されているはずなのに、いくら読んでも言及されない事項というのがある場合は、
 要件あるいは質問内容を明確に書いて
@@ -36,13 +36,13 @@
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>LDAP</primary><secondary>slave</secondary></indexterm>
 <indexterm><primary>スケーラビリティ</primary></indexterm>
-Samba は別の Samba プライマリドメインコントローラー (PDC) に対するバックアップ
-ドメインコントローラー (BDC) として機能することができる。Samba PDCは、LDAP
-アカウントバックエンドとともに運用することができる。LDAP バックエンドは、
-共用のマスターLDAPサーバーかスレーブサーバーのどちらでも使える。スレーブ LDAP サーバー
+Samba-3 は別のSambaプライマリドメインコントローラー(PDC)に対するバックアップ
+ドメインコントローラー(BDC)として機能することができる。Samba-3 PDCは、LDAP
+アカウントバックエンドとともに運用することができる。LDAPバックエンドは、
+共用のマスターLDAPサーバーかスレーブサーバーのどちらでも使える。スレーブLDAPサーバー
 を使用する利点は、マスターがダウンしている時でもクライアントがネットワークに
-ログオンできるということである。これにより Samba が高いレベルの拡張性を持つ
-ことになり、大規模な組織のための効果的なソリューションとなり得る。PDC に LDAP
+ログオンできるということである。これによりSambaが高いレベルの拡張性を持つ
+ことになり、大規模な組織のための効果的なソリューションとなり得る。PDCにLDAP
 スレーブサーバーを使用する場合、マスターの継続的な可用性を確保する必要がある。&smbmdash;
 悪い時にスレーブ側から見てマスターがダウンしていると、安定性の問題や運用上の
 問題となる。
@@ -53,12 +53,95 @@ Samba は別の Samba プライマリドメインコントローラー (PDC) に
 <indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
 <indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
 <indexterm><primary>propagate</primary></indexterm>
-Samba BDC を LDAP でないバックエンドで運用することは不可能なので、
-バックエンドが何らかの形で「双方向の」伝達を許容し、BDC 側からマスター
+Samba-3 BDCをLDAPでないバックエンドとともに運用することも可能だが、
+バックエンドが何らかの形で「双方向の」伝達を許容し、BDC側からマスター
 への変更が可能であるようにしなければならない。現段階でこれをできるのは
-LDAP のみである。PDC が、そのプライマリとして LDAP マスターサーバーを使うことが
-好ましい間、BDC はスレーブ LDAP サーバーを使うことが出来る。
+LDAPのみである。PDCが、そのプライマリとしてLDAPマスターサーバーを使うことが
+好ましい間、BDCはスレーブLDAPサーバーを使うことが出来る。
 </para>
+
+<para>
+<indexterm><primary>非LDAP</primary><secondary>バックエンド</secondary></indexterm>
+<indexterm><primary>SAMバックエンド</primary><secondary>非LDAP</secondary></indexterm>
+<indexterm><primary>ドメイン</primary><secondary>メンバー</secondary><tertiary>サーバー</tertiary></indexterm>
+<indexterm><primary>BDC</primary></indexterm>
+<indexterm><primary>PDC</primary></indexterm>
+<indexterm><primary>trust account password</primary></indexterm>
+<indexterm><primary>domain trust</primary></indexterm>
+LDAPでないバックエンドSAMデータベースを使用するのは問題に陥りやすくなる。
+なぜなら、ドメインメンバーサーバーもワークステーションも、マシン信頼アカウントの
+パスワードを定期的に変更するからである。新しいバスワードはローカルでしか保存
+されない。このことは、(LDAPベースのソリューションにあるような)集中的に格納
+されたアカウントデータベースが無く、Samba-3 がBDCとして動作しているとき、
+BDC 側のドメインメンバー信頼アカウントのパスワードの記録が、PDC(マスター)のSAM
+のコピーに届かないことを意味する。もし、PDCのSAMがBDC側に複製されると、
+最新の(変更後の)信頼アカウントのパスワードを含むSAMが上書きされることになり、
+ドメイン信頼が無効になってしまう。
+</para>
+
+<para>
+<indexterm><primary>net</primary><secondary>rpc</secondary></indexterm>
+<indexterm><primary>SAM backend</primary><secondary>ldapsam</secondary></indexterm>
+<indexterm><primary>SAM backend</primary><secondary>tdbsam</secondary></indexterm>
+<indexterm><primary>replication</primary><secondary>SAM</secondary></indexterm>
+BDCの設定方法に関して挙げられたコメントや質問の数が多いので、可能な選択肢の
+一つ一つについて、おのおのの解について利点欠点を見てみよう。
+<link linkend="pdc-bdc-table">以下のドメインバックエンドアカウント分散オプション一覧</link>
+は、PDC/BDC構成で設定可能な設定例の一覧である。
+</para>
+
+<table frame="all" id="pdc-bdc-table"><title>分散ドメインバックエンドアカウントの選択肢</title>
+<tgroup cols="3">
+        <colspec align="center" colwidth="1*"/>
+        <colspec align="center" colwidth="1*"/>
+        <colspec align="left" colwidth="3*"/>
+
+        <thead>
+        <row><entry>PDCバックエンド</entry><entry>BDCバックエンド</entry><entry>補足事項</entry></row>
+        </thead>
+        <tbody>
+        <row>
+        <entry><para>マスターLDAPサーバー</para></entry>
+        <entry><para>スレーブLDAPサーバー</para></entry>
+        <entry><para>高い整合性を提供する完全なソリューション。SAMは共通マスターLDAPサーバーで
+	    複製される。</para></entry>
+        </row>
+        <row>
+        <entry><para>単一の集中LDAPサーバー</para></entry>
+        <entry><para>単一の集中LDAPサーバー</para></entry>
+	<entry><para>
+	フェイルオーバー機能がないが実用可能なソリューション。これは実用的なソリューションで
+	あるが、完全ではない。
+	</para></entry>
+        </row>
+        <row>
+        <entry><para>tdbsam</para></entry>
+        <entry><para>tdbsam + <command>net rpc vampire</command></para></entry>
+        <entry><para>
+	Samba-3.0では動かない。Sambaはサーバーサイドプロトコル要求を実装していない。
+	</para></entry>
+        </row>
+        <row>
+        <entry><para>tdbsam</para></entry>
+        <entry><para>tdbsam + <command>rsync</command></para></entry>
+        <entry><para>
+	この設定を使ってはいけない。TDBファイルが使用中の状態でデータがディスクに
+	完全に書き戻されていないかもしれないので、動作しない。
+	さらに、ドメインの信頼関係を壊すだろう。
+	</para></entry>
+        </row>
+        <row>
+        <entry><para>smbpasswd file</para></entry>
+        <entry><para>smbpasswd file</para></entry>
+        <entry><para>
+	この設定を使ってはいけない。
+	同期が遅延するためにエレガントな解ではなく、ドメイン信頼関係
+	の問題で悩むだろう。
+	</para></entry>
+        </row>
+        </tbody>
+</tgroup>
+</table>
 
 </sect1>
 
@@ -182,18 +265,18 @@ PDCに対してトリガを送る。PDCは当該ドメインの全BDCに接続�
 <indexterm><primary>SAM</primary><secondary>差分ファイル</secondary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba は真の SAM 複製に参加できないので、Microsoft Windows NT4で
+Samba-3は真のSAM複製に参加できないので、Microsoft Windows NT4で
 使われているのと同じプロトコルを使用することが出来ない。
-Samba BDC は SAM 更新差分ファイルを作成できない。BDC が持っている差分
-ファイルから SAM の同期をとるために、PDC(NT4またはSamba) 間とやりとりもしない。
+Samba-3 BDCはSAM更新差分ファイルを作成できない。BDCが持っている差分
+ファイルからSAMの同期をとるために、PDC(NT4またはSamba)間とやりとりもしない。
 </para>
 
 <para>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>BDC</primary></indexterm>
-Samba はMicrosoft Windows NT4 BDC としては動作できず、Samba は
-Microsoft Windows NT4 BDC に対する PDC として正しく動作できない。
-Samba と Microsoft Windows NT4 はそれぞれのタイプの PDC への BDC として
+Samba-3 はMicrosoft Windows NT4 BDCとしては動作できず、Samba-3は
+Microsoft Windows NT4 BDCに対するPDCとして正しく動作できない。
+Samba-3とMicrosoft Windows NT4はそれぞれのタイプのPDCへのBDCとして
 機能することは出来る。
 </para>
 
@@ -218,9 +301,9 @@ NT4のPDCを稼働停止しなければならない場合や故障した場合�
 中に行うと、NT4 PDCは自動的に NT4 BDCに降格する。これはドメインコントローラー
 の管理の中で特に重要な一面である。昇格および降格を実行するのに使用される
 ツールはドメインサーバーマネジャーである。ここで注意しなければならない
-ことは、Samba の BDCは同様の方法で格上げすることはできないということである。
-これは、そのような Samba の再設定を行うには &smb.conf; ファイルの変更が必要に
-なるからである。作業は、&smb.conf; ファイルの手動での変更と、Samba ネットワーク
+ことは、Samba-3 の BDCは同様の方法で格上げすることはできないということである。
+これは、そのような Samba の再設定を行うには&smb.conf;ファイルの変更が必要に
+なるからである。作業は、&smb.conf;ファイルの手動での変更と、Sambaネットワーク
 サービスに関連するものの再起動をおこなうだけでよい。
 </para>
 
@@ -390,11 +473,9 @@ PDC/BDCとLDAPを使う、設定可能なパターンは以下の通り:
 <indexterm><primary>ドメインコントローラー</primary></indexterm>
 Microsoft Windows 2000とActive Directoryのリリース以降、この情報は
 複製可能で、管理コントロールの部分的あるいは全体を複製できるディレクトリ
-中に格納される。Samba-4.0 はActive Directory内でドメインコントローラー
-になれ、また、Active Directoryサーバーにもなれる。これをどのようにやるかの
-詳細については、
-<ulink url="https://wiki.samba.org/index.php/Samba4/HOWTO">
-Samba 4.0 as an AD DC HOWTO</ulink> を参照のこと。
+中に格納される。Samba-3はActive Directory内でドメインコントローラー
+にはなれず、また、Active Directoryサーバーにもなれない。このことは、Samba-3
+はActive DirectoryドメインコントローラーのBDCとなりえないことを意味する。
 </para>
 
 </sect2>
@@ -504,6 +585,37 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバーを準備�
 
 <itemizedlist>
 	<listitem><para>
+	<indexterm><primary>SID</primary></indexterm>
+	<indexterm><primary>PDC</primary></indexterm>
+	<indexterm><primary>BDC</primary></indexterm>
+	<indexterm><primary>private/secrets.tdb</primary></indexterm>
+	<indexterm><primary>private/MACHINE.SID</primary></indexterm>
+	<indexterm><primary>ドメインSID</primary></indexterm>
+	ドメインSIDはPDCとBDCで同じにしなければならない。バージョン2.2.5
+	以前のSambaでは、ドメインSIDは<filename>private/MACHINE.SID</filename>
+	ファイルに格納されていた。Sambaバージョン2.2.5以降すべてのバージョンでは、
+	ドメインSIDは<filename>private/secrets.tdb</filename>ファイルに
+	格納されている。このファイルは各サーバーで固有であり、PDCからBDCに
+	コピーできない。BDCは新しいSIDを起動時に生成する。新しく生成したBDCのSID
+	はPDCのドメインSIDを上書きする。これは、BDCにドメインSIDを入手することを
+	認める手続きである。これについては以下で説明する。
+	</para>
+
+	<para>
+	<indexterm><primary>ドメインSID</primary></indexterm>
+	<indexterm><primary>PDC</primary></indexterm>
+	<indexterm><primary>BDC</primary></indexterm>
+	<indexterm><primary>secrets.tdb</primary></indexterm>
+	<indexterm><primary>net</primary><secondary>rpc</secondary><tertiary>getsid</tertiary></indexterm>
+	PDCまたは既存のBDCからドメインSIDを検索するためと、検索した値を
+	<filename>secrets.tdb</filename>に格納するためには、以下を実行する:
+	</para>
+<screen>
+&rootprompt;<userinput>net rpc getsid</userinput>
+</screen>
+	</listitem>
+
+	<listitem><para>
 	<indexterm><primary>secrets.tdb</primary></indexterm>
 	<indexterm><primary>smbpasswd</primary></indexterm>
 	<indexterm><primary>LDAP管理用パスワード</primary></indexterm>
@@ -545,7 +657,9 @@ BDCの作成には最初に&smbd;を動かす前にSamba サーバーを準備�
 	<indexterm><primary>ssh</primary></indexterm>
 	<indexterm><primary>LDAP</primary></indexterm>
 	SambaパスワードデータベースはPDCからBDCに向けて複製されねばならない。
-	解決方法は、各BDCに対してスレーブ
+	<command>rsync</command>と<command>ssh</command>で<filename>smbpasswd</filename>
+	ファイルの同期を取るのが可能であるが、この方法は破綻していて
+	欠陥があるので推奨できない。よりよい解決方法は、各BDCに対してスレーブ
 	LDAPサーバーを、PDCにマスターLDAPサーバーを設定することである。
 	rsyncを使う方法は、一定間隔毎にデータが複製されるという理由で、本質的に
 	欠陥がある。すべての瞬間に、現在のマシンとユーザーアカウントの正しい情報で
@@ -659,13 +773,13 @@ BDCは<command>nss_ldap</command>ユーティリティとNSS経由の、ロー�
 <indexterm><primary>ID マッピング</primary></indexterm>
 <indexterm><primary>ドメインメンバーサーバー</primary></indexterm>
 <indexterm><primary>idmap backend</primary></indexterm>
-Samba は新しい ID マッピング機能を導入した。その機能の特徴の1つは、
-NTドメインのユーザーとグループ SID に関してユーザーとグループ ID を取り扱うやり方に、
+Samba-3は新しいIDマッピング機能を導入した。その機能の特徴の1つは、
+NTドメインのユーザーとグループSIDに関してユーザーとグループIDを取り扱うやり方に、
 より高い柔軟性を備えているということである。新しい機能の1つは、UNIX/Linuxの
-UID と GID の値が、PDC、すべての BDC とすべてのドメインメンバーサーバー上で
+UIDとGIDの値が、PDC、すべてのBDCとすべてのドメインメンバーサーバー上で
 一貫していることを明確に確保する。これを制御
 するパラメーターは、<parameter>idmap backend</parameter>である。その動作
-に関連する詳細な情報は、&smb.conf; マニュアルページを参照してほしい。
+に関連する詳細な情報は、&smb.conf;マニュアルページを参照してほしい。
 </para></note>
 
 <para>
@@ -737,15 +851,60 @@ SAMが再度コピーされたときに上書きされてしまう。その結�
 <indexterm><primary>BDC</primary></indexterm>
 <indexterm><primary>PDC</primary></indexterm>
 <indexterm><primary>ログオン要求</primary></indexterm>
-SambaでBDCを使う利点はあるかと言われればもちろんある。しかし、それはSamba PDC
-あるいは <ulink url="https://wiki.samba.org/index.php/Samba4/HOWTO">Samba 4.0 Active
-Directoryドメインコントローラー</ulink> に対してのみである。
-BDCを使う理由は可用性という点である。もしもPDCがSambaだった
+SambaでBDCを使う利点はあるかと言われればもちろんある。しかし、それはSamba PDCに対して
+のみである。BDCを使う理由は可用性という点である。もしもPDCがSambaだった
 場合、2番目のSambaマシンは、PDCがダウンしている時にログオン要求
 をサービスするように設定できる。
 </para>
 
 </sect2>
 
+<sect2>
+<title>smbpasswdファイルの複製はどうやるか?</title>
+
+<para>
+<indexterm><primary>複製</primary><secondary>SAM</secondary></indexterm>
+<indexterm><primary>smbpasswd</primary></indexterm>
+<indexterm><primary>SAM</primary></indexterm>
+smbpasswdファイルの複製は注意が必要である。SAMが変更されたときは必ず
+行わなければならない。各ユーザーのパスワードの変更はsmbpasswd
+ファイル中で行われるので、必ずBDCに複製されねばならない。そのため、smbpasswdファイル
+の複製は非常に頻繁に必要となる。
+</para>
+
+<para>
+<indexterm><primary>平文のパスワード</primary></indexterm>
+<indexterm><primary>ssh</primary></indexterm>
+<indexterm><primary>rsync</primary></indexterm>
+smbpasswdファイルには平文パスワードと同等のものが含まれているので、ネットワーク
+上で暗号化しないで送ってはならない。PDCからBDCへ、smbpasswdを複製する最もよい方法
+は、rsyncを使うことである。rsyncは伝送路としてsshを使える。
+<command>ssh</command>は、ユーザーがパスワードを入力
+<emphasis>しなくても</emphasis><command>rsync</command>での転送ができるように設定できる。
+</para>
+
+<para>
+<indexterm><primary>マシン信頼アカウント</primary></indexterm>
+<indexterm><primary>LDAP</primary></indexterm>
+少し前に説明したが、この方法を使うことは欠陥があるため危険である。マシン信頼
+アカウントの同期が外れると、結果としてドメインが破壊される。この方法は
+<emphasis>推奨されない</emphasis>。その代わりにLDAPを使うこと。
+</para>
+
+</sect2>
+
+<sect2>
+<title>これをすべてのLDAPに使えるか?</title>
+
+<para>
+<indexterm><primary>pdb_ldap</primary></indexterm>
+<indexterm><primary>LDAP</primary></indexterm>
+一言で言うと可能である。Sambaのpdb_ldapコードはレプリカLDAPサーバーに対する
+バインドをサポートし、データベースに対する変更の必要時には、referralの
+追跡と再バインドを行う(通常BDCはリードオンリで、そのためこれは滅多に
+起こらない)。
+</para>
+
+</sect2>
 </sect1>
 </chapter>

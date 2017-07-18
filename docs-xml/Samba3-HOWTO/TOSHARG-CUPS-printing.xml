@@ -103,8 +103,9 @@
 <indexterm><primary>/etc/printcap</primary></indexterm>
 <indexterm><primary>Printcap</primary></indexterm>
 <indexterm><primary>PrintcapFormat</primary></indexterm>
-SambaでのCUPSを使った印刷環境の、最も基本的な&smb.conf;の設定方法は、
-<smbconfoption name="printing">cups</smbconfoption>だけである。
+Samba-3.0(2.2.xから使える)でのCUPSを使った印刷環境の、最も基本的な&smb.conf;のセットアップは
+<smbconfoption name="printing">cups</smbconfoption>と
+<smbconfoption name="printcap">cups</smbconfoption>という2つのパラメーターを必要とする。
 CUPSはprintcapファイルを必要としない。しかし、<filename>cupsd.conf</filename>設定ファイルは、
 サードパーティアプリケーション(例えば<parameter>Printcap /etc/printcap</parameter>と
 <parameter>PrintcapFormat BSD</parameter>)に便利なように、どのように、CUPSによって
@@ -122,12 +123,56 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 
 	<para>
 <indexterm><primary>libcups.so</primary></indexterm>
-	SambaはCUPSと特別な関係があり、SambaはCUPSライブラリサポート機能を有効にして
-	コンパイルしなければならない。最も最新のバージョンでは、このサポートを有効にしている。
-	既定値では、CUPSはsmbdとその他のSambaバイナリにリンクされる。
-	パラメーター<smbconfoption name="printing">cups</smbconfoption>は、
-	この場合にのみ動作する。
+	SambaはCUPSと特別な関係がある。SambaはCUPSライブラリサポート機能を有効にして
+	コンパイルできる。最も最新のバージョンでは、このサポートを有効にしている。
+	既定値では、CUPSはsmbdとその他のSambaバイナリにリンクされる。もちろん、
+	<filename>libcups.so</filename>をSambaにリンクしなくてもCUPSを使う事が
+	できるが、要求されるあるいはサポートされる設定にいくつかの違いがある。
 	</para>
+
+	<para>
+<indexterm><primary>libcups</primary></indexterm>
+<indexterm><primary>ldd</primary></indexterm>
+	Sambaが<filename>libcups</filename>とリンクされ、コンパイルされた時、
+	<smbconfoption name="printcap">cups</smbconfoption>は、プリンター一覧の表示、
+	ジョブの投稿、キューの問い合わせなどにCUPS APIを使う。それ以外は、印刷のために、
+	これらの操作を、<command>-oraw</command>オプションを付加して、System Vの
+	コマンドにマップする。Linuxシステムでは、smbdが、libcupsライブラリにリンク
+	されているかを、<command>ldd</command>ユーティリティを使う事で知ることが出来る
+	(<command>ldd</command>は他のOSプラットフォーム上には無いかもしれないか、
+	その機能は別のコマンドによって行われるかもしれない):
+<screen>
+&rootprompt;<userinput>ldd `which smbd`</userinput>
+libssl.so.0.9.6 =&gt; /usr/lib/libssl.so.0.9.6 (0x4002d000)
+libcrypto.so.0.9.6 =&gt; /usr/lib/libcrypto.so.0.9.6 (0x4005a000)
+libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)
+[....]
+</screen>
+	</para>
+
+	<para>
+<indexterm><primary>libcups.so.2</primary></indexterm>
+	<computeroutput>libcups.so.2 =&gt; /usr/lib/libcups.so.2 (0x40123000)</computeroutput>
+	行は、このバージョンのSambaがCUPSサポートするようにコンパイルされていることを
+	示している。もしもこの場合で、printing = cupsが設定されている場合、
+	<emphasis>他の&smb.conf;中にある、手動で設定した印刷関係のコマンドは無視される</emphasis>。
+	これは重要な点なので覚えておくこと!
+	</para>
+
+	<tip><para>何らかの理由で、固有の印刷コマンドを設定するために、
+	<smbconfoption name="printing">sysv</smbconfoption>を設定することにより、これを行える
+	ようにする事が必要である。しかし、CUPSとSambaを密に統合する利便性のすべてを
+	失うことになる。これを行う場合、以下のように、印刷システムコマンドを手動で設定しなければ
+	ならない。
+	(最も重要: 
+	<smbconfoption name="print command"/>; other commands are
+	<smbconfoption name="lppause command"/>,
+	<smbconfoption name="lpresume command"/>,
+	<smbconfoption name="lpq command"/>,
+	<smbconfoption name="lprm command"/>,
+	<smbconfoption name="queuepause command"/> and
+	<smbconfoption name="queue resume command"/>).
+	</para></tip>
 
 	</sect2>
 
@@ -146,6 +191,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="load printers">yes</smbconfoption>
 	<smbconfoption name="printing">cups</smbconfoption>
+	<smbconfoption name="printcap name">cups</smbconfoption>
 
 	<smbconfsection name="[printers]"/>
 	<smbconfoption name="comment">All Printers</smbconfoption>
@@ -154,6 +200,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<smbconfoption name="guest ok">yes</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
+	<smbconfoption name="printer admin">root, @ntadmins, @smbprintadm</smbconfoption>
 	</smbconfblock>
 	</example>
 
@@ -192,6 +239,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<smbconfblock>
 	<smbconfsection name="[global]"/>
 	<smbconfoption name="printing">cups</smbconfoption>
+	<smbconfoption name="printcap name">cups</smbconfoption>
 	<smbconfoption name="load printers">yes</smbconfoption>
 
 	<smbconfsection name="[printers]"/>
@@ -200,6 +248,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<smbconfoption name="guest ok">yes</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
+	<smbconfoption name="printer admin">root, @ntadmins, @smbprintadm</smbconfoption>
 
 	<smbconfsection name="[special_printer]"/>
 	<smbconfoption name="comment">A special printer with his own settings</smbconfoption>
@@ -210,6 +259,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<smbconfoption name="guest ok">no</smbconfoption>
 	<smbconfoption name="writable">no</smbconfoption>
 	<smbconfoption name="printable">yes</smbconfoption>
+	<smbconfoption name="printer admin">kurt</smbconfoption>
 	<smbconfoption name="hosts deny">0.0.0.0</smbconfoption>
 	<smbconfoption name="hosts allow">turbo_xp, 10.160.50.23, 10.160.51.60</smbconfoption>
 	</smbconfblock>
@@ -218,8 +268,9 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	<para>
 	この特別な共有は、テスト目的専用である。これは印刷ジョブをファイルに書かない。
 	これは、ジョブパラメーターをSambaが認識する<filename>/tmp/smbprn.log</filename>
-	ファイルに記録し、ジョブファイルを削除する。さらに、ゲストアクセスは許可されず、
-	共有は
+	ファイルに記録し、ジョブファイルを削除する。さらに、この共有の
+	<smbconfoption name="printer admin"/>は<quote>kurt</quote>で
+	(<quote>@ntadmins</quote>グループではなくて)、ゲストアクセスは許可されず、共有は
 	ネットワークコンピューターに公開されず(そのため、これが共有であることを知っておく
 	必要がある)、3つのホストのみからアクセスできる。その共有に対して、CUPSが起動し、
 	印刷ジョブ上で通信をすることを防ぐために、
@@ -265,7 +316,7 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	</sect2>
 
 	<sect2>
-	<title>直接印刷機能:Windowsクライアント上のベンダードライバー</title>
+	<title>直接印刷機能:Windowsクライアント上のベンダドライバー</title>
 
 	<para>
 	<indexterm><primary>スプールのみ</primary></indexterm>
@@ -275,18 +326,18 @@ Webサイトにある、CUPSサーバーそれ自身が提供する、関連す�
 	すべてのジョブが扱われる<quote>直接</quote>スプーリングを管理することである。
 	この試みは、Windowsクライアントが、印刷デバイスに送られる準備が出来た印刷ジョブ
 	ファイルを準備することが期待されるということである。この場合、ネイティブな
-	(ベンダーが供給した)Windowsプリンタードライバーは、各、およびすべてのクライアントで、
+	(ベンダが供給した)Windowsプリンタードライバーは、各、およびすべてのクライアントで、
 	対象デバイスのものをインストールする必要がある。
 	</para>
 
 	<para>
 <indexterm><primary>render</primary></indexterm>
-<indexterm><primary>ベンダーが提供したドライバー</primary></indexterm>
+<indexterm><primary>ベンダが提供したドライバー</primary></indexterm>
 	同様に現代的な、簡単な方法で、CUPS、SambaとWindowsクライアントを設定することは
 	可能である。CUPSプリンターが直接印刷モード状態で設定されているならば、完全に
 	印刷ジョブ(ファイル)を描画することは、Sambaクライアントの責任である。ファイルは
 	プリンターに直接配信するのに適した形式で送られる必要がある。クライアントはこれを
-	行うために、ベンダーが提供したドライバーを動作させる必要がある。この場合、CUPSは
+	行うために、ベンダが提供したドライバーを動作させる必要がある。この場合、CUPSは
 	何ら印刷ファイル形式変換を行わない。
 	</para>
 
@@ -440,7 +491,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</formalpara>
 
 	<para>
-	これが、ベンダードライバーをローカルにインストールしたWindowsクライアントによって
+	これが、ベンダドライバーをローカルにインストールしたWindowsクライアントによって
 	準備された<quote>raw</quote>ファイルをCUPS/Sambaの協調印刷で行うときに知っておく
 	必要があることのすべてである。もしもより詳細なCUPS/Samba印刷についての背景
 	情報について興味がないならば、この章の残りの部分を読み飛ばせばよいだろう。
@@ -804,7 +855,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	されるものはプリンターのPPDである。それが意味をなす場合、PPD機能は、印刷
 	オプションをユーザーに選択されるために表示される、ドライバーのユーザーインタフェース
 	ダイアログ中で提供される。最後に、ユーザーの選択は、ドライバーによって作成された
-	PostScriptファイル中に(特別なPostScript、PJL、JCLあるいはベンダー固有のコマンド
+	PostScriptファイル中に(特別なPostScript、PJL、JCLあるいはベンダ固有のコマンド
 	形式として)何らかの形で書かれる。
 	</para>
 
@@ -819,14 +870,14 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	</sect2>
 
 	<sect2>
-	<title>Windows形式のベンダーPPDの使用</title>
+	<title>Windows形式のベンダPPDの使用</title>
 
 	<para>
 <indexterm><primary>CUPS</primary></indexterm>
 <indexterm><primary>PPDs</primary></indexterm>
 <indexterm><primary>PostScript</primary></indexterm>
 	CUPSはそのPostScriptモデルのための、開発元によって供給された、すべての仕様に
-	従っているPPDを扱うことが出来る。もしもベンダーがマニュアルとパンフレットに
+	従っているPPDを扱うことが出来る。もしもベンダがマニュアルとパンフレットに
 	使用しているOSについての言及がなかったとしても、それらを安全に信用できる:
 	<emphasis>もしも、Windows NTバージョンのPPDを入手したならば、CUPS中で変更なしに利用でき</emphasis>、
 	その結果、Windows NTユーザーが出来るように使用するプリンターのすべての能力に
@@ -848,12 +899,12 @@ application/octet-stream   application/vnd.cups-raw   0   -
 	実際のPostScriptプリンターのためには、Linuxprinting.orgからの
 	<emphasis>Foomatic</emphasis>か<emphasis>cupsomatic</emphasis>PPDを
 	<emphasis>使ってはならない</emphasis>。それらのデバイスには、オリジナルの
-	ベンダーが提供したPPDが常時最初の選択肢となる。
+	ベンダが提供したPPDが常時最初の選択肢となる。
 	</para></warning>
 
 	<tip><para>
 <indexterm><primary>W32X86/2</primary></indexterm>
-	もしも、特定のデバイスに対するオリジナルのベンダー提供PPDを捜していて、LAN上の
+	もしも、特定のデバイスに対するオリジナルのベンダ提供PPDを捜していて、LAN上の
 	NT4マシン(あるいは他の任意のWindowsマシン)がインストールされているPostScript
 	プリンターを持っている場合、すべてのプリンタードライバーが格納されているWindows
 	ディレクトリにアクセスするために、
@@ -871,7 +922,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>PPD</primary></indexterm>
 <indexterm><primary>CUPSフィルタリング</primary></indexterm>
 	CUPSは非PostScriptプリンターを扱うために、特別に作成されたPPDをも使う。それらの
-	PPDは通常ベンダーから供給されない(そして、同じモデル名のPostScriptプリンター用の
+	PPDは通常ベンダから供給されない(そして、同じモデル名のPostScriptプリンター用の
 	PPDファイルを使うことが出来ず、非PostScriptバージョンが動くことを期待することも
 	同じである)。非PostScriptプリンターに対してPPDがどのように適用されるかを知るため
 	には、最初にCUPSフィルタリングとファイルフォーマット変換アーキテクチャについて
@@ -892,7 +943,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 <indexterm><primary>MIME 認識</primary></indexterm>
 <indexterm><primary>MIME 変換規則</primary></indexterm>
 CUPSフィルタリングシステムの中核は、Ghostscriptによっている。Ghostscriptを追加する事で、
-CUPSはそれ自身固有のフィルター以外のいくつかを使う。あなた自身(あるいはベンダー)はさらに
+CUPSはそれ自身固有のフィルター以外のいくつかを使う。あなた自身(あるいはベンダ)はさらに
 フィルターを追加しても良い。CUPSはすべてのデータファイルフォーマットを種々のMIMEタイプの
 ラベル配下で取り扱う。入力された各印刷ファイルは、最初に行われる自動タイプわけに基づいて
 扱われる。自動タイプわけにより、MIMEタイプが決定する。与えられたMIMEタイプは、選択された対象
@@ -1298,8 +1349,8 @@ text/plain              application/postscript   33    texttops
 	いる。それを作るのはとても簡単で、選択したものに対応すべきプリンターモデル用に、
 	LinuxとUNIXラスタドライバーを製造元が作成するために、費用がかからないように
 	設計されている。CUPSは常時ラスタライズする最初のステージに注意を払っているので、
-	ベンダーはGhostscript互換について注意を払う必要はない(実際、CUPSラスタドライバーの
-	開発の資金調達を行っている、1つ以上のベンダーが現在存在する)。これは、
+	ベンダはGhostscript互換について注意を払う必要はない(実際、CUPSラスタドライバーの
+	開発の資金調達を行っている、1つ以上のベンダが現在存在する)。これは、
 	<link linkend="cups-raster2">Ghostscriptを使うCUPSラスタ生成の図解</link>
 	に図示している。
 	</para>
@@ -1843,7 +1894,7 @@ application/octet-stream   application/vnd.cups-raw   0   -
 		<listitem><para>
 		二番目のものは<parameter>rasterdriver</parameter>ステップである。これは、
 		種々のデバイス固有のフィルターを使う。このステップに対して良い品質をもつ
-		フィルターを提供するいくつかのベンダーがある。それらのいくつかはフリー
+		フィルターを提供するいくつかのベンダがある。それらのいくつかはフリー
 		ソフトウェアであり、いくつかはシェアウェアであり、いくつかは商用製品である。
 		</para></listitem>
 	</itemizedlist>
@@ -2251,13 +2302,19 @@ Windowsネットワーク印刷クライアントに対する、CUPSの強力な
 
 <smbconfblock>
 <smbconfoption name="printing">cups</smbconfoption>
+<smbconfoption name="printcap">cups</smbconfoption>
 </smbconfblock>
 
 <para>
 これらのパラメーターが指定されると、&smb.conf;中の(Sambaそれ自身と同様)、すべての手動設定
 した印刷ディレクティブ(たとえば<smbconfoption name="print command"/>か
-<smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、
-CUPS APIを通してCUPSと直接やりとりする。これは
+<smbconfoption name="lppause command"/>)は無視される。その代わりSambaは、SambaがCUPS
+ライブラリ(libcups)をサポートするようにコンパイルされているとき、CUPS APIを通してCUPSと
+直接やりとりする。他の印刷コマンドが設定されていない場合、印刷は、-orawオプションを
+自動的に付けてパススルーする、<emphasis>System V</emphasis>AT&amp;Tコマンドセットを
+使う(もし、コンパイル時にCUPSサポートをするようしたSambaサーバーで動作するよう、個別に
+定義した印刷コマンドを使いたい場合、単に
+<smbconfoption name="classicalprinting">sysv</smbconfoption>を使う)。これは
 <link linkend="13small">CUPS/Sambaサーバー経由での印刷ダイアグラム</link>で図示されている。
 </para>
 
@@ -2501,7 +2558,7 @@ Sambaの<smbconfsection name="[print$]"/>共有中に、プリンタードライ
 これは、とても簡単に、任意の(か全部の)インストールされたCUPSプリンターの共有が出来るように
 なる。<command>cupsaddsmb</command>は、Adobe PostScriptドライバーを、最近開発された
 Windows NT/200x/XP用のCUPS PostScriptドライバーと同様に使うことが出来る。
-<parameter>cupsaddsmb</parameter>は、ベンダープリンタードライバーと一緒に
+<parameter>cupsaddsmb</parameter>は、ベンダプリンタードライバーと一緒に
 <emphasis>動作することはできず</emphasis>、そのマニュアルページ中に名前がある
 ドライバーと<emphasis>同じもののみ</emphasis>動作する。
 </para>
@@ -4291,7 +4348,7 @@ foomatic-ripは、異なった文法、オプション、デバイスの選択�
 Foomatic PPDは100％準拠となる(ここ怪しい)。Foomaticのコンセプトにおける、いくつかの
 革新的な特徴は、ユーザーを驚かせるだろう。これは、多くのプリンターに対する、個別の
 紙サイズのサポートや同じジョブ内での、異なったペーパトレイを使う印刷のサポート
-ができる(両方の場合において、Windowsベースのベンダープリンタードライバーがこれをサポート
+ができる(両方の場合において、Windowsベースのベンダプリンタードライバーがこれをサポート
 していなかったとしても)。
 foomatic-rip is a very clever wrapper around the need to run Ghostscript with a different syntax, options,
 device selections, and/or filters for each different printer or spooler. At the same time, it can read the PPD
@@ -4341,7 +4398,7 @@ support for this from Windows-based vendor printer drivers).
 	フリーソフトウェアの取り組みであり、(CUPSの主要開発者としても知られている)
 	Michael Sweetによって開始され、現在驚異的な写真レベルの品質に到達した
 	Robert Krawitzによって指揮されている(多くのエプソンユーザーは、その品質は、
-	Microsoftプラットフォーム向けのEpsonによって提供されたベンダードライバーよりも
+	Microsoftプラットフォーム向けのEpsonによって提供されたベンダドライバーよりも
 	良いと断言している)。現在522モデルをサポートしている。</para></listitem>
 </itemizedlist>
 </sect3>
@@ -4370,7 +4427,7 @@ Linuxprinting.orgとGhostscriptを囲むFoomaticドライバーラッパーは�
 ディストリビューション上で印刷のための標準ツール(tool-chain)である。それらのほとんどは、
 基盤としてCUPSを使っている。ここ数年の間、ほとんどのプリンターに関するデータは、
 Kamppeterによって追加され、多くの追加コードが、SuSE、Red Hat、Conectiva、Debianや
-その他の技術者から寄贈された。ベンダー中立はFoomaticプロジェクトの重要なゴールである。
+その他の技術者から寄贈された。ベンダ中立はFoomaticプロジェクトの重要なゴールである。
 MandrakeとConectivaは統合されて現在Mandrivaと呼ばれている。
 </para>
 
@@ -4958,6 +5015,8 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printing">cups</smbconfoption>
 	を設定する。</para></listitem>
 
+	<listitem><para>Sambaの&smb.conf;で<smbconfoption name="printcap">cups</smbconfoption>
+	も設定する。</para></listitem>
 </itemizedlist>
 
 <note><para>
@@ -4971,6 +5030,17 @@ CUPS設定ファイル<filename>cupsd.conf</filename>中で設定される、い
 </para></note>
 </sect2>
 
+<sect2>
+<title>手動の設定</title>
+
+<para>
+すべてを手動で行いたいならば、<smbconfoption name="printing">cups</smbconfoption>を
+<smbconfoption name="printing">bsd</smbconfoption>に置き換える。そうすると手動で設定した
+コマンドが動作し(テストはしていないが)、
+<smbconfoption name="print command">lp -d %P %s; rm %s</smbconfoption>が期待通りの
+事を行うだろう。
+</para>
+</sect2>
 </sect1>
 
 <sect1>
@@ -5125,7 +5195,7 @@ Sambaサーバー上のプロセス一覧で見えてしまうことに注意(�
 
 	<para>
 	もしも<command>cupsaddsmb</command>か<command>rpcclient addriver</command>が、
-	WERR_BAD_PASSWORD/WERR_INVALID_PASSWORDというエラーメッセージを出す場合は、
+	WERR_BAD_PASSWORDというエラーメッセージを出す場合は、
 	<link linkend="root-ask-loop">the previous common error</link>を参照すること。
 	</para>
 	

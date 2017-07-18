@@ -1,0 +1,32 @@
+<samba:parameter name="send spnego principal"
+                 context="G"
+				 type="boolean"
+                 advanced="1" developer="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>
+    このパラメーターは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>が、SPNEGO交換の際にやりとり
+    することがある、サーバーから提供されたプリンシパルを送信するか
+    否かを制御する。
+  </para>
+    
+  <para>このパラメーターを yes にした場合、 Samba は IP アドレスしか
+  分からない場合や、 KDC にサービスプリンシパル名として登録されていない
+  名前しか分からない場合であっても、クライアントに対して Kerberos を
+  用いて接続しようとする。しかし、Kerberos
+  は名前に依存したプロトコルなので、通常こうした状況においては機能しない。</para>
+
+  <para>
+    このパラメーターを no にすると、 Sambaは、rfc4178 hint として
+    not_defined_in_RFC4178@please_ignore という文字列を送信し、
+    最新の RFC や Windows Server 2008 の動作に準じて動作する。
+  </para>
+
+  <para>
+    Windows XP SP2 以降のバージョンは、常のこの値を無視するようになっている
+    ことに注意。
+  </para>
+</description>
+<value type="default">no</value>
+</samba:parameter>
