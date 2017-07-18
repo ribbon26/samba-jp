@@ -1,6 +1,7 @@
 <samba:parameter name="print command"
                  context="S"
-		 type="string"
+				 type="string"
+		 print="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
     <para>印刷ジョブが、スプールファイルの書き込みを完了した後で、
@@ -8,7 +9,7 @@
 	関数経由でスプールファイルを処理するために、利用される。
 	通常、指定したコマンドはスプールファイルをホストの印刷サブシステムに送信するが、
 	そうしなければならないということはない。 
-	サーバーはスプールファイルを削除しないので、
+	サーバはスプールファイルを削除しないので、
 	指定したコマンドが処理完了後にスプールファイルを削除しなければならない。
 	さもなければ、古いスプールファイルを手動で削除する必要がある。</para>
 		
@@ -18,7 +19,7 @@
 	<para>%s, %f - スプールファイル名へのパス
 	</para>
 
-	<para>%p - プリンター名
+	<para>%p - プリンタ名
 	</para>
 
 	<para>%J - the job 
@@ -32,7 +33,7 @@
 
 	<para> print command には、<emphasis>最低限</emphasis> <parameter moreinfo="none">%s</parameter> もしくは <parameter moreinfo="none">%f</parameter> の記述が必要である。
 	<parameter moreinfo="none">%p</parameter> については必須ではない。
-	ジョブの実行時にプリンター名が指定されていない場合、
+	ジョブの実行時にプリンタ名が指定されていない場合、
 	<parameter moreinfo="none">%p</parameter> は単に print command から無視される。</para>
 
 	<para> [global] セクション中で指定された print command は、
@@ -51,15 +52,15 @@
 	<para> シェルで解析できる限りの非常に複雑な print command を記述することが可能である。
 	以下の例では印刷ジョブを記録し、ファイルを印刷してからそれを削除している。
 	';' はシェルスクリプトにおいて、
-	通常コマンド間のセパレーターとして用いられることに注意。</para>
+	通常コマンド間のセパレータとして用いられることに注意。</para>
 
     <para><command moreinfo="none">print command = echo Printing %s &gt;&gt; 
     /tmp/print.log; lpr -P %p %s; rm %s</command></para>
 
 	<para> システムでファイルを印刷する一般的な方法によっては、
 	このコマンドを適宜変更する必要があるかもしれない。
-	パラメーターの既定値は、<smbconfoption name="printing"/>
-    パラメーターの設定に応じて変化する。</para>
+	パラメータのデフォルト値は、<smbconfoption name="printing"/>
+    パラメータの設定に応じて変化する。</para>
 
 	<para>デフォルト: <command moreinfo="none">printing = BSD, AIX, QNX, LPRNG, 
 	PLPの場合:</command></para>
