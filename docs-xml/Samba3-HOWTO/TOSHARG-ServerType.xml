@@ -65,13 +65,14 @@ SambaはUNIXサーバーとMicrosoft Windows 3.xクライアントのための�
 <itemizedlist>
 	<listitem><para>
 	<indexterm><primary>ドメイン</primary><secondary>コントローラー</secondary></indexterm>
-	Samba はMicrosoft Windows NT4 ドメインコントローラーを置き換えられる。
+	Samba-3はMicrosoft Windows NT4 ドメインコントローラーを置き換えられる。
 	</para></listitem>
 
 	<listitem><para>
 	<indexterm><primary>active directory</primary></indexterm>
-	Samba はネイティブの Microsoft Active Directory ドメインと同じように
-	Microsoft Windows NT4スタイルのドメインとのすぐれた相互運用性を提供する。
+	Samba-3はネイティブのMicrosoft Active Directoryドメインと同じように
+	NT4スタイルのMicrosoft Windows NT4スタイルのドメインとのすぐれた相
+	互運用性を提供する。
 	</para></listitem>
 
 	<listitem><para>
@@ -89,7 +90,7 @@ SambaはUNIXサーバーとMicrosoft Windows 3.xクライアントのための�
 	<listitem><para>
 	<indexterm><primary>アカウント</primary><secondary>データベース</secondary><tertiary>バックエンド</tertiary></indexterm>
 	<indexterm><primary>encrypted</primary></indexterm>
-	Samba は複数の同時アクセス可能なアカウントデータベースバックエンドを
+	Samba-3は複数の同時アクセス可能なアカウントデータベースバックエンドを
 	使える(暗号化パスワードはWindowsネットワーキングのために固有となる形
 	式でアカウントデータベース中に格納される)。
 	</para></listitem>
@@ -97,7 +98,7 @@ SambaはUNIXサーバーとMicrosoft Windows 3.xクライアントのための�
 	<listitem><para>
 	<indexterm><primary>replicated</primary></indexterm>
 	アカウントデータベースバックエンドは複数の方法で複製され配布される。
-	これは、Samba が Microsoft Windows NT4 よりもより優れた柔軟性を与え、
+	これは、Samba-3がMicrosoft Windows NT4よりもより優れた柔軟性を与え、
 	多くの場合、Microsoft Windows 200xのActive Directory ドメインよりも
 	かなり便利なユーティリティとなる。
 	</para></listitem>
@@ -304,7 +305,7 @@ Sambaサーバーはドメインセキュリティ信頼アカウント(マシ�
 <indexterm><primary>NetBIOS</primary></indexterm>
 ドメインセキュリティ環境ないで、セキュリティアーキテクチャの基盤は、ユーザーレベルの
 セキュリティを使う。ドメインメンバーであるマシンは開始時に認証を行わなければならない。
-アカウントデータベース内にあるアカウントエントリの一部であるマシンアカウントは、
+アカウントデータベース内にあるアカウントエントリーの一部であるマシンアカウントは、
 その名前がマシンのNetBIOS名であり、パスワードはランダムに生成され、ドメインコントローラー
 と他のマシンの両方に知られている。もしもマシンアカウントがセットアップ中に認証
 されなければ、ユーザーは、それが認証できないため、そのマシンを使ってドメインにログオン
@@ -364,7 +365,7 @@ Sambaをドメインメンバーサーバーとする
 <indexterm><primary>/bin/false</primary></indexterm>
 Windowsドメインコントローラーによってアカウントが認証される時に、UIDを割り当てるため、
 このモードを使う認証は、おのおののユーザーに対する標準UNIXアカウントがあることを要求
-する。このアカウントは、<filename>/etc/passwd</filename>エントリ中で不正なシェルと
+する。このアカウントは、<filename>/etc/passwd</filename>エントリー中で不正なシェルと
 して設定するような方法で、Microsoft Windows以外のクライアントによってログオンする
 ことをブロックすることができる。ユーザーアカウントに対して不正なシェルを割り当てる
 最も良い方法は、シェルに<filename>/bin/false</filename>を割り当てることである。
@@ -407,7 +408,7 @@ Active Directoryドメインに参加することが出来る。これは、ド�
 </para>
 
 <para>
-もしも、Active Directory をSamba と一緒に使っているとき、ネイティブな AD
+もしも、Active DirectoryをSamba-3と一緒に使っているとき、ネイティブなAD
 メンバーとしてジョインできる。なぜそれを望むか?NT互換の認証プロトコルの使用
 をセキュリティポリが禁止するかもしれない。Windows2000とそれ以降のすべての
 マシンはKerberosを使用している。この場合、NT4スタイルのドメインとしての
@@ -518,6 +519,7 @@ Microsoftが既定値のパスワードモードを変更したとき、平文�
 
 <?latex \newpage ?>
 <smbconfblock>
+<smbconfoption name="password level"><replaceable>integer</replaceable></smbconfoption>
 <smbconfoption name="username level"><replaceable>integer</replaceable></smbconfoption>
 </smbconfblock>
 
@@ -532,7 +534,13 @@ Microsoftが既定値のパスワードモードを変更したとき、平文�
 <indexterm><primary>平文</primary></indexterm>
 しかしながら、UNIXシステム上のパスワードはしばしば大文字小文字を混ぜた文字で構成され
 ている。これは、平文認証を使ってSambaサーバーに接続しようとするWindows 9x/Meクライアント
-上でのユーザーは、小文字のパスワードが必須であるということである。
+上でのユーザーのために、<smbconfoption name="password level"/>が、パスワードに現れること
+が<emphasis>出来る</emphasis>大文字の最大数を設定しなければならないことを意味する。
+もしもサーバーのOSが伝統的なDESバージョンを使うcrypt()を使うならば、
+<smbconfoption name="password level"/>を8に設定することは、結果としてWindowsユーザー
+にとって、大文字小文字を無視したパスワードとして見える。これはまた、一致するまで
+(あるいはすべての組み合わせが失敗するまで)1つ1つ、Sambaがパスワード文字列の組み合わせ
+を試みるために、より長いログイン時間がかかるという結果となる。
 </para>
 
 <para>

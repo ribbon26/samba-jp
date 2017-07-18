@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="winbindd.8" lang="ja">
+<refentry id="winbindd.8">
 
 <refmeta>
 	<refentrytitle>winbindd</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -19,14 +19,12 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
 		<command>winbindd</command>
-		<arg choice="opt">-D|--daemon</arg>
-		<arg choice="opt">-F|--foreground</arg>
-		<arg choice="opt">-S|--stdout</arg>
-		<arg choice="opt">-i|--interactive</arg>
+		<arg choice="opt">-F</arg>
+		<arg choice="opt">-S</arg>
+		<arg choice="opt">-i</arg>
 		<arg choice="opt">-d &lt;debug level&gt;</arg>
 		<arg choice="opt">-s &lt;smb config file&gt;</arg>
-		<arg choice="opt">-n|--no-caching</arg>
-		<arg choice="opt">--no-process-group</arg>
+		<arg choice="opt">-n</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -81,6 +79,14 @@
  	</para>
 
 	<variablelist>
+		<varlistentry>
+		<term>-D</term>
+		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
+		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
+		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
+		</para></listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>hosts</term>
 		<listitem><para>
@@ -145,15 +151,7 @@ hosts:		files wins
 
 	<variablelist>
 		<varlistentry>
-		<term>-D|--daemon</term>
-		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
-		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
-		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
-		<term>-F|--foreground</term>
+		<term>-F</term>
 		<listitem><para>
 		このパラメーターを指定すると、
 		<command>winbindd</command>
@@ -174,7 +172,7 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
-		<term>-S|--stdout</term>
+		<term>-S</term>
 		<listitem><para>
 		このパラメーターを指定すると、
 		<command>winbindd</command>
@@ -184,10 +182,10 @@ hosts:		files wins
 
 		&stdarg.server.debug;
 		&popt.common.samba;
-		&popt.autohelp;
+		&stdarg.help;
 
 		<varlistentry>
-		<term>-i|--interactive</term>
+		<term>-i</term>
 		<listitem><para>
 		<command>winbindd</command>
 		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
@@ -200,7 +198,7 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
-		<term>-n|--no-caching</term>
+		<term>-n</term>
 		<listitem><para>いくつかのキャッシュを無効にする。これにより、
 		<command>winbindd</command> は、
 		クライアントに応答する前にドメインコントローラーからの応答を時々待たなければならず動作が遅くなるが、
@@ -209,12 +207,6 @@ hosts:		files wins
 		<command>winbindd</command> は処理を停止してしまう。
 		これは、信頼関係にある環境(trusted environments)で、グループメンバーシップの
 		トラックのために必要とされるsamlogon キャッシュを無効にはしない。
-		</para></listitem>
-		</varlistentry>
-
-		<varlistentry>
-		<term>--no-process-group</term>
-		<listitem><para>winbinddのために、新しいプロセスグループを作成しない。
 		</para></listitem>
 		</varlistentry>
 
@@ -571,14 +563,14 @@ auth  required    /lib/security/pam_unix.so \
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.4 - 4.6.6に対応する。</para>
+	<para>このマニュアルページは Samba 3 (訳注 4.0?) に対応する。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
 	<para>さとうふみやす</para>
 	</itemizedlist>
         によって行なわれた。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.6.6 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.0.23 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
 
 </refsect1>
 

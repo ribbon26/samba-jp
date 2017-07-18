@@ -1,56 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="vfs_linux_xfs_sgid.8" lang="ja">
+<refentry id="vfs_notify_fam.8">
 
 <refmeta>
-	<refentrytitle>vfs_syncops</refentrytitle>
+	<refentrytitle>vfs_notify_fam</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
 <refnamediv>
-	<refname>vfs_linux_xfs_sgid</refname>
-	<refpurpose></refpurpose>
+	<refname>vfs_notify_fam</refname>
+	<refpurpose>FAM によるファイル変更通知のサポート</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 	<cmdsynopsis>
-		<command>vfs objects = linux_xfs_sgid</command>
+		<command>vfs objects = notify_fam</command>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
 <refsect1>
-	<title>説明</title>
+	<title>解説</title>
 
 	<para>このVFSモジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
-	<para>
-	<command>vfs_linux_xfs_sgid</command>は、まだ存在している、古い Liunx XFS
-	のバグを暫定的に回避するためのVFSモジュールである:すなわち、特定の
-	環境において、SGIDビットが継承されない
-	(<ulink url="http://oss.sgi.com/bugzilla/show_bug.cgi?id=280">
-	http://oss.sgi.com/bugzilla/show_bug.cgi?id=280</ulink>)。
-	<command>vfs_linux_xfs_sgid</command> VFS モジュールは、もしも親
-	ディレクトリでSGIDビットが設定されていた場合、<command>mkdir</command>
-	コマンド処理後にSGIDビットを手動で設定することで、暫定回避を行う。
+	<para><command>vfs_notify_fam</command>モジュールは
+	システムの FAM (File Alteration Monitor) デーモンを利用し、
+	Windows クライアントにファイルに変更があったことを通知する機能を実現する。
+	FAMは通常IRIXと一部のBSD systemで提供されている。
 	</para>
 
 	<para>このモジュールはスタック可能である。</para>
-
 </refsect1>
 
 <refsect1>
-	<title>使用例</title>
+	<title>設定例</title>
 
-	<para>[share]に対するsyncops機能を追加:</para>
+	<para>FAM通知をすべての共有で有効にする:</para>
+
 <programlisting>
-        <smbconfsection name="[share]"/>
-	<smbconfoption name="vfs objects">linux_xfs_sgid</smbconfoption>
+        <smbconfsection name="[global]"/>
+	<smbconfoption name="vfs objects">notify_fam</smbconfoption>
 </programlisting>
 
 </refsect1>
@@ -58,7 +53,7 @@
 <refsect1>
 	<title>バージョン</title>
 
-	<para>このマニュアルページはバージョン 4.1.0 のSambaシステム用である。
+	<para>このヘルプはSambaシステム3.0.25(訳注:3.x?)に対応している
 	</para>
 </refsect1>
 
@@ -69,13 +64,14 @@
 	Tridgell によって作成された。現在 Samba は Samba Team に
 	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
 	として開発が行なわれている。</para>
+
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは、Samba 4.1.0 - 4.6.6 に対応する。</para>
+	<para>このドキュメントは、Samba 4.0.6 - 4.0.23 に対応する。</para>
     <para>このドキュメントの翻訳は
 		<itemizedlist>
-			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
 		</itemizedlist>
         によって行なわれた。</para>
 </refsect1>
