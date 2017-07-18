@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="vfs_gpfs.8" lang="ja">
+<refentry id="vfs_gpfs.8">
 
 <refmeta>
 	<refentrytitle>vfs_gpfs</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 
@@ -54,7 +54,7 @@
 	</para>
 
        <para>このモジュールは、smb.confのパラメータ
-       <smbconfoption name="acl map full control">acl map full control</smbconfoption>
+       <smbconfoption name="acl map full control"></smbconfoption>
        を使用する。これをyesに設定した場合(既定値)、このパラメータは、
        FILE_DELETE と FILE_DELETE_CHILDを除いた、すべてのファイルのパーミッション
        に、すでに含まれている(ディレクトリではなく)ファイルに対する、戻り値内の
@@ -99,10 +99,14 @@
 		propagate sharemodes across all GPFS nodes.
 		</para></listitem>
 		<listitem><para>
-		<command>no</command> - すべての GPFS ノードにまたがって sharemodes を伝搬しない。
-		これはもしも GPFS ファイルシステムが Samba によって排他的にエクスポート
+		<command>no</command> - すべてのGPFSノードにまたがってsharemodesを伝搬しない。
+		これはもしもGPFSファイルシステムがSambaによって排他的にエクスポート
 		される場合にのみ使うべきである。ローカルのUNIXアプリケーションか
-		NFS エクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		NFSエクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		do not propagate sharemodes across all GPFS nodes.
+		This should only be used if the GPFS file system is
+		exclusively exported by Samba. Access by local unix application or
+		NFS exports could lead to corrupted files.
 		</para></listitem>
 		</itemizedlist>
 		</listitem>
@@ -127,10 +131,14 @@
 		propagate leases across all GPFS nodes.
 		</para></listitem>
 		<listitem><para>
-		<command>no</command> - すべての GPFS ノードにまたがってリースを伝搬しない。
-                これは、もしも GPFS ファイルシステムが Samba によって排他的にエクスポート
-                される場合にのみ使うべきである。ローカルの UNIX アプリケーションか
-                NFS エクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		<command>no</command> - すべてのGPFSノードのリースを伝搬しない。
+                これはもしもGPFSファイルシステムがSambaによって排他的にエクスポート
+                される場合にのみ使うべきである。ローカルのUNIXアプリケーションか
+                NFSエクスポートによるアクセスはファイルの破壊を引き起こすことに繋がる。
+		do not propagate leases across all GPFS nodes.
+		This should only be used if the GPFS file system is
+		exclusively exported by Samba. Access by local unix application or
+		NFS exports could lead to corrupted files.
 		</para></listitem>
 		</itemizedlist>
 		</listitem>
@@ -184,10 +192,12 @@
 		<term>gpfs:getrealfilename = [ yes | no ]</term>
 		<listitem>
 		<para>
-		  <command>gpfs_get_realfilename_path()</command>機能の
-		  有効/無効を指定する。
-		  これは、大文字小文字を認識するワイルドカードファイル名アクセスを
+		  <command>gpfs_get_realfilename_path()</command>機能の使用を
+		  有効/無効にする。
+		  これは大文字小文字を認識するワイルドカードファイル名アクセスを
 		  改善する。
+		Enable/Disable usage of the <command>gpfs_get_realfilename_path()</command> function.
+		This improves the casesensitive wildcard file name access.
 		</para>
 
 		<itemizedlist>
@@ -210,11 +220,16 @@
 		<term>gpfs:winattr = [ yes | no ]</term>
 		<listitem>
 		<para>
-		  GPFSのwindows 属性の使用を有効/無効にする。
+		  GPFSのwindow属性の使用を有効/無効にする。
 		  GPFSは、たとえば、HIDDEN、READONLY、SYSTEMやその他のような
-		  windows 属性を個別に格納することが出来る。すなわち、Sambaが
-		  それらの属性を、パーミッションビットや拡張属性にマップする必要がないことを
-		  意味する。</para>
+		  window属性を個別に格納することが出来る。これは、Sambaが
+		  パーミッションビットや拡張属性にマップする必要がないことを
+		  意味する。</para><para>
+		Enable/Disable usage of the windows attributes in GPFS.
+		GPFS is able to store windows file attributes e.g. HIDDEN,
+		READONLY, SYSTEM and others natively. That means Samba doesn't
+		need to map them to permission bits or extended attributes.
+		</para>
 
 		<itemizedlist>
 		<listitem><para>
@@ -234,9 +249,11 @@
 		<term>gpfs:merge_writeappend = [ yes | no ]</term>
 		<listitem>
 		<para>
-		  GPFS ACLは 'APPEND' 権限を認識しない。
-		  このオプションは Samba に'APPEND' 権限をを 'WRITE' 権限に
+		  GPFS ACLは 'APPEND'権限を認識しない。
+		  このオプションはSambaに'APPEND'権限をを'WRITE'権限に
 		  マップさせる。
+		GPFS ACLs doesn't know about the 'APPEND' right.
+		This optionen lets Samba map the 'APPEND' right to 'WRITE'.
 		</para>
 
 		<itemizedlist>
@@ -323,10 +340,18 @@
 		<para>
 		  quotaによる共有の残量と使用量の報告を調整する。これを"yes"に
 		  設定すると、使用量と残量の要求は、ユーザーが要求したデータの
-		  ユーザークォータ、ユーザーのプライマリグループのグループクォータ
-		  も評価する。残量問い合わせ中のファイルセットクォータを反映する
-		  ために --dfreequota オプション をGPFSがすでに提供しているとしても、
-		  ファイルセットクォータは問合せされない。
+		  ユーザークォータ、ユーザーのプライマリグループのグループクォータと
+		  共有の最上位ディレクトリが持っているファイルセットに対する
+		  ファイルセットクォータも評価される。
+		</para>
+		<para>
+		Adjust reporting of the size and free space of a share
+		according to quotas. If this setting is "yes", a
+		request for size and free space will also evaluate the
+		user quota of the user requesting the data, the group
+		quota of the primary group of the user and the fileset
+		quota for the fileset containing the top level
+		directory of the share.
 		</para>
 
 		<para>
@@ -568,8 +593,8 @@
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.3.0 - 4.6.6 に対応する。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.6.6 対応の翻訳は
+	<para>このマニュアルページは Samba 4.2.8 - 4.2.12 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.2.12 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>

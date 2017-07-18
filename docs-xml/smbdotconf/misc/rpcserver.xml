@@ -1,12 +1,13 @@
 <samba:parameter name="rpc_server:SERVER"
                  context="G"
 		 type="string"
+		 advanced="1" print="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 	<para>
 	このオプションにより、RPC サービスを smbd の内部で動作させるか、
-	Samba4 の、エンドポイントマッパデーモン、
-	  spoolss デーモン、あるいは新しい LSA サービスデーモンのように、
+	Samba4の、エンドポイントマッパデーモン、
+	  spoolssデーモン、あるいは新しいLSAサービスデーモンのように、
 	外部のデーモンにリダイレクトするかを選択できるようになる。
 	rpc_server のプレフィックスに続いて、パイプ名か値を続ける必要がある。
 	</para>
@@ -32,7 +33,6 @@
 		<listitem><para>ntsvcs       - Plug and Play Services</para></listitem>
 		<listitem><para>eventlog     - Event Logger</para></listitem>
 		<listitem><para>initshutdown - Init Shutdown Service</para></listitem>
-		<listitem><para>mdssvc       - Spotlight</para></listitem>
 	</itemizedlist>
 
 	<para>
@@ -43,22 +43,23 @@
 	</para>
 
 	<para>
-	  旧来の方法は、smbd 中の<emphasis>embedded</emphasis>内部関数のように
+	  旧来の方法は、smbd中の<emphasis>embedded</emphasis>内部関数のように
 	  すべてのパイプを実行する手法である。既定値は各サービスごとに依存する。
 	</para>
 
 	<para>
 	  <emphasis>external</emphasis>オプションを選択すると、
-	  分離されたデーモンか、名前付きパイプ上の MS-RPC インタフェース経由で、
+	  分離されたデーモンか、名前付きパイプ上のMS-RPCインタフェース経由で、
 	  Sambaとインタフェースを取ることのできる、完全に独立した
 	  (サードパーティの)サーバーとして動かす事ができる。
 	</para>
 
 	<para>
-	  現在、Samba3 では、spoolssd、epmd、lsasd と mdssd という4つのデーモンをサポートしている。
-	それらのデーモンは<emphasis>rpc_daemon</emphasis>オプションを使う事で
-	有効にできる。spoolssd に対しては、以下のように、デーモンを有効にし、
+	現在、Samba3では、spoolssd,epmdとlsasdという3つのデーモンをサポートしている。
+	3つのデーモンは<emphasis>rpc_daemon</emphasis>オプションを使う事で
+	有効にできる。spoolssdに対しては、以下のように、デーモンを有効にし、
 	名前付きパイプをプロキシする必要がある:
+	you have to to enable the daemon and proxy the named pipe with:
 	</para>
 
 	<para>
@@ -71,15 +72,12 @@
 
 			rpc_server:spoolss = external
 			rpc_server:epmapper = disabled
-
-			rpc_daemon:mdssd = fork
-			rpc_server:mdssvc = external
 		</programlisting>
 
 	</para>
 
 	<para>
-	  ncacn_ip_tcp コネクションもリッスンする為に rpc サービスを有効にするための
+	  ncacn_ip_tcpコネクションもリッスンする為にrpc サービスを有効にするための
 	  特別なオプションがある。現在、これは、テスト用にのみ使われ、スケールしない!
 
 		<programlisting>

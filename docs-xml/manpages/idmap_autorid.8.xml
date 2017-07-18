@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="idmap_autorid.8" lang="ja">
+<refentry id="idmap_autorid.8">
 
 <refmeta>
 	<refentrytitle>idmap_autorid</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.2</refmiscinfo>
 </refmeta>
 
 
@@ -21,9 +21,15 @@
 	<para>The idmap_autorid backend provides a way to use an algorithmic
 	mapping scheme to map UIDs/GIDs and SIDs that is more deterministic
 	than idmap_tdb and easier to configure than idmap_rid.</para>
-	<para>idmap_autoridバックエンドは、idmap_tdbよりもより決定論的な、UID/GID と
-	SIDをマップするためのアルゴリズムによるマッピング方法を提供し、idmap_rid
+	<para>idmap_autoridバックエンドは、idmap_tdbよりもより確実に決まる、UID/GIDと
+	SIDをマップするためのアルゴリズム的なマッピング方法を提供し、idmap_rid
 	よりもより簡単に設定できる。</para>
+	<para>The module works similar to idmap_rid, but it automatically
+	configures the range to be used for each domain, so there is no need
+	to specify a specific range for each domain in the forest, the only
+	configuration that is needed is the range of uid/gids that shall
+	be used for user/group mappings and an optional size of the ranges
+	to be used.</para>
 	<para>モジュールはidmap_ridと同じように動作するが、各ドメインに対して使われる
 	レンジを自動的に設定するので、フォレスト中の各ドメインに対しては、
 	特定のレンジを指定する必要がなく、唯一設定できる項目は、
@@ -35,8 +41,8 @@
 	格納されるので、このデータベースを常時バックアップする必要がある。</para>
 	<para>Due to the algorithm being used, it is the module that is
 	most easy to use as it only requires a minimal configuration.</para>
-	<para>アルゴリズムによって処理が行われるので、このモジュールは、
-	最小の設定のみで、もっとも簡単に使うことが出来る。
+	<para>アルゴリズムによって処理が行われるので、これは、最小の設定のみで済む、
+	もっとも簡単に使うことが出来るモジュールである。
 	</para>
 </refsynopsisdiv>
 
@@ -44,29 +50,7 @@
 	<title>IDMAP オプション</title>
 
 	<variablelist>
-          <varlistentry>
-	    <term>range = low - high</term>
-	    <listitem><para>
-	      バックエンドが権威を持つ有効な uid と gid に一致する範囲を
-	      定義する。レンジはフィルタとして振る舞うことに注意。
-	      もしも、アルゴリズム的に決定された UID 又は GID がレンジ外に
-	      なると、それらは無視され、対応するマップは破棄される。
-	      これは、ローカルとリモートで定義された ID の間で偶然に UID/GID
-	      が重なってしまうことを防ぐ方法として用意されている。
-	    </para>
-	    <para>
-	      Defines the available matching uid and gid
-	                           range for which the backend is
-	                           authoritative. Note that the range acts as a
-	                           filter.  If algorithmically determined UID or
-	                           GID fall outside the range, they are ignored
-	                           and the corresponding map is discarded.  It is
-	                           intended as a way to avoid accidental UID/GID
-	                           overlaps between local and remotely defined
-	                           IDs.
-	                   </para></listitem>
-	              </varlistentry>
-	  <varlistentry>
+		<varlistentry>
 		<term>rangesize = numberofidsperdomain</term>
 		<listitem>
 			<para>ドメインレンジ毎のuid/gidの有効範囲を定義する。最小値は2000
@@ -106,11 +90,11 @@
 		</varlistentry>
                 <varlistentry>
                 <term>read only = [ yes | no ]</term>
-                <listitem>
-		<para>モジュールをリードオンリモードにする。idmap poolには、
-		新規のレンジを割り当てる事も、新しいマッピングを作成する事も
-		できない。既定値は no である。
-		</para>
+                <listitem><para>Turn the module into read-only mode. No new ranges will be allocated
+                nor will new mappings be created in the idmap pool. Defaults to no.</para>
+		<para>モジュールをリードオンリモードにする。idmap poolには、新規のレンジを
+		割り当てる事も、新しいマッピングを作成する事もできない。既定値は no で
+		ある。</para>
 		</listitem>
 		</varlistentry>
 	</variablelist>
@@ -145,8 +129,10 @@
 <refsect1>
 	<title>設定例</title>
 	<para>
-	  この例はプリンシパルドメインと19の信頼されたドメイン / レンジ拡張 のために
-	  動作する最低限の設定例である。
+		This example shows you the minimal configuration that will
+		work for the principial domain and 19 trusted domains.
+		この例はプリンシパルドメインと19の信頼されたドメイン / レンジ拡張 のために
+		動作する最低限の設定例である。
 	</para>
 
 	<programlisting>
@@ -205,7 +191,7 @@
 
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.4.0 - 4.6.6 に対応する。</para>
+    <para>このマニュアルページは Samba 4.1.0 - 4.2.12 に対応する。</para>
         <para>このドキュメントの翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
