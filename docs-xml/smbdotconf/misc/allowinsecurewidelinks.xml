@@ -3,35 +3,32 @@
 		type="boolean"
 		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-	<para>
-	  通常動作時においては、共有パスの外側へのシンボリックリンク許可
-	  を制御する<smbconfoption name="wide links"/>オプションは、
-	  Samba サーバ上で、<smbconfoption name="unix extensions"/>が有効な
-	  時には、自動的に無効にされる。これは、管理者がエクスポートする
-	  ことを期待しないサーバーファイルシステムの領域へのシンボリックリンク
-	  をUNIXクライアントが作成することを防ぐことを、セキュリティ上の
-	  目的とするために設定された。
-	</para>
-	<para>
-	  <smbconfoption name="allow insecure wide links"/>を真に設定する
-	  と、2つのパラメーター間のリンクを無効にし、この保護を無効にし、
-	  <smbconfoption name="unix extensions"/>が on になっていたとしても、
-	  (<smbconfoption name="wide links"/>を"真"にすることによって)
-	  シンボリックリンクをたどれるサーバーを構成するサイトを設定できる。
-	</para>
-	<para>
-	  UNIX クライアントによって作成されたシンボリックリンクを
-	  たどることをサーバーに対して許可する実装を完全に理解するまでは、
-	  このオプションを有効にすることは推奨しない。通常
-	  大多数の Samba 設定では、これを行うとセキュリティホールに
-	  なり、このパラメーターを設定することは推奨されない。
-	</para>
-	<para>
-	  このオプションは、すでにこの方法で意図的に Samba を設定していて、
-	 この機能を継続的にサポートするために Samba のソースコードに
-	 パッチを当て続けることをなくすために、サイトの要求によって
-	 追加されたものである。
-	</para>
+  <para>
+    共有外のパスへのシンボリックリンクの追跡を許可する
+    <smbconfoption name="wide links"/> は、通常 Samba サーバ上で
+    <smbconfoption name="unix extensions"/> が yes の場合は
+    自動的に no にされる。これは、 UNIX クライアントが、管理者が
+    外部への公開を好ましくないと考えているパスへのシンボリックリンクを
+    作成することを抑止するというセキュリティ上の理由で実装されている。
+  </para>
+  <para>
+    <smbconfoption name="allow insecure wide links"/> を yes に設定する
+    ことで、両パラメータ間の相関性を無効とすることで、
+    <smbconfoption name="unix extensions"/> が yes の場合でも、
+    （ <smbconfoption name="wide links"/> を yes にすることで）シンボリック
+    リンクの追跡を可能とする。
+  </para>
+  <para>
+    UNIX クライアントが作成したシンボリックリンクの追跡を可能とする
+    ことの意味を完全に理解していない限り、このパラメータを有効化する
+    ことは推奨しない。一般的な状況では、この設定はセキュリティホール
+    とみなされるため推奨しない。
+  </para>
+  <para>
+    このパラメーターは、この設定を意図的に行っており、機能のサポートが、
+    Samba ソースコードへのパッチ適用なしで継続されることを必要としている
+    サイトからの要求によって追加された。
+  </para>
 </description>
 <value type="default">no</value>
 </samba:parameter>

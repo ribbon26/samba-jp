@@ -1,12 +1,18 @@
 <samba:parameter name="rpc_daemon:DAEMON"
                  context="G"
 		 type="string"
+		 advanced="1" print="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
         <para>
-	  定義されてた rpc サービスのために、分離されたデーモンを起動するか、
+	  定義されてたrpcサービスのために、分離されたデーモンを起動するか、
 	  埋め込まれたコードを使うかを定義する。
-	  rpc_daemon プレフィックスはその後にサーバー名と値がなければならない。
+	  rpc_daemonプレフィックスはその後にサーバ名と値がなければならない。
+	</para>
+	<para>
+	Defines whether to use the embedded code or start a separate daemon
+	for the defined rpc services.
+	The rpc_daemon prefix must be followed by the server name, and a value.
 	</para>
 
 	<para>
@@ -18,23 +24,23 @@
 	</para>
 
 	<para>
-	  旧来のメソッドは smbd 中に埋め込まれた内部デーモンとして、
+	  旧来のメソッドはsmbd中に埋め込まれた内部デーモンとして、
 	  rpcサービスを動かすものであり、それゆえ、外部デーモンは
 	  既定値では<emphasis>無効</emphasis>になっている。
 	</para>
 
 	<para>
 	  <emphasis>fork</emphasis>オプションを選ぶと、この方法で設定された
-	  各デーモンごとに分離されたプロセスを、samba はフォークする。各デーモンは、
-	  複数の smbd からのリクエストと、ダイレクト TCP/IP接続を処理する為に使わ
-	  れる、複数の子プロセスを順番にフォークする(エンドポイントマッパが有効な場合)。
-	  名前付きパイプ上で発生し、そこで指定されたパイプを要求する smbd との
+	  各デーモン用に分離されたプロセスを、sambaはフォークする。各デーモンは、
+	  複数のsmbdからのリクエストを処理する為に使われる、複数の子プロセスを
+	  順番にフォークする(エンドポイントマッパが有効な場合)。
+	  名前付きパイプ上で発生し、そこで指定されたパイプを要求するsmbdとの
 	  通信は、外部デーモンにフォワードされる(<smbconfoption name="rpc_server"/>
 	  を参照のこと)。
 	</para>
 	<para>
 	Choosing the <emphasis>fork</emphasis> option will cause samba to fork
-	a separate process for each daemon configured this way. Each daemon may
+	a separate proces for each daemon configured this way. Each daemon may
 	in turn fork a number of children used to handle requests from multiple
 	smbds and direct tcp/ip connections (if the Endpoint Mapper is
 	enabled). Communication with smbd happens over named pipes and require
@@ -43,11 +49,11 @@
 	</para>
 
 	<para>
-	  フォークされた RPC デーモンは接続を扱うために動的に子プロセスをフォーク
+	  フォークされたRPCデーモンは接続を扱うために動的に子プロセスをフォーク
 	  する事をサポートする。どのくらい子プロセスを作るか、どのくらい早く
 	  それらをフォークするか、また、どのくらい各子プロセスにクライアントを
 	  同時に取り扱うかについて、ヒューリスティックな方法は、デーモンの後に
-	  名前が付けられた parametrical オプションによって定義される。
+	  名前が付けられたparametricalオプションによって定義される。
 	  現時点では以下の5つのオプションがある。
 	  <programlisting>
 		prefork_min_children
@@ -59,7 +65,7 @@
 
 		上記のオプションの1つを設定するためには以下の方法を使う:
 	<programlisting>
-	daemonname:prefork_min_children = 5
+	damonname:prefork_min_children = 5
 	</programlisting>
 	</para>
 	<para>
@@ -84,14 +90,12 @@
 	</para>
 
 	<para>
-	  Sambaにはspoolss、lsarpc/lsass、netlogon、samr、FSRVPとmdssvc(Spotlight)用に
-	  分離されたデーモンがある。現在、5つのデーモンが有効でそれらは以下の通りである:
+	  Sambaにはspoolssとlsarpc/lsass, netlogonとsamr pipes用に分離されたデーモン
+	  がある。現在、3つのデーモンが有効でそれらは以下の通りである:
 	  <programlisting>
 		epmd
 		lsasd
 		spoolssd
-		fssd
-		mdssd
 	  </programlisting>
 	例:
 	<programlisting>

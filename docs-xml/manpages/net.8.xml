@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
-<refentry id="net.8" lang="ja">
+<refentry id="net.8">
 
 <refmeta>
 	<refentrytitle>net</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
-	<refmiscinfo class="version">4.6</refmiscinfo>>
+	<refmiscinfo class="version">4.0</refmiscinfo>
 </refmeta>
 
 
@@ -107,6 +107,7 @@
 		</varlistentry>
 
 		&stdarg.netbios.name;
+		&stdarg.configfile;
 
 		<varlistentry>
 		<term>-S server</term>
@@ -392,13 +393,6 @@
                 </para></listitem>
                 </varlistentry>
 
-		<varlistentry>
-		<term>--no-dns-updates</term>
-		<listitem><para>
-		"net ads join" の一部として DNS 更新を実行しない。
-		</para></listitem>
-		</varlistentry>
-
                 &stdarg.encrypt;
                 &popt.common.samba.client;
 
@@ -461,9 +455,8 @@
 </refsect2>
 
 <refsect2>
-<title>[RPC|ADS] JOIN [TYPE] [--no-dns-updates] [-U username[%password]]
-[createupn=UPN] [createcomputer=OU] [machinepass=PASS]
-[osName=string osVer=string] [options]</title>
+<title>[RPC|ADS] JOIN [TYPE] [-U username[%password]] [createupn=UPN]
+       [createcomputer=OU] [machinepass=PASS] [osName=string osVer=string] [options]</title>
 
 <para>
 ドメインに参加する。サーバー上にコンピューターアカウントがすでに存在しており、
@@ -1261,7 +1254,7 @@ Samba のユーザー権利の実装と利用方法に関する詳細につい�
 <refsect2>
 <title>RPC GETSID</title>
 
-<para>ドメインの SID を取得して、ローカルの <filename>secrets.tdb</filename> に格納する。</para>
+<para>ドメインの SID を取得して、ローカルの <filename>secrets.tdb</filename> (か <filename>secrets.ntdb</filename>)に格納する。</para>
 
 </refsect2>
 
@@ -1334,58 +1327,6 @@ DN は標準の LDAP DN であり、 attributes は結果中に表示する LDAP
 <title>ADS WORKGROUP</title>
 
 <para>指定された Kerberos レルムのワークグループ名を表示する。</para>
-
-</refsect2>
-
-<refsect2>
-	<title>ADS ENCTYPES</title>
-
-<para>
-        AD中の、アカウントにおける "msDS-SupportedEncryptionTypes" 属性値の表示、変更あるいは削除	  
-</para>
-
-<para>
-  この属性は、どのKerberos暗号化タイプが、初期およびサービスチケットの生成に使われるかを制御する。その値には、以下で示される整数型のビットマスクを含む:
-</para>
-
-<para>0x00000001 DES-CBC-CRC</para>
-<para>0x00000002 DES-CBC-MD5</para>
-<para>0x00000004 RC4-HMAC</para>
-<para>0x00000008 AES128-CTS-HMAC-SHA1-96</para>
-<para>0x00000010 AES256-CTS-HMAC-SHA1-96</para>
-
-</refsect2>
-
-<refsect2>
-	<title>ADS ENCTYPES LIST <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
-
-<para>
-        与えられたアカウントの、"msDS-SupportedEncryptionTypes" 属性値を表示する。
-</para>
-
-<para>例: <userinput>net ads enctypes list Computername</userinput></para>
-
-</refsect2>
-
-<refsect2>
-	<title>ADS ENCTYPES SET <replaceable>&lt;ACCOUNTNAME&gt;</replaceable> <replaceable>[enctypes]</replaceable></title>
-
-<para>
-  ACCOUNTNAME のLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性値に、与えられた値を設定する。値が省略された場合は、すべての、現在サポートされている暗号化タイプを有効にする 31 が設定される。
-</para>
-
-<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
-
-</refsect2>
-
-<refsect2>
-	<title>ADS ENCTYPES DELETE <replaceable>&lt;ACCOUNTNAME&gt;</replaceable></title>
-
-<para>
-  ACCOUNTNAMEのLDAPオブジェクトの "msDS-SupportedEncryptionTypes" 属性を削除する。
-</para>
-
-<para>例: <userinput>net ads enctypes set Computername 24</userinput></para>
 
 </refsect2>
 
@@ -1681,62 +1622,16 @@ idmap_tdbバックエンドによって生成されたマップのダンプに�
 </refsect2>
 
 <refsect2>
-<title>IDMAP SET SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
+<title>IDMAP SECRET &lt;DOMAIN&gt;&lt;secret&gt;</title>
 
 <para>
- 指定したドメインのために、secretを格納し、おもに、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
+指定したドメインのために、secretを格納し、おおむね、idmap_ldapをバックエンドとして使うドメインのために使われる。このケースの場合、secretはldapサーバーに対してバインドするユーザーDNのパスワードとして使われる。
 </para>
 
 </refsect2>
 
 <refsect2>
-<title>IDMAP SET RANGE &lt;RANGE&gt; &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
-
-<para>
-  autorid データベース中に、与えられたドメイン(とインデックス)用のドメイン-レンジマッピングを格納する。
-</para>
-
-</refsect2>
-
-<refsect2>
-<title>IDMAP SET CONFIG &lt;config&gt; [--db=&lt;DB&gt;]</title>
-
-<para>
-  autorid データベース中のCONFIGエントリを更新する。
-</para>
-
-</refsect2>
-
-<refsect2>
-<title>IDMAP GET RANGE &lt;SID&gt; [index] [--db=&lt;DB&gt;]</title>
-
-<para>
-  与えられたドメインとインデックスに対するレンジを、autorid データベースから得る。
-</para>
-
-</refsect2>
-
-<refsect2>
-<title>IDMAP GET RANGES [&lt;SID&gt;] [--db=&lt;DB&gt;]</title>
-
-<para>
-  与えられたSIDで識別される1個、あるいはすべてのドメインのレンジを得る。
-</para>
-
-</refsect2>
-
-<refsect2>
-<title>IDMAP GET CONFIG [--db=&lt;DB&gt;]</title>
-
-<para>
-  autorid データベースからCONFIGエントリを得る。
-</para>
-
-</refsect2>
-
-<refsect2>
-
-<title>IDMAP DELETE MAPPING [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
+<title>IDMAP DELETE [-f] [--db=&lt;DB&gt;] &lt;ID&gt;</title>
 
 <para>
 Delete a mapping sid &lt;-&gt; gid or sid &lt;-&gt; uid from the IDMAP database.
@@ -1754,26 +1649,6 @@ uid: "UID番号"によって与えられる。
   を使う。詳細は、<citerefentry><refentrytitle>smbcontrol</refentrytitle>
   <manvolnum>1</manvolnum></citerefentry>マニュアルページを参照。
 </para>
-</refsect2>
-
-<refsect2>
-<title>IDMAP DELETE RANGE [-f] [--db=&lt;TDB&gt;] &lt;RANGE&gt;|(&lt;SID&gt; [&lt;INDEX&gt;])</title>
-
-<para>
-  autorid データベースから、'レンジ' または 'ドメイン SID とインデックス' で識別されるドメインレンジマッピングを削除する。
-  -f は、不正なマッピングを削除するのに使う。
-</para>
-
-</refsect2>
-
-<refsect2>
-<title>IDMAP DELETE RANGES [-f] [--db=&lt;TDB&gt;] &lt;SID&gt;</title>
-
-<para>
-  SIDで識別されるドメインの、すべてのドメインレンジマッピングを削除する。
-  -f は、不正なマッピングを削除するのに使う。
-</para>
-
 </refsect2>
 
 <refsect2>
@@ -1819,18 +1694,21 @@ uid: "UID番号"によって与えられる。
 
     <varlistentry><term>-T|--test</term>
       <listitem><para>
+	Dry run, show what changes would be made but don't touch anything.
 	試験実行であり、どのような変更が行われるかを表示するが何も変更しない。
       </para></listitem>
     </varlistentry>
 
     <varlistentry><term>-l|--lock</term>
       <listitem><para>
+	Lock the database while doing the check.
 	検査中にデータベースをロックする。
       </para></listitem>
     </varlistentry>
 
     <varlistentry><term>--db &lt;DB&gt;</term>
       <listitem><para>
+	Check the specified database.
 	指定されたデータベースを検査する。
       </para></listitem>
     </varlistentry>
@@ -1840,6 +1718,7 @@ uid: "UID番号"によって与えられる。
     </varlistentry>
   </variablelist>
 
+  It reports about the finding of the following errors:
   これは、見つかった以下のエラーを報告する:
 
   <variablelist>
@@ -1957,7 +1836,6 @@ sharename というユーザー定義共有の新規作成もしくは修正(上
 既存のユーザー定義共有を修正するコマンドは個別に用意されておらず、
 「net usershare add [sharename]」コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
 Samba の smbd デーモンは、接続のあったタイミングでユーザー定義共有の変更を検知するのため、変更は即座に反映される。ユーザー定義共有の追加、削除、変更により、smbd の再起動を行なう必要はない。
-
 </refsect3>
 
 <refsect3>
@@ -2167,8 +2045,8 @@ smb.confテキストファイル中では、むしろメタパラメーターで
 <title>[RPC] CONF SETINCLUDES <replaceable>section</replaceable> [<replaceable>filename</replaceable>]+</title>
 
 <para>
-(globalか共有の)提供されたセクションのための inculude リストを、1つまたはそれ以上の与えられたファイル名で設定する。
-ファイル名は %Iのような通常の smb.conf マクロを含んでいてもよい。
+(globalか共有の)提供されたセクションのためのinculudeリストを、1つまたはそれ以上の与えられたファイル名で設定する。
+ファイル名は %Iのような通常のsmb.confマクロを含んでいてもよい。
 </para>
 </refsect3>
 
@@ -2176,7 +2054,7 @@ smb.confテキストファイル中では、むしろメタパラメーターで
 <title>[RPC] CONF DELINCLUDES <replaceable>section</replaceable></title>
 
 <para>
-(globalか共有の)提供されたセクションから include リストを削除する。
+(globalか共有の)提供されたセクションからincludeリストを削除する。
 </para>
 </refsect3>
 
@@ -2186,7 +2064,7 @@ smb.confテキストファイル中では、むしろメタパラメーターで
 <title>REGISTRY</title>
 <para>
 Manipulate Samba's registry.
-Samba のレジストリを操作する。
+Sambaのレジストリを操作する。
 </para>
 
 <para>レジストリコマンドは以下の通り:
@@ -2220,26 +2098,30 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
 
 <refsect3>
   <title>REGISTRY ENUMERATE <replaceable>key</replaceable> </title>
-  <para>サブキーと<emphasis>key</emphasis>の値に番号を振る。
+  <para>Enumerate subkeys and values of <emphasis>key</emphasis>
+  サブキーと<emphasis>key</emphasis>の値に番号を振る。
   </para>
 </refsect3>
 
 <refsect3>
   <title>REGISTRY ENUMERATE_RECURSIVE <replaceable>key</replaceable> </title>
-  <para><emphasis>key</emphasis>とそのサブキーの値に番号を振る。
+  <para>Enumerate values of <emphasis>key</emphasis> and its subkeys.
+  <emphasis>key</emphasis>とそのサブキーの値に番号を振る。
   </para>
 </refsect3>
 
 <refsect3>
   <title>REGISTRY CREATEKEY <replaceable>key</replaceable> </title>
-  <para><emphasis>key</emphasis>がない場合、新しくを作成する。
+  <para>Create a new <emphasis>key</emphasis> if not yet existing.
+  もしもまだ存在しないならば、新しい<emphasis>key</emphasis>を作成する。
   </para>
 </refsect3>
 
 <refsect3>
   <title>REGISTRY DELETEKEY <replaceable>key</replaceable> </title>
-  <para>
-  サブキーがない場合、与えられた<emphasis>key</emphasis>とその値を
+  <para>Delete the given <emphasis>key</emphasis> and its
+   values from the registry, if it has no subkeys.
+  もしもサブキーがない場合、与えられた<emphasis>key</emphasis>とその値を
   レジストリから削除する。
   </para>
 </refsect3>
@@ -2372,6 +2254,10 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
       インポートファイルは、もしも事前チェックが成功した場合にのみ適用される。
     </para>
     <para>
+      The check-file follows the normal registry file syntax with the
+      following semantics:
+    </para>
+    <para>
       チェックファイルは以下の文法を使う、通常のレジストリファイル文法に従う。
     </para>
       <itemizedlist>
@@ -2458,8 +2344,11 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
    <varlistentry><term>--reg-version={1,2,3}</term>
       <listitem><para>
 	レジストリデータベースの形式を指定する。指定されなかった場合、
-	バイナリの値を既定値とするか、もしもコマンドラインで registry.tdb を
-	明確指定して起動した場合、INFO/versionレコード中で見つかった値に設定される。
+	バイナリの値を既定値とするか、もしも registry.tdb がコマンドラインで
+	明確に起動した場合、INFO/versionレコード中に見つかった値に設定される。
+	Specify the format of the registry database. If not given it defaults to
+	the value of the binary or, if an registry.tdb is explizitly stated at
+	the commandline, to the value found in the INFO/version record.
       </para></listitem>
     </varlistentry>
 
@@ -2559,12 +2448,12 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 <refsect2>
 <title>DOM</title>
 
-<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバーサイドから、リモートでマシンをドメインに参加・削除させる API がサポートされた。Windowsでは、リモートでマシンをメンバーに参加させる機能はWindows 2000 からサポートされていた。
+<para>バージョン 3.2.0 から、Sambaではクライアントもしくはサーバーサイドから、リモートでマシンをドメインに参加・削除させるAPIがサポートされた。Windowsでは、リモートでマシンをメンバーに参加させる機能はWindows 2000からサポートされていた。
 </para>
 <para>Sambaでリモートでマシンをドメインに追加するには、操作するアカウントが「Domain Admins」グループのメンバーか、「Administrators group」グループのメンバーか、もしくは「SeMachineAccountPrivilege 権限が付与されている」のいずれかでなければならない。
 </para>
 
-<para>クライアント側でリモートでマシンをドメインに参加させる net dom コマンドは以下の通り：
+<para>クライアント側でリモートでマシンをドメインに参加させるnet domコマンドは以下の通り：
 <simplelist>
 <member>net dom join - リモートでマシンをドメインに参加させる</member>
 <member>net dom unjoin -リモートでマシンをドメインから削除する</member>
@@ -2603,7 +2492,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom join -S xp -U XP\\administrator%secret domain=MYDOM account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XP というマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインに参加させている。ドメインに参加した後にマシンは再起動する。
 </para>
 
 </refsect3>
@@ -2635,7 +2524,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom unjoin -S xp -U XP\\administrator%secret account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XP というマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
+この例では、XPというマシンにローカル管理者としてパスワード「secret」で接続し、ドメイン「MYDOM」にドメイン管理者としてパスワード「topsecret」でドメインから削除している。ドメインから削除された後にマシンは再起動する。
 </para>
 
 </refsect3>
@@ -2663,7 +2552,7 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 </itemizedlist>
 
 <para>
-ドメイン中で名前を変更したいリモートマシンに、標準の net パラメーターを使って接続と
+ドメイン中で名前を変更したいリモートマシンに、標準のnetパラメーターを使って接続と
 認証を行う必要があることに注意。それらの追加のパラメーターには -S コンピューター名
 と-U ユーザー名を含む。
 </para>
@@ -2672,10 +2561,10 @@ evtファイルのインポートとエクスポートは、<emphasis>smb.conf</
 	net dom renamecomputer -S xp -U XP\\administrator%secret newname=XPNEW account=MYDOM\\administrator password=topsecret reboot.
 </para>
 <para>
-この例では、XP という名前のコンピューターに、パスワードが secret のローカルの
-Administrator として接続し、ドメインに参加しているコンピューターの名前を、
-MYDOM というドメインの管理者のアカウントとパスワード topsecret を使って、
-XPNEW に変更している。変更が成功したら、コンピューターをリブートする。
+この例では、XPという名前のコンピューターに、パスワードがsecretのローカルの
+Administratorとして接続し、ドメインに参加しているコンピューターの名前を、
+MYDOMというドメインの管理者のアカウントとパスワード topsecretを使って、
+XPNEWに変更している。変更が成功したら、コンピューターをリブートする。
 </para>
 
 </refsect3>
@@ -2694,7 +2583,7 @@ XPNEW に変更している。変更が成功したら、コンピューター�
 <para>
 グローバルロック配下でシェルを実行する。これはいくつかのシェルコマンドが実行される
 順番を定義するのに便利かもしれない。ロック情報は<filename>g_lock.tdb</filename>
-というファイルに格納される。CTDB が動作しているセットアップ時には、ロック情報は
+というファイルに格納される。CTDBが動作しているセットアップ時には、ロック情報は
 すべてのクラスターノードで有効である。
 </para>
 
@@ -2750,7 +2639,7 @@ XPNEW に変更している。変更が成功したら、コンピューター�
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.6.2 - 4.6.6 に対応する。</para>
+	<para>このマニュアルページは Samba 4.1.16 - 4.1.22 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -2760,7 +2649,7 @@ XPNEW に変更している。変更が成功したら、コンピューター�
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4 - 4.6.6 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 - 4.1.22 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 </refsect1>
 
 </refentry>
