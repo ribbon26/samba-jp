@@ -12,13 +12,11 @@
 
 	<xsl:template match="description"><xsl:apply-templates/></xsl:template>
 
-	<xsl:template match="value"><xsl:element name="literal"><xsl:apply-templates/></xsl:element></xsl:template>
-	
-	<xsl:template match="command"><xsl:element name="literal"><xsl:apply-templates/></xsl:element></xsl:template>
+	<xsl:template match="value"><xsl:apply-templates/></xsl:template>
 
 	<xsl:template match="synonym"><xsl:apply-templates/></xsl:template>
 
-	<xsl:template match="related"><xsl:element name="para"><xsl:text>関連コマンド</xsl:text><xsl:apply-templates/></xsl:element></xsl:template>
+	<xsl:template match="related"><xsl:apply-templates/></xsl:template>
 
 	<xsl:template match="samba:parameterlist">
 		<xsl:apply-templates>
@@ -53,14 +51,11 @@
 		</xsl:variable>
 
 		<xsl:variable name="term">
+			<xsl:element name="term">
 				<xsl:copy-of select="$anchor"/>
-				<xsl:element name="title">
-					<xsl:text>&#10;</xsl:text>
-					<xsl:text>&#10;</xsl:text>
-					<xsl:value-of select="@name"/>
-					<xsl:value-of select="$context"/>
-					<xsl:text>&#10;</xsl:text>
-				</xsl:element>
+				<xsl:value-of select="@name"/>
+				<xsl:value-of select="$context"/>
+			</xsl:element>
 		</xsl:variable>
 
 
@@ -69,7 +64,7 @@
 			<xsl:for-each select="value">
 				<xsl:if test="@type = 'example'">
 					<xsl:element name="para">
-						<xsl:text>例: </xsl:text>
+						<xsl:text>設定例: </xsl:text>
 						<xsl:element name="emphasis">
 							<xsl:element name="parameter">
 								<xsl:copy-of select="$name"/>
@@ -88,7 +83,7 @@
 			<xsl:for-each select="value">
 				<xsl:if test="@type = 'default'">
 					<xsl:element name="para">
-						<xsl:text>既定値: </xsl:text>
+						<xsl:text>デフォルト値: </xsl:text>
 						<xsl:element name="emphasis">
 							<xsl:element name="parameter">
 								<xsl:copy-of select="$name"/>
@@ -108,7 +103,7 @@
 				<xsl:when test="$tdefault = ''">
 					<xsl:element name="para">
 						<xsl:element name="emphasis">
-							<xsl:text>既定値なし</xsl:text>
+							<xsl:text>デフォルト値なし</xsl:text>
 						</xsl:element>	
 					</xsl:element>
 				</xsl:when>
@@ -123,7 +118,8 @@
 		</xsl:variable>
 
 		<xsl:for-each select="synonym">
-			<xsl:element name="section">
+			<xsl:element name="varlistentry">
+				<xsl:text>&#10;</xsl:text>     
 				<xsl:element name="indexterm">
 					<xsl:attribute name="significance">
 						<xsl:text>preferred</xsl:text>
@@ -135,57 +131,36 @@
 						<xsl:value-of select="$name"/>
 					</xsl:element>
 				</xsl:element>
-				<xsl:element name="title">
-				<xsl:text>&#10;</xsl:text>
-				<xsl:text>&#10;</xsl:text>
+				<xsl:element name="term">
 					<xsl:element name="anchor">
 						<xsl:attribute name="id">
 							<xsl:value-of select="translate(translate(string(.),' ',''), 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
 						</xsl:attribute>
 					</xsl:element>
 					<xsl:value-of select="."/>
-					<xsl:text>&#10;</xsl:text>
 				</xsl:element>
-				<xsl:element name="variablelist">
-					<xsl:element name="varlistentry">
-						<xsl:element name="listitem">
-							<xsl:element name="para">
-								<xsl:text>このパラメーターは右記のパラメーターの別名である：</xsl:text>
-								<xsl:element name="link">
-									<xsl:attribute name="linkend">
-										<xsl:value-of select="translate(translate(string($name),' ',''), 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-									</xsl:attribute>
-									<xsl:value-of select="$name"/>
-								</xsl:element>
-								<xsl:text>.</xsl:text>
-							</xsl:element>
-						</xsl:element>
-					</xsl:element>
+				<xsl:element name="listitem">
+					<xsl:element name="para"><xsl:text>このパラメータは、</xsl:text><xsl:copy-of select="$name"/><xsl:text>の別名である。</xsl:text></xsl:element>
 				</xsl:element>
-				<xsl:text>&#10;</xsl:text>     
 			</xsl:element>
 		</xsl:for-each>
 
-		<xsl:element name="section">
+		<xsl:element name="varlistentry">
+			<xsl:text>&#10;</xsl:text>     
 			<xsl:element name="indexterm">
 				<xsl:attribute name="significance">
 					<xsl:text>preferred</xsl:text>
 				</xsl:attribute>
 				<xsl:element name="primary">
-				<xsl:value-of select="@name"/>
+					<xsl:value-of select="@name"/>
 				</xsl:element>
 			</xsl:element>
 			<xsl:copy-of select="$term"/>
-			<xsl:element name="variablelist">
-				<xsl:element name="varlistentry">
-					<xsl:element name="listitem">
-						<xsl:copy-of select="$content"/> <xsl:text>&#10;</xsl:text>
-						<xsl:copy-of select="$default"/> <xsl:text>&#10;</xsl:text>
-						<xsl:copy-of select="$examples"/> <xsl:text>&#10;</xsl:text>
-					</xsl:element>
-				</xsl:element>
+			<xsl:element name="listitem">
+				<xsl:copy-of select="$content"/> <xsl:text>&#10;</xsl:text>
+				<xsl:copy-of select="$default"/> <xsl:text>&#10;</xsl:text>
+				<xsl:copy-of select="$examples"/> <xsl:text>&#10;</xsl:text>
 			</xsl:element>
-			<xsl:text>&#10;</xsl:text>
 		</xsl:element>
 	</xsl:template>
 </xsl:stylesheet>
