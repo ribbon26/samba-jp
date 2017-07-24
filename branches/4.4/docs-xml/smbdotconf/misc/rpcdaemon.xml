@@ -11,9 +11,8 @@
 	</para>
 -->
         <para>
-	  定義されてた rpc サービスのために、分離されたデーモンを起動するか、
-	  埋め込まれたコードを使うかを定義する。
-	  rpc_daemon プレフィックスはその後にサーバー名と値がなければならない。
+	定義済み rpc サービスに対して内蔵コードを使うか、個々のデーモンを起動するか
+	のいずれかを定義する。rpc_daemon プレフィックスの後ろにはサービス名と値を記述する。
 	</para>
 
 <!-- 原文 samba-4.4.15
@@ -21,11 +20,11 @@
 	Two possible values are currently supported:
 -->
 	<para>
-	  現時点では、以下の 2 つが使用可能である。
-	  <programlisting>
+	現時点では以下の 2 つが設定可能である。
+	<programlisting>
 		disabled
 		fork
-	  </programlisting>
+	</programlisting>
 	</para>
 
 <!-- 原文 samba-4.4.15
@@ -36,9 +35,8 @@
 	</para>
 -->
 	<para>
-	  旧来のメソッドは smbd 中に埋め込まれた内部デーモンとして、
-	  rpcサービスを動かすものであり、したがって外部デーモンは
-	  既定値では<emphasis>無効</emphasis>になっている。
+	従来は smbd に内蔵されたデーモンを利用して rpc サービスを動かしていた。
+	したがって外部デーモンを起動することは既定では<emphasis>無効</emphasis> になっている。
 	</para>
 
 <!-- 原文 samba-4.4.15
@@ -53,13 +51,13 @@
 	</para>
 -->
 	<para>
-	  <emphasis>fork</emphasis> オプションを選ぶと、この方法で設定された
-	  各デーモン用に分離されたプロセスを samba はフォークする。各デーモンは、
-	  複数の smbd からのリクエストを処理する為に使われる、複数の子プロセスを
-	  順番にフォークする(エンドポイントマッパーが有効な場合)。
-	  名前付きパイプ上で発生し、そこで指定されたパイプを要求する smbd との
-	  通信は、外部デーモンにフォワードされる (<smbconfoption name="rpc_server"/>
-	  を参照のこと)。
+	<emphasis>fork</emphasis> オプションにより、ここで設定した個々のデーモン
+	に応じたプロセスがフォークされる。フォークされたデーモンは、そこからさらに
+	多くの子プロセスをフォークする。この子プロセスは、複数の smbd からのリク
+	エストや直接 TCP/IP 接続 (direct TCP/IP connections) を取り扱う (エンド
+	ポイントマッパーが有効な場合)。smbd との通信は名前付きパイプ上で行われる。
+	この通信では、外部デーモンに対してそのパイプがフォワードされる必要がある。
+	(<smbconfoption name="rpc_server"/> を参照のこと。)
 	</para>
 
 <!-- 原文 samba-4.4.15
@@ -72,19 +70,18 @@
 	Five options are currently supported:
 -->
 	<para>
-	  フォークされた RPC デーモンは接続を扱うために動的に子プロセスをフォーク
-	  することをサポートする。どのくらい子プロセスを作るか、どのくらい早く
-	  それらをフォークするか、また、どのくらい各子プロセスにクライアントを
-	  同時に取り扱うかについて、ヒューリスティックな方法は、デーモンの後に
-	  名前が付けられた parametrical オプションによって定義される。
-	  現時点では以下の 5 つのオプションがある。
-	  <programlisting>
+	フォークされた RPC デーモンは、接続を処理するために動的な子プロセスの
+	フォークをサポートする。子プロセスの生成数、フォークのタイミング、
+	子プロセスが同時に処理するクライアント数については、デーモン名の直後に
+	記述するパラメーターにより指定する。
+	現時点では以下の 5 つのオプションがある。
+	<programlisting>
 		prefork_min_children
 		prefork_max_children
 		prefork_spawn_rate
 		prefork_max_allowed_clients
 		prefork_child_min_life
-	  </programlisting>
+	</programlisting>
 
 <!-- 原文 samba-4.4.15
 	To set one of these options use the follwing syntax:
@@ -102,8 +99,8 @@
 	daemons are available and they are called:
 -->
 	<para>
-	Samba には spoolss、lsarpc/lsass、netlogon、samr、FSRVP と mdssvc (Spotlight) 用に
-	分離されたデーモンがある。現在 5 つのデーモンが有効でそれらは以下の通りである。
+	Samba には spoolss、lsarpc/lsass、netlogon、samr、FSRVP、mdssvc (Spotlight) 用に
+	それぞれ個別のデーモンがある。現在 5 つのデーモンが利用可能であり、以下の名前で表わす。
 	<programlisting>
 		epmd
 		lsasd
