@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2017/08/08
+						2017/08/10
 						日本Sambaユーザー会
 
 
@@ -67,58 +67,36 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 
 4. ビルド方法
 ======================================================================
-## 4.1 準備
-## 
-## 4.1.1 プロキシの設定
-## 
-## XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
-## ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
-## かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
-## 使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
-## を使う/使わないでかなり差が付きます。
-## 
-## 4.1.2 カタログファイルの準備
-## 
-## docs-xml/build配下にあるREADMEファイルに記載のように、catalog.xmlファイルを
-## 作成します。具体的には、 docs-xml ディレクトリで、
-## 
-## % export XML_CATALOG_FILES="file:///etc/xml/catalog file://$(pwd)/build/catalog.xml"
-## 
-## と、
-## 
-## % cat $(pwd)/build/catalog.xml.in | sed -e "s|@abs_top_srcdir@|$(pwd)|g" |sed -e
-## "s|@abs_top_builddir@|$(pwd)|g"> $(pwd)/build/catalog.xml
-## 
-## を実行します。README中の上記行は間違っていますので、上記のように指定してください。
-## 
-## 4.2 Samba 4.x.y の場合
+4.1 準備
 
-(1) Samba ソースアーカイブファイルを 任意のディレクトリに展開
+(1) プロキシの設定
+
+XMLファイルをコンパイルするときには、xsltprocが xslファイルをインター
+ネット上のサイトからダウンロードします。そのため、処理にかなり時間が
+かかります。xsl ファイルは静的コンテンツですので、キャッシュサーバを
+使って、ダウンロード時間を減らすようにしてください。キャッシュサーバ
+を使う/使わないでかなり差が付きます。
+ 
+(2) Samba ソースアーカイブファイルを 任意のディレクトリに展開
 
   $ cd /srv/build
   $ tar xzf /srv/source/samba-4.X.Y.tar.gz
 
-(2) Samba 翻訳文書アーカイブファイルを任意の場所に展開
+(3) Samba 翻訳文書アーカイブファイルを任意の場所に展開
 
   $ cd /srv/build
   $ mkdir samba-ja-docs-4.X.Y-Z
   $ cd /srv/source/samba-ja-docs-4.X.Y-Z
   $ tar xzf samba-ja-docs-4.X.Y-Z.tar.gz
 
-## (3) Samba ソースツリー内の docs-xml ディレクトリへのシンボリック
-##     リンクを翻訳文書ディレクトリ内に作成
-## 
-##   $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
-##   $ ln -s /srv/build/samba-4.X.Y-Z/docs-xml samba-docs-xml
-
-(3) configure を実行; --with-sambadir を用いて Samba ソースディレクトリを指定
+(4) configure を実行; --with-sambadir を用いて Samba ソースディレクトリを指定
 
   $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
   $ ./configure --with-sambadir=/srv/build/samba-4.X.Y
   または
   $ ./configure --with-sambadir=../../../samba-4.X.Y
 
-(4) ビルドを実行
+4.2 ビルドを実行
 
   $ make clean
   $ make manpages (manpagesの作成)
@@ -128,8 +106,6 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 
 5. 変更履歴
 ======================================================================
-
-4.3系列以前については README.43 として変更履歴を分離しました。
 
 2016/06/19 Ver 4.4.4-1 4.4.4対応
 		     build/DTD/samba-doc,
@@ -227,7 +203,7 @@ HTML形式、およびman形式のファイル両方ともUTF-8でエンコー�
 	       	     vfs_acl_xattr.8.xml
 		     修正
 
-2016/08/08 Ver 4.4.15-1 4.4.15対応
+2016/08/10 Ver 4.4.15-1 4.4.15対応
 	       	     makefile修正等、lang="ja"対応
 		     aclocal.m4,configure,configure.ac,Makefile.in,
 		     Makefile.settings.in,
