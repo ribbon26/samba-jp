@@ -13,80 +13,143 @@
 
 <refnamediv>
 	<refname>idmap_ad</refname>
-	<refpurpose>Winbind用のSambaの idmap_adバックエンド</refpurpose>
+<!-- 原文 samba-4.4.15
+	<refpurpose>Samba's idmap_ad Backend for Winbind</refpurpose>
+-->
+	<refpurpose>Winbind 用の idmap_ad バックエンド</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
+<!-- 原文 samba-4.4.15
+	<title>DESCRIPTION</title>
+	<para>The idmap_ad plugin provides a way for Winbind to read
+	id mappings from an AD server that uses RFC2307/SFU schema
+	extensions. This module implements only the &quot;idmap&quot;
+	API, and is READONLY. Mappings must be provided in advance
+	by the administrator by adding the uidNumber attributes for
+	users and gidNumber attributes for groups in the AD. Winbind
+	will only map users that have a uidNumber and whose primary
+	group have a gidNumber attribute set. It is however
+	recommended that all groups in use have gidNumber attributes
+	assigned, otherwise they are not working.</para>
+-->
 	<title>説明</title>
-	<para>idmap_adプラグインは、RFC2307/SFUスキーマ拡張を使うADサーバーからの
-       idマッピングをWinbindが読み出す方法を提供する。このモジュールは&quot;idmap&quot;
-	APIのみに実装され、リードオンリである。マッピングは、posixAccount/posixGroupクラスと、ユーザーに対する
-相対的な属性型/属性値ペアとAD中のグループオブジェクトを管理者によって前もって
-追加することを提供されることが必要である。</para>
+	<para>idmap_ad プラグインは、RFC2307/SFU スキーマ拡張を使う AD サーバーからの
+	id マッピングを Winbind が読み出す手段を提供する。このモジュールは &quot;idmap&quot;
+	API 実装するだけであり、読み取り機能のみである。
 
+	マッピングは posixAccount/posixGroup クラスと、
+	ユーザーに対する相対的な属性型/属性値ペアと AD 中のグループオブジェクトを管理者によって
+	前もって追加することを提供されることが必要である。</para>
+
+<!-- 原文 samba-4.4.15
+	<para>
+	Currently, the <parameter>ad</parameter> backend
+	does not work as the default idmap backend, but one has
+	to configure it separately for each domain for which one wants
+	to use it, using disjoint ranges. One usually needs to configure
+	a writeable default idmap range, using for example the
+	<parameter>tdb</parameter> or <parameter>ldap</parameter>
+	backend, in order to be able to map the BUILTIN sids and
+	possibly other trusted domains. The writeable default config
+	is also needed in order to be able to create group mappings.
+	This catch-all default idmap configuration should have a range
+	that is disjoint from any explicitly configured domain with
+	idmap backend <parameter>ad</parameter>. See the example below.
+	</para>
+-->
         <para>
-	現在、<parameter>ad</parameter>バックエンドは既定値のidmapバックエンドとしては
-	動作せず、これを使用したい場合、各ドメイン毎に個別に、disjoint rangeを使って
-	設定しなければならない。通常、書き込み可能な既定値のidmapレンジを設定しなければ
-	ならないが、このときには、たとえば、<parameter>tdb</parameter>または
-	<parameter>ldap</parameter>バックエンドを、BUILTIN sidや他の信頼するドメインを
-	マップすることができるようにするために使う。書き込み可能な既定値の設定はまた、
-	グループマッピングの作成が出来るようにするために必要である。この包括的な
-	既定値のidmap設定は、idmap バックエンド <parameter>ad</parameter>を使う
-	任意の明示的に設定されたドメインからdisjointされたレンジを持たなければならない。
+	現在 <parameter>ad</parameter> バックエンドは idmap バックエンドの既定値には
+	なっていない。ドメインにおいてこれを利用する場合は、すべてのドメインにわたって
+	idmap の設定範囲が重複しないように設定する必要がある。
+	また、たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter> 
+	バックエンドを用いる場合には、
+	書き込み可能な idmap の範囲を既定値として設定するのが普通である。
+	BUILTIN sid 
+グループマッピングが生成できるように、
+この包括的な
+	既定値の idmap 設定は、idmap バックエンド <parameter>ad</parameter> を使う
+	任意の明示的に設定されたドメインから disjoint されたレンジを持たなければならない。
 	以下の例を参照のこと。</para>
-        <para>
-        Currently, the <parameter>ad</parameter> backend
-        does not work as the the default idmap backend, but one has
-        to configure it separately for each domain for which one wants
-        to use it, using disjoint ranges. One usually needs to configure
-        a writeable default idmap range, using for example the
-        <parameter>tdb</parameter> or <parameter>ldap</parameter>)
-        backend, in order to be able to map the BUILTIN sids and
-        possibly other trusted domains. The writeable default config
-        is also needed in order to be able to create group mappings.
-        This catch-all default idmap configuration should have a range
-        that is disjoint from any explicitly configured domain with
-        idmap backend <parameter>ad</parameter>. See the example below.
-        </para>
 
 </refsynopsisdiv>
 
 <refsect1>
+<!-- 原文 samba-4.4.15
+	<title>IDMAP OPTIONS</title>
+-->
 	<title>IDMAP オプション</title>
 
 	<variablelist>
 		<varlistentry>
 		<term>range = low - high</term>
 		<listitem><para>
-              　これは、バックエンドが信頼できるuidとgidレンジの有効な一致を定義する。
-		レンジはフィルターとして振る舞うことに注意。もしも、指定された任意のUIDまたはGIDが
-		レンジを外れてしまうAD内に格納されていたならば、レンジは無視され、対応する
-		マップは破棄される。ローカルとリモートで定義されたIDの、偶然のUID/GIDの重なりを防ぐために、それは意図されている。</para></listitem>
+<!-- 原文 samba-4.4.15
+			Defines the available matching UID and GID range for which the
+			backend is authoritative. Note that the range acts as a filter.
+			If specified any UID or GID stored in AD that fall outside the
+			range is ignored and the corresponding map is discarded.
+			It is intended as a way to avoid accidental UID/GID overlaps
+			between local and remotely defined IDs.
+-->
+			このバックエンドが割り当て権限をもつ UID および GID の範囲を定義する。
+			この範囲はフィルターとして処理されることに注意。
+			もしも、指定された任意の UID または GID が
+			レンジを外れてしまう AD 内に格納されていたならば、この範囲指定は無視され、対応する
+			マップは破棄される。ローカルとリモートで定義された ID の、偶然の UID/GID の重なり
+			を防ぐために、それは意図されている。
+		</para></listitem>
 		</varlistentry>
 		<varlistentry>
 		<term>schema_mode = &lt;rfc2307 | sfu | sfu20&gt;</term>
 		<listitem><para>
-                                                                        			Active Directory に関するユーザーとグループ情報を問い合わせるときに、idmap_adを
-		使うべきであるスキーマを定義する。これは、Windows 2003 R2またはService for Unix(SFU)
-スキーマ中に含まれているRFC2307スキーマサポートよりも簡単である。
-    SFU 3.0と3.5は、"sfu" を、SFU 2.0は、"sfu20"を選択すること。
-    プライマルグループのメンバーシップは現在常時"primaryGroupID" LDAP属性から計算されることに注意。
+<!-- 原文 samba-4.4.15
+			Defines the schema that idmap_ad should use when querying
+			Active Directory regarding user and group information.
+			This can be either the RFC2307 schema support included
+			in Windows 2003 R2 or the Service for Unix (SFU) schema.
+			For SFU 3.0 or 3.5 please choose "sfu", for SFU 2.0
+			please choose "sfu20".
+-->
+			idmap_ad が用いるスキーマを定義するものであり、
+			Active Directory においてユーザー情報やグループ情報を問い合わせる際に利用される。
+			これは、Windows 2003 R2 における RFC2307 スキーマサポートか、
+			あるいは Service for Unix (SFU) のいずれかである。
+			SFU 3.0 や 3.5 に対しては "sfu" を、また SFU 2.0 に対しては "sfu20" を選択すること。
+
+<!-- 原文 samba-4.4.15
+			Please note that primary group membership is currently always calculated
+			via the "primaryGroupID" LDAP attribute.
+-->
+			現時点においてプライマリグループのメンバーシップは LDAP 属性である "primaryGroupID" を通じて計算されることに注意。
 		</para></listitem>
 		</varlistentry>
 	</variablelist>
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.4.15
+	<title>EXAMPLES</title>
+-->
 	<title>使用例</title>
 	<para>
-        以下の例は、どのように、プリンシパルと信頼されたADドメインから相対的なidマッピングを
-	検索するかを示している。もしも、信頼されたドメインが存在するidと競合するならば、
+<!-- 原文 samba-4.4.15
+	The following example shows how to retrieve idmappings from our principal and
+	trusted AD domains. If trusted domains are present id conflicts must be
+	resolved beforehand, there is no
+	guarantee on the order conflicting mappings would be resolved at this point.
+-->
+        以下の例は、どのように、プリンシパルと信頼された AD ドメインから相対的な id マッピングを
+	検索するかを示している。もしも、信頼されたドメインが存在する id と競合するならば、
 	それは、あらかじめ解決されていなければならず、順番が競合したマッピングはその時点
 	で解決されていることについては何らの保証もない。
 
-	この例はまた、どのように、BULITINのような内部のバックエンドを使うことが出来る
-ローカルのid割り当てのために競合しない小さなレンジを残すための方法を示している。</para>
+<!-- 原文 samba-4.4.15
+	This example also shows how to leave a small non conflicting range for local
+	id allocation that may be used in internal backends like BUILTIN.
+-->
+	この例はまた、どのように、BULITIN のような内部のバックエンドを使うことが出来る
+	ローカルの id 割り当てのために競合しない小さなレンジを残すための方法を示している。</para>
 
 	<programlisting>
 	[global]
@@ -107,7 +170,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.0.6 - 4.4.13  に対応する。</para>
+	<para>このマニュアルページは Samba 4.0.6 - 4.4.15  に対応する。</para>
         <para>このドキュメントの翻訳は
 	<itemizedlist>
 		<listitem><para>武田保真</para></listitem>
