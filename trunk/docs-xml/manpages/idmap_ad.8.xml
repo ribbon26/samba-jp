@@ -18,37 +18,29 @@
 
 <refsynopsisdiv>
 	<title>説明</title>
-	<para>idmap_adプラグインは、RFC2307/SFUスキーマ拡張を使うADサーバーからの
-       idマッピングをWinbindが読み出す方法を提供する。このモジュールは&quot;idmap&quot;
-	APIのみに実装され、リードオンリである。マッピングは、posixAccount/posixGroupクラスと、ユーザーに対する
-相対的な属性型/属性値ペアとAD中のグループオブジェクトを管理者によって前もって
-追加することを提供されることが必要である。</para>
+	<para>idmap_ad プラグインは、RFC2307/SFU スキーマ拡張を使う AD サーバーからの
+	id マッピングを Winbind が読み出す手段を提供する。このモジュールは &quot;idmap&quot;
+	API 実装するだけであり、読み取り機能のみである。
+	マッピングは、ユーザに対応する uidNumber 属性と、グループに対応する
+	gidNumbe 属性を、AD 中に、管理者によって
+	前もって追加されることが必要である。Winbind は、 uidNumber を
+	持ち、かつ、そのプライマリグループが、  gidNumber 属性に設定されて
+	いるユーザのみをマップする。しかしながら、使用指定するすべての
+	グループが、 gidNumber 属性を持つことを推奨する。</para>
 
         <para>
-	現在、<parameter>ad</parameter>バックエンドは既定値のidmapバックエンドとしては
-	動作せず、これを使用したい場合、各ドメイン毎に個別に、disjoint rangeを使って
-	設定しなければならない。通常、書き込み可能な既定値のidmapレンジを設定しなければ
-	ならないが、このときには、たとえば、<parameter>tdb</parameter>または
-	<parameter>ldap</parameter>バックエンドを、BUILTIN sidや他の信頼するドメインを
-	マップすることができるようにするために使う。書き込み可能な既定値の設定はまた、
-	グループマッピングの作成が出来るようにするために必要である。この包括的な
-	既定値のidmap設定は、idmap バックエンド <parameter>ad</parameter>を使う
-	任意の明示的に設定されたドメインからdisjointされたレンジを持たなければならない。
+	現在 <parameter>ad</parameter> バックエンドは idmap バックエンドの既定値には
+	なっていない。ドメインにおいてこれを利用する場合は、すべてのドメインにわたって
+	idmap の設定範囲が重複しないように設定する必要がある。
+	また、BUILTIN sid や他の信頼されたドメインをマップ出来るようにするため、
+	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter> 
+	バックエンドを用いる場合には、	書き込み可能な 既定値の idmap 範囲を
+	設定するのが普通である。
+	書き込み可能な既定値の 設定は、グループマッピングを作成するためにも
+	必要である。この包括的な
+	既定値の idmap 設定は、idmap バックエンド <parameter>ad</parameter> を使う
+	任意の明示的に設定されたドメインから disjoint された設定範囲でなければならない。
 	以下の例を参照のこと。</para>
-        <para>
-        Currently, the <parameter>ad</parameter> backend
-        does not work as the the default idmap backend, but one has
-        to configure it separately for each domain for which one wants
-        to use it, using disjoint ranges. One usually needs to configure
-        a writeable default idmap range, using for example the
-        <parameter>tdb</parameter> or <parameter>ldap</parameter>)
-        backend, in order to be able to map the BUILTIN sids and
-        possibly other trusted domains. The writeable default config
-        is also needed in order to be able to create group mappings.
-        This catch-all default idmap configuration should have a range
-        that is disjoint from any explicitly configured domain with
-        idmap backend <parameter>ad</parameter>. See the example below.
-        </para>
 
 </refsynopsisdiv>
 
@@ -59,10 +51,14 @@
 		<varlistentry>
 		<term>range = low - high</term>
 		<listitem><para>
-              　これは、バックエンドが信頼できるuidとgidレンジの有効な一致を定義する。
-		レンジはフィルターとして振る舞うことに注意。もしも、指定された任意のUIDまたはGIDが
-		レンジを外れてしまうAD内に格納されていたならば、レンジは無視され、対応する
-		マップは破棄される。ローカルとリモートで定義されたIDの、偶然のUID/GIDの重なりを防ぐために、それは意図されている。</para></listitem>
+			このバックエンドが割り当て権限をもつ UID および GID の範囲を定義する。
+			この範囲はフィルターとして処理されることに注意。
+			AD 内に格納される、指定された任意の UID または GID が
+			レンジを外れていると、この範囲指定は無視され、対応する
+			マップは破棄される。これは、
+			ローカルとリモートで定義された ID が、偶然 UID/GID が重なって
+			しまうことを防ぐという意図がある。
+		</para></listitem>
 		</varlistentry>
 		<varlistentry>
 		<term>schema_mode = &lt;rfc2307 | sfu | sfu20&gt;</term>
