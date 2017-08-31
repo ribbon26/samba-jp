@@ -16,7 +16,7 @@
 <!-- 原文 samba-4.6.7
 	<refpurpose>Samba's idmap_ad Backend for Winbind</refpurpose>
 -->
-	<refpurpose>Winbind用のSambaの idmap_adバックエンド</refpurpose>
+	<refpurpose>Winbind 用の idmap_ad バックエンド</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -36,13 +36,14 @@
 	<title>説明</title>
 	<para>idmap_ad プラグインは、RFC2307/SFU スキーマ拡張を使う AD サーバーからの
 	id マッピングを Winbind が読み出す手段を提供する。このモジュールは &quot;idmap&quot;
-	API 実装するだけであり、読み取り機能のみである。
-	マッピングは、ユーザに対応する uidNumber 属性と、グループに対応する
-	gidNumbe 属性を、AD 中に、管理者によって
-	前もって追加されることが必要である。Winbind は、 uidNumber を
+	API を実装するだけであり、読み取り機能のみである。
+	AD 内のユーザーに対応する uidNumber 属性と、グループに対応する gidNumbe 属性は、
+	管理者が前もってマッピングに追加しておくことが必要である。
+	Winbind は、 uidNumber を
 	持ち、かつ、そのプライマリグループが、  gidNumber 属性に設定されて
-	いるユーザのみをマップする。しかしながら、使用指定するすべての
-	グループが、 gidNumber 属性を持つことを推奨する。</para>
+	いるユーザーのみをマップする。ただし利用しているグループはすべて
+	gidNumber 属性を割り当てることが推奨されている。
+	こうしておかないと、設定は適切に動作しない。</para>
 
 <!-- 原文 samba-4.6.7
 	<para>
@@ -64,14 +65,14 @@
 	現在 <parameter>ad</parameter> バックエンドは idmap バックエンドの既定値には
 	なっていない。ドメインにおいてこれを利用する場合は、すべてのドメインにわたって
 	idmap の設定範囲が重複しないように設定する必要がある。
-	また、BUILTIN sid や他の信頼されたドメインをマップ出来るようにするため、
-	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter> 
-	バックエンドを用いる場合には、	書き込み可能な 既定値の idmap 範囲を
-	設定するのが普通である。
-	書き込み可能な既定値の 設定は、グループマッピングを作成するためにも
-	必要である。この包括的な
-	既定値の idmap 設定は、idmap バックエンド <parameter>ad</parameter> を使う
-	任意の明示的に設定されたドメインから disjoint された設定範囲でなければならない。
+	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter>
+	バックエンドを用いる場合は、BUILTIN sid や他の信頼されたドメインを
+	マップ出来るようにするために、書き込み可能な既定の idmap 範囲を設定
+	することを通常行う。
+	書き込み可能な既定値の設定は、グループマッピングを作成するためにも
+	必要である。この包括的な既定値の idmap 設定は、idmap バックエンド
+	<parameter>ad</parameter> を使うように明示された他のどのドメインに
+	対しても、重複しないように設定する必要がある。
 	以下の例を参照のこと。</para>
 
 </refsynopsisdiv>
@@ -96,9 +97,9 @@
 -->
 			このバックエンドが割り当て権限をもつ UID および GID の範囲を定義する。
 			この範囲はフィルターとして処理されることに注意。
-			AD 内に格納される、指定された任意の UID または GID が
-			レンジを外れていると、この範囲指定は無視され、対応する
-			マップは破棄される。これは、
+			AD 内に格納されている UID または GID であっても、設定範囲
+			から外れたものが指定されると、この範囲指定は無視され、対応
+			するマップは破棄される。これは、
 			ローカルとリモートで定義された ID が、偶然 UID/GID が重なって
 			しまうことを防ぐという意図がある。
 		</para></listitem>
@@ -114,17 +115,18 @@
 			For SFU 3.0 or 3.5 please choose "sfu", for SFU 2.0
 			please choose "sfu20".
 -->
-                                                                        			Active Directory に関するユーザーとグループ情報を問い合わせるときに、idmap_adを
-		使うべきであるスキーマを定義する。これは、Windows 2003 R2またはService for Unix(SFU)
-スキーマ中に含まれているRFC2307スキーマサポートよりも簡単である。
-    SFU 3.0と3.5は、"sfu" を、SFU 2.0は、"sfu20"を選択すること。
+			idmap_ad が用いるスキーマを定義するものであり、
+			Active Directory においてユーザー情報やグループ情報を問い合わせる際に利用される。
+			これは、Windows 2003 R2 における RFC2307 スキーマサポートか、
+			あるいは Service for Unix (SFU) のいずれかである。
+			SFU 3.0 や 3.5 に対しては "sfu" を、また SFU 2.0 に対しては "sfu20" を選択すること。
 
 <!-- 原文 samba-4.6.7
 			Please note that the behavior of primary group membership is
 			controlled by the <emphasis>unix_primary_group</emphasis> option.
 -->
-    プライマルグループメンバーシップの動作は、<emphasis>unix_primary_group</emphasis>
-    オプションによって制御されることに注意。
+			プライマルグループメンバーシップの動作は、<emphasis>unix_primary_group</emphasis>
+			オプションによって制御されることに注意。
 		</para></listitem>
 		</varlistentry>
                 <varlistentry>
@@ -138,12 +140,12 @@
 		  If set to <parameter>no</parameter> the primary group membership is
 		  calculated via the "primaryGroupID" LDAP attribute.
 -->
-		ユーザのプライマリグループを、SFU属性か、あるいはADのプライマリグループ
-		から取り出すかの定義。これが<parameter>yes</parameter>に設定された
-		場合、プライマリグループメンバシップは LDAP属性 (gidNumber)から
+		ユーザーのプライマリグループを、SFU 属性か、あるいは AD のプライマリグループ
+		から取り出すかの定義。これが <parameter>yes</parameter> に設定された
+		場合、プライマリグループメンバーシップは LDAP属性 (gidNumber) から
 		取り出される。
-		<parameter>no</parameter>に設定された場合には、プライマリグループ
-		メンバシップは "primaryGroupID" LDAP 属性から計算される。
+		<parameter>no</parameter> に設定された場合には、プライマリグループ
+		メンバーシップは LDAP 属性 "primaryGroupID" から計算される。
                </para>
 <!-- 原文 samba-4.6.7
 		<para>Default: no</para>
@@ -161,16 +163,17 @@
 		  attributes the options <emphasis>template shell</emphasis> and
 		  <emphasis>template homedir</emphasis> are used.
 -->
-	       <para>これを<parameter>yes</parameter>に設定した場合、winbind は
-	       LDAP 属性からログインシェルとホームディレクトリ情報を検索する。
-	       <parameter>no</parameter>に設定した場合か、 AD の LDAP エントリに
-	       SFU 属性がない場合は、オプション <emphasis>template shell</emphasis>と
-	       <emphasis>template homedir</emphasis>が使われる。
-	       </para>
+		<para>
+		これを <parameter>yes</parameter> に設定した場合、winbind は
+		LDAP 属性からログインシェルとホームディレクトリ情報を検索する。
+		<parameter>no</parameter> に設定した場合か、 AD の LDAP エントリに
+		SFU 属性がない場合は、オプション <emphasis>template shell</emphasis> と
+		<emphasis>template homedir</emphasis> が使われる。
+		</para>
 <!-- 原文 samba-4.6.7
 		<para>Default: no</para>
 -->
-               <para>既定値: no</para>
+		<para>既定値: no</para>
                 </listitem>
                </varlistentry>
 	</variablelist>
@@ -189,17 +192,16 @@
 	guarantee on the order conflicting mappings would be resolved at this point.
 -->
 	<para>
-        以下の例は、プリンシパルと信頼された AD ドメインから相対的な id マッピングを
-	検索する方法を示している。もしも、信頼されたドメインが存在する id と競合するならば、
-	それは、あらかじめ解決されていなければならず、順番が競合したマッピングはその時点
-	で解決されていることについては何らの保証もない。
+        以下の例は、主として利用する信頼された AD ドメインから id マッピングを
+	取得する方法を示している。信頼されたドメインに対して id の競合が解決されず
+	に残っていた場合、競合したマッピングがその順どおりに解決する保証はない。
 
 <!-- 原文 samba-4.6.7
 	This example also shows how to leave a small non conflicting range for local
 	id allocation that may be used in internal backends like BUILTIN.
 -->
-	この例はまた、どのように、BULITINのような内部のバックエンドを使うことが出来る
-ローカルのid割り当てのために競合しない小さなレンジを残すための方法を示している。</para>
+	この例はまた、競合しないわずかな範囲を残している例であり、BUILTIN のような
+	内部のバックエンド向けに、ローカルの id 割り当て範囲とするものである。</para>
 
 	<programlisting>
 	[global]
@@ -218,18 +220,22 @@
 -->
 	<title>著者</title>
 
-	<para>
 <!-- 原文 samba-4.6.7
+	<para>
 	The original Samba software and related utilities
 	were created by Andrew Tridgell. Samba is now developed
 	by the Samba Team as an Open Source project similar
 	to the way the Linux kernel is developed.
+	</para>
 -->
-オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が 行なわれている。</para>
+	<para>
+	オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell に
+	よって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様の
+	オープンソースプロジェクトとして開発が 行なわれている。</para>
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.6.2 - 4.6.6  に対応する。</para>
+	<para>このマニュアルページは Samba 4.6.2 - 4.6.7  に対応する。</para>
         <para>このドキュメントの翻訳は
 	<itemizedlist>
 		<listitem><para>武田保真</para></listitem>

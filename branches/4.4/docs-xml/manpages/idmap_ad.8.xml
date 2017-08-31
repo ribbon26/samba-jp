@@ -36,13 +36,14 @@
 	<title>説明</title>
 	<para>idmap_ad プラグインは、RFC2307/SFU スキーマ拡張を使う AD サーバーからの
 	id マッピングを Winbind が読み出す手段を提供する。このモジュールは &quot;idmap&quot;
-	API 実装するだけであり、読み取り機能のみである。
-	マッピングは、ユーザに対応する uidNumber 属性と、グループに対応する
-	gidNumbe 属性を、AD 中に、管理者によって
-	前もって追加されることが必要である。Winbind は、 uidNumber を
+	API を実装するだけであり、読み取り機能のみである。
+	AD 内のユーザーに対応する uidNumber 属性と、グループに対応する gidNumbe 属性は、
+	管理者が前もってマッピングに追加しておくことが必要である。
+	Winbind は、 uidNumber を
 	持ち、かつ、そのプライマリグループが、  gidNumber 属性に設定されて
-	いるユーザのみをマップする。しかしながら、使用指定するすべての
-	グループが、 gidNumber 属性を持つことを推奨する。</para>
+	いるユーザーのみをマップする。ただし利用しているグループはすべて
+	gidNumber 属性を割り当てることが推奨されている。
+	こうしておかないと、設定は適切に動作しない。</para>
 
 <!-- 原文 samba-4.4.15
 	<para>
@@ -64,14 +65,14 @@
 	現在 <parameter>ad</parameter> バックエンドは idmap バックエンドの既定値には
 	なっていない。ドメインにおいてこれを利用する場合は、すべてのドメインにわたって
 	idmap の設定範囲が重複しないように設定する必要がある。
-	また、BUILTIN sid や他の信頼されたドメインをマップ出来るようにするため、
-	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter> 
-	バックエンドを用いる場合には、	書き込み可能な 既定値の idmap 範囲を
-	設定するのが普通である。
-	書き込み可能な既定値の 設定は、グループマッピングを作成するためにも
-	必要である。この包括的な
-	既定値の idmap 設定は、idmap バックエンド <parameter>ad</parameter> を使う
-	任意の明示的に設定されたドメインから disjoint された設定範囲でなければならない。
+	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter>
+	バックエンドを用いる場合は、BUILTIN sid や他の信頼されたドメインを
+	マップ出来るようにするために、書き込み可能な既定の idmap 範囲を設定
+	することを通常行う。
+	書き込み可能な既定値の設定は、グループマッピングを作成するためにも
+	必要である。この包括的な既定値の idmap 設定は、idmap バックエンド
+	<parameter>ad</parameter> を使うように明示された他のどのドメインに
+	対しても、重複しないように設定する必要がある。
 	以下の例を参照のこと。</para>
 
 </refsynopsisdiv>
@@ -96,9 +97,9 @@
 -->
 			このバックエンドが割り当て権限をもつ UID および GID の範囲を定義する。
 			この範囲はフィルターとして処理されることに注意。
-			AD 内に格納される、指定された任意の UID または GID が
-			レンジを外れていると、この範囲指定は無視され、対応する
-			マップは破棄される。これは、
+			AD 内に格納されている UID または GID であっても、設定範囲
+			から外れたものが指定されると、この範囲指定は無視され、対応
+			するマップは破棄される。これは、
 			ローカルとリモートで定義された ID が、偶然 UID/GID が重なって
 			しまうことを防ぐという意図がある。
 		</para></listitem>
@@ -135,24 +136,24 @@
 	<title>EXAMPLES</title>
 -->
 	<title>使用例</title>
-	<para>
 <!-- 原文 samba-4.4.15
+	<para>
 	The following example shows how to retrieve idmappings from our principal and
 	trusted AD domains. If trusted domains are present id conflicts must be
 	resolved beforehand, there is no
 	guarantee on the order conflicting mappings would be resolved at this point.
 -->
-        以下の例は、プリンシパルと信頼された AD ドメインから相対的な id マッピングを
-	検索する方法の例を示している。もし、信頼されたドメインが、既存の id と競合するならば、
-	それは、あらかじめ解決されていなければならず、順番が競合したマッピングはその時点
-	で解決されていることについては何らの保証もない。
+	<para>
+        以下の例は、主として利用する信頼された AD ドメインから id マッピングを
+	取得する方法を示している。信頼されたドメインに対して id の競合が解決されず
+	に残っていた場合、競合したマッピングがその順どおりに解決する保証はない。
 
 <!-- 原文 samba-4.4.15
 	This example also shows how to leave a small non conflicting range for local
 	id allocation that may be used in internal backends like BUILTIN.
 -->
-	この例はまた、BULITIN のような内部のバックエンドを使うことが出来る
-	ローカルの id 割り当てのために競合しない小さなレンジを残すための方法を示している。</para>
+	この例はまた、競合しないわずかな範囲を残している例であり、BUILTIN のような
+	内部のバックエンド向けに、ローカルの id 割り当て範囲とするものである。</para>
 
 	<programlisting>
 	[global]
@@ -166,11 +167,22 @@
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.4.15
+	<title>AUTHOR</title>
+-->
 	<title>著者</title>
 
+<!-- 原文 samba-4.4.15
 	<para>
-	  オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell に
-	  よって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様の
+	The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.
+	</para>
+-->
+	<para>
+	オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell に
+	よって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様の
 	オープンソースプロジェクトとして開発が 行なわれている。</para>
 </refsect1>
 <refsect1>
