@@ -5,6 +5,7 @@
   <xsl:param name="local.l10n.xml" select="document('local.ja.xml')"/>
 
   <!-- samba-ja: 出力エンコーディングを定める -->
-  <xsl:output method="html" encoding="UTF-8"/>
+  <xsl:param name="chunker.output.encoding" select="'UTF-8'"/>
+  <xsl:output method="html" encoding="'UTF-8'"/>
 
 </xsl:stylesheet>
