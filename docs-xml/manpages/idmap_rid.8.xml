@@ -30,10 +30,9 @@
 	in this case as the mapping is deterministic.</para>
 -->
 	<title>説明</title>
-	<para>idmap_rid バックエンドは、UID や GID と SID を対応付けるための
-	方法のひとつとして、アルゴリズム的なマッピングの仕組みを提供する。
-	このケースでは決定論的なマッピングを行うため、データベースを必要
-	としない。</para>
+	<para>idmap_rid バックエンドは、アルゴリズムによって UID や GID を SID に
+	マッピングする方式を提供する。これを用いる場合はマッピングが計算によって
+	決定されるため、データベースは必要としない。</para>
 
 <!-- 原文 samba-4.7.0
 	<para>
@@ -42,8 +41,8 @@
 	</para>
 -->
 	<para>
-	現在、それらは disjoint レンジを使う idmap_rid バックエンドを使うべき各ドメインの
-	ための明示的な idmap 設定であるべきである。
+	現状においては、idmap_rid バックエンドを利用するドメインに対しては、個々
+	に idmap 設定を明示的に行ない、互いに重複しないようにする必要がある。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -57,11 +56,12 @@
 	</para>
 -->
 	<para>
-	通常、BUILTIN sid と他のドメインをマップスル事が出来るようにするためと、
-	グループマッピングを作成できるようにするために、unix idを作成できる、
-	<parameter>tdb</parameter>か<parameter>ldap</parameter> のような
-	バックエンドを使う、書き込み可能な既定値のidmapレンジを定義する必要がある。
-	以下の例を参照のこと。
+	注意: idmap_rid バックエンドは、デフォルトのバックエンドとして利用され
+	なくなっている。通常は、書き込み可能な既定の idmap 範囲を定義する必要が
+	あるため、<parameter>tdb</parameter> や <parameter>ldap</parameter> の
+	ようなバックエンドを用いて Unix ID を生成するような設定を行う。
+	これによって BUILTIN SID とそれ以外のドメインをマップできるようになり、
+	またグループマッピングも生成されるようになる。以下の例を参照のこと。
 	</para>
 </refsynopsisdiv>
 
@@ -83,12 +83,13 @@
 			It is intended as a way to avoid accidental UID/GID overlaps
 			between local and remotely defined IDs.
 -->
-			バックエンドが権威を持つと規定されている、uid と gid の利用可能な
-			マッチング範囲を定義する。この範囲はフィルターとして動作することに
-			注意されたい。UID と GID の計算結果がアルゴリズム的にこの範囲外
-			になってしまった場合、これらは無視され、対応するマップは破棄される。
-			このオプションは、UID や GID がたまたまローカルとリモートでそれぞれ
-			定義された ID と重複してしまうのを避けるために用意されている。
+			このバックエンドが割り当て権限をもつ UID と GID の範囲を
+			定義する。この範囲はフィルターとして処理されることに注意。
+			アルゴリズムによって計算された UID と GID が範囲外になって
+			しまった場合、これらは無視され、対応するマップは破棄される。
+			このオプションは、UID や GID がたまたまローカルとリモート
+			でそれぞれ定義された ID と重複してしまうのを避けるために
+			用意されている。
 		</para></listitem>
 		</varlistentry>
 
@@ -105,17 +106,17 @@
 			The default is not to restrict the allowed rids at all,
 			i.e. a base_rid value of 0.
 -->
-			UID や GID から SID を生成したり、取得したSID から UID や GID を
-			求めたりするためのベースとなる整数を指定する。
-			これは、base rid よりも小さい、RID ベースの SID がフィルターされることを
-			意味する。既定値は許されている RID に制限されておらず、すなわち、
-			base_rid の値は 0 である。
+			UID や GID から SID を生成したり、SID から UID や GID を
+			再生成したりするための基となる整数を定義する。これは RID
+			が base_rid よりも小さい SID はフィルターされることを意味
+			する。既定値は 0 であり、この場合は RID に制限をかけない
+			ものとなる。
 		 </para>
 		 <para>
 <!-- 原文 samba-4.7.0
 			Use of this parameter is deprecated.
 -->
-			このパラメーターを使う事は推奨しない。
+			このパラメーターを使うことは推奨しない。
 		 </para></listitem>
 		</varlistentry>
 	</variablelist>
@@ -125,7 +126,7 @@
 <!-- 原文 samba-4.7.0
 	<title>THE MAPPING FORMULAS</title>
 -->
-        <title>マッピング形式</title>
+        <title>マッピング計算式</title>
 <!-- 原文 samba-4.7.0
 	<para>
 		The Unix ID for a RID is calculated this way:
@@ -135,7 +136,7 @@
 	</para>
 -->
         <para>
-		RID 用の Unix ID は以下の方法で計算される:
+		RID に対する Unix ID は以下の方法で計算される:
                 <programlisting>
                         ID = RID - BASE_RID + LOW_RANGE_ID
                 </programlisting>
@@ -171,10 +172,10 @@
 	</para>
 -->
 	<para>
-		この例では idmap_rid で 2 つのドメインを設定し、それは、
-		基本的なドメインと信頼するドメインであり、tdb への既定値の
-		id マッピングスキームを残してある。この例はまた、信頼する
-		ドメインに対しての base_rid パラメーターの使用方法も説明している。
+		この例では idmap_rid のドメインとして 2 つ、つまりプリンシパル
+		ドメインと信頼するドメインを設定するものであり、tdb による既定
+		のマッピングを残すものである。また信頼するドメインにおいて
+		base_rid パラメーターの利用方法も示している。
 	</para>
 
 	<programlisting>
