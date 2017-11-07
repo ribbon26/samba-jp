@@ -1,6 +1,6 @@
 		Sambaドキュメントの日本語訳版について
 
-						2017/10/30
+						2017/11/07
 						日本Sambaユーザー会
 
 
@@ -115,27 +115,6 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
   $ cd /srv/source/samba-ja-docs-4.X.Y-Z/docs-xml
   $ ln -s /srv/build/samba-4.X.Y-Z/docs-xml samba-docs-xml
 
-(4) Makefileの修正
-    4.6.6 までの、オリジナルのdocs-xml/Makefile には不具合があり、
-    生成されるマニュアルページがアルファベット順になりません。
-    以下のように修正をしてください。
-
-----------------------------------------------------------------------------------
-
---- Makefile.orig       2017-01-11 16:55:14.000000000 +0900
-+++ Makefile    2017-06-20 20:29:21.123498429 +0900
-@@ -8,7 +8,7 @@
-
- # Docs to build
- MAIN_DOCS = $(patsubst %/index.xml,%,$(wildcard */index.xml))
--MANPAGES = $(wildcard $(MANPAGEDIR)/*.?.xml)
-+MANPAGES = $(sort $(wildcard $(MANPAGEDIR)/*.?.xml))
-
- # Lists of files to process
- MANPAGES_PLUCKER = $(patsubst $(MANPAGEDIR)/%.xml,$(PLUCKERDIR)/%.pdb,$(MANPAGES))
-
------------------------------------------------------------------------------------
-
 (4) ビルドを実行
 
   $ make clean
@@ -146,8 +125,14 @@ docs-xml/build配下にあるREADMEファイルに記載のように、catalog.x
 
 5. 変更履歴
 ======================================================================
-2017/10/30 Ver 4.7.0-1 4.7.0対応
-	   idmap_rfc2307.8.xml,vfs_fruit.8.xml 変更
+2017/11/07 Ver 4.7.0-1 4.7.0対応
+	   Makefile のバグが直ったため、READMEから修正方法を
+	   削除。
+	   idmap_rid.8.xml,idmap_rfc2307.8.xml,net.8.xml,samba-tool.8.xml,
+	   smbcacls.1.xml,smbclient.1.xml,smbcontrol.1.xml,vfs_catia.8.xml,
+	   vfs_fruit.8.xml,vfs_glusterfs.8.xml,vfs_gpfs.8.xml,
+	   vfs_media_harmony.8.xml,vfs_shadow_copy2.8.xml,
+	   vfs_syncops.8.xml,vfs_tsmsm.8.xml,vfs_zfsacl.8.xml 変更
 	   winbind/winbinddprivilegedsocketdirectory.xml 削除
 
 ======================================================================
