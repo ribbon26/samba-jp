@@ -49,8 +49,8 @@
 	this by:</para>
 -->
 	<para><command>vfs_media_harmony</command> VFS モジュールは、
-	Avid editorial workstation がネットワークドライブを共有することができるように
-	する。これは以下の方法で行う。</para>
+	Avid editorial workstation がネットワークドライブを共有できるようにする。
+        これは以下の方法で行う。</para>
 <!-- 原文 samba-4.7.0
 	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
 	<listitem><para>Giving each client their own copy of the Avid
@@ -60,10 +60,11 @@
 	</orderedlist>
 -->
 	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
-	<listitem><para>各クライアントに、固有の Avid msmMMOB.mdb と msmFMID.pmr
-	ファイルのコピーを与え、ディレクトリを作成する。</para></listitem>
-	<listitem><para>各クライアントが書き込み時間を明示的に制御する事をできるようにし、
-	Avid アプリケーションが Avid メディアディレクトリを認識する。</para></listitem>
+	<listitem><para>各クライアント用に Avid msmMMOB.mdb ファイルと msmFMID.pmr
+        ファイルのコピーを与え、ディレクトリを作成する。</para></listitem>
+	<listitem><para>Avid アプリケーションが Avid メディアディレクトリの書き込み時間
+        を参照するため、各クライアントに対して明示的に、その書き込み時間を制御できるよう
+        にしておく。</para></listitem>
 	</orderedlist>
 
 <!-- 原文 samba-4.7.0
@@ -86,19 +87,19 @@
 	configuration beyond enabling the module is needed to get this
 	portion of its functionality working.</para>
 -->
-	<para><command>vfs_media_harmony</command> は、自動的に、クライアントから
-	Avid データベースファイルまたはファイルのクライアント固有のバージョン用
-	Avid Creating ディレクトリへの要求をリダイレクトする。この機能のこの部分を
-	利用するために、モジュールを有効にする以上の設定は必要ない。</para>
+	<para><command>vfs_media_harmony</command> は、Avid データベースファイルに
+        対しての、あるいはクライアントごとのファイルを収容する Avid 生成ディレクトリ
+        に対してのクライアントからの要求を、自動的にリダイレクトする。
+        この機能部分を動作させるには、モジュールを有効に設定するだけでよい。</para>
 
 <!-- 原文 samba-4.7.0
 	<para>If Mac and Windows Avid clients will be accessing the same
 	folder, they should be given separate share definitions, with
 	hidden Mac files vetoed on the Windows share.  See EXAMPLES.</para>
 -->
-	<para>もしも、Mac と Windows の Avid クライアントが同じフォルダーをアクセス
-	する場合、それらは、Windows 共有上で拒否（veto）される、隠し Mac ファイルを含む、
-	別々の共有定義が与えられる。例を参照のこと。</para>
+	<para>Mac と Windows の Avid クライアントが同じフォルダーにアクセスする場合は、
+        別々に共有定義を行う必要がある。そして Windows の共有では Mac の隠しファイル
+        を拒否（veto）設定する必要がある。使用例を参照のこと。</para>
 
 <!-- 原文 samba-4.7.0
 	<para>To allow each client to control when the Avid application
@@ -108,22 +109,20 @@
 	To trigger Avid database refreshes, update the write time on
 	those files.  See EXAMPLES.</para>
 -->
-	<para>各クライアントに、Avid アプリケーションがそれらの Avid データベースを
-	リフレッシュする時制御できるようにするため、
-	[avid_dir_name]_[client_ip_address]_[client_username] という名前の
-	各クライアント用と各 Avid メディアディレクトリ用のファイルを作成する。
-	Avid データベースリフレッシュをトリガーするため、それらのファイルを
-	書き込み時に更新する。例を参照のこと。</para>
+	<para>Avid アプリケーションが個々の Avid データベースのリフレッシュを行えるように
+        する必要がある。各クライアントがこれを制御できるように、各クライアント用のファイル
+        を生成するとともに、[avid_dir_name]_[client_ip_address]_[client_username] という
+        名前の Avid メディアディレクトリを生成する。Avid データベースをリフレッシュするには、
+        関連するファイルの書き込み時間を更新する。使用例を参照のこと。</para>
 
 <!-- 原文 samba-4.7.0
 	<para>It is also necessary for the <command>cache locked write times = no</command>
 	option to be set for clients to be able to control their Avid
 	media folder write times.</para>
 -->
-	<para>また、クライアントに Avid メディアフォルダー書き込み時間を
-	制御することを可能にするため、
-	<command>cache locked write times = no</command> オプションを設定する
-	ことも必要である。</para>
+	<para>また <command>cache locked write times = no</command> を設定すること
+        も必要である。これによりクライアントは、Avid メディアフォルダーの書き込み
+        時間を制御できるようになる。</para>
 
 </refsect1>
 
@@ -136,7 +135,7 @@
 <!-- 原文 samba-4.7.0
 	<para>Enable media_harmony for Mac and Windows clients:</para>
 -->
-	<para>Mac とWindows クライアント用に media_harmony を有効にする:</para>
+	<para>Mac と Windows の両クライアント向けに media_harmony を有効にする。</para>
 <programlisting>
         <smbconfsection name="[avid_mac]"/>
 	<smbconfoption name="path">/avid</smbconfoption>
@@ -154,8 +153,8 @@
 	<para>Create the files that will allow users david and susan
 	to control their own Avid database refreshes:</para>
 -->
-	<para>ユーザー david と susan に、それら固有のAvidデータベースリフレッシュを
-	コントロールすることができるようにするため、ファイルを作成する:</para>
+	<para>ユーザー david と susan が、それぞれの Avid データベースに対する
+        リフレッシュを制御できるように、ファイルを生成する。</para>
 <programlisting>
 	touch '/avid/OMFI MediaFiles_192.168.1.10_david' \
 		'/avid/OMFI MediaFiles_192.168.1.11_susan' \
@@ -165,7 +164,7 @@
 <!-- 原文 samba-4.7.0
 	<para>Trigger an Avid database refresh for user david:</para>
 -->
-	<para>ユーザー david 用にAvidデータベースリフレッシュを行う:</para>
+	<para>ユーザー david 用の Avid データベースをリフレッシュする。</para>
 <programlisting>
 	touch '/avid/OMFI MediaFiles_192.168.1.10_david' \
 		'/avid/Avid MediaFiles/MXF/1_192.168.1.10_david'
@@ -177,10 +176,9 @@
 	examples/scripts/vfs/media_harmony/trigger_avid_update.py to
 	create and update these files.</para>
 -->
-	<para>もしも、管理対象が非常に大きなAvidメディアフォルダーの場合、
-	各エディターに、適切に変更されたバージョンの
-	examples/scripts/vfs/media_harmony/trigger_avid_update.py を
-	それらのファイルの作成と更新のために使う事ができる。</para>
+	<para>多数の Avid メディアフォルダーを管理する必要がある場合、各エディター
+        において examples/scripts/vfs/media_harmony/trigger_avid_update.py を
+        適切に修正することで、関連ファイルの生成や更新を行うことができる。</para>
 
 </refsect1>
 
@@ -199,13 +197,12 @@
 	msmMMOB.mdb_192.168.1.10_userx even though it doesn't show up
 	in a directory listing.</para>
 -->
-	<para><command>vfs_media_harmony</command> は、メディア向けの、
-	OMFI MediaFiles ディレクトリか Avid MediaFiles 中を見る Avid 編集
-	アプリケーションといっしょに使って動くように設計されている。
-	汎用的な使用法を行うすべての環境で期待されているように動くようには
-	設計されていない。たとえば、ディレクトリ一覧中に表示されない
-	としても、msmMMOB.mdb_192.168.1.10_userx のようなクライアント固有の
-	ファイルをオープンすることは可能である。</para>
+	<para><command>vfs_media_harmony</command> は Avid 編集アプリケーション
+        とともに動作するものとして設計されており、そのアプリケーションは Avid
+        メディアファイルや OMFI メディアファイルディレクトリを参照する。
+	どのような状況でも動作するような一般的な設計になっているわけではない。
+        たとえば、クライアント用の msmMMOB.mdb_192.168.1.10_userx といったファイル
+        をオープンすることはできるが、ただしディレクトリ一覧中には表示されない。</para>
 
 </refsect1>
 
@@ -219,7 +216,7 @@
 	<para>This man page is correct for version 3.2.7 of the Samba suite.
 	</para>
 -->
-	<para>このマニュアルページはバージョン 3.2.7（訳注4.0?）の Samba システムのために修正された。
+	<para>このマニュアルページは Samba バージョン 3.2.7 用（訳注4.0?）である。
 	</para>
 </refsect1>
 
