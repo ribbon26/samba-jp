@@ -6,6 +6,9 @@
 	<refentrytitle>vfs_shadow_copy2</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
 	<refmiscinfo class="version">4.7</refmiscinfo>
 </refmeta>
@@ -13,6 +16,9 @@
 
 <refnamediv>
 	<refname>vfs_shadow_copy2</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>Expose snapshots to Windows clients as shadow copies.
+-->
 	<refpurpose>Windows クライアントにスナップショットをシャドウコピーとして見せる</refpurpose>
 </refnamediv>
 
@@ -23,24 +29,60 @@
 </refsynopsisdiv>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
 	<title>説明</title>
 
+<!-- 原文 samba-4.7.0
+	<para>This VFS module is part of the
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
 	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
-    <para><command>vfs_shadow_copy2</command> VFS モジュールは
-    Microsoft のシャドウコピーサービスと似た機能を提供する。
-    適切に設定されると、このモジュールにより Microsoft
-    シャドウコピークライアントから Samba の共有上にある "シャドウコピー"
-    をファイルシステムのスナップショット経由で参照できるようになる。
-    </para>
+<!-- 原文 samba-4.7.0
+	<para>
+	The <command>vfs_shadow_copy2</command> VFS module offers a
+	functionality similar to Microsoft Shadow Copy services.
+	When set up properly,
+	this module allows Microsoft Shadow Copy clients to browse
+	through file system snapshots as "shadow copies" on Samba shares.
+	</para>
+-->
+	<para><command>vfs_shadow_copy2</command> VFS モジュールは
+	Microsoft のシャドウコピーサービスと似た機能を提供する。
+	適切に設定されると、このモジュールにより Microsoft
+	シャドウコピークライアントから Samba の共有上にある "シャドウコピー"
+	をファイルシステムのスナップショット経由で参照できるようになる。
+	</para>
 
-	<para>これは、(オリジナルの<citerefentry><refentrytitle>shadow_copy</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry>モジュールと比較して)
-	以下の追加の機能を持つ、シャドウコピーの第2版となるモジュールである:
+<!-- 原文 samba-4.7.0
+	<para>
+	This is a second implementation of a shadow copy module
+	which has the following additional features (compared to the original
+	<citerefentry><refentrytitle>shadow_copy</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> module):
+	</para>
+-->
+	<para>これは、（オリジナルの <citerefentry><refentrytitle>shadow_copy</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> モジュールと比較して）
+	以下の追加の機能を持つ、シャドウコピーの第 2 版となるモジュールである:
 	</para>
 	<orderedlist continuation="restarts" inheritnum="ignore" numeration="arabic">
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	There is no need any more to populate your share's root directory
+	with symlinks to the snapshots if the file system stores the
+	snapshots elsewhere.
+	Instead, you can flexibly configure the module where to look for
+	the file system snapshots.
+	This can be very important when you have thousands of
+	shares, or use [homes].
+	</para></listitem>
+-->
         <listitem><para>
 	ファイルシステムが他の場所でスナップショットを格納する場合、スナップショットへの
 	シンボリックリンクがある、共有のルートディレクトリに対して事前設定する必要は
@@ -48,84 +90,152 @@
 	自在にモジュールを設定出来る。これは数千個の共有があったり
 	[homes] を使ったりする場合にとても重要なことである。
 	</para></listitem>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Snapshot directories need not be in one fixed central place but
+	can be located anywhere in the directory tree. This mode helps to
+	support file systems that offer snapshotting of particular
+	subtrees, for example the GPFS independent file sets.
+	</para></listitem>
+-->
 	<listitem><para>
 	スナップショットディレクトリは、ある特定位置だけはなく、
 	ディレクトリツリー中のあらゆる場所置くことが出来る。このモードは、
-	たとえばGPFSの独立ファイルセットのような、任意のサブツリーでスナップショットを
-	取ることができるファイルシステムのサポートに有用である。</para>
-	</listitem>
+	たとえば GPFS の独立ファイルセットのような、任意のサブツリーでスナップショットを
+	取ることができるファイルシステムのサポートに有用である。
+	</para></listitem>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Vanity naming for snapshots: snapshots can be named in any format
+	compatible with str[fp]time conversions.
+	</para></listitem>
+-->
         <listitem><para>
 	スナップショット名の目立たせ方: スナップショットは
 	str[fp]time 変換結果と互換のある任意の形式で名前を付けることができる。
-        </para><para>
-        Vanity naming for snapshots: snapshots can be named in any format
-        compatible with str[fp]time conversions.
         </para></listitem>
-        <listitem><para>
-	タイムスタンプはUTCの代わりにローカル時間で表現できる。
-        </para></listitem>
+<!-- 原文 samba-4.7.0
 	<listitem><para>
-	ファイルのinode番号は、必要に応じて、オリジナルとは異なるように
-	変更できる。これはWindows GUIの'リストア'ボタンが、GPFSのように、
-	スナップショットファイルとオリジナルに対して同じデバイスとinode
-	番号を返すファイルシステムを使っているときに共有違反がないように
-	動作するようにする。</para><para>
+	Timestamps can be represented in localtime rather than UTC.
+	</para></listitem>
+-->
+        <listitem><para>
+	タイムスタンプは UTC の代わりにローカル時間で表現できる。
+        </para></listitem>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
 	The inode number of the files can optionally be altered to be
 	different from the original. This fixes the 'restore' button
 	in the Windows GUI to work without a sharing violation when
 	serving from file systems, like GPFS, that return the same
 	device and inode number for the snapshot file and the original.
 	</para></listitem>
+-->
 	<listitem><para>
-	シャドウコピーの結果は、既定値ではクライアントに送られる前に整列
-	される。これはディレクトリをアルファベット順に読めないファイルシステム
-	にとって便利である(通常のunix)。もしもファイルシステムが
-	ディレクトリ表示時を整列するのであれば、ここでの整列順は、設定可能で
-	停止もできる。</para><para>
+	ファイルの inode 番号は、必要に応じて、オリジナルとは異なるように
+	変更できる。これは Windows GUI の 'リストア' ボタンが、GPFS のように、
+	スナップショットファイルとオリジナルに対して同じデバイスと inode
+	番号を返すファイルシステムを使っているときに共有違反がないように
+	動作するようにする。
+	</para></listitem>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
 	Shadow copy results are by default sorted before being sent to the
 	client. This is beneficial for filesystems that don't read
 	directories alphabetically (the default unix). Sort ordering can be
 	configured and sorting can be turned off completely if the file
 	system sorts its directory listing.
 	</para></listitem>
+-->
+	<listitem><para>
+	シャドウコピーの結果は、既定値ではクライアントに送られる前に整列
+	される。これはディレクトリをアルファベット順に読めないファイルシステム
+	にとって便利である（通常の unix）。もしもファイルシステムが
+	ディレクトリ表示時を整列するのであれば、ここでの整列順は、設定可能で
+	停止もできる。</para></listitem>
 	</orderedlist>
 
+<!-- 原文 samba-4.7.0
+	<para>This module is stackable.</para>
+-->
 	<para>このモジュールはスタック可能である。</para>
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>CONFIGURATION</title>
+-->
 	<title>設定</title>
 
-	<para><command>vfs_shadow_copy2</command>は、ファイルシステムが
-    スナップショットを実装していることを前提にしている。
-    一般的なファイルシステムの多くが標準でこれをサポートしている。
+<!-- 原文 samba-4.7.0
+	<para><command>vfs_shadow_copy2</command> relies on a filesystem
+	snapshot implementation. Many common filesystems have native
+	support for this.
+	</para>
+-->
+	<para><command>vfs_shadow_copy2</command> は、ファイルシステムが
+	スナップショットを実装していることを前提にしている。
+	一般的なファイルシステムの多くが標準でこれをサポートしている。
 	</para>
 
-	<para><command>vfs_shadow_copy2</command>が認識できるように、
+<!-- 原文 samba-4.7.0
+	<para>Filesystem snapshots must be available under
+	specially named directories in order to be recognized by
+	<command>vfs_shadow_copy2</command>. These snapshot directory
+	is typically a direct subdirectory of the share root's mountpoint
+	but there are other modes that can be configured with the
+	parameters described in detail below.</para>
+-->
+	<para><command>vfs_shadow_copy2</command> が認識できるように、
 	ファイルシステムのスナップショットが特定の名称のディレクトリ配下で有効になっている
 	必要がある。スナップショットディレクトリは通常共有のルートディレクトリ
 	直下にあるサブディレクトリであるが、以下で詳細が説明されている、
-	パラメータで設定される、他のモードもある。</para>
+	パラメーターで設定される、他のモードもある。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>The snapshot at a given point in time is expected in a
+	subdirectory of the snapshot directory where the snapshot's
+	directory is expected to be a formatted version of the
+	snapshot time. The default format which can be changed
+	with the <command>shadow:format</command> option
+	is @GMT-YYYY.MM.DD-hh.mm.ss, where:
+-->
 	<para>特定の時点でのスナップショットはスナップショットディレクトリの
 	サブディレクトリ中にあることが期待されていて、それは、スナップショット
 	取得時間を表現する書式になっている。
-	<command>shadow:format</command>オプションによって変更できるその書式は、
+	<command>shadow:format</command> オプションによって変更できるその書式は、
 	@GMT-YYYY.MM.DD-hh.mm.ss であり、それぞれ
+<!-- 原文 samba-4.7.0
 	<itemizedlist>
-		<listitem><para><command>YYYY</command>は4桁の年</para></listitem>
-		<listitem><para><command>MM</command>は2桁の月</para></listitem>
-		<listitem><para><command>DD</command>は2桁の日</para></listitem>
-		<listitem><para><command>hh</command>は2桁の時</para></listitem>
-		<listitem><para><command>mm</command>>は2桁の分</para></listitem>
-		<listitem><para><command>ss</command>>は2桁の秒</para></listitem>
-		</itemizedlist>
-    で指定する。
+	<listitem><para><command>YYYY</command> is the 4 digit year</para></listitem>
+	<listitem><para><command>MM</command> is the 2 digit month</para></listitem>
+	<listitem><para><command>DD</command> is the 2 digit day</para></listitem>
+	<listitem><para><command>hh</command> is the 2 digit hour</para></listitem>
+	<listitem><para><command>mm</command> is the 2 digit minute</para></listitem>
+	<listitem><para><command>ss</command> is the 2 digit second.</para></listitem>
+	</itemizedlist>
+-->
+	<itemizedlist>
+	<listitem><para><command>YYYY</command>は 4 桁の年</para></listitem>
+	<listitem><para><command>MM</command>は 2 桁の月</para></listitem>
+	<listitem><para><command>DD</command>は 2 桁の日</para></listitem>
+	<listitem><para><command>hh</command>は 2 桁の時</para></listitem>
+	<listitem><para><command>mm</command>>は 2 桁の分</para></listitem>
+	<listitem><para><command>ss</command>>は 2 桁の秒</para></listitem>
+	</itemizedlist>
+
+	で指定する。
 	</para>
 
+<!-- 原文 samba-4.7.0
+	<para>The <command>vfs_shadow_copy2</command> snapshot naming
+	convention can be produced with the following
+	<citerefentry><refentrytitle>date</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry> command:
+-->
 	<para><command>vfs_shadow_copy2</command>のスナップショットの名前形式は、
-    以下の<citerefentry><refentrytitle>date</refentrytitle>
-	<manvolnum>1</manvolnum></citerefentry>コマンドで生成できる：
+	以下の <citerefentry><refentrytitle>date</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry> コマンドで生成できる：
 	<programlisting>
 	TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S
 	</programlisting></para>
@@ -133,6 +243,9 @@
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+        <title>OPTIONS</title>
+-->
     <title>オプション</title>
 
     <variablelist>
@@ -140,51 +253,107 @@
 	<term>shadow:mountpoint = MOUNTPOINT
 	</term>
 	<listitem>
-	<para>
-	  このパラメータを使うと、共有パスを含む、ファイルシステムのマウント
-	  ポイントを指定できる。通常このマウントポイントは自動的に検出される。
-	  しかし、特にテストのような、ある種の場面においては、
-	  このように指定できることが好都合である。</para>
-	<para>例: shadow:mountpoint = /path/to/filesystem</para>
-	<para>既定値: shadow:mountpoint = 未定義</para>
-	</listitem>
-	</varlistentry>
-	<varlistentry>
-        <term>shadow:snapdir = SNAPDIR
-        </term>
-        <listitem>
-        <para>共有のスナップショットを保持しているファイルシステムの、
-	ディレクトリへのパス。絶対パスが指定された場合、それはその通り
-	に使われる。相対パスが指定された場合、ファイルシステムにおける
-	共有のルートのマウントポイントからの相対となる
-	(<command>shadow:mountpoint</command>を参照)。
-        </para>
-	<para>
-	<command>shadow:snapdirseverywhere</command>は、このパラメータ
-	に依存し、相対パスが必要であることに注意。絶対パスで設定すると、
-	<command>shadow:snapdirseverywhere</command>は無効となる。
-	</para>
-	<para>
-	<command>shadow:crossmountpoints</command>オプションも、
-	相対snapdirを必要とすることに注意。絶対パスで設定すると、
-	<command>shadow:crossmountpoints</command>は無効となる。
-	</para>
-	<para>例: shadow:snapdir = /some/absolute/path</para>
-	<para>既定値: shadow:snapdir = .snapshots</para>
-        </listitem>
-        </varlistentry>
+<!-- 原文 samba-4.7.0
+		<para>
+		With this parameter, one can specify the mount point
+		of the filesystem that contains the share path.
+		Usually this mount point is automatically detected.
+		But for some constellations, in particular tests,
+		it can be convenient to be able to specify it.
+		</para>
+-->
+		<para>
+		このパラメーターを使うと、共有パスを含む、ファイルシステムのマウント
+		ポイントを指定できる。通常このマウントポイントは自動的に検出される。
+		しかし、特にテストのような、ある種の場面においては、
+		このように指定できることが好都合である。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>Example: shadow:mountpoint = /path/to/filesystem</para>
+		<para>Default: shadow:mountpoint = NOT SPECIFIED</para>
+-->
+		<para>例: shadow:mountpoint = /path/to/filesystem</para>
+		<para>既定値: shadow:mountpoint = 未定義</para>
+		</listitem>
+		</varlistentry>
 
-        <varlistentry>
-        <term>shadow:basedir = BASEDIR
+		<varlistentry>
+		<term>shadow:snapdir = SNAPDIR
 		</term>
-        <listitem>
-        <para>
-	basedirオプションは共有のマウントポイントと、ファイルシステムの
-	共有のルートとの間で、ファイルシステムのスナップショットが取られる
-	所からの相対で、ディレクトリを指定できるようにする。
-        </para>
-	<para>
-	たとえば、もしも
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+		Path to the directory where the file system of
+		the share keeps its snapshots.
+		If an absolute path is specified, it is used as-is.
+		If a relative path is specified, then it is taken
+		relative to the mount point of the filesystem of
+		the share root. (See <command>shadow:mountpoint</command>.)
+		</para>
+-->
+		<para>共有のスナップショットを保持しているファイルシステムの、
+		ディレクトリへのパス。絶対パスが指定された場合、それはその通り
+		に使われる。相対パスが指定された場合、ファイルシステムにおける
+		共有のルートのマウントポイントからの相対となる
+		（<command>shadow:mountpoint</command>を参照）。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that <command>shadow:snapdirseverywhere</command>
+		depends on this parameter and needs a relative path.
+		Setting an absolute path disables
+		<command>shadow:snapdirseverywhere</command>.
+		</para>
+-->
+		<para>
+		<command>shadow:snapdirseverywhere</command> は、このパラメーター
+		に依存し、相対パスが必要であることに注意。絶対パスで設定すると、
+		<command>shadow:snapdirseverywhere</command> は無効となる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that the <command>shadow:crossmountpoints</command>
+		option also requires a relative snapdir.
+		Setting an absolute path disables
+		<command>shadow:crossmountpoints</command>.
+		</para>
+-->
+		<para>
+		<command>shadow:crossmountpoints</command> オプションも、
+		相対 snapdir を必要とすることに注意。絶対パスで設定すると、
+		<command>shadow:crossmountpoints</command> は無効となる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>Example: shadow:snapdir = /some/absolute/path</para>
+		<para>Default: shadow:snapdir = .snapshots</para>
+-->
+		<para>例: shadow:snapdir = /some/absolute/path</para>
+		<para>既定値: shadow:snapdir = .snapshots</para>
+		</listitem>
+		</varlistentry>
+
+	        <varlistentry>
+	        <term>shadow:basedir = BASEDIR
+		</term>
+	        <listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+		The basedir option allows one to specify a directory
+		between the share's mount point and the share root,
+		relative to which the file system's snapshots are taken.
+		</para>
+-->
+		<para>
+		basedir オプションは共有のマウントポイントと、ファイルシステムの
+		共有のルートとの間で、ファイルシステムのスナップショットが取られる
+		所からの相対で、ディレクトリを指定できるようにする。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		For example, if
+-->
+		<para>
+		たとえば、もしも
 	        <itemizedlist>
 		<listitem><para>
 		<command>basedir = mountpoint/rel_basedir</command>
@@ -195,281 +364,490 @@
 		<listitem><para>
 		<command>snapshot_path = mountpoint/snapdir</command>
 	        </para>
+<!-- 原文 samba-4.7.0
 		<para>
-		または snapdirが絶対パスの場合
+		or
+		<command>snapshot_path = snapdir</command>
+		if snapdir is absolute
+		</para></listitem>
+-->
+		<para>
+		または snapdir が絶対パスの場合
 		<command>snapshot_path = snapdir</command>
 		</para></listitem>
 		</itemizedlist>
+<!-- 原文 samba-4.7.0
+		then the snapshot of a
+		<command>file = mountpoint/rel_basedir/rel_share_root/rel_file</command>
+		at a time TIME will be found under
+		<command>snapshot_path/FS_GMT_TOKEN(TIME)/rel_share_root/rel_file</command>,
+		where FS_GMT_TOKEN(TIME) is the timestamp string belonging
+		to TIME in the format required by the file system.
+		(See <command>shadow:format</command>.)
+		</para>
+-->
 		TIMEにおけるスナップショット
 		<command>file = mountpoint/rel_basedir/rel_share_root/rel_file</command>
 		は
 		<command>snapshot_path/FS_GMT_TOKEN(TIME)/rel_share_root/rel_file</command>
-		に置かれる。このとき、FS_GMT_TOKEN(TIME)は、ファイルシステムが要求する
-		書式に沿った、TIMOのタイムスタンプである
-		(<command>shadow:format</command>コマンドを参照)。
+		に置かれる。このとき、FS_GMT_TOKEN(TIME) は、ファイルシステムが要求する
+		書式に沿った、TIMO のタイムスタンプである
+		（<command>shadow:format</command>コマンドを参照）。
 	        </para>
-		<para>basedirの既定値は共有ルートのファイルシステムにおけるマウントポイント
-		である(<command>shadow:mountpoint</command>を参照)。
+<!-- 原文 samba-4.7.0
+		<para>The default for the basedir is the mount point
+		of the file system of the share root
+		(see <command>shadow:mountpoint</command>).
 		</para>
+-->
+		<para>basedir の既定値は共有ルートのファイルシステムにおけるマウントポイント
+		である（<command>shadow:mountpoint</command>を参照）。
+		</para>
+<!-- 原文 samba-4.7.0
 		<para>
-		<command>shadow:snapdirseverywhere</command>と
-		<command>shadow:crossmountpoints</command>オプションは、
-		<command>shadow:basedir</command>と非互換であり、
-		basedirの設定を無効にすることに注意。
+		Note that the <command>shadow:snapdirseverywhere</command>
+		and  <command>shadow:crossmountpoints</command>
+		options are incompatible with <command>shadow:basedir</command>
+		and disable the basedir setting.
 		</para>
-        </listitem>
-        </varlistentry>
+-->
+		<para>
+		<command>shadow:snapdirseverywhere</command> と
+		<command>shadow:crossmountpoints</command> オプションは、
+		<command>shadow:basedir</command> と非互換であり、
+		basedir の設定を無効にすることに注意。
+		</para>
+	        </listitem>
+	        </varlistentry>
 
 		<varlistentry>
 		<term>shadow:snapsharepath = SNAPSHAREPATH
 		</term>
 		<listitem>
-		  <para>
-		    このパラメータを使うと、スナップショットのルートディレクトリ
-		    からの相対で、スナップショット中における共有のルートディレクトリ
-		    のパスを指定出来る。これは、<command>shadow:basedir</command>
-		    の代替方法であり、より多くの制御が出来る。
-		  </para><para>
+<!-- 原文 samba-4.7.0
+		<para>
 		With this parameter, one can specify the path of the share's
 		root directory in snapshots, relative to the snapshot's
 		root directory. It is an alternative method to
 		<command>shadow:basedir</command>, allowing greater control.
 		</para>
+-->
 		<para>
-		  たとえば、もしも各スナップショット中で、共有中のファイルが
-		  <command>path/to/share/</command>というパスを持つ場合、
-		  <command>shadow:snapsharepath</command>は、
-		  <command>path/to/share</command> に設定出来る。
+		このパラメーターを使うと、スナップショットのルートディレクトリ
+		からの相対で、スナップショット中における共有のルートディレクトリ
+		のパスを指定出来る。これは、<command>shadow:basedir</command>
+		の代替方法であり、より多くの制御が出来る。
 		</para>
+<!-- 原文 samba-4.7.0
 		<para>
-		  このパラメータを使うと、スナップショットがオリジナルの
-		  ファイルシステムのイメージかその一部かを意味しなくなる。
-		  たとえば、あるシステムが、共有中に含まれるファイルのみの
-		  バックアップを実行し、論理構造でバックアップ
-		  ファイルを公開できるようになる。</para><para>
+		For example, if within each
+		snapshot the files of the share have a
+		<command>path/to/share/</command> prefix, then
+		<command>shadow:snapsharepath</command> can be
+		set to <command>path/to/share</command>.
+		</para>
+-->
+		<para>
+		たとえば、もしも各スナップショット中で、共有中のファイルが
+		<command>path/to/share/</command> というパスを持つ場合、
+		<command>shadow:snapsharepath</command> は、
+		<command>path/to/share</command> に設定できる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
 		With this parameter, it is no longer assumed that a
 		snapshot represents an image of the original file system or
 		a portion of it. For example, a system could perform
 		backups of only files contained in shares, and then
 		expose the backup files in a logical structure:
 		</para>
+-->
+		<para>
+		このパラメーターを使うと、スナップショットがオリジナルの
+		ファイルシステムのイメージかその一部かを意味しなくなる。
+		たとえば、あるシステムが、共有中に含まれるファイルのみの
+		バックアップを実行し、論理構造でバックアップ
+		ファイルを公開できるようになる。</para>
 		<itemizedlist>
 		<listitem><para>share1/</para></listitem>
 		<listitem><para>share2/</para></listitem>
 		<listitem><para>.../</para></listitem>
 		</itemizedlist>
+<!-- 原文 samba-4.7.0
 		<para>
-		  <command>shadow:snapdirseverywhere</command>と
-		  <command>shadow:basedir</command>オプションは、
-		  <command>shadow:snapsharepath</command>と、
-		  <command>shadow:snapsharepath</command>を無効にする
-		  設定とは非互換であることに注意。
+		Note that the <command>shadow:snapdirseverywhere</command>
+		and the <command>shadow:basedir</command> options
+		are incompatible with <command>shadow:snapsharepath</command>
+		and disable <command>shadow:snapsharepath</command> setting.
 		</para>
+-->
+		<para>
+		<command>shadow:snapdirseverywhere</command> と
+		<command>shadow:basedir</command> オプションは、
+		<command>shadow:snapsharepath</command> と、
+		<command>shadow:snapsharepath</command> を無効にする
+		設定とは非互換であることに注意。
+		</para>
+<!-- 原文 samba-4.7.0
 		<para>Example: shadow:snapsharepath = path/to/share</para>
 		<para>Default: shadow:snapsharepath = NOT SPECIFIED</para>
-                </listitem>
+-->
+		<para>例: shadow:snapsharepath = path/to/share</para>
+		<para>既定値: shadow:snapsharepath = 未定義</para>
+		</listitem>
 		</varlistentry>
 
 		<varlistentry>
-                 <term>shadow:sort = asc/desc
-                 </term>
-                 <listitem>
-                 <para>既定値では、このモジュールはクライアントにデータを送信する前に、
-		 シャドウコピーデータをアルファベット順に整列する。このパラメータを
-		 使う事で、整列の順番を指定できる。設定可能な値は desc (既定値で
-		 降順)とasc (昇順)である。ファイルシステムがディレクトリをアルファベット順
-		 に整列する場合、このパラメータに、その他の値を指定することで、
-		 このモジュールの整列動作を止めることが出来る。
-                 </para>
-		 <para>例: shadow:sort = asc</para>
-		 <para>例: shadow:sort = none</para>
-		 <para>既定値: shadow:sort = desc</para>
-                 </listitem>
-                 </varlistentry>
+		<term>shadow:sort = asc/desc
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>By default, this module sorts the shadow copy data
+		alphabetically before sending it to the client.
+		With this parameter, one can specify the sort order.
+		Possible known values are desc (descending, the default)
+		and asc (ascending). If the file system lists directories
+		alphabetically sorted, one can turn off sorting in this
+		module by specifying any other value.
+		</para>
+-->
+		<para>既定値では、このモジュールはクライアントにデータを送信する前に、
+		シャドウコピーデータをアルファベット順に整列する。このパラメーターを
+		使う事で、整列の順番を指定できる。設定可能な値は desc（既定値で
+		降順）とasc（昇順）である。ファイルシステムがディレクトリをアルファベット順
+		に整列する場合、このパラメーターに、その他の値を指定することで、
+		このモジュールの整列動作を止めることができる。
+                </para>
+<!-- 原文 samba-4.7.0
+		<para>Example: shadow:sort = asc</para>
+		<para>Example: shadow:sort = none</para>
+		<para>Default: shadow:sort = desc</para>
+-->
+		<para>例: shadow:sort = asc</para>
+		<para>例: shadow:sort = none</para>
+		<para>既定値: shadow:sort = desc</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>shadow:localtime = yes/no
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>This is an optional parameter that indicates whether the
+		snapshot names are in UTC/GMT or in local time. If it is
+		disabled then UTC/GMT is expected.
+		</para>
+-->
+		<para>これは補助的なパラメーターで、スナップショットの名前を UTC/GMT
+		か、ローカル時間にするかを指示する。これが無効な場合、UTC/GMT が使われる。
+		</para>
+		<para>shadow:localtime = no</para>
+		</listitem>
+		</varlistentry>
 
                 <varlistentry>
-                 <term>shadow:localtime = yes/no
-                 </term>
-                 <listitem>
-                 <para>これは補助的なパラメーターで、スナップショットの名前をUTC/GMT
-		 か、ローカル時間にするかを指示する。これが無効な場合、UTC/GMTが使われる。
-                 </para>
-		 <para>shadow:localtime = no</para>
-                 </listitem>
-                 </varlistentry>
-
-                <varlistentry>
-                 <term>shadow:format = スナップショット名のフォーマット指定
-                 </term>
-                 <listitem>
-                 <para>これは補助的なパラメーターで、ファイルシステム中での、
-		 スナップショットの名前を決めるための、書式を指定する。
-		 書式はstr[fp]timeによって認識される変換形式と互換がなければならない。
-		 既定値は、"@GMT-%Y.%m.%d-%H.%M.%S"である。
-                 </para>
-		 <para>既定値: shadow:format = "@GMT-%Y.%m.%d-%H.%M.%S"</para>
-                 </listitem>
-                 </varlistentry>
+<!-- 原文 samba-4.7.0
+                <term>shadow:format = format specification for snapshot names
+-->
+		<term>shadow:format = スナップショット名のフォーマット指定
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+                <para>This is an optional parameter that specifies the format
+		specification for the naming of snapshots in the file system.
+		The format must be compatible with the conversion
+		specifications recognized by str[fp]time.
+                </para>
+-->
+		<para>これは補助的なパラメーターで、ファイルシステム中での、
+		スナップショットの名前を決めるための、書式を指定する。
+		書式は str[fp]time によって認識される変換形式と互換がなければならない。
+		既定値は、"@GMT-%Y.%m.%d-%H.%M.%S" である。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>Default: shadow:format = "@GMT-%Y.%m.%d-%H.%M.%S"</para>
+-->
+		<para>既定値: shadow:format = "@GMT-%Y.%m.%d-%H.%M.%S"</para>
+		</listitem>
+		</varlistentry>
 
 		<varlistentry>
 		<term>shadow:sscanf = yes/no</term>
 		<listitem>
+<!-- 原文 samba-4.7.0
 		<para>
-                このパラメータは、書式文字列中での時間が、
-		符号なしの long integer (%lu)ではなく、
+		This parameter can be used to specify that the time in
+		format string is given as an unsigned long integer (%lu)
+		rather than a time strptime() can parse.
+		The result must be a unix time_t time.
+		</para>
+-->
+		<para>
+		このパラメーターは、書式文字列中での時間が、
+		符号なしの long integer (%lu) ではなく、
 		strptime() が認識できる時間とする場合に使用する。
-		結果はunix time_t時間でなければならない。</para>
+		結果は unix time_t 時間でなければならない。</para>
+<!-- 原文 samba-4.7.0
+		<para>Default: shadow:sscanf = no</para>
+-->
 		<para>既定値: shadow:sscanf = no</para>
 		</listitem>
 		</varlistentry>
 
-        <varlistentry>
-        <term>shadow:fixinodes = yes/no
-        </term>
-        <listitem>
-        <para><command moreinfo="none">shadow:fixinodes</command>
-        が有効の場合、このモジュールはスナップショット中のそれぞれの
-        ファイルの見かけの inode 番号を、そのファイルのパスのハッシュ値で
-        修正する。これは（たとえば GPFS のスナップショットのように）
-        スナップショットがオリジナルのファイルと同じデバイス名＋ inode
-        番号を持つ場合に必要となる。（訳注：そのようなシステムにおいて）
-        このオプションを設定しないでシャドウコピー UI の「リストア」
-        ボタンを押すと、共有違反で失敗してしまう。
-        </para>
-        </listitem>
-        </varlistentry>
+		<varlistentry>
+		<term>shadow:fixinodes = yes/no
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+                <para>If you enable <command moreinfo="none">shadow:fixinodes
+		</command> then this module will modify the apparent inode
+		number of files in the snapshot directories using a hash of the
+		files path. This is needed for snapshot systems where the
+		snapshots have the same device:inode number as the original
+		files (such as happens with GPFS snapshots). If you don't set
+		this option then the 'restore' button in the shadow copy UI
+		will fail with a sharing violation.
+                </para>
+-->
+		<para><command moreinfo="none">shadow:fixinodes</command>
+		が有効の場合、このモジュールはスナップショット中のそれぞれの
+		ファイルの見かけの inode 番号を、そのファイルのパスのハッシュ値で
+		修正する。これは（たとえば GPFS のスナップショットのように）
+		スナップショットがオリジナルのファイルと同じデバイス名＋ inode
+		番号を持つ場合に必要となる。（訳注：そのようなシステムにおいて）
+		このオプションを設定しないでシャドウコピー UI の「リストア」
+		ボタンを押すと、共有違反で失敗してしまう。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>Default: shadow:fixinodes = no</para>
+-->
+		<para>既定値: shadow:fixinodes = no</para>
+		</listitem>
+		</varlistentry>
 
 		<varlistentry>
 		<term>shadow:snapdirseverywhere = yes/no
 		</term>
 		<listitem>
-		<para>もしも<command moreinfo="none">
-		shadow:snapdirseverywhere </command>を有効にした場合、
+<!-- 原文 samba-4.7.0
+		<para>
+		If you enable
+		<command moreinfo="none">shadow:snapdirseverywhere </command>
+		then this module will look
+		out for snapshot directories in the current working directory
+		and all parent directories, stopping at the mount point
+		by default.
+		But see <command>shadow:crossmountpoints</command> how to change
+		that behaviour.
+		</para>
+-->
+		<para>もしも <command moreinfo="none">
+		shadow:snapdirseverywhere </command> を有効にした場合、
 		このモジュールは、現在のワーキングディレクトリに対する、
 		現在のワーキングディレクトリおよびすべての上位ディレクトリ
 		に対して、スナップショットディレクトリを見つけ出し、
 		既定値のマウントポイントを使うのをやめる。このような
-		動作の詳細については<command>shadow:crossmountpoints</command>
+		動作の詳細については <command>shadow:crossmountpoints</command>
 		を参照のこと。
 		</para>
-		<para>
-		たとえば、これが必要なところは、IBMのGPFS中で
-		独立したファイルセットであるが、その他のファイルシステムと同様、
-		ファイルシステム中における特定のサブディレクトリのみを
-		スナップショットすることをサポートする場合がある。
-		</para>
+<!-- 原文 samba-4.7.0
 		<para>
 		An example where this is needed are independent filesets in
 		IBM's GPFS, but other filesystems might support snapshotting
 		only particular subtrees of the filesystem as well.
 		</para>
+-->
 		<para>
-		<command>shadow:snapdirseverywhere</command>は、
-		<command>shadow:snapdir</command>に依存し、それは相対パスが
-		必要なことに注意。絶対パスを設定すると、
-		<command>shadow:snapdirseverywhere</command>は無効になる。
+		たとえば、これが必要なところは、IBM の GPFS 中で
+		独立したファイルセットであるが、その他のファイルシステムと同様、
+		ファイルシステム中における特定のサブディレクトリのみを
+		スナップショットすることをサポートする場合がある。
 		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that <command>shadow:snapdirseverywhere</command>
+		depends on <command>shadow:snapdir</command> and needs it to be
+		a relative path. Setting an absolute snapdir path disables
+		<command>shadow:snapdirseverywhere</command>.
+		</para>
+-->
+		<para>
+		<command>shadow:snapdirseverywhere</command> は、
+		<command>shadow:snapdir</command> に依存し、それは相対パスが
+		必要なことに注意。絶対パスを設定すると、
+		<command>shadow:snapdirseverywhere</command> は無効になる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that this option is incompatible with the
+		<command>shadow:basedir</command> option and removes the
+		<command>shadow:basedir</command> setting by itself.
+		</para>
+-->
 		<para>
 		このオプションは、<command>shadow:basedir</command>
-		とは非互換で、<command>shadow:basedir</command>で
-		設定したものを無効化する事に注意。
+		とは非互換で、<command>shadow:basedir</command> で
+		設定したものを無効化することに注意。
 		</para>
+<!-- 原文 samba-4.7.0
+		<para>Example: shadow:snapdirseverywhere = yes</para>
+		<para>Default: shadow:snapdirseverywhere = no</para>
+-->
 		<para>例: shadow:snapdirseverywhere = yes</para>
 		<para>既定値: shadow:snapdirseverywhere = no</para>
 		</listitem>
 		</varlistentry>
 
 		<varlistentry>
-		 <term>shadow:crossmountpoints = yes/no
-		 </term>
-		 <listitem>
+		<term>shadow:crossmountpoints = yes/no
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+		This option is effective in the case of
+		<command>shadow:snapdirseverywhere = yes</command>.
+		Setting this option makes the module not stop at the
+		first mount point encountered when looking for snapdirs,
+		but lets it search potentially all through the path
+		instead.
+                </para>
+-->
 		<para>
 		このオプションは、<command>shadow:snapdirseverywhere = yes</command>
 		の場合に有効となる。
-		このオプションを設定すると、snapdirを捜す時、マウントポイントを1つ
-		見つけた時点で(検索を)終了せず、あり得るパス全体を通して検索する。</para>
-		<para>
-                This option is effective in the case of
-                <command>shadow:snapdirseverywhere = yes</command>.
-                Setting this option makes the module not stop at the
-                first mount point encountered when looking for snapdirs,
-                but lets it search potentially all through the path
-                instead.
+		このオプションを設定すると、snapdir を捜す時、マウントポイントを 1 つ
+		見つけた時点で（検索を）終了せず、あり得るパス全体を通して検索する。
 		</para>
-		<para>
-		例をあげると、これが必要なのは、IBMのGPFS中の独立した
-		ファイルセットだが、他のファイルシステムでも同様に、
-		ファイルシステムの特定のサブツリーのみのスナップショットをサポートする
-		可能性がある。</para>
+<!-- 原文 samba-4.7.0
 		<para>
 		An example where this is needed are independent filesets in
 		IBM's GPFS, but other filesystems might support snapshotting
 		only particular subtrees of the filesystem as well.
 		</para>
+-->
 		<para>
-		<command>shadow:crossmountpoints</command>は
-		<command>shadow:snapdir</command>に依存し、それは相対パスが
-                必要なことに注意。絶対パスを設定すると、
-                <command>shadow:crossmountpoints</command>は無効になる。
+		例をあげると、これが必要なのは、IBM の GPFS 中の独立した
+		ファイルセットだが、他のファイルシステムでも同様に、
+		ファイルシステムの特定のサブツリーのみのスナップショットをサポートする
+		可能性がある。
 		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that <command>shadow:crossmountpoints</command>
+		depends on <command>shadow:snapdir</command> and needs it to be
+		a relative path. Setting an absolute snapdir path disables
+		<command>shadow:crossmountpoints</command>.
+		</para>
+-->
+		<para>
+		<command>shadow:crossmountpoints</command> は
+		<command>shadow:snapdir</command> に依存し、それは相対パスが
+		必要なことに注意。絶対パスを設定すると、
+		<command>shadow:crossmountpoints</command> は無効になる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+		Note that this option is incompatible with the
+		<command>shadow:basedir</command> option and removes the
+		<command>shadow:basedir</command> setting by itself.
+		</para>
+-->
 		<para>
 		このオプションは、<command>shadow:basedir</command>
-                とは非互換で、<command>shadow:basedir</command>で
-                設定したものを無効化する事に注意。
+		とは非互換で、<command>shadow:basedir</command> で
+		設定したものを無効化することに注意。
 		</para>
+<!-- 原文 samba-4.7.0
+		<para>Example: shadow:crossmountpoints = yes</para>
+		<para>Default: shadow:crossmountpoints = no</para>
+-->
 		<para>例: shadow:crossmountpoints = yes</para>
 		<para>既定値: shadow:crossmountpoints = no</para>
-		 </listitem>
-		 </varlistentry>
+		</listitem>
+		</varlistentry>
 
-		 <varlistentry>
-		 <term>shadow:snapprefix
-		 </term>
-		 <listitem>
-		 <para>
-		 スナップショットがどんどん増えるため、ファイルシステムには、
-		 あるスナップショットを、たとえば、月次、週次、マニュアル、
-		 特別なイベントのようなものから、他と区別するような仕組みが
-		 必要である。そのため、そのようなファイルシステムでは、
-		 たとえば、時間ベースでない、変更可能な名前をスナップショットに
-		 つけるしくみのような、異なった方法でスナップショットにタグを
-		 つける方法を提供する。<command>shadow:format</command>
-		 のみでは、そのようなスナップショットを区別するのは困難である。
-		 このオプションパラメータを使うことにより、ファイルシステム中
-		 のスナップショットディレクトリの名前に対して、いろいろな
-		 プレフィックスを指定することができるようになる。
-		 <command>shadow:format</command>と、<command>shadow:delimiter</command>
-		 パラメータと一緒に、このパラメータが設定された場合、
-		 ファイルシステム中のスナップショットディレクトリがとり得る
-		 名前を決定する。オプションは、基本的な正規表現(BRE)のみを
-		 サポートする。
-		 </para>
-		 </listitem>
-		 </varlistentry>
+		<varlistentry>
+		<term>shadow:snapprefix
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+		With growing number of snapshots file-systems need some mechanism
+		to differentiate one set of snapshots from other, e.g. monthly, weekly,
+		manual, special events, etc. Therefore these file-systems provide different
+		ways to tag snapshots, e.g. provide a configurable way to name snapshots,
+		which is not just based on time.  With only <command>shadow:format</command>
+		it is very difficult to filter these snapshots. With this optional parameter,
+		one can specify a variable prefix component for names of the snapshot
+		directories in the file-system. If this parameter is set, together with the
+		<command>shadow:format</command> and <command>shadow:delimiter</command>
+		parameters it determines the possible names of snapshot
+		directories in the file-system. The option only supports Basic
+		Regular Expression (BRE).
+		</para>
+-->
+		<para>
+		スナップショットがどんどん増えるため、ファイルシステムには、
+		あるスナップショットを、たとえば、月次、週次、マニュアル、
+		特別なイベントのようなものから、他と区別するような仕組みが
+		必要である。そのため、そのようなファイルシステムでは、
+		たとえば、時間ベースでない、変更可能な名前をスナップショットに
+		つけるしくみのような、異なった方法でスナップショットにタグを
+		つける方法を提供する。<command>shadow:format</command>
+		のみでは、そのようなスナップショットを区別するのは困難である。
+		このオプションパラメーターを使うことにより、ファイルシステム中
+		のスナップショットディレクトリの名前に対して、いろいろな
+		プレフィックスを指定することができるようになる。
+		<command>shadow:format</command> と、<command>shadow:delimiter</command>
+		パラメーターと一緒に、このパラメーターが設定された場合、
+		ファイルシステム中のスナップショットディレクトリがとり得る
+		名前を決定する。オプションは、基本的な正規表現（BRE）のみを
+		サポートする。
+		</para>
+		</listitem>
+		</varlistentry>
 
-		 <varlistentry>
-		 <term>shadow:delimiter
-		 </term>
-		 <listitem>
-		 <para>
-		 このオプションパラメータは、<command>shadow:snapprefix</command>と
-		 <command>shadow:format</command> 間のデリミタとして
-		 使われる。このパラメータは、<command>shadow:snapprefix</command>
-		 が設定されているときにのみ使われる。
-		 </para>
-		 <para>既定値: shadow:delimiter = "_GMT"</para>
-		 </listitem>
-		 </varlistentry>
+		<varlistentry>
+		<term>shadow:delimiter
+		</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+		This optional parameter is used as a delimiter between
+		<command>shadow:snapprefix</command> and <command>shadow:format</command>.
+		This parameter is used only when <command>shadow:snapprefix</command>
+		is set.
+		</para>
+-->
+		<para>
+		このオプションパラメーターは、<command>shadow:snapprefix</command> と
+		<command>shadow:format</command> 間のデリミタとして
+		使われる。このパラメーターは、<command>shadow:snapprefix</command>
+		が設定されているときにのみ使われる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>Default: shadow:delimiter = "_GMT"</para>
+-->
+		<para>既定値: shadow:delimiter = "_GMT"</para>
+		</listitem>
+		</varlistentry>
 		</variablelist>
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>EXAMPLES</title>
+-->
 	<title>設定例</title>
 
+<!-- 原文 samba-4.7.0
+	<para>Add shadow copy support to user home directories:</para>
+-->
 	<para>ユーザーのホームディレクトリでシャドウコピーをサポートするには
-    以下の設定を行なう:</para>
+	以下の設定を行なう。</para>
 <programlisting>
-    <smbconfsection name="[homes]"/>
+	<smbconfsection name="[homes]"/>
 	<smbconfoption name="vfs objects">shadow_copy2</smbconfoption>
 	<smbconfoption name="shadow:snapdir">/data/snapshots</smbconfoption>
 	<smbconfoption name="shadow:basedir">/data/home</smbconfoption>
@@ -479,35 +857,66 @@
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>CAVEATS</title>
+-->
 	<title>警告</title>
 
+<!-- 原文 samba-4.7.0
+	<para>This is not a backup, archival, or version control solution.
+	</para>
+-->
 	<para>これはバックアップでも、アーカイブでも、バージョン管理のための
-    機能でもないことに注意。</para>
+	機能でもないことに注意。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>With Samba or Windows servers,
+	<command>vfs_shadow_copy2</command> is designed to be an end-user
+	tool only. It does not replace or enhance your backup and
+	archival solutions and should in no way be considered as
+	such. Additionally, if you need version control, implement a
+	version control system.</para>
+-->
 	<para>Samba と Windows の双方において、<command>vfs_shadow_copy2</command>
-    はエンドユーザーのための機能として設計されている。これはバックアップや
-    アーカイブ機能を代替、もしくは拡張するものではないので、そのような認識
-    は禁物である。バージョン管理機能が必要であれば、バージョン管理機能を
-    実装する必要がある。</para>
+	はエンドユーザーのための機能として設計されている。これはバックアップや
+	アーカイブ機能を代替、もしくは拡張するものではないので、そのような認識
+	は禁物である。バージョン管理機能が必要であれば、バージョン管理機能を
+	実装する必要がある。</para>
 
 </refsect1>
 
 
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
 	<title>バージョン</title>
 
+<!-- 原文 samba-4.7.0
+	<para>This man page is correct for version 4.0 of the Samba suite.
+	</para>
+-->
 	<para>このマニュアルページは Samba システムのバージョン 4.0 に適合する。
 	</para>
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
 	<title>著者</title>
 
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+-->
 	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
-    Tridgell によって作成された。現在 Samba は Samba Team に
-    よって、Linuxカーネルの開発と同様にオープンソースプロジェクト
-    として開発が行なわれている。</para>
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linux カーネルの開発と同様にオープンソースプロジェクト
+	として開発が行なわれている。</para>
 
 </refsect1>
 
