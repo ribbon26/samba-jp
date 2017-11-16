@@ -19,7 +19,7 @@
 <!-- 原文 samba-4.7.0
 	<refpurpose>Ensure meta data operations are performed synchronously.</refpurpose>
 -->
-	<refpurpose>メタデータ操作を同期的に実行させる</refpurpose>
+	<refpurpose>メタデータ操作を同期実行する。</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -39,7 +39,7 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry> suite.</para>
 -->
-	<para>このVFSモジュールは
+	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
@@ -55,14 +55,14 @@
 	</para>
 -->
 	<para>
-	ある種のファイルシステム（いくつかなジャーナルファイルシステムなど）
-	では、電源失効後にファイルシステム中に残っていることをオペレーション
-	が保障するために、多くのメタデータ操作に対して fsync() が実行される
-	ことを要求する。これは、クラスタ化された Samba において、
-	ノードフェイルオーバーシステム中に参加している、いくつかのクラスタ
-	ファイルシステムにおいては特に重要である。それらのファイルシステム
-	に対して、<command>vfs_syncops</command> VFS モジュールは、それらの操作を
-	安全に実行する方法を提供する。
+        ファイルシステムの中には（ジャーナルファイルシステムの場合も）、
+	停電発生後にメタデータに対する操作がファイルシステム内に維持される
+	ことを保証し、大半のメタデータに対して fsync() が実行されることを必要と
+	しているものがある。
+	クラスター化された Samba を含むノードフェイルオーバーシステムに参加しよう
+	としているクラスターファイルシステムにとって、このことは特に重要となる
+	ことがある。こういったファイルシステムに対して <command>vfs_syncops</command> 
+	VFS モジュールは、メタデータに関する操作を安全に実行する方法を提供する。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -87,10 +87,10 @@
 	</para>
 -->
 	<para>
-	<command>vfs_syncops</command> VFS モジュールをによる、多くの
-	パフォーマンス低下は、close() 中の fsync である。これは、グローバル
-	または共有単位のどちらかで、<command>syncops:onclose = no</command>
-	を使うことによって無効にできる。
+	<command>vfs_syncops</command> VFS モジュールの性能は、close() 内の
+	fsync において低下することが多い。
+	<command>syncops:onclose = no</command> を設定すれば、これを防ぐことが
+	できる。設定はグローバルと共有ごとのどちらでもよい。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -102,10 +102,10 @@
 	</para>
 -->
 	<para>
-	最後のデータが fsync() で書かれることのみを要求する特定のファイルシステムでは、
-	<command>syncops:onmeta = no</command> を使ってこのモジュールのメタデータ
-	同期を無効にすることができる。このオプションはグローバルまたは共有単位で
-	設定できる。
+	ファイルシステムの中には、最終のデータが fsync() によって書き込まれさえすれば
+	よいものもあるので、この場合は <command>syncops:onmeta = no</command> の設定を
+	行えば、このモジュールのメタデータ同期を無効にできる。
+	このオプションはグローバルと共有ごとのどちらでも設定できる。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -115,9 +115,9 @@
 	</para>
 -->
 	<para>
-	<command>vfs_syncops</command> VFS モジュールは、
-	<command>syncops:disable = true</command> を使って共有に対して、
-	完全に無効化することもできる。
+	<command>syncops:disable = true</command> の設定を行えば、共有に対する
+	<command>vfs_syncops</command> VFS モジュールの機能を完全に無効とすること
+	ができる。
 	</para>
 </refsect1>
 
@@ -150,7 +150,7 @@
 	<para>This man page is correct for version 4.1.0 of the Samba suite.
 	</para>
 -->
-	<para>このマニュアルページは Samba システムバージョン 4.1.0 用である。
+	<para>このマニュアルページは Samba バージョン 4.1.0 以降に向けたものである。
 	</para>
 </refsect1>
 
