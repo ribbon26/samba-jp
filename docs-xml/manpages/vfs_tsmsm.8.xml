@@ -6,6 +6,9 @@
 	<refentrytitle>vfs_tsmsm</refentrytitle>
 	<manvolnum>8</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
 	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
 	<refmiscinfo class="version">4.7</refmiscinfo>
 </refmeta>
@@ -13,6 +16,9 @@
 
 <refnamediv>
 	<refname>vfs_tsmsm</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>VFS module for handling offline files with Tivoli Storage Manager Space Management</refpurpose>
+-->
 	<refpurpose>Tivoli Storage Manager Space Management を使うオフラインファイルの操作用 VFS モジュール</refpurpose>
 </refnamediv>
 
@@ -23,26 +29,32 @@
 </refsynopsisdiv>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
 	<title>説明</title>
 
+<!-- 原文 samba-4.7.0
+	<para>This VFS module is part of the
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
 	<para>この VFS モジュールは
 	<citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>The <command>tsmsm</command> VFS module is an
+	extension for handling offline files with Tivoli
+	Storage Manager Space Management.
+	</para>
+-->
 	<para><command>tsmsm</command> VFS モジュールは、
-	 Tivoli Storage Manager Space Management と共にオフラインファイルを
-	 操作するための拡張である。
+	Tivoli Storage Manager Space Management と共にオフラインファイルを
+	操作するための拡張である。
 	</para>
 
-	<para>
-	  これは、オンライン(マイグレートされていない)ファイル用の実際のサイズの
-	  'オンラインレシオ'よりも、512のn倍で計算したファイルサイズで報告された
-	  ブロックの数が大きいという事実に基づいた、ヒューリスティックな手法を使う、
-	  高価なDMAP 呼び出しを行う事を防ごうとする。もしもヒューリスティックな
-	  チェックが失敗した場合、このモジュールはDMAPIを呼び出し、オフライン
-	  (マイグレードされた)ファイルがあるかどうかの特定の属性を問い合わせる。
-	  もしも、この属性が存在した場合、ファイルはオフラインであると推測される。
-	</para>
+<!-- 原文 samba-4.7.0
 	<para>
 		It tries to avoid calling expensive DMAPI calls with some
 		heuristics based on the fact that number of blocks reported of a
@@ -52,13 +64,29 @@
 		a specific attribute which is present for offline (migrated) files.
 		If this attribute presents, the file is considered offline.
 	</para>
+-->
+	<para>
+	これは、オンライン（マイグレートされていない）ファイル用の実際のサイズの
+	'オンラインレシオ' よりも、512 の n 倍で計算したファイルサイズで報告された
+	ブロックの数が大きいという事実に基づいた、ヒューリスティックな手法を使う、
+	高価な DMAP 呼び出しを行うことを防ごうとする。もしもヒューリスティックな
+	チェックが失敗した場合、このモジュールは DMAPI を呼び出し、オフライン
+	（マイグレードされた）ファイルがあるかどうかの特定の属性を問い合わせる。
+	もしも、この属性が存在した場合、ファイルはオフラインであると推測される。
+	</para>
 
+<!-- 原文 samba-4.7.0
+	<para>This module is not stackable.</para>
+-->
 	<para>このモジュールはスタック可能ではない。</para>
 
 </refsect1>
 
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
 	<title>オプション</title>
 
 	<variablelist>
@@ -67,17 +95,19 @@
 
 		<term>tsmsm:hsm script = [ path to hsm script ]</term>
 		<listitem>
-		<para>
-		  hsm スクリプトには、2つの引数: operationとfilepathを取る
-		  シェルスクリプトを指定する。tsmsmモジュールは、ファイルに
-		  filepath offline であると設定するため、"offline"のみを
-		  使用する。
-		</para>
+<!-- 原文 samba-4.7.0
 		<para>
 			hsm script should point to a shell script which
 			accepts two arguments: operation and filepath.
 			the tsmsm module only uses "offline" for operation
 			to set the file under filepath offline.
+		</para>
+-->
+		<para>
+		hsm スクリプトには、2 つの引数: operation と filepath を取る
+		シェルスクリプトを指定する。tsmsm モジュールは、ファイルに
+		filepath offline であると設定するため、"offline" のみを
+		使用する。
 		</para>
 		</listitem>
 
@@ -86,13 +116,15 @@
 
 		<term>tsmsm:online ratio = [ number ]</term>
 		<listitem>
-		<para>
-		実際のファイルサイズに対して報告されたサイズをチェックするための割合。
-		既定値は 0.5 である。
-		</para>
+<!-- 原文 samba-4.7.0
 		<para>
 		Ratio to check reported size against actual file size.
 		The default value is 0.5.
+		</para>
+-->
+		<para>
+		実際のファイルサイズに対して報告されたサイズをチェックするための割合。
+		既定値は 0.5 である。
 		</para>
 		</listitem>
 
@@ -102,9 +134,15 @@
 
 		<term>tsmsm:dmapi attribute = [ attribute-name ]</term>
 		<listitem>
+<!-- 原文 samba-4.7.0
 		<para>
-		  ファイルがオフラインの時存在する DMAPI 属性の名前。
-		  既定値は "IBMobj"(GPFSが使うものである)。
+		Name of a DMAPI attribute that is present when a file is offline.
+		The default is "IBMobj" (which is what GPFS uses).
+		</para>
+-->
+		<para>
+		ファイルがオフラインの時存在する DMAPI 属性の名前。
+		既定値は "IBMobj"（GPFS が使うものである）。
 		</para>
 		</listitem>
 
@@ -113,9 +151,15 @@
 
 		<term>tsmsm:dmapi value = [ value for the DMAPI attribute ]</term>
 		<listitem>
+<!-- 原文 samba-4.7.0
 		<para>
-		  ファイルがオフラインであると推測されるために
-		  持っているべきDMAPI 属性の値。既定値は空(値は要求されない)。
+		Value that the DMAPI attribute should have for the file to
+		be considered offline. The default is empty (no value required).
+		</para>
+-->
+		<para>
+		ファイルがオフラインであると推測されるために
+		持っているべき DMAPI 属性の値。既定値は空（値は要求されない）。
 		</para>
 		</listitem>
 
@@ -125,9 +169,15 @@
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>EXAMPLES</title>
+-->
 	<title>使用例</title>
 
-	<para>以下のようにすることで、TSMサポート付きのGPFSマウントは、Samba経由でエクスポートできる:</para>
+<!-- 原文 samba-4.7.0
+	<para>A GPFS mount with TSM support can be exported via Samba as follows:</para>
+-->
+	<para>以下のようにすることで、TSM サポート付きの GPFS マウントは、Samba 経由でエクスポートできる。</para>
 
 <programlisting>
         <smbconfsection name="[gpfs_tsm_share]"/>
@@ -137,24 +187,35 @@
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
 	<title>バージョン</title>
-	<para>このマニュアルページはバージョン4.0 のSambaシステム用である。
+<!-- 原文 samba-4.7.0
+	<para>This man page is correct for version 4.0 of the Samba suite.
+	</para>
+-->
+	<para>このマニュアルページはバージョン 4.0 の Samba システム用である。
 	</para>
 </refsect1>
 
 <refsect1>
+<!-- 原文 samba-4.7.0
+-->
 	<title>著者</title>
 
+<!-- 原文 samba-4.7.0
+-->
 	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
 	Tridgell によって作成された。現在 Samba は Samba Team に
-	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	よって、Linux カーネルの開発と同様のオープンソースプロジェクト
 	として開発が行なわれている。</para>
 
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
 	<para>このドキュメントは、Samba 4.0.3 - 4.7.0 に対応する。</para>
-    <para>このドキュメントの翻訳は
+	<para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
 		</itemizedlist>
