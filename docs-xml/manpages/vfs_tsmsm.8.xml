@@ -19,7 +19,7 @@
 <!-- 原文 samba-4.7.0
 	<refpurpose>VFS module for handling offline files with Tivoli Storage Manager Space Management</refpurpose>
 -->
-	<refpurpose>Tivoli Storage Manager Space Management を使うオフラインファイルの操作用 VFS モジュール</refpurpose>
+	<refpurpose>Tivoli Storage Manager Space Management におけるオフラインファイルを取り扱う VFS モジュール。</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -49,9 +49,9 @@
 	Storage Manager Space Management.
 	</para>
 -->
-	<para><command>tsmsm</command> VFS モジュールは、
-	Tivoli Storage Manager Space Management と共にオフラインファイルを
-	操作するための拡張である。
+	<para><command>tsmsm</command> VFS モジュールは Tivoli Storage
+	Manager Space Management におけるオフラインファイルを取り扱う
+	拡張モジュールである。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -66,19 +66,20 @@
 	</para>
 -->
 	<para>
-	これは、オンライン（マイグレートされていない）ファイル用の実際のサイズの
-	'オンラインレシオ' よりも、512 の n 倍で計算したファイルサイズで報告された
-	ブロックの数が大きいという事実に基づいた、ヒューリスティックな手法を使う、
-	高価な DMAP 呼び出しを行うことを防ごうとする。もしもヒューリスティックな
-	チェックが失敗した場合、このモジュールは DMAPI を呼び出し、オフライン
-	（マイグレードされた）ファイルがあるかどうかの特定の属性を問い合わせる。
-	もしも、この属性が存在した場合、ファイルはオフラインであると推測される。
+	このモジュールは、ヒューリスティック手法を用いることで、処理コストの高い
+	DMAPI 呼び出しをできるだけ行わないようにしている。このヒューリスティック
+	手法とは、ファイルのブロック数として取得されている値に 512 をかけたものが、
+	（マイグレートされていない）オンラインファイルの実サイズに 'オンライン割合'
+	をかけた値よりも大きくなるという事実に基づいている。
+	このヒューリスティック手法によるチェックに合わなかった場合は DMAPI 呼び出し
+	が行われ、（マイグレードされた）オフラインファイルが保持する特定の属性を
+	問い合わせる。そしてその属性が存在していたら、オフラインファイルとして扱う。
 	</para>
 
 <!-- 原文 samba-4.7.0
 	<para>This module is not stackable.</para>
 -->
-	<para>このモジュールはスタック可能ではない。</para>
+	<para>このモジュールはスタックできない。</para>
 
 </refsect1>
 
@@ -93,7 +94,10 @@
 
 		<varlistentry>
 
+<!-- 原文 samba-4.7.0
 		<term>tsmsm:hsm script = [ path to hsm script ]</term>
+-->
+		<term>tsmsm:hsm script = [ hsm スクリプトへのパス ]</term>
 		<listitem>
 <!-- 原文 samba-4.7.0
 		<para>
@@ -104,17 +108,20 @@
 		</para>
 -->
 		<para>
-		hsm スクリプトには、2 つの引数: operation と filepath を取る
-		シェルスクリプトを指定する。tsmsm モジュールは、ファイルに
-		filepath offline であると設定するため、"offline" のみを
-		使用する。
+		hsm スクリプトには、2 つの引数 operation、filepath を取る
+		ようなシェルスクリプトを指定する。tsmsm モジュールにおいては
+		"offline" 処理のみが行われ、filepath 配下のファイルはオフライン
+		に設定される。
 		</para>
 		</listitem>
 
 		</varlistentry>
 		<varlistentry>
 
+<!-- 原文 samba-4.7.0
 		<term>tsmsm:online ratio = [ number ]</term>
+-->
+		<term>tsmsm:online ratio = [ 数値 ]</term>
 		<listitem>
 <!-- 原文 samba-4.7.0
 		<para>
@@ -123,7 +130,7 @@
 		</para>
 -->
 		<para>
-		実際のファイルサイズに対して報告されたサイズをチェックするための割合。
+		実際のファイルサイズに対して、取得されているサイズをチェックするための割合。
 		既定値は 0.5 である。
 		</para>
 		</listitem>
@@ -132,7 +139,10 @@
 
 		<varlistentry>
 
+<!-- 原文 samba-4.7.0
 		<term>tsmsm:dmapi attribute = [ attribute-name ]</term>
+-->
+		<term>tsmsm:dmapi attribute = [ 属性名 ]</term>
 		<listitem>
 <!-- 原文 samba-4.7.0
 		<para>
@@ -141,7 +151,7 @@
 		</para>
 -->
 		<para>
-		ファイルがオフラインの時存在する DMAPI 属性の名前。
+		ファイルがオフラインであるときに存在する DMAPI 属性名。
 		既定値は "IBMobj"（GPFS が使うものである）。
 		</para>
 		</listitem>
@@ -149,7 +159,10 @@
 		</varlistentry>
 		<varlistentry>
 
+<!-- 原文 samba-4.7.0
 		<term>tsmsm:dmapi value = [ value for the DMAPI attribute ]</term>
+-->
+		<term>tsmsm:dmapi value = [ DMAPI 属性の値 ]</term>
 		<listitem>
 <!-- 原文 samba-4.7.0
 		<para>
@@ -158,8 +171,8 @@
 		</para>
 -->
 		<para>
-		ファイルがオフラインであると推測されるために
-		持っているべき DMAPI 属性の値。既定値は空（値は要求されない）。
+		ファイルをオフラインとして扱うために DMAPI 属性に設定されているべき値。
+		既定値は空（値を指定しない）。
 		</para>
 		</listitem>
 
@@ -195,7 +208,7 @@
 	<para>This man page is correct for version 4.0 of the Samba suite.
 	</para>
 -->
-	<para>このマニュアルページはバージョン 4.0 の Samba システム用である。
+	<para>このマニュアルページは Samba バージョン 4.0 以降に向けたものである。
 	</para>
 </refsect1>
 
