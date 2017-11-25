@@ -49,8 +49,9 @@
 	with ZFS.
 	</para>
 -->
-	<para><command>zfsacl</command> VFS モジュールは、ZFS と適切に統合する
-	ために、Samba が必要とする、すべての ACL 拡張のためのベースモジュールである。
+	<para><command>zfsacl</command> VFS モジュールは、Samba と ZFS
+	を適切に統合させるために、Samba にとって必要となる ACL 拡張属性
+	のすべてを取り扱うモジュールである。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -60,9 +61,10 @@
 	</itemizedlist>
 	</para>
 -->
-	<para>現在、zfsacl vfs モジュールは以下の領域中で拡張を提供する:
+	<para>現在 zfsacl vfs モジュールは以下の処理状況において拡張属性を提供する。
 	<itemizedlist>
-	<listitem><para>ZFS 用の構成可能なオプションを使う NFSv4 ACL インタフェース</para></listitem>
+	<listitem><para>ZFS に対しての設定変更が可能なオプションを用いた NFSv4 ACL
+	インターフェース</para></listitem>
 	</itemizedlist>
 	</para>
 
@@ -73,11 +75,11 @@
 	are the responsibility of the underlying filesystem than of Samba.
 	</para>
 -->
-	<para><command>注意:</command> このモジュールは、posix ACL 動作を
-	フォローし、結果、chown 経由でのパーミッション取得を許可する。
-	このような制限は、Samba がベースとして使うファイルシステムの責任
-	であるので、このモジュール経由で chown コマンドを制限するのに、
-	後の時点で行うことがある。
+	<para><command>注意:</command> このモジュールは posix acl の動作に
+	従うので、chown を通じての権限取得を可能にする。
+	Samba は後の処理タイミングにおいて、このモジュールの chown 処理を
+	許可しない場合がある。こういった制約を扱う責任は、Samba 側にある
+	のではなく、Samba が扱っているファイルシステム側にあるからである。
 	</para>
 
 <!-- 原文 samba-4.7.0
@@ -93,12 +95,14 @@
 -->
 	<para>このモジュールは、
 	<smbconfoption name="acl map full control">acl map full control</smbconfoption>
-	smb.conf パラメーターを使用する。yes（既定値）に設定すると、このパラメーターは、
-	FILE_DELETE と FILE_DELETE_CHILD を除いたすべてのファイルパーミッションが
-	含まれている、ファイルに対する（ディレクトリではなく）、ACE エントリの戻り
-	にある、FILE_DELETE_CHILD ビットを追加する。これは、GENERIC_ALL アクセスを
-	要求する Windows アプリケーションが、NFSv4 互換の ACL を使うファイルシステムに
-	対して実行するとき、ACCESS_DENIED エラーが返ってしまうことを防ぐ。</para>
+	smb.conf パラメーターを使用する。yes（既定値）に設定すると、
+	ファイルに対する ACE エントリとして戻ってくる値に FILE_DELETE_CHILD
+	ビットを加える。これはファイルに対するものであってディレクトリではない。
+	なおその戻り値は、FILE_DELETE、 FILE_DELETE_CHILD を除き、すでにファイル
+	に関するパーミッションはすべて含まれている。これは、Windows アプリケーション
+	が NFSv4 互換 ACL を使うファイルシステムに対して動作していて、GENERIC_ALL
+	アクセスを要求するものである場合に、ACCESS_DENIED エラーが返ってしまうこと
+	を防ぐ。</para>
 
 <!-- 原文 samba-4.7.0
 	<para>This module is stackable.</para>
