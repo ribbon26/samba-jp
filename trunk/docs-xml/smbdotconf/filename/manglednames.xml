@@ -1,38 +1,113 @@
 <samba:parameter name="mangled names"
-		 type="boolean"
+                 type="enum"
+                 enumlist="enum_mangled_names"
                  context="S"
                  parm="1"
-		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+<!-- 原文 samba-4.7.0
+	<para>This controls whether non-DOS names under UNIX 
+	should be mapped to DOS-compatible names (&quot;mangled&quot;) and made visible, 
+	or whether non-DOS names should simply be ignored.</para>
+-->
 	<para> このパラメーターは、
-	UNIX 上の DOS非互換のファイル名をDOS互換の名前(「短縮名」)に短縮してアクセス可能にするか、
+	UNIX 上の DOS 非互換のファイル名を DOS 互換の名前（「短縮名」）に短縮してアクセス可能にするか、
 	単純に無視するかどうかを制御する。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>See the section on <smbconfoption name="name mangling"/> for 
+	details on how to control the mangling process.</para>
+-->
 	<para>短縮処理がどのように行なわれているかについての詳細は、
 	<smbconfoption name="name mangling"/> セクションを参照のこと。</para>
 
-	<para>短縮が行なわれる場合の手法は以下の通りである(訳注:以下は hash アルゴリズムの場合):</para>
+<!-- 原文 samba-4.7.0
+	<para>Possible option settings are</para>
+-->
+	<para>Possible option settings are</para>
+
+	<itemizedlist>
+<!-- 原文 samba-4.7.0
+		<listitem><para><emphasis>yes (default)</emphasis> -
+		enables name mangling for all not DOS 8.3 conforming
+		names.</para></listitem>
+-->
+		<listitem><para><emphasis>yes (default)</emphasis> -
+		enables name mangling for all not DOS 8.3 conforming
+		names.</para></listitem>
+
+<!-- 原文 samba-4.7.0
+		<listitem><para><emphasis>no</emphasis> - disables any
+		name mangling.</para></listitem>
+-->
+		<listitem><para><emphasis>no</emphasis> - disables any
+		name mangling.</para></listitem>
+
+<!-- 原文 samba-4.7.0
+		<listitem><para><emphasis>illegal</emphasis> - does
+		mangling for names with illegal NTFS characters. This
+		is the most sensible setting for modern clients that
+		don't use the shortname anymore.</para></listitem>
+-->
+		<listitem><para><emphasis>illegal</emphasis> - does
+		mangling for names with illegal NTFS characters. This
+		is the most sensible setting for modern clients that
+		don't use the shortname anymore.</para></listitem>
+	</itemizedlist>
+
+<!-- 原文 samba-4.7.0
+	<para>If mangling is used then the mangling method is as follows:</para>
+-->
+	<para>短縮が行なわれる場合の手法は以下の通りである。（訳注: 以下は hash アルゴリズムの場合）</para>
 
 	<itemizedlist>
 		<listitem>
-			<para> ファイル名の先頭から一番右にあるドットの前までの英数5文字は、
-			大文字に変換された上で、
-			短縮名の先頭5文字となる。</para>
-		</listitem>
+<!-- 原文 samba-4.7.0
+			<para>The first (up to) five alphanumeric characters 
+			before the rightmost dot of the filename are preserved, forced 
+			to upper case, and appear as the first (up to) five characters 
+			of the mangled name.</para>
+-->
+			<para>
+			ファイル名の先頭から一番右にあるドットの前までの英数 5 文字は、
+			大文字に変換された上で、短縮名の先頭 5 文字となる。
+			</para>
 		
+		</listitem>
+
 		<listitem>
+<!-- 原文 samba-4.7.0
+			<para>A tilde &quot;~&quot; is appended to the first part of the mangled
+			name, followed by a two-character unique sequence, based on the
+			original root name (i.e., the original filename minus its final
+			extension). The final extension is included in the hash calculation
+			only if it contains any upper case characters or is longer than three
+			characters.</para>
+-->
 			<para>チルダ「~」が短縮名に付加される。
 			更に元々のファイル名のベース部分(ファイル名から拡張子部分を除いたもの)から生成された一意な2文字が付加される。
 			拡張子にあたる部分は、大文字を含んでいるか、
 			3文字以上の場合のみ、ハッシュの計算に含まれる。
 			</para>
 
+<!-- 原文 samba-4.7.0
+			<para>Note that the character to use may be specified using 
+				the <smbconfoption name="mangling char"/>
+			option, if you don't like '~'.</para>
+-->
 			<para> 「~」の利用を避けたい場合は、
 			<smbconfoption name="mangling char"/>
 			オプションにより、別の文字を指定することも可能である。</para>
 		</listitem>
 
 		<listitem>
+<!-- 原文 samba-4.7.0
+			<para>Files whose UNIX name begins with a dot will be 
+			presented as DOS hidden files. The mangled name will be created as 
+			for other filenames, but with the leading dot removed and &quot;___&quot; as 
+			its extension regardless of actual original extension (that's three 
+			underscores).</para>
+-->
 			<para>UNIX 上のファイル名がドットから始まる場合、
 			そのファイルは DOS の隠しファイルとして扱われる。
 			この場合の短縮名は、ファイル名の先頭のドットを取り除き、
@@ -41,17 +116,33 @@
 		</listitem>
 	</itemizedlist>
 
-	<para>2桁のハッシュ値は、大文字の英数文字になる。</para>
+<!-- 原文 samba-4.7.0
+	<para>The two-digit hash value consists of upper case alphanumeric characters.</para>
+-->
+	<para>2 桁のハッシュ値は、大文字の英数文字になる。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>This algorithm can cause name collisions only if files 
+	in a directory share the same first five alphanumeric characters. 
+	The probability of such a clash is 1/1300.</para>
+-->
 	<para>このアルゴリズムは、
 	ディレクトリ内のファイルに先頭の英数 5 文字が同一のファイル名が存在する時のみ名前の衝突が発生するが、
 	実際に衝突する確率は、1/1300 である。</para>
 
+<!-- 原文 samba-4.7.0
+	<para>The name mangling (if enabled) allows a file to be 
+	copied between UNIX directories from Windows/DOS while retaining 
+	the long UNIX filename. UNIX files can be renamed to a new extension 
+	from Windows/DOS and will retain the same basename. Mangled names 
+	do not change between sessions.</para>
+-->
 	<para>
-	名前の短縮処理により、(この処理が有効な限り) Windows や DOS から、UNIX 側の長いファイル名を保持したまま UNIX ディレクトリ間のファイルのコピーができる。 
+	名前の短縮処理により、（この処理が有効な限り）Windows や DOS から、UNIX 側の長いファイル名を保持したまま UNIX ディレクトリ間のファイルのコピーができる。 
 	Windows や DOS 側から UNIX 側のファイル名の拡張子を変更しても、ベース名は保持される。 
 	なお、セッションが異なっても短縮名は変化しない。 
 	</para>
 </description>
 <value type="default">yes</value>
+<value type="example">illegal</value>
 </samba:parameter>
