@@ -1,28 +1,122 @@
 <samba:parameter name="profile acls"
                  context="S"
 		 type="boolean"
+                 deprecated="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-    <para>この真偽値パラメーターは、Windows 2000 もしくは Windows XP 用のユーザープロファイルを Samba サーバー上の共有に格納する際に発生する問題に対処するため作成された。
-	Windows 2000 や Windows XP の新しいサービスパック(訳注: 各々 SP4 と SP1) では、セキュリティの ACL チェックが行なわれるようになり、ローカルのワークステーション上に格納されているプロファイルのコピーを Samba 上の共有にコピーする際に、プロファイルのディレクトリの所有者と書き込み権をチェックするようになった。
+<!-- 原文 samba-4.7.0
+	<para>
+	As most system support support posix acls and extended attributes
+	today. The "acl_xattr" vfs module should be used instead of
+	using <smbconfoption name="profile acls">yes</smbconfoption>.
+	Using an vfs module that provides nfs4 acls may also work.
+	</para>
+-->
+	<para>
+	As most system support support posix acls and extended attributes
+	today. The "acl_xattr" vfs module should be used instead of
+	using <smbconfoption name="profile acls">yes</smbconfoption>.
+	Using an vfs module that provides nfs4 acls may also work.
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	With modern clients (as of 2017) it's not possible to
+	use <smbconfoption name="profile acls">yes</smbconfoption> anymore.
+	</para>
+-->
+	<para>
+	With modern clients (as of 2017) it's not possible to
+	use <smbconfoption name="profile acls">yes</smbconfoption> anymore.
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	This boolean parameter was added to fix the problems that people have been
+	having with storing user profiles on Samba shares from Windows 2000 or
+	Windows XP clients. New versions of Windows 2000 or Windows XP service
+	packs do security ACL checking on the owner and ability to write of the
+	profile directory stored on a local workstation when copied from a Samba
+	share.
+	</para>
+-->
+	<para>この真偽値パラメーターは、Windows 2000 もしくは Windows XP 用のユー
+	ザープロファイルを Samba サーバー上の共有に格納する際に発生する問題に対処
+	するため作成された。Windows 2000 や Windows XP の新しいサービスパック
+	（訳注: 各々 SP4 と SP1）では、セキュリティの ACL チェックが行なわれる
+	ようになり、ローカルのワークステーション上に格納されているプロファイルの
+	コピーを Samba 上の共有にコピーする際に、プロファイルのディレクトリの
+	所有者と書き込み権をチェックするようになった。
 </para>
 
-    <para>winbindd を用いたドメインモードで運用していない場合、ローカルワークステーション上に複製された、ワークステーションにログオン中ユーザーのセキュリティ情報 (SID) は無意味なため、結果としてプロファイルの格納に失敗する。
-	このパラメーターをプロファイルの格納に使用する共有で有効にすることにより、クライアントに返却される Windows の ACL について、以下の 2 点が変更となる。
-	まず、すべてのファイルおよびディレクトリの所有者とグループの所有者が、各々 BUILTIN\Administrators および BUILTIN\Users となる (SID は各々 S-1-5-32-544 と S-1-5-32-545)。
-	次に、返却されるすべての ACL に対して BUILTIN\Users にフルコントロールの ACE が付加される。
-	これにより、Windows 2000 および Windows XP のワークステーションのユーザーがプロファイルにアクセスできるようになる。
+<!-- 原文 samba-4.7.0
+	<para>
+	When not in domain mode with winbindd then the security info copied
+	onto the local workstation has no meaning to the logged in user (SID) on
+	that workstation so the profile storing fails. Adding this parameter
+	onto a share used for profile storage changes two things about the
+	returned Windows ACL. Firstly it changes the owner and group owner
+	of all reported files and directories to be BUILTIN\\Administrators,
+	BUILTIN\\Users respectively (SIDs S-1-5-32-544, S-1-5-32-545). Secondly
+	it adds an ACE entry of "Full Control" to the SID BUILTIN\\Users to
+	every returned ACL. This will allow any Windows 2000 or XP workstation
+	user to access the profile.
+	</para>
+-->
+	<para>winbindd を用いたドメインモードで運用していない場合、ローカルワーク
+	ステーション上に複製された、ワークステーションにログオン中ユーザーのセキュ
+	リティ情報（SID）は無意味なため、結果としてプロファイルの格納に失敗する。
+	このパラメーターをプロファイルの格納に使用する共有で有効にすることにより、
+	クライアントに返却される Windows の ACL について、以下の 2 点が変更となる。
+	まず、すべてのファイルおよびディレクトリの所有者とグループの所有者が、
+	各々 BUILTIN\Administrators および BUILTIN\Users となる（SID は各々
+	S-1-5-32-544 と S-1-5-32-545）。次に、返却されるすべての ACL に対して
+	BUILTIN\Users にフルコントロールの ACE が付加される。これにより、
+	Windows 2000 および Windows XP のワークステーションのユーザーがプロファ
+	イルにアクセスできるようになる。
 	</para>
 	
+<!-- 原文 samba-4.7.0
 	<para>
-	ワークステーションに複数のユーザーがログオンする環境の場合、別ユーザーのプロファイルへのアクセスを禁止するためには、「捜査チェックのバイパス」権利を削除する必要がある。
-	プロファイルディレクトリのトップ(ユーザー名を含む名称となっている)がワークステーション上で作成される際、所有するユーザー以外のアクセスを禁止するような ACL が設定されるため、この設定により、別のユーザーのプロファイルディレクトリへのアクセスを禁止することができる。
-    </para>
+	Note that if you have multiple users logging
+	on to a workstation then in order to prevent them from being able to access
+	each others profiles you must remove the "Bypass traverse checking" advanced
+	user right. This will prevent access to other users profile directories as
+	the top level profile directory (named after the user) is created by the
+	workstation profile code and has an ACL restricting entry to the directory
+	tree to the owning user.
+	</para>
+-->
+	<para>
+	ワークステーションに複数のユーザーがログオンする環境の場合、別ユーザーの
+	プロファイルへのアクセスを禁止するためには、「捜査チェックのバイパス」
+	権利を削除する必要がある。プロファイルディレクトリのトップ（ユーザー名を
+	含む名称となっている）がワークステーション上で作成される際、所有する
+	ユーザー以外のアクセスを禁止するような ACL が設定されるため、この設定に
+	より、別のユーザーのプロファイルディレクトリへのアクセスを禁止することが
+	できる。
+	</para>
 
-      <para>
-	注意:このパラメーターはプロファイル専用の共有においてのみ yes に設定すべきである。
-	その他の共有では、ファイル所有者が不正になってしまうかもしれない。
-      </para>
+<!-- 原文 samba-4.7.0
+	<para>
+	Note that this parameter should be set to yes on dedicated profile shares only.
+	On other shares, it might cause incorrect file ownerships.
+	</para>
+-->
+	<para>
+	注意: このパラメーターはプロファイル専用の共有においてのみ yes に設定
+	すべきである。その他の共有では、ファイル所有者が不正になってしまうかも
+	しれない。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	This parameter is deprecated with Samba 4.7 and will be removed in future versions.
+	</para>
+-->
+	<para>
+	This parameter is deprecated with Samba 4.7 and will be removed in future versions.
+	</para>
 
 </description>
 <value type="default">no</value>
