@@ -1,10 +1,20 @@
 <samba:parameter name="auth methods"
                  context="G"
-		 type="list"
+                 type="cmdlist"
+                 deprecated="1"
 		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 
-    <para>このパラメーターにより、管理者は <command moreinfo="none">smbd</command> がユーザー認証を行なう際に使用する認証機構を選択することが可能となる。
+<!-- 原文 samba-4.7.0
+    <para>
+    This option allows the administrator to chose what authentication methods <command  moreinfo="none">smbd</command> 
+    will use when authenticating a user. This option defaults to sensible values based on <smbconfoption name="security"/>.  
+    This should be considered a developer option and used only in rare circumstances.  In the majority (if not all) 
+    of production servers, the default setting should be adequate.
+    </para>
+-->
+    <para>このパラメーターにより、管理者は <command moreinfo="none">smbd</command>
+    がユーザー認証を行なう際に使用する認証機構を選択することが可能となる。
     このパラメーターのデフォルトは、<smbconfoption name="security"/>
     パラメーターに基づいて適切な値が設定される。
     このオプションは開発者向けであり、
@@ -12,20 +22,38 @@
     実際の運用では多くの場合 (必ずというわけではない)、デフォルト設定のままにしておくべきである。
     </para>
 
+<!-- 原文 samba-4.7.0
+    <para>
+    Each entry in the list attempts to authenticate the user in turn, until
+    the user authenticates.  In practice only one method will ever actually 
+    be able to complete the authentication.
+    </para>
+-->
     <para>
     ユーザーが認証されるまで、
     リスト中の各エントリによって順番にユーザー認証が行なわれる。
-    従って、実際に認証が成功となる認証機構は1つだけである。
+    したがって実際に認証が成功となる認証機構は 1 つだけである。
     </para>
 
+<!-- 原文 samba-4.7.0
     <para>
-    設定可能な値としては、<constant>guest</constant> (匿名アクセス)、
-    <constant>sam</constant> (NetBIOS名あるいはドメイン名に基づくローカルのアカウントリストの検索)、
-    <constant>winbind</constant> (winbinddによるリモートユーザーの認証要求の中継)、
-    <constant>ntdomain</constant> (winbindd 導入以前のリモートドメインユーザーの認証方法。
-    現在は winbindd を使用する方が望ましいので使用すべきではない)、
-    <constant>trustdomain</constant> (信頼できるユーザーの、smbd からリモート DC への直接アクセスによる認証。
-    現在は winbindd を使用する方が望ましいので使用すべきではない) がある。
+    Possible options include <constant>guest</constant> (anonymous access), 
+    <constant>sam</constant> (lookups in local list of accounts based on netbios 
+    name or domain name), <constant>winbind</constant> (relay authentication requests
+    for remote users through winbindd), <constant>ntdomain</constant> (pre-winbindd 
+    method of authentication for remote domain users; deprecated in favour of winbind method), 
+    <constant>trustdomain</constant> (authenticate trusted users by contacting the 
+    remote DC directly from smbd; deprecated in favour of winbind method).
+    </para>
+-->
+    <para>
+    設定可能な値としては、<constant>guest</constant>（匿名アクセス）、
+    <constant>sam</constant>（NetBIOS 名あるいはドメイン名に基づくローカルのアカウントリストの検索）、
+    <constant>winbind</constant>（winbindd によるリモートユーザーの認証要求の中継）、
+    <constant>ntdomain</constant>（winbindd 導入以前のリモートドメインユーザーの認証方法。
+    現在は winbindd を使用する方が望ましいので使用すべきではない）、
+    <constant>trustdomain</constant>（信頼できるユーザーの、smbd からリモート DC への直接アクセスによる認証。
+    現在は winbindd を使用する方が望ましいので使用すべきではない）がある。
     </para>
 </description>
 <value type="default"/>
