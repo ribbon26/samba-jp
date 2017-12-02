@@ -1,16 +1,70 @@
 <samba:parameter name="map untrusted to domain"
                  context="G"
-		 type="boolean"
-		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+                 type="enum"
+                 enumlist="enum_bool_auto"
+                 deprecated="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+<!-- 原文 samba-4.7.0
+    <para>
+    By default, and with <smbconfoption name="map untrusted to domain">auto</smbconfoption>
+    smbd will defer the decision whether the domain name provided by the
+    client is a valid domain name to the Domain Controller (DC) of
+    the domain it is a member of, if it is not a DC.  If the DC indicates
+    that the domain portion is unknown, then a local authentication is performed.
+    Standalone servers always ignore the domain.  This is basically the same as
+    the behavior implemented in Windows.
+    </para>
+-->
     <para>
     クライアントが smbd に接続する際に BOGUS\user のような信頼されない
     ドメイン名を使っている場合、smbd は BOGUS ドメインを自身の SAM 名に
     置き換えてからそのユーザーを認証する。
     smbd が PDC として動作している場合、置き換えられた名前は DOMAIN\user となる。
-    smbd がドメインのメンバーサーバーもしくはスタンドアロンサーバーとして動作している場合、置き換えられた名前は WORKSTATION\user となる。
+    smbd がドメインのメンバーサーバーもしくはスタンドアロンサーバーとして
+    動作している場合、置き換えられた名前は WORKSTATION\user となる。
     </para>
 
+<!-- 原文 samba-4.7.0
+    <para>
+    With <smbconfoption name="map untrusted to domain">no</smbconfoption>,
+    if a client connects to smbd using an untrusted domain name, such as
+    BOGUS\user, smbd replaces the BOGUS domain with it's SAM name
+    (forcing local authentication) before
+    attempting to authenticate that user.  In the case where smbd is acting as
+    a NT4 PDC/BDC this will be DOMAIN\user.  In the case where smbd is acting as a
+    domain member server or a standalone server this will be WORKSTATION\user.
+    While this appears similar to the behaviour of
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption>,
+    the difference is that smbd will use a cached (maybe incomplete) list
+    of trusted domains in order to classify a domain as "untrusted"
+    before contacting any DC first.
+    </para>
+-->
+    <para>
+    With <smbconfoption name="map untrusted to domain">no</smbconfoption>,
+    if a client connects to smbd using an untrusted domain name, such as
+    BOGUS\user, smbd replaces the BOGUS domain with it's SAM name
+    (forcing local authentication) before
+    attempting to authenticate that user.  In the case where smbd is acting as
+    a NT4 PDC/BDC this will be DOMAIN\user.  In the case where smbd is acting as a
+    domain member server or a standalone server this will be WORKSTATION\user.
+    While this appears similar to the behaviour of
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption>,
+    the difference is that smbd will use a cached (maybe incomplete) list
+    of trusted domains in order to classify a domain as "untrusted"
+    before contacting any DC first.
+    </para>
+
+<!-- 原文 samba-4.7.0
+    <para>
+    With <smbconfoption name="map untrusted to domain">yes</smbconfoption>,
+    smbd provides the legacy behavior matching that of versions of Samba pre 3.4:
+    the BOGUS domain name would always be replaced by the
+    primary domain before attempting to authenticate that user.
+    This will be DOMAIN\user in all server roles except active directory domain controller.
+    </para>
+-->
     <para>
     Samba 3.4.0 より前のバージョンでは、smbd がドメインのメンバーサーバーとして
     動作している場合、BOGUS の部分は smbd がメンバーとして所属
@@ -18,6 +72,12 @@
     認証処理は DOMAIN\user の認証情報を使って DC に委譲される。
     </para>
 
+<!-- 原文 samba-4.7.0
+    <para>
+    <smbconfoption name="map untrusted to domain">no</smbconfoption>,
+    was the default up to Samba 4.6.
+    </para>
+-->
     <para>
     このパラメーターが <constant>yes</constant> にセットされている場合、
     smbd は信頼されないドメイン名をプライマリドメイン名にマッピングするという
@@ -25,7 +85,21 @@
     このパラメーターは意味を持たない。
     </para>
 
+<!-- 原文 samba-4.7.0
+    <para>
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption> was added
+    and become the default with Samba 4.7.0. As the option is marked as
+    <constant>deprecated</constant> it will be removed in a future release, while the behavior of
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption> will be kept.
+    </para>
+-->
+    <para>
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption> was added
+    and become the default with Samba 4.7.0. As the option is marked as
+    <constant>deprecated</constant> it will be removed in a future release, while the behavior of
+    <smbconfoption name="map untrusted to domain">auto</smbconfoption> will be kept.
+    </para>
 </description>
 
-<value type="default">no</value>
+<value type="default">auto</value>
 </samba:parameter>
