@@ -1,24 +1,129 @@
 <samba:parameter name="ntlm auth"
                  context="G"
-		 type="boolean"
+                 type="enum"
+                 enumlist="enum_ntlm_auth"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
-    <para>このパラメーターにより、<citerefentry><refentrytitle>smbd</refentrytitle>
-    <manvolnum>8</manvolnum></citerefentry> が NTLM レスポンスを用いてユーザー認証を行なうかどうかが設定される。
-      このパラメーターを無効にすると、クライアントは LANMAN パスワードハッシュ
-      か NTLMv2 レスポンスを送信する必要がある。</para>
-    <para>このオプションと <command moreinfo="none">lanman
-    auth</command> の両方を無効にした場合、NTLMv2 ログインのみが可能となる。すべての
-    クライアントが NTLMv2 をサポートしているわけではなく、ほとんどの場合、NTLMv2 を
-    使用するためには、明示的に設定を行なうことが必要である。</para>
+<!-- 原文 samba-4.7.0
+    <para>This parameter determines whether or not <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will attempt to
+    authenticate users using the NTLM encrypted password response for
+    this local passdb (SAM or account database). </para>
+-->
+    <para><citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> がローカル passdb（SAM すなわち
+    アカウントデータベース）に対して、NTLM レスポンスを用いたユーザー認証を
+    行なうかどうかを設定する。</para>
 
+<!-- 原文 samba-4.7.0
+    <para>If disabled, both NTLM and LanMan authencication against the
+    local passdb is disabled.</para>
+-->
+    <para>このパラメーターを無効にした場合は、ローカル passdb に対しての 
+    NTLM 認証と LanMan 認証の両方が無効になる。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>Note that these settings apply only to local users,
+    authentication will still be forwarded to and NTLM authentication
+    accepted against any domain we are joined to, and any trusted
+    domain, even if disabled or if NTLMv2-only is enforced here.  To
+    control NTLM authentiation for domain users, this must option must
+    be configured on each DC.</para>
+-->
+    <para>この設定はあくまでローカルユーザーに対して適用されるものであって、
+    参加しているドメインにおける認証は、どのようなドメインであってもフォワード
+    され NTLM 認証が行われる。信頼されるドメインであれば、認証が無効であったり、
+    このパラメーター設定によって NTLMv2 のみの認証に制限されていても構わない。
+    ドメインユーザーに対する NTLM 認証を制御するには、このパラメーターを各 DC
+    において設定する必要がある。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>By default with <command moreinfo="none">lanman
+    auth</command> set to <constant>no</constant> and
+    <command moreinfo="none">ntlm auth</command> set to
+    <constant>ntlmv2-only</constant> only NTLMv2 logins will be
+    permited.  Most clients support NTLMv2 by default, but some older
+    clients will require special configuration to use it.</para>
+-->
+    <para><command moreinfo="none">lanman auth</command> を
+    <constant>no</constant> と設定し、<command moreinfo="none">
+    ntlm auth</command> を <constant>ntlmv2-only</constant> と設定する
+    のが既定値であり、この場合 NTLMv2 によるログインのみが許可される。
+    たいていのクライアントは NTLMv2 を既定としてサポートしているが、
+    古いクライアントの中には特別な設定を必要とするものもある。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>The primary user of NTLMv1 is MSCHAPv2 for VPNs and 802.1x.</para>
+-->
     <para>NTLMv1 は、VPN や 802.1X で用いられる MS-CHAPv2 で主に利用されている。</para>
 
-    <para>Samba 4.5 において、既定値が、 "yes" から "no" に変更された。</para>
+<!-- 原文 samba-4.7.0
+    <para>The available settings are:</para>
+-->
+    <para>利用可能な設定は以下のとおり。</para>
+
+    <itemizedlist>
+        <listitem>
+<!-- 原文 samba-4.7.0
+          <para><constant>ntlmv1-permitted</constant>
+	  (alias <constant>yes</constant>) - Allow NTLMv1 and above for all clients.</para>
+-->
+          <para><constant>ntlmv1-permitted</constant>
+	  （<constant>yes</constant> の別名）- 全クライアントに対し、NTLMv1 以上の認証を許可する。</para>
+
+        </listitem>
+
+        <listitem>
+<!-- 原文 samba-4.7.0
+          <para><constant>ntlmv2-only</constant>
+	  (alias <constant>no</constant>) - Do not allow NTLMv1 to be used,
+	  but permit NTLMv2.</para>
+-->
+          <para><constant>ntlmv2-only</constant>
+	  （<constant>no</constant> の別名）- NTLMv1 の利用を許可せず NTLMv2 の利用を許可する。
+          </para>
+        </listitem>
+
+        <listitem>
+<!-- 原文 samba-4.7.0
+            <para><constant>mschapv2-and-ntlmv2-only</constant> - Only
+            allow NTLMv1 when the client promises that it is providing
+            MSCHAPv2 authentication (such as the <command
+            moreinfo="none">ntlm_auth</command> tool).</para>
+-->
+            <para><constant>mschapv2-and-ntlmv2-only</constant> - 
+            クライアントが（<command moreinfo="none">ntlm_auth</command> ツール
+            のような）MSCHAPv2 認証を提供することが確実である場合に限って 
+            NTLMv1 認証を行う。</para>
+        </listitem>
+
+        <listitem>
+<!-- 原文 samba-4.7.0
+          <para><constant>disabled</constant> - Do not accept NTLM (or
+          LanMan) authentication of any level, nor permit
+          NTLM password changes.</para>
+-->
+          <para><constant>disabled</constant> - NTLM（または LanMan）の
+          どのようなレベルであっても認証を受けつけない。また NTLM パスワード
+          の変更も受けつけない。</para>
+        </listitem>
+
+    </itemizedlist>
+
+<!-- 原文 samba-4.7.0
+    <para>The default changed from <constant>yes</constant> to
+    <constant>no</constant> with Samba 4.5.  The default chagned again
+    to <constant>ntlmv2-only</constant> with Samba 4.7, however the
+    behaviour is unchanged.</para>
+-->
+    <para>Samba 4.5 において、既定値が <constant>yes</constant> から
+    <constant>no</constant> に変更された。Samba 4.7 からはさらに
+    <constant>ntlmv2-only</constant> に変更されたが、その動作は変わって
+    いない。</para>
 
 </description>
 
 <related>lanman auth</related>
 <related>raw NTLMv2 auth</related>
-<value type="default">no</value>
+<value type="default">ntlmv2-only</value>
 </samba:parameter>
