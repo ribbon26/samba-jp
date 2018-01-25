@@ -4,20 +4,7 @@
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 
-	<para>
-	 Samba と ctdb を使う クラスター環境において、locking.tdb のような
-	 中心にある、ctdb でホスティングされたデータベース上でのロックは
-	 長時間保持されないことは非常に重大である。現在の Samba アーキテクチャ
-	 において、Samba がロックを行い、ロックをし続けている間、
-	 ロックは共有クラスターファイルシステム中にファイルシステムコールを
-	 行うことが起きる。このオプションは Samba に、もしも、指定された
-	 ミリセカンド秒の間でそれがロックを保持したことを検出させることを警告する。
-	 もしもこれが起きた場合、<emphasis>smbd</emphasis>はデバッグレベル0
-	 メッセージを、自身のログと場合によっては syslog に記録する。
-	 このようなログメッセージが出る最もよくある例は、Samba がエクスポートした
-	 クラスターファイルシステムが期待したよりも長く処理がかかっている場合である。
-	 このメッセージはクラスターにおける潜在的な問題のデバッグ手法として
-	意味がある。</para>
+<!-- 原文 samba-4.7.0
 	<para>
 	In a cluster environment using Samba and ctdb it is critical
 	that locks on central ctdb-hosted databases like locking.tdb
@@ -33,8 +20,27 @@
 	The messages are meant as a debugging aid for potential
 	cluster problems.
 	</para>
+-->
+	<para>
+	Samba と ctdb を使うクラスター環境において、
+	locking.tdb のような ctdb が扱う中心的なデータベースは、
+	長時間ロックしないことが重要である。
+	現在の Samba アーキテクチャにおいては、Samba がロックを行ったときに、
+	そのロックが続いた状態で、共有クラスターファイルシステムに対してファイルシステムコールが起きる場合がある。
+	指定したミリセカンド秒以上のロックの継続が検出された場合に、
+	このオプションによって Samba から警告を出力させることができる。
+	それが検出されたときには、<emphasis>smbd</emphasis> のログにデバッグレベル 0 のメッセージが出力され、
+	場合によっては syslog にも出力される。
+	このようなログメッセージが出力される理由として、
+	Samba がクラスターファイルシステムにおいて実行する処理が、
+	通常よりも長くかかってしまった場合に発生することが多い。
+	クラスターに関する潜在的な問題をデバッグする際には、このメッセージが役に立つこともある。
+	</para>
 
-	<para>既定値は0で、このログ出力を抑止する。</para>
+<!-- 原文 samba-4.7.0
+	<para>The default value of 0 disables this logging.</para>
+-->
+	<para>既定値は 0 で、このログ出力を抑止する。</para>
 
 </description>
 <value type="default">0</value>
