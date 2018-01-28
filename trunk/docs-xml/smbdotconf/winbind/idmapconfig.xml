@@ -4,65 +4,90 @@
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 
+<!-- 原文 samba-4.7.0
+	<para>
+	ID mapping in Samba is the mapping between Windows SIDs and Unix user
+	and group IDs. This is performed by Winbindd with a configurable plugin
+	interface. Samba's ID mapping is configured by options starting with the
+	<smbconfoption name="idmap config"/> prefix.
+	An idmap option consists of the <smbconfoption name="idmap config"/>
+	prefix, followed by a domain name or the asterisk character (*),
+	a colon, and the name of an idmap setting for the chosen domain.
+	</para>
+-->
 	<para>
 	Samba における ID のマッピングは、Windows SID と UNIX のユーザーと
-	グループとの間でのマッピングである。これは設定可能な(configurable)
+	グループとの間でのマッピングである。これは設定可能な（configurable）
 	プラグインインタフェースとして Winbindd によって処理される。Samba の
-	ID マッピングは、<smbconfoption name="idmap config"/>プレフィックス
+	ID マッピングは、<smbconfoption name="idmap config"/> プレフィックス
 	から始まるオプションによって設定される。
 	</para>
 
+
+<!-- 原文 samba-4.7.0
 	<para>
-	  idmap の構成は、それ故グループに分割され、1つのグループは
-	  各ドメイン毎に設定でき、特定のドメイン名の代わりに"*"をつかう
-	  グループは、それ固有の idmap 設定を明示的に持たないすべての
-	  ドメインに対して適用される、既定値の設定となる。
+	The idmap configuration is hence divided into groups, one group
+	for each domain to be configured, and one group with the
+	asterisk instead of a proper domain name, which specifies the
+	default configuration that is used to catch all domains that do
+	not have an explicit idmap configuration of their own.
+	</para>
+-->
+	<para>
+	idmap の構成は、それ故グループに分割され、1 つのグループは
+	各ドメイン毎に設定でき、特定のドメイン名の代わりに "*" をつかう
+	グループは、それ固有の idmap 設定を明示的に持たないすべての
+	ドメインに対して適用される、既定値の設定となる。
 	</para>
 
+<!-- 原文 samba-4.7.0
+	<para>
+	There are three general options available:
+	</para>
+-->
         <para>
-        3つの基本オプションが存在する:
+        3 つの基本オプションが存在する。
         </para>
 
 	<variablelist>
 		<varlistentry>
 		<term>backend = backend_name</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		This specifies the name of the idmap plugin to use as the
+		SID/uid/gid backend for this domain. The standard backends are
+		...
+-->
                 <listitem><para>
 		これは、このドメインに対して SID/uid/gid バックエンドとして
 		使う idmap プラグインの名前を指定する。標準のバックエンドは、
 		tdb
-		(<citerefentry><refentrytitle>idmap_tdb</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>),
+		（<citerefentry><refentrytitle>idmap_tdb</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>）、
 		tdb2
-		(<citerefentry><refentrytitle>idmap_tdb2</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+		（<citerefentry><refentrytitle>idmap_tdb2</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
 		ldap
-		(<citerefentry><refentrytitle>idmap_ldap</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+		（<citerefentry><refentrytitle>idmap_ldap</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
 		rid
-		(<citerefentry><refentrytitle>idmap_rid</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+		（<citerefentry><refentrytitle>idmap_rid</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
 		hash
-		(<citerefentry><refentrytitle>idmap_hash</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+		（<citerefentry><refentrytitle>idmap_hash</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
 		autorid
-		(<citerefentry><refentrytitle>idmap_autorid</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
+		（<citerefentry><refentrytitle>idmap_autorid</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
 		ad
-		(<citerefentry><refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum></citerefentry>),
-		,
-		と nss
-		(<citerefentry><refentrytitle>idmap_nss</refentrytitle> <manvolnum>8</manvolnum></citerefentry>)
+		（<citerefentry><refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）、
+		nss
+		（<citerefentry><refentrytitle>idmap_nss</refentrytitle> <manvolnum>8</manvolnum></citerefentry>）
 		である。
+<!-- 原文 samba-4.7.0
+		The corresponding manual pages contain the details, but
+		here is a summary.
+		</para>
+-->
 		対応するマニュアルページには詳細が記載されているが、以下はその
 		要約である。
 		</para>
+<!-- 原文 samba-4.7.0
 		<para>
-		  最初の3つは、内部 unixid カウンターを使いそれら固有のマップを作成し、
-		  データベースに格納する。それらは標準の idmap 構成中で使うために
-		  適している。rid と hash バックエンドは、SID用に、 unixid を決める
-		  ために完全なアルゴリズムによる計算方法を使っている。autrid
-		  モジュールはtdb と rid バックエンドの合成である。これは、
-		  対応する各ドメイン用のレンジを生成し、独立して、それらの
-		  自動的に設定された各ドメインに rid アルゴリズムを適用する。
-		  ad バックエンドは unix ID を標準のスキーマ
-		  拡張経由で Active Directory に格納する。nss バックエンドは
-		  標準的な winbindd 設定を反転し、ldap の設定中で便利な、
-		  nsswitch からの名前経由でunixid を得る。
-		  
 		The first three of these create mappings of their own using
 		internal unixid counters and store the mappings in a database.
 		These are suitable for use in the default idmap configuration.
@@ -76,18 +101,48 @@
 		the standard winbindd setup and gets the unix ids via names
 		from nsswitch which can be useful in an ldap setup.
 		</para></listitem>
+-->
+		<para>
+		最初の 3 つは、内部 unixid カウンターを使いそれら固有のマップを作成し、
+		データベースに格納する。それらは標準の idmap 構成中で使うために
+		適している。rid と hash バックエンドは、SID用に、 unixid を決める
+		ために完全なアルゴリズムによる計算方法を使っている。autrid
+		モジュールは tdb と rid バックエンドの合成である。これは、
+		対応する各ドメイン用のレンジを生成し、独立して、それらの
+		自動的に設定された各ドメインに rid アルゴリズムを適用する。
+		ad バックエンドは unix ID を標準のスキーマ
+		拡張経由で Active Directory に格納する。nss バックエンドは
+		標準的な winbindd 設定を反転し、ldap の設定中で便利な、
+		nsswitch からの名前経由で unixid を得る。
+		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>range = low - high</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		Defines the available matching uid and gid range for which the
+		backend is authoritative. For allocating backends, this also
+		defines the start and the end of the range for allocating
+		new unique IDs.
+		</para>
+-->
                 <listitem><para>
-		バックエンドの管轄下にある、利用可能なuidとgidの範囲を指定する。
+		バックエンドの管轄下にある、利用可能な uid と gid の範囲を指定する。
 		すべての割り当てを行うバックエンドには、これはまた、
 		新しい ユニーク ID を割り当てるための、レンジの開始終了も定義する。
                 </para>
+<!-- 原文 samba-4.7.0
 		<para>
-		Winbindは、このパラメーターを使って信頼できるバックエンドから
-		unix IDとSIDのマッピング情報を検索する。そのため、各ドメイン
+		winbind uses this parameter to find the backend that is
+		authoritative for a unix ID to SID mapping, so it must be set
+		for each individually configured domain and for the default
+		configuration. The configured ranges must be mutually disjoint.
+		</para></listitem>
+-->
+		<para>
+		Winbind は、このパラメーターを使って信頼できるバックエンドから
+		unix ID と SID のマッピング情報を検索する。そのため、各ドメイン
 		ごとと、既定値用に設定する必要がある。設定されたレンジはお互いに
 		重複してはならない。
 		</para></listitem>
@@ -95,39 +150,55 @@
 
                 <varlistentry>
                 <term>read only = yes|no</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		This option can be used to turn the writing backends
+		tdb, tdb2, and ldap into read only mode. This can be useful
+		e.g. in cases where a pre-filled database exists that should
+		not be extended automatically.
+		</para></listitem>
+-->
                 <listitem><para>
-		  このオプションは、tdb、tdb2とldap バックエンドをリードオンリ
-		  モードにするのに使うことが出来る。これは、たとえば、あらかじめ
-		  データが入っている、自動的に拡張すべきでない、データベースを
-		  使う場合に便利である。
-                This option can be used to turn the writing backends
-                tdb, tdb2, and ldap into read only mode. This can be useful
-                e.g. in cases where a pre-filled database exists that should
-                not be extended automatically.
+		このオプションは、tdb、tdb2 と ldap バックエンドをリードオンリ
+		モードにするのに使うことが出来る。これは、たとえば、あらかじめ
+		データが入っている、自動的に拡張すべきでない、データベースを
+		使う場合に便利である。
                 </para></listitem>
 
 		</varlistentry>
 	</variablelist>
 
+<!-- 原文 samba-4.7.0
 	<para>
-	次の例はCORPドメインが<citerefentry><refentrytitle>idmap_ad</refentrytitle>
+	The following example illustrates how to configure the <citerefentry>
+	<refentrytitle>idmap_ad</refentrytitle> <manvolnum>8</manvolnum>
+	</citerefentry> backend for the CORP domain and the
+	<citerefentry><refentrytitle>idmap_tdb</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> backend for all other
+	domains. This configuration assumes that the admin of CORP assigns
+	unix ids below 1000000 via the SFU extensions, and winbind is supposed
+	to use the next million entries for its own mappings from trusted
+	domains and for local groups for example.
+	</para>
+-->
+	<para>
+	次の例は CORP ドメインが<citerefentry><refentrytitle>idmap_ad</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry> バックエンド
-	で、他の全てのドメインが<citerefentry><refentrytitle>idmap_tdb</refentrytitle>
+	で、他の全てのドメインが <citerefentry><refentrytitle>idmap_tdb</refentrytitle>
 	<manvolnum>8</manvolnum></citerefentry> バックエンドとしてどのように
 	設定されるかを示している。
-	この設定では、CORPドメインの管理者がSFUを使って1000000以下をアサイン
-	しており、winbindが次の1000000台を、自分の管轄下のドメインとローカル
+	この設定では、CORP ドメインの管理者が SFU を使って 1000000 以下をアサイン
+	しており、winbind が次の 1000000 台を、自分の管轄下のドメインとローカル
 	グループのためのマッピングに使う場合の例である。
 	</para>
-	
+
 	<programlisting>
-	idmap backend = tdb
         idmap config * : backend = tdb
         idmap config * : range = 1000000-1999999
 
 	idmap config CORP : backend  = ad
 	idmap config CORP : range = 1000-999999
 	</programlisting>
-	
+
 </description>
 </samba:parameter>
