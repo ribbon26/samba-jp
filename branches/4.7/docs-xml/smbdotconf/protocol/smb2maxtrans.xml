@@ -1,0 +1,23 @@
+<samba:parameter name="smb2 max trans"
+		type="byte"
+		context="G"
+		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<para>このオプションは、<citerefentry><refentrytitle>smbd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry>が、QUERY_INFOと関連するSMB2呼び出し経由での
+ファイルメタデータの問い合わせで使われるだろう最大のバッファーサイズをクライアントに
+通知する、プロトコル値を指定する。
+This option specifies the protocol value that <citerefentry><refentrytitle>smbd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry> will return to a client, informing the client of the largest
+size of buffer that may be used in querying file meta-data via QUERY_INFO and related SMB2 calls.
+</para>
+<para>既定値は8388608バイト(8MiB)で、これはWindows Server 2012 R2 と同じである。</para>
+<para>既定値は 8MiBであるが、この限界は、
+smb2 dialect (64KiB は SMB == 2.0、 1MiB は SMB >= 2.1 で LargeMTU指定の時)
+に基づくことに留意。Large MTU は、NBT上(tcp ポート139)ではサポートされない。</para>
+</description>
+
+<related>smb2 max read</related>
+<related>smb2 max write</related>
+<value type="default">8388608</value>
+</samba:parameter>

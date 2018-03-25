@@ -1,0 +1,53 @@
+<samba:parameter name="kerberos encryption types"
+                 context="G"
+                 type="enum"
+		 enumlist="enum_kerberos_encryption_types_vals"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+    このパラメータは、Kerberos クライントとしての動作時に、利用する暗号タイプを設定する。
+    とりうる値は<emphasis>all</emphasis>, <emphasis>strong</emphasis>, <emphasis>legacy</emphasis>
+    である。
+    </para>
+
+    <para>
+    Samba が Kerberos チケットを必要とする場合は Kerberos ライブラリ (MIT または Heimdal) を利用する。
+    このライブラリは通常 krb5.conf ファイルによって Samba とは無関係に設定が行われる。
+    そのファイルにおいてはディレクティブにより利用する暗号タイプを設定する。
+    一方 Samba には Active Directory プロトコルとドメインコントローラーを定めるアルゴリズムがある。
+    したがって Kerberos ライブラリが正しくドメインコントローラーを利用するように以下のような仕組みを設けている。
+    すなわち <citerefentry><refentrytitle>winbindd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> や
+    <citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>
+    といった Samba プロセスにおいて、独自の krb5.conf ファイルを作り出し、Samba から呼び出された Kerberos ライブラリは
+    このファイルを用いるようにしている。
+    この独自のファイルは Kerberos ライブラリの処理をすべて制御し、
+    本パラメーターはその独自ファイル内において暗号タイプの設定を制御する。
+    つまりは Samba が扱う暗号タイプを制御することにもなる。
+    </para>
+
+    <para>
+    <constant>all</constant> を設定すると、 Active Directory における暗号タイプをすべて許可する。
+    </para>
+
+    <para>
+    <constant>strong</constant> を設定すると、AES ベースの暗号タイプのみを利用する。
+    これはダウンクレード攻撃を避けるような堅牢な環境において利用する。
+    </para>
+
+    <para>
+    <constant>legacy</constant> を設定すると RC4-HMAC-MD5 のみを許可する。
+    この設定によって AES を不許可とすることは特殊なことである。
+    普通、暗号タイプはノード間で調停するものである。しかしながら、
+    一つ、本パラメーターの利用状況が考えられる。
+    Windows において読み込み専用のドメインコントローラー (RODC) が AES 暗号化を採用
+    しているが、書き込み可能なドメインコントローラー、ただし AES 暗号化はサポートしていないものに対して、
+    プロキシーを介してリクエストを送信すると、ハンドシェイクに失敗する。
+    本パラメーターを <constant>legacy</constant> に設定すれば Samba は AES 暗号化による調停は行わない。
+    ただし通信確立の際には、より軽度な暗号タイプが利用可能であることを前提とする。
+    </para>
+</description>
+
+<value type="default">all</value>
+</samba:parameter>
