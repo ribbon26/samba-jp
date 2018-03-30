@@ -7,7 +7,7 @@
 	<manvolnum>7</manvolnum>
 	<refmiscinfo class="source">Samba</refmiscinfo>
 	<refmiscinfo class="manual">その他</refmiscinfo>
-	<refmiscinfo class="version">4.7</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
 </refmeta>
 
 
@@ -26,7 +26,8 @@
 	<para> Sambaシステムは、Server Message Block (通常 SMB と略される) 
 	プロトコルの実装と、Active Directory サービスを提供する UNIX 用
 	プログラムの集合体である。
-	このプロトコルは、Common Internet File System(CIFS) として言及される
+	最初のバージョンの SMB プロトコルは、しばしば、
+	Common Internet File System(CIFS) として言及される
 	こともある。より詳細な説明は、<ulink url="http://www.ubiqx.org/cifs/">
 	http://www.ubiqx.org/cifs/</ulink> を参照のこと。
 	また Samba は nmbd によって NetBIOS プロトコルを実装する。</para>
@@ -46,9 +47,8 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smbd</refentrytitle>
 		<manvolnum>8</manvolnum></citerefentry></term>
-		<listitem><para><command>smbd</command> デーモンは Windows 
-		95/98、Windows NT、Windows for Workgroups 、 LAN
-		Manager といった SMB クライアントに対し、ファイルとプリンターのサービスを提供する。
+		<listitem><para><command>smbd</command> デーモンは
+		SMB クライアントに対し、ファイルとプリンターのサービスを提供する。
 		このデーモンの設定ファイルは <citerefentry><refentrytitle>
 		smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
 		にて説明している。
@@ -77,10 +77,10 @@
 		<term><citerefentry><refentrytitle>smbclient</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbclient</command> プログラムは
-		シンプルな ftp クライアントのような機能を提供する。これは、(Windows
-		NT のような) 互換性のあるサーバーの SMB 共有へのアクセスに便利である。
-		また、これを用いることで、UNIX マシンから SMB サーバー (Windows
-		NT が動作している PC など) に接続されているプリンターへの印刷も可能となる。</para>
+		シンプルな ftp クライアントのような機能を提供する。これは、
+		互換性のある SMB サーバーの SMB 共有へのアクセスに便利である。
+		また、これを用いることで、UNIX マシンから SMB サーバー 
+		に接続されているプリンターへの印刷も可能となる。</para>
 		</listitem>
 		</varlistentry>
 
@@ -98,7 +98,9 @@
 		<listitem><para><command>testparm</command> ユーティリティは、
 		Samba の <citerefentry><refentrytitle>smb.conf</refentrytitle>
 		<manvolnum>5</manvolnum></citerefentry> 
-		設定ファイルに対するシンプルな文法チェッカである。</para>
+		設定ファイルに対するシンプルな文法チェッカである。
+	        AD サーバ モードにおいては、<command>samba-tool testparm</command>
+		を使うべきである。</para>
 		</listitem>
 		</varlistentry>
 
@@ -124,8 +126,8 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>nmblookup</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
-		<listitem><para><command>nmblookup</command> ツールは、UNIX
-		ホストから NetBIOS 名の問い合わせを行うことを可能にする。
+		<listitem><para><command>nmblookup</command> ツールは、
+		NetBIOS 名の問い合わせを行うことを可能にする。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -133,9 +135,8 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smbpasswd</refentrytitle>
 		<manvolnum>8</manvolnum></citerefentry></term>
-		<listitem><para><command>smbpasswd</command> コマンドは、Samba
-		や Windows NT サーバーの LanMan や NTLM
-		のパスワードハッシュ値を変更するツールである。
+		<listitem><para><command>smbpasswd</command> コマンドは、
+		ローカルおよびリモートの Samba パスワードを設定するツールである。
 		</para>
 		</listitem>
 		</varlistentry>
@@ -144,7 +145,7 @@
 		<term><citerefentry><refentrytitle>smbcacls</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbcacls</command> コマンドはリモート
-		CIFS サーバーの ACL を設定するツールである。</para>
+		SMB サーバーの ACL を設定するツールである。</para>
 		</listitem>
 		</varlistentry>
 
@@ -159,8 +160,8 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>smbtar</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
-		<listitem><para><command>smbtar</command> は CIFS/SMB
-		サーバーのデータバックアップをとるツールである。
+		<listitem><para><command>smbtar</command> は SMB
+		サーバーのデータディレクトリのバックアップを取るツールである。
 		</para></listitem>
 		</varlistentry>
 
@@ -184,7 +185,7 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>rpcclient</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
-		<listitem><para><command>rpcclient</command> はリモートの CIFS
+		<listitem><para><command>rpcclient</command> はリモートの SMB
 		サーバーに対して RPC コマンドを実行することができる
 		ユーティリティである。</para></listitem>
 		</varlistentry>
@@ -206,8 +207,9 @@
 		<varlistentry>
 		<term><citerefentry><refentrytitle>net</refentrytitle>
 		<manvolnum>8</manvolnum></citerefentry></term>
-		<listitem><para><command>net</command> コマンドは DOS/Windows
-		の NET.EXE コマンドと似た動作をする。
+		<listitem><para><command>net</command> コマンドは
+		Samba メンバとスタンドアロンサーバの管理を行なう
+		主要なツールである。
 		</para></listitem>
 		</varlistentry>
 
@@ -254,7 +256,7 @@
 		<term><citerefentry><refentrytitle>smbcquotas</refentrytitle>
 		<manvolnum>1</manvolnum></citerefentry></term>
 		<listitem><para><command>smbcquotas</command> はリモート
-		サーバーの NTFS5 の QUOTA を設定するツールである。</para>
+		サーバーの QUOTA を管理するツールである。</para>
 		</listitem>
 		</varlistentry>
 	</variablelist>
@@ -268,12 +270,12 @@
 	Samba に付属するドキュメントと、使用するコンポーネントの
 	マニュアルページを読むことを強く推奨する。
 	マニュアルページの中によくわからない所があれば、
-	<ulink url="http://devel.samba.org/">http://devel.samba.org</ulink>
+	<ulink url="https://devel.samba.org/">https://devel.samba.org</ulink>
 	からバグレポートの報告やパッチの提供に関する情報を取得できる。
 	</para>
 
 	<para>もしなんらかの助けが必要な場合、Samba の Web サイト
-	<ulink url="http://www,samba.org/">http://www.samba.org/</ulink>
+	<ulink url="https://www,samba.org/">https://www.samba.org/</ulink>
 	を参照してほしい。
 	さまざまなオプションが利用できる筈である。
 	</para>
@@ -288,26 +290,25 @@
 	Samba システムの複製を配布することは奨励されているが、
 	このライセンスをきちんと遵守してほしい。</para>
 
-	<para>Sambaシステムの最新版は anonymous ftp によって
-	samba.org のディレクトリ pub/samba/ から入手できる。
-	また世界中のさまざまなミラー・サイトからも入手可能である。</para>
+	<para>Sambaシステムの最新版は
+	<ulink url="https://download.samba.org/pub/samba/">
+	https://download.samba.org/pub/samba/</ulink> にある。
+	</para>
 
-	<para>Samba の有益な情報は <ulink url="news:comp.protocols.smb">
-	comp.protocol.smb</ulink> ニュースグループや、Samba メーリングリスト
-	から入手することができるかもしれない。
-	メーリングリストに参加するための詳細な情報は、Samba に付属している
-	README ファイルに記されている。</para>
-	
-	<para>もし Web ブラウザー (Mozilla や Konqueror など)
-	が使えるなら、<ulink url="http://lists.samba.org/">
-	http://lists.samba.org</ulink> にて Samba メーリングリストの過去記事を
-	含む多くの有用な情報を得ることができる。</para>
+	<para> Samba Wiki は
+	<ulink url="https://wiki.samba.org/">https://wiki.samba.org</ulink>
+	にあり、数多くの有用な情報がある。
+	Samba メーリングリストは
+	<ulink url="https://lists.samba.org/">https://lists.samba.org</ulink>
+	で、過去の有用な情報があり、メーリングリストに参加することで、
+	種々の事項についての助言を得たり議論ができる。
+	</para>
 </refsect1>
 
 <refsect1>
 	<title>バージョン</title>
 	
-	<para>このマニュアルページは、Samba システムのバージョン 4 用である。
+	<para>このマニュアルページは、Samba バージョン &doc.version; 用である。
 	</para>
 </refsect1>
 
@@ -315,12 +316,12 @@
 	<title>協力</title>
 	
 	<para>Samba プロジェクトに協力したいと考えるなら、
-	<ulink url="http://lists.samba.org/">http://lists.samba.org</ulink> の
+	<ulink url="https://lists.samba.org/">https://lists.samba.org</ulink> の
 	Samba メーリングリストに加入することを勧める。
 	</para>
 
 	<para>提供可能なパッチや報告すべきバグを持っているなら、
-	<ulink url="http://devel.samba.org/">http://devel.samba.org/</ulink>
+	<ulink url="https://devel.samba.org/">https://devel.samba.org/</ulink>
 	を参照してパッチ提供の方法に関する情報を入手してほしい。
 	パッチは <command>diff -u</command> 形式が望ましい。</para>
 </refsect1>
@@ -332,8 +333,8 @@
 	全員が全ての Samba ユーザーから称賛されるに値する。
 	全員のリストを見るには、cvs で管理する以前については
 	ソースパッケージ中の <filename>change-log</filename> を、git で管理するようになってからの
-	貢献者については <ulink url="http://git.samba.org/">
-	http://git.samba.org/</ulink> を参照のこと。
+	貢献者については <ulink url="https://git.samba.org/">
+	https://git.samba.org/</ulink> を参照のこと。
 	GIT は Samba Team が Samba の開発に利用しているオープンソースの
 	ソース管理システムである。
 	このプロジェクトは、git 無しには管理しきれないに違いない。
@@ -349,20 +350,11 @@
 	オープンソースプロジェクトである Samba Team によって開発されている。
 	</para>
 
-	<para>オリジナルの Samba の マニュアルページは Karl Auer
-	によって書かれた。
-	マニュアルページは YODL 形式 (別の優秀なオープンソースソフトウェアで、
-	<ulink url="ftp://ftp.icce.rug.nl/pub/unix/">
-	ftp://ftp.icce.rug.nl/pub/unix/</ulink> にある) で変換され、
-	Jeremy Allison によって Samba 2.0 リリースのために更新された。
-	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。
-	Samba 3.0 のための DocBook XML 4.2 への変換は Alexander Bokovoy に
-	よって行われた。</para>
 </refsect1>
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.1.0 - 4.7.6 に対応する。</para>
+	<para>このマニュアルページは Samba 4.8.0 - 4.8.0 に対応する。</para>
         <para>このマニュアルページの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
@@ -373,7 +365,7 @@
         によって行なわれた。</para>
 
 	<para>このマニュアルページの Samba 3.0.23 - 3.6.9 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>このマニュアルページの Samba 4.0.0 - 4.7.6 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>このマニュアルページの Samba 4.0.0 - 4.8.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 
 </refsect1>
 
