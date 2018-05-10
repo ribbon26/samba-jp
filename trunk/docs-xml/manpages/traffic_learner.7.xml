@@ -107,16 +107,22 @@
 	</varlistentry>
 -->
         <listitem><para>
-	The traffic-model that is produced will be written to this file. The
-	OUTPUT_FILE can then be passed to <command>traffic_replay</command>
-	to generate (and manipulate) Samba network traffic.
+	生成されたトラフィックモデルを書き込むファイルを指定する。
+	OUTPUT_FILE は、Samba のネットワークトラフィックを生成
+	(および操作)するために、<command>traffic_replay</command>
+	に渡すことができる。
 	</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
 	<term>--dns-mode [inline|count]</term>
+<!-- Samba 4.8.0
 	<listitem><para>
 	How DNS traffic should be handled by the model.
+	</para></listitem>
+-->
+        <listitem><para>
+	モデルによって扱われる DNS トラフィックの指定。
 	</para></listitem>
 	</varlistentry>
 
@@ -124,8 +130,9 @@
 </refsect1>
 
 <refsect1>
-	<title>EXAMPLES</title>
+	<title>例</title>
 
+<!--
 	<para>To take a traffic-summary file and produce a traffic-model
 	file, use:</para>
 
@@ -134,6 +141,18 @@
 
 	<para>To generate a traffic-model from a packet capture, you can
 	pipe the traffic summary to STDIN using:</para>
+
+	<para><command>tshark -r capture.pcapng -T pdml |
+	traffic_summary.pl | traffic_learner -o traffic-model.txt</command></para>
+-->
+        <para>traffic-summary ファイルを使い、traffic-model ファイルを
+	生成するには、以下のように行なう:</para>
+
+	<para><command>traffic_learner traffic-summary.txt
+	-o traffic-model.txt</command></para>
+
+	<para>パケットキャプチャから traffic-model を生成するには、
+	以下のように、traffic summary を標準入力に繋ぐ:</para>
 
 	<para><command>tshark -r capture.pcapng -T pdml |
 	traffic_summary.pl | traffic_learner -o traffic-model.txt</command></para>
