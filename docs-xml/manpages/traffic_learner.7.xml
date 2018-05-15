@@ -181,7 +181,7 @@
 	それらのカウントの比率が、次のパケットの確率を計算するのに使われる。
 	</para>
 
-	<para>モデルは JSON 形式で格納され、さらに、 conversation レートと
+	<para>モデルは JSON 形式で格納され、さらに、 通信 レートと
 	DNS トラフィックレートについての情報も格納されている。
 	</para>
 
@@ -206,7 +206,7 @@
              }, <lineannotation>[...]</lineannotation>
           }
         </programlisting>
-<!--
+<!-- Samba 4.8.0
         <para> This counts the observed continuations after an ldap
         packet with opcode 0 (a bind) followed by a dcerpc packet with
         opcode 11 (also a bind). The most common next packet is
@@ -226,6 +226,7 @@
 	これは1回だけ現れ、めったに発生しないが、リプライで選択される
 	可能性はある。
         </para>
+<!-- Samba 4.8.0
         <para> There are two special packet types here.
         "<code>wait:3</code>" refers to a temporary pause in the
         conversation, where the "<code>3</code>" pseudo-opcode indicates
@@ -233,13 +234,27 @@
         "<code>wait:4</code>" pause would be about 2.7 times longer that
         a "<code>wait:3</code>", which in turn would be similarly longer
         than a "<code>wait:2</code>".
+-->
+        </para>
+        <para> 2つの特別なパケットタイプがある。
+        "<code>wait:3</code>" は、 通信中の一時的な中断を参照し、
+	"<code>3</code>" 疑似オペコードは、待ち時間の長さを指数形式で指示する。
+        そのため、"<code>wait:4</code>" は、 "<code>wait:3</code>", よりも
+	約 2.7 倍長くなり、同様に "<code>wait:2</code>" よりも長くなる。
         </para>
 
+<!-- Samba 4.8.0
 	<para>The other special packet is "-", which represents the
 	limit of the conversation. In the example, this indicates that
 	one observed conversation ended after this particular ngram.
 	This special opcode is also used at the beginning of
 	conversations, which are indicated by the ngram "<code>-\t-</code>".
+	</para>
+-->
+	<para>その他の特別なパケットは "-" で、これは 通信の限界を示す。
+	例においては、これは、この特定の ngram の後で、1つの観測された
+	通信が終わることを指定する。この特別なオペコードは、
+	ngram "<code>-\t-</code>" と示すことで、通信の開始にも使う。
 	</para>
 
 
