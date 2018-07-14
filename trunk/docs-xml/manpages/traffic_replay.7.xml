@@ -286,7 +286,9 @@
 
 	<varlistentry>
 	<term>--generate-users-only</term>
-	<listitem><para>Add extra user/groups on the DC to increase the DB
+        <listitem>
+<!-- Samba 4.8.0
+        <para>Add extra user/groups on the DC to increase the DB
 	size. By default, this tool automatically creates test users that map
 	to the traffic conversations being generated. This option allows extra
 	users to be created on top of this. Note that these extra users may
@@ -299,41 +301,76 @@
 	option allows this to be done only once.</para>
 
 	<para>Note that the users created will remain on the DC until the
-	tool is run with the --clean-up option. This means that it is best to
-	only assign group memberships once, i.e. run --clean-up before
+	tool is run with the - -clean-up option. This means that it is best to
+	only assign group memberships once, i.e. run - -clean-up before
 	assigning a different allocation of group memberships.</para>
-	<itemizedlist>
+-->
+        <para>DBサイズを増大させるために、追加の ユーザ/グループを追加する。
+	既定値では、このツールは自動的にトラフィックのやりとりを生成する際に
+	マップされるテストユーザを作成する。このオプションで、追加のユーザを
+	この上に作成することが出来る。それら追加したユーザはトラフィックの
+	生成には実際には使われない事に注意 - トラフィック生成は、モデル/サマリ
+	ファイルからいくつかのやりとりをベースにして作成される。
+	</para>
+	
+	<para>
+	大量のユーザ作成には長時間かかるので、オプションは１回だけ実行できる。
+	</para>
+
+	<para>作成されたユーザは、--clean-up オプションを指定して実行するまで、
+	引き続きDC上に残っていることに注意。このことは、グループメンバシップを
+	１回だけ割り当てる事を推奨する、すなわち、--clean-up オプション付きで
+	実行する前に、グループメンバシップの異なった割り当てを行う。</para>
+       <itemizedlist>
 
 		<varlistentry>
 		<term>-n|--number-of-users &lt;total-users&gt;</term>
 		<listitem><para>
-		Specifies the total number of test users to create (excluding
+<!-- Samba 4.8.0
+	        Specifies the total number of test users to create (excluding
 		any machine accounts required for the traffic). Note that these
 		extra users simply populate the DC's DB - the actual user
 		traffic generated is still based on the summary-file.
+-->
+                作成すべきユーザの総数を指定する(トラフィックで要求される
+		任意のマシンアカウントは除く)。これら追加ユーザは DC 上の DB
+		で単に populate されることに注意 - 生成された実際のユーザ
+		トラフィックはサマリファイルをベースにしている。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>--number-of-groups &lt;total-groups&gt;</term>
 		<listitem><para>
-		Creates the specified number of groups, for assigning the test
+<!--
+		 Creates the specified number of groups, for assigning the test
 		users to. Note that users are not automatically assigned to
-		groups - use either --average-groups-per-user or
-		--group-membership to do this.
+		groups - use either - -average-groups-per-user or
+		- -group-membership to do this.
+-->		
+                テストユーザを割り当てるため、指定された数のグループを作成する。
+		ユーザは自動的にグループに割り当てられないことに注意 -
+		--average-groups-per-user か --group-membership を使うこと。
 		</para></listitem>
 		</varlistentry>
 
 		<varlistentry>
 		<term>--average-groups-per-user &lt;average-groups&gt;</term>
 		<listitem><para>
+<!--
 		Randomly assigns the test users to the test groups created.
 		The group memberships are distributed so that the overall
 		average groups that a user is member of matches this number.
 		Some users will belong to more groups and some users will
 		belong to fewer groups. This option is incompatible with
-		the --group-membership option.
-		</para></listitem>
+		the - -group-membership option.
+-->
+		作成されたテストグループに、テストユーザをランダムに割り当てる。
+		全体のユーザが所属する平均的なグループがこの数と一致するので、
+		グループメンバシップが配分される。あるユーザはより多くの
+		グループに所属し、あるユーザはより少ないグループに属している。
+		このオプションは  --group-membership オプションとは非互換である。
+               </para></listitem>
 		</varlistentry>
 
 		<varlistentry>
