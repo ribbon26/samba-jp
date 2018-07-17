@@ -163,7 +163,7 @@
 
 	<varlistentry>
 	<term>-F|--fixed-password &lt;test-password&gt;</term>
-<!--
+<!-- Samba 4.8.0
  	<listitem><para>
 	Test users are created when this tool is run, so that actual Samba
 	activity, such as authorizing users, can be mimicked. This option
@@ -232,7 +232,7 @@
 		<varlistentry>
 		<term>-S|--scale-traffic &lt;factor&gt;</term>
 		<listitem><para>
-<!--
+<!-- Samba 4.8.0
 		Increases the number of conversations by this factor. This
 		option won't affect the rate at which packets get sent (which
 		is still based on the traffic model), but it will mean more
@@ -246,7 +246,7 @@
 
 		<varlistentry>
 		<term>--traffic-summary &lt;output-file&gt;</term>
-<!--
+<!-- Samba 4.8.0
 		<listitem><para>
 		Instead of replaying a traffic-model, this option generates a
 		traffic-summary file based on what traffic would be sent. Using
@@ -540,6 +540,7 @@
 <title>OPERATIONS</title>
 
 <refsect2>
+<!-- Samba 4.8.0
 	<title>Generating a traffic-summary file</title>
 	<para>To use this tool, you need either a traffic-summary file or a
 	traffic-model file. To generate either of these files, you will need a
@@ -550,13 +551,34 @@
 	of users logging on, then take a capture at 8:30am when users are
 	logging in.</para>
 
-	<para>Next, you need to convert your packet capture into a traffic
+        <para>Next, you need to convert your packet capture into a traffic
 	summary file, using <command>traffic_summary.pl</command>. Basically
 	this removes any sensitive information from the capture and summarizes
 	what type of packet was sent and when.</para>
 
-	<para>Refer to the <command>traffic_summary.pl --help</command> help for more
+-->
+	<title>トラフィックサマリファイルの生成</title>
+	<para>このツールを使うためには、トラフィックサマリファイルか
+	トラフィックモデルファイルのどちらかが必要である。それらの
+	ファイルを生成するためには、使用しているネットワーク上で、
+	実際に Samba の動作をパケットキャプチャする必要がある。</para>
+
+	<para>生成したいネットワーク上で、Wiresharkを使ってパケットキャプチャを
+	取るのが良いだろう。例えば、多数のユーザがログオンするのをシミュレート
+	したい場合は、ユーザがログインする 午前8:30にパケットキャプチャを取る。
+	</para>
+
+	<para>次に、取得したパケットキャプチャをトラフィックサマリファイルに
+	変換する必要がある。これには、<command>traffic_summary.pl</command>
+	を使う。基本的に、この作業では、キャプチャから機敏情報を削除し、
+	いつ、どのようなタイプのパケットが送られたかということを要約する。
+	</para>
+<!-- Samba 4.8.0
+	<para>Refer to the <command>traffic_summary.pl - -help</command> help for more
 	details, but the basic command will look something like:</para>
+-->
+	<para>詳細は<command>traffic_summary.pl --help</command> ヘルプを
+	してほしいが、基本的なコマンドは以下のようになる:</para>
 
 	<para><command>tshark -r capture.pcapng -T pdml |
 	traffic_summary.pl &gt; traffic-summary.txt</command></para>
