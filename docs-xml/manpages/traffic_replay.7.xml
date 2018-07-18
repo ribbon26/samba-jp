@@ -608,7 +608,7 @@
 	my-dc.samdom.example.com -UAdmin%password -W samdom
 	--realm=samdom.example.com --fixed-password=blahblah123!</command>
 	</para>
-<!--
+<!-- Samba 4.8.0
 	<para>This simply regenerates Samba activity seen in the traffic
 	summary. The traffic is grouped into 'conversations' between a host and
 	the DC.	A user and machine account is created on the DC for each
@@ -663,7 +663,8 @@
 </refsect2>
 
 <refsect2>
-	<title>Generating a traffic-model file</title>
+  <title>トラフィックモデルファイルの生成</title>
+<!-- Samba 4.8.0
 	<para>To create a traffic-model file, simply pass the traffic-summary
 	file to the <command>traffic_learner</command> script. E.g.</para>
 
@@ -672,10 +673,21 @@
 
 	<para>This generates a model of the Samba activity in your network.
 	This model-file can now be used to generate traffic.</para>
+-->
+	<para>トラフィックモデルを生成するためには、単にトラフィックサマリ
+	を以下のように、<command>traffic_learner</command>スクリプトに渡すだけである。
+	</para>
+
+	<para><command>traffic_learner traffic-summary.txt
+	-o traffic-model.txt</command></para>
+
+	<para>これは、使用しているネットワーク上での、 Samba 動作のモデルを生成する。
+	このモデルファイルは、トラフィックの生成に使うことが出来る。</para>
 </refsect2>
 
 <refsect2>
-	<title>Replaying the traffic-model file</title>
+	<title>トラフィックサマリファイルの再生</title>
+<!-- Samba 4.8.0
 	<para>Packet generation using a traffic-model file uses the same
 	command as a traffic-summary file, e.g.</para>
 
@@ -684,9 +696,20 @@
 	</para>
 
 	<para>By default, this will generate 60 seconds worth of traffic based
-	on the model. You can specify longer using the --duration parameter.
+	on the model. You can specify longer using the - -duration parameter.
+	</para>
+-->
+	<para>トラフィックモデルを使ったパケットの生成は、以下のように、
+	トラフィックサマリファイルに対するコマンドと同じである。</para>
+
+	<para><command>traffic_replay traffic-model.txt
+	my-dc.samdom.example.com -UAdmin%password</command>
 	</para>
 
+	<para>既定値では、モデルに基づいて、60秒分のトラフィックを生成する。
+	それより長くしたい場合は --duration パラメータを指定する。
+	</para>
+<!-- Samba 4.8.0
 	<para>The traffic generated is an approximation of what was seen in
 	the network capture. The traffic generation involves some randomness,
 	so running the same command multiple times may result in slightly
@@ -695,14 +718,30 @@
 	<para>As well as changing how long the model runs for, you can also
 	change how many conversations get generated and how fast the traffic
 	gets replayed. To roughly double the number of conversations that get
-	replayed, use --scale-traffic=2 or to approximately halve the number
-	use --scale-traffic=0.5. To approximately double how quickly the
-	conversations get replayed, use --replay-rate=2, or to halve this use
-	--replay-rate=0.5</para>
+	replayed, use - -scale-traffic=2 or to approximately halve the number
+	use - -scale-traffic=0.5. To approximately double how quickly the
+	conversations get replayed, use - -replay-rate=2, or to halve this use
+	- -replay-rate=0.5</para>
 
 	<para>For example, to generate approximately 10 times the amount of
 	traffic seen over a two-minute period (based on the network capture),
 	use:</para>
+
+-->
+	<para>生成されたトラフィックは、ネットワークのキャプチャ中にあるものの
+	近似値である。トラフィックの生成は、若干ランダム性を改善するので、
+	同じコマンドを複数回実行しても、結果のトラフィックは生成されたものとは
+	は多少異なる。</para>
+
+	<para>モデルの動作時間を変更するだけではなく、生成される会話の数や、
+	トラフィックの再生速度を変更することも出来る。再生する会話の数をおおよそ倍に
+	するには、--scale-traffic=2 を使い、おおよそ半分にするには、
+	--scale-traffic=0.5 を使う。会話の再生速度をおおよそ倍にするには、
+	--replay-rate=2 を使い、おおよそ半分にするには、
+	--replay-rate=0.5 を使う。</para>
+	
+	<para>たとえば、(ネットワークトラフィックを元にして)2分間に10倍の
+	量を生成するには以下のように行う。</para>
 
 	<para><command>traffic_replay traffic-model.txt
 	my-dc.samdom.example.com -UAdmin%password --fixed-password=blahblah123!
