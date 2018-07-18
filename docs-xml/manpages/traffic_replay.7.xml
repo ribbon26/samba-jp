@@ -585,6 +585,7 @@
 </refsect2>
 
 <refsect2>
+<!-- Samba 4.8.0
 	<title>Replaying a traffic-summary file</title>
 	<para>Once you have a traffic-summary file, you can use it to generate
 	traffic. The traffic_replay tool gets passed the traffic-summary file,
@@ -593,12 +594,21 @@
 	workgroup (although the realm and workgroup may be determined
 	automatically, for example from the /etc/smb.conf file, if one is 
 	present). E.g.</para>
+-->	
+	<title>トラフィックサマリファイルの再生</title>
+	<para>トラフィックサマリファイルがある場合は、これをトラフィックの
+	生成に使うことが出来る。traffic_replay ツールは、テスト対象 DC の完全な
+	DNS名とともに、トラフィックサマリファイルを渡す。そのほかに、
+	いくつかのユーザ認証情報、Samba の realm とワークグループ名
+	(もしも存在するならば、 /etc/smb.conf ファイル に例がある、realm と
+	ワークグループ名が自動的に決まっているのにもかかわらず)を提供する
+	必要がある。たとえば以下の通り。</para>
 
 	<para><command>traffic_replay traffic-summary.txt
 	my-dc.samdom.example.com -UAdmin%password -W samdom
 	--realm=samdom.example.com --fixed-password=blahblah123!</command>
 	</para>
-
+<!--
 	<para>This simply regenerates Samba activity seen in the traffic
 	summary. The traffic is grouped into 'conversations' between a host and
 	the DC.	A user and machine account is created on the DC for each
@@ -608,13 +618,29 @@
 
 	<para>Creating users can be quite a time-consuming process, especially
 	if a lot of conversations are being generated. To save time, the test
-	users remain on the DC by default. You will need to run the --clean-up
+	users remain on the DC by default. You will need to run the - -clean-up
 	option to remove them, once you have finished generating traffic.
 	Because the same test users are used across multiple runs of the tool,
 	a consistent password for these users needs to be used - this is
-	specified by the --fixed-password option.
+	specified by the - -fixed-password option.
+	</para>
+-->
+	<para>これは、単純に、トラフィックサマリ中にある、Samba の動作を
+	再現する。トラフィックは、ホストと DC との間を、'やりとり' 中に
+	グループ化する。ユーザとマシンアカウントが、ログインの許可および
+	他の操作を成功させるために、各テスト通信ごとに生成される。
+	スクリプトはサマリ中にあるものと同じタイプのパケットを生成する。
 	</para>
 
+	<para>ユーザの生成は、特にたくさんの会話が生成されている場合には、
+	とても時間がかかる処理になる。時間を節約するために、既定値で、
+	テストユーザは DC上に残ったままになる。トラフィックの生成を完了した
+	際には、 --clean-up オプションを動かして、それらを削除する必要がある。
+	ツールを同時に複数実行すると、同じテストユーザが使われてしまうため、
+	ユーザのパスワードは一貫しておく必要がある。これには、
+	--fixed-password オプションによって指定する。
+	</para>
+<!-- Samba-4.8.0
 	<para>The benefit of this tool over simply using tcprelay is that the
 	traffic generated is independent of any specific network. No setup is
 	needed beforehand on the test DC. The traffic no longer contains
@@ -624,6 +650,16 @@
 	<para>However, replaying a traffic-summary directly is somewhat limited
 	in what you can actually do. A more flexible approach is to generate
 	the traffic using a model file.</para>
+-->
+	<para>単に、tcprelay を使用することよりもこのツールが便利な点は、
+	生成されるトラフィックが特定のネットワークから独立していることである。
+	テストDC上で、事前に設定する必要はない。トラフィックにはもはや
+	機敏情報は含まれていないので、トラフィックサマリは他の Samba 開発者と
+	共有することが可能である。</para>
+
+	<para>しかしながら、トラフィックサマリを直接再生することは、
+	実際に出来る事よりは制限がかかる。より自由度の高いやり方は、
+	モデルファイルを使ってトラフィックを生成することである。</para>
 </refsect2>
 
 <refsect2>
