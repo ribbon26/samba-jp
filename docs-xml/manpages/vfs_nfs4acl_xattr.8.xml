@@ -6,15 +6,14 @@
     <refentrytitle>vfs_nfs4acl_xattr</refentrytitle>
     <manvolnum>8</manvolnum>
     <refmiscinfo class="source">Samba</refmiscinfo>
-    <refmiscinfo class="manual">System Administration tools</refmiscinfo>
+    <refmiscinfo class="manual">システム管理ツール</refmiscinfo>
     <refmiscinfo class="version">&doc.version;</refmiscinfo>
   </refmeta>
 
 
   <refnamediv>
     <refname>vfs_nfs4acl_xattr</refname>
-    <refpurpose>Save NTFS-ACLs as NFS4 encoded blobs in extended
-    attributes</refpurpose>
+    <refpurpose>NTFS の ACLを、NFS4でエンコードしたblob として拡張属性に保存する</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -24,29 +23,35 @@
   </refsynopsisdiv>
 
   <refsect1>
-    <title>DESCRIPTION</title>
+    <title>説明</title>
 
-    <para>This VFS module is part of the
+    <para>この VFS モジュールは
     <citerefentry><refentrytitle>samba</refentrytitle>
-    <manvolnum>7</manvolnum></citerefentry> suite.</para>
-
+    <manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+<!-- Samba 4.8.0
     <para>The <command>vfs_acl_xattr</command> VFS module stores NTFS Access
     Control Lists (ACLs) in Extended Attributes (EAs/xattrs).  This enables the
     full mapping of Windows ACLs on Samba servers.
     </para>
+-->
+    <para><command>vfs_acl_xattr</command> VFS モジュールは NTFS アクセス制御リスト
+    (ACLs) を拡張属性 (EAs/xattrs) に保存する。これにより、Samba  サーバ上で、 Windows ACL
+    の完全なマッピングが可能になる。
+    </para>
 
-    <para>This module is stackable.</para>
+    <para>このモジュールはスタック可能である。</para>
   </refsect1>
 
 
   <refsect1>
-    <title>OPTIONS</title>
+    <title>オプション</title>
 
     <variablelist>
 
       <varlistentry>
 	<term>nfs4acl_xattr:encoding = [ndr|xdr]</term>
 	<listitem>
+<!-- Samba 4.8.0
 	  <para>This parameter configures the marshaling format used in the ACL
 	  blob and the default extended attribute name used to store the blob.
 	  </para>
@@ -61,21 +66,40 @@
 	  and group identifiers and an additional attribute per nfsace4. By
 	  default this encoding stores the blob in the extended attribute
 	  "security.nfs4acl_xdr".</para>
+-->
+	  <para>このパラメータは、ACL blob 中で使われる marshaling 形式と、
+	  blob に保存する際に使われる既定値の拡張属性名で設定を行う。</para>
+
+	  <para><emphasis>ndr (既定値)</emphasis> に設定すると、POSIX ドラフト
+	  NFSv4 互換 NDR エンコーディングで NT ACL を保存する。既定値では、これは、
+	  拡張属性 "security.nfs4acl_ndr" を使う。</para>
+
+	  <para><emphasis>xdr</emphasis> に設定すると、XDR エンコーディングで、NFS 4.1
+	  RFC 5661 と同様の形式で NT ACLを保存する。RFC 5661 との主要な違いは、
+	  ユーザとグループ識別子、nfsace4 ごとの追加属性として文字列の代わりに id を使用
+	  することである。既定値では、このエンコーディングは、拡張属性 "security.nfs4acl_xdr"
+	  中に blob を保存する。</para>
 	</listitem>
       </varlistentry>
 
       <varlistentry>
 	<term>nfs4acl_xattr:version = [40|41]</term>
 	<listitem>
+<!-- Samba 4.8.0
 	  <para>This parameter configures the NFS4 ACL level. Only
 	  <emphasis>41</emphasis> fully supports mapping NT ACLs and should be
 	  used. The default is <emphasis>41</emphasis>.</para>
+-->
+	  <para>このパラメータは、NFS4 ACL レベルを設定する。
+	  <emphasis>41</emphasis> のみ、NT ACLのマッピングを完全にサポートするので、
+	  これを使うこと。既定値は<emphasis>41</emphasis>である。</para>
 	</listitem>
       </varlistentry>
 
       <varlistentry>
 	<term>nfs4acl_xattr:default acl style = [posix|windows|everyone]</term>
 	<listitem>
+<!-- Samba 4.8.0
 	  <para>This parameter determines the type of ACL that is synthesized in
 	  case a file or directory lacks an ACL extended attribute.</para>
 
@@ -83,7 +107,15 @@
 	  synthesized based on the POSIX mode permissions for user, group and
 	  others, with an additional ACE for <emphasis>NT
 	  Authority\SYSTEM</emphasis> will full rights.</para>
+-->
+	  <para>このパラメータは、ACL 拡張属性が欠けているファイルやディレクトリに
+	  おいて、合成する ACL のタイプを決める。</para>
 
+	  <para><emphasis>posix</emphasis>に設定した場合、完全な権限を持つ、
+	  <emphasis>NT Authority\SYSTEM</emphasis>を付けた上で、 ユーザ、グループ、
+	  その他に対し、POSIX モードのパーミッションをベースにして、ACL を合成する。</para>
+
+<!-- Samba 4.8.0
 	  <para>When set to <emphasis>windows</emphasis>, an ACL is synthesized
 	  the same way Windows does it, only including permissions for the owner
 	  and <emphasis>NT Authority\SYSTEM</emphasis>.</para>
@@ -93,16 +125,30 @@
 
 	  <para>The default for this option is
 	  <emphasis>everyone</emphasis>.</para>
+-->
+	  <para><emphasis>windows</emphasis>に設定した場合、所有者に対するパーミッション
+	  と、<emphasis>NT Authority\SYSTEM</emphasis> のみを含むという、Windows と
+	  同じやりかたで、ACL を合成する。</para>
+
+	  <para><emphasis>everyone</emphasis>に設定した場合、everyone (S-1-1-0) に対する
+	  完全なパーミッションを与えるように ACL を合成する。</para>
+
+	  <para>このオプションの既定値は<emphasis>everyone</emphasis>である。</para>
 	</listitem>
       </varlistentry>
 
       <varlistentry>
 	<term>nfs4acl_xattr:xattr_name = STRING</term>
 	<listitem>
+<!-- Samba 4.8.0
 	  <para>This parameter configures the extended attribute name used to
 	  store the marshaled ACL.</para>
 	  <para>The default depends on the setting for
 	  <emphasis>nfs4acl_xattr:encoding</emphasis>.</para>
+-->
+	  <para>このパラメータは、marshaled ACL に保存するときに使われる拡張属性名を
+	  設定する。</para>
+	  <para>既定値は、<emphasis>nfs4acl_xattr:encoding</emphasis>の設定に依存する。</para>
 	</listitem>
       </varlistentry>
 
@@ -110,10 +156,14 @@
   </refsect1>
 
   <refsect1>
-    <title>EXAMPLES</title>
+    <title>例</title>
 
+<!-- Samba 4.8.0
     <para>A directory can be exported via Samba using this module as
     follows:</para>
+-->
+    <para>このモジュールを使って Samba 経由でディレクトリをエクスポートするには
+    以下のように行う。</para>
 
     <programlisting>
       <smbconfsection name="[samba_gpfs_share]"/>
@@ -123,12 +173,23 @@
   </refsect1>
 
   <refsect1>
-    <title>AUTHOR</title>
-
-    <para>The original Samba software and related utilities
-    were created by Andrew Tridgell. Samba is now developed
-    by the Samba Team as an Open Source project similar
-    to the way the Linux kernel is developed.</para>
+    <title>著者</title>
+   <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
   </refsect1>
+
+</refentry>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.8.0 - 4.8.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.8.0 - 4.8.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
 
 </refentry>
