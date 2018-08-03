@@ -3,6 +3,7 @@
                  type="integer"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+<!--
 	<para>This option controls the number of worker processes that are
 		started for each service when prefork process model is enabled.
 		The prefork children are only started for those services that
@@ -18,6 +19,21 @@
 		an individual service by using "prefork children: service name"
 		i.e. "prefork children:ldap = 8" to set the number of ldap
 		worker processes.</para>
+-->
+	<para>このオプションは、prefork モデルが有効な場合に、各サービスごとに起動する
+		worker プロセス数を制御する。Prefork 子プロセスは、prefork をサポートする
+		サービスのみで起動する(現時点では ldap のみ)。Prefork をサポートしない
+		プロセスに対するすべての要求は、唯一動いているそのサービスの
+		プロセスで処理される。
+	</para>
+
+	<para>これは、そのサーバ上で有効なCPUの数の、小さい倍数にする必要がある。
+		</para>
+
+	<para>さらに、複数の prefork した子プロセスは、"prefork children: service name"
+		を使うことによって、独立したサービスとして指定できる。すなわち、
+		"prefork children:ldap = 8" は、ldap worker プロセス数を設定する。
+		</para>
 </description>
 
 <value type="default">1</value>
