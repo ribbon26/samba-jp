@@ -13,13 +13,34 @@
 	  &quot;winbind expand groups&quot; パラメーターはドメイングループの
 	  メンバーシップを明確に適用する。</para>
 
+<!-- Samba-4.8.0
+         <para>This option also affects the return of non nested
+         group memberships of Windows domain users. With the
+         new default "winbind expand groups = 0" winbind does
+         not query group memberships at all.</para>
+-->	      
+         <para>このオプションは、ネストされていない、Windows のドメインユーザの
+	 グループメンバシップの戻り値にも影響する。新しい既定値
+         "winbind expand groups = 0" を使うと、winbind はグループメンバシップの
+         問合せをしない。</para>
+	  
 	 <para>このパラメーターに高い値を設定することは、最上位の winbindd 
 	   デーモンがグループの展開を処理しなければならず、その間、
 	   NSS や認証要求に対する応答が不可能となるために、システムの
 	   性能低下をもたらすことに注意しなさい。</para>
 
+<!-- Samba-4.8.0
+        <para>The default value was changed from 1 to 0 with Samba 4.2.
+        Some broken applications (including some implementations of
+        newgrp and sg) calculate the group memberships of
+        users by traversing groups, such applications will require
+        "winbind expand groups = 1". But the new default makes winbindd
+        more reliable as it doesn't require SAMR access to domain
+        controllers of trusted domains.</para>
+-->	       
 	   <para>既定値は Samba 4.2 で 1から0に変更となった。いくつかの
-	   不正なアプリケーションは、グループを検索して、ユーザがどこの
+	   不正なアプリケーション(いくつかの、newgrp と sg の実装を含む)は、
+	   グループを検索して、ユーザがどこの
 	   グループにいるかを調べるが、そのようなアプリケーションは、
 	   "winbind expand groups = 1" を必要とする。しかし、新しい既定値は、
 	   信頼されたドメインの、ドメインコントローラに対する SAMR アクセスを
