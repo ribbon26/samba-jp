@@ -14,10 +14,10 @@
 -->
     このオプションは、<smbconfoption name="security"/> オプションが
     <constant>domain</constant> または <constant>ads</constant> に設定されている場合にのみ
-    有効となる。もしも yes (既定値) に設定されていた場合は、winbindd は
+    有効となる。yes (既定値) に設定すると、winbindd は
     新しい信頼するドメインのスキャンを定期的に行い、winbindd 中のグローバルリストに
     追加する。リストは <command>wbinfo --trusted-domains --verbose</command> を
-    使うことで抜き出すことが出来る。これは、Samba 4.7 以降の動作に一致する。</para>
+    使うことで抜き出すことが出来る。これは、Samba 4.7 以前の動作に一致する。</para>
 
 <!-- Samba 4.8.0
     <para>The construction of that global list is not reliable and often
@@ -30,11 +30,12 @@
     Some pam_winbind setups may also require the global list.</para>
 -->
 
-    <para>そのグローバルリストの構築は信頼できるものではなく、複雑な信頼関係では
-    しばしば不完全になる。一番よくある状況においては、リストは、winbinddが正しく動作するためには
-    不要である。たとえば、<constant>autorid</constant>, <constant>tdb</constant> または
-    <constant>ad</constant> を使う単純な idmap 設定を使う、SMB 経由での通常ファイルの
-    提供である。
+    <para>グローバルリストの構築は信頼できるものではなく、複雑な信頼関係では
+    しばしば不完全になる。多くの環境では winbindd が正常動作する上でこのリストは
+    不要である。たとえば、一般的な SMB ファイルサーバーサービスを
+    <constant>autorid</constant>, <constant>tdb</constant> または
+    <constant>ad</constant> による単純な idmap 設定を
+    用いて実装している環境が挙げられる。
     しかし、ある種の複雑な設定ではリストを必要とする。たとえば、
     idmap バックエンドを特定のドメインに対して指定する場合などである。
     いくつかの pam_winbind 設定では、グローバルリストを要求するものもある。</para>
