@@ -1,0 +1,222 @@
+<samba:parameter name="smb encrypt"
+                 context="S"
+		 type="enum"
+		 enumlist="enum_smb_signing_vals"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+  <itemizedlist>
+    <listitem>
+      <para>
+	接続時に SMB1 を使う場合、このオプションは、Unix拡張を
+	使う、Samba 3.2 で導入された SMB プロトコルへの Samba 固有の
+	拡張を使うかを制御する。
+      </para>
+    </listitem>
+
+    <listitem>
+      <para>
+	接続時に SMB2 以降を使う場合、このオプションは、バージョン3
+	以降でサポートされる、Windows 8 以降で有効な、 SMB レベルの暗号化
+	を使うかを制御する。
+      </para>
+    </listitem>
+  </itemizedlist>
+
+  <para>
+    このパラメータはグローバルでも、共有ごとでも設定出来る。
+    設定可能な値は
+    <emphasis>off</emphasis> (又は <emphasis>disabled</emphasis>),
+    <emphasis>enabled</emphasis> (又は <emphasis>auto</emphasis>),
+    <emphasis>if_required</emphasis>),
+    <emphasis>desired</emphasis>, と
+    <emphasis>required</emphasis> (又は <emphasis>mandatory</emphasis>) である。
+    特別な値 <emphasis>default</emphasis> は、暗黙の既定値で、実体は
+    <emphasis>enabled</emphasis> ある。
+    
+  </para>
+
+  <variablelist>
+    <varlistentry>
+     <term><emphasis>SMB1 に対する影響</emphasis></term>
+      <listitem>
+	<para>
+	  SMB1 における Samba 固有の暗号化接続は、UNIX 拡張の一部として
+	  ネゴシエーションされる、SMB プロトコルの拡張である。SMB 暗号化は
+	  SMB プロトコルストリーム中で、リクエスト/応答を毎回暗号化および
+	  署名する機能を持つ GSSAPI(Windows 上の SSPI)を使う。有効にすると、
+	  ssh で保護されたセッションのように、SMB/CIFS 通信をセキュアにする
+	  機能を提供するが、暗号化のネゴシエーションおよびキーの署名には
+	  SMB/CIFS の認証を使う。現在これは Samba 3.2 以降の smbclient のみ
+	  でサポートされていて、そのうち Linux の CIFSFS と MacOS/X でサポート
+          されるかもしれない。Windows クライアントはこの機能をサポートしない。
+	</para>
+
+	<para>
+	  これは共有単位で設定出来るが、クライアントは、指定された共有に対して
+	  トラフィックではなく、全セッションを暗号化することを選べる。
+	  もしも、これを mandatory に設定すると、共有へのすべてのトラフィックは
+	  共有に対する接続がなされた後は、<emphasis>必ず</emphasis>
+	  暗号化されなければならない。サーバは、そのような共有に対する、
+	  暗号化されていないすべての要求には "access denied" を返す。
+	  暗号化されたトラフィックを選ぶと、すべてのデータに対する暗号化および署名
+	  を暗号化する時のオーバヘッドと同様、より小さなパケットサイズが使われるため
+	  (巨大な UNIX 系の読み/書き操作が許可されないため)、トラフィックが減少する。
+	</para>
+
+	<para>
+	  もしも、SMB 暗号化が選択された場合、
+	  GSSAPI フラグが、データの署名と sealing 両方を選択するのに使うように、
+	  Windows形式のSMB署名
+	  (<smbconfoption name="server signing"/>オプションを参照)は、
+	  もはや必要ない。
+	</para>
+
+	<para>
+	  auto または 既定値を設定すると、SMB 暗号化機能は提供されるが、
+	  強制はされない。mandatory に設定すると、SMB 暗号化が要求され、
+	  disable を設定すると、SMB 暗号化はネゴシエーション出来ない。
+	</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><emphasis>SMB2における影響</emphasis></term>
+      <listitem>
+	<para>
+	  ネイティブな SMB トランスポート暗号化機能は SMB バージョン3.0以降で有効に
+	  なっている。これは、<emphasis>server max protocol</emphasis>が
+	  <emphasis>SMB3</emphasis>以降に設定された場合にのみ、提供される。
+	  クライアントは、Windows 8以降、あるいは Windows Server 2012以降と、
+	  Samba 4.1 以降の smbclient で、このタイプの暗号化をサポートしている。
+	</para>
+	
+
+	<para>
+	  このプロトコル実装にはいろいろなオプションがある:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      プロトコルネゴシエーション中に SMB 暗号化のネゴシエーション実行
+	      する機能がある。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      データ暗号化はグローバルに有効に出来る。この場合、
+	      暗号化対応なコネクションは、暗号化されたすべてのセッション中で
+	      すべてのトラフィックを持つことになる。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      データ暗号化は、グローバルに有効化されていない場合、
+	      共有単位でも有効にできる。ある、暗号化対応なコネクションに対し、
+	      暗号化が有効になっている共有へのすべてのコネクションは
+	      暗号化される。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      暗号化は強制することができる。このことは、データの暗号化が
+	      グローバルに有効化されている場合、暗号化に対応していない
+	      コネクションでは、セッションセットアップが拒否されることを
+	      意味する。さらに、tree connection は、データ暗号化が有効に
+	      なっている場合、共有に対する暗号化に対応していないコネクションは
+	      拒否される。
+	    </para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  これらの機能は、以下のような<emphasis>smb encrypt</emphasis>
+	  の設定で制御出来る:
+	</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      そのままで既定値とするか、明示的に<emphasis>default</emphasis>を設定
+	      するか、グローバルに<emphasis>enabled</emphasis>
+	      と設定すると、暗号化のネゴシエーションを有効にするが、
+	      グローバルあるいは共有単位のデータ暗号化を有効にはしない。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      グローバルに <emphasis>desired</emphasis> と設定すると、
+	      ネゴシエーションを有効化し、それをサポートしているクライアントに
+	      対して、セッションと共有接続上におけるデータの暗号化を有効にする。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      グローバルに<emphasis>required</emphasis>を設定すると、
+	      ネゴシエーションを有効にし、セッションと共有接続上におけるデータの暗号化を
+	      有効にする。暗号化をサポートしないクライアントはサーバへのアクセスを
+	      拒否される。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      グローバルに<emphasis>off</emphasis>を設定すると、
+	      暗号化機能を完全に無効にする。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      共有上で<emphasis>desired</emphasis>を設定すると、
+	      ネゴシエーションがグローバルに有効になっている場合、
+	      クライアントが暗号化をサポートしていると、
+	      この共有に対するデータの暗号化を有効にする。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      共有上で<emphasis>required</emphasis>を設定すると、
+	      ネゴシエーションがグローバルで有効になっている場合、
+	      この共有に対する暗号化が強制される。すなわち、
+	      暗号化をサポートしないクライアントは共有へのアクセスを
+	      拒否される。
+	    </para>
+	    <para>
+	      このことは、Sambaで制御される共有ごとの強制操作は Windows と
+	      比べて違うと言うことに注意: Windows では、
+	      <emphasis>RejectUnencryptedAccess</emphasis>はグローバルの
+	      設定で、それが設定された場合、データ暗号化が有効になっている
+	      すべての共有は自動的に暗号化が強制される。Samba 上でそれと同じ効果を
+	      得るためには、グローバルに<emphasis>smb encrypt</emphasis> を
+	      <emphasis>enabled</emphasis>に設定し、暗号化したいすべての
+	      共有に<emphasis>required</emphasis> を設定する。
+	      さらに、Windows では不可能な、いくつかの共有において、
+	      暗号化が <emphasis>required</emphasis>と、いくつかの
+	      共有において暗号化か<emphasis>desired</emphasis> のみという構成が、
+	      Samba 上で可能である。
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      <emphasis>off</emphasis>を設定するか、共有に対して
+	      <emphasis>enabled</emphasis>しても何の影響もない。
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+	    
+</description>
+
+<value type="default">default</value>
+</samba:parameter>

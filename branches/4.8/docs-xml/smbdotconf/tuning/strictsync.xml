@@ -1,0 +1,76 @@
+<samba:parameter name="strict sync"
+                 context="S"
+		 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- 原文 samba-4.7.0
+    <para>This parameter controls whether Samba honors a request
+    from an SMB client to ensure any outstanding operating system
+    buffer contents held in memory are safely written onto stable
+    storage on disk. If set to <constant>yes</constant>, which is
+    the default, then Windows applications can force the smbd server
+    to synchronize unwritten data onto the disk. If set to
+    <constant>no</constant> then smbd will ignore client
+    requests to synchronize unwritten data onto stable storage on
+    disk.</para>
+-->
+    <para>このパラメーターは、
+    オペレーティングシステム内にてメモリ上に不明なバッファーデータがあったとしても、
+    ディスク上の安定したストレージへの書き込みが安全に行われるように、
+    SMB クライアントからの要求を受け入れるかどうかを制御する。
+    既定値である <constant>yes</constant> に設定すると、
+    Windows アプリケーションは smbd サーバーに対して、
+    まだ書き込まれていないデータをディスク上に強制的に同期する。
+    <constant>no</constant> に設定すると、
+    smbd はクライアント要求を無視するので、
+    まだ書き込まれていないデータをディスク上の安定したストレージに同期することは行わない。
+    </para>
+
+<!-- 原文 samba-4.7.0
+    <para>In Samba 4.7.0, the default for this parameter changed from
+    <constant>no</constant> to <constant>yes</constant> to better
+    match the expectations of SMB2/3 clients and improve application
+    safety when running against smbd.</para>
+-->
+    <para>Samba 4.7.0 において、このパラメーターの既定値は
+    <constant>no</constant> から <constant>yes</constant> に変更された。
+    これは SMB2/3 クライアントの期待に沿うものであり、
+    smbd に対して動作するアプリケーションの安全性を向上させる。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>The flush request from SMB2/3 clients is handled
+    asynchronously inside smbd, so leaving the parameter as the default
+    value of <constant>yes</constant> does not block the processing of
+    other requests to the smbd process.</para>
+-->
+    <para>SMB2/3 クライアントからのフラッシュ要求は非同期に処理されるので、
+    パラメーターを <constant>yes</constant> の設定のままにしておいても、
+    smbd プロセスに対する他の要求処理はブロックされない。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>Legacy Windows applications (such as the Windows 98 explorer
+    shell) seemed to confuse writing buffer contents to the operating
+    system with synchronously writing outstanding data onto stable storage
+    on disk. Changing this parameter to <constant>no</constant> means that
+    <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will ignore the Windows
+    applications request to synchronize unwritten data onto disk. Only
+    consider changing this if smbd is serving obsolete SMB1 Windows clients
+    prior to Windows XP (Windows 98 and below). There should be no need to
+    change this setting for normal operations.</para>
+-->
+    <para>かつての Windows アプリケーション（例えば Windows 98 のエクスプローラーシェル）では、
+    オペレーティングシステムに対してバッファー内容を書き込むという処理と、
+    不明なデータを安定したディスク上のストレージと同期して書き込むという処理が取り違えられているようである。
+    このパラメーターを <constant>no</constant> に変更すると、
+    <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が Windows アプリケーションから要求されても、
+    未処理のデータをディスクに書き込む同期処理は無視される。
+    したがってこのパラメーターは、smbd が Windows XP よりも古い
+    （Windows 98 やそれ以前の）SMB1 Windows クライアントとして動作している場合にのみ、
+    変更が必要である。通常処理においてこの設定を変更する必要はない。</para>
+</description>
+
+<related>sync always</related>
+<value type="default">yes</value>
+</samba:parameter>
