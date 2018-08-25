@@ -108,7 +108,44 @@
 	<programlisting>
 		<smbconfsection name="[share]"/>
 		<smbconfoption name="vfs objects">ceph</smbconfoption>
+		<smbconfoption name="path">/non-mounted/cephfs/path</smbconfoption>
+		<smbconfoption name="kernel share modes">no</smbconfoption>
 	</programlisting>
+<!-- samba-4.8.5
+        <para>
+                Since <command>vfs_ceph</command> does not require a filesystem
+                mount, the share <command>path</command> is treated differently:
+                it is interpreted as an absolute path within the Ceph filesystem
+                on the attached Ceph cluster.
+                In a ctdb cluster environment where ctdb manages Samba,
+                <command>CTDB_SAMBA_SKIP_SHARE_CHECK=yes</command> must be
+                configured to disable local share path checks, otherwise ctdb
+                will not reach a healthy state.
+        </para>
+
+        <para>
+                Note that currently <command>kernel share modes</command> have
+                to be disabled in a share running with the CephFS vfs module for
+                file serving to work properly.
+        </para>
+-->
+        <para>
+                <command>vfs_ceph</command> は、ファイルシステムのマウントを必要と
+                しないので、共有の <command>path</command> は異なった形で扱われる:
+		すなわち、アタッチされた Ceph クラスタでの Chep ファイルシステム内
+		における絶対パスとして解釈される。
+		ctdb が Samba を管理している ctdb クラスタ環境中では、
+                <command>CTDB_SAMBA_SKIP_SHARE_CHECK=yes</command> で、
+		ローカルの共有パスチェックを無効にするように設定せねばならず、
+		それ以外の場合では、ctdb は健全な状態にはならない。
+        </para>
+
+        <para>
+                 現在の所、ファイルサービスが正常に動作するために、CephFS vfs
+	         モジュールが動作している共有中では、
+		 <command>kernel share modes</command> を無効にする必要がある。
+        </para>
+	
 </refsect1>
 
 <refsect1>
