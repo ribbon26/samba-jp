@@ -1638,7 +1638,7 @@
         <refsect3><title>操作モード</title>
         <varlistentry>
                 <term>samba-tool visualize ntdsconn</term>
-                <listitem><para>Looks at NTDS 接続を探す。
+                <listitem><para>NTDS 接続を探す。
                 </para></listitem>
                 </varlistentry>
 
@@ -1648,6 +1648,22 @@
                 </para></listitem>
                 </varlistentry>
         </refsect3>
+
+<!-- Samba 4.9.0
+	<varlistentry>
+		<term>samba-tool visualize uptodateness</term>
+		<listitem><para>Looks at replication lag as shown by the
+                uptodateness vectors.
+		</para></listitem>
+		</varlistentry>
+-->
+	<varlistentry>
+		<term>samba-tool visualize uptodateness</term>
+		<listitem><para>uptodateness ベクタとして表示されているような、
+                レプリケーションの遅延を探す。
+		</para></listitem>
+		</varlistentry>
+
 <!-- Samba 4.8.0
             <refsect3><title>GRAPHICAL MODES</title>
         <varlistentry>
@@ -1679,21 +1695,50 @@
 
         <varlistentry>
                 <term>--dot</term>
-                <listitem><para>Graphviz dot 形式のファイルを出力する。
+                <listitem><para>Graphviz dot 形式のファイルを出力する(ntdsconn と reps モード用)。
 		dot または xdot を用いることによって、ネットワークをグラフ化
 		して参照することができる。その際には、DC が頂点として、また
 		ネットワーク接続が辺によって表現される。特定のネットワーク
 		接続は、異なった色や線のスタイルによって表現される。
                 </para></listitem>
                 </varlistentry>
+<!-- Samba 4.9.0
+		<varlistentry>
+                <term>- -xdot</term>
+                <listitem><para>Generate Graphviz dot output as with
+                <arg choice="opt">- -dot</arg> and attempt to view it
+                immediately using <command>/usr/bin/xdot</command>.
+                </para></listitem>
+                </varlistentry>
+		<varlistentry>
+-->		
+                <term>--xdot</term>
+                <listitem><para><arg choice="opt">--dot</arg> と同じように
+                dot を出力し、さらに、<command>/usr/bin/xdot</command> を使って
+                すぐに結果を表示する。
+                </para></listitem>
+                </varlistentry>
         </refsect3>
 
         <varlistentry>
                 <term>-r</term>
+<!-- Samba 4.9.0
+		<listitem><para>Normally,
+		<command>samba-tool</command> talks to one database;
+		with the <arg choice="opt">-r</arg> option attempts
+		are made to contact all the DCs known to the first
+		database. This is necessary for <command>samba-tool
+		visualize uptodateness</command> and for
+		<command>samba-tool visualize reps</command> because
+		the repsFrom/To objects are not replicated, and it can
+		reveal replication issues in other modes.
+		</para></listitem>
+ -->
                 <listitem><para>通常<command>samba-tool</command> は1つの
                 データベースを使う; <arg choice="opt">-r</arg> オプションを指定すると、
 		最初のデータベースが知っている、すべてのDCに対して接続を試みる。
-		これは、repsFrom/To オブジェクトが複製(レプリケーション)されないため、
+		これは、<command>samba-tool visualize uptodateness</command> と、
+		repsFrom/To オブジェクトが複製(レプリケーション)されないため、
 		<command>samba-tool visualize reps</command> から
 		賢明な結果を得るために必要である。また、これにより、
 		他のモードにおけるレプリケーションの問題を明確にすることができる。
