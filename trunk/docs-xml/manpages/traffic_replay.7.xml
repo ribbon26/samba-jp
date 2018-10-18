@@ -188,6 +188,27 @@
 	</para></listitem>
         </varlistentry>
 
+<!-- Samba 4.9.0
+	<varlistentry>
+	<term>random-seed</term>
+	<listitem><para>
+	A number to seed the random number generator with. When traffic is
+	generated from a model-file, use this option to keep the traffic
+	consistent across multiple test runs. This allows you to compare the
+	performance of Samba between different releases.
+	</para></listitem>
+	</varlistentry>
+-->
+ 	<varlistentry>
+	<term>random-seed</term>
+	<listitem><para>
+	乱数生成器に与えるシードの値。トラフィックがモデルファイルから
+	生成される場合、このオプションを使うと、複数のテスト間でトラフィックの一貫性を
+	保てる。よって、Samba の異なったリリース間でパフォーマンスの比較ができるように
+	なる。
+	</para></listitem>
+	</varlistentry>
+
 	<varlistentry>
 <!-- Samba 4.8.0
 	<term>Traffic Model Options</term>
@@ -246,7 +267,7 @@
 
 		<varlistentry>
 		<term>--traffic-summary &lt;output-file&gt;</term>
-<!-- Samba 4.8.0
+<!-- Samba 4.9.0
 		<listitem><para>
 		Instead of replaying a traffic-model, this option generates a
 		traffic-summary file based on what traffic would be sent. Using
@@ -261,7 +282,7 @@
 		<para>
 		For taking performance measurements over several test runs,
 		it's recommended to use this option and replay the traffic from
-		a traffic-summary file.
+		a traffic-summary file, or to use the - -random-seed option.
 		</para></listitem>
 -->
 		<listitem><para>
@@ -277,7 +298,8 @@
 	        </para>
 		<para>
 		何回かのテスト実行で性能測定を行うときには、このオプションを使って
-		トラフィックサマリファイルからのトラフィックを再生することを推奨する。
+		トラフィックサマリファイルからのトラフィックを再生するか、
+		--random-seed を指定することを推奨する。
 		</para></listitem>
 		</varlistentry>
 	</itemizedlist>
@@ -709,11 +731,12 @@
 	<para>既定値では、モデルに基づいて、60秒分のトラフィックを生成する。
 	それより長くしたい場合は --duration パラメータを指定する。
 	</para>
-<!-- Samba 4.8.0
+<!-- Samba 4.9.0
 	<para>The traffic generated is an approximation of what was seen in
 	the network capture. The traffic generation involves some randomness,
 	so running the same command multiple times may result in slightly
-	different traffic being generated.</para>
+	different traffic being generated (although you can avoid this, by
+        specifying the - -random-seed option).</para>
 
 	<para>As well as changing how long the model runs for, you can also
 	change how many conversations get generated and how fast the traffic
@@ -731,7 +754,7 @@
 	<para>生成されたトラフィックは、ネットワークのキャプチャ中にあるものの
 	近似値である。トラフィックの生成は、若干ランダム性を改善するので、
 	同じコマンドを複数回実行しても、結果のトラフィックは生成されたものとは
-	は多少異なる。</para>
+	は多少異なる(--random-seed オプションを指定してこれを防いだとしても)。</para>
 
 	<para>モデルの動作時間を変更するだけではなく、生成される会話の数や、
 	トラフィックの再生速度を変更することも出来る。再生する会話の数をおおよそ倍に
