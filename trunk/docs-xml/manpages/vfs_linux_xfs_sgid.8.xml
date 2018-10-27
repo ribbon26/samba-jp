@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>vfs_linux_xfs_sgid</refname>
-	<refpurpose></refpurpose>
+	<refpurpose>XFS sgid ビットが継承されない事への workaround</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -30,14 +30,14 @@
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
 	<para>
-	<command>vfs_linux_xfs_sgid</command>は、まだ存在している、古い Liunx XFS
-	のバグを暫定的に回避するためのVFSモジュールである:すなわち、特定の
-	環境において、SGIDビットが継承されない
-	(<ulink url="http://oss.sgi.com/bugzilla/show_bug.cgi?id=280">
-	http://oss.sgi.com/bugzilla/show_bug.cgi?id=280</ulink>)。
-	<command>vfs_linux_xfs_sgid</command> VFS モジュールは、もしも親
-	ディレクトリでSGIDビットが設定されていた場合、<command>mkdir</command>
-	コマンド処理後にSGIDビットを手動で設定することで、暫定回避を行う。
+	既定の ACL が設定されているとき、特定の環境において、SGIDビットが継承されないという、
+	古い Linux での XFS バグは、
+	(<ulink url="https://web.archive.org/web/20160320180937/http://oss.sgi.com/bugzilla/show_bug.cgi?id=280">
+        https://web.archive.org/web/20160320180937/http://oss.sgi.com/bugzilla/show_bug.cgi?id=280
+        </ulink>)
+        3.11 で修正された
+(<ulink url="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=42c49d7f249c2487f36d3314753d5d8ebcee8249">
+	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=42c49d7f249c2487f36d3314753d5d8ebcee8249</ulink>)。
 	</para>
 
 	<para>このモジュールはスタック可能である。</para>
