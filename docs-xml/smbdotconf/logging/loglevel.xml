@@ -59,17 +59,22 @@
         <listitem><para><parameter moreinfo="none">auth_audit</parameter></para></listitem>
         <listitem><para><parameter moreinfo="none">auth_json_audit</parameter></para></listitem>
         <listitem><para><parameter moreinfo="none">kerberos</parameter></para></listitem>
-    </itemizedlist>
+        <listitem><para><parameter moreinfo="none">dsdb_audit</parameter></para></listitem>
+        <listitem><para><parameter moreinfo="none">dsdb_json_audit</parameter></para></listitem>
+        <listitem><para><parameter moreinfo="none">dsdb_password_audit</parameter></para></listitem>
+        <listitem><para><parameter moreinfo="none">dsdb_password_json_audit</parameter></para></listitem>
+        <listitem><para><parameter moreinfo="none">dsdb_transaction_audit</parameter></para></listitem>
+        <listitem><para><parameter moreinfo="none">dsdb_transaction_json_audit</parameter></para></listitem>    </itemizedlist>
 
-<!-- 原文 samba-4.7.0
+<!-- 原文 samba-4.9.0
     <para>Authentication and authorization audit information is logged
-    under the auth_audit, and if Samba is compiled against the jansson
-    JSON library, a JSON representation is logged under
+    under the auth_audit, and if Samba was not compiled with
+    - -without-json-audit, a JSON representation is logged under
     auth_json_audit.</para>
 -->
     <para>認証と承認の監査情報は auth_audit を指定するとログ出力される。
-    jansson JSON ライブラリを用いて Samba をコンパイルしている場合は、
-    auth_json_audit を指定すると JSON 形式でのログ出力が行われる。</para>
+    --without-json-audit パラメータなしで Samba がコンパイルされた場合、
+    auth_json_audit 配下に JSON 形式でのログ出力が行われる。</para>
 
 <!-- 原文 samba-4.7.0
     <para>Support is comprehensive for all authentication and authorisation
@@ -100,6 +105,35 @@
 	<listitem><para>4: 承認成功</para></listitem>
 	<listitem><para>5: 匿名による認証と承認の成功</para></listitem>
     </itemizedlist>
+
+<!-- Samba-4.9.0
+    <para>Changes to the sam.ldb database are logged
+    under the dsdb_audit and a JSON representation is logged under
+    dsdb_json_audit.</para>
+
+    <para>Password changes and Password resets are logged under
+    dsdb_password_audit and a JSON representation is logged under the
+    dsdb_password_json_audit.</para>
+
+    <para>Transaction rollbacks and prepare commit failures are logged under
+    the dsdb_transaction_audit and a JSON representation is logged under the
+    password_json_audit. Logging the transaction details allows the
+    identification of password and sam.ldb operations that have been rolled
+    back.</para>
+-->
+    <para>sam.ldb データベースへの変更は、 dsdb_audit 配下にログ出力が
+    行われ、dsdb_json_audit 配下に JSON 形式でのログ出力が行われる。
+    </para>
+
+    <para>パスワードの変更とパスワードのリセットは、dsdb_password_audit
+    配下にログ出力が行われ、dsdb_password_json_audit 配下にJSON 形式での
+    ログ出力が行われる。</para>
+
+    <para>トランザクションのロールバックとコミット準備の失敗は、
+    dsdb_transaction_audit 配下にログ出力が行われ、password_json_audit 配下に
+    JSON 形式でのログ出力が行われる。トランザクション詳細のログを取ると、
+    パスワードと、ロールバックされた sam.ldb 操作の識別が可能になる。 
+    </para>
 
 </description>
 <value type="default">0</value>
