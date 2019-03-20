@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="lmhosts.5" lang="ja">
+
+<refmeta>
+	<refentrytitle>lmhosts</refentrytitle>
+	<manvolnum>5</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.6.6
+	<refmiscinfo class="manual">File Formats and Conventions</refmiscinfo>
+-->
+	<refmiscinfo class="manual">ファイルフォーマットと表記</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>lmhosts</refname>
+<!-- 原文 samba-4.6.6
+	<refpurpose>The Samba NetBIOS hosts file</refpurpose>
+-->
+	<refpurpose>Samba の NetBIOS hosts ファイル</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<!-- 原文 samba-4.6.6
+	<para><filename>lmhosts</filename> is the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> NetBIOS name to IP address mapping file.</para> 
+-->
+	<para><filename>lmhosts</filename> は <citerefentry><refentrytitle>Samba
+	</refentrytitle><manvolnum>7</manvolnum></citerefentry> が NetBIOS 名を
+	IP アドレスに関連付けるためのファイルである。</para> 
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+	
+<!-- 原文 samba-4.6.6
+	<para>This file is part of the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>このファイルは <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.6.6
+	<para><filename>lmhosts</filename> is the <emphasis>Samba
+	</emphasis> NetBIOS name to IP address mapping file.  It 
+	is very similar to the <filename>/etc/hosts</filename> file 
+	format, except that the hostname component must correspond 
+	to the NetBIOS naming format.</para>
+-->
+	<para><filename>lmhosts</filename> は <emphasis>Samba</emphasis> において
+	NetBIOS 名を IP アドレスに関連付けるためのファイルである。このファイルは
+	<filename>/etc/hosts</filename> ファイルとよく似ているが、
+	ホスト名の部分は NetBIOS の命名形式で記述しなければならない。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>FILE FORMAT</title>
+	<para>It is an ASCII file containing one line for NetBIOS name. 
+	The two fields on each line are separated from each other by 
+	white space. Any entry beginning with '#' is ignored. Each line 
+	in the lmhosts file contains the following information:</para>
+-->
+	<title>ファイル形式</title>
+	<para> これは 1 行につき 1 つの NetBIOS 名を記述する ASCII ファイルである。
+	各行には 2 つの項目があり、空白文字で区切られる。
+	'#' 文字で始まる行は無視される。lmhosts ファイルの各行は、
+	以下のような情報が含まれている :</para>
+
+	<itemizedlist>
+<!-- 原文 samba-4.6.6
+		<listitem><para>IP Address - in dotted decimal format.</para>
+		</listitem>
+-->
+		<listitem><para>IP アドレス - '.' 文字で区切られた 10 進数数字での表記
+		</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para>NetBIOS Name - This name format is a 
+		maximum fifteen character host name, with an optional 
+		trailing '#' character followed by the NetBIOS name type 
+		as two hexadecimal digits.</para>
+-->
+		<listitem><para>NetBIOS 名 - 最大 15 文字の NetBIOS ホスト名であり、
+		'#' 文字に続けて 2 桁の 16 進数値で表現された NetBIOS 
+		名のタイプをオプションで指定できる。</para>
+
+<!-- 原文 samba-4.6.6
+		<para>If the trailing '#' is omitted then the given IP 
+		address will be returned for all names that match the given 
+		name, whatever the NetBIOS name type in the lookup.</para>
+-->
+		<para>もし '#' 文字以降が省略されると、NetBIOS 名のタイプに関わらず、
+		ホスト名が一致した行の IP アドレスをすべて返す。</para>
+		</listitem>
+	</itemizedlist>
+
+<!-- 原文 samba-4.6.6
+	<para>An example follows:
+-->
+	<para>設定例は下記のとおり :</para>
+<programlisting>
+#
+# Sample Samba lmhosts file.
+#
+192.9.200.1	TESTPC
+192.9.200.20	NTSERVER#20
+192.9.200.21	SAMBASERVER
+</programlisting>
+
+	
+<!-- 原文 samba-4.6.6
+	<para>Contains three IP to NetBIOS name mappings. The first 
+	and third will be returned for any queries for the names "TESTPC" 
+	and "SAMBASERVER" respectively, whatever the type component of 
+	the NetBIOS name requested.</para>
+-->
+	<para>この例では、IP と NetBIOS 名の関連付けを 3 つ記述している。
+	1 つめと 3 つめは、NetBIOS 名のタイプに関係なく、"TESTPC" または "SAMBASERVER" 
+	という名前が要求されれば IP アドレスが返される。
+	</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The second mapping will be returned only when the "0x20" name 
+	type for a name "NTSERVER" is queried. Any other name type will not 
+	be resolved.</para>
+-->
+	<para>2 つめは NetBIOS 名が "NTSERVER" であり、名前タイプが "0x20" 
+	である要求の場合にのみ返される。それ以外の名前タイプが指定されても、
+	名前は解決されない。</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The default location of the <filename>lmhosts</filename> file 
+	is in the same directory as the <citerefentry><refentrytitle>smb.conf</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry> file.</para>
+-->
+	<para><filename>lmhosts</filename> ファイルを置く既定の場所は、<citerefentry>
+	<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+	ファイルと同じディレクトリである. </para>
+	
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>FILES</title>
+-->
+	<title>ファイル</title>
+
+<!-- 原文 samba-4.6.6
+	<para>lmhosts is loaded from the configuration directory. This is 
+		usually <filename>/etc/samba</filename> or <filename>/usr/local/samba/lib</filename>.
+-->
+	<para>lmhosts は設定ファイルのディレクトリに置かれたものが読み込まれる。
+	このディレクトリは通常 <filename>/etc/samba</filename> または <filename>/usr/local/samba/lib</filename> である。
+	</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.8.0
+     <para>This man page is part of version &doc.version; of the Samba suite.</para>
+-->
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6; 日本語訳では and を取り除いている点に注意
+	<title>SEE ALSO</title>
+	<para><citerefentry>
+	<refentrytitle>smbclient</refentrytitle><manvolnum>1</manvolnum>
+	</citerefentry>, <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+	</citerefentry>, and <citerefentry><refentrytitle>smbpasswd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>
+	</para>
+-->
+	<title>参照</title>
+	<para><citerefentry>
+	<refentrytitle>smbclient</refentrytitle><manvolnum>1</manvolnum>
+	</citerefentry>, <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+	</citerefentry>, <citerefentry><refentrytitle>smbpasswd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>
+	</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.6.6
+	<para>The original Samba software and related utilities 
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar 
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 3.0.3 - 4.9.3 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>でん</para></listitem>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+
+	<para>Samba 3.0.3 - 4.9.3 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+</refsect1>
+
+</refentry>

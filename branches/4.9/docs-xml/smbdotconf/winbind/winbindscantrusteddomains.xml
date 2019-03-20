@@ -1,0 +1,55 @@
+<samba:parameter name="winbind scan trusted domains"
+                 context="G"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba 4.8.0
+    <para>
+    This option only takes effect when the <smbconfoption name="security"/> option is set to
+    <constant>domain</constant> or <constant>ads</constant>.
+    If it is set to yes (the default), winbindd periodically tries to scan for new
+    trusted domains and adds them to a global list inside of winbindd.
+    The list can be extracted with <command>wbinfo - -trusted-domains - -verbose</command>.
+    This matches the behaviour of Samba 4.7 and older.</para>
+-->
+    <para>
+    このオプションは、<smbconfoption name="security"/> オプションが
+    <constant>domain</constant> または <constant>ads</constant> に設定されている場合にのみ
+    有効となる。yes (既定値) に設定すると、winbindd は
+    新しい信頼するドメインのスキャンを定期的に行い、winbindd 中のグローバルリストに
+    追加する。リストは <command>wbinfo --trusted-domains --verbose</command> を
+    使うことで抜き出すことが出来る。これは、Samba 4.7 以前の動作に一致する。</para>
+
+<!-- Samba 4.8.0
+    <para>The construction of that global list is not reliable and often
+    incomplete in complex trust setups. In most situations the list is
+    not needed any more for winbindd to operate correctly.
+    E.g. for plain file serving via SMB using a simple idmap setup
+    with <constant>autorid</constant>, <constant>tdb</constant> or <constant>ad</constant>.
+    However some more complex setups require the list, e.g.
+    if you specify idmap backends for specific domains.
+    Some pam_winbind setups may also require the global list.</para>
+-->
+
+    <para>グローバルリストの構築は信頼できるものではなく、複雑な信頼関係では
+    しばしば不完全になる。多くの環境では winbindd が正常動作する上でこのリストは
+    不要である。たとえば、一般的な SMB ファイルサーバーサービスを
+    <constant>autorid</constant>, <constant>tdb</constant> または
+    <constant>ad</constant> による単純な idmap 設定を
+    用いて実装している環境が挙げられる。
+    しかし、ある種の複雑な設定ではリストを必要とする。たとえば、
+    idmap バックエンドを特定のドメインに対して指定する場合などである。
+    いくつかの pam_winbind 設定では、グローバルリストを要求するものもある。</para>
+<!-- Samba 4.8.0
+    <para>If you have a setup that doesn't require the global list, you should set
+    <smbconfoption name="winbind scan trusted domains">no</smbconfoption>.
+    </para>
+-->
+
+    <para>グローバルリストを必要としない設定をするならば、
+    <smbconfoption name="winbind scan trusted domains">no</smbconfoption> に設定すべきである。
+    </para>
+</description>
+
+<value type="default">yes</value>
+</samba:parameter>

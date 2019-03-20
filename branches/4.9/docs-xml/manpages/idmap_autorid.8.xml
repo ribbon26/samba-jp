@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_autorid.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_autorid</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_autorid</refname>
+	<refpurpose>Samba の Winbind 用 idmap_autoridバックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+<!---
+	<para>The idmap_autorid backend provides a way to use an algorithmic
+	mapping scheme to map UIDs/GIDs and SIDs that is more deterministic
+	than idmap_tdb and easier to configure than idmap_rid.</para>
+-->
+	<para>idmap_autoridバックエンドは、idmap_tdbよりもより決定論的な、UID/GID と
+	SIDをマップするためのアルゴリズムによるマッピング方法を提供し、idmap_rid
+	よりもより簡単に設定できる。</para>
+	<para>モジュールはidmap_ridと同じように動作するが、各ドメインに対して使われる
+	レンジを自動的に設定するので、フォレスト中の各ドメインに対しては、
+	特定のレンジを指定する必要がなく、唯一設定できる項目は、
+	user/groupマッピングのために使われることができるuid/gidのレンジと、
+	オプションの、レンジのサイズである。</para>
+<!--
+	<para>The mappings of which domain is mapped to which range is stored
+	in autorid.tdb, thus you should backup this database regularly.</para>
+-->
+        <para>ドメインのマッピングはレンジにマップされ、それはautorid.tdbに
+	格納されるので、このデータベースを常時バックアップする必要がある。</para>
+<!--	<para>Due to the algorithm being used, it is the module that is
+	most easy to use as it only requires a minimal configuration.</para>
+-->
+        <para>アルゴリズムによって処理が行われるので、このモジュールは、
+	最小の設定のみで、もっとも簡単に使うことが出来る。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+          <varlistentry>
+	    <term>range = low - high</term>
+	    <listitem><para>
+	      バックエンドが権威を持つ有効な uid と gid に一致する範囲を
+	      定義する。レンジはフィルタとして振る舞うことに注意。
+	      もしも、アルゴリズム的に決定された UID 又は GID がレンジ外に
+	      なると、それらは無視され、対応するマップは破棄される。
+	      これは、ローカルとリモートで定義された ID の間で偶然に UID/GID
+	      が重なってしまうことを防ぐ方法として用意されている。
+	    </para>
+<!--
+	    <para>
+	      Defines the available matching uid and gid
+	                           range for which the backend is
+	                           authoritative. Note that the range acts as a
+	                           filter.  If algorithmically determined UID or
+	                           GID fall outside the range, they are ignored
+	                           and the corresponding map is discarded.  It is
+	                           intended as a way to avoid accidental UID/GID
+	                           overlaps between local and remotely defined
+	                           IDs.
+	    </para>
+-->
+	     </listitem>
+	  </varlistentry>
+	  <varlistentry>
+		<term>rangesize = numberofidsperdomain</term>
+		<listitem>
+			<para>ドメインレンジ毎のuid/gidの有効範囲を定義する。最小値は2000
+			である。この値より大きいRIDを伴うSIDは、有効レンジ数に依存する
+			拡張レンジにマップされる。もしも、autoridバックエンドが、
+			有効レンジ外で動作している場合、新しいドメインに対する
+			マップ要求(あるいはすでに存在するドメインに対する新しい
+			拡張レンジ)は、無視され、対応するマップは破棄される。
+		</para>
+                       <para>
+                       例: レンジサイズが10000に設定され、RIDが10000までの
+		       users/groupsは、ドメインの最初のレンジに配置される。
+		       RIDが25000のオブジェクトをマップしようとする場合、
+		       拡張レンジが割り当てられ、20000-29999までのすべてのRIDを
+		       マップするのに使われる。
+		       </para>
+<!--
+                <para>One range will be used for local users and groups and for
+                      non-domain well-known SIDs like Everyone (S-1-1-0) or Creator Owner (S-1-3-0).
+                     A chosen list of well-known SIDs will be preallocated on first start
+                     to create deterministic mappings for those.</para>
+		<para>
+                Thus the number of local users and groups that can be created is
+                limited by this option as well. If you plan to create a large amount
+                of local users or groups, you will need set this parameter accordingly.
+		</para>
+-->
+                <para>1つのレンジはローカルユーザーとグループ用と、Everyone (S-1-1-0)
+		あるいは Creator Owner (S-1-3-0) のような、非ドメインで、よく使われる
+		SIDに使われる。選択されたよく使われるSIDのリストは、それらのマッピングを
+		作成する時に、最初に事前割り当てされる。</para>
+		<para>
+		それゆえ、作成出来るローカルユーザーとグループの数は、このオプションに
+		よって制限される。もしも、ローカルユーザーとグループを大量に作る計画が
+		あるならば、このパラメーターを適切に設定する必要がある。
+                </para>
+		<para>既定値は 100000である。</para>
+		</listitem>
+		</varlistentry>
+                <varlistentry>
+                <term>read only = [ yes | no ]</term>
+                <listitem>
+		<para>モジュールをリードオンリモードにする。idmap poolには、
+		新規のレンジを割り当てる事も、新しいマッピングを作成する事も
+		できない。既定値は no である。
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>マッピング作成方法</title>
+	<para>
+		RID用の Unix ID は以下の方法で計算される:
+		<programlisting>
+		  ID =  REDUCED RID + IDMAP RANGE LOW VALUE + RANGE NUMBER * RANGE SIZE
+		</programlisting>
+		ここで、REDUCED RID = RID % RANGE_SIZE で、
+		DOMAIN RANGE INDEX = RID / RANGE_SIZE はドメインのsidと共に、
+		RANGE NUMBER(データベースに格納される)を決めるのに使われる。
+		
+	</para>
+	<para>
+		同じように、与えられた Unix ID のための RID 計算方式は
+		以下のようになる:
+		<programlisting>
+			RID = (ID - LOW ID) % RANGE SIZE + DOMAIN RANGE INDEX * RANGE SIZE
+		</programlisting>
+		ここで、DOMAIN RANGE INDEX は RANGE NUMBER = (ID - LOW ID) / RANGE SIZE
+		によるドメインsidといっしょにデータベースから検索される。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定例</title>
+	<para>
+	  この例はプリンシパルドメインと19の信頼されたドメイン / レンジ拡張 のために
+	  動作する最低限の設定例である。
+	</para>
+
+	<programlisting>
+	[global]
+	security = ads
+	workgroup = CUSTOMER
+	realm = CUSTOMER.COM
+
+        idmap config * : backend = autorid
+        idmap config * : range = 1000000-1999999
+
+	</programlisting>
+
+<!--
+	<para>
+		This example shows how to configure idmap_autorid as default
+		for all domains with a potentially large amount of users
+		plus a specific configuration for a trusted domain
+		that uses the SFU mapping scheme. Please note that idmap
+		ranges and sfu ranges are not allowed to overlap.
+	</para>
+-->	
+	<para>
+		この例は、大量のユーザーが存在しうるすべてのドメインと、それに
+		加えて、SFUマッピング方法を使う信頼されたドメインのための
+		特定の設定のために、既定値としてidmap_autoridを設定する方法を
+		示す。idmapレンジとsfuレンジはオーバーラップが許されない
+		事に注意してほしい。
+	</para>
+
+	<programlisting>
+	[global]
+	security = ads
+	workgroup = CUSTOMER
+	realm = CUSTOMER.COM
+
+        idmap config * : backend = autorid
+        idmap config * : range = 1000000-19999999
+	autorid:rangesize = 1000000
+
+	idmap config TRUSTED : backend  = ad
+	idmap config TRUSTED : range    = 50000 - 99999
+	autorid:rangesize = 1000000
+	</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+        <para>
+    オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew Tridgell
+    により書かれた。Samba は現在 Samba チームの元で、Linux のカーネルと
+    同様にオープンソースソフトウェアとして開発されている。
+        </para>
+
+</refsect1>
+
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 4.4.0 - 4.9.3 に対応する。</para>
+        <para>このドキュメントの翻訳は
+    <itemizedlist>
+        <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+    </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

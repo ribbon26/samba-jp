@@ -1,0 +1,35 @@
+<samba:parameter name="lprm command"
+                 context="S"
+		 type="string"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このパラメーターには、
+	印刷ジョブを削除するためにサーバー上で実行するコマンドを指定する。</para>
+
+	<para> このコマンドは、
+	プリンター名とジョブ番号を受け取るとその印刷ジョブを削除するプログラムやスクリプトでなければならない。</para>
+
+	<para><parameter moreinfo="none">%p</parameter> 変数は、
+	プリンター名に置換される。
+	<parameter moreinfo="none">%j</parameter> はジョブ番号(整数)に置換される。</para>
+
+	<para> サーバーの PATH 環境変数が利用できないかもしれないことを考慮して、
+	<parameter moreinfo="none">lprm command</parameter> を絶対パスで記述することを推奨する。
+	</para>
+
+	<para>
+	以下に設定例を示す。
+<programlisting>
+lprm command = /usr/bin/lprm -P%p %j
+
+あるいは
+
+lprm command = /usr/bin/cancel %p-%j
+</programlisting>
+	</para>
+
+</description>
+<related>printing</related>
+
+<value type="default"> printing パラメーターの設定に依存する </value>
+</samba:parameter>

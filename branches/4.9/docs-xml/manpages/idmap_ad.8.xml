@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_ad.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_ad</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_ad</refname>
+<!-- 原文 samba-4.6.7
+	<refpurpose>Samba's idmap_ad Backend for Winbind</refpurpose>
+-->
+	<refpurpose>Winbind 用の idmap_ad バックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<!-- 原文 samba-4.6.7
+	<title>DESCRIPTION</title>
+	<para>The idmap_ad plugin provides a way for Winbind to read
+	id mappings from an AD server that uses RFC2307/SFU schema
+	extensions. This module implements only the &quot;idmap&quot;
+	API, and is READONLY. Mappings must be provided in advance
+	by the administrator by adding the uidNumber attributes for
+	users and gidNumber attributes for groups in the AD. Winbind
+	will only map users that have a uidNumber and whose primary
+	group have a gidNumber attribute set. It is however
+	recommended that all groups in use have gidNumber attributes
+	assigned, otherwise they are not working.</para>
+-->
+	<title>説明</title>
+	<para>idmap_ad プラグインは、RFC2307/SFU スキーマ拡張を使う AD サーバーからの
+	id マッピングを Winbind が読み出す手段を提供する。このモジュールは &quot;idmap&quot;
+	API を実装するだけであり、読み取り機能のみである。
+	AD 内のユーザーに対応する uidNumber 属性と、グループに対応する gidNumbe 属性は、
+	管理者が前もってマッピングに追加しておくことが必要である。
+	Winbind は、 uidNumber を
+	持ち、かつ、そのプライマリグループが、  gidNumber 属性に設定されて
+	いるユーザーのみをマップする。ただし利用しているグループはすべて
+	gidNumber 属性を割り当てることが推奨されている。
+	こうしておかないと、設定は適切に動作しない。</para>
+
+<!-- 原文 samba-4.6.7
+	<para>
+	Currently, the <parameter>ad</parameter> backend
+	does not work as the default idmap backend, but one has
+	to configure it separately for each domain for which one wants
+	to use it, using disjoint ranges. One usually needs to configure
+	a writeable default idmap range, using for example the
+	<parameter>tdb</parameter> or <parameter>ldap</parameter>
+	backend, in order to be able to map the BUILTIN sids and
+	possibly other trusted domains. The writeable default config
+	is also needed in order to be able to create group mappings.
+	This catch-all default idmap configuration should have a range
+	that is disjoint from any explicitly configured domain with
+	idmap backend <parameter>ad</parameter>. See the example below.
+	</para>
+-->
+        <para>
+	現在 <parameter>ad</parameter> バックエンドは idmap バックエンドの既定値には
+	なっていない。ドメインにおいてこれを利用する場合は、すべてのドメインにわたって
+	idmap の設定範囲が重複しないように設定する必要がある。
+	たとえば <parameter>tdb</parameter> バックエンドや <parameter>ldap</parameter>
+	バックエンドを用いる場合は、BUILTIN sid や他の信頼されたドメインを
+	マップ出来るようにするために、書き込み可能な既定の idmap 範囲を設定
+	することを通常行う。
+	書き込み可能な既定値の設定は、グループマッピングを作成するためにも
+	必要である。この包括的な既定値の idmap 設定は、idmap バックエンド
+	<parameter>ad</parameter> を使うように明示された他のどのドメインに
+	対しても、重複しないように設定する必要がある。
+	以下の例を参照のこと。</para>
+
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.6.7
+	<title>IDMAP OPTIONS</title>
+-->
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>range = low - high</term>
+		<listitem><para>
+<!-- 原文 samba-4.6.7
+			Defines the available matching UID and GID range for which the
+			backend is authoritative. Note that the range acts as a filter.
+			If specified any UID or GID stored in AD that fall outside the
+			range is ignored and the corresponding map is discarded.
+			It is intended as a way to avoid accidental UID/GID overlaps
+			between local and remotely defined IDs.
+-->
+			このバックエンドが割り当て権限をもつ UID および GID の範囲を定義する。
+			この範囲はフィルターとして処理されることに注意。
+			AD 内に格納されている UID または GID であっても、設定範囲
+			から外れたものが指定されると、この範囲指定は無視され、対応
+			するマップは破棄される。これは、
+			ローカルとリモートで定義された ID が、偶然 UID/GID が重なって
+			しまうことを防ぐという意図がある。
+		</para></listitem>
+		</varlistentry>
+		<varlistentry>
+		<term>schema_mode = &lt;rfc2307 | sfu | sfu20&gt;</term>
+		<listitem><para>
+<!-- 原文 samba-4.6.7
+			Defines the schema that idmap_ad should use when querying
+			Active Directory regarding user and group information.
+			This can be either the RFC2307 schema support included
+			in Windows 2003 R2 or the Service for Unix (SFU) schema.
+			For SFU 3.0 or 3.5 please choose "sfu", for SFU 2.0
+			please choose "sfu20".
+-->
+			idmap_ad が用いるスキーマを定義するものであり、
+			Active Directory においてユーザー情報やグループ情報を問い合わせる際に利用される。
+			これは、Windows 2003 R2 における RFC2307 スキーマサポートか、
+			あるいは Service for Unix (SFU) のいずれかである。
+			SFU 3.0 や 3.5 に対しては "sfu" を、また SFU 2.0 に対しては "sfu20" を選択すること。
+
+<!-- 原文 samba-4.6.7
+			Please note that the behavior of primary group membership is
+			controlled by the <emphasis>unix_primary_group</emphasis> option.
+-->
+			プライマルグループメンバーシップの動作は、<emphasis>unix_primary_group</emphasis>
+			オプションによって制御されることに注意。
+		</para></listitem>
+		</varlistentry>
+                <varlistentry>
+                <term>unix_primary_group = yes/no</term>
+                <listitem><para>
+<!-- 原文 samba-4.6.7
+		  Defines whether the user's primary group is fetched from the SFU
+		  attributes or the AD primary group. If set to
+		  <parameter>yes</parameter> the primary group membership is fetched
+		  from the LDAP attributes (gidNumber).
+		  If set to <parameter>no</parameter> the primary group membership is
+		  calculated via the "primaryGroupID" LDAP attribute.
+-->
+		ユーザーのプライマリグループを、SFU 属性か、あるいは AD のプライマリグループ
+		から取り出すかの定義。これが <parameter>yes</parameter> に設定された
+		場合、プライマリグループメンバーシップは LDAP属性 (gidNumber) から
+		取り出される。
+		<parameter>no</parameter> に設定された場合には、プライマリグループ
+		メンバーシップは LDAP 属性 "primaryGroupID" から計算される。
+               </para>
+<!-- 原文 samba-4.6.7
+		<para>Default: no</para>
+-->
+               <para>既定値: no</para>
+               </listitem>
+               </varlistentry>
+               <varlistentry>
+               <term>unix_nss_info = yes/no</term>
+               <listitem>
+<!-- 原文 samba-4.6.7
+		  If set to <parameter>yes</parameter> winbind will retrieve the login
+		  shell and home directory from the LDAP attributes. If set to
+		  <parameter>no</parameter> the or the AD LDAP entry lacks the SFU
+		  attributes the options <emphasis>template shell</emphasis> and
+		  <emphasis>template homedir</emphasis> are used.
+-->
+		<para>
+		これを <parameter>yes</parameter> に設定した場合、winbind は
+		LDAP 属性からログインシェルとホームディレクトリ情報を検索する。
+		<parameter>no</parameter> に設定した場合か、 AD の LDAP エントリに
+		SFU 属性がない場合は、オプション <emphasis>template shell</emphasis> と
+		<emphasis>template homedir</emphasis> が使われる。
+		</para>
+<!-- 原文 samba-4.6.7
+		<para>Default: no</para>
+-->
+		<para>既定値: no</para>
+                </listitem>
+               </varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.7
+	<title>EXAMPLES</title>
+-->
+	<title>使用例</title>
+<!-- 原文 samba-4.6.7
+	<para>
+	The following example shows how to retrieve idmappings from our principal and
+	trusted AD domains. If trusted domains are present id conflicts must be
+	resolved beforehand, there is no
+	guarantee on the order conflicting mappings would be resolved at this point.
+-->
+	<para>
+        以下の例は、主として利用する信頼された AD ドメインから id マッピングを
+	取得する方法を示している。信頼されたドメインに対して id の競合が解決されず
+	に残っていた場合、競合したマッピングがその順どおりに解決する保証はない。
+
+<!-- 原文 samba-4.6.7
+	This example also shows how to leave a small non conflicting range for local
+	id allocation that may be used in internal backends like BUILTIN.
+-->
+	この例はまた、競合しないわずかな範囲を残している例であり、BUILTIN のような
+	内部のバックエンド向けに、ローカルの id 割り当て範囲とするものである。</para>
+
+	<programlisting>
+	[global]
+	workgroup = CORP
+        idmap config * : backend = tdb
+        idmap config * : range = 1000000-1999999
+
+	idmap config CORP : backend  = ad
+	idmap config CORP : range = 1000-999999
+	</programlisting>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.7
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.6.7
+	<para>
+	The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.
+	</para>
+-->
+	<para>
+	オリジナルの Samba ソフトウェアと関連するユーティリティは、 Andrew Tridgell に
+	よって作成された。現在 Samba は Samba Team によって、 Linux カーネルの開発と同様の
+	オープンソースプロジェクトとして開発が 行なわれている。</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.6.2 - 4.9.3  に対応する。</para>
+        <para>このドキュメントの翻訳は
+	<itemizedlist>
+		<listitem><para>武田保真</para></listitem>
+		<listitem><para>たかはしもとのぶ</para></listitem>
+		<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+</refentry>

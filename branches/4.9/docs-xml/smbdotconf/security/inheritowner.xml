@@ -1,0 +1,55 @@
+<samba:parameter name="inherit owner"
+                 context="S"
+		 type="enum"
+		 enumlist="enum_inherit_owner_vals"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para> 新規作成したファイルやディレクトリの所有者としては、
+    通常接続しているユーザーの実行 UID の値が用いられる。
+    このパラメーターにより、Samba の管理者は、
+    新規作成したファイルやディレクトリの所有者を
+    親ディレクトリの所有者と同一にすることが可能となる。</para>
+
+    <para>有効なオプションは以下の通り:</para>
+    <itemizedlist>
+      <listitem><para><constant>no</constant> -
+      あるファイルの Windows (SID)所有者と UNIX (uid) 所有者の両方は
+      ファイルを作成した時の利用者の ID に設定される。
+      </para></listitem>
+
+      <listitem><para><constant>windows and unix</constant> -
+      新規ファイルやディレクトリにおける Windows の (SID)所有者と
+      UNIX (uid)の所有者を、親ディレクトリの所有者に設定する。
+      </para></listitem>
+
+      <listitem><para><constant>yes</constant> -
+      <constant>windows and unix</constant>の別名。
+      </para></listitem>
+
+      <listitem><para><constant>unix only</constant> -
+      UNIX の所有者は、親ディレクトリのUNIX 所有者に設定される。
+      </para></listitem>
+    </itemizedlist>
+    
+
+      <para>この動作が有用な状況としては、
+    ユーザーがファイルの作成や修正はできるが、削除はできないようにした drop box や、
+    あるユーザーの移動プロファイルのディレクトリ内に新規作成されたファイルの所有者が
+    そのユーザーとなるようにしたい場合などが挙げられる。</para>
+
+    <para><constant>unix only</constant>オプションはファイルのWindowsでの所有者と
+    UNIX での所有者の間の結合を事実上断ち切る。その結果、このモードでは、
+    ファイルのWindowsでの所有者を設定しても、UNIXの所有者を変更しない。
+    このモードを使用するには、<smbconfoption name="acl_xattr:ignore system acls">yes</smbconfoption>
+    といっしょの acl_xattr VFS モジュールのような、完全な NT ACL モデルをエミュレートできる
+    バッキングストアをいっしょに使うべきである。また、(UNIX拡張なしで) SMB 経由でのみ
+    ファイルが公開される時に、フォルダのquota をエミュレートする事にも使用できる。
+    ディレクトリの UNIX 所有者はローカルに設定され、すべてのサブディレクトリに継承され、
+    それらはすべて同じ quota を消費する。</para>
+    
+</description>
+
+<related>inherit permissions</related>
+
+<value type="default">no</value>
+</samba:parameter>
