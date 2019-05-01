@@ -600,10 +600,21 @@
 	    防止するため、._ AppleDouble ファイルを見せなくするかどうかの指定。</para>
         -->
 
-<!-- 原文 samba-4.6.6
+<!-- 原文 samba-4.10.0
 	      <para>Vetoing ._ files may break some applications, eg
 	      extracting Mac ZIP archives from Mac clients failes,
 	      because they contain ._ files. Setting this option to
+	      false will fix this, but the abstraction leak of
+	      exposing the internally created ._ files may have other
+	      unknown side effects.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+      	      <para>Vetoing ._ files may break some applications, e.g.
+	      extracting Mac ZIP archives from Mac clients fails,
+	      because they contain ._ files. <command>rsync</command> will
+	      also be unable to sync files beginning with underscores, as
+	      the temporary files it uses for these will start with ._ and
+	      so cannot be created.</para>
+	      <para>Setting this option to
 	      false will fix this, but the abstraction leak of
 	      exposing the internally created ._ files may have other
 	      unknown side effects.</para>
@@ -613,18 +624,13 @@
 	      誤動作を引き起こすことがある。たとえば、Mac クライアントから
 	      Mac ZIP アーカイブのを展開すると、アーカイブ中に ._ ファイルが
 	      含まれているために失敗する。
-	      このオプションを false にすることでこの問題を回避できるが、
+	      <command>rsync</command> も同様に、下線で始まるファイルの
+	      同期ができないが、これは、一時ファイルが、._ で始まるファイルを
+	      使うが、それが作成できないという理由による。</para>
+	      <para>このオプションを false にすることでこの問題を回避できるが、
 	      内部向けに作成された ._ ファイルが露見してしまうことで
               未知の副作用を引き起こすかもしれない。</para>
 	      <para>既定値は <emphasis>yes</emphasis> である。</para>
-	<!-- 4.4系で重複していた訳: 一時的保存
-	    <para> ._ ファイルを見せなくすると、いくつかのアプリケーションが動かなくなる
-	    ことがある。たとえば、 ._ ファイルを含むため、Mac クライアントからの Mac ZIP
-	    の回答は失敗する。このオプションを false に設定すると、これを修正するが、
-	    内部的に作成された ._ ファイルの露出をリークする概念は、他の不明な
-	    副作用を引き起こすかもしれない。</para>
-	    <para>既定値は <emphasis>yes</emphasis> である。</para>
-	-->
 	  </listitem>
 	  </varlistentry>
 
@@ -773,8 +779,8 @@
 </refsect1>
 <refsect1>
     <title>日本語訳</title>
-    <para>このマニュアルページは Samba 4.9.2 - 4.9.3 に対応する。</para>
-    <para>このドキュメントの Samba 4.8.0 - 4.9.3 対応の翻訳は
+    <para>このマニュアルページは Samba 4.10.0 - 4.10.2 に対応する。</para>
+    <para>このドキュメントの Samba 4.8.0 - 4.10.2 対応の翻訳は
     <itemizedlist>
         <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
     </itemizedlist>
