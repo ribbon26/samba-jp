@@ -3,6 +3,7 @@
                  type="integer"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+<!-- Samba 4.10.2
 	<para>This option specifies the number of seconds added to the delay
 		before a prefork master or worker process is restarted.  The
 		restart is initially zero, the prefork backoff increment is
@@ -19,6 +20,21 @@
 		There will be a zero second delay for the first restart. A two
 		second delay for the second restart. A four second delay for the
 		third and any subsequent restarts</para>
+-->
+	<para>このオプションは、prefork master または ワーカプロセスが再起動する
+		前の遅延時間を秒単位で指定する。再起動時の遅延は初期値では 0 だが、
+		"prefork maximum backoff" で指定される最大値までの範囲で、
+		prefork backoff increment で指定した値だけ、再起動ごとに遅延を行なう。
+	</para>
+
+	<para>さらに、"prefork backoff increment: service name" という形で
+	        指定することで、特定のサービスだけ指定を行える。たとえば、
+	        i.e. "prefork backoff increment:ldap = 2" は、
+		遅延の増分を 2にする。</para>
+
+	<para>backoff increment が2で、 maximum backoff が5の場合、
+		最初の再起動時における遅延は 0 秒であり、2回目の再起動時には2秒となり、
+		3回目以降の再起動時における遅延は4秒となる。</para>
 </description>
 
 <value type="default">10</value>
