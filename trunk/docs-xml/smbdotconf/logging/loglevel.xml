@@ -16,16 +16,17 @@
     ファイル中でデバッグレベル（ログレベル）を設定することが可能になる。
     </para>
 
-<!-- 原文 samba-4.7.0
+<!-- 原文 samba-4.10.0
     <para>This parameter has been extended since the 2.2.x 
     series, now it allows one to specify the debug level for multiple 
-    debug classes. This is to give greater flexibility in the configuration 
-    of the system. The following debug classes are currently implemented:
+    debug classes and distinct logfiles for debug classes. This is to give
+    greater flexibility in the configuration of the system. The following
+    debug classes are currently implemented:
     </para>
 -->
     <para>
     このパラメーターは Samba 2.2.x 系列と比べ強化されており、デバッグクラスごと
-    にデバッグレベルを指定することが可能となっている。
+    にデバッグレベルと異なったデバッグログファイルを指定することが可能となっている。
     これにより、システムの設定が非常に柔軟に行なえるようになる。以下の
     デバッグクラスが現在実装されている。</para>
 
@@ -66,14 +67,24 @@
         <listitem><para><parameter moreinfo="none">dsdb_transaction_audit</parameter></para></listitem>
         <listitem><para><parameter moreinfo="none">dsdb_transaction_json_audit</parameter></para></listitem>    </itemizedlist>
 
-<!-- 原文 samba-4.9.0
+<!-- 原文 samba-4.10.0
+    <para>To configure the logging for specific classes to go into a different
+    file then <smbconfoption name="log file"/>, you can append
+    <emphasis>@PATH</emphasis> to the class, eg <parameter>log level = 1
+    full_audit:1@/var/log/audit.log</parameter>.</para>
+
     <para>Authentication and authorization audit information is logged
     under the auth_audit, and if Samba was not compiled with
-    - -without-json-audit, a JSON representation is logged under
+    - -without-json, a JSON representation is logged under
     auth_json_audit.</para>
--->
+ -->
+     <para>指定されたクラスを異なったファイルにログ出力するための設定は、
+     <smbconfoption name="log file"/> のあとに、クラスに対して
+    <emphasis>@PATH</emphasis> と指定する。たとえば、 <parameter>log level = 1
+    full_audit:1@/var/log/audit.log</parameter> である。</para>
+
     <para>認証と承認の監査情報は auth_audit を指定するとログ出力される。
-    --without-json-audit パラメータなしで Samba がコンパイルされた場合、
+    --without-json パラメータなしで Samba がコンパイルされた場合、
     auth_json_audit 配下に JSON 形式でのログ出力が行われる。</para>
 
 <!-- 原文 samba-4.7.0
@@ -138,4 +149,5 @@
 </description>
 <value type="default">0</value>
 <value type="example">3 passdb:5 auth:10 winbind:2</value>
+<value type="example">1 full_audit:1@/var/log/audit.log winbind:2</value>
 </samba:parameter>
