@@ -30,7 +30,7 @@
 		<arg choice="opt">-W workgroup</arg>
 		<arg choice="opt">-N</arg>
 		<arg choice="opt">-I destinationIP</arg>
-		<arg choice="req">server</arg>
+		<arg choice="req">BINDING-STRING|HOST</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -53,15 +53,139 @@
 
 	<variablelist>
 		<varlistentry>
-		<term>server</term>
-		<listitem><para>接続先のサーバーを NetBIOS 名で指定する。
-		サーバーは SMB/CIFS サーバーである必要がある。 この名前の解決には
-		<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5
-		</manvolnum></citerefentry> ファイルの
-		<smbconfoption name="name resolve order"/>
-		パラメーターが用いられる。
-		</para></listitem>
-		</varlistentry>
+<!-- Samba-4.10.6
+		<term>BINDING-STRING|HOST</term>
+		<listitem>
+			<para>When connecting to a dcerpc service you need to
+			specify a binding string.</para>
+
+			<para>The format is:</para>
+
+			<para>TRANSPORT:host[options]</para>
+
+			<para>where TRANSPORT is either ncacn_np (named pipes) for SMB or
+			ncacn_ip_tcp for DCERPC over TCP/IP.</para>
+
+			<para>"host" is an IP or hostname or netbios name. If the binding
+			string identifies the server side of an endpoint, "host" may be
+			an empty string. See below for more details.</para>
+
+			<para>"options" can include a SMB pipe name if using the ncacn_np
+			transport or a TCP port number if using the ncacn_ip_tcp transport,
+			otherwise they will be auto-determined.</para>
+
+			<para>Examples:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[1024]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,seal,krb5]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,spnego]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr,sign,print]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc:/path/to/unix/socket</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">//SAMBA</parameter></para></listitem>
+			</itemizedlist>
+
+			<para>The supported transports are:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_np</parameter> - Connect using named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp</parameter> - Connect over TCP/IP</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc</parameter> - Connect over local RPC (unix sockets)</para></listitem>
+			</itemizedlist>
+
+			<para>The supported options are:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">sign</parameter> - Use RPC integrety autentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">seal</parameter> - Enable RPC privacy (encryption) autentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">connect</parameter> - Use RPC connect level authentication (auth, but no sign or seal)</para></listitem>
+			<listitem><para><parameter moreinfo="none">packet</parameter> - Use RPC packet authentication level</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">spnego</parameter> - Use SPNEGO instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">ntlm</parameter> - Use plain NTLM instead of SPNEGO or NTLMSSP</para></listitem>
+			<listitem><para><parameter moreinfo="none">krb5</parameter> - Use Kerberos instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">schannel</parameter> - Create a schannel connection</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">smb1</parameter> - Use SMB1 for named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">smb2</parameter> - Use SMB2/3 for named pipes</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">validate</parameter> - Enable the NDR validator</para></listitem>
+			<listitem><para><parameter moreinfo="none">print</parameter> - Enable debug output of packets</para></listitem>
+			<listitem><para><parameter moreinfo="none">padcheck</parameter> - Check reply data for non-zero pad bytes</para></listitem>
+			<listitem><para><parameter moreinfo="none">bigendian</parameter> - Use big endian for RPC</para></listitem>
+			<listitem><para><parameter moreinfo="none">ndr64</parameter> - Use NDR64 for RPC</para></listitem>
+			</itemizedlist>
+
+		</listitem>
+-->
+		<term>BINDING-STRING|HOST</term>
+		<listitem>
+		        <para>dcerpc サービスへの接続時にバインド文字列を
+			指定する。</para>
+
+			<para>書式は以下の通り:</para>
+
+			<para>TRANSPORT:host[options]</para>
+
+			<para>ここで TRANSPORT は、SMB に対する ncacn_np (名前付きパイプ) か
+			TCP/IP 上の DCERPC に対する ncacn_ip_tcp である。</para>
+
+			<para>"host" は、IP か ホスト名か netbios名 である。バインド文字列が
+			サーバサイドのエンドポイントを識別する場合、  "host" は
+			空の文字列でもよい。詳細は以下を参照のこと。</para>
+
+			<para>"options" は、ncacn_np トランスポートを使う場合は、SMB パイプ名を
+			含んでもよく、ncacn_ip_tcp トランスポートを使う場合は TCP ポート番号を
+			含んでもよく、その他の場合は、自動的に決定される。</para>
+
+			<para>例:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[1024]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,seal,krb5]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,spnego]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr,sign,print]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc:/path/to/unix/socket</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">//SAMBA</parameter></para></listitem>
+			</itemizedlist>
+
+			<para>サポートされるトランスポートは以下の通り:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_np</parameter> - Connect using named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp</parameter> - Connect over TCP/IP</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc</parameter> - Connect over local RPC (unix sockets)</para></listitem>
+			</itemizedlist>
+
+			<para>サポートされるオプションは以下の通り:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">sign</parameter> - Use RPC integrety autentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">seal</parameter> - Enable RPC privacy (encryption) autentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">connect</parameter> - Use RPC connect level authentication (auth, but no sign or seal)</para></listitem>
+			<listitem><para><parameter moreinfo="none">packet</parameter> - Use RPC packet authentication level</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">spnego</parameter> - Use SPNEGO instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">ntlm</parameter> - Use plain NTLM instead of SPNEGO or NTLMSSP</para></listitem>
+			<listitem><para><parameter moreinfo="none">krb5</parameter> - Use Kerberos instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">schannel</parameter> - Create a schannel connection</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">smb1</parameter> - Use SMB1 for named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">smb2</parameter> - Use SMB2/3 for named pipes</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">validate</parameter> - Enable the NDR validator</para></listitem>
+			<listitem><para><parameter moreinfo="none">print</parameter> - Enable debug output of packets</para></listitem>
+			<listitem><para><parameter moreinfo="none">padcheck</parameter> - Check reply data for non-zero pad bytes</para></listitem>
+			<listitem><para><parameter moreinfo="none">bigendian</parameter> - Use big endian for RPC</para></listitem>
+			<listitem><para><parameter moreinfo="none">ndr64</parameter> - Use NDR64 for RPC</para></listitem>
+			</itemizedlist>
+
+		</listitem>
+                </varlistentry>
 
 
 		<varlistentry>
@@ -616,7 +740,7 @@ Comma Separated list of Files
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.3.0 - 4.10.4 に対応する。</para>
+	<para>このマニュアルページは Samba 4.10.6 - 4.10.6 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -627,7 +751,7 @@ Comma Separated list of Files
         によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - 3.6.9 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 4.0.0 - 4.10.4  対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 4.0.0 - 4.10.6  対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
 
 </refsect1>
 
