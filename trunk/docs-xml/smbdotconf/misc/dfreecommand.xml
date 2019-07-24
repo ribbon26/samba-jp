@@ -34,18 +34,19 @@
 	<para>dfree スクリプト(実行可能にする必要がある)を以下に示す:
 <programlisting format="linespecific"> 
 #!/bin/sh
-df $1 | tail -1 | awk '{print $(NF-4),$(NF-2)}'
+df "$1" | tail -1 | awk '{print $(NF-4),$(NF-2)}'
 </programlisting>
         </para>
         <para>
 	もしくは、以下のようなものも考えられる(Sys V ベースのシステムの場合):
 <programlisting format="linespecific"> 
 #!/bin/sh
-/usr/bin/df -k $1 | tail -1 | awk '{print $3&quot; &quot;$5}'
+/usr/bin/df -k "$1" | tail -1 | awk '{print $3&quot; &quot;$5}'
 </programlisting>
-</para>
-<para>
-	システムによっては、コマンド名をフルパスで記述する必要がある場合があるので注意。</para>
+        システムによっては、コマンド名をフルパスで記述する必要がある場合があるので注意。
+	さらに、スクリプトに渡される引数は、空白や改行のような特殊文字を含む場合、
+	引用符でくくらなければならないことにも注意。
+	</para>
 
 	<para>
 	デフォルトは内部ルーチンにより、ディスクの総容量と空き容量が計算される。
