@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="dbwrap_tool.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>dbwrap_tool</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>dbwrap_tool</refname>
+	<refpurpose>dbwrap インタフェースによる低レベルな TDB/CTDB 操作ツール</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>dbwrap_tool</command>
+		<arg choice="opt">--persistent</arg>
+		<arg choice="opt">--non-persistent</arg>
+		<arg choice="opt">-d &lt;debug level&gt;</arg>
+		<arg choice="opt">-s &lt;config file&gt;</arg>
+		<arg choice="opt">-l &lt;log file base&gt;</arg>
+		<arg choice="opt">-V</arg>
+		<arg choice="opt">--option=&lt;name&gt;=&lt;value&gt;</arg>
+		<arg choice="req">&lt;database&gt;</arg>
+		<arg choice="req">&lt;operation&gt;</arg>
+		<arg choice="opt">&lt;key&gt;
+			<arg choice="opt">&lt;type&gt;
+                        <arg choice="opt">&lt;value&gt;</arg></arg></arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>dbwrap_tool は、dbwrap インタフェースにより
+	TDB/CTDB データベースを操作するために使われる。</para>
+
+	<para>以下のデータベース操作が可能である:
+	<itemizedlist>
+		<listitem><para>fetch: レコードの読み取り</para></listitem>
+		<listitem><para>store: レコードの作成もしくは変更</para></listitem>
+		<listitem><para>delete: レコードの削除</para></listitem>
+		<listitem><para>exists: レコードが存在することの確認</para></listitem>
+		<listitem><para>erase: 全レコードの削除</para></listitem>
+		<listitem><para>listkeys: 全レコードの一覧表示</para></listitem>
+		<listitem><para>listwatchers: レコードの変更を待機しているプロセスの一覧</para></listitem>
+	</itemizedlist>
+	</para>
+	<para>以下の型が有効である:
+	<itemizedlist>
+		<listitem><para>int32: 符号つき32ビット整数</para></listitem>
+		<listitem><para>uint32: 符号なし32ビット整数</para></listitem>
+		<listitem><para>string: "hello world"</para></listitem>
+		<listitem><para>hex: "68656C6C6F20776F726C6400" ("hello world")のような16進数の文字列</para></listitem>
+	</itemizedlist>
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+               <varlistentry>
+                       <term>--persistent</term>
+                       <listitem><para>永続的な(persistent)データベースとして、
+		       データベースをオープンする。
+                     </para>
+		     <para>
+		       正確には、 --persistent と --non-persistent のうちどちらかを
+		       指定しなければならない。
+		     </para>
+		       </listitem>
+               </varlistentry>
+               <varlistentry>
+                       <term>--non-persistent</term>
+                       <listitem><para>永続的ではない(non-persistent)データベースとして、
+		       データベースをオープンする。
+                       </para>
+                       <para>
+			 警告: その時点で、他に誰も開いていない場合、永続的ではない状態で
+			 データベースをオープンすると、データベースをワイプする。
+		       </para>
+		       <para>
+			 Caveat: opening a database as non-persistent when there
+                       is currently no other opener will wipe the database.
+                       </para>
+                       <para>
+			 正確には、 --persistent と --non-persistent のうちどちらかを
+			 指定しなければならない
+		       </para></listitem>
+	       </varlistentry>
+		&popt.common.samba.client;
+		&popt.autohelp;
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>コマンド</title>
+	<refsect2>
+		<title>fetch</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; fetch &lt;key&gt; &lt;type&gt;
+		</cmdsynopsis>
+	</refsect2>
+	<refsect2>
+		<title>store</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; store &lt;key&gt; &lt;type&gt; &lt;value&gt;
+		</cmdsynopsis>
+	</refsect2>
+	<refsect2>
+		<title>delete</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; delete &lt;key&gt;
+		</cmdsynopsis>
+	</refsect2>
+        <refsect2>
+               <title>exists</title>
+               <cmdsynopsis>
+                       <command>dbwrap_tool</command> &lt;database&gt; exists &lt;key&gt;
+               </cmdsynopsis>
+        </refsect2>
+	<refsect2>
+		<title>erase</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; erase
+		</cmdsynopsis>
+	</refsect2>
+	<refsect2>
+		<title>listkeys</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; listkeys
+		</cmdsynopsis>
+	</refsect2>
+	<refsect2>
+		<title>listwatchers</title>
+		<cmdsynopsis>
+			<command>dbwrap_tool</command> &lt;database&gt; listwatchers
+		</cmdsynopsis>
+	</refsect2>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+	<variablelist>
+		<varlistentry><term>winbindd_idmap.tdb の全キーを表示する。</term>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb listkeys</para></listitem>
+		</varlistentry>
+		<varlistentry><term>"USER HWM" というキーのレコードを uint32 型として読み取る。</term>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb fetch "USER HWM" uint32</para></listitem>
+		</varlistentry>
+		<varlistentry><term>"USER HWM" というキーのレコードを削除する。</term>
+			<listitem><para><command>dbwrap_tool</command> --persistent winbindd_idmap.tdb remove "USER HWM"</para></listitem>
+		</varlistentry>
+		<varlistentry><term>"USER HWM" というキーのレコードの値を 214 で上書きする。</term>
+			<listitem><para>uint32: <command>dbwrap_tool</command> --persistent winbindd_idmap.tdb store "USER HWM" uint32 214</para></listitem>
+			<listitem><para>hex: <command>dbwrap_tool</command> --persistent winbindd_idmap.tdb store "USER HWM" hex D6000000</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>注意</title>
+
+	<para>慎重に使うこと!</para>
+</refsect1>
+
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>参照</title>
+	<para><citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry></para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
+	<para>dbwrap_tool のマニュアルページは、Bjoern Baumbach によって作成された。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは 4.2.0 - 4.10.4 に対応する。</para>
+        <para>このドキュメントの Samba 4.0.3 - 4.10.4  対応の翻訳は
+	<itemizedlist>
+	<para>太田俊哉 (ribbon@samba.gr.jp)</para>
+	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
+	</itemizedlist>	
+        によって行なわれた。</para>
+
+</refsect1>
+
+</refentry>

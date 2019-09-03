@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_ldap.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_ldap</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_ldap</refname>
+	<refpurpose>SambaのWinbind用idmap_ldapバックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+
+	<para>idmap_ldap プラグインは、 LDAP ディレクトリサービスにある
+	SID/uid/gid のマッピングテーブルに対して、 Winbind から格納/呼び出しを
+	行う手段を提供する。</para>
+
+	<para>idmap_ridのような呼び出しのみのバックエンドと異なり、
+	これは、割り当てを行うバックエンドである。これは、新しいマッピングを
+	生成するために、新しいユーザーとグループIDを割り当てる必要があるという
+	ことである。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>ldap_base_dn = DN</term>
+		<listitem><para>
+			SID/uid/gid マッピングエントリーを行う際に使用する、
+			ディレクトリの base suffix を定義する。定義されていない場合、
+			idmap_ldap はデフォルトで smb.conf の &quot;ldap idmap suffix&quot;
+			オプションの値を使用する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>ldap_user_dn = DN</term>
+		<listitem><para>
+			認証の際に使用する user DN を定義する。
+			この認証に使うsecretは、net idmap secret
+			(<citerefentry><refentrytitle>net</refentrytitle>
+			<manvolnum>8</manvolnum></citerefentry>を参照)を使って
+			格納せねばならない。もしも存在しない場合、
+			ldap passdb 設定からのldap認証情報が使われ、それもない
+			場合、最終的な処理として、匿名バインドが実行される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>ldap_url = ldap://server/</term>
+		<listitem><para>
+			既存の SID/uid/gid マップエントリーのために使用する LDAP 
+			サーバーを指定する。未定義の場合、 ldap://localhost/ が使われる。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+		<term>range = low - high</term>
+                <listitem><para>
+			バックエンドが権威を持つと規定されている、 uid と gid の利用可能な
+			マッチング範囲を定義する。
+                </para></listitem>
+                </varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+        <title>使用例</title>
+	<para>
+	  以下の使用例は、どのようにldapディレクトリが既定値のidmap バックエンド
+	  として使われるかを示している。idmap rangeとベースディレクトリ
+	  サフィックスの設定も示している。idmap_user_dnのsecretは
+	  &quot;net idmap secret '*' password&quot;で設定されねばならない。
+        </para>	  
+
+        <programlisting>
+        [global]
+        idmap config * : backend      = ldap
+        idmap config * : range        = 1000000-1999999
+        idmap config * : ldap_url     = ldap://localhost/
+        idmap config * : ldap_base_dn = ou=idmap,dc=example,dc=com
+        idmap config * : ldap_user_dn = cn=idmap_admin,dc=example,dc=com
+        </programlisting>
+
+        <para>
+	  この使用例は、マッピングを格納するためにtdbが既定値のバックエンドと
+	  なっている間、リードオンリのバックエンドとしてldapが使うことが出来る
+	  という事を示している。これは、あるドメインDOM1に対する明示的な
+	  設定を追加し、これはldap idmap backend を使う。既定値のレンジから
+	  共通範囲を持たないレンジが使われることに注意。
+        </para>
+
+        <programlisting>
+        [global]
+        # "backend = tdb" is redundant here since it is the default
+        idmap config * : backend = tdb
+        idmap config * : range = 1000000-1999999
+
+        idmap config DOM1 : backend = ldap
+        idmap config DOM1 : range = 2000000-2999999
+        idmap config DOM1 : read only = yes
+        idmap config DOM1 : ldap_url = ldap://server/
+        idmap config DOM1 : ldap_base_dn = ou=idmap,dc=dom1,dc=example,dc=com
+        idmap config DOM1 : ldap_user_dn = cn=idmap_admin,dc=dom1,dc=example,dc=com
+        </programlisting>
+
+</refsect1>
+
+<refsynopsisdiv>
+	<title>備考</title>
+
+	<para>LDAP サーバーに対して認証を使用するには DN とパスワードを
+	指定する必要があるだろう。設定ファイル中に平文で指定された
+	パスワードが晒されてしまうことを防ぐために、これらはセキュリティ
+	ストアの中に格納される。特定の idmap ドメインにおいて、指定された
+	DN に対する秘密のパスワードを格納するには &quot;net idmap &quot; 
+	コマンドを使用する。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 3.6.0 - 4.10.4 に対応する。</para>
+		<para>このドキュメントの Samba 3.2.4 - 4.10.4 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+		<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+		によって行なわれた。</para>
+</refsect1>
+
+</refentry>

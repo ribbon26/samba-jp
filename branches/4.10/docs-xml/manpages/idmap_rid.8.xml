@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_rid.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_rid</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_rid</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>Samba's idmap_rid Backend for Winbind</refpurpose>
+-->
+	<refpurpose>Winbind 用 idmap_rid バックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+	<para>The idmap_rid backend provides a way to use an algorithmic
+	mapping scheme to map UIDs/GIDs and SIDs. No database is required
+	in this case as the mapping is deterministic.</para>
+-->
+	<title>説明</title>
+	<para>idmap_rid バックエンドは、アルゴリズムによって UID や GID を SID に
+	マッピングする方式を提供する。これを用いる場合はマッピングが計算によって
+	決定されるため、データベースは必要としない。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	Currently, there should to be an explicit idmap configuration for each
+	domain that should use the idmap_rid backend, using disjoint ranges.
+	</para>
+-->
+	<para>
+	現状においては、idmap_rid バックエンドを利用するドメインに対しては、個々
+	に idmap 設定を明示的に行ない、互いに重複しないようにする必要がある。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	NOTE: The idmap_rid backend can NOT bet used as the default backend.
+	One usually needs to define a writeable default idmap range, using
+	a backend like <parameter>tdb</parameter> or <parameter>ldap</parameter>
+	that can create unix ids, in order to be able to map the BUILTIN sids
+	and other domains, and also in order to be able to create group mappings.
+	See the example below.
+	</para>
+-->
+	<para>
+	注意: idmap_rid バックエンドは、デフォルトのバックエンドとして利用され
+	なくなっている。通常は、書き込み可能な既定の idmap 範囲を定義する必要が
+	あるため、<parameter>tdb</parameter> や <parameter>ldap</parameter> の
+	ようなバックエンドを用いて Unix ID を生成するような設定を行う。
+	これによって BUILTIN SID とそれ以外のドメインをマップできるようになり、
+	またグループマッピングも生成できるようになる。以下の例を参照のこと。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>IDMAP OPTIONS</title>
+-->
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>range = low - high</term>
+		<listitem><para>
+<!-- 原文 samba-4.7.0
+			Defines the available matching uid and gid range for which the
+			backend is authoritative. Note that the range acts as a filter.
+			If algorithmically determined UID or GID fall outside the
+			range, they are ignored and the corresponding map is discarded.
+			It is intended as a way to avoid accidental UID/GID overlaps
+			between local and remotely defined IDs.
+-->
+			このバックエンドが割り当て権限をもつ UID と GID の範囲を
+			定義する。この範囲はフィルターとして処理されることに注意。
+			アルゴリズムによって計算された UID と GID が範囲外になって
+			しまった場合、これらは無視され、対応するマップは破棄される。
+			このオプションは、UID や GID がたまたまローカルとリモート
+			でそれぞれ定義された ID と重複してしまうのを避けるために
+			用意されている。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+<!-- 原文 samba-4.7.0
+		<term>base_rid = INTEGER</term>
+-->
+		<term>base_rid = 整数</term>
+		<listitem><para>
+<!-- 原文 samba-4.7.0
+			Defines the base integer used to build SIDs out of a UID or a GID,
+			and to rebase the UID or GID to be obtained from a SID.
+			This means SIDs with a RID less than the base rid are filtered.
+			The default is not to restrict the allowed rids at all,
+			i.e. a base_rid value of 0.
+-->
+			UID や GID から SID を生成したり、SID から UID や GID を
+			再生成したりするための基となる整数を定義する。これは RID
+			が base_rid よりも小さい SID はフィルターされることを意味
+			する。既定値は 0 であり、この場合は RID に制限をかけない
+			ものとなる。
+		 </para>
+		 <para>
+<!-- 原文 samba-4.7.0
+			Use of this parameter is deprecated.
+-->
+			このパラメーターを使うことは推奨しない。
+		 </para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>THE MAPPING FORMULAS</title>
+-->
+        <title>マッピング計算式</title>
+<!-- 原文 samba-4.7.0
+	<para>
+		The Unix ID for a RID is calculated this way:
+		<programlisting>
+			ID = RID - BASE_RID + LOW_RANGE_ID.
+		</programlisting>
+	</para>
+-->
+        <para>
+		RID に対する Unix ID は以下の方法で計算される:
+                <programlisting>
+                        ID = RID - BASE_RID + LOW_RANGE_ID
+                </programlisting>
+        </para>
+<!-- 原文 samba-4.7.0
+	<para>
+		Correspondingly, the formula for calculating the RID for a
+		given Unix ID is this:
+		<programlisting>
+			RID = ID + BASE_RID - LOW_RANGE_ID.
+		</programlisting>
+	</para>
+-->
+        <para>
+		それに対応して、与えられた Unix ID から RID を計算する方法は下記の通り:
+                <programlisting>
+                        RID = ID + BASE_RID - LOW_RANGE_ID
+                </programlisting>
+        </para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>EXAMPLES</title>
+-->
+	<title>使用例</title>
+<!-- 原文 samba-4.7.0
+	<para>
+		This example shows how to configure two domains with idmap_rid,
+		the principal domain and a trusted domain, leaving the default
+		id mapping scheme at tdb. The example also demonstrates the use
+		of the base_rid parameter for the trusted domain.
+	</para>
+-->
+	<para>
+		この例では idmap_rid のドメインとして 2 つ、つまりプリンシパル
+		ドメインと信頼するドメインを設定するものであり、tdb による既定
+		のマッピングを残すものである。また信頼するドメインにおいて
+		base_rid パラメーターの利用方法も示している。
+	</para>
+
+	<programlisting>
+	[global]
+	security = domain
+	workgroup = MAIN
+
+        idmap config * : backend        = tdb
+        idmap config * : range          = 1000000-1999999
+
+        idmap config MAIN : backend     = rid
+        idmap config MAIN : range       = 10000 - 49999
+
+        idmap config TRUSTED : backend  = rid
+        idmap config TRUSTED : range    = 50000 - 99999
+	</programlisting>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.
+	</para>
+-->
+	<para>
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.2.1 - 4.10.4に対応する。</para>
+	<para>このドキュメントの Samba 3.4.0 - 4.10.4 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	<listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
+	</itemizedlist>
+	によって行なわれた。</para>
+</refsect1>
+
+</refentry>

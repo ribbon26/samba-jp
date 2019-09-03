@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_media_harmony.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_unityed_media</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_unityed_media</refname>
+	<refpurpose>複数の Avid クライアントがネットワークドライブを共有出来るようにする。</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = unityed_media</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+        <para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>Unityed Media は Media Harmony VFS と関連するが、
+	Unityed Media と Media Harmony 間での主要な違いは、
+	unityed Media がメディアディレクトリの手動リフレッシュを必要としない
+	ことである。Unityed Media は Unity、ISIS、 EditShare 又はその他特定
+	目的のソリューションが行うのと同じような方法で、メディアファイルを
+	扱う。あるいは、クライアントサイドのアプリケーションと選択したハード
+	ウェアなしに。
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para>もしも Mac と Windows の Avid クライアントが同じフォルダに
+	アクセスした場合、それらには、Windows 共有上では隠される 隠し
+	Mac ファイル機能が使える、分離された共有定義が与えられるべきである。
+	例を参照のこと。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>unityed_media:clientid = user | hostname | ip </term>
+	    <listitem>
+	      <para>クライアントに関連する何の識別子が、
+	      ユーザ固有のパスを追加するかを制御する:</para>
+
+	      <itemizedlist>
+		<listitem><para><command>user (既定値)</command> -
+		username を使う。 </para></listitem>
+
+		<listitem><para><command>hostname</command> - hostname
+		を使う。これは、常時汎用の文字列 ("workstation") を
+		サーバに送るため、OS X クライアントでは動かないことに注意。
+		</para></listitem>
+
+		<listitem><para><command>ip</command> - クライアントの
+		IP アドレスを使う。これは、未テストでうまく動かないことに注意。
+		</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+	<para>unityed_media for Mac と Windows クライアントに対して unityed_media を有効にする:</para>
+<programlisting>
+        <smbconfsection name="[avid_mac]"/>
+	<smbconfoption name="path">/avid</smbconfoption>
+	<smbconfoption name="vfs objects">unityed_media</smbconfoption>
+        <smbconfsection name="[avid_win]"/>
+	<smbconfoption name="path">/avid</smbconfoption>
+	<smbconfoption name="vfs objects">unityed_media</smbconfoption>
+	<smbconfoption name="veto files">/.DS_Store/._@/.Trash@/.Spotlight@/.hidden/.hotfiles@/.vol/</smbconfoption>
+	<smbconfoption name="delete veto files">yes</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルは Samba システム &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+  <title>著者</title>
+
+  <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+  Tridgell によって作成された。現在 Samba は Samba Team に
+  よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+  として開発が行なわれている。</para>
+</refsect1>
+<refsect1>
+  <title>日本語訳</title>
+  <para>このマニュアルページは Samba 4.3.0 - 4.10.4 に対応する。</para>
+  <para>このドキュメントの Samba 4.3.0 - 4.10.4 対応の翻訳は
+  <itemizedlist>
+    <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+  </itemizedlist>
+  によって行なわれた。</para>
+</refsect1>
+
+</refentry>

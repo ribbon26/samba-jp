@@ -1,0 +1,34 @@
+<samba:parameter name="client NTLMv2 auth"
+                 context="G"
+		 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このパラメーターにより、<citerefentry><refentrytitle>smbclient</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> がサーバーへの接続時に
+    NTLMv2 暗号化パスワードレスポンスを使用した認証を行なうかどうかが設定される。</para>
+
+    <para>有効にすると、NTLMv2 および LMv2 レスポンス(両方とも以前のバージョンよりはセキュアである) が送信される。
+    ただし、古いバージョンのサーバー(Windows NT 4.0 SP3以前、Windows 9x および Samba 2.2)は、NTLMv2をサポートしているドメインにいない時、 NTLMv2 と互換性がない。</para>
+
+    <para>同様に、有効にした場合 NTLMv1、 <command
+    moreinfo="none">client lanman auth</command> および <command
+    moreinfo="none">client plaintext auth</command>
+    認証は無効となる。また、共有レベルの認証も同時に無効となる。</para>
+
+    <para>無効にした場合、 NTLM レスポンス (および可能であれば LANMAN レスポンス)
+    が、<command
+    moreinfo="none">client lanman auth</command> の値に応じてクライアントから送信される。</para>
+
+    <para>Windows Vista および後継のバージョンはすでに NTLMv2 のみを使い、また、サイトに
+    よって(特に「ベストプラクティス」のセキュリティポリシーを適用しているサイト)は
+    NTLMv2 のみを許可し、脆弱な LM および NTLM レスポンスは許可していない。</para>
+
+    <para><smbconfoption name="client use spnego"/>も<constant>yes</constant>に
+    設定した場合、拡張セキュリティ (SPNEGO) が、NTLMSSPのみをNTLMv2で使うために
+         必要とされる。この動作はCVE-2016-2111 用のパッチによって導入された。</para>
+</description>
+
+<related>client ipc signing</related>
+
+<value type="default">no</value>
+</samba:parameter>
