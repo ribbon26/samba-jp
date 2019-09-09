@@ -269,6 +269,12 @@
 	sAMAccountName, with or without the trailing dollar sign.</para>
 </refsect3>
 -->
+<refsect3>
+	<title>computer delete <replaceable>computername</replaceable> [options]</title>
+	<para>存在しているコンピュータアカウントを削除する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName で、ドル記号がついている場合も無い場合もある。</para>
+</refsect3>
+
 <!-- Samba-4.11.0
 <refsect3>
 	<title>computer edit <replaceable>computername</replaceable></title>
@@ -278,7 +284,7 @@
 
 	<variablelist>
 	<varlistentry>
-	<term>--editor=EDITOR</term>
+	<term>- -editor=EDITOR</term>
 	<listitem><para>
 	Specifies the editor to use instead of the system default, or 'vi' if no
 	system default is set.
@@ -287,6 +293,23 @@
 	</variablelist>
 </refsect3>
 -->
+<refsect3>
+	<title>computer edit <replaceable>computername</replaceable></title>
+	<para>コンピュータの AD オブジェクトを編集する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName であり、
+	末尾にはドル記号が付く場合と付かない場合がある。.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
 
 <!-- Samba-4.9.0
 <refsect3>
@@ -321,29 +344,6 @@
 </refsect3>
 -->
 <refsect3>
-	<title>computer delete <replaceable>computername</replaceable> [options]</title>
-	<para>存在しているコンピュータアカウントを削除する。</para>
-	<para>コマンドで指定されたコンピュータ名は sAMAccountName で、ドル記号がついている場合も無い場合もある。</para>
-</refsect3>
-
-<refsect3>
-	<title>computer edit <replaceable>computername</replaceable></title>
-	<para>コンピュータの AD オブジェクトを編集する。</para>
-	<para>コマンドで指定されたコンピュータ名は sAMAccountName であり、
-	末尾にはドル記号が付く場合と付かない場合がある。.</para>
-
-	<variablelist>
-	<varlistentry>
-	<term>--editor=EDITOR</term>
-	<listitem><para>
-	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
-	場合は  'vi' を使う。
-	</para></listitem>
-	</varlistentry>
-	</variablelist>
-</refsect3>
-
-<refsect3>
 	<title>computer list</title>
 	<para>コンピュータの一覧を表示する。</para>
 </refsect3>
@@ -371,6 +371,384 @@
 	</varlistentry>
 	</variablelist>
 </refsect3>
+
+<!-- Samba-4.11.0
+<refsect2>
+	<title>contact</title>
+	<para>Manage contacts.</para>
+</refsect2>
+-->
+<refsect2>
+	<title>contact</title>
+	<para>contact の管理</para>
+</refsect2>
+
+<!-- Samba-4.11.0
+
+<refsect3>
+	<title>contact create [<replaceable>contactname</replaceable>] [options]</title>
+	<para>Create a new contact in the Active Directory Domain.</para>
+	<para>The name of the new contact can be specified by the first
+	argument 'contactname' or the - -given-name, - -initial and - -surname
+	arguments. If no 'contactname' is given, contact's name will be made
+	up of the given arguments by combining the given-name, initials and
+	surname. Each argument is optional. A dot ('.') will be appended to
+	the initials automatically.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -ou=OU</term>
+	<listitem><para>
+	DN of alternative location (with or without domainDN counterpart) in
+	which the new contact will be created.
+	E.g. 'OU=OUname'.
+	Default is the domain base.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -description=DESCRIPTION</term>
+	<listitem><para>
+	The new contacts's description.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -surname=SURNAME</term>
+	<listitem><para>
+	Contact's surname.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -given-name=GIVEN_NAME</term>
+	<listitem><para>
+	Contact's given name.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -initials=INITIALS</term>
+	<listitem><para>
+	Contact's initials.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -display-name=DISPLAY_NAME</term>
+	<listitem><para>
+	Contact's display name.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -job-title=JOB_TITLE</term>
+	<listitem><para>
+	Contact's job title.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -department=DEPARTMENT</term>
+	<listitem><para>
+	Contact's department.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -company=COMPANY</term>
+	<listitem><para>
+	Contact's company.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -mail-address=MAIL_ADDRESS</term>
+	<listitem><para>
+	Contact's email address.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -internet-address=INTERNET_ADDRESS</term>
+	<listitem><para>
+	Contact's home page.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -telephone-number=TELEPHONE_NUMBER</term>
+	<listitem><para>
+	Contact's phone number.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -mobile-number=MOBILE_NUMBER</term>
+	<listitem><para>
+	Contact's mobile phone number.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -physical-delivery-office=PHYSICAL_DELIVERY_OFFICE</term>
+	<listitem><para>
+	Contact's office location.
+	</para></listitem>
+	</varlistentry>
+
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+	<title>contact create [<replaceable>contactname</replaceable>] [options]</title>
+	<para>Active Directory ドメイン内で新しい contact を作成する。</para>
+	<para>新しい contact の新しい名前は最初の引数 'contactname' か、
+	--given-name 、 --initial 、 --surname 引数で指定できる。
+	'contactname' が指定されなかった場合、contact の名前は given-name、initials と
+	surname を合成することによって作成される。各引数の指定は任意である。ピリオド ('.') 
+	は initials に自動的に追加される。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--ou=OU</term>
+	<listitem><para>
+	新しく作成された contact の alternative location
+	のDN(domainDN counterpartの有無にかかわらず)。
+	例 'OU=OUname'.
+	既定値はドメインベース。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--description=DESCRIPTION</term>
+	<listitem><para>
+	新しい contacts の説明。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--surname=SURNAME</term>
+	<listitem><para>
+	contact の surname。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--given-name=GIVEN_NAME</term>
+	<listitem><para>
+	contact のgiven name。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--initials=INITIALS</term>
+	<listitem><para>
+	contact の initials。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--display-name=DISPLAY_NAME</term>
+	<listitem><para>
+	contact の display name。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--job-title=JOB_TITLE</term>
+	<listitem><para>
+	contact の job title。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--department=DEPARTMENT</term>
+	<listitem><para>
+	contact の department。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--company=COMPANY</term>
+	<listitem><para>
+	contact の company。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--mail-address=MAIL_ADDRESS</term>
+	<listitem><para>
+	contact の メールアドレス。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--internet-address=INTERNET_ADDRESS</term>
+	<listitem><para>
+	contact のホームページ。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--telephone-number=TELEPHONE_NUMBER</term>
+	<listitem><para>
+	contact の電話番号。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--mobile-number=MOBILE_NUMBER</term>
+	<listitem><para>
+	contact の 携帯電話番号。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--physical-delivery-office=PHYSICAL_DELIVERY_OFFICE</term>
+	<listitem><para>
+	contact のオフィス住所。
+	</para></listitem>
+	</varlistentry>
+
+	</variablelist>
+</refsect3>
+
+<!-- Samba-11.0
+<refsect3>
+	<title>contact delete <replaceable>contactname</replaceable> [options]</title>
+	<para>Delete an existing contact.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact edit <replaceable>contactname</replaceable></title>
+	<para>Modify a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact list [options]</title>
+	<para>List all contacts.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--full-dn</term>
+	<listitem><para>
+	Display contact's full DN instead of the name.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact move <replaceable>contactname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a contact into the specified organizational
+	unit or container.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact show <replaceable>contactname</replaceable> [options]</title>
+	<para>Display a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--attributes=CONTACT_ATTRS</term>
+	<listitem><para>
+	Comma separated list of attributes, which will be printed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+-->
+<refsect3>
+	<title>contact delete <replaceable>contactname</replaceable> [options]</title>
+	<para>Delete an existing contact.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact edit <replaceable>contactname</replaceable></title>
+	<para>Modify a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact list [options]</title>
+	<para>List all contacts.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--full-dn</term>
+	<listitem><para>
+	Display contact's full DN instead of the name.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact move <replaceable>contactname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a contact into the specified organizational
+	unit or container.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact show <replaceable>contactname</replaceable> [options]</title>
+	<para>Display a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--attributes=CONTACT_ATTRS</term>
+	<listitem><para>
+	Comma separated list of attributes, which will be printed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+
 
 <refsect2>
 	<title>dbcheck</title>
