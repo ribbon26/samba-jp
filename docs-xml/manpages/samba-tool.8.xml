@@ -1461,6 +1461,38 @@
 	<para>AD グループを削除する。</para>
 </refsect3>
 
+<!-- Samba-4.11.0
+<refsect3>
+	<title>group edit <replaceable>groupname</replaceable></title>
+	<para>Edit a group AD object.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+
+<refsect3>
+	<title>group edit <replaceable>groupname</replaceable></title>
+	<para>グループ AD オブジェクトを編集する。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
 <refsect3>
 	<title>group list</title>
 <!-- 原文 samba-4.7.0
@@ -1546,6 +1578,149 @@
 -->
 	<para>NT ACL を管理する。</para>
 </refsect2>
+
+<!-- Samba-4.11.0
+<refsect3>
+	<title>ntacl changedomsid <replaceable>original-domain-SID</replaceable> <replaceable>new-domain-SID</replaceable> <replaceable>file</replaceable> [options]</title>
+	<para>Change the domain SID for ACLs.
+	Can be used to change all entries in acl_xattr when the machine's SID
+	has accidentially changed or the data set has been copied
+	to another machine either via backup/restore or rsync.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -use-ntvfs</term>
+	<listitem><para>
+	Set the ACLs directly to the TDB or xattr. The POSIX permissions will
+	NOT be changed, only the NT ACL will be stored.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -service=SERVICE</term>
+	<listitem><para>
+	Specify the name of the smb.conf service to use. This option is
+	required in combination with the - -use-s3fs option.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -use-s3fs</term>
+	<listitem><para>
+	Set the ACLs for use with the default s3fs file server via the VFS
+	layer. This option requires a smb.conf service, specified by the
+	- -service=SERVICE option.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -xattr-backend=[native|tdb]</term>
+	<listitem><para>
+	Specify the xattr backend type (native fs or tdb).
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -eadb-file=EADB_FILE</term>
+	<listitem><para>
+	Name of the tdb file where attributes are stored.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--recursive</term>
+	<listitem><para>
+	Set the ACLs for directories and their contents recursively.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -follow-symlinks</term>
+	<listitem><para>
+	Follow symlinks when - -recursive is specified.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -verbose</term>
+	<listitem><para>
+	Verbosely list files and ACLs which are being processed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+-->
+
+<refsect3>
+	<title>ntacl changedomsid <replaceable>original-domain-SID</replaceable> <replaceable>new-domain-SID</replaceable> <replaceable>file</replaceable> [options]</title>
+	<para>ACL のドメイン SID を変更する。
+	マシンの SID が間違って変更されたときや、バックアップ/リストアあるいは rsyncで
+	データセットが他のマシンにコピーされた時などに、acl_xattr 中のすべてのエントリを
+	変更するのに使える。.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--use-ntvfs</term>
+	<listitem><para>
+	TDB や xattr に対して ACL を直接設定する。POSIX パーミッションは
+	変更されず、NT ACL のみ格納される。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--service=SERVICE</term>
+	<listitem><para>
+	使用する smb.conf サービスの名前を指定する。このオプションは
+	--use-s3fs オプションと同時に使用する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--use-s3fs</term>
+	<listitem><para>
+	VFS レイヤ経由で 既定の s3fs ファイルサーバで使用するACLを設定する。
+	このオプションは --service=SERVICE オプションで指定する smb.conf serviceと
+	同時に使用する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--xattr-backend=[native|tdb]</term>
+	<listitem><para>
+	xattr バックエンドタイプを指定する(ネイティブな fs または tdb)。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--eadb-file=EADB_FILE</term>
+	<listitem><para>
+	属性が格納されている tdb ファイルの名前。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--recursive</term>
+	<listitem><para>
+	ディレクトリとその配下に対して ACL を設定する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--follow-symlinks</term>
+	<listitem><para>
+	--recursive が指定されたときに、シンボリックリンクもたどる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--verbose</term>
+	<listitem><para>
+	処理されたファイルと ACL の一覧を表示する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
 
 <refsect3>
 	<title>ntacl get <replaceable>file</replaceable> [options]</title>
