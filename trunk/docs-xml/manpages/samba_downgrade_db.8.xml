@@ -13,7 +13,7 @@
 
 <refnamediv>
 	<refname>samba_downgrade_db</refname>
-	<refpurpose>Samba tool for downgrading AD databases
+	<refpurpose>AD データベースのダウングレードを行うための Samba ツール
 	</refpurpose>
 </refnamediv>
 
@@ -26,10 +26,11 @@
 </refsynopsisdiv>
 
 <refsect1>
-	<title>DESCRIPTION</title>
-	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
-	<manvolnum>8</manvolnum></citerefentry> suite.</para>
+	<title>説明</title>
+	<para>このツールは<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
 
+<!-- Samba-4.11.0	
 	<para>The format of the Samba Active Directory (AD) database changed in
 	version 4.8 and 4.11. When downgrading a Samba AD Domain Controller (DC)
 	to a release that is older than either of these versions (e.g. 4.11 to
@@ -47,26 +48,52 @@
 	this tool. Once the tool has run, do not restart samba or modify the
 	database before the Samba software package has been downgraded.
 	</para>
+-->
+	<para>Samba Active Directory (AD) データベースの形式は、バージョン
+	4.8 と 4.11 で変更になった。Samba AD Domain Controller (DC) を、
+	それらのバージョンよりも古いリリースのものにダウングレードするとき
+	(たとえば 4.11 から 4.10)、Samba パッケージが安全にダウングレードできる
+	<emphasis>前に</emphasis>、AD データベースを手動でダウングレードする
+	必要がある。
+	</para>
+
+	<para>このツールは、バージョン &doc.version; で使われている形式から、
+	バージョン 4.7 のものに、Samba の sam.ldb データベースをダウングレードする
+	ツールである。必要とあらば、以降の Samba バージョンでは、Samba を最初に
+	実行するときに、v-4.7形式のデータベースに再構成を行う。</para>
+
+	<para>このツールを実行する前に、DC 上のすべての Samba サービスを停止しなければ
+	ならないことに注意。このツールを動かしたら、Samba ソフトウェアパッケージが
+	ダウングレードする前に、Samba のリスタートや変更を行ってはならない。
+	</para>
+
 </refsect1>
 
 <refsect1>
-	<title>OPTIONS</title>
+	<title>オプション</title>
 
 	<variablelist>
 
 	<varlistentry>
 	<term>-H [sam.ldb file]</term>
 	<listitem><para>
+<!-- Samba-4.11.0
 	Link directly to a sam.ldb file instead of using path in system
 	smb.conf
+-->
+        システムの smb.conf 中にあるパスのを使う代わりに、sam.ldb ファイルを直接指定する。
 	</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
 	<term>-s [smb.conf file]</term>
 	<listitem><para>
-	Link directly to smb.conf file instead of system default (usually
+ <!-- Samba-4.11.0
+        Link directly to smb.conf file instead of system default (usually
 	in /usr/local/samba/etc/smb.conf)
+ -->
+        システム既定の smb.conf (通常は /usr/local/samba/etc/smb.conf) の代わりに
+	smb.conf を直接指定する。
 	</para></listitem>
 	</varlistentry>
 
@@ -74,22 +101,31 @@
 </refsect1>
 
 <refsect1>
-	<title>VERSION</title>
+	<title>バージョン</title>
 
-	<para>This man page is complete for version &doc.version; of the Samba
-	suite.</para>
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。</para>
 </refsect1>
 
 <refsect1>
-	<title>AUTHOR</title>
+	<title>著者</title>
 
-	<para>The original Samba software and related utilities
-	were created by Andrew Tridgell. Samba is now developed
-	by the Samba Team as an Open Source project similar
-	to the way the Linux kernel is developed.</para>
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
 
-	<para>The samba_downgrade_db tool was developed by the Samba team
-	at Catalyst IT Ltd.</para>
+	<para>samba_downgrade_db tool は、 Catalyst IT Ltd の Samba チームによって開発された。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.11.0 - 4.11.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.24 対応の翻訳は
+	<itemizedlist>
+	<para>太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+	</itemizedlist>
+	</para>
+
 </refsect1>
 
 </refentry>
