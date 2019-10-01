@@ -49,13 +49,20 @@
     <variablelist>
 
       <varlistentry>
-	<term>nfs4acl_xattr:encoding = [ndr|xdr]</term>
+	<term>nfs4acl_xattr:encoding = [nfs|ndr|xdr]</term>
 	<listitem>
 <!-- Samba 4.8.0
 	  <para>This parameter configures the marshaling format used in the ACL
 	  blob and the default extended attribute name used to store the blob.
 	  </para>
-
+-->
+<!-- Samba-4.11.0
+          <para>When set to <emphasis>nfs</emphasis> - fetch and store the NT
+          ACL in NFS 4.0 or 4.1 compatible XDR encoding. By default this uses
+          the extended attribute "system.nfs4_acl". This setting also
+          disables <emphasis>validate_mode</emphasis>.</para>
+-->
+<!-- Samba-4.8.0
 	  <para>When set to <emphasis>ndr (default)</emphasis> - store the NT
 	  ACL with POSIX draft NFSv4 compatible NDR encoding. By default this
 	  uses the extended attribute "security.nfs4acl_ndr".</para>
@@ -70,8 +77,13 @@
 	  <para>このパラメータは、ACL blob 中で使われる marshaling 形式と、
 	  blob に保存する際に使われる既定値の拡張属性名で設定を行う。</para>
 
+          <para><emphasis>nfs</emphasis> に設定すると、NFS 4.0 または 4.1 互換の
+          XDR エンコーディングで、NT ACL を読み取り/保存する。既定でこれは
+          拡張属性 "system.nfs4_acl" を使う。またこの設定は
+          <emphasis>validate_mode</emphasis> を無効にする。</para>
+
 	  <para><emphasis>ndr (既定値)</emphasis> に設定すると、POSIX ドラフト
-	  NFSv4 互換 NDR エンコーディングで NT ACL を保存する。既定値では、これは、
+	  NFSv4 互換 NDR エンコーディングで NT ACL を保存する。既定でこれは、
 	  拡張属性 "security.nfs4acl_ndr" を使う。</para>
 
 	  <para><emphasis>xdr</emphasis> に設定すると、XDR エンコーディングで、NFS 4.1
