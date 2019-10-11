@@ -7,8 +7,8 @@
 	<para>この設定は、クライアントが使用を試みる最低位のプロトコル
 	を制御する。</para>
 
-    <para>通常は、SMB プロトコルの自動ネゴシエーションフェーズにより
-    適切なプロトコルが選択されるため、このオプションを設定する必要はない。
+    <para>通常は、SMB プロトコルの自動ネゴシエーションフェーズにより適切なプロトコルが
+    選択されるため、古い SMB1 のみのサーバに接続する場合を除き、このオプションを設定する必要はない。
     </para>
 
     <para>有効なプロトコルの完全な一覧については<related>client max protocol</related>
@@ -16,6 +16,15 @@
 
     <para>たとえば、winbinddのような、 DCERPC 用の IPC$ 接続は、
     <smbconfoption name="client ipc max protocol"/>オプションによって制御される。</para>
+<!-- Samba-4.11.0
+       <para>Note that most command line tools support
+       - -option='client min protocol=NT1', so it may not be required to
+       enable SMB1 protocols globally in smb.conf.</para>
+-->
+      <para>ほとんどのコマンドラインツールは --option='client min protocol=NT1'
+      をサポートしているため、smb.conf 中で、グローバルに SMB1 プロトコルを
+      有効にしなくてもよい。</para>
+    
 </description>
 
 <related>client max protocol</related>
@@ -23,6 +32,6 @@
 <related>client ipc min protocol</related>
 <related>client ipc max protocol</related>
 
-<value type="default">CORE</value>
+<value type="default">SMB2_02</value>
 <value type="example">NT1</value>
 </samba:parameter>
