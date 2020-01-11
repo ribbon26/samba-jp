@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_snapper.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_snapper</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_snapper</refname>
+	<refpurpose>
+	  シャドウコピーとして、snapperによって管理されるスナップショットの公開
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = snapper</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>
+	  <command>vfs_snapper</command> VFS モジュールは、Sambaで
+	  使われる、snapperによって管理されるスナップショットを公開する。これは、
+	  リモートのSMBクライアントに、Windows エクスプローラの、
+	  "以前のバージョン" タブ経由で、シャドウコピーにアクセスできる機能を
+	  提供する。
+	</para>
+
+	<para>
+	  スナップショットはファイルサーバリモートVSSプロトコル (FSRVP)を使う事で、
+	  リモートから作成/削除出来る。スナップショット作成と削除の要求は、DBus 経由で
+	  snapper に送られる。
+	</para>
+	
+	<para>
+		このモジュールはスタック可能である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<para>
+	  ベースとなる共有パスには、適切なsnapper 設定ファイルがなければならない。
+	  スナップショットディレクトリツリーは、適切なユーザがアクセスできるように
+	  しなければならない。
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">snapper</smbconfoption>
+	</programlisting>
+
+	<para>
+	  リモートからのスナップショット作成と削除のために、Samba の FSRVP
+	  サーバは [global] セクション中で設定されねばならない:
+	</para>
+
+	<programlisting>
+	  <smbconfsection name="[global]"/>
+	  <smbconfoption name="rpc_daemon:fssd">fork</smbconfoption>
+	  <smbconfoption name="registry shares">yes</smbconfoption>
+	  <smbconfoption name="include">registry</smbconfoption>
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>パーミッション</title>
+ 	<para>
+	  Snapperは、 .snapshots サブディレクトリ配下にスナップショットを格納する。
+	  このディレクトリは、Windows エクスプローラの 「以前のバージョン」タブ
+	  経由でスナップショットにアクセスしようとする任意のユーザが、ディレクトリ
+	  内にアクセスできるようにしなければならない。規定値では、非root以外の
+	  ユーザに対しては、ディレクトリ内へのアクセスが拒否される。さらに、
+	  snapperの ALLOW_USERS または ALLOW_GROUPS オプション経由で snapper
+	  で管理されるスナップショットの一覧を表示するために、パーミッションが
+	  許可されなければならない。Snapperは SYNC_ACL オプション経由で、
+	  .snapshots 内へのアクセスを、ユーザとグループに対して自動的に許可
+	  することができる。
+	</para>
+	<para>
+	  リモートからのスナップショット作成と削除は、Active Directory の
+	  administrator、backup operators 又は 明示的に SeBackupPrivilege
+	  権限を付与された users のみ、Samba によって許可される。Snapper は
+	  snapper のALLOW_USERS 又は ALLOW_GROUPS オプションによって、適切な
+	  ユーザに対して許可されねばならない。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>VERSION</title>
+
+	<para>
+		このマニュアルは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.3.0 - 4.11.1 に対応する。</para>
+        <para>このドキュメントの Samba 4.2.0 - 4.11.1 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

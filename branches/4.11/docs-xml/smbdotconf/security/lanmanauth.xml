@@ -1,0 +1,92 @@
+<samba:parameter name="lanman auth"
+                 context="G"
+		 type="boolean"
+		 function="_lanman_auth"
+		 deprecated="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.11.0
+    <para>This parameter has been deprecated since Samba 4.11 and
+    support for LanMan (as distinct from NTLM, NTLMv2
+    or Kerberos authentication)
+    will be removed in a future Samba release.</para>
+    <para>That is, in the future, the current default of
+    <command>lanman auth = no</command>
+    will be the enforced behaviour.</para>
+-->
+    <para>このパラメータは Samba 4.11 から非推奨となり、
+    (NTLM, NTLMv2 または Kerberos 認証とは異なり) LanMan
+    は将来の Samba リリースでは削除される。</para>
+    <para>そのため、将来は、現在の既定値である <command>lanman auth = no</command>
+    が強制された動作となる。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>This parameter determines whether or not <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will attempt to
+    authenticate users or permit password changes
+    using the LANMAN password hash. If disabled, only clients which support NT 
+    password hashes (e.g. Windows NT/2000 clients, smbclient, but not 
+    Windows 95/98 or the MS DOS network client) will be able to
+    connect to the Samba host.</para>
+-->
+    <para>このパラメーターは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が LANMAN パスワードハッシュを使用した
+    認証を行なうか否かを制御する。無効にした場合、 NT パスワードハッシュを利用する
+    クライアント（Windows NT/2000クライアント、smbclient など。しかし Windows 95/98 や
+    MS-DOS クライアントは含まない）のみが Samba ホストに接続できる。</para>
+
+<!-- 原文 samba-4.7.0
+    <para>The LANMAN encrypted response is easily broken, due to its
+    case-insensitive nature, and the choice of algorithm.  Servers
+    without Windows 95/98/ME or MS DOS clients are advised to disable
+    this option.  </para>
+-->
+    <para>LANMAN 暗号化レスポンスは簡単に解読することが可能である。これは大文字と小文字を
+    区別しないことや、使用しているアルゴリズムなどに起因する。Windows 95/98 や MS-DOS
+    クライアントが存在しない場合は、このオプションを無効にした方がよいだろう。
+    </para>
+
+<!-- 原文 samba-4.7.0
+    <para>When this parameter is set to <value>no</value> this
+    will also result in sambaLMPassword in Samba's passdb being
+    blanked after the next password change. As a result of that
+    lanman clients won't be able to authenticate, even if lanman
+    auth is re-enabled later on.
+    </para>
+-->
+    <para>このパラメーターが <value>no</value> に設定された場合、これは、次のパスワードの
+    変更時に Samba の passdb 中の sambaLMPassword を空白にする動作も行う。この結果、
+    lanman クライアントは、あとで lanman auth を再度有効にしたとしても認証できなくなる。
+    </para>
+		
+<!-- 原文 samba-4.10.6
+    <para>Unlike the <parameter moreinfo="none">encrypt
+    passwords</parameter> option, this parameter cannot alter client
+    behaviour, and the LANMAN response will still be sent over the
+    network.  See the <command moreinfo="none">client lanman
+    auth</command> to disable this for Samba's clients (such as smbclient)</para>
+-->
+    <para><parameter moreinfo="none">encypt
+    passwords</parameter> オプションとは異なり、このパラメーターはクライアントの挙動を
+    制御するものではなく、 LANMAN レスポンスは依然としてネットワーク上を送信される。
+    Samba のクライアント（smbclient など）で LANMAN レスポンスを無効にするには
+    <command moreinfo="none">client lanman auth</command> を参照のこと。</para>
+
+<!-- 原文 samba-4.10.6
+    <para>This parameter is overriden by <parameter moreinfo="none">ntlm
+    auth</parameter>, so unless that it is also set to
+    <constant>ntlmv1-permitted</constant> or <constant>yes</constant>,
+    then only NTLMv2 logins will be permited and no LM hash will be
+    stored.  All modern clients support NTLMv2, and but some older
+    clients require special configuration to use it.</para>
+-->
+    <para>このパラメータは <parameter moreinfo="none"> ntlm auth</parameter>
+    パラメータによって上書きされるため、<constant>ntlmv1-permitted</constant> または
+    <constant>yes</constant> が設定されてない限り、NTLMv2 ログインのみが許可され、
+    LM ハッシュは格納されない。最近のクライアントはすべて NTLMv2をサポートしている
+    が、いくつかのクライアントは特別な設定をすることが必要である。</para>
+
+  </description>
+
+<value type="default">no</value>
+</samba:parameter>

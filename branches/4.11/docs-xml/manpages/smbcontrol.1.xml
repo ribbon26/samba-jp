@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="smbcontrol.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>smbcontrol</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">User Commands</refmiscinfo>
+-->
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>smbcontrol</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>send messages to smbd, nmbd or winbindd processes</refpurpose>
+-->
+	<refpurpose>smbd、nmbd または winbindd のプロセスにメッセージを送信する
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>smbcontrol</command>
+		<arg>-s</arg>
+		<arg>-t|--timeout</arg>
+	</cmdsynopsis>
+	
+	<cmdsynopsis>
+		<command>smbcontrol</command>
+		<arg>destination</arg>
+		<arg>message-type</arg>
+		<arg>parameter</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para><command>smbcontrol</command> is a very small program, which 
+	sends messages to a <citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, a <citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, or a <citerefentry><refentrytitle>winbindd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> daemon running on the system.</para>
+-->
+	<para><command>smbcontrol</command> は動作中の <citerefentry>
+	<refentrytitle>smbd</refentrytitle><manvolnum>8</manvolnum>
+	</citerefentry>、<citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> や <citerefentry>
+	<refentrytitle>winbindd</refentrytitle><manvolnum>8</manvolnum>
+	</citerefentry> デーモンにメッセージを送る、
+	とても小さなプログラムである。</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+
+	<variablelist>
+	        &popt.autohelp;
+		&popt.common.samba.client;
+		<varlistentry>
+		<term>-t|--timeout</term>
+		<listitem><para>
+<!-- 原文 samba-4.7.0
+				Set timeout to seconds.
+-->
+				秒単位のタイムアウト値を設定。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>destination</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>One of <parameter>nmbd</parameter>,
+		<parameter>smbd</parameter>, <parameter>winbindd</parameter>
+		or a process ID.</para>
+-->
+		<listitem><para><parameter>nmbd</parameter>、
+		<parameter>smbd</parameter>、<parameter>winbindd</parameter>
+		かプロセス ID のどれか。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The <parameter>all</parameter> destination causes the 
+		message to "broadcast" to all running daemons including nmbd and
+		winbind. This is a change for Samba 3.3, prior to this the
+		parameter smbd used to do this.</para>
+-->
+		<para>distinationに <parameter>all</parameter> を指定すると、
+		nmbd と winbind を含む、動いているデーモンすべてに、"ブロードキャスト"
+		でメッセージを送る。これは、Samba 3.3 から変更になり、それ以前
+		では、smbd がこのパラメーターを使う。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The <parameter>smbd</parameter> destination causes the 
+		message to be sent to the smbd daemon specified in the 
+		<filename>smbd.pid</filename> file.</para>
+-->
+		<para>destination に <parameter>smbd</parameter> を指定すると
+		<filename>smbd.pid</filename> ファイルで指定された smbd デーモンに
+		メッセージが送られる。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The <parameter>nmbd</parameter> destination causes the 
+		message to be sent to the nmbd daemon specified in the 
+		<filename>nmbd.pid</filename> file.</para>
+-->
+		<para>destination に <parameter>nmbd</parameter> を指定すると
+		<filename>nmbd.pid</filename> ファイルで指定されている nmbd
+		デーモンに対してメッセージが送られる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The <parameter>winbindd</parameter> destination causes the 
+		message to be sent to the winbind daemon specified in the 
+		<filename>winbindd.pid</filename> file.</para>
+-->
+		<para>destination に <parameter>winbindd</parameter> を指定すると
+		<filename>winbindd.pid</filename> ファイルで指定されている winbindd
+		デーモンに対してメッセージが送られる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>If a single process ID is given, the message is sent 
+		to only that process.</para></listitem>
+-->
+		<para>もし単一のプロセス ID が与えられたときは、メッセージは
+		その 1 つのプロセスにのみ送られる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>message-type</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Type of message to send. See 
+		the section <constant>MESSAGE-TYPES</constant> for details.
+-->
+		<listitem><para>メッセージの種類を指定する。詳細は
+		<constant>MESSAGE-TYPES</constant> を参照のこと。
+		</para></listitem></varlistentry>
+		
+
+	
+		<varlistentry>
+		<term>parameters</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>any parameters required for the message-type</para>
+-->
+		<listitem><para>メッセージの種類によって必要なパラメーター。
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+	
+</refsect1>
+
+<refsect1>
+	<title>MESSAGE-TYPES</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Available message types are:</para>
+-->
+	<para>使用可能なメッセージの種類:</para>
+
+	<variablelist>
+	<varlistentry><term>close-share</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Order smbd to close the client 
+	connections to the named share. Note that this doesn't affect client 
+	connections to any other shares. This message-type takes an argument of the
+	share name for which client connections will be closed, or the
+	"*" character which will close all currently open shares.
+	This may be useful if you made changes to the access controls on the share.
+	This message can only be sent to <constant>smbd</constant>.</para>
+	</listitem>
+-->
+	<listitem><para>smbd に対し、指名した共有に接続しているクライアントの
+	接続を閉じるように命令する。これはクライアントの他の共有への接続には
+	影響を与えないことに注意。このメッセージタイプはクライアント接続を
+	閉じたい共有名か、開いている共有をすべて切断する "*" を引数として
+	取る。これは、共有のアクセスコントロールを変更したときに便利である。
+	このメッセージは <constant>smbd</constant> にのみ送ることができる。
+	</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>debug</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Set debug level to the value specified by the 
+	parameter. This can be sent to any of the destinations. If this
+	message is sent to either the smbd or winbindd daemons, the parent
+	process will rebroadcast the message to all child processes changing
+	the debug level in each one.</para>
+	</listitem>
+-->
+	<listitem><para>メッセージはデバッグレベルを parameter
+	で指定された値に設定する。このメッセージはどの destination
+	に対しても送信できる。smbd デーモンまたは winbindd デーモンに
+	メッセージが送信された場合、親プロセスは子プロセスすべてに
+	メッセージをブロードキャストして、それぞれのデバッグレベルを変更する。</para>
+	</listitem>
+	</varlistentry>
+
+        <varlistentry>
+       <term>kill-client-ip</term>
+       <listitem>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Order smbd to close the client connections from a
+	given IP address. This message-type takes an argument of the IP
+	address from which client connections will be closed. This message
+	can only be sent to <constant>smbd</constant>.</para>
+	</listitem>
+-->
+	<para>smbd に、与えられた IP アドレスからの、クライアント接続をクローズ
+	させる。このメッセージタイプには、クローズすべきクライアント接続からの
+	IP アドレスを引数として必要とする。このメッセージは、
+	<constant>smbd</constant> のみに送ることが出来る。
+	</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>force-election</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>This message causes the <command>nmbd</command> daemon to 
+	force a new browse master election. </para>
+-->
+	<listitem><para>このメッセージは <command>nmbd</command>
+	デーモンに新たにマスターブラウザーの選定を始めさせる。</para>
+	</listitem></varlistentry>
+
+	<varlistentry>
+	<term>ping</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Send specified number of "ping" messages and 
+	wait for the same number of  reply "pong" messages. This can be sent to 
+	any of the destinations.</para>
+	</listitem>
+-->
+	<listitem><para>メッセージは parameter で指定された数だけの "ping"
+	メッセージを送信し、同じ数だけの "pong" メッセージの応答を待つ。
+	このメッセージはどの destination に対しても 送信できる。</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>profile</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Change profile settings of a daemon, based on the 
+	parameter. The parameter can be "on" to turn on profile stats 
+	collection, "off" to turn off profile stats collection, "count"
+	to enable only collection of count stats (time stats are 
+	disabled), and "flush" to zero the current profile stats. This can 
+	be sent to any smbd or nmbd destinations.</para>
+-->
+	<listitem><para>メッセージはデーモンに parameter に基づいた profile
+	の設定に変更するメッセージを送信する。 parameter に "on" を指定すると
+	profile stats の収集が有効となり、"off" を指定すると profile stats
+	の収集が無効となり、"count" を指定すると count stats の収集のみが
+	有効となり（time stats は無効）、また、"flush" を指定したときは現在の
+	profile stats をゼロにする。 このメッセージはどの smbd および nmbd にも送信できる。</para>
+	</listitem></varlistentry>
+
+	<varlistentry>
+	<term>debuglevel</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Request debuglevel of a certain daemon and write it to stdout. This 
+	can be sent to any of the destinations.</para>
+	</listitem>
+-->
+	<listitem><para>メッセージはデーモンの "debuglevel" を問い合わせる
+	メッセージを送信し、それを STDOUT に出力する。このメッセージはどの
+	destination に対しても送信できる。</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>profilelevel</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Request profilelevel of a certain daemon and write it to stdout. 
+	This can be sent to any smbd or nmbd destinations.</para>
+	</listitem>
+-->
+	<listitem><para>
+	メッセージはデーモンの "profile" を問い合わせる
+	メッセージを送信し、それを STDOUT に出力する。このメッセージはどの
+	smbd および nmbd のデーモンに対しても送信することができる。
+	</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>printnotify</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Order smbd to send a printer notify message to any Windows NT clients 
+	connected to a printer. This message-type takes the following arguments:
+	</para>
+-->
+	<listitem><para>メッセージはプリンターに接続しているすべての Windows NT
+	クライアントへ printer notify message を送信する。このメッセージには
+	以下の引数を渡すことができる:
+	</para>
+	
+	<variablelist>
+
+	    <varlistentry>
+	    <term>queuepause printername</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Send a queue pause change notify
+	    message to the printer specified.</para></listitem>
+-->
+	    <listitem><para>指定したプリンターに対し、queue pause change notify
+	    メッセージを送信する。</para></listitem>
+ 	    </varlistentry>
+
+	    <varlistentry>
+	    <term>queueresume printername</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Send a queue resume change notify
+	    message for the printer specified.</para></listitem>
+-->
+	    <listitem><para>指定したプリンターに対し、queue resume change notify
+	    メッセージを送信する。</para></listitem>
+ 	    </varlistentry>
+
+		<varlistentry>
+	    <term>jobpause printername unixjobid</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Send a job pause change notify
+	    message for the printer and unix jobid
+	    specified.</para></listitem> 
+-->
+	    <listitem><para>指定したプリンターと UNIX の jobid に対し、job pause
+	    change notify メッセージを送信する。</para></listitem> 
+ 	    </varlistentry>
+
+	    <varlistentry>
+	    <term>jobresume printername unixjobid</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Send a job resume change notify
+	    message for the printer and unix jobid
+	    specified.</para></listitem>  
+-->
+	    <listitem><para>指定したプリンターと UNIX の jobid に対し、job resume
+	    change notify メッセージを送信する。</para></listitem>  
+	    </varlistentry>
+
+	    <varlistentry>
+	    <term>jobdelete printername unixjobid</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Send a job delete change notify
+	    message for the printer and unix jobid
+	    specified.</para></listitem> 
+-->
+	    <listitem><para>指定したプリンターと UNIX の jobid に対し、job delete
+	    change notify メッセージを送信する。</para></listitem> 
+	    </varlistentry>
+	</variablelist>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	Note that this message only sends notification that an
+	event has occurred.  It doesn't actually cause the
+	event to happen.
+	</para>
+-->
+	<para>このメッセージはイベントが起こったと通知するだけである。
+	実際にイベントを起こすわけではない。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>This message can only be sent to <constant>smbd</constant>. </para>
+-->
+	<para>このメッセージは <constant>smbd</constant> に対してのみ
+	送信できる。</para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>dmalloc-mark</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Set a mark for dmalloc. Can be sent to both smbd and nmbd. Only available if samba is built with dmalloc support. </para></listitem>
+-->
+	<listitem><para>dmalloc のマークをセットする。smbd と nmbd
+	の両方に対して送信することができる。Samba の dmalloc
+	サポートが有効になった状態でビルドされた場合にのみ使用できる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>dmalloc-log-changed</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>
+	Dump the pointers that have changed since the mark set by dmalloc-mark. 
+	Can be sent to both smbd and nmbd. Only available if samba is built with dmalloc support. </para></listitem>
+-->
+	<listitem><para>
+	dmalloc-mark によってマークされた時点以降で、変更のあったポインターを
+	ダンプする。smbd と nmbd の両方に対して送信することができる。
+	Samba の dmalloc サポートが有効になった状態でビルドされた場合にのみ
+	使用できる。</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>shutdown</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Shut down specified daemon. Can be sent to both smbd and nmbd.</para></listitem>
+-->
+	<listitem><para>指定されたデーモンを落とすことができる。
+	smbd と nmbd の両方に対して送信することができる。</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>pool-usage</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Print a human-readable description of all 
+	talloc(pool) memory usage by the specified daemon/process. Available 
+	for both smbd and nmbd.</para></listitem>
+-->
+	<listitem><para>指定されたデーモン/プロセスの talloc(pool) memory
+	usage を、人間に読み取り可能な状態で表示する。smbd と nmbd の両方に
+	対して使用できる。</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>ringbuf-log</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Fetch and print the ringbuf log. Requires
+	<parameter>logging = ringbuf</parameter>. Available for smbd, winbindd
+	and nmbd.</para></listitem>
+-->
+	<listitem><para>ringbuf ログを取得して表示する。<parameter>logging = 
+	ringbuf</parameter> であることが必要。smbd、winbindd、nmbd に対して
+	使用できる。</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>drvupgrade</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Force clients of printers using specified driver 
+	to update their local version of the driver. Can only be 
+	sent to smbd.</para></listitem>
+-->
+	<listitem><para>特定のドライバーを使用しているプリンターのクライアントに
+	対し、ローカルのドライバーをアップデートするように強制する。
+	smbd に対してのみ送信することができる。</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>reload-config</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Force daemon to reload smb.conf configuration file. Can be sent
+	to <constant>smbd</constant>, <constant>nmbd</constant>, or <constant>winbindd</constant>.
+	</para></listitem>
+-->
+	<listitem><para>デーモンに smb.conf 設定ファイルの再読み込みを
+	強制させる。<constant>smbd</constant>、<constant>nmbd</constant> か
+	<constant>winbindd</constant> に対して送信することができる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>reload-printers</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Force smbd to reload printers. Can only be sent to
+	<constant>smbd</constant>.
+	</para></listitem>
+-->
+	<listitem><para>smbdにプリンターの再読込みを強制させる。<constant>smbd</constant>
+	のみに送信できる。
+	</para></listitem>
+	</varlistentry>
+
+        <varlistentry>
+        <term>idmap</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Notify about changes of id mapping. Can be sent
+	to <constant>smbd</constant> or (not implemented yet) <constant>winbindd</constant>.
+	</para></listitem>
+-->
+        <listitem><para>id マッピングの変更について通知する。<constant>smbd</constant> か
+	（まだ未実装だが）<constant>winbindd</constant> に送ることが出来る。
+        </para></listitem>
+
+        <variablelist>
+          <varlistentry>
+            <term>flush [uid|gid]</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Flush caches for sid &lt;-&gt; gid and/or sid &lt;-&gt; uid mapping.
+	    </para></listitem>
+-->
+            <listitem><para>sid &lt;-&gt; gid か sid &lt;-&gt; uid マッピング用の
+	    キャッシュをフラッシュする。
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>delete &lt;ID&gt;</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Remove a mapping from cache. The mapping is given by &lt;ID&gt;
+	    which may either be a sid: S-x-..., a gid: "GID number" or a uid: "UID number".
+	    </para></listitem>
+-->
+            <listitem><para>キャッシュからマッピングを削除する。マッピングは、
+	    sid: S-x-...、gid: "GID 番号" あるいは uid: "UID 番号" のいずれかの
+	    形式による &lt;ID&gt; によって与えられる。
+            </para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>kill &lt;ID&gt;</term>
+<!-- 原文 samba-4.7.0
+	    <listitem><para>Remove a mapping from cache. Terminate <constant>smbd</constant> if
+	    the id is currently in use.</para></listitem>
+-->
+            <listitem><para>キャッシュからマッピングを削除する。もしも現在 id が
+	    使われているのであれば、<constant>smbd</constant> を終了する。
+            </para></listitem>
+          </varlistentry>
+        </variablelist>
+        </varlistentry>
+
+       <varlistentry>
+       <term>num-children</term>
+<!-- 原文 samba-4.7.0
+	<listitem><para>Query the number of smbd child processes. This
+	message can only be sent
+	to <constant>smbd</constant>.</para></listitem>
+-->
+       <listitem><para>smbd チャイルドプロセスの数を問い合わせる。
+       このメッセージは、<constant>smbd</constant> のみに送ることが出来る。
+       </para></listitem>
+       </varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.8.0
+        <para>This man page is part of version &doc.version; of
+        the Samba suite.</para>
+-->
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>SEE ALSO</title>
+-->
+	<title>関連項目</title>
+<!-- 原文 samba-4.7.0: and の削除と最終のピリオドの削除
+	<para><citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> and <citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>.</para>
+-->
+	<para><citerefentry><refentrytitle>nmbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>、 <citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry></para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+	
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities 
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar 
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、
+	Andrew Tridgell によって作成された。 現在 Samba は、Samba Team によって
+	Linux カーネルの 開発と同様に、オープンソースプロジェクトとして
+	開発されている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.6.2 - 4.11.1 に対応する。</para>
+        <para>このドキュメントの Samba 3.2.4 - 3.6.9 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		<listitem><para>はせがわ ようすけ</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+	<para>このドキュメントの Samba 3.6.10 - 4.11.1 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	<listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
+	</itemizedlist>
+	によって行われた。</para>
+</refsect1>
+
+</refentry>

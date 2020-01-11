@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_shell_snap.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_shell_snap</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_shell_snap</refname>
+	<refpurpose>
+	  スナップショット作成と削除を行うシェルスクリプトの呼び出し
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = shell_snap</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+        <para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>システムの一部である。</para>
+	
+	<para>
+	  <command>vfs_shell_snap</command>は、ファイルサーバリモート VSS
+	  プロトコル(FSRVP) を使って、リモートのクライアントにより要求される
+	  スナップショット作成と削除操作を行うシェルスクリプトを呼び出す。
+	</para>
+
+	<para>
+	  以下のシェル呼び出しは smb.conf で設定する:
+	</para>
+	<para>
+		<smbconfoption name="shell_snap:check path command"></smbconfoption>
+		<itemizedlist>
+		  <listitem><para>
+		    指定された共有がスナップショット作成/削除要求をサポートするか
+		    どうかのチェックを、FSRVPクライアントが要求したときに呼ばれる。
+			</para></listitem>
+			<listitem><para>
+			  <parameter>share_path</parameter>引数1つと共にコマンドが
+			  呼ばれる。
+			</para></listitem>
+			<listitem><para>
+			  コマンドは<parameter>share_path</parameter> がスナップショット
+			  可能の時には 0 を返さねばならない。
+			</para></listitem>
+		</itemizedlist>
+	</para>
+	<para>
+		<smbconfoption name="shell_snap:create command"></smbconfoption>
+		<itemizedlist>
+		  <listitem><para>
+		    FSRVPクライアントがスナップショット作成要求時に呼ばれる。 
+			</para></listitem>
+			<listitem><para>
+			  <parameter>share_path</parameter>引数1つと共にコマンドが
+                          呼ばれる。
+			</para></listitem>
+			<listitem><para>
+			  コマンドは、スナップショット作成が成功したときには 0 を
+			  返さねばならない。
+			</para></listitem>
+			<listitem><para>
+			  コマンドは、新しく作成されたスナップショットのパスを標準出力に
+			  出力せねばならない。
+			</para></listitem>
+		</itemizedlist>
+	</para>
+	<para>
+		<smbconfoption name="shell_snap:delete command"></smbconfoption>
+		<itemizedlist>
+		  <listitem><para>
+		    スナップショット削除をFSRVPクライアントが要求したときに呼ばれる。
+			</para></listitem>
+			<listitem><para>
+			  <parameter>base_share_path</parameter>と
+			  <parameter>snapshot_share_path</parameter>引数付きで
+			  コマンドは呼ばれる。
+			</para></listitem>
+			<listitem><para>
+			  コマンドは、スナップショットが正常に削除された場合は
+			  ステータス 0 を返さねばならない。
+			</para></listitem>
+		</itemizedlist>
+		すべてのコマンドは、 認証されたFSRVPクライアントユーザとして実行される。
+	</para>
+
+	<para>
+	  このモジュールはスタック可能である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">shell_snap</smbconfoption>
+		<smbconfoption name="shell_snap:check path command">
+			snap_check_path.sh</smbconfoption>
+		<smbconfoption name="shell_snap:create command">
+			snap_create.sh</smbconfoption>
+		<smbconfoption name="shell_snap:delete command">
+			snap_delete.sh</smbconfoption>
+	</programlisting>
+
+	<para>
+	  Samba の FSRVP サーバは [global] セクション中で設定されねばならない:
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[global]"/>
+		<smbconfoption name="rpc_daemon:fssd">fork</smbconfoption>
+		<smbconfoption name="registry shares">yes</smbconfoption>
+		<smbconfoption name="include">registry</smbconfoption>
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>
+	  このマニュアルは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+  <title>著者</title>
+
+  <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+  Tridgell によって作成された。現在 Samba は Samba Team に
+  よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+  として開発が行なわれている。</para>
+</refsect1>
+<refsect1>
+  <title>日本語訳</title>
+  <para>このマニュアルページは Samba 4.3.0 - 4.11.1 に対応する。</para>
+  <para>このドキュメントの Samba 4.3.0 - 4.11.1 対応の翻訳は
+  <itemizedlist>
+    <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+  </itemizedlist>
+  によって行なわれた。</para>
+</refsect1>
+
+</refentry>

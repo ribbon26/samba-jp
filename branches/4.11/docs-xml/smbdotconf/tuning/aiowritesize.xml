@@ -1,0 +1,41 @@
+<samba:parameter name="aio write size"
+                 context="S"
+		 type="bytes"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>
+この整数パラメーター
+が非ゼロ値にセットされている場合、ファイルをライトする際に要求された I/O
+サイズがこの値より大きければ、Samba は非同期ライトを行う。
+注意：非同期ライトが行われるのは、non-chained と non-chaining ライトで、
+かつライトキャッシュを使わない場合に限られる。</para>
+
+  <para>
+Samba 3.0 における非同期 I/O におけるサポートは、リードとライトを合わせて
+10個までの、未解決の非同期リクエストに限られる。</para>
+  
+<!-- Samba 4.8.0
+  <para>The only reasonable values for this parameter are 0 (no async I/O) and
+  1 (always do async I/O).</para>
+  <para>Compared to <smbconfoption name="aio read size"/> this parameter has
+    a smaller effect, most writes should end up in the
+    file system cache. Writes that require space allocation might
+    benefit most from going asynchronous.</para>
+-->
+<para>このパラメータの最適な値は 0 (非同期I/Oを行わない) と
+1 (常時非同期I/Oを行う) のみである。</para>
+<para> <smbconfoption name="aio read size"/> と比べると、ほとんどの書き込み動作は
+ファイルシステムキャッシュで終了するため、このパラメータは影響度が小さい。
+スペースの割り当てを必要とする書き込み動作は、非同期にすると
+効率がよくなるかもしれない。
+</para>
+
+  <related>write cache size</related>
+  <related>aio read size</related>
+</description>
+
+<value type="default">0</value>
+<value type="example">16384<comment>
+リクエストサイズが 16KB を超えるライトについて非同期 I/O を使用する。
+    </comment></value>
+</samba:parameter>
