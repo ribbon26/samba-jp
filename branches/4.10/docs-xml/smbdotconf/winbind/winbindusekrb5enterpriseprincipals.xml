@@ -1,0 +1,59 @@
+<samba:parameter name="winbind use krb5 enterprise principals"
+                 context="G"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.10.9
+        <para>winbindd is able to get kerberos tickets for
+	pam_winbind with krb5_auth or wbinfo -K/- -krb5auth=.
+	</para>
+
+	<para>winbindd (at least on a domain member) is never be able
+	to have a complete picture of the trust topology (which is managed by the DCs).
+	There might be uPNSuffixes and msDS-SPNSuffixes values,
+	which don't belong to any AD domain at all.
+	</para>
+
+	<para>With <smbconfoption name="winbind scan trusted domains">no</smbconfoption>
+	winbindd don't even get an incomplete picture of the topology.
+	</para>
+
+	<para>It is not really required to know about the trust topology.
+	We can just rely on the [K]DCs of our primary domain (e.g. PRIMARY.A.EXAMPLE.COM)
+	and use enterprise principals e.g. upnfromB@B.EXAMPLE.COM@PRIMARY.A.EXAMPLE.COM
+	and follow the WRONG_REALM referrals in order to find the correct DC.
+	The final principal might be userfromB@INTERNALB.EXAMPLE.PRIVATE.
+	</para>
+
+	<para>With <smbconfoption name="winbind use krb5 enterprise principals">yes</smbconfoption>
+	winbindd enterprise principals will be used.
+	</para>
+-->
+        <para>winbindd は、krb5_auth or wbinfo -K/--krb5auth= を使う
+	用に、kerberos チケットを取得できる。
+	</para>
+
+	<para>(少なくともドメインメンバでは) winbindd は (DCによって管理される)
+	完全な信頼トポロジ構成を持てない。uPNSuffixes と msDS-SPNSuffixes の値が
+	存在する可能性があるが、それらはどの AD ドメインにも属していない。
+	</para>
+
+	<para><smbconfoption name="winbind scan trusted domains">no</smbconfoption>
+	を使う事により、winbindd は不完全なトポロジ構成を取得しない。
+	</para>
+
+	<para>信頼トポロジについて知る必要はない。プライマリドメイン(たとえば
+	PRIMARY.A.EXAMPLE.COM)の[K]DC に依存するだけであり、たとえば、
+	upnfromB@B.EXAMPLE.COM@PRIMARY.A.EXAMPLE.COM のようなエンタープライズ
+	プリンシパルを使い、正しいDCを探すためにWRONG_REALM リファラルに従う。
+	最終とキナプリンシパルは userfromB@INTERNALB.EXAMPLE.PRIVATE かもしれない。
+	</para>
+
+	<para><smbconfoption name="winbind use krb5 enterprise principals">yes</smbconfoption>
+	とすると、winbindd エンタープライズプリンシパルが使われる。
+	</para>
+</description>
+
+<value type="default">no</value>
+<value type="example">yes</value>
+</samba:parameter>
