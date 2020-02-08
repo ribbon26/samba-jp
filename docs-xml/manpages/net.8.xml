@@ -591,6 +591,45 @@
                 </para></listitem>
                 </varlistentry>
 
+                <!-- Options for net vfs stream2abouble -->
+ 
+<!-- Samba-4.12.0
+                <varlistentry>
+                <term>- -recursive</term>
+                <listitem><para>Traverse a directory
+                hierarchy.</para></listitem>
+                </varlistentry>
+ 
+                <varlistentry>
+                <term>- -continue</term>
+                <listitem><para>Continue traversing a directory hierarchy in
+                case conversion of one file fails.</para></listitem>
+                </varlistentry>
+ 
+                <varlistentry>
+                <term>- -follow-symlinks</term>
+                <listitem><para>Follow symlinks encountered while traversing a
+                directory.</para></listitem>
+                </varlistentry>
+ -->
+                <varlistentry>
+                <term>--recursive</term>
+                <listitem><para>再帰検索を行う。
+                </para></listitem>
+                </varlistentry>
+ 
+                <varlistentry>
+                <term>--continue</term>
+                <listitem><para>ファイル名の大文字小文字変換が失敗しても、再帰検索を継続する。
+                </para></listitem>
+                </varlistentry>
+ 
+                <varlistentry>
+                <term>--follow-symlinks</term>
+                <listitem><para>ディレクトリ検索中に、シンボリックリンクをたどる。
+                </para></listitem>
+                </varlistentry>
+
                 &stdarg.encrypt;
                 &popt.common.samba.client;
 
@@ -1961,6 +2000,88 @@ against an NT4 Domain Controller.
 <para>Fetch domain SID and store it in the local <filename>secrets.tdb</filename>. </para>
 -->
 <para>ドメインの SID を取得して、ローカルの <filename>secrets.tdb</filename> に格納する。</para>
+
+</refsect2>
+
+<!-- Samba-4.12.0
+<refsect2>
+
+<title>ADS GPO</title>
+<refsect3>
+<title>ADS GPO APPLY &lt;USERNAME|MACHINENAME&gt; </title>
+<para>Apply GPOs for a username or machine name. Either username or machine name should be provided to the command, not both. </para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO GETGPO [<replaceable>GPO</replaceable>]</title>
+<para>List specified GPO.</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LINKADD [<replaceable>LINKDN</replaceable>] [<replaceable>GPODN</replaceable>]</title>
+<para>Link a container to a GPO. <replaceable>LINKDN</replaceable> Container to link to a GPO. <replaceable>GPODN</replaceable> GPO to link container to. DNs must be provided properly escaped. See RFC 4514 for details.</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LINKGET [<replaceable>CONTAINER</replaceable>]</title>
+<para>Lists gPLink of a containter.</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LIST &lt;USERNAME|MACHINENAME&gt; </title>
+<para>Lists all GPOs for a username or machine name. Either username or machine name should be provided to the command, not both. </para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LISTALL</title>
+<para>Lists all GPOs on a DC.</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO REFRESH [<replaceable>USERNAME</replaceable>] [<replaceable>MACHINENAME</replaceable>]</title>
+<para>Lists all GPOs assigned to an account and download them. <replaceable>USERNAME</replaceable> User to refresh GPOs for. <replaceable>MACHINENAME</replaceable> Machine to refresh GPOs for.</para>
+</refsect3>
+
+</refsect2>
+
+-->
+<refsect2>
+
+<title>ADS GPO</title>
+<refsect3>
+<title>ADS GPO APPLY &lt;USERNAME|MACHINENAME&gt; </title>
+<para>ユーザ名とマシン名に対して GPO を適用する。両方ではなく、ユーザ名かマシン名のどちらかはコマンドに指定する必要がある。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO GETGPO [<replaceable>GPO</replaceable>]</title>
+<para>指定された GPO を一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LINKADD [<replaceable>LINKDN</replaceable>] [<replaceable>GPODN</replaceable>]</title>
+<para>GPO にコンテナをリンクする。<replaceable>LINKDN</replaceable> GPO にリンクするコンテナ。<replaceable>GPODN</replaceable> コンテナにリンクする GPO 。DN は適切にエスケープして提供されねばならない。詳細は  RFC 4514 を参照のこと。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LINKGET [<replaceable>CONTAINER</replaceable>]</title>
+<para>コンテナの gPLink を一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LIST &lt;USERNAME|MACHINENAME&gt; </title>
+<para>ユーザ名とマシン名の、すべての GPO を一覧表示する。両方ではなく、ユーザ名かマシン名のどちらかはコマンドに指定する必要がある。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO LISTALL</title>
+<para>DC 中のすべての GPO を一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+<title>ADS GPO REFRESH [<replaceable>USERNAME</replaceable>] [<replaceable>MACHINENAME</replaceable>]</title>
+<para>アカウントに割り当てられたすべての GPO を一覧表示し、それをダウンロードする。<replaceable>USERNAME</replaceable>GPO をリフレッシュするためのユーザ名。<replaceable>MACHINENAME</replaceable> GPO をリフレッシュするためのマシン名。</para>
+</refsect3>
 
 </refsect2>
 
@@ -4151,9 +4272,9 @@ string.sddl形式文字列でセキュリティ識別子を設定する。</memb
 
    <varlistentry><term>--reg-version={1,2,3}</term>
       <listitem><para>
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.12.0
 	Specify the format of the registry database. If not given it defaults to
-	the value of the binary or, if an registry.tdb is explizitly stated at
+	the value of the binary or, if an registry.tdb is explicitly stated at
 	the commandline, to the value found in the INFO/version record.
 -->
 	レジストリデータベースの形式を指定する。指定されなかった場合、
@@ -4654,6 +4775,141 @@ Dump the locking table of a certain global lock.
 		</itemizedlist>
 
 	</refsect3>
+</refsect2>
+
+<refsect2>
+
+<!-- Samba 4.12.0
+<refsect2>
+  <title>vfs</title>
+  <para>Access shared filesystem through the VFS.</para>
+
+  <refsect3>
+    <title>vfs stream2abouble [- -recursive] [- -verbose] [- -continue] [- -follow-symlinks] <replaceable>share</replaceable> <replaceable>path</replaceable></title>
+
+    <para>Convert file streams to AppleDouble files.</para>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>share</replaceable>
+	A Samba share.</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>path</replaceable> A relative path of something in
+	the Samba share. "." can be used for the root directory of the
+	share.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Options:</para>
+    <variablelist>
+      <varlistentry>
+	<term>- -recursive</term>
+	<listitem><para>Traverse a directory hierarchy.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>- -verbose</term>
+	<listitem><para>Verbose output.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>- -continue</term>
+	<listitem><para>Continue traversing a directory hierarchy if a single
+	conversion fails.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>- -follow-symlinks</term>
+	<listitem><para>Follow symlinks encountered while traversing a
+	directory.</para></listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect3>
+
+  <refsect3>
+    <title>vfs getntacl <replaceable>share</replaceable> <replaceable>path</replaceable></title>
+
+    <para>Display the security descriptor of a file or directory.</para>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>share</replaceable>
+	A Samba share.</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>path</replaceable> A relative path of something in
+	the Samba share. "." can be used for the root directory of the
+	share.</para>
+      </listitem>
+    </itemizedlist>
+  </refsect3>
+
+</refsect2>
+-->  
+<refsect2>
+  <title>vfs</title>
+  <para>VFS 経由で共有ファイルシステムにアクセスする。</para>
+
+  <refsect3>
+    <title>vfs stream2abouble [--recursive] [--verbose] [--continue] [--follow-symlinks] <replaceable>share</replaceable> <replaceable>path</replaceable></title>
+
+    <para>ファイルストリームを AppleDouble ファイルに変換する。</para>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>share</replaceable>
+	Samba の共有。</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>path</replaceable> Samba 共有中のファイルに対する相対パス。
+	"." は共有におけるルートディレクトリとして使われる。
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>オプション:</para>
+    <variablelist>
+      <varlistentry>
+	<term>--recursive</term>
+	<listitem><para>ディレクトリ階層をたどる。</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--verbose</term>
+	<listitem><para>詳細出力。</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--continue</term>
+	<listitem><para>ある変換作業に失敗しても、引き続きディレクトリ階層をたどる。
+	</para></listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--follow-symlinks</term>
+	<listitem><para>ディレクトリ階層をたどっているとき、シンボリックリンクもだどる。
+	</para></listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect3>
+
+  <refsect3>
+    <title>vfs getntacl <replaceable>share</replaceable> <replaceable>path</replaceable></title>
+
+    <para>ファイルまたはディレクトリのセキュリティ識別子を表示する。</para>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>share</replaceable>
+	Samba の共有。</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <listitem>
+	<para><replaceable>path</replaceable> Samba 共有中のファイルに対する相対パス。
+        "." は共有におけるルートディレクトリとして使われる。
+	</para>
+      </listitem>
+    </itemizedlist>
+  </refsect3>
+
 </refsect2>
 
 <refsect2>
