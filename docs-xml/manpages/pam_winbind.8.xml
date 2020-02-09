@@ -159,6 +159,116 @@
 		</para></listitem>
 		</varlistentry>
 
+<!-- Samba-4.12.0
+		<varlistentry>
+		<term>krb5_ccache_type=[type]</term>
+		<listitem><para>
+
+		When pam_winbind is configured to try kerberos authentication
+		by enabling the <parameter>krb5_auth</parameter> option, it can
+		store the retrieved Ticket Granting Ticket (TGT) in a
+		credential cache. The type of credential cache can be
+		controlled with this option.  The supported values are:
+		<parameter>KCM</parameter> or <parameter>KEYRING</parameter>
+		(when supported by the system's Kerberos library and
+		operating system),
+		<parameter>FILE</parameter> and <parameter>DIR</parameter>
+		(when the DIR type is supported by the system's Kerberos
+		library). In case of FILE a credential cache in the form of
+		/tmp/krb5cc_UID will be created -  in case of DIR you NEED
+		to specify a directory. UID is replaced with the numeric
+		user id. The UID directory is being created. The path up to
+		the directory should already exist. Check the details of the
+		Kerberos implmentation.</para>
+
+		<para>When using the KEYRING type, the supported mechanism is
+		<quote>KEYRING:persistent:UID</quote>, which uses the Linux
+		kernel keyring to store credentials on a per-UID basis.
+		The KEYRING has its limitations. As it is secure kernel memory,
+		for example bulk sorage of credentils is for not possible.</para>
+
+		<para>When using th KCM type, the supported mechanism is
+		<quote>KCM:UID</quote>, which uses a Kerberos credential
+		manaager to store credentials on a per-UID basis similar to
+		KEYRING. This is the recommended choice on latest Linux
+		distributions, offering a Kerberos Credential Manager. If not
+		we suggest to use KEYRING as those are the most secure and
+		predictable method.</para>
+
+		<para>It is also possible to define custom filepaths and use the "%u"
+		pattern in order to substitute the numeric user id.
+		Examples:</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>krb5_ccache_type = DIR:/run/user/%u/krb5cc</term>
+					<listitem><para>This will create a credential cache file in the specified directory.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>krb5_ccache_type = FILE:/tmp/krb5cc_%u</term>
+					<listitem><para>This will create a credential cache file.</para></listitem>
+			</varlistentry>
+		</variablelist>
+
+		<para>Leave empty to just do kerberos authentication without
+		having a ticket cache after the logon has succeeded.
+		This setting is empty by default.</para>
+		</listitem>
+		</varlistentry>
+-->
+		<varlistentry>
+		<term>krb5_ccache_type=[type]</term>
+		<listitem><para>
+
+		When pam_winbind is configured to try kerberos authentication
+		<parameter>krb5_auth</parameter> オプションを有効にして、pam_winbind が
+		kerberos 認証を行うように設定された場合、Winbindd は TGT (Ticket Granting Ticket)
+		を資格情報キャッシュ中に保持する。資格情報キャッシュのタイプは
+		このオプションで制御できる。サポートされている値は
+		<parameter>KCM</parameter> と <parameter>KEYRING</parameter>
+		(システムの Kerberos ライブラリと OS によってサポートされている場合)、
+		<parameter>FILE</parameter> と <parameter>DIR</parameter>
+		(DIR タイプがシステムの Kerberos ライブラリでサポートされている場合)である。
+		FILE の場合、/tmp/krb5cc_UID 形式の認証情報キャッシュが作成される。
+		DIR の場合、ディレクトリを指定する必要がある。UID は数字のユーザ ID
+		に置き換えられる。UID ディレクトリが作成される。そのディレクトリ
+		までのパスはすでに存在していなければならない。詳細は Kerberos の
+		実装を参照のこと。</para>
+
+		<para>KEYRING タイプを使用する場合、サポートされている方式は
+		<quote>KEYRING:persistent:UID</quote>で、これは、UID 毎の
+		認証情報を格納するために、Linux のカーネル keyring を使用する。
+		KEYRING には固有の制限がある。カーネルメモリはセキュアなので、
+		たとえば、資格情報のバルクストレージは不可能である。</para>
+
+		<para>KCM タイプを使用する場合、サポートされる方式は
+		<quote>KCM:UID</quote>で、これは、KEYRING と同様、UID 毎の
+		認証情報を格納する、Kerberos 認証情報マネージャを使用する。
+		これは Kereberos 認証情報マネージャが提供されている
+		最新の Linux ディストリビューションで推奨される方式である。
+		そうでない場合、もっともセキュアで一般的なな方法である
+		KEYRING を使う事を推奨する。</para>
+
+		<para>また、カスタムファイルパスの定義と、数字のユーザ ID に置換するために、
+		"%u" を使う事も可能である。
+		以下は例である:</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>krb5_ccache_type = DIR:/run/user/%u/krb5cc</term>
+					<listitem><para>これは、指定されたディレクトリ中に認証情報キャッシュファイルを作成する。</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>krb5_ccache_type = FILE:/tmp/krb5cc_%u</term>
+					<listitem><para>これは、認証情報キャッシュファイルを作成する。</para></listitem>
+			</varlistentry>
+		</variablelist>
+
+		<para>空にした場合、ログオン成功後に、チケットキャッシュなしで Kerberos 認証を行う。
+		この設定は既定値で 空 である。</para>
+		</listitem>
+		</varlistentry>
+
 		<varlistentry>
 		<term>krb5_ccache_type=[type]</term>
 		<listitem><para>
