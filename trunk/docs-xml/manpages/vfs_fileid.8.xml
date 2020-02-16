@@ -108,6 +108,16 @@
                 in a cluster for the root directory of a share.
 		</para>
 -->
+<!-- Samba-4.12.0
+                <para>The <command>fsname_norootdir_ext</command> algorithm
+                generates device ids by hashing the kernel device name, except
+                for the root directory of shares where it will use the hostname
+                algorithm. Additionally it generates an extid based on the
+                process pid. This can be used to deliberately break lock
+                coherency between all smbd processes in the whole cluster for
+                the root directory of a share.
+                </para>
+-->
                 <para><command>hostname</command> アルゴリズムは、
 		ホスト名をハッシュしてデバイス IDを生成する。これは、
 		クラスタ中のロックの一貫性を破るために使用できる。
@@ -118,6 +128,13 @@
 		これは、共有のルートディレクトリのクラスタ中の、ロックの
 		一貫性を破るのに使われる。
 		</para>
+                <para><command>fsname_norootdir_ext</command>アルゴリズムは
+		カーネルデバイス名をハッシュすることにより、デバイス id を生成するが、
+		ホスト名アルゴリズムを使う共有のルートディレクトリでは行わない。
+		さらに、プロセスの pid をベースにした extid も生成する。
+		これは、共有のルートディレクトリ用の、クラスタ全体中で、すべての
+		smbd プロセス間でのロックの一貫性を意図的に解除することができる。
+                </para>
 		</para>
 		</listitem>
 		</varlistentry>
