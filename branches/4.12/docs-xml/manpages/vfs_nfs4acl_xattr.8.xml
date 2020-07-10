@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_nfs4acl_xattr.8" lang="ja">
+
+  <refmeta>
+    <refentrytitle>vfs_nfs4acl_xattr</refentrytitle>
+    <manvolnum>8</manvolnum>
+    <refmiscinfo class="source">Samba</refmiscinfo>
+    <refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+    <refmiscinfo class="version">&doc.version;</refmiscinfo>
+  </refmeta>
+
+
+  <refnamediv>
+    <refname>vfs_nfs4acl_xattr</refname>
+    <refpurpose>NTFS の ACLを、NFS4でエンコードしたblob として拡張属性に保存する</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>vfs objects = nfs4acl_xattr</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>説明</title>
+
+    <para>この VFS モジュールは
+    <citerefentry><refentrytitle>samba</refentrytitle>
+    <manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+<!-- Samba 4.8.0
+    <para>The <command>vfs_acl_xattr</command> VFS module stores NTFS Access
+    Control Lists (ACLs) in Extended Attributes (EAs/xattrs).  This enables the
+    full mapping of Windows ACLs on Samba servers.
+    </para>
+-->
+    <para><command>vfs_acl_xattr</command> VFS モジュールは NTFS アクセス制御リスト
+    (ACLs) を拡張属性 (EAs/xattrs) に保存する。これにより、Samba  サーバ上で、 Windows ACL
+    の完全なマッピングが可能になる。
+    </para>
+
+    <para>このモジュールはスタック可能である。</para>
+  </refsect1>
+
+
+  <refsect1>
+    <title>オプション</title>
+
+    <variablelist>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:encoding = [nfs|ndr|xdr]</term>
+	<listitem>
+<!-- Samba 4.8.0
+	  <para>This parameter configures the marshaling format used in the ACL
+	  blob and the default extended attribute name used to store the blob.
+	  </para>
+-->
+<!-- Samba-4.11.0
+          <para>When set to <emphasis>nfs</emphasis> - fetch and store the NT
+          ACL in NFS 4.0 or 4.1 compatible XDR encoding. By default this uses
+          the extended attribute "system.nfs4_acl". This setting also
+          disables <emphasis>validate_mode</emphasis>.</para>
+-->
+<!-- Samba-4.8.0
+	  <para>When set to <emphasis>ndr (default)</emphasis> - store the NT
+	  ACL with POSIX draft NFSv4 compatible NDR encoding. By default this
+	  uses the extended attribute "security.nfs4acl_ndr".</para>
+
+	  <para>When set to <emphasis>xdr</emphasis> - store the NT ACL in a
+	  format similar to NFS 4.1 RFC 5661 in XDR encoding. The main
+	  differences to RFC 5661 are the use of ids instead of strings as users
+	  and group identifiers and an additional attribute per nfsace4. By
+	  default this encoding stores the blob in the extended attribute
+	  "security.nfs4acl_xdr".</para>
+-->
+	  <para>このパラメータは、ACL blob 中で使われる marshaling 形式と、
+	  blob に保存する際に使われる既定値の拡張属性名で設定を行う。</para>
+
+          <para><emphasis>nfs</emphasis> に設定すると、NFS 4.0 または 4.1 互換の
+          XDR エンコーディングで、NT ACL を読み取り/保存する。既定でこれは
+          拡張属性 "system.nfs4_acl" を使う。またこの設定は
+          <emphasis>validate_mode</emphasis> を無効にする。</para>
+
+	  <para><emphasis>ndr (既定値)</emphasis> に設定すると、POSIX ドラフト
+	  NFSv4 互換 NDR エンコーディングで NT ACL を保存する。既定でこれは、
+	  拡張属性 "security.nfs4acl_ndr" を使う。</para>
+
+	  <para><emphasis>xdr</emphasis> に設定すると、XDR エンコーディングで、NFS 4.1
+	  RFC 5661 と同様の形式で NT ACLを保存する。RFC 5661 との主要な違いは、
+	  ユーザとグループ識別子、nfsace4 ごとの追加属性として文字列の代わりに id を使用
+	  することである。既定値では、このエンコーディングは、拡張属性 "security.nfs4acl_xdr"
+	  中に blob を保存する。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:version = [40|41]</term>
+	<listitem>
+<!-- Samba 4.8.0
+	  <para>This parameter configures the NFS4 ACL level. Only
+	  <emphasis>41</emphasis> fully supports mapping NT ACLs and should be
+	  used. The default is <emphasis>41</emphasis>.</para>
+-->
+	  <para>このパラメータは、NFS4 ACL レベルを設定する。
+	  <emphasis>41</emphasis> のみ、NT ACLのマッピングを完全にサポートするので、
+	  これを使うこと。既定値は<emphasis>41</emphasis>である。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:default acl style = [posix|windows|everyone]</term>
+	<listitem>
+<!-- Samba 4.8.0
+	  <para>This parameter determines the type of ACL that is synthesized in
+	  case a file or directory lacks an ACL extended attribute.</para>
+
+	  <para>When set to <emphasis>posix</emphasis>, an ACL will be
+	  synthesized based on the POSIX mode permissions for user, group and
+	  others, with an additional ACE for <emphasis>NT
+	  Authority\SYSTEM</emphasis> will full rights.</para>
+-->
+	  <para>このパラメータは、ACL 拡張属性が欠けているファイルやディレクトリに
+	  おいて、合成する ACL のタイプを決める。</para>
+
+	  <para><emphasis>posix</emphasis>に設定した場合、完全な権限を持つ、
+	  <emphasis>NT Authority\SYSTEM</emphasis>を付けた上で、 ユーザ、グループ、
+	  その他に対し、POSIX モードのパーミッションをベースにして、ACL を合成する。</para>
+
+<!-- Samba 4.8.0
+	  <para>When set to <emphasis>windows</emphasis>, an ACL is synthesized
+	  the same way Windows does it, only including permissions for the owner
+	  and <emphasis>NT Authority\SYSTEM</emphasis>.</para>
+
+	  <para>When set to <emphasis>everyone</emphasis>, an ACL is synthesized
+	  giving full permissions to everyone (S-1-1-0).</para>
+
+	  <para>The default for this option is
+	  <emphasis>everyone</emphasis>.</para>
+-->
+	  <para><emphasis>windows</emphasis>に設定した場合、所有者に対するパーミッション
+	  と、<emphasis>NT Authority\SYSTEM</emphasis> のみを含むという、Windows と
+	  同じやりかたで、ACL を合成する。</para>
+
+	  <para><emphasis>everyone</emphasis>に設定した場合、everyone (S-1-1-0) に対する
+	  完全なパーミッションを与えるように ACL を合成する。</para>
+
+	  <para>このオプションの既定値は<emphasis>everyone</emphasis>である。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:xattr_name = STRING</term>
+	<listitem>
+<!-- Samba 4.8.0
+	  <para>This parameter configures the extended attribute name used to
+	  store the marshaled ACL.</para>
+	  <para>The default depends on the setting for
+	  <emphasis>nfs4acl_xattr:encoding</emphasis>.</para>
+-->
+	  <para>このパラメータは、marshaled ACL に保存するときに使われる拡張属性名を
+	  設定する。</para>
+	  <para>既定値は、<emphasis>nfs4acl_xattr:encoding</emphasis>の設定に依存する。</para>
+	</listitem>
+      </varlistentry>
+
+<!-- Samba-4.12.0
+      <varlistentry>
+	<term>nfs4acl_xattr:nfs4_id_numeric = yes|no (default: no)</term>
+	<listitem>
+	  <para>This parameter tells the module how the NFS4 server encodes user
+	  and group identifiers on the network. With the default setting the
+	  module expects identifiers encoded as per the NFS4 RFC as
+	  user@domain.</para>
+	  <para>When set to <emphasis>yes</emphasis>, the module expects the
+	  identifiers as numeric string.</para>
+	  <para>The default for this options<emphasis>no</emphasis>.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:validate_mode = yes|no</term>
+	<listitem>
+	  <para>This parameter configures whether the module enforces the POSIX
+	  mode is set to 0777 for directories and 0666 for files. If this
+	  constrained is not met, the xattr with the ACL blob is
+	  discarded.</para>
+	  <para>The default depends on the setting for
+	  <emphasis>nfs4acl_xattr:encoding</emphasis>: when set to
+	  <emphasis>nfs</emphasis> this setting is disabled by default,
+	  otherwise it is enabled.</para>
+	</listitem>
+      </varlistentry>
+-->
+      <varlistentry>
+	<term>nfs4acl_xattr:nfs4_id_numeric = yes|no (default: no)</term>
+	<listitem>
+	  <para>このパラメータは、ネットワーク上で、NFS4サーバが、ユーザおよびグループの識別子を
+	  どのようにエンコードするかを指定する。既定値は、user@domain という NFS4のRFC
+	  に従った識別子をモジュールは仮定している。</para>
+	  <para><emphasis>yes</emphasis>に設定すると、モジュールは数字列の識別子
+	  を仮定する。</para>
+	  <para>このオプションの既定値は<emphasis>no</emphasis>である。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>nfs4acl_xattr:validate_mode = yes|no</term>
+	<listitem>
+	  <para>このパラメータは、POSIXのパーミッションを、ディレクトリに対して 0777、
+	  ファイルに対して 0666 に設定する。この制約が満たされない場合、
+	  ACL blob を使う xattr は無視される。</para>
+	  <para>既定値は
+	  <emphasis>nfs4acl_xattr:encoding</emphasis> の設定に依存する: 
+	  <emphasis>nfs</emphasis> に設定した場合、この設定は既定で無効となる。
+	  その他の場合は有効となる。</para>
+	</listitem>
+      </varlistentry>
+
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>例</title>
+
+<!-- Samba 4.8.0
+    <para>A directory can be exported via Samba using this module as
+    follows:</para>
+-->
+    <para>このモジュールを使って Samba 経由でディレクトリをエクスポートするには
+    以下のように行う。</para>
+
+    <programlisting>
+      <smbconfsection name="[samba_gpfs_share]"/>
+      <smbconfoption name="vfs objects">nfs4acl_xattr</smbconfoption>
+      <smbconfoption name="path">/foo/bar</smbconfoption>
+    </programlisting>
+  </refsect1>
+
+  <refsect1>
+    <title>著者</title>
+   <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+  </refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.11.0 - 4.11.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.8.0 - 4.11.1 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

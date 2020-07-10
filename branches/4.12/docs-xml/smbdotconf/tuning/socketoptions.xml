@@ -1,0 +1,80 @@
+<samba:parameter name="socket options"
+                 context="G"
+		 type="string"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>
+      <warning>
+	<para>最近のサーバーOS では、多くの状況において、高いネットワーク
+	パフォーマンスが得られるようにチューニングされている。
+	socket option を設定した場合、それらの設定を上書きすることになる。
+	Liunx は特に、socket buffer size を指定した場合、バッファーサイズを
+	自動的にチューニングするメカニズムが OFF になる。これは TCP/IP
+	スタックの機能を損なわせる可能性がある。</para>
+
+	<para>socket option を正しくすると、パフォーマンスに大きな違いが
+	出るが、間違ってしまうと、パフォーマンスは大きく下がってしまう。
+	他のローレベル設定と同じように、これを変更しなければならない場合は、
+	大きな変更の前に小さな変更を行って、<emphasis>試験</emphasis>
+	を行を行うこと。</para>
+      </warning>
+    </para>
+
+    <para>このオプションは、クライアントとの通信に利用されるソケットオプションを設定する。</para>
+
+    <para>ソケットオプションは、 OS のネットワーク層の接続に影響し、通信の最適化に利用されるものである。</para>
+
+    <para>このオプションは、各ネットワークにおける Samba サーバーの性能の最適化に用いられることが多い。 Samba 自身がネットワークにおける最適のパラメーターを知るすべはないので、このオプションは、自分自身で実験して設定しなければならない。設定を行なう前に、使用している OS の適切なドキュメント  (恐らく <command moreinfo="none">man setsockopt</command> が役立つだろう) を読むことを強く推奨する。</para>
+
+    <para>システムによっては、このオプションを設定すると、 Samba が「Unknown socket option」というメッセージを返却するようになるかもしれない。この原因は、ミスタイプか、 includes.h に使用している OS の include ファイルを追加する必要があるかのいずれかであろう。後者の場合は、<ulink url="mailto:samba-technical@lists.samba.org"> samba-technical@lists.samba.org</ulink> までパッチを送ってほしい。</para>
+
+    <para>サポートされているソケットオプションについては、 OS の制約がない限り、どれでもどのような組合せでも用いることができる。</para>
+
+    <para>以下に現在このオプションで設定可能なソケットオプションの一覧を示す:</para>
+
+    <itemizedlist>
+    	<listitem><para>SO_KEEPALIVE</para></listitem>
+    	<listitem><para>SO_REUSEADDR</para></listitem>
+    	<listitem><para>SO_BROADCAST</para></listitem>
+    	<listitem><para>TCP_NODELAY</para></listitem>
+	<listitem><para>TCP_KEEPCNT *</para></listitem>
+	<listitem><para>TCP_KEEPIDLE *</para></listitem>
+	<listitem><para>TCP_KEEPINTVL *</para></listitem>
+    	<listitem><para>IPTOS_LOWDELAY</para></listitem>
+    	<listitem><para>IPTOS_THROUGHPUT</para></listitem>
+	<listitem><para>SO_REUSEPORT</para></listitem>
+    	<listitem><para>SO_SNDBUF *</para></listitem>
+    	<listitem><para>SO_RCVBUF *</para></listitem>
+    	<listitem><para>SO_SNDLOWAT *</para></listitem>
+    	<listitem><para>SO_RCVLOWAT *</para></listitem>
+	<listitem><para>SO_SNDTIMEO *</para></listitem>
+	<listitem><para>SO_RCVTIMEO *</para></listitem>
+	<listitem><para>TCP_FASTACK *</para></listitem>
+	<listitem><para>TCP_QUICKACK</para></listitem>
+	<listitem><para>TCP_NODELAYACK</para></listitem>
+	<listitem><para>TCP_KEEPALIVE_THRESHOLD *</para></listitem>
+	<listitem><para>TCP_KEEPALIVE_ABORT_THRESHOLD *</para></listitem>
+	<listitem><para>TCP_DEFER_ACCEPT *</para></listitem>
+    </itemizedlist>
+
+    <para><emphasis>'*'</emphasis> 印のあるオプションは、整数の引数を必要とする。それ以外のものは、 1 または 0 の引数で有効、無効を指定することもできるが、 1 または 0 を指定しない場合は、有効に設定される。</para>
+
+    <para>引数を指定する場合は、<command moreinfo="none">SO_SNDBUF = 8192</command> のように、 SOME_OPTION = VALUE という形式で指定する。 = 記号の前後に空白を入れてはいけない。
+		</para>
+
+    <para>ローカルネットワーク以外を考慮しなくても良い場合、</para>
+
+    <para><command moreinfo="none">socket options = IPTOS_LOWDELAY</command></para>
+    <para>と設定するのがよいであろう。</para>
+
+    <para>ローカルネットワークが存在する場合は以下の設定を試してみるとよいであろう:</para>
+
+    <para><command moreinfo="none">socket options = IPTOS_LOWDELAY TCP_NODELAY</command></para>
+
+    <para>WAN の場合は、 IPTOS_THROUGHPUT を設定してみるとよいかも知れない。</para>
+
+    <para>これらのオプションの中には、 Samba サーバーを完全に停止させるものもあるかもしれない。オプションを設定する際には気をつけること。</para>
+</description>
+<value type="default">TCP_NODELAY</value>
+<value type="example">IPTOS_LOWDELAY</value>
+</samba:parameter>

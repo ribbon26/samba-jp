@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_default_quota.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_default_quota</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_default_quota</refname>
+	<refpurpose>Windows クライアントに対してデフォルトのクォータ情報を提供する
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = default_quota</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは、
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+  <para>
+    一般的なクォータ実装の多くは、ユーザーやグループごとのクォータを設定
+    できるが、それらのデフォルト値を保持することができない。
+    Samba の <command>vfs_default_quota</command> モジュールにより、クォータ
+    のデフォルト値を保持できるようになり、 Windows のエクスプローラー
+    から、これを参照することが可能となる。
+  </para>
+
+  <para>
+    Samba のデフォルトでは、 クォータのデフォルト値として NO_LIMIT が
+    返却され、値の変更はできない。 <command>vfs_default_quota</command>
+    は、デフォルトのクォータ値を、指定したユーザーのクォータ値にマッピング
+    する。デフォルトでは、 root ユーザーの値にマッピングされる。
+    これは、 root ユーザーに対するクォータは通常適用されないためである。
+  </para>
+
+	<para>このモジュールはスタック可能である。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>default_quota:uid = UID</term>
+		<listitem>
+    <para>
+      ユーザーに対するクォータのデフォルト値を格納する UID を指定する。
+    </para>
+
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>default_quota:gid = GID</term>
+		<listitem>
+    <para>
+      グループに対するクォータのデフォルト値を格納する GID を指定する。
+    </para>
+
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>default_quota:uid nolimit = BOOL</term>
+		<listitem>
+    <para>
+      このパラメーターを yes に設定すると、ユーザーに対するクォータ
+      のデフォルト値を格納しているユーザー自身のクォータは、
+      無制限 (NO_LIMIT) として処理される。
+      no の場合は、指定された値が使用される。
+    </para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>default_quota:gid nolimit = BOOL</term>
+		<listitem>
+    <para>
+      このパラメーターを yes に設定すると、グループに対するクォータ
+      のデフォルト値を格納しているグループ自身のクォータは、
+      無制限 (NO_LIMIT) として処理される。
+      no の場合は、指定された値が使用される。
+    </para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+  <title>設定例</title>
+
+  <para>
+    クォータのデフォルト値を UID が 65535 のユーザーのクォータとして保持する。
+    該当ユーザー自身のクォータは無制限とする。
+	</para>
+
+<programlisting>
+        <smbconfsection name="[global]"/>
+	<smbconfoption name="vfs objects">default_quota</smbconfoption>
+	<smbconfoption name="default_quota:uid">65535</smbconfoption>
+	<smbconfoption name="default_quota:uid nolimit">yes</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 3.0.25 - 4.11.1 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
