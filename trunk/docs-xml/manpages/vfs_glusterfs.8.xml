@@ -279,6 +279,49 @@
 
 </refsect1>
 
+<!-- Samba-4.13.2
+<refsect1>
+	<title>CAVEATS</title>
+
+	<para>
+                The GlusterFS write-behind performance translator, when used
+                with Samba, could be a source of data corruption. The
+                translator, while processing a write call, immediately returns
+                success but continues writing the data to the server in the
+                background. This can cause data corruption when two clients
+                relying on Samba to provide data consistency are operating on
+                the same file.
+        </para>
+        <para>
+                The write-behind translator is enabled by default on GlusterFS.
+                The vfs_glusterfs plugin will check for the presence of the
+                translator and refuse to connect if detected.
+                Please disable the write-behind translator for the GlusterFS
+                volume to allow the plugin to connect to the volume.
+	</para>
+</refsect1>
+-->
+<refsect1>
+	<title>CAVEATS</title>
+
+	<para>
+                GlusterFS の write-behind パフォーマンストランスレータは、
+	        Samba と共に使うと、データのソースを破壊する可能性があります。
+		トランスレータが書き込み呼び出しを処理している間は、すぐに
+		成功を返しますが、引き続きサーバにデータをバックグラウンドで
+		書き込んでいます。これは、データの一貫性を提供するために Samba に
+		依存している 2つのクライアントが同じファイルで動作している場合に
+		データ破壊を引き起こす可能性があります。
+        </para>
+        <para>
+                write-behind トランスレータは GlusterFS では既定で有効になって
+                います。vfs_glusterfs プラグインは、トランスレータの存在を
+		確認し、見つかった場合には、接続を拒否します。ボリュームに対して
+		プラグインが接続できるようにするためには、GlusterFS に対して
+		write-behind トランスレータを無効にしてください。
+	</para>
+</refsect1>
+
 <refsect1>
 <!-- 原文 samba-4.7.0
 	<title>VERSION</title>
@@ -315,7 +358,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このドキュメントは、Samba 4.6.2 - 4.13.0 に対応する。</para>
+	<para>このドキュメントは、Samba 4.13.2 - 4.13.2 に対応する。</para>
 	<para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
