@@ -279,7 +279,7 @@
 
 </refsect1>
 
-<!-- Samba-4.13.2
+<!-- Samba-4.13.3
 <refsect1>
 	<title>CAVEATS</title>
 
@@ -298,7 +298,15 @@
                 translator and refuse to connect if detected.
                 Please disable the write-behind translator for the GlusterFS
                 volume to allow the plugin to connect to the volume.
+		The write-behind translator can easily be disabled via calling
+		<programlisting>
+                        gluster volume set &lt;volumename&gt; performance.write-behind off
+                </programlisting> on the commandline.
 	</para>
+	<para>
+                With GlusterFS versions >= 9, we silently bypass write-behind
+                translator during initial connect and failure is avoided.
+        </para>
 </refsect1>
 -->
 <refsect1>
@@ -319,7 +327,18 @@
 		確認し、見つかった場合には、接続を拒否します。ボリュームに対して
 		プラグインが接続できるようにするためには、GlusterFS に対して
 		write-behind トランスレータを無効にしてください。
+		write-behind トランスレータは 以下のように呼び出すことで簡単に
+		無効に出来ます。
+		<programlisting>
+                        gluster volume set &lt;volumename&gt; performance.write-behind off
+                </programlisting>
 	</para>
+        <para>
+	        GlusterFS のバージョンが 9 より大きい場合、最初の接続時には
+		write-behind トランスレータを無条件にバイパスするので、
+		失敗が防げます。
+        </para>
+
 </refsect1>
 
 <refsect1>
@@ -358,7 +377,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このドキュメントは、Samba 4.13.2 - 4.13.2 に対応する。</para>
+	<para>このドキュメントは、Samba 4.13.3 - 4.13.3 に対応する。</para>
 	<para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
