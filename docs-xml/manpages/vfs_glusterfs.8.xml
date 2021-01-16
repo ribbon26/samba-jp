@@ -279,6 +279,68 @@
 
 </refsect1>
 
+<!-- Samba-4.12.11
+<refsect1>
+	<title>CAVEATS</title>
+
+	<para>
+                The GlusterFS write-behind performance translator, when used
+                with Samba, could be a source of data corruption. The
+                translator, while processing a write call, immediately returns
+                success but continues writing the data to the server in the
+                background. This can cause data corruption when two clients
+                relying on Samba to provide data consistency are operating on
+                the same file.
+        </para>
+        <para>
+                The write-behind translator is enabled by default on GlusterFS.
+                The vfs_glusterfs plugin will check for the presence of the
+                translator and refuse to connect if detected.
+                Please disable the write-behind translator for the GlusterFS
+                volume to allow the plugin to connect to the volume.
+		The write-behind translator can easily be disabled via calling
+		<programlisting>
+                        gluster volume set &lt;volumename&gt; performance.write-behind off
+                </programlisting> on the commandline.
+	</para>
+	<para>
+                With GlusterFS versions >= 9, we silently bypass write-behind
+                translator during initial connect and failure is avoided.
+        </para>
+</refsect1>
+-->
+<refsect1>
+	<title>CAVEATS</title>
+
+	<para>
+                GlusterFS の write-behind パフォーマンストランスレータは、
+	        Samba と共に使うと、データのソースを破壊する可能性があります。
+		トランスレータが書き込み呼び出しを処理している間は、すぐに
+		成功を返しますが、引き続きサーバにデータをバックグラウンドで
+		書き込んでいます。これは、データの一貫性を提供するために Samba に
+		依存している 2つのクライアントが同じファイルで動作している場合に
+		データ破壊を引き起こす可能性があります。
+        </para>
+        <para>
+                write-behind トランスレータは GlusterFS では既定で有効になって
+                います。vfs_glusterfs プラグインは、トランスレータの存在を
+		確認し、見つかった場合には、接続を拒否します。ボリュームに対して
+		プラグインが接続できるようにするためには、GlusterFS に対して
+		write-behind トランスレータを無効にしてください。
+		write-behind トランスレータは 以下のように呼び出すことで簡単に
+		無効に出来ます。
+		<programlisting>
+                        gluster volume set &lt;volumename&gt; performance.write-behind off
+                </programlisting>
+	</para>
+        <para>
+	        GlusterFS のバージョンが 9 より大きい場合、最初の接続時には
+		write-behind トランスレータを無条件にバイパスするので、
+		失敗が防げます。
+        </para>
+
+</refsect1>
+
 <refsect1>
 <!-- 原文 samba-4.7.0
 	<title>VERSION</title>
@@ -315,7 +377,7 @@
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このドキュメントは、Samba 4.6.2 - 4.11.1 に対応する。</para>
+	<para>このドキュメントは、Samba 4.12.11 - 4.12.11 に対応する。</para>
 	<para>このドキュメントの翻訳は
 		<itemizedlist>
 			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
