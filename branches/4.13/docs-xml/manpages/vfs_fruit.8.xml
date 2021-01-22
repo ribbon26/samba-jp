@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_fruit.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_fruit</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.6.6
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_fruit</refname>
+<!-- 原文 samba-4.6.6
+	<refpurpose>Enhanced OS X and Netatalk interoperability</refpurpose>
+-->
+	<refpurpose>OS X と Netatalk との相互運用性を強化する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = fruit</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.6.6
+	<para>This VFS module is part of the
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The <command>vfs_fruit</command> module provides
+	enhanced compatibility with Apple SMB clients and
+	interoperability with a Netatalk 3 AFP fileserver.</para>
+-->
+	<para><command>vfs_fruit</command> モジュールは、Apple SMB クライアント
+	との互換性向上と、Netatalk 3 AFP ファイルサーバーとの相互運用性を提供する。
+	</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The module should be stacked with
+	<command>vfs_catia</command> if enabling character conversion and
+	must be stacked with <command>vfs_streams_xattr</command>, see the
+	example section for the correct config.</para>
+-->
+	<para>このモジュールは、もしも文字変換をするのであれば、
+	<command>vfs_catia</command> といっしょに使うべきであり、さらに、
+	<command>vfs_streams_xattr</command> と共に使わなければならない。
+	正しい設定方法は、例 の節を参照のこと。</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The module enables alternate data streams (ADS) support
+	for a share, intercepts the OS X special streams "AFP_AfpInfo"
+	and "AFP_Resource" and handles them in a special way. All
+	other named streams are deferred to
+	<command>vfs_streams_xattr</command> which must be loaded
+	together with <command>vfs_fruit</command>.</para>
+-->
+	<para>モジュールは、共有に対して、代替データストリーム (ADS)
+	のサポートと、OS X 特有のストリーム "AFP_AfpInfo" と "AFP_Resource"
+	を横取りし、それを特別な方法で扱う機能を有効にする。
+	その他すべての名前付きストリームは、<command>vfs_fruit</command>
+	といっしょにロードされねばならない <command>vfs_streams_xattr</command>
+	にゆだねられる。</para>
+
+<!-- 原文 samba-4.6.6
+	<para>Be careful when mixing shares with and without
+	vfs_fruit. OS X clients negotiate SMB2 AAPL protocol
+	extensions on the first tcon, so mixing shares with and
+	without fruit will globally disable AAPL if the first tcon is
+	without fruit.</para>
+-->
+	<para>vfs_fruit が有効な共有と無効な共有が混在している場合は注意すること。
+	OS X クライアントは最初に tcon を行う際に SMB2 AAPL プロトコル拡張の
+	ネゴシエーションを行う。そのため、最初に tcon を行った共有で
+	vfs_fruit が無効の場合、すべての共有で AAPL が無効となってしまう。
+	</para>
+
+<!-- 原文 samba-4.6.6
+	<para>Having shares with ADS support enabled for OS X client
+	is worthwhile because it resembles the behaviour of Apple's
+	own SMB server implementation and it avoids certain severe
+	performance degradations caused by Samba's case sensitivity
+	semantics.</para>
+-->
+	<para>共有で OS X クライアント向けの代替データストリーム(訳注:ADS)の
+	サポートを有効化することにより、Apple 固有の SMB サーバー実装と同等の動作が
+	実現する。これにより、Samba が大文字小文字判別に起因する
+	顕著なパフォーマンス低下が抑止される。
+	</para>
+
+<!-- 原文 samba-4.6.6
+	<para>The OS X metadata and resource fork stream can be stored
+	in a way compatible with Netatalk 3 by setting
+	<command>fruit:resource = file</command> and
+	<command>fruit:metadata = netatalk</command>.</para>
+-->
+	<para>OS X メタデータとリソースフォークストリームは、Netatalk 3 と
+	互換性のある方法で、下記のように設定することにより格納される。
+	<command>fruit:resource = file</command> と
+	<command>fruit:metadata = netatalk</command></para>
+
+<!-- 原文 samba-4.6.6
+	<para>OS X maps NTFS illegal characters to the Unicode private
+	range in SMB requests. By setting <command>fruit:encoding =
+	native</command>, all mapped characters are converted to
+	native ASCII characters.</para>
+-->
+	<para>OS X は、NTFS の不正な文字を、SMB 要求中で、Unicode
+	のプライベート領域にマップする。
+	<command>fruit:encoding = native</command> を設定することにより、
+	すべてのマップされた文字は ネイティブな ASCII 文字に変換される。
+	</para>
+
+<!-- 原文 samba-4.6.6
+	<para>Finally, share access modes are optionally checked
+	against Netatalk AFP sharing modes by setting
+	<command>fruit:locking = netatalk</command>.</para>
+-->
+	<para>最後に、共有アクセスモードは、
+	<command>fruit:locking = netatalk</command>
+	を設定することにより、Netatalk AFP 共有モードに対して
+	チェックすることもできる。</para>
+
+<!-- 原文 samba-4.8.0
+	<para>This module is not stackable other than described in
+	this manpage.</para>
+-->
+	<para>このモジュールは、このマニュアルページで言及されている
+	もの以外に対してはスタックできない。</para>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>GLOBAL OPTIONS</title>
+-->
+	<title>グローバルオプション</title>
+
+<!-- 原文 samba-4.6.6
+	<para>The following options must be set in the global smb.conf section
+	and won't take effect when set per share.</para>
+-->
+	<para>以下に示すオプションは smb.conf のグローバルセクションに
+        定義しなければならず、共有ごとに設定しても無効である。</para>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>fruit:aapl = yes | no</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>A <emphasis>global</emphasis> option whether to enable Apple's SMB2+
+	      extension codenamed AAPL. Default
+	      <emphasis>yes</emphasis>. This extension enhances
+	      several deficiencies when connecting from Macs:</para>
+-->
+	      <para>グローバルオプション。Appleの コードネーム AAPL の、SMB2+ 拡張を
+	      有効にするかどうかを指定する。規定値では、
+	      <emphasis>yes</emphasis> である。この拡張は、Mac からの接続時に
+	      いくつかの足らない機能を補う:</para>
+
+	      <itemizedlist>
+<!-- 原文 samba-4.8.0
+		<listitem><para>directory enumeration is enriched with
+		Mac relevant filesystem metadata (UNIX mode,
+		FinderInfo, resource fork size and effective
+		permission), as a result the Mac client doesn't need
+		to fetch this metadata individually per directory
+		entry resulting in an often tremendous performance
+		increase.</para></listitem>
+-->
+		<listitem><para>ディレクトリ一覧表示は、Mac のファイルシステム
+		メタデータで強化され (UNIX モード、FinderInfo、リソースフォーク
+		サイズと実行パーミッション)、その結果、驚異的な性能向上が得られ
+		るので、Mac クライアントは、ディレクトリエントリごとに、個別に
+		このメタデータをフェッチする必要がない。
+		</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para>The ability to query and modify the
+		UNIX mode of directory entries.</para></listitem>
+-->
+		<listitem><para>ディレクトリエントリの UNIX モードを問い合わせ/
+		変更する機能。</para></listitem>
+	      </itemizedlist>
+
+<!-- 原文 samba-4.6.6
+	      <para>There's a set of per share options that come into play when
+	      <emphasis>fruit:aapl</emphasis> is enabled. These opions, listed
+	      below, can be used to disable the computation of specific Mac
+	      metadata in the directory enumeration context, all are enabled by
+	      default:</para>
+-->
+	      <para>ディレクトリ一覧表示時に、特定の Mac メタデータの計算を無効
+	      にするときに使う、共有単位のオプション群がある。既定値では
+	      すべて有効である:</para>
+
+	      <itemizedlist>
+		<listitem><para>readdir_attr:aapl_rsize = true | false</para></listitem>
+		<listitem><para>readdir_attr:aapl_finder_info = true | false</para></listitem>
+		<listitem><para>readdir_attr:aapl_max_access = true | false</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:nfs_aces = yes | no</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>A <emphasis>global</emphasis> option whether support for
+	      querying and modifying the UNIX mode of directory entries via NFS
+	      ACEs is enabled, default <emphasis>yes</emphasis>.</para>
+-->
+	      <para>NFS ACE 経由での、ディレクトリエントリの UNIX モードを問合せ/変更する
+	      機能を有効にするかどうかの指定で、既定値は <emphasis>yes</emphasis>。 </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:copyfile = yes | no</term>
+	  <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>A <emphasis>global</emphasis> option whether to enable OS X
+	      specific copychunk ioctl that requests a copy of a whole file
+	      along with all attached metadata.</para>
+	      <para>WARNING: the copyfile request is blocking the
+	      client while the server does the copy.</para>.
+	      <para>The default is <emphasis>no</emphasis>.</para>
+-->
+	    <para>OS X 固有の、すべての付属するメタデータと一緒にファイル全体
+	    コピーを要求する copychunk ioctl を有効にするかの指定。</para>
+	    <para>注意: copyfile 要求は、サーバーがコピーを行っている間は
+	    クライアントに対してブロックされることに注意。</para>
+	    <para>既定値は <emphasis>no</emphasis> である。</para>
+	  </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:zero_file_id = yes | no</term>
+	    <listitem>
+<!-- Samba 4.11.0
+	      <para>Whether to return zero to queries of on-disk file
+	      identifier if the client has negotiated AAPL.</para>
+	      <para>Mac applications and / or the Mac SMB client code expect the
+	      on-disk file identifier to have the semantics of HFS+ Catalog Node
+	      Identifier (CNID). Samba provides File-IDs based on a file's
+	      initial creation date if the option <smbconfoption name="store dos
+	      attributes"/> is enabled.  Returning a file identifier of
+	      zero causes the Mac client to stop using and trusting the file id
+	      returned from the server.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para>クライアントによる AAPL ネゴシエート
+              後に、ディスク上のファイル識別子の問い合わせに対してゼロを返すか
+              どうかを指定する。</para>
+	      <para>Mac アプリケーションや Mac SMB クライアントコードは、
+	      ディスク上のファイル識別子が HFS+ カタログノード識別子（HFS+
+	      Catalog Node Identifier; CNID）として機能することを想定している。
+	      Samba は、<smbconfoption name="store dos attributes"/>オプションが
+	      有効になっている場合、ファイルの初期作成時刻を元にしたファイルIDを
+	      提供する。
+	      ファイル識別子としてゼロが返ると、Mac クライアントはサーバーから
+	      返るファイル識別子を信用しなくなり、使わなくなる。</para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	    </listitem>
+	  </varlistentry>
+
+<!-- 原文 samba-4.6.7
+          <varlistentry>
+            <term>fruit:model = MacSamba</term>
+            <listitem>
+              <para>This option defines the model string inside the AAPL
+              extension and will determine the appearance of the icon representing the
+              Samba server in the Finder window.</para>
+              <para>The default is <emphasis>MacSamba</emphasis>.</para>
+            </listitem>
+          </varlistentry>
+-->
+          <varlistentry>
+            <term>fruit:model = MacSamba</term>
+            <listitem>
+              <para>このオプションは、AAPL 内でのモデル文字と、
+	      ファインダーウィンドウ内での、Samba サーバアイコンの表現方法を
+	      決める。</para>
+              <para>既定値は<emphasis>MacSamba</emphasis>である。</para>
+            </listitem>
+          </varlistentry>
+	  
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+
+<!-- 原文 samba-4.6.6
+	<para>The following options can be set either in the global smb.conf section
+	or per share.</para>
+-->
+	<para>以下に示すオプションは smb.conf 内のグローバルセクションと
+        各共有ごとのいずれにおいても設定できる。</para>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>fruit:resource = [ file | xattr | stream ]</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>Controls where the OS X resource fork is stored.</para>
+-->
+	      <para>どこに OSX リソースフォークを格納するかを制御する。</para>
+
+<!-- 原文 samba-4.6.6
+	      <para>Due to a spelling bug in all Samba versions older then
+	      4.6.0, this option can also be given as
+	      <emphasis>fruit:ressource</emphasis>, ie with two s.</para>
+-->
+	      <para>4.6.0 以前の古い Samba バージョンすべてには スペルミスの
+	      バグがあり、このオプションは 
+	      <emphasis>fruit:ressource</emphasis> 、すなわち2つの s が
+	      ついている形でも提供されている。</para>
+
+	      <itemizedlist>
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>file (default)</command> - use a ._
+		AppleDouble file compatible with OS X and
+		Netatalk</para></listitem>
+-->
+		<listitem><para><command>file (既定値)</command> -
+		OS X と Netatalk 互換の ._ AppleDouble ファイル
+		を使う。</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>xattr</command> - use a
+		xattr, requires a filesystem with large xattr support
+		and a file IO API compatible with xattrs, this boils
+		down to Solaris and derived platforms and
+		ZFS</para></listitem>
+-->
+		<listitem><para><command>xattr</command> - 
+		拡張属性 (xattr) を使用する。これは、大きなサイズの拡張属性をサポート
+		するファイルシステムと、拡張属性に準拠した
+		ファイル IO API が必要となる。つまり、
+		Solaris と Solaris 派生プラットフォームの ZFS が必須である。
+		</para></listitem>
+
+<!-- 原文 samba-4.12.0
+		<listitem><para><command>stream (experimental)</command> - pass
+		the stream on to the next module in the VFS stack.
+		<emphasis>Warning: </emphasis> this option should not be used
+		with the <emphasis>streams_xattr</emphasis> module due to the
+		extended attributes size limitations of most
+		filesystems.</para></listitem>
+-->
+		<listitem><para><command>stream (実験的)</command> - 
+		VFS スタック内において、ストリームを次のモジュールに渡す。
+		<emphasis>警告:</emphasis> たいていのファイルシステム
+		には拡張属性のサイズ制限があるため、このオプションを
+		<emphasis>streams_xattr</emphasis> モジュールとともに利用しないこと。
+		</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+          <varlistentry>
+            <term>fruit:time machine = [ yes | no ]</term>
+            <listitem>
+<!-- Samba-4.8.0
+              <para>Controls if Time Machine support via the FULLSYNC volume
+              capability is advertised to clients.</para>
+-->
+              <para>FULLSYNC ボリュームケーパビリティによる Time Machine 機能が
+              クライアントに対して広告されるかを制御する。</para>
+
+              <itemizedlist>
+<!-- Samba-4.8.0
+                <listitem><para><command>yes</command> - Enables Time Machine
+                support for this share. Also registers the share with mDNS in
+                case Samba is built with mDNS support.</para></listitem>
+
+                <listitem><para><command>no (default)</command> Disables
+                advertising Time Machine support.</para></listitem>
+-->
+                <listitem><para><command>yes</command> - この共有に対して
+                Time Machine サポートを有効にする。また、Samba が mDNS を
+		サポートするようにビルドされている場合は、mDNS に
+		共有を登録する。</para></listitem>
+
+                <listitem><para><command>no (デフォルト)</command> 
+                Time Machine support の広告を行わない。</para></listitem>
+
+              </itemizedlist>
+
+<!-- Samba-4.8.0
+              <para>This option enforces the following settings per share (or
+              for all shares if enabled globally):</para>
+-->
+              <para>このオプションは共有ごとに(あるいは、グローバルに有効に
+	      なっている場合はすべての共有に対して)、以下の設定を有効に
+              する:</para>
+              <itemizedlist>
+                <listitem><para><command>durable handles = yes</command></para></listitem>
+                <listitem><para><command>kernel oplocks = no</command></para></listitem>
+                <listitem><para><command>kernel share modes = no</command></para></listitem>
+                <listitem><para><command>posix locking = no</command></para></listitem>
+              </itemizedlist>
+
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>fruit:time machine max size = SIZE [K|M|G|T|P]</term>
+            <listitem>
+<!-- Samba-4.8.0
+              <para>Useful for Time Machine: limits the reported disksize, thus
+              preventing Time Machine from using the whole real disk space for
+              backup. The option takes a number plus an optional unit.</para>
+-->
+              <para>Time Machine に便利である: レポートされるディスクサイズを
+              制限するため、Time Machine が、バックアップ時に、実ディスク
+	      領域すべてを使ってしまうことを防ぐ。オプションには、数字と、それに続く
+              単位を指定する。.</para>
+<!-- Samba-4.12.0
+              <para><emphasis>IMPORTANT</emphasis>: This is an approximated
+              calculation that only takes into account the contents of Time
+              Machine sparsebundle images. Therefore you <emphasis>MUST
+              NOT</emphasis> use this volume to store other content when using
+              this option, because it would NOT be accounted.</para>
+-->
+              <para><emphasis>重要</emphasis>: これは、Time Machin の
+              スパースバンドル イメージの内容のみを勘定に入れた概算である。
+              そのため、このオプションを使う時には、
+	      勘定に入らないという理由により、このボリュームには<emphasis>
+	      他のコンテンツを格納してはいけない。</emphasis></para>
+<!-- Samba-4.8.0
+              <para>The calculation works by reading the band size from the
+              Info.plist XML file of the sparsebundle, reading the bands/
+              directory counting the number of band files, and then multiplying
+              one with the other.</para>
+-->
+              <para>計算は、スパースバンドル の Info.plist XML ファイルの
+              バンドサイズを読み、band ファイルの数を数える、bands/
+	      を読み、それぞれの結果をを乗算することで行われる。</para>
+            </listitem>
+          </varlistentry>
+	  
+	  <varlistentry>
+	    <term>fruit:metadata = [ stream | netatalk ]</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>Controls where the OS X metadata stream is stored:</para>
+-->
+	      <para>OS X メタデータストリームが格納される場所を指定する:</para>
+
+	      <itemizedlist>
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>netatalk (default)</command> - use
+		Netatalk compatible xattr</para></listitem>
+-->
+		<listitem><para><command>netatalk (既定値)</command> - 
+		Netatalk 互換の xattr を使う</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>stream</command> - pass the
+		stream on to the next module in the VFS
+		stack</para></listitem>
+-->
+		<listitem><para><command>stream</command> - 
+		VFS スタックの次のモジュールにストリームを渡す</para></listitem>
+	      </itemizedlist>
+
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:locking = [ netatalk | none ]</term>
+	    <listitem>
+	      <para></para>
+	      <itemizedlist>
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>none (default)</command> - no
+		cross protocol locking</para></listitem>
+-->
+		<listitem><para><command>none (既定値)</command> - 
+		cross protocol locking を使わない</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>netatalk</command> - use
+		cross protocol locking with Netatalk</para></listitem>
+-->
+		<listitem><para><command>netatalk</command> - 
+		Netatalk で cross protocol locking を使う</para></listitem>
+
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:encoding = [ native | private ]</term>
+	    <listitem>
+
+<!-- 原文 samba-4.6.6
+	      <para>Controls how the set of illegal NTFS ASCII
+	      character, commonly used by OS X clients, are stored in
+	      the filesystem.</para>
+-->
+	      <para>ファイルシステムに格納される、OS X クライアントで一般的に
+	      使われる、不正な NTFS ASCII 文字セットを制御:</para>
+
+<!-- 原文 samba-4.6.6
+	      <para><emphasis>Important:</emphasis> this is known to not fully
+	      work with <emphasis>fruit:metadata=stream</emphasis> or
+	      <emphasis>fruit:resource=stream</emphasis>.</para>
+-->
+	      <para>
+	      <emphasis>重要:</emphasis> 既知のことであるが、これは
+	      <emphasis>fruit:metadata=stream</emphasis> や
+	      <emphasis>fruit:resource=stream</emphasis> とともに用いた場合、
+	      完全には動作しない。
+	      </para>
+
+	      <itemizedlist>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>private (default)</command> -
+		store characters as encoded by the OS X client: mapped
+		to the Unicode private range</para></listitem>
+-->
+		<listitem><para><command>private (規定値)</command> -
+		OS X クライアントによってエンコードされた形で文字を格納:
+		Unicode プライベート領域にマップされる</para></listitem>
+
+<!-- 原文 samba-4.6.6
+		<listitem><para><command>native</command> - store
+		characters with their native ASCII
+		value. <emphasis>Important</emphasis>: this option
+		requires the use of <emphasis>vfs_catia</emphasis> in
+		the VFS module stack as shown in the examples
+		section.</para></listitem>
+-->
+		<listitem><para><command>native</command> - 
+		そのままの ASCII 値として文字を格納。
+		<emphasis>重要</emphasis>:このオプションは、例 で説明している
+		ように、VFS モジュールスタック中で <emphasis>vfs_catia</emphasis>
+		を必要とする。
+		</para></listitem>
+
+	      </itemizedlist>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:veto_appledouble = yes | no</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para><emphasis>Note:</emphasis> this option only applies when
+	      <parameter>fruit:resource</parameter> is set to
+	      <parameter>file</parameter> (the default).</para>
+-->
+              <para><emphasis>参考:</emphasis> このオプションは、
+	      <parameter>fruit:resource</parameter> が
+	      <parameter>file</parameter> (既定値) に設定されている
+	      場合にのみ適用される。</para>
+
+<!-- 原文 samba-4.6.6
+	      <para>When <parameter>fruit:resource</parameter> is set to
+	      <parameter>file</parameter>, vfs_fruit may create ._ AppleDouble
+	      files. This options controls whether these ._ AppleDouble files
+	      are vetoed which prevents the client from accessing them.</para>
+-->
+	      <para><parameter>fruit:resource</parameter> が
+	      <parameter>file</parameter> に設定された場合、
+	      vfs_fruit は ._ AppleDouble ファイルを生成する。
+	      このオプションは、クライアントからファイルに対するアクセスを
+	      防ぐために、._ AppleDouble を見えなくする (veto)
+	      かを制御する。</para>
+	<!-- 4.4系にて重複していた訳: 一時的保存
+	    <para> Mac リソースフォークを格納する目的のため、 vfs_fruit それ自身に
+	    よって作成された、内部 AppleDouble ファイルの閲覧と変更を、クライアントから
+	    防止するため、._ AppleDouble ファイルを見せなくするかどうかの指定。</para>
+        -->
+
+<!-- 原文 samba-4.10.0
+	      <para>Vetoing ._ files may break some applications, eg
+	      extracting Mac ZIP archives from Mac clients failes,
+	      because they contain ._ files. Setting this option to
+	      false will fix this, but the abstraction leak of
+	      exposing the internally created ._ files may have other
+	      unknown side effects.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+      	      <para>Vetoing ._ files may break some applications, e.g.
+	      extracting Mac ZIP archives from Mac clients fails,
+	      because they contain ._ files. <command>rsync</command> will
+	      also be unable to sync files beginning with underscores, as
+	      the temporary files it uses for these will start with ._ and
+	      so cannot be created.</para>
+	      <para>Setting this option to
+	      false will fix this, but the abstraction leak of
+	      exposing the internally created ._ files may have other
+	      unknown side effects.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para> ._ ファイルをアクセス不可にすると、いくつかのアプリケーションで
+	      誤動作を引き起こすことがある。たとえば、Mac クライアントから
+	      Mac ZIP アーカイブのを展開すると、アーカイブ中に ._ ファイルが
+	      含まれているために失敗する。
+	      <command>rsync</command> も同様に、下線で始まるファイルの
+	      同期ができないが、これは、一時ファイルが、._ で始まるファイルを
+	      使うが、それが作成できないという理由による。</para>
+	      <para>このオプションを false にすることでこの問題を回避できるが、
+	      内部向けに作成された ._ ファイルが露見してしまうことで
+              未知の副作用を引き起こすかもしれない。</para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	  </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:posix_rename = yes | no</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>Whether to enable POSIX directory rename behaviour
+	      for OS X clients. Without this, directories can't be
+	      renamed if any client has any file inside it
+	      (recursive!) open.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para>OS X クライアントで、POSIX の改名動作を有効にするかどうか。
+	      これがないと、クライアントが、対象ディレクトリ中 (再帰的に!) に
+	      オープンしているファイルがあると、ディレクトリは改名出来ない。
+	      </para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	    </listitem>
+	   </varlistentry>
+
+	  <varlistentry>
+	    <term>readdir_attr:aapl_rsize = yes | no</term>
+	    <listitem>
+
+<!-- 原文 samba-4.6.6
+	      <para>Return resource fork size in SMB2 FIND responses.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para>SMB2 FIND レスポンスにおいてリソースフォークサイズを返す。</para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>readdir_attr:aapl_finder_info = yes | no</term>
+	    <listitem>
+
+<!-- 原文 samba-4.6.6
+	      <para>Return FinderInfo in SMB2 FIND responses.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para>SMB2 FIND レスポンスにおいて FinderInfo を返す。</para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>readdir_attr:aapl_max_access = yes | no</term>
+	    <listitem>
+<!-- 原文 samba-4.6.6
+	      <para>Return the user's effective maximum permissions in SMB2 FIND
+	      responses. This is an expensive computation, setting this to off
+	      pretends the use has maximum effective permissions.</para>
+	      <para>The default is <emphasis>yes</emphasis>.</para>
+-->
+	      <para>SMB2 FIND レスポンスにおいて、ユーザーにとって有効な
+	      アクセス許可の最大値を返す。これを求める処理には時間を要する。
+	      no に設定した場合は、アクセス許可は最大とみなされる。</para>
+	      <para>既定値は <emphasis>yes</emphasis> である。</para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:wipe_intentionally_left_blank_rfork = yes | no</term>
+	    <listitem>
+<!-- Samba-4.9.2
+              <para>Whether to wipe Resource Fork data that matches the special
+	      286 bytes sized placeholder blob that macOS client create on
+	      occasion. The blob contains a string <quote>This resource fork
+	      intentionally left blank</quote>, the remaining bytes being mostly
+	      zero. There being no one use of this data, it is probably safe to
+	      discard it. When this option is enabled, this module truncates the
+	      Resource Fork stream to 0 bytes.</para>
+	      <para>The default is <emphasis>no</emphasis>.</para>
+-->
+              <para>MacOS クライアントが時折作成する、特殊な内容の 286 バイトの
+	      リソースフォークを削除するかを制御する。その内容は
+	      <quote>This resource fork intentionally left blank</quote>という
+	      文字列と、残りはほぼゼロで埋められている。
+	      このデータは使われることがないため、おそらく削除しても問題ない。
+	      このオプションを有効にすると、このモジュールは、リソースフォーク
+	      ストリームを切り捨て、 0 バイトにする。</para>
+	      <para>既定値は<emphasis>no</emphasis>である。</para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>fruit:delete_empty_adfiles = yes | no</term>
+	    <listitem>
+<!-- Samba-4.9.2
+	      <para>Whether to delete empty AppleDouble files. Empty means that
+	      the resource fork entry in the AppleDouble files is of size 0, or
+	      the size is exactly 286 bytes and the content matches a special
+	      boilerplate resource fork created my macOS.</para>
+	      <para>The default is <emphasis>no</emphasis>.</para>
+-->	      
+	      <para>空の、AppleDouble ファイルを削除するかを制御する。空とは
+	      AppleDouble ファイル中のリソースフォークエントリのサイズが 0 か、
+	      MacOS が作成するある特殊な内容の  286 バイトの
+	      リソースフォークの場合である。</para>
+	      <para>既定値は<emphasis>no</emphasis>である。</para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>EXAMPLES</title>
+-->
+	<title>例</title>
+
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="vfs objects">catia fruit streams_xattr</smbconfoption>
+	<smbconfoption name="fruit:resource">file</smbconfoption>
+	<smbconfoption name="fruit:metadata">netatalk</smbconfoption>
+	<smbconfoption name="fruit:locking">netatalk</smbconfoption>
+	<smbconfoption name="fruit:encoding">native</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.6.6
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.6.6
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>
+	オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。
+	</para>   
+
+</refsect1>
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 4.11.0 - 4.13.2 に対応する。</para>
+    <para>このドキュメントの Samba 4.8.0 - 4.13.2 対応の翻訳は
+    <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+    </itemizedlist>
+    によって行なわれた。</para>
+</refsect1>
+
+</refentry>

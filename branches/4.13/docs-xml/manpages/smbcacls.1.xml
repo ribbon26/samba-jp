@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="smbcacls.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>smbcacls</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">User Commands</refmiscinfo>
+-->
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>smbcacls</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>Set or get ACLs on an NT file or directory names</refpurpose>
+-->
+	<refpurpose>Windows NT 上のファイルやディレクトリの ACL の取得や設定</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>smbcacls</command>
+		<arg choice="req">//server/share</arg>
+		<arg choice="req">/filename</arg>
+		<arg choice="opt">-D|--delete acl</arg>
+		<arg choice="opt">-M|--modify acl</arg>
+		<arg choice="opt">-a|--add acl</arg>
+		<arg choice="opt">-S|--set acl</arg>
+		<arg choice="opt">-C|--chown name</arg>
+		<arg choice="opt">-G|--chgrp name</arg>
+		<arg choice="opt">-I allow|remove|copy</arg>
+		<arg choice="opt">--numeric</arg>
+		<arg choice="opt">-t</arg>
+		<arg choice="opt">-U username</arg>
+		<arg choice="opt">-d</arg>
+                <arg choice="opt">-e</arg>
+                <arg choice="opt">-m|--max-protocol LEVEL</arg>
+		<arg choice="opt">--query-security-info FLAGS</arg>
+		<arg choice="opt">--set-security-info FLAGS</arg>
+		<arg choice="opt">--sddl</arg>
+		<arg choice="opt">--domain-sid SID</arg>
+		<arg choice="opt">-x|--maximum-access</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The <command>smbcacls</command> program manipulates NT Access Control
+	Lists (ACLs) on SMB file shares. An ACL is comprised zero or more Access
+	Control Entries (ACEs), which define access restrictions for a specific
+	user or group.</para>
+-->
+	<para><command>smbcacls</command> は、SMB ファイル共有内の ACL
+	（Access Control Lists）を操作するプログラムである。
+	ACL はなにもないか、特定のユーザーやグループに対するアクセス制限を行う、
+	1 つ以上の ACE（Access Control Entries）から構成される。
+	</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The following options are available to the <command>smbcacls</command> program.  
+	The format of ACLs is described in the section ACL FORMAT </para>
+-->
+	<para><command>smbcacls</command> コマンドでは以下のオプションが
+	利用可能である。ACL の形式は、ACL FORMAT セクションで記述する。</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>-a|--add acl</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Add the entries specified to the ACL.  Existing
+		access control entries are unchanged.</para></listitem>
+-->
+		<listitem><para>エントリを、指定された ACL に追加する。既存の ACE
+		は変更されない。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-M|--modify acl</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Modify the mask value (permissions) for the ACEs
+		specified on the command line.  An error will be printed for each 
+		ACE specified that was not already present in the object's ACL.
+		</para></listitem>
+-->
+		<listitem><para>コマンドラインで指定された ACE の mask 値
+		（パーミッション）を変更する。オブジェクトの ACL に指定された ACE が存在しない場合、
+		その ACL ごとにエラーが出力される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-D|--delete acl</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Delete any ACEs specified on the command line.
+		An error will be printed for each ACE specified that was not
+		already present in the object's ACL. </para></listitem>
+-->
+		<listitem><para>コマンドラインで指定された ACE を削除する。
+		オブジェクトの ACL に指定された ACE が存在しない場合、その ACL ごとにエラーが
+		出力される。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-S|--set acl</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command sets the ACL on the object with
+		only what is specified on the command line.  Any existing ACL
+		is erased. Note that the ACL specified must contain at least a revision,
+		type, owner and group for the call to succeed. </para></listitem>
+-->
+		<listitem><para>このコマンドは、コマンドラインで指定された ACL
+		のみをオブジェクトに設定する。存在する ACL は削除される。
+		呼び出しを成功させるためには、指定する ACL に最低限リビジョン、タイプ、
+		所有者とグループが含まれている必要がある。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-C name</term>
+		<listitem><para>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The owner of a file or directory can be changed 
+		to the name given using the <parameter>-C</parameter> option.  
+		The name can be a sid in the form S-1-x-y-z or a name resolved 
+		against the server specified in the first argument. </para>
+-->
+		<parameter>-C</parameter> オプションを利用することで、
+		ファイルやディレクトリの所有者を name で指定したアカウントに変更することが可能である。
+		name は S-1-x-y-z 形式の sid で指定するか、
+		最初の引数で指定したサーバーが認識可能な名前で指定する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>This command is a shortcut for -M OWNER:name. 
+		</para></listitem>
+-->
+		<para>このコマンドは -M OWNER:name の短縮形になる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-G name</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The group owner of a file or directory can 
+		be changed to the name given using the <parameter>-G</parameter> 
+		option.  The name can be a sid in the form S-1-x-y-z or a name 
+		resolved against the server specified n the first argument.
+		</para>
+-->
+		<listitem><para>ファイルやディレクトリのグループ所有者は、<parameter>
+		-G</parameter> オプションを利用することで指定した name
+		に変更することが可能である。名前は S-1-x-y-z 形式の sid で指定するか、
+		先頭の引数で指定したサーバーが認識可能な name で指定する。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>This command is a shortcut for -M GROUP:name.</para></listitem>
+-->
+		<para>このコマンドは -M GROUP:name の短縮形になる。</para></listitem>
+		</varlistentry>
+		
+                <varlistentry>
+                <term>-I|--inherit allow|remove|copy</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Set or unset the windows "Allow inheritable
+		permissions" check box using the <parameter>-I</parameter>
+		option.  To set the check box pass allow. To unset the check
+		box pass either remove or copy. Remove will remove all
+		inherited acls. Copy will copy all the inherited acls.
+		</para></listitem>
+-->
+		<listitem><para>
+		<parameter>-I</parameter> オプションを使うことで Windows の
+		"Allow inheritable permissions" チェックボックスの設定/解除を
+		行う。設定するとチェックボックスに許可が渡される。解除すると
+		チェックボックスには削除かコピーのどちらかが渡される。削除は
+		すべての継承された ACL を削除するコピーの場合には、すべての
+		継承された ACL がコピーされる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--numeric</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This option displays all ACL information in numeric 
+		format.  The default is to convert SIDs to names and ACE types 
+		and masks to a readable string format.  </para></listitem>
+-->
+		<listitem><para>このオプションは、全ての ACL 情報を数値形式で
+		表示させる。デフォルトでは、SID は名前に、ACE の type と mask は、
+		可読性のある文字列形式に変換される。 </para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-m|--max-protocol PROTOCOL_NAME</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This allows the user to select the
+		highest SMB protocol level that smbcacls will use to
+		connect to the server. By default this is set to
+		NT1, which is the highest available SMB1 protocol.
+		To connect using SMB2 or SMB3 protocol, use the
+		strings SMB2 or SMB3 respectively. Note that to connect
+		to a Windows 2012 server with encrypted transport selecting
+		a max-protocol of SMB3 is required.
+		</para></listitem>
+-->
+		 <listitem><para>これは、ユーザーに対して、smbcacls がサーバー接続時に使用する
+		 最上位の SMB プロトコルを選択出来るようにする。既定値では、
+		 これは、SMB1 プロトコルの最上位である NT1 に設定されている。
+		 SMB2 または SMB3 プロトコルで接続する場合、おのおの SMB2 または
+		 SMB3 という文字列を指定する。通信路の暗号化を使って Windows 
+		 2012 Server に接続する場合、max-protocol は SMB3 が必要である
+		 ことに注意。
+		 </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-t</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		Don't actually do anything, only validate the correctness of 
+		the arguments.
+		</para></listitem>
+-->
+		<listitem><para>
+		実際に処理は行わず、指定した引数の正当性を検証する。
+		</para></listitem>
+		</varlistentry>
+				
+		<varlistentry>
+		<term>--query-security-info FLAGS</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The security-info flags for queries.
+		</para></listitem>
+-->
+		<listitem><para>問い合わせにおける security-info フラグ。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--set-security-info FLAGS</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The security-info flags for queries.
+		</para></listitem>
+-->
+		<listitem><para>問い合わせにおける security-info フラグ。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--sddl</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Output and input acls in sddl format.
+		</para></listitem>
+-->
+		<listitem><para>sddl 形式による acl の入出力。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--domain-sid SID</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>SID used for sddl processing.
+-->
+		<listitem><para>sddl 処理に使う SID。
+		</para></listitem>
+		</varlistentry>
+
+<!-- Samba-4.11.0
+                <varlistentry>
+                <term>-x|- -maximum-access</term>
+                <listitem><para>When displaying an ACL additionally query
+                the server for effective maximum permissions. Note that this
+                is only supported with SMB protocol version 2 or higher.
+                </para></listitem>
+		</varlistentry>
+-->
+                <varlistentry>
+                <term>-x|--maximum-access</term>
+                <listitem><para>ACLを追加で表示する場合、有効な最大パーミッションを
+		得るためにサーバに問合せする。これは、 SMB プロトコルバージョン 2 以降
+		でのみサポートされていることに注意。
+                </para></listitem>
+		</varlistentry>
+
+		&stdarg.server.debug;
+		&popt.common.samba;
+		&popt.common.credentials;
+		&popt.common.connection;
+		&popt.autohelp;
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>ACL FORMAT</title>
+-->
+	<title>ACL 形式</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The format of an ACL is one or more entries separated by
+	either commas or newlines.  An ACL entry is one of the following: </para>
+-->
+	<para>ACL の形式は、カンマか改行記号で 1 つ以上の エントリを区切ったもの
+	である。ACL エントリは以下のいずれかの形式をとる: </para>
+
+<para><programlisting> 
+REVISION:&lt;revision number&gt;
+OWNER:&lt;sid or name&gt;
+GROUP:&lt;sid or name&gt;
+ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
+</programlisting></para>
+  
+<!-- 原文 samba-4.7.0
+	<para>The revision of the ACL specifies the internal Windows 
+	NT ACL revision for the security descriptor.  
+	If not specified it defaults to 1.  Using values other than 1 may 
+	cause strange behaviour. </para>
+-->
+	<para>REVISION は、セキュリティディスクリプタに対する内部的な Windows
+	NT ACL のリビジョンを表す。特に指定されない場合のデフォルトは 1 である。
+	1 以外の値を指定した場合は、挙動がおかしくなることがある。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The owner and group specify the owner and group sids for the 
+	object.  If a SID in the format S-1-x-y-z is specified this is used, 
+	otherwise the name specified is resolved using the server on which 
+	the file or directory resides. </para>
+-->
+	<para>OWNER と GROUP はオブジェクトの所有者およびグループの sid を指定する。
+	SID が S-1-x-y-z の形式で指定された場合はそのまま用いられ、
+	それ以外の場合、指定された名前はファイルやディレクトリが存在するサーバーに
+	よって解析される。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>ACEs are specified with an "ACL:" prefix, and define permissions
+	granted to an SID.  The SID again can be specified in S-1-x-y-z format
+	or as a name in which case it is resolved against the server on which
+	the file or directory resides.  The type, flags and mask values
+	determine the type of access granted to the SID. </para>
+-->
+	<para>ACE は "ACL:" プレフィックスで指定され、SID に対して与えられるパーミッション
+	を指定する。この SID も
+	S-1-x-y-z の形式で指定するか、名前で指定することが可能で、後者の場合、
+	ファイルやディレクトリが存在するサーバーによって解析される。 type, flag, mask
+	の値は、SID に対して与えられたアクセスの種類を指定する。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The type can be either ALLOWED or	DENIED to allow/deny access 
+	to the SID. The flags values are generally zero for file ACEs and
+	either 9 or 2 for directory ACEs.  Some common flags are: </para>
+-->
+	<para>
+	typeは SID に対する許可および拒否に対応する(訳注: 実際は type は ALLOWED か DENIED を指定し、それぞれ SID に対するアクセス許可および拒否に対応する、が正しい(fumiya))。
+	flag の値はファイルの ACE の場合通常 0 であり、ディレクトリの ACE の場合は通常
+	9 か 2 である。 共通的な flags は以下の通りである。</para>
+
+	<itemizedlist> 
+		<listitem><para><constant>#define SEC_ACE_FLAG_OBJECT_INHERIT     	0x1</constant></para></listitem>
+		<listitem><para><constant>#define SEC_ACE_FLAG_CONTAINER_INHERIT  	0x2</constant></para></listitem>
+		<listitem><para><constant>#define SEC_ACE_FLAG_NO_PROPAGATE_INHERIT     0x4</constant></para></listitem>
+		<listitem><para><constant>#define SEC_ACE_FLAG_INHERIT_ONLY       	0x8</constant></para></listitem>
+ 	</itemizedlist>
+  
+<!-- 原文 samba-4.7.0
+	<para>At present, flags can only be specified as decimal or
+	hexadecimal values.</para>
+-->
+	<para>現在のところ flag の値は 10 進数もしくは 16
+	進数でのみ指定することができる。</para>
+ 
+<!-- 原文 samba-4.7.0
+	<para>The mask is a value which expresses the access right 
+	granted to the SID. It can be given as a decimal or hexadecimal value, 
+	or by using one of the following text strings which map to the NT 
+	file permissions of the same name. </para>
+-->
+	<para>mask は SID に対して与えられたアクセス権を表現する値である。それは 10
+	進数もしくは 16 進数で設定するか、NT のファイルパーミッションと同じ名称である
+	以下の文字列のうちの一つを利用して設定することができる。</para>
+
+	<itemizedlist>
+<!-- 原文 samba-4.7.0
+		<listitem><para><emphasis>R</emphasis> - Allow read access </para></listitem>
+		<listitem><para><emphasis>W</emphasis> - Allow write access</para></listitem>
+		<listitem><para><emphasis>X</emphasis> - Execute permission on the object</para></listitem>
+		<listitem><para><emphasis>D</emphasis> - Delete the object</para></listitem>
+		<listitem><para><emphasis>P</emphasis> - Change permissions</para></listitem>
+		<listitem><para><emphasis>O</emphasis> - Take ownership</para></listitem>
+-->
+		<listitem><para><emphasis>R</emphasis> - 読み取りの許可 </para></listitem>
+		<listitem><para><emphasis>W</emphasis> - 書き込みの許可</para></listitem>
+		<listitem><para><emphasis>X</emphasis> - オブジェクトの実行</para></listitem>
+		<listitem><para><emphasis>D</emphasis> - オブジェクトの削除</para></listitem>
+		<listitem><para><emphasis>P</emphasis> - パーミッションの変更</para></listitem>
+		<listitem><para><emphasis>O</emphasis> - 所有権の取得</para></listitem>
+	</itemizedlist>
+
+<!-- 原文 samba-4.7.0
+	<para>The following combined permissions can be specified:</para>
+-->
+	<para>以下の複合パーミッションも指定可能である。</para>
+
+	<itemizedlist>
+<!-- 原文 samba-4.7.0
+		<listitem><para><emphasis>READ</emphasis> -  Equivalent to 'RX'
+		permissions</para></listitem>
+		<listitem><para><emphasis>CHANGE</emphasis> - Equivalent to 'RXWD' permissions
+		</para></listitem>
+		<listitem><para><emphasis>FULL</emphasis> - Equivalent to 'RWXDPO' 
+		permissions</para></listitem>
+-->
+		<listitem><para><emphasis>READ</emphasis> - 'RX'
+		パーミッションと等価である。
+		</para></listitem>
+		<listitem><para><emphasis>CHANGE</emphasis> - 'RXWD'
+		パーミッションと等価である。
+		</para></listitem>
+		<listitem><para><emphasis>FULL</emphasis> - 'RWXDPO'
+		パーミッションと等価である。
+		</para></listitem>
+	</itemizedlist>
+	</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>EXIT STATUS</title>
+-->
+	<title>終了ステータス</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The <command>smbcacls</command> program sets the exit status 
+	depending on the success or otherwise of the operations performed.  
+	The exit status may be one of the following values. </para>
+-->
+	<para><command>smbcacls</command> コマンドは、操作が成功したか、
+	その他の結果になったかに応じた戻り値を設定する。 
+	戻り値は、以下の値のいずれかになる。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>If the operation succeeded, smbcacls returns and exit 
+	status of 0.  If <command>smbcacls</command> couldn't connect to the specified server, 
+	or there was an error getting or setting the ACLs, an exit status 
+	of 1 is returned.  If there was an error parsing any command line 
+	arguments, an exit status of 2 is returned. </para>
+-->
+	<para>操作が成功した場合、<command>smbcacls</command> は戻り値として 0
+	を返す。もし <command>smbcacls</command> が指定したサーバーに接続できなかったか、
+	ACL を取得または設定する際にエラーが発生した場合、戻り値として 1 が返される。
+	コマンドライン引数の解析に失敗した場合は、戻り値として 2 が返される。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.8.0
+	<para>This man page is correct for version &doc.version; of the Samba suite.</para>
+-->
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+	
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities 
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar 
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team によって、Linux
+	カーネルの開発と同様のオープンソースプロジェクトとして開発が行なわれている。
+	</para>
+	
+<!-- 原文 samba-4.7.0
+	<para><command>smbcacls</command> was written by Andrew Tridgell 
+	and Tim Potter.</para>
+-->
+	<para><command>smbcacls</command> は Andrew Tridgell と Tim Potter
+	によって書かれた。</para>
+	
+<!-- 原文 samba-4.7.0
+	<para>The conversion to DocBook for Samba 2.2 was done 
+	by Gerald Carter. The conversion to DocBook XML 4.2 for Samba 3.0 was done
+	by Alexander Bokovoy.</para>
+-->
+	<para> Samba 2.2 における DocBook 形式への変換は、Gerald Carter
+	によって行なわれた。Samba 3.0 における DocBook XML 4.2 形式への変換は、
+	Alexander Bokovoy によって行われた。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.11.0 - 4.13.2 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 - 4.13.2 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+                <listitem><para>太田俊哉(ribbon@samba.gr.jp></para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

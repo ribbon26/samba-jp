@@ -1,0 +1,47 @@
+<samba:parameter name="ctdb locktime warn threshold"
+                 context="G"
+		 type="integer"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+<!-- 原文 samba-4.7.0
+	<para>
+	In a cluster environment using Samba and ctdb it is critical
+	that locks on central ctdb-hosted databases like locking.tdb
+	are not held for long. With the current Samba architecture
+	it happens that Samba takes a lock and while holding that
+	lock makes file system calls into the shared cluster file
+	system. This option makes Samba warn if it detects that it
+	has held locks for the specified number of milliseconds. If
+	this happens, <emphasis>smbd</emphasis> will emit a debug level 0
+	message into its logs and potentially into syslog. The most likely
+	reason for such a log message is that an operation of the cluster
+	file system Samba exports is taking longer than expected.
+	The messages are meant as a debugging aid for potential
+	cluster problems.
+	</para>
+-->
+	<para>
+	Samba と ctdb を使うクラスター環境において、
+	locking.tdb のような ctdb が扱う中心的なデータベースは、
+	長時間ロックしないことが重要である。
+	現在の Samba アーキテクチャにおいては、Samba がロックを行ったときに、
+	そのロックが続いた状態で、共有クラスターファイルシステムに対してファイルシステムコールが起きる場合がある。
+	指定したミリセカンド秒以上のロックの継続が検出された場合に、
+	このオプションによって Samba から警告を出力させることができる。
+	それが検出されたときには、<emphasis>smbd</emphasis> のログにデバッグレベル 0 のメッセージが出力され、
+	場合によっては syslog にも出力される。
+	このようなログメッセージが出力される理由として、
+	Samba がエクスポートするクラスターファイルシステムに対して実行する処理が、
+	通常よりも長くかかってしまった場合に発生することが多い。
+	クラスターに関する潜在的な問題をデバッグする際には、このメッセージが役に立つこともある。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The default value of 0 disables this logging.</para>
+-->
+	<para>既定値は 0 で、このログ出力を抑止する。</para>
+
+</description>
+<value type="default">0</value>
+</samba:parameter>

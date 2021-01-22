@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_ceph_snapshots.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_ceph_snapshots</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_ceph_snapshots</refname>
+	<refpurpose>
+		シャドウコピーとして、CephFS スナップショットを公開する
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = ceph_snapshots</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- Samba-4.12.0	
+	<para>
+		The <command>vfs_ceph_snapshots</command> VFS module exposes
+		CephFS snapshots for use by Samba. When enabled, SMB clients
+		such as Windows Explorer's Previous Versions dialog, can
+		enumerate snapshots and access them via "timewarp" tokens.
+	</para>
+
+	<para>
+		This module can be combined with <command>vfs_ceph</command>,
+		but <command>vfs_ceph_snapshots</command> must be listed first
+		in the <command>vfs objects</command> parameter list.
+	</para>
+
+	<para>
+		CephFS support for ceph.snap.btime virtual extended attributes
+		is required for this module to work properly. This support was
+		added via https://tracker.ceph.com/issues/38838.
+	</para>
+-->
+	<para>
+		<command>vfs_ceph_snapshots</command> VFS モジュールは Samba が
+		使うために、CephFS スナップショットを公開する。有効にした場合、
+		Windows のエクスプローラの以前のバージョンのような SMB クライアント
+		はスナップショットを列挙することができるようになり、 "timewarp" トークン
+		経由でアクセス出来る。
+	</para>
+
+	<para>
+		このモジュールは<command>vfs_ceph</command>と同時に使えるが、
+		<command>vfs_ceph_snapshots</command> は
+		<command>vfs objects</command> パラメータリストの最初に書かなければならない。
+	</para>
+
+	<para>
+	        ceph.snap.btime 仮想拡張属性に対する CephFS サポートは、
+		このモジュールを適切に動作させるために要求される。このサポートは
+		https://tracker.ceph.com/issues/38838 を契機として追加された。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>設定</title>
+
+<!-- Samba-4.11.0
+	<para>
+		When used atop <command>vfs_ceph</command>,
+		<command>path</command> refers to an absolute path within the
+		Ceph filesystem and should not be mounted locally:
+	</para>
+-->
+        <para>
+		<command>vfs_ceph</command>を一番前に置いた場合、
+		<command>path</command> は Ceph ファイルシステム内の絶対パスを参照するので
+		ローカルにマウントされるべきではない:
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">ceph_snapshots ceph</smbconfoption>
+		<smbconfoption name="path">/non-mounted/cephfs/path</smbconfoption>
+		<smbconfoption name="kernel share modes">no</smbconfoption>
+	</programlisting>
+
+<!-- Samba-4.11.0
+	<para>
+		<command>vfs_ceph_snapshots</command> can also be used atop a
+		kernel CephFS mounted share path, without
+		<command>vfs_ceph</command>. In this case Samba's default VFS
+		backend <command>vfs_default</command> is used:
+	</para>
+-->
+        <para>
+		<command>vfs_ceph_snapshots</command> は、<command>vfs_ceph</command>なしで、
+		kernel Ceph FSでマウントされた共有パスに使う事もできる。
+		その場合、Samba の既定の VFS バックエンド
+		<command>vfs_default</command> が使われる:
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">ceph_snapshots</smbconfoption>
+		<smbconfoption name="path">/mnt/cephfs/</smbconfoption>
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>ceph:snapdir = subdirectory</term>
+		<listitem>
+<!-- Samba-4.11.0
+		<para>
+			Allows for the configuration of the special CephFS
+			snapshot subdirectory name. This parameter should only
+			be changed from the ".snap" default if the ceph.conf
+			<command>client snapdir</command> or
+			<command>snapdirname</command> mount option settings
+			are changed from their matching ".snap" defaults.
+		</para>
+-->
+		<para>
+			CephFS スナップショットサブディレクトリ名を指定する。
+			このパラメータは、ceph.conf の<command>client snapdir</command>
+			または <command>snapdirname</command> マウントオプションの
+			設定が ".snap" の既定値に一致するものから変更された
+			場合に、".snap" の既定値のみを変更する。
+		</para>
+		<para>
+			Default:
+			<smbconfoption name="ceph:snapdir">.snap</smbconfoption>
+		</para>
+		<para>
+			Example:
+			<smbconfoption name="ceph:snapdir">.snapshots</smbconfoption>
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	
+	<para>このマニュアルページは、Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。
+	Samba は現在 Linux カーネルが 開発されているような方法での
+	オープンソースプロジェクトである Samba Team によって開発されている。
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.11.0 - 4.13.2 に対応する。</para>
+	<para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
