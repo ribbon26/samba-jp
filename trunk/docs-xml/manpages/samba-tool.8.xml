@@ -1611,6 +1611,24 @@
 	<para>新しい AD グループを作成する。</para>
 </refsect3>
 
+<!-- Samba-4.14.0
+<refsect3>
+        <title>group create <replaceable>groupname</replaceable> [options]</title>
+        <para>Add a new AD group. This is a synonym for the
+        <command>samba-tool group add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool group add</command> instead.</para>
+</refsect3>
+-->
+
+<refsect3>
+        <title>group create <replaceable>groupname</replaceable> [options]</title>
+        <para>新しい AD group を追加する。これは
+        <command>samba-tool group add</command> コマンドの別名であり、
+	互換のためのみで提供されている。代わりに、
+        <command>samba-tool group add</command> を使って欲しい。</para>
+</refsect3>
+
 <refsect3>
 	<title>group addmembers <replaceable>groupname</replaceable> <replaceable>members</replaceable> [options]</title>
 <!-- 原文 samba-4.7.0
@@ -1669,10 +1687,54 @@
 
 <refsect3>
 	<title>group listmembers <replaceable>groupname</replaceable> [options]</title>
-<!-- 原文 samba-4.7.0
-	<para>List all members of the specified AD group.</para>
+<!-- 原文 samba-4.14.0
+        <para>List all members of the specified AD group.</para>
+        <para>By default the sAMAccountNames are listed. If no sAMAccountName
+        is available, the CN will be used instead.</para>
+        <variablelist>
+        <varlistentry>
+        <term>- -full-dn</term>
+        <listitem><para>
+        List the distinguished names instead of the sAMAccountNames.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-expired</term>
+        <listitem><para>
+        Do not list expired group members.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-disabled</term>
+        <listitem><para>
+        Do not list disabled group members.
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
 -->
 	<para>指定された AD グループのメンバーを一覧表示する。</para>
+        <para>既定では、sAMAccountNames は一覧表示される。sAMAccountName が
+	1つもなければ、代わりに CN が使われる。</para>
+        <variablelist>
+        <varlistentry>
+        <term>--full-dn</term>
+        <listitem><para>
+        sAMAccountNames の代わりに distinguished names を一覧表示する。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-expired</term>
+        <listitem><para>
+        満了した group members を一覧表示しない。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-disabled</term>
+        <listitem><para>
+        無効の disabled group members を表示しない。
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
 </refsect3>
 
 <!-- Samba 4.9.0
@@ -1723,6 +1785,92 @@
 	<para>Show statistics for overall groups and group memberships.</para>
 </refsect3>
 -->
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>group rename <replaceable>groupname</replaceable> [options]</title>
+        <para>Rename a group and related attributes.</para>
+        <para>This command allows to set the group's name related attributes. The
+        group's CN will be renamed automatically.
+        The group's CN will be the sAMAccountName.
+        Use the - -force-new-cn option to specify the new CN manually and the
+        - -reset-cn to reset this change.</para>
+        <para>Use an empty attribute value to remove the specified attribute.</para>
+        <para>The groupname specified on the command is the sAMAccountName.</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>- -force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify a new CN (RDN) instead of using the sAMAccountName.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -reset-cn</term>
+        <listitem><para>
+        Set the CN to the sAMAccountName.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        New mail address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        New account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+
+<refsect3>
+        <title>group rename <replaceable>groupname</replaceable> [options]</title>
+        <para>グループと関連する属性を改名する。</para>
+        <para>このコマンドはグループ名に関連する属性の設定を許可する。
+	グループの CN は自動的に改名される。
+	グループの CN は sAMAccountName になる。
+        新しい CN を手動で設定する場合は --force-new-cn を、この変更をリセットする場合は、
+	 --reset-cn オプションを使用する。</para>
+        <para>指定された属性を削除する場合は、空の属性値を使用する。</para>
+        <para>コマンド上で groupname を指定する場合は sAMAccountName である。</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>--force-new-cn=NEW_CN</term>
+        <listitem><para>
+        sAMAccountName を使う代わりに 新しい CN (RDN) を指定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--reset-cn</term>
+        <listitem><para>
+        sAMAccountName で CN を設定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        新しい email address。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        新しい account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
 
 <refsect3>
 	<title>group stats [options]</title>
