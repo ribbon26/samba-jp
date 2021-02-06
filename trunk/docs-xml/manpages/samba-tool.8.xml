@@ -2079,10 +2079,10 @@
 	<para>organizational unit (OU) の管理</para>
 </refsect2>
 
-<!-- Samba 4.9.0
+<!-- Samba 4.14.0
 <refsect3>
-	<title>ou create <replaceable>ou_dn</replaceable> [options]</title>
-	<para>Create an organizational unit.</para>
+	<title>ou add <replaceable>ou_dn</replaceable> [options]</title>
+	<para>Add an organizational unit.</para>
 	<para>The name of the organizational unit can be specified as a full DN
 	or without the domainDN component.</para>
 
@@ -2096,6 +2096,39 @@
 	</variablelist>
 </refsect3>
 
+<refsect3>
+        <title>ou create <replaceable>ou_dn</replaceable> [options]</title>
+        <para>Add a new organizational unit. This is a synonym for the
+        <command>samba-tool ou add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool ou add</command> instead.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>ou add <replaceable>ou_dn</replaceable> [options]</title>
+	<para>organizational unit を追加する。</para>
+	<para>organizational unit の名前は完全なDNか
+	ドメインDNコンポーネントなしで指定できる。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--description=DESCRIPTION</term>
+	<listitem><para>
+	OU の説明を指定する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+        <title>ou create <replaceable>ou_dn</replaceable> [options]</title>
+        <para>新しい organizational unit を作成する。これは
+        <command>samba-tool ou add</command> コマンドの別名であり、
+        互換のためにのみある。代わりに
+        <command>samba-tool ou add</command> を使って欲しい。</para>
+</refsect3>
+
+<!-- Samba-4.9.0
 <refsect3>
 	<title>ou delete <replaceable>ou_dn</replaceable> [options]</title>
 	<para>Delete an organizational unit.</para>
@@ -2162,22 +2195,6 @@
 	or without the domainDN component.</para>
 </refsect3>
 -->
-<refsect3>
-	<title>ou create <replaceable>ou_dn</replaceable> [options]</title>
-	<para>organizational unit を作成する。</para>
-	<para>organizational unit の名前は完全なDNか
-	ドメインDNコンポーネントなしで指定できる。</para>
-
-	<variablelist>
-	<varlistentry>
-	<term>--description=DESCRIPTION</term>
-	<listitem><para>
-	OU の説明を指定する。
-	</para></listitem>
-	</varlistentry>
-	</variablelist>
-</refsect3>
-
 <refsect3>
 	<title>ou delete <replaceable>ou_dn</replaceable> [options]</title>
 	<para>organizational unitを削除する。</para>
@@ -2397,21 +2414,23 @@
 
 <refsect3>
 	<title>user add <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
-<!-- 原文 samba-4.7.0
-	<para>Create a new user. Please note that this subcommand is deprecated
-	and available for compatibility reasons only. Please use
-	<command>samba-tool user create</command> instead.</para>
+<!-- 原文 samba-4.14.0
+	<para>Add a new user to the Active Directory Domain.</para>
 -->
-	<para>新しいユーザーを追加する。このサブコマンドはあくまでも互換のためにのみ存在していることに注意。代わりに
-	<command>samba-tool user create</command>コマンドを使うように。</para>
+	<para>新しいユーザーを AD ドメインに追加する。</para>
 </refsect3>
 
 <refsect3>
 	<title>user create <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
-<!-- 原文 samba-4.7.0
-	<para>Create a new user in the Active Directory Domain.</para>
+<!-- 原文 samba-4.14.0
+        <para>Add a new user. This is a synonym for the
+        <command>samba-tool user add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool user add</command> instead.</para>
 -->
-	<para>Active Directory ドメインでの新しいユーザーを作成する。</para>
+         <para>新しいユーザを追加する。これは<command>samba-tool user add</command>
+	 コマンドの別名であり、互換のためのみにある。代わりに、
+	 <command>samba-tool user add</command> を使って欲しい。</para>
 </refsect3>
 
 <refsect3>
@@ -2468,6 +2487,72 @@
 	<para>Enable an user account.</para>
 -->
 	<para>ユーザーアカウントを有効にする。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user list</title>
+        <para>List all users.</para>
+        <para>By default the user's sAMAccountNames are listed.</para>
+        <variablelist>
+        <varlistentry>
+        <term>- -full-dn</term>
+        <listitem><para>
+        List user's distinguished names instead of the sAMAccountNames.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>-b BASE_DN|- -base-dn=BASE_DN</term>
+        <listitem><para>
+        Specify base DN to use. Only users under the specified base DN will be
+        listed.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-expired</term>
+        <listitem><para>
+        Do not list expired user accounts.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-disabled</term>
+        <listitem><para>
+        Do not list disabled user accounts.
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+<refsect3>
+        <title>user list</title>
+        <para>ユーザ一覧を表示する。</para>
+        <para>既定では、ユーザの sAMAccountNames が表示される。</para>
+        <variablelist>
+        <varlistentry>
+        <term>--full-dn</term>
+        <listitem><para>
+        ユーザの distinguished names を sAMAccountNames の代わりに表示する。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>-b BASE_DN|--base-dn=BASE_DN</term>
+        <listitem><para>
+        base DN を指定する。指定された base DN 配下のもののみ表示される。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-expired</term>
+        <listitem><para>
+        満了したユーザアカウントを表示しなう。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-disabled</term>
+        <listitem><para>
+        無効のユーザアカウントを表示しない。
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
 </refsect3>
 
 <refsect3>
