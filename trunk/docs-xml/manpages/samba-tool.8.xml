@@ -1831,6 +1831,11 @@
 -->
 
 <refsect3>
+	<title>group stats [options]</title>
+	<para>グループ全体とグループメンバの統計を表示する。</para>
+</refsect3>
+
+<refsect3>
         <title>group rename <replaceable>groupname</replaceable> [options]</title>
         <para>グループと関連する属性を改名する。</para>
         <para>このコマンドはグループ名に関連する属性の設定を許可する。
@@ -1870,11 +1875,6 @@
         </para></listitem>
         </varlistentry>
         </variablelist>
-</refsect3>
-
-<refsect3>
-	<title>group stats [options]</title>
-	<para>グループ全体とグループメンバの統計を表示する。</para>
 </refsect3>
 
 <refsect2>
@@ -2643,12 +2643,189 @@
 	<para>ユーザーアカウントのパスワードを変更する（認証されたものに限る）。</para>
 </refsect3>
 
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user rename <replaceable>username</replaceable> [options]</title>
+        <para>Rename a user and related attributes.</para>
+        <para>This command allows to set the user's name related attributes. The user's
+        CN will be renamed automatically.
+        The user's new CN will be made up by combining the given-name, initials
+        and surname. A dot ('.') will be appended to the initials automatically,
+        if required.
+        Use the - -force-new-cn option to specify the new CN manually and - -reset-cn
+        to reset this change.</para>
+        <para>Use an empty attribute value to remove the specified attribute.</para>
+        <para>The username specified on the command is the sAMAccountName.</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>- -surname=SURNAME</term>
+        <listitem><para>
+        New surname
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -given-name=GIVEN_NAME</term>
+        <listitem><para>
+        New given name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -initials=INITIALS</term>
+        <listitem><para>
+        New initials
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify a new CN (RDN) instead of using a combination
+        of the given name, initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -reset-cn</term>
+        <listitem><para>
+        Set the CN to the default combination of given name,
+        initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        New display name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        New email address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        New account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -upn=UPN</term>
+        <listitem><para>
+        New user principal name
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+
+<refsect3>
+        <title>user rename <replaceable>username</replaceable> [options]</title>
+        <para>ユーザと関連する属性を改名する。</para>
+        <para>このコマンドはユーザの名前に関連する属性の設定を許可する。ユーザの
+        CN は自動的に改名される。
+	ユーザの新しい CN は、given-name, initials と surname を組み合わせることで
+	作成される。ドット ('.') は、必要であれば自動的に initials に追加される。
+	新しい CN を手動で指定する際には --force-new-cn を、この変更をリセットする
+	場合は、--reset-cn オプションを使用する。</para>
+        <para>指定された属性を削除するには、空の属性値を使用する。</para>
+        <para>コマンド上で username の指定は sAMAccountName である。</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>--surname=SURNAME</term>
+        <listitem><para>
+        新しい surname
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--given-name=GIVEN_NAME</term>
+        <listitem><para>
+        新しい given name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--initials=INITIALS</term>
+        <listitem><para>
+        新しい initials
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify 新しい CN (RDN) を given name, initials と surname の
+	組み合わせを使う代わりに指定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--reset-cn</term>
+        <listitem><para>
+        既定の given name, initials と surname の組み合わせを CN に設定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        新しい display name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        新しい email address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        新しい account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--upn=UPN</term>
+        <listitem><para>
+        新しい user principal name
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+
 <refsect3>
 	<title>user setexpiry <replaceable>username</replaceable> [options]</title>
 <!-- 原文 samba-4.11.0
 	<para>Set the expiration of a user account.</para>
 -->
 	<para>ユーザーアカウントの満了日を設定する。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user unlock <replaceable>username</replaceable> [options]</title>
+        <para>This command unlocks a user account in the Active Directory
+        domain.</para>
+</refsect3>
+-->
+
+<refsect3>
+        <title>user unlock <replaceable>username</replaceable> [options]</title>
+        <para>このコマンドは AD ドメイン中のユーザアカウントをアンロックする。
+        </para>
 </refsect3>
 
 <refsect3>
