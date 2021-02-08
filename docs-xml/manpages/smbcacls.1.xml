@@ -34,6 +34,7 @@
 		<arg choice="opt">-C|--chown name</arg>
 		<arg choice="opt">-G|--chgrp name</arg>
 		<arg choice="opt">-I allow|remove|copy</arg>
+		<arg choice="opt">--propagate-inheritance</arg>
 		<arg choice="opt">--numeric</arg>
 		<arg choice="opt">-t</arg>
 		<arg choice="opt">-U username</arg>
@@ -184,12 +185,12 @@
 		
                 <varlistentry>
                 <term>-I|--inherit allow|remove|copy</term>
-<!-- 原文 samba-4.7.0
+<!-- 原文 samba-4.14.0
 		<listitem><para>Set or unset the windows "Allow inheritable
 		permissions" check box using the <parameter>-I</parameter>
 		option.  To set the check box pass allow. To unset the check
 		box pass either remove or copy. Remove will remove all
-		inherited acls. Copy will copy all the inherited acls.
+		inherited ACEs. Copy will copy all the inherited ACEs.
 		</para></listitem>
 -->
 		<listitem><para>
@@ -197,12 +198,29 @@
 		"Allow inheritable permissions" チェックボックスの設定/解除を
 		行う。設定するとチェックボックスに許可が渡される。解除すると
 		チェックボックスには削除かコピーのどちらかが渡される。削除は
-		すべての継承された ACL を削除するコピーの場合には、すべての
-		継承された ACL がコピーされる。
+		すべての継承された ACE を削除するコピーの場合には、すべての
+		継承された ACE がコピーされる。
 		</para></listitem>
 		</varlistentry>
 
-		<varlistentry>
+<!-- Samba-4.14.0
+                <varlistentry>
+                <term>- -propagate-inheritance</term>
+                <listitem><para>Add, modify, delete or set ACEs on an entire
+                directory tree according to the inheritance flags. Refer to the
+                INHERITANCE section for details.
+                </para></listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>--propagate-inheritance</term>
+                <listitem><para>inheritance フラグが付いているディレクトリツリー
+                全体に対して、ACE の追加、変更削除または設定を行う。詳細については
+		INHERITANCE 節を参照のこと。
+                </para></listitem>
+                </varlistentry>
+
+                <varlistentry>
 		<term>--numeric</term>
 <!-- 原文 samba-4.7.0
 		<listitem><para>This option displays all ACL information in numeric 
@@ -370,29 +388,35 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 	の値は、SID に対して与えられたアクセスの種類を指定する。</para>
 
 <!-- 原文 samba-4.7.0
-	<para>The type can be either ALLOWED or	DENIED to allow/deny access 
-	to the SID. The flags values are generally zero for file ACEs and
-	either 9 or 2 for directory ACEs.  Some common flags are: </para>
+        <para>The type can be either ALLOWED or DENIED to allow/deny access
+        to the SID.</para>
+
+        <para>The flags field defines how the ACE should be considered when
+        performing inheritance. <command>smbcacls</command> uses these flags
+        when run with <parameter>- -propagate-inheritance</parameter>.</para>
+
+        <para>Flags can be specified as decimal or hexadecimal values, or with
+        the respective (XX) aliases, separated by a vertical bar "|".</para>
 -->
 	<para>
-	typeは SID に対する許可および拒否に対応する(訳注: 実際は type は ALLOWED か DENIED を指定し、それぞれ SID に対するアクセス許可および拒否に対応する、が正しい(fumiya))。
-	flag の値はファイルの ACE の場合通常 0 であり、ディレクトリの ACE の場合は通常
-	9 か 2 である。 共通的な flags は以下の通りである。</para>
+	typeは ALLOWED か DENIED のどちらかで、SID に対する許可および拒否に
+	対応する。</para>
 
-	<itemizedlist> 
-		<listitem><para><constant>#define SEC_ACE_FLAG_OBJECT_INHERIT     	0x1</constant></para></listitem>
-		<listitem><para><constant>#define SEC_ACE_FLAG_CONTAINER_INHERIT  	0x2</constant></para></listitem>
-		<listitem><para><constant>#define SEC_ACE_FLAG_NO_PROPAGATE_INHERIT     0x4</constant></para></listitem>
-		<listitem><para><constant>#define SEC_ACE_FLAG_INHERIT_ONLY       	0x8</constant></para></listitem>
- 	</itemizedlist>
+	<para>フラグフィールドは、継承を実行するときに、どのように ACE を考慮
+	するかを定義する。<command>smbcacls</command> は、
+	<parameter>- -propagate-inheritance</parameter> が指定されて実行された
+	時にこれらのフラグを使う。</para>
+
+	<para>flag の値は 10進又は16進値か、縦棒 "|" で区切られた それぞれの
+	(XX) 別名で指定できる。</para>
+
+        <itemizedlist>
+                <listitem><para><emphasis>(OI)</emphasis> Object Inherit        0x1</para></listitem>
+                <listitem><para><emphasis>(CI)</emphasis> Container Inherit     0x2</para></listitem>
+                <listitem><para><emphasis>(NP)</emphasis> No Propagate Inherit  0x4</para></listitem>
+                <listitem><para><emphasis>(IO)</emphasis> Inherit Only          0x8</para></listitem>
+        </itemizedlist>
   
-<!-- 原文 samba-4.7.0
-	<para>At present, flags can only be specified as decimal or
-	hexadecimal values.</para>
--->
-	<para>現在のところ flag の値は 10 進数もしくは 16
-	進数でのみ指定することができる。</para>
- 
 <!-- 原文 samba-4.7.0
 	<para>The mask is a value which expresses the access right 
 	granted to the SID. It can be given as a decimal or hexadecimal value, 
@@ -447,6 +471,10 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 	</refsect1>
 
 <refsect1>
+
+<!-- Samba-4.14.0
+-->
+
 <!-- 原文 samba-4.7.0
 	<title>EXIT STATUS</title>
 -->
