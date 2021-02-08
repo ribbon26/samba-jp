@@ -473,7 +473,162 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 <refsect1>
 
 <!-- Samba-4.14.0
+<refsect1>
+        <title>INHERITANCE</title>
+
+        <para>Per-ACE inheritance flags can be set in the ACE flags field. By
+        default, inheritable ACEs e.g. those marked for object inheritance (OI)
+        or container inheritance (CI), are not propagated to sub-files or
+        folders. However, with the
+        <parameter>- -propagate-inheritance</parameter> argument specified, such
+        ACEs are automatically propagated according to some inheritance
+        rules.
+        <itemizedlist>
+                <listitem><para>Inheritable (OI)(OI) ACE flags can only be
+                applied to folders. </para></listitem>
+                <listitem><para>Any inheritable ACEs applied to sub-files or
+                folders are marked with the inherited (I) flag. Inheritable
+                ACE(s) are applied to folders unless the no propagation (NP)
+                flag is set. </para>
+                </listitem>
+                <listitem><para>When an ACE with the (OI) flag alone set is
+                progagated to a child folder the inheritance only flag (IO) is
+                also applied. This indicates the permissions associated with
+                the ACE don't apply to the folder itself (only to it's
+                child files). When applying the ACE to a child file the ACE is
+                inherited as normal.</para></listitem>
+                <listitem><para>When an ace with the (CI) flag alone set is
+                propagated to a child file there is no effect, when propagated
+                to a child folder it is inherited as normal.
+                </para></listitem>
+                <listitem><para>When an ACE that has both (OI) &amp; (CI) flags
+                set the ACE is inherited as normal by both folders and
+                files.</para></listitem>
+        </itemizedlist></para>
+<para>(OI)(READ) added to parent folder</para>
+<para><programlisting>
++-parent/        (OI)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (OI)(IO)(I)(READ)
+  |   +-file.2   (I)(READ)
+</programlisting></para>
+<para>(CI)(READ) added to parent folder</para>
+<para><programlisting>
++-parent/        (CI)(READ)
+| +-file.1
+| +-nested/      (CI)(I)(READ)
+  |   +-file.2
+</programlisting></para>
+<para>(OI)(CI)(READ) added to parent folder</para>
+<para><programlisting>
++-parent/        (OI)(CI)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (OI)(CI)(I)(READ)
+  |   +-file.2   (I)(READ)
+</programlisting></para>
+<para>(OI)(NP)(READ) added to parent folder</para>
+<para><programlisting>
++-oi_dir/        (OI)(NP)(READ)
+| +-file.1       (I)(READ)
+| +-nested/
+|   +-file.2
+</programlisting></para>
+<para>(CI)(NP)(READ) added to parent folder</para>
+<para><programlisting>
++-oi_dir/        (CI)(NP)(READ)
+| +-file.1
+| +-nested/      (I)(READ)
+|   +-file.2
+</programlisting></para>
+<para>(OI)(CI)(NP)(READ) added to parent folder</para>
+<para><programlisting>
++-parent/        (CI)(OI)(NP)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (I)(READ)
+|   +-file.2
+</programlisting></para>
+        <para>Files and folders with protected ACLs do not allow inheritable
+        permissions (set with <parameter>-I</parameter>). Such objects will
+        not receive ACEs flagged for inheritance with (CI) or (OI).</para>
+
+</refsect1>
 -->
+<refsect1>
+        <title>継承</title>
+
+        <para>ACE 毎の継承フラグは ACE フラグフィールド中で設定できる。既定では、
+        inheritable ACEs、すなわち、オブジェクト継承 (OI) またはコンテナ継承 (CI) としてマークされたもの
+	で、これらはサブファイル又はフォルダには伝搬しない。しかし、
+	<parameter>--propagate-inheritance</parameter> 引数を指定すると、
+	このような ACE は自動的にいくつかの継承ルールによって伝搬される。
+        <itemizedlist>
+                <listitem><para>Inheritable (OI)(OI) ACE フラグはフォルダにのみ
+                適用される。</para></listitem>
+                <listitem><para>サブフォルダ又はフォルダに適用される任意の
+		inheritable ACE は、inherited (I) フラグが付けられる。Inheritable
+                ACE は、no propagation (NP) フラグが設定されていたとしてもフォルダに
+		適用される。</para>
+                </listitem>
+                <listitem><para>(OI) フラグのみが設定された ACE が、子のフォルダに
+                伝搬された時は、inheritance only フラグ (IO) も設定される。
+                これは、 ACE に関連づけられたパーミッションはフォルダそれ自身に
+		適用されない(その子のファイルにのみ)と言うことを示している。
+                子に ACE を適用する場合、ACE は通常通り伝搬される。</para></listitem>
+                <listitem><para>(CI) フラグのみが設定された ACE が子のファイルに
+		伝搬されたときは、特に何も影響はなく、このフォルダに伝搬されたときは、
+                通常通り継承する。
+                </para></listitem>
+                <listitem><para>(OI) &amp; (CI) とフラグ両方が設定された ACE は、
+                フォルダとファイル両方に対して通常通り伝搬される。</para></listitem>
+        </itemizedlist></para>
+<para>(OI)(READ) を親フォルダに追加r</para>
+<para><programlisting>
++-parent/        (OI)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (OI)(IO)(I)(READ)
+  |   +-file.2   (I)(READ)
+</programlisting></para>
+<para>(CI)(READ) を親フォルダに追加r</para>
+<para><programlisting>
++-parent/        (CI)(READ)
+| +-file.1
+| +-nested/      (CI)(I)(READ)
+  |   +-file.2
+</programlisting></para>
+<para>(OI)(CI)(READ) を親フォルダに追加r</para>
+<para><programlisting>
++-parent/        (OI)(CI)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (OI)(CI)(I)(READ)
+  |   +-file.2   (I)(READ)
+</programlisting></para>
+<para>(OI)(NP)(READ) を親フォルダに追加r</para>
+<para><programlisting>
++-oi_dir/        (OI)(NP)(READ)
+| +-file.1       (I)(READ)
+| +-nested/
+|   +-file.2
+</programlisting></para>
+<para>(CI)(NP)(READ) を親フォルダに追加r</para>
+<para><programlisting>
++-oi_dir/        (CI)(NP)(READ)
+| +-file.1
+| +-nested/      (I)(READ)
+|   +-file.2
+</programlisting></para>
+<para>(OI)(CI)(NP)(READ) を親フォルダに追加</para>
+<para><programlisting>
++-parent/        (CI)(OI)(NP)(READ)
+| +-file.1       (I)(READ)
+| +-nested/      (I)(READ)
+|   +-file.2
+</programlisting></para>
+        <para>保護された ACL があるファイルとフォルダは、inheritable な
+        パーミッション(<parameter>-I</parameter>で設定)を許可しない。そのような
+	オブジェクトは、(CI) 又は (OI) がある継承用に ACE にフラグが付いている
+	ものを受け取らない。</para>
+
+</refsect1>
 
 <!-- 原文 samba-4.7.0
 	<title>EXIT STATUS</title>
@@ -550,8 +705,8 @@ ACL:&lt;sid or name&gt;:&lt;type&gt;/&lt;flags&gt;/&lt;mask&gt;
 
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.11.0 - 4.13.2 に対応する。</para>
-        <para>このドキュメントの Samba 3.0.0 - 4.13.2 対応の翻訳は
+	<para>このマニュアルページは Samba 4.14.0 - 4.14.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 - 4.14.0 対応の翻訳は
 	<itemizedlist>
 		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
 		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
