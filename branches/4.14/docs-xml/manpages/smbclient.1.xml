@@ -1,0 +1,2388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="smbclient.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>smbclient</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">User Commands</refmiscinfo>
+-->
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+	<refname>smbclient</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>ftp-like client to access SMB/CIFS resources
+	on servers</refpurpose>
+-->
+	<refpurpose>サーバー上の SMB/CIFS リソースにアクセスする ftp
+	のようなクライアント</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>smbclient</command>
+		<arg choice="opt">-b &lt;buffer size&gt;</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-e</arg>
+		<arg choice="opt">-L &lt;netbios name&gt;</arg>
+		<arg choice="opt">-U username</arg>
+		<arg choice="opt">-I destinationIP</arg>
+		<arg choice="opt">-M &lt;netbios name&gt;</arg>
+		<arg choice="opt">-m maxprotocol</arg>
+		<arg choice="opt">-A authfile</arg>
+		<arg choice="opt">-N</arg>
+        <arg choice="opt">-g</arg>
+		<arg choice="opt">-i scope</arg>
+		<arg choice="opt">-O &lt;socket options&gt;</arg>
+		<arg choice="opt">-p port</arg>
+		<arg choice="opt">-R &lt;name resolve order&gt;</arg>
+		<arg choice="opt">-s &lt;smb config file&gt;</arg>
+		<arg choice="opt">-k</arg>
+		<arg choice="opt">-P|--machine-pass</arg>
+		<arg choice="opt">-c &lt;command&gt;</arg>
+	</cmdsynopsis>
+
+	<cmdsynopsis>
+		<command>smbclient</command>
+		<arg choice="req">servicename</arg>
+		<arg choice="opt">password</arg>
+		<arg choice="opt">-b &lt;buffer size&gt;</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">-e|--encrypt</arg>
+		<arg choice="opt">-D Directory</arg>
+		<arg choice="opt">-U username</arg>
+		<arg choice="opt">-W workgroup</arg>
+		<arg choice="opt">-M &lt;netbios name&gt;</arg>
+		<arg choice="opt">-m maxprotocol</arg>
+		<arg choice="opt">-A authfile</arg>
+		<arg choice="opt">-N</arg>
+        <arg choice="opt">-g</arg>
+		<arg choice="opt">-l log-basename</arg>
+		<arg choice="opt">-I destinationIP</arg>
+		<arg choice="opt">-E</arg>
+		<arg choice="opt">-c &lt;command string&gt;</arg>
+		<arg choice="opt">-i scope</arg>
+		<arg choice="opt">-O &lt;socket options&gt;</arg>
+		<arg choice="opt">-p port</arg>
+		<arg choice="opt">-R &lt;name resolve order&gt;</arg>
+		<arg choice="opt">-s &lt;smb config file&gt;</arg>
+		<arg choice="opt">-T&lt;c|x&gt;IXFvgbNan</arg>
+		<arg choice="opt">-k</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>このツールは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para><command>smbclient</command> is a client that can
+	'talk' to an SMB/CIFS server. It offers an interface
+	similar to that of the ftp program (see <citerefentry><refentrytitle>ftp</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry>).
+	Operations include things like getting files from the server
+	to the local machine, putting files from the local machine to
+	the server, retrieving directory information from the server
+	and so on. </para>
+-->
+	<para><command>smbclient</command> は SMB/CIFS サーバーと「会話」をする
+	ことができるクライアントである。ftp プログラム（<citerefentry>
+	<refentrytitle>ftp</refentrytitle><manvolnum>1</manvolnum>
+	</citerefentry> を参照）とよく似たインターフェースを提供し、
+	サーバーからローカルマシンへファイルをダウンロードしたり、
+	ローカルマシンからサーバーへとファイルをアップロードしたり、
+	サーバーからディレクトリ情報を取得するなどの動作を行う。</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+	
+	<variablelist>
+		<varlistentry>
+		<term>servicename</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>servicename is the name of the service
+		you want to use on the server. A service name takes the form
+		<filename>//server/service</filename> where <parameter>server
+		</parameter> is the NetBIOS name of the SMB/CIFS server
+		offering the desired service and <parameter>service</parameter>
+		is the name of the service offered.	 Thus to connect to
+		the service "printer" on the SMB/CIFS server "smbserver",
+		you would use the servicename <filename>//smbserver/printer
+		</filename></para>
+-->
+		<listitem><para>servicename は利用したいサービスのサーバー上での
+		名前である。サービス名は <filename>//server/service</filename>
+		のような形をとり、<parameter>server</parameter> は利用したい
+		サービスを提供している SMB/CIFS サーバーの NetBIOS 名であり、
+		<parameter>service</parameter> は提供されているサービスの名前である。
+		したがって、SMB/CIFS サーバー "smbserver" の "printer"
+		というサービスに接続するには、<filename>//smbserver/printer
+		</filename> というサービス名を使用する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Note that the server name required is NOT necessarily
+		the IP (DNS) host name of the server !	The name required is
+		a NetBIOS server name, which may or may not be the
+		same as the IP hostname of the machine running the server.
+		</para>
+-->
+		<para>必要とされるサーバー名が、一概にサーバーの IP (DNS)
+		ホスト名であるとは限らないことに注意! 必要とされる名前は NetBIOS
+		名であり、その名前はサーバーの動作しているマシンの IP
+		ホスト名と同じかも知れないし、 異なっているかも知れない。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The server name is looked up according to either
+		the <parameter>-R</parameter> parameter to <command>smbclient</command> or
+		using the name resolve order parameter in
+		the <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> file,
+		allowing an administrator to change the order and methods
+		by which server names are looked up. </para></listitem>
+		</varlistentry>
+-->
+		<para>サーバー名を解決する方法は、<command>smbclient</command>
+		の <parameter>-R</parameter> オプションか、<citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry> ファイル中の name resolve order パラメーターに
+		よって決定される。
+		このパラメーターにより、管理者が、名前解決の順番や方式を変更する
+		ことが可能になっている。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>password</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The password required to access the specified
+		service on the specified server. If this parameter is
+		supplied, the <parameter>-N</parameter> option (suppress
+		password prompt) is assumed. </para>
+-->
+		<listitem><para>指定したサーバーのサービスへアクセスするために
+		必要なパスワードである。このパラメーターが指定された場合、
+		<parameter>-N</parameter> オプション（パスワードプロンプトの抑止）
+		が自動的に設定される。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>There is no default password. If no password is supplied
+		on the command line (either by using this parameter or adding
+		a password to the <parameter>-U</parameter> option (see
+		below)) and the <parameter>-N</parameter> option is not
+		specified, the client will prompt for a password, even if
+		the desired service does not require one. (If no password is
+		required, simply press ENTER to provide a null password.)
+		</para>
+-->
+		<para>デフォルトのパスワードはない。（このパラメーターを用いるか、
+		<parameter>-U</parameter> オプション（以下を参照）でパスワードが
+		指定されなかったことにより）パスワードがコマンドラインから指定されず、
+		<parameter>-N</parameter> オプションも指定されていない場合、
+		サーバーがパスワードを要求しているかどうかに関わらず、
+		クライアントはパスワード入力を求める。
+		（パスワードが必要でない場合は、 単に ENTER キーを入力する事で、
+		空のパスワードを渡せばよい。）</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Note: Some servers (including OS/2 and Windows for
+		Workgroups) insist on an uppercase password. Lowercase
+		or mixed case passwords may be rejected by these servers.
+		</para>
+-->
+		<para>注意: ある種のサーバー（OS/2、Windows for Workgroup など）は、
+		大文字のパスワードを要求する。小文字や、大文字小文字の混じった
+		パスワードは拒否されるであろう。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Be cautious about including passwords in scripts.
+		</para></listitem>
+-->
+		<para>パスワードをスクリプト中に記述するときは、十分注意すること。
+		</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-R &lt;name resolve order&gt;</term> 
+<!-- 原文 samba-4.7.0
+		<listitem><para>This option is used by the programs in the Samba
+		suite to determine what naming services and in what order to resolve
+		host names to IP addresses. The option takes a space-separated
+		string of different name resolution options.</para>
+-->
+		<listitem><para>このオプションは、Samba スイートのプログラムによって、
+		ホスト名と IP アドレスの名前解決のためにどのようなネーミングサービスを
+		どのような順序で使用するかを決めるのに使用される。このオプションには、
+		名前解決オプションを文字列のかたちで指定する。複数を指定する場合は
+		スペースで区切る。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The options are :"lmhosts", "host", "wins" and "bcast". They
+		cause names to be resolved as follows:</para>
+-->
+		<para>指定できるのは、"lmhosts"、"host"、"wins"、"bcast" である。
+		それぞれにおいて、名前解決は次のように行われる。</para>
+
+		<itemizedlist>
+<!-- 原文 samba-4.7.0
+			<listitem><para><constant>lmhosts</constant>: Lookup an IP
+			address in the Samba lmhosts file. If the line in lmhosts has
+			no name type attached to the NetBIOS name (see
+			the <citerefentry><refentrytitle>lmhosts</refentrytitle>
+			<manvolnum>5</manvolnum></citerefentry> for details) then
+			any name type matches for lookup.</para>
+			</listitem>
+-->
+			<listitem><para><constant>lmhosts</constant>: Samba lmhosts
+			ファイルで IP アドレスが検索される。lmhosts の行に NetBIOS 名
+			にアタッチされるネームタイプがない場合（詳細については 
+			<citerefentry><refentrytitle>lmhosts</refentrytitle> <manvolnum>
+			5</manvolnum></citerefentry> を参照）、ネームタイプがどれで
+			あるかは検索結果に影響しなくなる。</para>
+			</listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><constant>host</constant>: Do a standard host
+			name to IP address resolution, using the system <filename>/etc/hosts
+			</filename>, NIS, or DNS lookups. This method of name resolution
+			is operating system dependent, for instance on IRIX or Solaris this
+			may be controlled by the <filename>/etc/nsswitch.conf</filename>
+			file).	Note that this method is only used if the NetBIOS name
+			type being queried is the 0x20 (server) name type, otherwise
+			it is ignored.</para>
+			</listitem>
+-->
+			<listitem><para><constant>host</constant>: システムの 
+			<filename>/etc/hosts</filename>、NIS、DNS ルックアップを使用
+			した、ホスト名 - IP アドレス間の標準の名前解決が行われる。
+			名前解決の方法の詳細な部分は、IRIX、Solaris といった OS に
+			よって変わる。<filename>/etc/nsswitch.conf</filename> で
+			制御できる場合もある。この方法は、検索される NetBIOS 名の
+			タイプが 0x20（サーバー）である時にのみ使用できる点に注意。
+			さもなければ指定しても無視される。</para>
+			</listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><constant>wins</constant>: Query a name with
+			the IP address listed in the <parameter>wins server</parameter>
+			parameter.	If no WINS server has
+			been specified this method will be ignored.</para>
+			</listitem>
+-->
+			<listitem><para><constant>wins</constant>: 
+			<parameter>wins server</parameter> パラメーターに指定された
+			IP アドレスを持つ名前が検索される。WINS サーバーが指定され
+			ていなければ、無視される。</para>
+			</listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><constant>bcast</constant>: Do a broadcast on
+			each of the known local interfaces listed in the
+			<parameter>interfaces</parameter>
+			parameter. This is the least reliable of the name resolution
+			methods as it depends on the target host being on a locally
+			connected subnet.</para>
+			</listitem>
+-->
+			<listitem><para><constant>bcast</constant>: 
+			<parameter>interfaces</parameter> パラメーターに指定された
+			既知のローカルインターフェースそれぞれについてブロードキャ
+			ストを行う。ターゲットホストがローカル接続サブネット上に
+			ある場合にしか使えないので、最も信頼性の低い名前解決法。</para>
+			</listitem>
+		</itemizedlist>
+
+<!-- 原文 samba-4.7.0
+		<para>If this parameter is not set then the name resolve order
+		defined in the <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> file parameter
+		(name resolve order) will be used. </para>
+-->
+		<para>このパラメーターが設定されなかった場合、名前解決方法の使用
+		順序は、<citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> ファイルのパラメーター
+		（name resolve order）に指定されたとおりになる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The default order is lmhosts, host, wins, bcast and without
+		this parameter or any entry in the <parameter>name resolve order
+		</parameter> parameter of the <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> file the name resolution
+		methods will be attempted in this order. </para></listitem>
+-->
+		<para>デフォルトの優先順位は、lmhosts、host、wins、bcast となる。
+		このパラメーターがない場合、あるいは <citerefentry><refentrytitle>
+		smb.conf</refentrytitle> <manvolnum>5</manvolnum></citerefentry> 
+		ファイルの <parameter>name resolve order</parameter> パラメーター
+		にエントリがない場合、この順序で名前解決方法が試行される。</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-M NetBIOS name</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This options allows you to send messages, using
+		the "WinPopup" protocol, to another computer. Once a connection is
+		established you then type your message, pressing ^D (control-D) to
+		end. </para>
+-->
+		<listitem><para>このオプションを指定すると、"WinPopup"
+		プロトコルを使って、別のコンピューターへメッセージを送信することが
+		できる。接続が確立してから任意のメッセージを入力する。
+		終了するには、^D（control-D）を入力する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>If the receiving computer is running WinPopup the user will
+		receive the message and probably a beep. If they are not running
+		WinPopup the message will be lost, and no error message will
+		occur. </para>
+-->
+		<para>受信したコンピューターで WinPopup が起動していれば、
+		ユーザーはおそらくビープ音とともに、メッセージを受信することになる。
+		WinPopup が起動していないとメッセージは失われ、
+		エラーメッセージは表示されない。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The message is also automatically truncated if the message
+		is over 1600 bytes, as this is the limit of the protocol.
+		</para>
+-->
+		<para>1600 バイトを越えるメッセージは、プロトコルの仕様による
+		制限のため、自動的に切り捨てられる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>
+		One useful trick is to pipe the message through <command>smbclient</command>.
+		For example: smbclient -M FRED &lt; mymessage.txt will send the
+		message in the file <filename>mymessage.txt</filename> to the
+		machine FRED.
+		</para>
+-->
+		<para>便利な使用例として、<command>smbclient</command>
+		を通してメッセージを cat する方法を紹介しよう。例えば: <command>
+		smbclient -M FRED &lt; mymessage.txt</command> とすると、
+		<filename>mymessage.txt</filename> ファイルの内容をメッセージ
+		としてマシン FRED に送ることができる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>You may also find the <parameter>-U</parameter> and
+		<parameter>-I</parameter> options useful, as they allow you to
+		control the FROM and TO parts of the message. </para>
+-->
+		<para>また <parameter>-U</parameter> や <parameter>-I</parameter>
+		オプションも、メッセージの FROM や TO に相当する設定を指定したい場合は、
+		便利なこともある。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>See the <parameter>message command</parameter> parameter in the <citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry> for a description of how to handle incoming
+		WinPopup messages in Samba. </para>
+-->
+		<para>Samba で WinPopup メッセージを受け取る方法は、<citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry> の <parameter>message command</parameter>
+		パラメーターを参照のこと。</para>
+
+<!-- 原文 samba-4.7.0
+		<para><emphasis>Note</emphasis>: Copy WinPopup into the startup group
+		on your WfWg PCs if you want them to always be able to receive
+		messages. </para></listitem>
+-->
+		<para><emphasis>注意</emphasis>: WfWg PC で常にメッセージを
+		受信できるようにしたいなら、startup グループに WinPopup
+		をコピーすること。</para></listitem>
+		</varlistentry>
+		
+		<varlistentry>
+		<term>-p port</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This number is the TCP port number that will be used
+		when making connections to the server. The standard (well-known)
+		TCP port number for an SMB/CIFS server is 139, which is the
+		default. </para></listitem>
+-->
+		<listitem><para>この値は、サーバーへ接続するときに利用する TCP
+		のポート番号である。SMB/CIFS サーバー用の標準の（well-known）TCP
+		ポート番号は 139 であり、これがデフォルト値となる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-g</term>
+		<listitem><para>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This parameter provides combined with
+		<parameter>-L</parameter> easy parseable output	that allows processing
+		with utilities such as grep and cut.
+		</para></listitem>
+-->
+		<parameter>-L</parameter> と組み合わせることで、パースしやすい出力を
+		得られる。これにより grep や cut といったユーティリティで処理
+		しやすくなる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-m|--max-protocol protocol</term>
+<!-- 原文 samba-4.10.4
+		<listitem><para>This allows the user to select the
+		highest SMB protocol level that smbclient will use to
+		connect to the server. By default this is set to
+		highest available SMB3 protocol version.
+		To connect using SMB2 or SMB1 protocol, use the
+		strings SMB2 or NT1 respectively. Note that to connect
+		to a Windows 2012 server with encrypted transport selecting
+		a max-protocol of SMB3 is required.
+		</para></listitem>
+-->
+		<listitem><para>このパラメーターを使うと、smbclient がサーバーに
+		接続する時に使う、最高位の SMB プロトコルを選択できるようになる。
+		既定値では、SMB3 プロトコルで最も最高位のものに設定されている。
+		SMB2 または SMB1 プロトコルで接続するためには、おのおの SMB2 または NT1
+		という文字列を使用する。暗号化された通信で Windows 2012 サーバーに
+		接続するためには、SMB3 が必要とされることに注意。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-P|--machine-pass</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		Make queries to the external server using the machine account of the local server.
+		</para></listitem>
+-->
+		<listitem><para>
+		ローカルサーバーのマシンアカウントを使い、外部サーバーに対して問い合わせを行う。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-I IP-address</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para><replaceable>IP address</replaceable> is the address of the server to connect to.
+		It should be specified in standard "a.b.c.d" notation. </para>
+-->
+		<listitem><para><replaceable>IP address</replaceable> は接続する
+		サーバーの IP アドレスを表す。これは、標準的な "a.b.c.d"
+		形式で指定する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Normally the client would attempt to locate a named
+		SMB/CIFS server by looking it up via the NetBIOS name resolution
+		mechanism described above in the <parameter>name resolve order</parameter>
+		parameter above. Using this parameter will force the client
+		to assume that the server is on the machine with the specified IP
+		address and the NetBIOS name component of the resource being
+		connected to will be ignored. </para>
+-->
+		<para>通常クライアントは前述した <parameter>name resolve order
+		</parameter> パラメーター中で記述した NetBIOS 名の解決メカニズムを
+		用いて検索する事により、その SMB/CIFS サーバーのアドレスを
+		解決しようとする。このパラメーターを使うことで、クライアントは、
+		強制的に指定された IP アドレスをサーバーの IP アドレスとみなし、
+		接続しようとしているリソースの NetBIOS 名を上書きする。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>There is no default for this parameter. If not supplied,
+		it will be determined automatically by the client as described
+		above. </para></listitem>
+-->
+		<para>このパラメーターのデフォルト値はない。
+		このパラメーターが指定されなければ、アドレスは前述したようにして
+		クライアントが自動的に決定する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-E|--stderr</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This parameter causes the client to write messages
+		to the standard error stream (stderr) rather than to the standard
+		output stream. </para>
+-->
+		<listitem><para>このパラメーターは、クライアントがメッセージを
+		標準出力ではなく、標準エラー出力（stderr）に出力するようにする。</para>
+		
+<!-- 原文 samba-4.7.0
+		<para>By default, the client writes messages to standard output
+		- typically the user's tty. </para></listitem>
+-->
+		<para>既定値では、クライアントはメッセージを標準出力 -
+		一般的にはユーザーの tty - に出力する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-L|--list</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This option allows you to look at what services
+		are available on a server. You use it as <command>smbclient -L
+		host</command> and a list should appear.  The <parameter>-I
+		</parameter> option may be useful if your NetBIOS names don't
+		match your TCP/IP DNS host names or if you are trying to reach a
+		host on another network. </para></listitem>
+-->
+		<listitem><para>このオプションを指定すると、サーバー上で利用可能な
+		サービスを一覧することができる。<command>smbclient -L host</command>
+		のようにして使うと、サービスの一覧が表示される。
+		NetBIOS 名が TCP/IP の DNS のホスト名に一致しない場合や、
+		別のネットワーク上のホストの情報を表示しようとしている場合は、
+		<parameter>-I</parameter> オプションが役にたつ。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>	
+		<term>-b|--send-buffer buffersize</term>
+<!-- 原文 samba-4.7.0
+-->
+		<listitem><para>
+		ファイル送受信時、smbclinetは、接続されたサーバに対して許可されたリクエストの
+		最大数を元にしたサイズの内部バッファを使う。このコマンドは、
+		このサイズを0バイト(サーバが制御している既定値のサイズを使う事を意味する)
+		から16776960 (0xFFFF00)バイトまでの任意の値に変更できる。
+		サーバが制御している値を使う事は、大量の読み取りと書き込みが同時にあるとき、
+		サーバを最も効率よく動かすためにsmbclientがパイプライン動作するなどして、
+		もっとも効率的である。この値を、その他の任意の値に設定すると、転送は
+		遅くなるだろう。これはまたsmbclient内部にある
+		<command>iosize</command>コマンド使う事にもよって設定できる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>B|--browse</term>
+<!-- 原文 samba-4.7.0
+-->
+		<listitem><para>
+		DNSを使ったSMBサーバのブラウズ。
+		</para></listitem>
+		</varlistentry>
+
+		&stdarg.client.debug;
+		&popt.common.samba;
+		&popt.common.credentials;
+		&popt.common.connection;
+		&popt.autohelp;
+
+<!-- 原文不在につき、以下の訳文はコメントアウトに 2017.11.04 matsuand
+		<varlistentry>
+		<term>-t terminal code</term>
+		<listitem><para>このオプションは、<command>smbclient</command> 
+		に対してリモートサーバーが表示するファイル名をどのように変換すべきかを
+		指定する。通常、アジア言語のマルチバイト文字の UNIX 上での実装は、
+		SMB/CIFS サーバーと異なる文字セットを使用している (例えば <emphasis>
+		SJIS</emphasis> ではなく <emphasis>EUC</emphasis>、というように)。
+		このパラメーターを設定することで、<command>smbclient</command> は
+		UNIX 上のファイル名と SMB サーバー上のファイル名との変換を正しく
+		行うようになる。このオプションは厳格にテストされたものではなく、
+		多少問題があるかも知れない。</para>
+
+		<para>terminal code には CWsjis, CWeuc, CWjis7, CWjis8, CWjunet,
+		CWhex, CWcap がある。これらは全てではなく、完全なリストは、
+		Samba のソースコードをチェックして欲しい。</para></listitem>
+		</varlistentry>
+-->
+                <varlistentry>
+                <term>-t|--timeout &lt;timeout-seconds&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This allows the user to tune the default
+		timeout used for each SMB request. The default setting is
+		20 seconds. Increase it if requests to the server sometimes
+		time out. This can happen when SMB3 encryption is selected
+		and smbclient is overwhelming the server with requests.
+		This can also be set using the <command>timeout</command>
+		command inside smbclient.
+		</para></listitem>
+-->
+                <listitem><para>これを使うと、利用者に、各SMB要求で使う既定値の
+		タイムアウトを修正出来るようになる。既定値は20秒である。サーバへの
+		要求がしばしばタイムアウトする場合、この値を増やすとよいだろう。
+		これはまた、SMB3暗号化が選択されていた場合とsmbclientが
+		serverに対して過負荷な時に発生する可能性がある。また、
+		smbclient内部で<command>timeout</command>コマンドを使うことで
+		も設定される。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>-T|--tar tar options</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>smbclient may be used to create <command>tar(1)
+		</command> compatible backups of all the files on an SMB/CIFS
+		share. The secondary tar flags that can be given to this option
+		are:</para>
+-->
+		<listitem><para>smbclient は SMB/CIFS 共有上の全てのファイルに
+		おいて、<command>tar(1)</command> 互換のバックアップを行うことが
+		できる。このオプションに設定可能な副次的な tar
+		フラグは以下のとおり。</para>
+
+		<itemizedlist>
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>c</parameter> - Create a tar
+			backup archive on the local system.	 Must be followed by
+			the name of a tar file, tape device or "-" for standard
+			output. If using standard output you must turn the log
+			level to its lowest value -d0 to avoid corrupting your tar
+			file. This flag is mutually exclusive with the
+			<parameter>x</parameter> flag. </para></listitem>
+-->
+			<listitem><para><parameter>c</parameter> - ローカルシステム
+		        上で tarファイルを作成する。このオプションの後には tar
+			ファイルの名前、テープデバイス、もしくは標準出力を意味する
+			"-" のいずれかを指定しなければならない。
+			標準出力を指定した場合、ログレベルを最低の -d0 にして、
+			tar ファイルの出力が破壊されないようにすること。
+			このフラグは <parameter>x</parameter> フラグと互いに
+			排他的な関係にある。</para></listitem>
+
+<!-- Samba-4.11.0
+                        <listitem><para><parameter>n</parameter> - In
+                        combination with the <parameter>c</parameter>
+                        flag, do not actually create the archive,
+                        instead perform a dry run that attempts
+                        everything that involved in creation other than
+                        writing the file.</para></listitem>
+-->
+                        <listitem><para><parameter>n</parameter> - 
+                        <parameter>c</parameter> フラグと同時に使い、
+			実際にアーカイブを作成せず、そのかわりに、
+			ファイルへの書き込み以外の、作成に関するすべての
+                        ことを実行する。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>x</parameter> - Extract (restore) a local
+			tar file back to a share. Unless the -D option is given, the tar
+			files will be restored from the top level of the share. Must be
+			followed by the name of the tar file, device or "-" for standard
+			input. Mutually exclusive with the <parameter>c</parameter> flag.
+			Restored files have their creation times (mtime) set to the
+			date saved in the tar file. Directories currently do not get
+			their creation dates restored properly. </para></listitem>
+-->
+			<listitem><para><parameter>x</parameter> - ローカルの tar
+			ファイルを共有に展開（リストア）する。-D オプションが
+			指定されていないと、tar ファイルは共有の最上位
+			ディレクトリからリストアされる。
+			このオプションの後には tar ファイルの名前、デバイスの名前、
+			あるいは 標準入力を意味する "-" を指定しなければならない。
+			このフラグは <parameter>c</parameter> フラグと互いに
+			排他的な関係にある。リストアされたファイルは、作成日時
+			（mtime）が tar ファイルに保存された時点の日付になる。
+			また、現在ディレクトリについては、作成日時が正しく
+			リストアされない。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>I</parameter> - Include files and directories.
+			Is the default behavior when filenames are specified above. Causes
+			files to be included in an extract or create (and therefore
+			everything else to be excluded). See example below.	 Filename globbing
+			works  in one of two ways.	See <parameter>r</parameter> below. </para></listitem>
+-->
+			<listitem><para><parameter>I</parameter> - 指定したファイルと
+			ディレクトリを処理の対象にする。このオプションは、ファイル名が
+			指定されている場合のデフォルトの動作であり、tar ファイルを
+			展開または作成する時に、指定されたものだけを処理の対象にする
+			（従って、それ以外のものは全て除外される）。
+			下記の例を参照のこと。ファイル名のワイルドカード指定機能は、
+			二つある方式のどちらかを使う。下記の <parameter>r</parameter>
+			オプションを参照のこと。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>X</parameter> - Exclude files and directories.
+			Causes files to be excluded from an extract or create. See
+			example below.	Filename globbing works in one of two ways.
+			See <parameter>r</parameter> below. </para></listitem>
+-->
+			<listitem><para><parameter>X</parameter> - 指定したファイルと
+			ディレクトリを処理の対象から除外する。このオプションは tar
+			ファイルを展開または作成する時に、指定されたものを処理の対象から
+			除外する。下記の例を参照のこと。 ファイル名のワイルドカード
+			指定機能は、二つある方式のどちらかを使う。下記の <parameter>r
+			</parameter> オプションを参照のこと。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>F</parameter> - File containing a list of files and directories.
+			The <parameter>F</parameter> causes the name following the tarfile to
+			create to be read as a filename that contains a list of files and directories to
+			be included in an extract or create (and therefore everything else to be excluded).
+			See example below. Filename globbing works in one of two ways.
+			See <parameter>r</parameter> below.
+			</para></listitem>
+-->
+			<listitem><para><parameter>F</parameter> - ファイルとディレクトリ
+			の一覧を含むファイルである。<parameter>F</parameter>オプションは、
+			展開または作成時に含まれるファイルとディレクトリのリストを含む
+			ファイル名として作成するためのtarファイルの名前となる。
+			(and therefore everything else to be excluded).
+			以下の例を参照のこと。ファイル名の globbing は２つの方法のどちら
+			かで動作する。下記の <parameter>r</parameter> オプションを参照のこと。
+			</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>b</parameter> - Blocksize. Must be followed
+			by a valid (greater than zero) blocksize.  Causes tar file to be
+			written out in blocksize*TBLOCK (512 byte) blocks.
+			</para></listitem>
+-->
+			<listitem><para><parameter>b</parameter> - ブロックサイズ。
+			このオプションの後には有効な（1 以上の）ブロックサイズを
+			指定しなければならない。このオプションにより、tar ファイルは、
+			ブロックサイズ*TBLOCK（512 バイト）ブロックの単位で
+			書き出されるようになる。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>g</parameter> - Incremental. Only back up
+			files that have the archive bit set. Useful only with the
+			<parameter>c</parameter> flag. </para></listitem>
+-->
+			<listitem><para><parameter>g</parameter> - インクリメンタル
+			（増分）。 アーカイブビットが立っているファイルだけをバックアップ
+			する。 <parameter>c</parameter> フラグが指定されている時のみ
+			意味をもつ。</para></listitem>
+
+<!-- 原文 samba-4.12.0
+                        <listitem><para><parameter>v</parameter> - Verbose. Makes tar
+                        print out the files being processed. By default tar is not verbose.
+			This is the same as tarmode verbose.
+			</para></listitem>
+-->
+			<listitem><para><parameter>q</parameter> - 詳細表示 (Verbose) 。
+			処理中のファイルを表示する。既定値では表示しない。これは、
+			tarmode verbose と同じである。
+			</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>r</parameter> - Use wildcard
+			matching to include or exclude. Deprecated.
+			</para></listitem>
+-->
+			<listitem><para><parameter>r</parameter> - 処理対象に入れるか外すかを
+			ワイルドカードで指定。推奨しない。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>N</parameter> - Newer than. Must be followed
+			by the name of a file whose date is compared against files found
+			on the share during a create. Only files newer than the file
+			specified are backed up to the tar file. Useful only with the
+			<parameter>c</parameter> flag. </para></listitem>
+-->
+			<listitem><para><parameter>N</parameter> - 更新（newer）。
+			このオプションの後には、ファイル名を指定する必要がある。
+			そのファイルの日付と作成中に共有上で見つかったファイルの日付とが
+			比較される。指定されたファイルより新しいファイルだけが tar
+			ファイルにバックアップされる。 <parameter>c</parameter>
+			フラグが指定されている時のみ意味をもつ。</para></listitem>
+
+<!-- 原文 samba-4.7.0
+			<listitem><para><parameter>a</parameter> - Set archive bit. Causes the
+			archive bit to be reset when a file is backed up. Useful with the
+			<parameter>g</parameter> and <parameter>c</parameter> flags.
+			</para></listitem>
+-->
+			<listitem><para><parameter>a</parameter> - アーカイブビットを
+			セットする。ファイルがバックアップされた時点でアーカイブビットが
+			クリアされる。 <parameter>g</parameter> および <parameter>c
+			</parameter> フラグが設定されている時のみ意味をもつ。
+			</para></listitem>
+		</itemizedlist>
+
+<!-- 原文 samba-4.7.0
+		<para><emphasis>Tar Long File Names</emphasis></para>
+-->
+		<para><emphasis>Tar における長いファイル名</emphasis></para>
+
+<!-- 原文 samba-4.7.0
+		<para><command>smbclient</command>'s tar option now supports long
+		file names both on backup and restore. However, the full path
+		name of the file must be less than 1024 bytes.	Also, when
+		a tar archive is created, <command>smbclient</command>'s tar option places all
+		files in the archive with relative names, not absolute names.
+		</para>
+-->
+		<para><command>smbclient</command> の tar オプションは、 現在
+		バックアップとリストアの両方で長いファイル名をサポートしている。しかし、
+		ファイルのフルパス名は 1024 バイト以下である必要がある。また tar
+		アーカイブが作成された時、 <command>smbclient</command> の tar
+		オプションはそのアーカイブ内のすべてのファイルを絶対ファイル名ではなく、
+		相対ファイル名で記録する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para><emphasis>Tar Filenames</emphasis></para>
+-->
+		<para><emphasis>Tar ファイル名</emphasis></para>
+
+<!-- 原文 samba-4.7.0
+		<para>All file names can be given as DOS path names (with '\\'
+		as the component separator) or as UNIX path names (with '/' as
+		the component separator). </para>
+-->
+		<para>すべてのファイルには、DOS のパス名（'\\'をパス名の区切りとする）
+		を付与するか、UNIX のパス名（'/' をパス名の区切りとする）を付与する
+		ことができる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para><emphasis>Examples</emphasis></para>
+-->
+		<para><emphasis>例</emphasis></para>
+
+<!-- 原文 samba-4.7.0
+		<para>Restore from tar file <filename>backup.tar</filename> into myshare on mypc
+		(no password on share). </para>
+-->
+		<para>tar ファイルの <filename>backup.tar</filename> を mypc 上の
+		myshare（パスワードなし）にリストアする。</para>
+
+		<para><command>smbclient //mypc/myshare "" -N -Tx backup.tar
+		</command></para>
+
+<!-- 原文 samba-4.7.0
+		<para>Restore everything except <filename>users/docs</filename>
+		</para>
+-->
+		<para><filename>users/docs</filename> 以外のすべてをリストアする。
+		</para>
+
+		<para><command>smbclient //mypc/myshare "" -N -TXx backup.tar 
+		users/docs</command></para>
+
+<!-- 原文 samba-4.7.0
+		<para>Create a tar file of the files beneath <filename>
+		users/docs</filename>. </para>
+-->
+		<para><filename>users/docs</filename> 配下のファイルを含む tar
+		ファイルを作成する。</para>
+
+		<para><command>smbclient //mypc/myshare "" -N -Tc
+		backup.tar users/docs </command></para>
+
+<!-- 原文 samba-4.7.0
+		<para>Create the same tar file as above, but now use
+		a DOS path name. </para>
+-->
+		<para>上記と同じ tar ファイルを作成するが、DOS のパス名を使用する。
+		</para>
+
+		<para><command>smbclient //mypc/myshare "" -N -Tc backup.tar 
+		users\\edocs </command></para>
+
+<!-- 原文 samba-4.7.0
+		<para>Create a tar file of the files listed in the file <filename>tarlist</filename>.</para>
+-->
+		<para>共有上にあるすべてのファイルとディレクトリを含む tar
+		ファイルを作成する。</para>
+
+		<para><command>smbclient //mypc/myshare "" -N -Tc backup.tar *
+		</command></para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-D initial directory</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Change to initial directory before starting. Probably
+		only of any use with the tar -T option. </para></listitem>
+-->
+		<listitem><para>動作を開始する前に、ディレクトリ initial directory
+		に移動する。おそらく、利用されるのは tar オプション -T が指定された
+		ときだけだろう。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-c command string</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>command string is a semicolon-separated list of
+		commands to be executed instead of prompting from stdin. <parameter>
+		-N</parameter> is implied by <parameter>-c</parameter>.</para>
+-->
+		<listitem><para>command string はセミコロンで区切ったコマンドの
+		リストである。このコマンドは、標準入力から受け取るコマンドの代わりに
+		実行される。<parameter>-N</parameter> オプションが <parameter>-c
+		</parameter> オプションによって、暗黙の内に設定される。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>This is particularly useful in scripts and for printing stdin
+		to the server, e.g. <command>-c 'print -'</command>. </para></listitem>
+-->
+		<para>このオプションが特に役立つのは、スクリプトで利用したり、
+		標準入力を例えば <command>-c 'print -'</command> のようにして
+		サーバーに出力したりする場合である。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPERATIONS</title>
+-->
+	<title>オペレーション(操作)</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Once the client is running, the user is presented with
+	a prompt : </para>
+-->
+	<para>クライアントが起動すると、ユーザーには以下のようなプロンプトが表示される。
+	</para>
+
+	<para><prompt>smb:\&gt; </prompt></para>
+
+<!-- 原文 samba-4.7.0
+	<para>The backslash ("\\") indicates the current working directory
+	on the server, and will change if the current working directory
+	is changed. </para>
+-->
+	<para>バックスラッシュ（"\\"）はサーバー上の現在の作業ディレクトリを示しており、
+	作業ディレクトリを変えるとこの表示も変わる。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The prompt indicates that the client is ready and waiting to
+	carry out a user command. Each command is a single word, optionally
+	followed by parameters specific to that command. Command and parameters
+	are space-delimited unless these notes specifically
+	state otherwise. All commands are case-insensitive.	 Parameters to
+	commands may or may not be case sensitive, depending on the command.
+	</para>
+-->
+	<para>このプロンプトは、クライアントの準備ができ、ユーザーのコマンド実行を
+	待機していることを示している。各コマンドは、一つの単語であるが、コマンドによっては、
+	コマンド固有のパラメーターを指定する事もできる。コマンドとパラメーターは、
+	特に注釈がない限り、スペースで区切られる。
+	全てのコマンドは大文字小文字を識別しない。
+	コマンドのパラメーターは、コマンドによって大文字と小文字が区別されたり
+	されなかったりする。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>You can specify file names which have spaces in them by quoting
+	the name with double quotes, for example "a long file name". </para>
+-->
+	<para>スペースが含まれているファイル名は、名前をダブルクオート文字で、例えば、
+	"a long file name" のように括る事で指定できる。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>Parameters shown in square brackets (e.g., "[parameter]") are
+	optional.  If not given, the command will use suitable defaults. Parameters
+	shown in angle brackets (e.g., "&lt;parameter&gt;") are required.
+	</para>
+-->
+	<para>大括弧（"[" と "]"）で括られて示されているパラメーター（例えば "[parameter]"）
+	は、オプションである。指定されなかった場合、コマンドは適切なデフォルト値を用いる。
+	不等号記号（"&lt;" と "&gt;"）で括られて示されているパラメーター（例えば
+	"&lt;parameter&gt;"）は、必須である。</para>
+
+
+<!-- 原文 samba-4.7.0
+	<para>Note that all commands operating on the server are actually
+	performed by issuing a request to the server. Thus the behavior may
+	vary from server to server, depending on how the server was implemented.
+	</para>
+-->
+	<para>サーバー上でのコマンドの実行は、実際にサーバーに対して要求を発行することで
+	実行されることに注意してほしい。従って、その動作はサーバー間で異なる場合があり、
+	サーバーの実装方法に依存している。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The commands available are given here in alphabetical order. </para>
+-->
+	<para>利用できるコマンドを以下にアルファベット順で紹介する。</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>? [command]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>If <replaceable>command</replaceable> is specified, the ? command will display
+		a brief informative message about the specified command.  If no
+		command is specified, a list of available commands will
+		be displayed. </para></listitem>
+-->
+		<listitem><para><replaceable>command</replaceable> を指定すると、?
+		コマンドは指定されたコマンドについての簡潔で有益な説明を表示する。
+		command を指定しないと、利用できるコマンドの一覧が表示される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>! [shell command]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>If <replaceable>shell command</replaceable> is specified, the !
+		command will execute a shell locally and run the specified shell
+		command. If no command is specified, a local shell will be run.
+		</para></listitem>
+-->
+		<listitem><para><replaceable>shell command</replaceable> を指定すると、
+		! コマンドはローカルでシェルを起動し、指定されたシェルコマンドを起動する。
+		コマンドを指定しないと、ローカルなシェルが起動する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>allinfo file</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The client will request that the server return
+		all known information about a file or directory (including streams).
+		</para></listitem>
+-->
+		<listitem><para>クライアントは、ファイルまたはディレクトリについてのすべての
+		存在する情報（streamを含む）をサーバーが返す要求を出す。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>altname file</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The client will request that the server return
+		the "alternate" name (the 8.3 name) for a file or directory.
+		</para></listitem>
+-->
+		<listitem><para>クライアントは、ファイルまたはディレクトリの "代わり"
+		の名前（8.3形式の名前）を返すようにサーバーに要求する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>archive &lt;number&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Sets the archive level when operating on files.
+		0 means ignore the archive bit, 1 means only operate on files with this bit set,
+		2 means only operate on files with this bit set and reset it after operation,
+		3 means operate on all files and reset it after operation. The default is 0.
+		</para></listitem>
+-->
+		<listitem><para>ファイル上で操作を行うときにアーカイブレベルを設定する。
+		0 はアーカイブビットを無視、1 はこのビットを設定するようにのみファイルを操作し、
+		2 は操作時にこのビットを設定し、操作終了後にビットを解除するのみ行い、
+		3 はすべてのファイルに対して操作時に設定を行い、操作終了後にビットを解除する。
+		既定値は 0 である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>backup</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Toggle the state of the "backup intent" flag
+		sent to the server on directory listings and file opens. If
+		the "backup intent" flag is true, the server will try and
+		bypass some file system checks if the user has been granted
+		SE_BACKUP or SE_RESTORE privileges. This state is useful when
+		performing a backup or restore operation.
+		</para></listitem>
+-->
+		<listitem><para>ディレクトリ表示とファイルのオープン時にサーバーに
+		送られる "backup intent" フラグを On/Off する。もしも "backup intent"
+		フラグが真であれば、サーバーは、もしもユーザーが SE_BACKUP または
+		SE_RESTORE 権限が許可されているならば、いくつかのシステムチェックを
+		試み、バイパスする。この状態は、バックアップまたはリストア操作を
+		行う時に便利である。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>blocksize &lt;number&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Sets the blocksize parameter for a tar operation. The default is 20.
+		Causes tar file to be written out in blocksize*TBLOCK (normally 512 byte) units.
+		</para></listitem>
+-->
+		<listitem><para>操作時のブロックサイズパラメーターを設定する。既定値は 20 である。
+		tar ファイルの出力を blocksize*TBLOCK（512 バイト）ユニットごとに行うようにする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>cancel jobid0 [jobid1] ... [jobidN]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The client will request that the server cancel
+		the printjobs identified by the given numeric print job ids.
+		</para></listitem>
+-->
+		<listitem><para>クライアントは、与えられたジョブ ID の印刷ジョブを
+		キャンセルするようにサーバーに要求する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>case_sensitive</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Toggles the setting of the flag in SMB packets that
+		tells the server to treat filenames as case sensitive. Set to OFF by
+		default (tells file server to treat filenames as case insensitive). Only
+		currently affects Samba 3.0.5 and above file servers with the case sensitive
+		parameter set to auto in the smb.conf.
+		</para></listitem>
+-->
+		<listitem><para>サーバーに対して、ファイル名の大文字小文字の区別を行うことを
+		告げる SMB パケット中のフラグの On/Off を行う。既定値では、OFF に設定される
+		（ファイルサーバーに対してファイル名の大文字小文字の区別を行わない事を告げる）。
+		smb.conf 中で case sensitive parameter が設定されている Samba 3.0.5 以降
+		のサーバーにのみ、現在影響する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>cd &lt;directory name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>If "directory name" is specified, the current
+		working directory on the server will be changed to the directory
+		specified. This operation will fail if for any reason the specified
+		directory is inaccessible. </para>
+-->
+		<listitem><para>もしも、"ディレクトリ名"が指定されたならば、サーバー上の
+		現在の作業ディレクトリは指定されたディレクトリに変更される。この操作は、
+		そのディレクトリがアクセス不能の場合失敗する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>If no directory name is specified, the current working
+		directory on the server will be reported. </para></listitem>
+-->
+		<para>もしも、ディレクトリ名が指定されない場合は、サーバー上の現在の作業
+		ディレクトリが表示される。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>chmod file mode in octal</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. The client requests that the server
+		change the UNIX permissions to the given octal mode, in standard UNIX format.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。クライアントは、UNIX
+		での標準形式である 8 進数での UNIX パーミッションに変更するように
+		サーバーに要求する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>chown file uid gid</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. The client requests that the server
+		change the UNIX user and group ownership to the given decimal values. Note there is
+		currently no way to remotely look up the UNIX uid and gid values for a given name.
+		This may be addressed in future versions of the CIFS UNIX extensions.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。クライアントは、与えられた
+		10 進数のユーザー ID、グループ ID に所有者を変更するようにサーバーに要求する。
+		現在は、与えられた名前からリモートの uid と gid を検索する方法は
+		ないことに注意。これは、将来のバージョンの CIFS UNIX 拡張によって
+		対応されるかもしれない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>close &lt;fileid&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Closes a file explicitly opened by the open command. Used for
+		internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>open コマンドで開いたファイルを明示的にクローズする。
+		Samba 内部のテストプロセスでのみ使用する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>del &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The client will request that the server attempt
+		to delete all files matching <replaceable>mask</replaceable> from the current working
+		directory on the server. </para></listitem>
+-->
+		<listitem><para>クライアントがサーバーに対し、サーバー上の現在の
+		作業ディレクトリで <replaceable>mask</replaceable> に一致するすべての
+		ファイルを削除するように要求する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>deltree &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>The client will request that the server attempt
+		to delete all files and directories matching <replaceable>mask</replaceable> from the current working
+		directory on the server. Note this will recursively delete files and directories within
+		the directories selected even without the recurse command being set. If any of the delete
+		requests fail the command will stop processing at that point, leaving files and directories
+		not yet processed untouched. This is by design.</para></listitem>
+-->
+		<listitem><para>クライアントがサーバーに対し、サーバー上の現在の
+		作業ディレクトリで <replaceable>mask</replaceable> に一致するファイル
+		やディレクトリをすべて削除するように要求する。recurse コマンドが与えら
+		れていなくても、指定されたディレクトリ配下のファイルやディレクトリを
+		再帰的に削除することに注意。削除要求が失敗した時点でコマンドの実行は
+		中断され、まだ処理を行っていないファイルやディレクトリは、削除されずに
+		そのまま残る。これは設計仕様によるものである。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>dir &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>A list of the files matching <replaceable>mask</replaceable> in the current
+		working directory on the server will be retrieved from the server
+		and displayed. </para></listitem>
+-->
+		<listitem><para>サーバー上の現在の作業ディレクトリで、<replaceable>mask
+		</replaceable> に一致するファイルの一覧をサーバーから入手し、表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>du &lt;filename&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Does a directory listing and then prints out the current disk usage and free space on a share.
+		</para></listitem>
+-->
+		<listitem><para>ディレクトリの表示を行い、次に、
+		現在のディスクの使用量と共有上の空きスペースを表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>echo &lt;number&gt; &lt;data&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Does an SMBecho request to ping the server. Used for internal Samba testing purposes.
+-->
+		<listitem><para>ping を行うため、SMBecho 要求をサーバーに対して送る。
+		Samba 内部のテストのためにのみ使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>exit</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Terminate the connection with the server and exit
+		from the program. </para></listitem>
+-->
+		<listitem><para>サーバーとの接続を終了し、プログラムを終了する。
+		</para></listitem> 
+		</varlistentry>
+
+		<varlistentry>
+		<term>get &lt;remote file name&gt; [local file name]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Copy the file called <filename>remote file name</filename> from
+		the server to the machine running the client. If specified, name
+		the local copy <filename>local file name</filename>.  Note that all transfers in
+		<command>smbclient</command> are binary. See also the
+		lowercase command. </para></listitem>
+-->
+		<listitem><para><filename>remote file name</filename> という名前の
+		ファイルをサーバーからクライアントを実行しているマシンへコピーする。
+		<filename>local file name</filename> が指定されていると、
+		それがローカルにコピーされるファイルの名前となる。
+		<command>smbclient</command> によるファイルの転送は、すべて binary
+		モードで行われることに注意してほしい。lowercase コマンドも参照のこと。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>getfacl &lt;filename&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Requires the server support the UNIX extensions. Requests and prints
+		the POSIX ACL on a file.
+		</para></listitem>
+-->
+		<listitem><para>サーバーが UNIX 拡張をサポートしていることを要求する。
+		ファイル上の POSIX ACL を要求し、表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>hardlink &lt;src&gt; &lt;dest&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Creates a hardlink on the server using Windows CIFS semantics.
+		</para></listitem>
+-->
+		<listitem><para>Windows の CIFS 文法をつかって、サーバー上にハードリンクを作成する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>help [command]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>See the ? command above. </para></listitem>
+-->
+		<listitem><para>前述の ? コマンドを参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+<!-- 原文 samba-4.7.0
+		<term>history</term> <listitem><para>Displays the command history.</para></listitem>
+-->
+		<term>history</term> <listitem><para>コマンド履歴を表示する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>iosize &lt;bytes&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>
+		When sending or receiving files, smbclient uses an
+		internal buffer sized by the maximum number of allowed requests
+		to the connected server. This command allows this size to be set to any
+		range between 0 (which means use the default server controlled size) bytes
+		and 16776960 (0xFFFF00) bytes. Using the server controlled size is the
+		most efficient as smbclient will pipeline as many simultaneous reads or
+		writes needed to keep the server as busy as possible. Setting this to
+		any other size will slow down the transfer.
+		</para></listitem>
+-->
+		<listitem><para>
+		ファイル送受信の際、smbclient は、接続されたサーバーへの、
+		許可された要求の最大数によってサイズが決まる内部バッファーを使用する。
+		このコマンドは、0 バイト（既定値で、サーバが制御したサイズを使うことを
+		意味する）から 16776960（0xFFFF00）バイトの範囲で、このサイズを変更する
+		ことができる。
+		サーバーが制御している値を使う事は、大量の読み取りと書き込みが同時にあるとき、
+		サーバーを最も効率よく動かすために smbclient がパイプライン動作するなどして、
+		もっとも効率的である。この値を、その他の任意の値に設定すると、転送は
+		遅くなるだろう。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>lcd [directory name]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>If <replaceable>directory name</replaceable> is specified, the current
+		working directory on the local machine will be changed to
+		the directory specified. This operation will fail if for any
+		reason the specified directory is inaccessible. </para>
+-->
+		<listitem><para><replaceable>directory name</replaceable> を指定すると、
+		ローカルマシン上の現在の作業ディレクトリが指定されたディレクトリになる。
+		何らかの理由で指定されたディレクトリにアクセスできないと、
+		操作は失敗する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>If no directory name is specified, the name of the
+		current working directory on the local machine will be reported.
+		</para></listitem>
+-->
+		<para>ディレクトリ名を指定しないと、ローカルマシン上の現在の
+		作業ディレクトリが表示される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>link target linkname</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. The client requests that the server
+		create a hard link between the linkname and target files. The linkname file
+		must not exist.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。クライアントは、targetと
+		linkname ファイルの間にハードリンクを作成するようにサーバーに要求する。
+		linkname ファイルが存在してはいけない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>listconnect</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Show the current connections held for DFS purposes.
+-->
+		<listitem><para>DFS のために、現在保持している接続状況を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>lock &lt;filenum&gt; &lt;r|w&gt; &lt;hex-start&gt; &lt;hex-len&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Tries to set a POSIX
+		fcntl lock of the given type on the given range. Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。与えられたレンジ上で与えられたタイプの
+		POSIX fcntl ロックを設定することを試みる。Samba 内部のテスト用のみに使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>logon &lt;username&gt; &lt;password&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Establishes a new vuid for this session by logging on again.
+		Replaces the current vuid. Prints out the new vuid. Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>再度ログオンすることにより、このセッションのための新しい
+		vuid を確立する。新しい vuid を表示する。Samba 内部のテスト用のみに使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>logoff</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Logs the user off the server, closing the session.
+		Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>サーバーからログオフし、セッションをクローズする。
+		内部的な Samba テストの目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>lowercase</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Toggle lowercasing of filenames for the get and
+		mget commands.
+		</para>
+-->
+		<listitem><para>get および mget コマンドにおいて、ファイル名を
+		小文字化するかどうかの設定を切り換える。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>When lowercasing is toggled ON, local filenames are converted
+		to lowercase when using the get and mget commands. This is
+		often useful when copying (say) MSDOS files from a server, because
+		lowercase filenames are the norm on UNIX systems. </para></listitem>
+-->
+		<para>小文字化を ON にすると、 get および mget コマンドを使ったときに、
+		ローカルのファイル名が小文字に変換される。これは、サーバーから（いわゆる）
+		MS-DOS 形式の名前を持つファイルをコピーするときに役立つ。
+		UNIX システムでは、ファイル名を小文字にするのが一般的であるためである。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>ls &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>See the dir command above. </para></listitem>
+-->
+		<listitem><para>前述の dir コマンドを参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>mask &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command allows the user to set up a mask
+		which will be used during recursive operation of the mget and
+		mput commands. </para>
+-->
+		<listitem><para>このコマンドは、mget と mput コマンドが再帰的な操作を
+		行うときに用いるマスクを設定する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The masks specified to the mget and mput commands act as
+		filters for directories rather than files when recursion is
+		toggled ON. </para>
+-->
+		<para>再帰モードが ON のとき、 mget と mput コマンドに指定するマスクは
+		ファイルに対するフィルターとしてではなく、ディレクトリに対するフィルター
+		として働く。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>The mask specified with the mask command is necessary
+		to filter files within those directories. For example, if the
+		mask specified in an mget command is "source*" and the mask
+		specified with the mask command is "*.c" and recursion is
+		toggled ON, the mget command will retrieve all files matching
+		"*.c" in all directories below and including all directories
+		matching "source*" in the current working directory. </para>
+-->
+		<para>mask コマンドで指定するマスクは、それらのディレクトリ配下の
+		ファイルをフィルターするために必要となる。たとえば、mget コマンドが
+		"source*" のときに mask が指定されており、mask コマンドで指定されたマスクが
+		"*.c" で、再帰モードが ON であったとする。すると mget コマンドは、
+		現在の作業ディレクトリ中の "source*" に一致するすべてのディレクトリ配下で、
+		"*.c" に一致するすべてのファイルを取得する。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Note that the value for mask defaults to blank (equivalent
+		to "*") and remains so until the mask command is used to change it.
+		It retains the most recently specified value indefinitely. To
+		avoid unexpected results it would be wise to change the value of
+		mask back to "*" after using the mget or mput commands. </para></listitem>
+-->
+		<para>既定値では mask の値は空（'*' と同等）になっており、 mask
+		コマンドを使って変更されるまで変わらない。mask の値は、最後に
+		指定された値を保ち続ける。
+		予想外の結果を招かないように、mget か mput コマンドを使った後には、
+		mask の値を '*' に戻しておくことが賢明である。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>md &lt;directory name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>See the mkdir command. </para></listitem>
+-->
+		<listitem><para>mkdir コマンドを参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>mget &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Copy all files matching <replaceable>mask</replaceable> from the server to
+		the machine running the client. </para>
+-->
+		<listitem><para><replaceable>mask</replaceable> に一致するすべての
+		ファイルを、サーバーからクライアントを実行しているマシンにコピーする。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Note that <replaceable>mask</replaceable> is interpreted differently during recursive
+		operation and non-recursive operation - refer to the recurse and
+		mask commands for more information. Note that all transfers in
+		<command>smbclient</command> are binary. See also the lowercase command. </para></listitem>
+-->
+		<para>再帰モードになっているかどうかによって、<replaceable>mask
+		</replaceable> の解釈が異なることに注意。詳細は recurse と mask
+		コマンドを参照のこと。<command>smbclient</command> によるファイルの転送は、
+		すべて binary モードで行われることに注意してほしい。
+		lowercase も参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>mkdir &lt;directory name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Create a new directory on the server (user access
+		privileges permitting) with the specified name. </para></listitem>
+-->
+		<listitem><para>指定された名前の新しいディレクトリを（ユーザーのアクセスが
+		許可されている）サーバー上に作成する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>more &lt;file name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Fetch a remote file and view it with the contents
+		of your PAGER environment variable.
+		</para></listitem>
+-->
+		<listitem><para>リモートファイルを取得し、環境変数 PAGER の内容に
+		従ってそのファイルを表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>mput &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+-->
+		<listitem><para>ローカルマシン上の現在の作業ディレクトリ内で <replaceable>
+		mask</replaceable> に一致するすべてのファイルを、サーバー上の現在の
+		作業ディレクトリにコピーする。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Note that <replaceable>mask</replaceable> is interpreted differently during recursive
+		operation and non-recursive operation - refer to the recurse and mask
+		commands for more information. Note that all transfers in <command>smbclient</command>
+		are binary. </para></listitem>
+-->
+		<para>再帰モードになっているかどうかによって、<replaceable>mask
+		</replaceable> の解釈が異なることに注意。詳細は、recurse と mask
+		コマンドを参照のこと。<command>smbclient</command> によるファイルの転送は、
+		すべて binary モードで行われることに注意してほしい。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>notify &lt;dir name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Query a directory for change
+		notifications. This command issues a recursive
+		filechangenotify call for all possible changes. As
+		changes come in will print one line per change. See
+		<ulink url="https://msdn.microsoft.com/en-us/library/dn392331.aspx">https://msdn.microsoft.com/en-us/library/dn392331.aspx</ulink>
+		for a description of the action numbers that this
+		command prints.</para>
+		<para>This command never ends, it waits for event
+		indefinitely.
+		</para></listitem>
+-->
+		<listitem><para>変更通知をディレクトリに問い合わせる。このコマンドは、
+		すべての変更可能性について再帰的な filechangenotify 呼び出しを発行する。
+		変更があると、1 つの変更ごとに、1 行表示される。このコマンドが表示する
+		アクションの番号の説明については、
+	        <ulink url="https://msdn.microsoft.com/en-us/library/dn392331.aspx">https://msdn.microsoft.com/en-us/library/dn392331.aspx</ulink>
+		を参照のこと。</para>
+		<para>このコマンドは永久に終わらない。イベントを無限に待つ。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Query the remote server to see if it supports the CIFS UNIX
+		extensions and prints out the list of capabilities supported. If so, turn
+		on POSIX pathname processing and large file read/writes (if available),.
+		</para></listitem>
+-->
+		<listitem><para>CIFS UNIX 拡張をサポートするかをリモートサーバーに問い合わせし、
+		提供されている機能一覧を表示する。もしもそうであれば（もしも可能であれば）、
+		大きなファイルの読み書きと POSIX パス名の処理を ON にする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_encrypt &lt;domain&gt; &lt;username&gt; &lt;password&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Attempt to negotiate
+		SMB encryption on this connection. If smbclient connected with kerberos
+		credentials (-k) the arguments to this command are ignored and the kerberos
+		credentials are used to negotiate GSSAPI signing and sealing instead. See
+		also the -e option to smbclient to force encryption on initial connection.
+		This command is new with Samba 3.2.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、そうでなければ失敗する。このコネクション上で SMB 暗号化の
+		ネゴシエーションを試みる。もしも smbclient が kerberos 証明書（-k）で接続され
+		ていたならば、このコマンドの引数は無視され、kerberos 証明書は GSSAPI の書名と
+		sealing の代わりに使われる。最初の接続時に smbclent に対して暗号化を
+		強制する -e オプションも参照のこと。
+		このコマンドは Samba 3.2 から新規に導入された。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_open &lt;filename&gt; &lt;octal mode&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Opens a remote file
+		using the CIFS UNIX extensions and prints a fileid. Used for internal Samba
+		testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX 拡張を使ってリモートファイルを
+		オープンし、ファイル ID を表示する。
+		Samba 内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_mkdir &lt;directoryname&gt; &lt;octal mode&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Creates a remote directory
+		using the CIFS UNIX extensions with the given mode.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX 拡張を使って与えられたモードで、
+		リモートディレクトリを作成する。
+		Samba 内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_rmdir &lt;directoryname&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Deletes a remote directory
+		using the CIFS UNIX extensions.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX 拡張を使って
+		リモートディレクトリを削除する。
+		Samba 内部のテスト用のみに使用される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_unlink &lt;filename&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Deletes a remote file
+		using the CIFS UNIX extensions.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。CIFS UNIX 拡張を使って
+		リモートファイルを削除する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>posix_whoami</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Query the remote server for the user token using the CIFS UNIX
+		extensions WHOAMI call. Prints out the guest status, user, group, group list and
+		sid list that the remote server is using on behalf of the logged on user.
+		</para></listitem>
+-->
+		<listitem><para>CIFS UNIX 拡張 WHOAMI 呼び出しを使って、リモートサーバーに
+		ユーザートークンを問い合わせる。リモートサーバーがログオンしているユーザーの
+		代わりに、ゲストステータス、ユーザー、グループ、グループリストと SID リスト
+		を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>print &lt;file name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Print the specified file from the local machine
+		through a printable service on the server. </para></listitem>
+-->
+		<listitem><para>指定したローカルマシン上のファイルを、サーバー上の
+		印刷サービスを使って印刷する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>prompt</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Toggle prompting for filenames during operation
+		of the mget and mput commands. </para>
+-->
+		<listitem><para>mget と mput コマンドの操作において、ファイル名の確認を
+		行うかどうかの設定を切り換える。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>When toggled ON, the user will be prompted to confirm
+		the transfer of each file during these commands. When toggled
+		OFF, all specified files will be transferred without prompting.
+		</para></listitem>
+-->
+		<para>この設定が ON であると、これらのコマンドの実行中、各ファイルごとに
+		転送するかどうかをユーザーに確認する。設定が OFF であると、指定された
+		すべてのファイルが確認なしに転送される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>put &lt;local file name&gt; [remote file name]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Copy the file called <filename>local file name</filename> from the
+		machine running the client to the server. If specified,
+		name the remote copy <filename>remote file name</filename>. Note that all transfers
+		in <command>smbclient</command> are binary. See also the lowercase command.
+		</para></listitem>
+-->
+		<listitem><para><filename>local file name</filename> という名前の
+		ファイルをクライアントを実行しているマシンからサーバーにコピーする。
+		<filename>remote file name</filename> が指定されていると、それがサーバーに
+		コピーされるファイルの名前となる。
+		<command>smbclient</command> によるファイルの転送は、すべて binary
+		モードで行われることに注意してほしい。lowercase コマンドも参照のこと。
+		</para></listitem>
+		</varlistentry>	
+
+		<varlistentry>
+		<term>queue</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Displays the print queue, showing the job id,
+		name, size and current status. </para></listitem>
+-->
+		<listitem><para>印刷のキューを表示し、印刷ジョブの ID、名前、サイズ、
+		現在の状態が見られる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>quit</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>See the exit command. </para></listitem>
+-->
+		<listitem><para>exit コマンドを参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>readlink symlinkname</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Print
+		the value of the symlink "symlinkname".
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。シンボリックリンク "symlinkname"
+		の値を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>rd &lt;directory name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>See the rmdir command. </para></listitem>
+-->
+		<listitem><para>rmdir コマンドを参照のこと。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>recurse</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Toggle directory recursion for the commands mget
+		and mput. </para>
+-->
+		<listitem><para>mget と mput コマンドにおいて、ディレクトリを再帰的に
+		辿るかどうかの設定を切り換える。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>When toggled ON, these commands will process all directories
+		in the source directory (i.e., the directory they are copying
+		from ) and will recurse into any that match the mask specified
+		to the command. Only files that match the mask specified using
+		the mask command will be retrieved. See also the mask command.
+		</para>
+-->
+		<para>この設定が ON であると、それらのコマンドは、対象となるディレクトリ
+		（すなわち、コピー元となるディレクトリ）内のすべてのディレクトリを処理し、
+		コマンドに指定した mask に一致するディレクトリを再帰的に辿る。
+		ファイルは、mask コマンドを使って指定したマスクに一致するものだけが、
+		処理の対象となる。 mask コマンドも参照のこと。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>When recursion is toggled OFF, only files from the current
+		working directory on the source machine that match the mask specified
+		to the mget or mput commands will be copied, and any mask specified
+		using the mask command will be ignored. </para></listitem>
+-->
+		<para>この設定が OFF である場合、コピー元となるマシンの作業ディレクトリから、
+		mget または mput コマンドに指定されたマスクに一致するファイルだけが
+		コピーされる。mask コマンドを使って指定されたマスクは無視される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>rename &lt;old filename&gt; &lt;new filename&gt; [-f]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Rename files in the current working directory on the
+		server from <replaceable>old filename</replaceable> to
+		<replaceable>new filename</replaceable>. The optional
+		-f switch allows for superseding the destination file,
+		if it exists. This is supported by NT1 protocol dialect
+		and SMB2 protocol family.</para></listitem>
+-->
+		<listitem><para>サーバー上の現在の作業ディレクトリ上の
+		<replaceable>old filename</replaceable> を
+		<replaceable>new filename</replaceable> に改名する。
+		-f スイッチオプションは、対象先のファイルが存在していても上書きを行う。
+		これは NT1 プロトコルダイアレクトおよび SMB2 プロトコルファミリーにて
+		サポートされる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>rm &lt;mask&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Remove all files matching <replaceable>mask</replaceable> from the current
+		working directory on the server. </para></listitem>
+-->
+		<listitem><para><replaceable>mask</replaceable> に一致するすべての
+		ファイルをサーバー上の現在の作業ディレクトリから削除する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>rmdir &lt;directory name&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Remove the specified directory (user access
+		privileges permitting) from the server. </para></listitem>
+-->
+ 		<listitem><para>指定された名前の（ユーザーのアクセスが許可されている）
+		ディレクトリをサーバーから削除する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		  <term>scopy &lt;source filename&gt; &lt;destination filename&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Attempt to copy a file on the server using the
+		most efficient server-side copy calls. Falls back to using
+		read then write if server doesn't support server-side copy.
+		</para></listitem>
+-->
+		  <listitem><para>もっとも適したサーバー側での copy 呼び出しを使って、
+		  サーバー上でファイルのコピーを行う。サーバーがサーバー側でのコピー機能を
+		  サポートしていない場合、読み取りを行った後書き込むという動作に切り換える。
+		  </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>setmode &lt;filename&gt; &lt;perm=[+|\-]rsha&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>A version of the DOS attrib command to set
+		file permissions. For example: </para>
+-->
+		<listitem><para>DOS 版の attrib コマンドと同等に、ファイルの
+		パーミッションを設定する。 例えば</para>
+
+		<para><command>setmode myfile +r </command></para>
+
+<!-- 原文 samba-4.7.0
+		<para>would make myfile read only. </para></listitem>
+-->
+		<para>は myfile を読み込み専用にする。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>showconnect</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Show the currently active connection held for DFS purposes.
+		</para></listitem>
+-->
+		<listitem><para>DFS のために現在有効な接続情報を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>stat file</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. The client requests the
+		UNIX basic info level and prints out the same info that the Linux stat command
+		would about the file. This includes the size, blocks used on disk, file type,
+		permissions, inode number, number of links and finally the three timestamps
+		(access, modify and change). If the file is a special file (symlink, character or
+		block device, fifo or socket) then extra information may also be printed.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーが CIFS UNIX 拡張をサポートしているかに
+		依存し、もしもそうでなければ失敗する。クライアントは UNIX ベースの情報レベルを
+		要求し、ファイルについての Linux stat コマンドと同じ情報を出力する。これには
+		サイズ、ディスクで使用されているブロック数、ファイルのタイプ、パーミッション、
+		inode 番号、リンクの数と最後に 3 つの時刻情報（アクセス、変更と更新）が含まれる。
+		もしもファイルがスペシャルファイル（シンボリックリンク、文字またはブロックデバイス、
+		fifo あるいはソケット）の場合は、拡張情報も出力される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>symlink target linkname</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. The client requests that the server
+		create a symbolic hard link between the target and linkname files. The linkname file
+		must not exist. Note that the server will not create a link to any path that lies
+		outside the currently connected share. This is enforced by the Samba server.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。クライアントは、target と
+		linkname ファイルの間にシンボリックリンクを作成するようにサーバーに
+		要求する。linkname ファイルは存在してはいけない。
+		サーバーは現在接続している共有の外を指すリンクは作成しないことに注意。
+		これは Samba server によって強制される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tar &lt;c|x&gt;[IXbgNa]</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Performs a tar operation - see the
+		<parameter>-T</parameter> command line option above. Behavior
+		may be affected by the tarmode command (see below). Using g
+		(incremental) and N (newer) will affect tarmode settings. Note
+		that using the "-" option with tar x may not work - use the
+		command line option instead.</para></listitem>
+-->
+		<listitem><para>tar 作業を行う。 前述の <parameter>-T</parameter>
+		コマンドラインオプションを参照のこと。このコマンドの動作は tarmode
+		コマンド（下記を参照）に影響される。
+		パラメーター g（増分）と N（更新）を使うと、tarmode の設定に影響を及ぼす。
+		tar x（展開）時のオプションに "-"（標準入力）を使っても動作しないだろう。
+		かわりにコマンドラインオプションで使うようにすること。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>blocksize &lt;blocksize&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Blocksize. Must be followed by a valid (greater
+		than zero) blocksize. Causes tar file to be written out in
+		<replaceable>blocksize</replaceable>*TBLOCK (512 byte) blocks. </para></listitem>
+-->
+		<listitem><para>ブロックサイズ。このオプションの後には有効な
+		（1 以上の）ブロックサイズを指定しなければならない。
+		このオプションにより、tar ファイルは、
+		<replaceable>blocksize</replaceable>*TBLOCK（通常 512 バイト）
+		ブロックの単位で書き出されるようになる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tarmode &lt;full|inc|reset|noreset|system|nosystem|hidden|nohidden|verbose|noverbose&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Changes tar's behavior with regard to DOS
+		attributes. There are 4 modes which can be turned on or
+		off.</para>
+-->
+		<listitem><para>DOS アーカイブビットに関する tar の動作を設定する。
+		4 つのモードがあり、それぞれ on/off できる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Incremental mode (default off). When off (using
+		<command>full</command>) tar will back up everything
+		regardless of the <emphasis>archive</emphasis> bit
+		setting. When on (using <command>inc</command>), tar will only
+		back up files with the archive bit set.</para>
+-->
+		<para>Incremental（増分）モード（既定値は off）。off の場合、
+		（<command>full</command> を使うと） tar は <emphasis>archive</emphasis> 
+		ビットの設定にかかわらず、すべてをバックアップする。on の場合、
+		（<command>inc</command>を使うと）tar はアーカイブビットが設定されて
+		いるもののみをバックアップする。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Reset mode (default off). When on (using
+		<command>reset</command>), tar will remove the archive bit on
+		all files it backs up (implies read/write share). Use
+		<command>noreset</command> to turn off.</para>
+-->
+		<para>Reset モード（既定値は off）。on にすると（<command>reset</command>
+		を使うと）、tar はバックアップ先のすべてのファイルにおいてアーカイブビット
+		をクリアする（読み書きできる共有において）。
+		<command>noreset</command> を使うと off になる。
+		</para>
+
+<!-- 原文 samba-4.7.0
+		<para>System mode (default on). When off, tar will not backup
+		system files. Use <command>nosystem</command> to turn off.</para>
+-->
+		<para> System モード（既定値は on）。off にすると、tar はシステムファイルを
+		バックアップしない。<command>nosystem</command> で off になる。</para>
+
+<!-- 原文 samba-4.7.0
+		<para>Hidden mode (default on). When off, tar will not backup
+		hidden files. Use <command>nohidden</command> to turn off.</para>
+		</listitem>
+-->
+		<para>Hidden モード（既定値は on）。off にすると、tar は 隠し（hidden）
+		ファイルをバックアップしない。<command>nohidden</command> で
+		off になる</para>
+		</listitem>
+		</varlistentry>
+
+                <varlistentry>
+<!-- 原文 samba-4.7.0
+		<term>timeout &lt;per-operation timeout in seconds&gt;</term>
+		<listitem><para>This allows the user to tune the default
+		timeout used for each SMB request. The default setting is
+		20 seconds. Increase it if requests to the server sometimes
+		time out. This can happen when SMB3 encryption is selected
+		and smbclient is overwhelming the server with requests.
+		</para></listitem>
+-->
+		<term>timeout &lt;秒単位での動作単位のタイムアウト&gt;</term>
+		<listitem><para>これを使うと、各 SMB 要求で使う既定値のタイムアウトを
+		変更できる。既定値は 20 秒である。サーバーへの接続要求がしばしばタイム
+		アウトする時にはこれを増やすと良いだろう。
+		これはまた、SMB3 暗号化が選択されていた場合と smbclient が
+		server に対して過負荷な時に発生する可能性がある。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>unlock &lt;filenum&gt; &lt;hex-start&gt; &lt;hex-len&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>This command depends on the server supporting the CIFS
+		UNIX extensions and will fail if the server does not. Tries to unlock a POSIX
+		fcntl lock on the given range. Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>このコマンドはサーバーの CIFS UNIX 拡張のサポートに依存し、
+		サーバーがサポートしていない場合は失敗する。与えられたレンジで POSIX fcntl
+		ロックの解除を試みる。
+		Samba 内部のテストのみに用いられる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>volume</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Prints the current volume name of the share.
+		</para></listitem>
+-->
+		<listitem><para>共有のボリューム名を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>vuid &lt;number&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Changes the currently used vuid in the protocol to
+		the given arbitrary number. Without an argument prints out the current
+		vuid being used. Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>与えられた任意の番号に対するプロトコル中の現在使われている
+		vuid を変更する。引数が与えられないと、現在使われている vuid を表示する。
+		Samba 内部のテストのみに用いられる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tcon &lt;sharename&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Establishes a new tree connect (connection to a share).
+		Replaces the current tree connect. Prints the new tid (tree id).
+		Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>新しい tree connect（共有への接続）を確立する。
+		現在の tree connect を置き換える。新しい tid（tree id）を表示する。
+		内部的な Samba テスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tdis</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Close the current share connection (tree disconnect).
+		Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>現在の共有接続をクローズする（tree disconnect）。
+		内部的な Samba テスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>tid &lt;number&gt;</term>
+<!-- 原文 samba-4.7.0
+		<listitem><para>Changes the current tree id (tid) in the
+		protocol to a new arbitrary number. Without an argument, it
+		prints out the tid currently used.
+		Used for internal Samba testing purposes.
+		</para></listitem>
+-->
+		<listitem><para>新しい arbitrary 番号のために、プロトコル中の
+		現在の tree id（tid）を変更する。引数が無い場合、現在使われている
+		tid を表示する。
+		内部的な Samba テスト目的で使われる。
+		</para></listitem>
+		</varlistentry>
+
+<!-- Samba-4.13.0
+                <varlistentry>
+                <term>utimes &lt;filename&gt; &lt;create time&gt; &lt;access time&gt; &lt;write time&gt; &lt;
+                change time&gt;</term>
+                <listitem><para>Changes the timestamps on a file by name.
+                Times should be specified in the format [YY]YY:MM:DD-HH:MM:SS or -1 for no change.
+                </para></listitem>
+                </varlistentry>
+
+-->		    
+                <varlistentry>
+                <term>utimes &lt;filename&gt; &lt;create time&gt; &lt;access time&gt; &lt;write time&gt; &lt;
+                change time&gt;</term>
+                <listitem><para>指定されたファイルのタイムスタンプを変更する。
+		時刻は [YY]YY:MM:DD-HH:MM:SS 形式で指定する。 -1 は変更なしである。
+                </para></listitem>
+                </varlistentry>
+		
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>NOTES</title>
+-->
+	<title>注意</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Some servers are fussy about the case of supplied usernames,
+	passwords, share names (AKA service names) and machine names.
+	If you fail to connect try giving all parameters in uppercase.
+	</para>
+-->
+	<para>サーバーによっては、与えられたユーザー名、パスワード、共有名
+	（サービス名とも言う）、マシン名などの大文字小文字を厳格に識別する。
+	サーバーへの接続が失敗したときは、すべてのパラメーターを大文字にして
+	試してみよう。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>It is often necessary to use the -n option when connecting
+	to some types of servers. For example OS/2 LanManager insists
+	on a valid NetBIOS name being used, so you need to supply a valid
+	name that would be known to the server.</para>
+-->
+	<para>ある種のサーバーに接続するときには、-n オプションを使わなければ
+	ならないような場合がよくある。たとえば OS/2 の LanManager では、有効な
+	NetBIOS 名が使われていなければならない。
+	よって、サーバーが知っている有効な名前を与える必要がある。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>smbclient supports long file names where the server
+	supports the LANMAN2 protocol or above. </para>
+-->
+	<para>サーバーが LANMAN2 かそれ以降のプロトコルをサポートしている場合、
+	smbclient は長いファイル名をサポートする。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>ENVIRONMENT VARIABLES</title>
+-->
+	<title>環境変数</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The variable <envar>USER</envar> may contain the
+	username of the person	using the client. This information is
+	used only if the protocol  level is high enough to support
+	session-level passwords.</para>
+-->
+	<para>変数 <envar>USER</envar> の値は、クライアントが使用するユーザーの名前となる。
+	この情報は、プロトコルのレベルが充分高く、セッションレベルのパスワードを
+	サポートしている場合にだけ利用される。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The variable <envar>PASSWD</envar> may contain
+	the password of the person using the client.  This information is
+	used only if the protocol level is high enough to support
+	session-level passwords. </para>
+-->
+	<para>変数 <envar>PASSWD</envar> の値は、クライアントが使用するユーザーの
+	パスワードとなる。この情報は、プロトコルのレベルが充分高く、セッションレベルの
+	パスワードをサポートしている場合にだけ利用される。</para>
+
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>INSTALLATION</title>
+-->
+	<title>インストール</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The location of the client program is a matter for
+	individual system administrators. The following are thus
+	suggestions only. </para>
+-->
+	<para>クライアントプログラムをどこに置くべきかは、各システム管理者が
+	判断すべき問題である。よって、以下はただの提案である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>It is recommended that the smbclient software be installed
+	in the <filename>/usr/local/samba/bin/</filename> or <filename>
+	/usr/samba/bin/</filename> directory, this directory readable
+	by all, writeable only by root. The client program itself should
+	be executable by all. The client should <emphasis>NOT</emphasis> be
+	setuid or setgid! </para>
+-->
+	<para>クライアントソフトウェアは <filename>/usr/local/samba/bin</filename>
+	か <filename>/usr/samba/bin</filename> にインストールし、ディレクトリは
+	全ユーザーから読み出し可能で root のみ書き込み可能にすることが推奨される。
+	クライアントプログラム自身はすべてのユーザーから実行可能にするべきである。
+	クライアントを setuid や setgid しないように!
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The client log files should be put in a directory readable
+	and writeable only by the user. </para>
+-->
+	<para>クライアントのログファイルは、そのユーザーだけが読み書き可能な
+	ディレクトリに置くこと。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>To test the client, you will need to know the name of a
+	running SMB/CIFS server. It is possible to run <citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> as an ordinary user - running that server as a daemon
+	on a user-accessible port (typically any port number over 1024)
+	would provide a suitable test server. </para>
+-->
+	<para>クライアントをテストするには、動作している SMB/CIFS サーバーの名前を
+	知らなくてはならない。<citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> は一般ユーザーでも起動することが
+	できるので、ユーザーが利用できるポート（たいていは 1024 より大きいポート番号
+	ならどこでもよい）でデーモンとしてサーバーを起動することで、
+	適切なテスト環境となるだろう。</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DIAGNOSTICS</title>
+-->
+	<title>診断</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Most diagnostics issued by the client are logged in a
+	specified log file. The log file name is specified at compile time,
+	but may be overridden on the command line. </para>
+-->
+	<para>クライアントによって出されたほとんどの診断メッセージは、
+	指定されたログファイルに記録される。ログファイルの名前はコンパイル時に
+	指定されるが、コマンドラインで変更することもできる。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The number and nature of diagnostics available depends
+	on the debug level used by the client. If you have problems,
+	set the debug level to 3 and peruse the log files. </para>
+-->
+	<para>利用できる診断メッセージの量と内容は、クライアントで設定された
+	デバッグレベルに依存する。問題を抱えているなら、デバッグレベルを 3
+	に設定してログファイルに目を通してほしい。</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This man page is correct for version 3.2 of the Samba suite.</para>
+-->
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+	
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作られた。Samba は現在、Linux カーネルが開発されているような
+	方法でのオープンソースプロジェクトである Samba Team によって開発されている。
+	</para>
+	
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.13.0 - 4.14.5 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 - 3.0.24 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>佐藤 文優</para></listitem>
+		<listitem><para>はせがわ ようすけ</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 3.6.6 対応の翻訳は、
+	<itemizedlist>
+		<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+		<listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+	<para>このドキュメントの Samba 3.6.7 - 4.14.5 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	<listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
+	</itemizedlist>
+	によって行われた。</para>
+</refsect1>
+
+</refentry>

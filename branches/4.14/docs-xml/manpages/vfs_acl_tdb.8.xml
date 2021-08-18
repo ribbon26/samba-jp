@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_acl_tdb.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_acl_tdb</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_acl_tdb</refname>
+	<refpurpose>tdb ファイルに NTFS のアクセス許可を保存する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = acl_tdb</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>vfs_acl_tdb</command> VFSモジュールは、
+	tdb ファイルに NTFS のアクセス許可 (ACL) を格納する。
+	これにより、 Samba サーバーで NTFS のアクセス許可を
+	完全に実装することが可能となる。
+	</para>
+
+	<para>
+	アクセス許可の設定は
+	<filename>$LOCKDIR/file_ntacls.tdb</filename> 中に格納される。
+	</para>
+
+	<para>
+	このモジュールは、以下のパラメータを強制的に指定する:
+	<itemizedlist>
+	<listitem><para>inherit acls = true</para></listitem>
+	<listitem><para>dos filemode = true</para></listitem>
+	<listitem><para>force unknown acl user = true</para></listitem>
+	</itemizedlist>
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+       <variablelist>
+               <!-- please keep in sync with the other acl vfs modules that provide the same
+ options -->
+               <varlistentry>
+               <term>acl_tdb:ignore system acls = [yes|no]</term>
+               <listitem>
+               <para>
+    このパラメーターが <emphasis>yes</emphasis> に設定された場合、
+    このモジュールは、可能な範囲で実施しているシステムの ACL とのマッピング
+    処理を<emphasis>無効化</emphasis>する。デフォルトの <emphasis>no
+    </emphasis> の場合、 Samba はシステムの ACL と NTFS のアクセス許可の
+    両方に対して設定を行い、またアクセス可否の確認を実施する。
+    ローカルまたは NFS 経由でのファイルアクセスのために、システムの ACL も
+    設定しておく必要がある場合は、この設定が望ましいであろう。
+    Samba 経由以外でファイルアクセスを行わない場合は、このパラメーターを
+    yes にすることで、 NTFS のアクセス許可との互換性を高めることができる。
+  </para>
+         <para>
+	 もしも、<emphasis>acl_tdb:ignore system acls</emphasis>が
+	 <emphasis>yes</emphasis>に設定されていた場合、以下の設定が
+	 追加で強制的に指定される。
+	 <itemizedlist>
+	 <listitem><para>create mask = 0666</para></listitem>
+	 <listitem><para>directory mask = 0777</para></listitem>
+	 <listitem><para>map archive = no</para></listitem>
+	 <listitem><para>map hidden = no</para></listitem>
+	 <listitem><para>map readonly = no</para></listitem>
+	 <listitem><para>map system = no</para></listitem>
+	 <listitem><para>store dos attributes = yes</para></listitem>
+	 </itemizedlist>
+         </para>
+         </listitem>
+         </varlistentry>
+
+        <varlistentry>
+        <term>acl_tdb:default acl style = [posix|windows|everyone]</term>
+        <listitem>
+        <para>
+	このパラメータは、ファイルまたはディレクトリが、
+	<emphasis>security.NTACL</emphasis> xattr が抜けている場合に
+	合成される時の、ACL のタイプを決定する。
+	</para>
+	<para>
+	<emphasis>posix</emphasis>に設定した場合、
+	<emphasis>NT Authority\SYSTEM</emphasis>がすべての権限を
+	持つような、追加の ACE を付加した、ユーザ、グループとその他
+	に対して、POSIX モードパーミッションをベースとした、
+	ACL が合成される。
+	</para>
+	<para>
+	  <emphasis>windows</emphasis>に設定した場合、
+	  所有者と、<emphasis>NT Authority\SYSTEM</emphasis>
+	  に対するパーミッションのみを含む、Windows が行うのと
+	  同じやり方で、ACL が合成される。
+	</para>
+<!-- Samba 4.8.0
+      <para>
+      When set to <emphasis>everyone</emphasis>, an ACL is synthesized
+      giving full permissions to everyone (S-1-1-0).
+      </para>     
+-->	   
+      <para>
+      <emphasis>everyone</emphasis>に設定した場合、ACL は、
+      everyone (S-1-1-0) に対する完全なパーミッション が合成される。
+      </para>     
+
+	<para>
+	  このオプションの既定値は <emphasis>posix</emphasis>である。
+	</para>
+        </listitem>
+        </varlistentry>
+
+       </variablelist>
+	
+</refsect1>
+<refsect1>
+	<title>著者</title>
+
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+</refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このドキュメントは、Samba 4.8.0 - 4.14.5 に対応する。</para>
+    <para>このドキュメントの翻訳は
+        <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+        <listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+        </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+</refentry>
