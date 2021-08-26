@@ -3407,7 +3407,7 @@ to restart smbd on adding, deleting or changing a user defined share.
 オプションの "guest_ok" パラメーターは、smb.conf 中の同名のパラメーターと同じ意味を持ち、該当のユーザー定義共有に対するゲストアクセスを許可する。
 このパラメーターは、 smb.conf 中でグローバルパラメーターの "usershare allow guests" が有効になっている時のみ設定できる。
 </para>
-
+<para>
 既存のユーザー定義共有を修正するコマンドは個別に用意されておらず、
 "net usershare add [sharename]" コマンドを用いて、sharename 共有を新規のオプションを指定して上書き変更することになる。
 Samba の smbd デーモンは、接続のあったタイミングでユーザー定義共有の変更を検知するのため、変更は即座に反映される。ユーザー定義共有の追加、削除、変更により、smbd の再起動を行なう必要はない。
@@ -4896,10 +4896,17 @@ Dump the locking table of a certain global lock.
 <refsect2>
 <title>OFFLINEJOIN</title>
 
+<!-- Samba-4.15.0
 <para>Starting with version 4.15 Samba has support for offline join APIs. Windows supports offline join capabilities since Windows 7 and Windows 2008 R2.
 </para>
+-->
+<para>バージョン 4.15 のSamba から、offline join API をサポートするようになった。Windows では Windows 7 と Windows 2008 R2 から offline join 機能をサポートしている。
+</para>
 
+<!-- Samba-4.15.0
 <para>The following offline commands are implemented:
+-->
+<para>以下のオフラインコマンドが実装されている:
 <simplelist>
 <member>net offlinejoin provision - Provisions a machine account in AD.</member>
 <member>net offlinejoin requestodj - Requests a domain offline join.</member>
@@ -4909,12 +4916,16 @@ Dump the locking table of a certain global lock.
 <refsect3>
 	<title>OFFLINEJOIN PROVISION <replaceable>domain=DOMAIN</replaceable> <replaceable>machine_name=MACHINE_NAME</replaceable> <replaceable>machine_account_ou=MACHINE_ACCOUNT_OU</replaceable> <replaceable>dcname=DCNAME</replaceable> <replaceable>defpwd</replaceable> <replaceable>reuse</replaceable> <replaceable>savefile=FILENAME</replaceable> <replaceable>printblob</replaceable></title>
 
-<para>
+<!-- Samba-4.15.0
 Provisions a machine account in AD. This command needs network connectivity to the domain controller to succeed. This command supports the following additional parameters:
+-->
+<para>
+AD 内でマシンアカウントをプロビジョンする。このコマンドは、処理が成功するために、ドメインコントローラに対するネットワーク接続を必要とする。このコマンドは以下の追加パラメータをサポートする:
 </para>
 
 <itemizedlist>
 
+<!-- Samba-4.15.0
 <listitem><para><replaceable>DOMAIN</replaceable> can be a NetBIOS domain name (also known as short domain name) or a DNS domain name for Active Directory Domains. The <replaceable>DOMAIN</replaceable> parameter cannot be NULL.</para></listitem>
 
 <listitem><para><replaceable>MACHINE_NAME</replaceable> defines the machine account name that will be provisioned in AD. The <replaceable>MACHINE_NAME</replaceable> parameter cannot be NULL.</para></listitem>
@@ -4930,11 +4941,27 @@ Provisions a machine account in AD. This command needs network connectivity to t
 <listitem><para><replaceable>SAVEFILE</replaceable> is an optional parameter to store the generated provisioning data on disk.</para></listitem>
 
 <listitem><para><replaceable>PRINTBLOB</replaceable> is an optional parameter to print the generated provisioning data on stdout.</para></listitem>
+ -->
+<listitem><para><replaceable>DOMAIN</replaceable> は、Active Directory ドメインの、NetBIOS ドメイン名 (ショートドメイン名としても知られている) あるいは DNS ドメイン名でもよい。 <replaceable>DOMAIN</replaceable> パラメータは NULL であってはならない。</para></listitem>
+
+<listitem><para><replaceable>MACHINE_NAME</replaceable> は、AD 内でプロビジョンされる マシンアカウント名を定義する。<replaceable>MACHINE_NAME</replaceable> パラメータは NULL であってはならない。</para></listitem>
+
+<listitem><para><replaceable>MACHINE_ACCOUNT_OU</replaceable> は、 既定でない LDAP コンテナ中で マシンアカウントを作成するために、<emphasis>ou=mymachines,cn=Users,dc=example,dc=com</emphasis> のように、RFC 1779 LDAP DN に設定できる。このオプションパラメータは、Active Directory ドメインに join するときのみサポートされる。</para></listitem>
+
+<listitem><para><replaceable>DCNAME</replaceable> は、AD 内でマシンアカウントを作成するときに、特定のドメインコントローラを定義する。</para></listitem>
+
+<listitem><para><replaceable>DEFPWD</replaceable> はオプションのパラメータで、既定のマシンアカウントパスワード使用を強制する。このパラメータの使用は、既定のマシンアカウントパスワードが容易に推測されるため、推奨されない。 </para></listitem>
+
+<listitem><para><replaceable>REUSE</replaceable> はオプションのパラメータで、AD 内の既存のマシンアカウントを再使用するように強制する。</para></listitem>
+
+<listitem><para><replaceable>SAVEFILE</replaceable> はオプションのパラメータで、生成されたプロビジョニングデータをディレクトリに格納する。</para></listitem>
+
+<listitem><para><replaceable>PRINTBLOB</replaceable> はオプションのパラメータで、生成されたプロビジョニングデータを標準出力に出力する。</para></listitem>
 
 </itemizedlist>
 
 <para>
-	Example:
+	例:
 	net offlinejoin provision -U administrator%secret domain=MYDOM machine_name=MYHOST savefile=provisioning.txt
 </para>
 </refsect3>
@@ -4942,18 +4969,26 @@ Provisions a machine account in AD. This command needs network connectivity to t
 <refsect3>
 	<title>OFFLINEJOIN REQUESTODJ <replaceable>loadfile=FILENAME</replaceable></title>
 
+<!-- Samba-4.15.0
 <para>
 Requests an offline domain join by providing file-based provisioning data. This command supports the following additional parameters:
+</para>
+-->
+<para>
+ファイルベースのプロビジョニングデータによって offline join を要求する。このコマンドは以下の追加パラメータをサポートする:
 </para>
 
 <itemizedlist>
 
+<!-- Samba-4.15.0
 <listitem><para><replaceable>LOADFILE</replaceable> is a required parameter to load the provisioning from a file.</para></listitem>
+-->
+<listitem><para><replaceable>LOADFILE</replaceable> は、ファイルからプロビジョニングをロードするために必要なパラメータである。</para></listitem>
 
 </itemizedlist>
 
 <para>
-	Example:
+	例:
 	net offlinejoin requestodj -U administrator%secret loadfile=provisioning.txt
 </para>
 
@@ -5013,7 +5048,7 @@ Requests an offline domain join by providing file-based provisioning data. This 
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.14.0 - 4.14.5 に対応する。</para>
+	<para>このマニュアルページは Samba 4.15.0 - 4.15.0 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -5023,7 +5058,7 @@ Requests an offline domain join by providing file-based provisioning data. This 
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4 - 4.14.5 対応の翻訳は、
+	<para>Samba 3.2.4 - 4.15.0 対応の翻訳は、
 	  <itemizedlist>
 	    <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
 	    <listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
