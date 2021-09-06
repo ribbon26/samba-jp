@@ -18,15 +18,19 @@
 
 <refsynopsisdiv>
 	<cmdsynopsis>
-		<command>winbindd</command>
-		<arg choice="opt">-D|--daemon</arg>
-		<arg choice="opt">-F|--foreground</arg>
-		<arg choice="opt">-S|--stdout</arg>
-		<arg choice="opt">-i|--interactive</arg>
-		<arg choice="opt">-d &lt;debug level&gt;</arg>
-		<arg choice="opt">-s &lt;smb config file&gt;</arg>
-		<arg choice="opt">-n|--no-caching</arg>
-		<arg choice="opt">--no-process-group</arg>
+                <arg choice="opt">-D|--daemon</arg>
+                <arg choice="opt">-i|--interactive</arg>
+                <arg choice="opt">-F|--foreground</arg>
+                <arg choice="opt">--no-process-group</arg>
+                <arg choice="opt">-n|--no-caching</arg>
+                <arg choice="opt">-d &lt;debug level&gt;</arg>
+                <arg choice="opt">--debug-stdout</arg>
+                <arg choice="opt">--configfile=&lt;configuration file&gt;</arg>
+                <arg choice="opt">--option=&lt;name&gt;=&lt;value&gt;</arg>
+                <arg choice="opt">-l|--log-basename &lt;log directory&gt;</arg>
+                <arg choice="opt">--leak-report</arg>
+                <arg choice="opt">--leak-report-full</arg>
+                <arg choice="opt">-V|--version</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -153,6 +157,19 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
+		<term>-i|--interactive</term>
+		<listitem><para>
+		<command>winbindd</command>
+		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
+		このオプションは、
+		<command>winbindd</command>
+		の対話的なデバッグが必要な開発者のためのものである。
+		この際、<command>-S</command>
+		パラメーターが指定されたときと同じく、ログは標準出力に出力される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
 		<term>-F|--foreground</term>
 		<listitem><para>
 		このパラメーターを指定すると、
@@ -174,28 +191,8 @@ hosts:		files wins
 		</varlistentry>
 
 		<varlistentry>
-		<term>-S|--stdout</term>
-		<listitem><para>
-		このパラメーターを指定すると、
-		<command>winbindd</command>
-		はファイルの代わりに標準出力にログを出力するようになる。
-		</para></listitem>
-		</varlistentry>
-
-		&stdarg.server.debug;
-		&popt.common.samba;
-		&popt.autohelp;
-
-		<varlistentry>
-		<term>-i|--interactive</term>
-		<listitem><para>
-		<command>winbindd</command>
-		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
-		このオプションは、
-		<command>winbindd</command>
-		の対話的なデバッグが必要な開発者のためのものである。
-		この際、<command>-S</command>
-		パラメーターが指定されたときと同じく、ログは標準出力に出力される。
+		<term>--no-process-group</term>
+		<listitem><para>winbinddのために、新しいプロセスグループを作成しない。
 		</para></listitem>
 		</varlistentry>
 
@@ -212,11 +209,8 @@ hosts:		files wins
 		</para></listitem>
 		</varlistentry>
 
-		<varlistentry>
-		<term>--no-process-group</term>
-		<listitem><para>winbinddのために、新しいプロセスグループを作成しない。
-		</para></listitem>
-		</varlistentry>
+                &cmdline.common.samba.server;
+                &popt.autohelp;
 
 	</variablelist>
 </refsect1>
@@ -389,13 +383,6 @@ auth  required    /lib/security/pam_unix.so \
 
 	<para>以下の注意点は、
 	<command>winbindd</command> の設定や実行の際に有用である:
-	</para>
-
-	<para>
-	<command>winbindd</command>
-	が機能するには、同じマシン上で
-	<citerefentry><refentrytitle>nmbd</refentrytitle><manvolnum>8</manvolnum></citerefentry>
-	を実行していなければならない。
 	</para>
 
 	<para>
@@ -583,14 +570,14 @@ auth  required    /lib/security/pam_unix.so \
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.13.2 - 4.14.5 に対応する。</para>
+	<para>このマニュアルページは Samba 4.15.0 - 4.15.0 に対応する。</para>
         <para>このドキュメントの Samba 3.0.24 対応の翻訳は
 	<itemizedlist>
 	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
 	<para>さとうふみやす</para>
 	</itemizedlist>
         によって行なわれた。</para>
-        <para>このドキュメントの Samba 3.2.4 - 4.14.5 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.15.0 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
 
 </refsect1>
 
