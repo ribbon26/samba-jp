@@ -1,0 +1,62 @@
+<samba:parameter name="client use kerberos"
+                 context="G"
+                 type="enum"
+                 function="_client_use_kerberos"
+                 enumlist="enum_use_kerberos_vals"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+  <description>
+<!-- Samba-4.15.0
+	<para>
+		This parameter determines whether Samba client tools will try
+		to authenticate using Kerberos. For Kerberos authentication you
+		need to use dns names instead of IP addresses when connnecting
+		to a service.
+	</para>
+-->
+	<para>
+	  このパラメータは、Samba クライアントツールが、Kerberos を使って
+	  認証を行うかどうかを指定する。Kerberos 認証のためには、サービス接続時に、
+	  IP アドレスの代わりに DNS変更 名を使う必要がある。
+	</para>
+
+	<para>取り得るオプション設定は以下の通り:</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				<emphasis>desired</emphasis> - Kerberos
+				認証が最初に試行され、それが失敗した場合に、
+				自動的に NTLM にフォールバックする。
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<emphasis>required</emphasis> - Kerberos
+				認証が要求される。この場合は NTLM や他の
+				代替のものにはフォールバックしない。
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<emphasis>off</emphasis> - Kerberos を
+				使わず、NTLM または他の代替のものを代わりに
+				使う。
+			</para>
+		</listitem>
+	</itemizedlist>
+
+<!-- Samba-4.15.0
+	<para>
+		In case that weak cryptography is not allowed (e.g. FIPS mode)
+		the default will be forced to <emphasis>required</emphasis>.
+	</para>
+-->
+	<para>
+		弱い暗号が許されない場合 (たとえば FIPS モード)、
+		既定値は強制的に <emphasis>required</emphasis> になる。
+	</para>
+</description>
+
+<value type="default">desired</value>
+</samba:parameter>
