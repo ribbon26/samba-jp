@@ -253,47 +253,81 @@
 </varlistentry>
 '>
 
-
-
-
-<!ENTITY stdarg.configfile '
+<!ENTITY cmdline.common.option '
 <varlistentry>
-<term>-s|--configfile=&lt;configuration file&gt;</term>
-<listitem><para>サーバーが必要とする詳細な設定を含む設定ファイルを
-指定する。このファイルには、サーバーが提供するサービスに関する記述や、
-どの printcap ファイルを利用するかといった情報が含まれている。詳細は
-&smb.conf; を参照のこと。設定ファイルの名前の既定値は、コンパイル時
-に決定される。
-</para></listitem>
-</varlistentry>'>
+        <term>--option=&lt;name&gt;=&lt;value&gt;</term>
+        <listitem>
+                <para>
+                        コマンドラインから
+                        <citerefentry><refentrytitle>smb.conf</refentrytitle>
+                        <manvolnum>5</manvolnum></citerefentry> オプション
+                        "&lt;name&gt;" に値 "&lt;value&gt;" を設定する。
+			これはコンパイル時の既定値と設定ファイルから読み込まれた
+			オプションを上書きする。名前または値に空白が入っていた場合、
+			引用符で --option=name=value 全体を囲む。
+                </para>
+        </listitem>
+</varlistentry>
+'>
 
-<!ENTITY stdarg.version '
+<!ENTITY cmdline.common.config.client '
 <varlistentry>
-<term>-V|--version</term>
-<listitem><para>プログラムのバージョン番号を表示する。
-</para></listitem>
-</varlistentry>'>
+        <term>--configfile=&lt;configuration file&gt;</term>
+        <listitem>
+                <para>
+                        クライアントが必要とする詳細な設定を含むファイルを指定する。
+			このファイル中にある情報は、クライアントまたはサーバに対して
+			一般的であるか、あるいは、
+			<smbconfoption name="client smb encrypt" />
+			のような、クライアント固有のオプションのみを提供することが
+			できる。詳細については &smb.conf; を参照のこと。既定の
+			設定ファイルの名前はコンパイル時に決定される。
+                </para>
+        </listitem>
+</varlistentry>
+'>
 
-<!ENTITY stdarg.log-basename '
+<!ENTITY cmdline.common.config.server '
 <varlistentry>
-<term>-l|--log-basename=logdirectory</term>
-<listitem><para>ログ/デバッグファイルのファイル名。拡張子として
-<constant>".progname"</constant> が追加される(例えば log.smbclient,
-log.smbd,など)。ログファイルはクライアントによって削除されることはない。 
-</para></listitem>
-</varlistentry>'>
+        <term>--configfile=CONFIGFILE</term>
+        <listitem>
+                <para>
+                        サーバが必要とする詳細な設定を含むファイルを指定する。
+                        このファイルには、サーバが提供するサービスに関する記述や、
+			どの printcap ファイルを使うかといったサーバ固有の情報が
+			含まれている。詳細については &smb.conf; を参照のこと。既定の
+                        設定ファイルの名前はコンパイル時に決定される。
+                </para>
+        </listitem>
+</varlistentry>
+'>
 
-<!ENTITY stdarg.option '
+<!ENTITY cmdline.version '
 <varlistentry>
-<term>--option=&lt;name&gt;=&lt;value&gt;</term>
-<listitem><para>コマンドラインから
-<citerefentry><refentrytitle>smb.conf</refentrytitle>
-<manvolnum>5</manvolnum></citerefentry>
-オプション "&lt;name&gt;" に値 "&lt;value&gt;" を設定。
-これはコンパイル時の既定値と設定ファイルから読み込まれたオプションを上書きする。
-</para></listitem>
-</varlistentry>'>
+        <term>-V|--version</term>
+        <listitem>
+                <para>
+                        プログラムのバージョン番号を表示する。
+                </para>
+        </listitem>
+</varlistentry>
+'>
 
+<!ENTITY cmdline.common.samba.logbasename '
+<varlistentry>
+        <term>-l|--log-basename=logdirectory</term>
+        <listitem>
+                <para>
+                        ログ/デバッグファイルのベースディレクトリ名。拡張子
+                        <constant>".progname"</constant> が追加される (たとえば
+                        log.smbclient, log.smbd など)。ログファイルは
+                        クライアントによって削除されることはない。
+                </para>
+        </listitem>
+</varlistentry>
+'>
+
+================================================================================
 <!ENTITY popt.common.samba '
 &stdarg.version;
 &stdarg.configfile;
