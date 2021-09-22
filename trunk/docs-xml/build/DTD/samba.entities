@@ -369,58 +369,84 @@
 &cmdline.version;
 '>
 
-==================================================================================
-
-
-<!ENTITY stdarg.resolve.order '
+<!ENTITY cmdline.common.connection.nameresolve '
 <varlistentry>
-<term>-R|--name-resolve &lt;name resolve order&gt;</term>
-<listitem><para>このオプションは、ホスト名と IP アドレスの名前解決のために
-どのようなネーミングサービスをどのような順序で使用するかを決めるのに使用される。
-このオプションには、異なった名前解決オプションを空白で区切って並べる。</para>
+        <term>-R|--name-resolve=NAME-RESOLVE-ORDER</term>
+        <listitem>
+                <para>
+                        このオプションは、ホスト名と IP アドレスの名前解決のために
+			どのようなネーミングサービスをどのような順序で使用するかを決める
+			のに使用される。このオプションには、異なった名前解決オプションを
+			空白で区切って並べる。--name-resolve=NAME-RESOLVE-ORDER 全体を
+			引用符でくくるのがもっとも良いやり方である。
+                </para>
 
-<para>指定できるオプションは "lmhosts", "host", "wins" と "bcast" である。
-それぞれにおいて、名前解決は次のように行われる :</para>
+                <para>
+                        指定できるオプションは: "lmhosts", "host", "wins" and "bcast" である。
+                        それぞれにおいて、名前解決は次のように行われる:
+                </para>
 
-<itemizedlist>
-<listitem><para><constant>lmhosts</constant>: 
-Samba lmhosts ファイルで IP アドレスが検索される。lmhosts の行に NetBIOS名に
-アタッチされるネームタイプがない場合(詳細については<citerefentry><refentrytitle>
-lmhosts</refentrytitle> <manvolnum>5</manvolnum></citerefentry>を参照)、
-ネームタイプがどれであるかは検索結果に影響しなくなる。
-</para></listitem>
+                <itemizedlist>
+                        <listitem>
+                                <para>
+                                        Samba lmhosts ファイルで IP アドレスが検索される。
+					lmhosts の行に NetBIOS名にアタッチされるネームタイプが
+					ない場合(詳細については<citerefentry><refentrytitle>
+					lmhosts</refentrytitle> <manvolnum>5</manvolnum>
+					</citerefentry>を参照)、ネームタイプがどれであるかは
+					検索結果に影響しなくなる。
+                                </para>
+                        </listitem>
 
-<listitem><para><constant>host</constant>: 
-システムの <filename>/etc/hosts</filename> 、NIS、DNS ルックアップを使用した、
-ホスト名 - IP アドレス間の標準の名前解決が行われる。名前解決の方法の詳細な部分は、
-IRIX、Solaris といった OS によって変わる。<filename>/etc/nsswitch.conf
-</filename>で制御できる場合もある。この方法は、検索される NetBIOS 名のタイプが
- 0x20 (サーバー) である時にのみ使用できる点に注意。さもなければ指定しても無視される。
-</para></listitem>
+                        <listitem>
+                                <para>
+                                        システムの <filename>/etc/hosts</filename> 、NIS、
+					DNS ルックアップを使用した、ホスト名 - IP アドレス間の
+					標準の名前解決が行われる。名前解決の方法の詳細な部分は、
+					IRIX、Solaris といった OS によって変わる。
+					<filename>/etc/nsswitch.conf</filename>で制御できる場合も
+					ある。この方法は、検索される NetBIOS 名のタイプが 0x20
+					(サーバー) である時にのみ使用できる点に注意。さもなければ
+					指定しても無視される。
+                                </para>
+                        </listitem>
 
-<listitem><para><constant>wins</constant>: 
-<parameter>wins server</parameter>パラメーターに指定された IP アドレスを持つ
-名前が検索される。WINS サーバーが指定されていなければ、無視される。
-</para></listitem>
+                        <listitem>
+                                <para>
+                                        <parameter>wins server</parameter>パラメーターに指定
+					された IP アドレスを持つ名前が検索される。WINS サーバーが
+					指定されていなければ、この方法は無視される。
+                                </para>
+                        </listitem>
 
-<listitem><para><constant>bcast</constant>: 
-<parameter>interfaces</parameter>パラメーターに指定された既知のローカル･
-インターフェースそれぞれについてブロードキャストを行う。ターゲット・ホストが
-ローカル接続サブネット上にある場合にしか使えないので、最も信頼性の低い名前
-解決法である。
-</para></listitem>
-</itemizedlist>
+                        <listitem>
+                                <para>
+                                        <parameter>interfaces</parameter>パラメーターに指定された
+					既知のローカル･インターフェースそれぞれについてブロード
+					キャストを行う。ターゲット・ホストがローカル接続サブネット
+					上にある場合にしか使えないので、最も信頼性の低い名前
+					解決法である。
+                                </para>
+                        </listitem>
+                </itemizedlist>
 
-<para>このパラメーターが設定されなかった場合、名前解決方法の使用順序は &smb.conf;
-ファイル中のパラメーター(<smbconfoption name="name resolve order"/>)に指定されたとおりになる。
-</para>
+                <para>
+                        このパラメーターが設定されなかった場合、名前解決方法の使用順序は
+			&smb.conf; ファイル中のパラメーター
+			(<smbconfoption name="name resolve order"/>)に指定されたとおりになる。
+                </para>
 
-<para>既定値の順番は lmhosts, host, wins, bcast である。このパラメータがない場合か
-何らかのエントリが
-<smbconfoption name="name resolve order" /> parameter of
-the &smb.conf; ファイル中のパラメータにある場合は、名前解決の手段はこの順で行われる。
-resolution methods will be attempted in this order. </para></listitem>
-</varlistentry>'>
+                <para>
+                        既定の順番は lmhosts, host, wins, bcast である。このパラメータがない
+			場合か何らかのエントリが<smbconfoption name="name resolve order" />
+			the &smb.conf; ファイル中のパラメータにある場合は、名前解決の手段は
+			この順で行われる。
+                </para>
+        </listitem>
+</varlistentry>
+'>
+
+==================================================================================
 
 <!ENTITY stdarg.netbios.name '
 <varlistentry>
