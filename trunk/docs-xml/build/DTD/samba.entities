@@ -552,55 +552,66 @@
 &cmdline.common.connection.realm;
 '>
 
-==================================================================================
-
-<!ENTITY popt.common.connection '
-&stdarg.netbios.name;
-&stdarg.scope;
-&stdarg.workgroup;
-&stdarg.socket.options;
-'>
-
-<!ENTITY stdarg.nopass '
-<varlistentry>
-<term>-N|--no-pass</term>
-<listitem><para>このオプションを指定すると、クライアントはユーザーへの
-パスワード入力要求をしなくなる。パスワードが必要ないサービスにアクセスする
-ときに有用である。</para>
-
-<para>コマンドラインにパスワードが指定されておらず、このオプションも指定
-されていないと、クライアントはパスワードを要求する。</para>
-
-<para>もしも、パスワードがコマンドライン上で指定され、このオプションも
-定義されていた場合、コマンドライン上のパスワードは無視され、パスワードは
-使われない。</para></listitem>
-</varlistentry>'>
-
 <!ENTITY pct "&#37;">
 
-<!ENTITY stdarg.username '
+<!ENTITY cmdline.common.credentials.user '
 <varlistentry>
-<term>-U|--user=username[&pct;password]</term>
-<listitem><para>SMB のユーザー名、またはユーザー名とパスワードを指定する。</para>
+        <term>-U|--user=[DOMAIN\]USERNAME[&pct;PASSWORD]</term>
+        <listitem>
+                <para>
+                        SMB のユーザー名、またはユーザー名とパスワードを指定する。
+                </para>
 
-<para>もしも &pct;password を指定しないと、ユーザーにパスワードの入力を求める。
-クライアントはまず初めに<envar>USER</envar>、<envar>LOGNAME</envar>の順に
-環境変数の存在を調べ、もしもどちらかが存在するならば、その文字列を大文字にする。
-環境変数が存在しない場合、ユーザー名として<constant>GUEST</constant>が用いられる。
-</para>
+                <para>
+                        もしも &pct;password を指定しないと、ユーザーにパスワードの入力を求める。
+			クライアントはまず初めに<envar>USER</envar>、<envar>LOGNAME</envar>の
+			順に環境変数の存在を調べ、もしもどちらかが存在するならば、その文字列を
+			大文字にする。環境変数が存在しない場合、ユーザー名として
+			<constant>GUEST</constant>が用いられる。
+                </para>
 
-<para>このほかに、平文のユーザー名とパスワードを記述した認証ファイルを使用する
-オプションがある。このオプションは主にスクリプト向けに用意されており、認証情報を
-コマンドラインや環境変数に含めたくない場合に有用である。このオプションを利用する
-ときは、ファイルのパーミッションを確認し、ほかのユーザーから参照されないように
-注意すること。詳細は<parameter>-A</parameter>オプションを参照のこと。</para>
+                <para>
+                        このほかに、平文のユーザー名とパスワードを記述した認証ファイルを使用する
+			3番目のオプションがある。このオプションは主にスクリプト向けに用意されて
+			おり、認証情報をコマンドラインや環境変数に含めたくない場合に有用である。
+			このオプションを利用するときは、ファイルのパーミッションを確認し、ほかの
+			ユーザーから参照されないように注意すること。詳細は
+			<parameter>-A</parameter>オプションを参照のこと。
+                </para>
 
-<para>パスワードをスクリプトに含める場合は注意すること。多くのシステムでは、実行
-中のプロセスのコマンドラインは<command>ps</command>コマンドで参照することが
-できてしまう。安全のため、必ず、<command>rpcclient</command>を使用して、
-パスワード入力を要求し、直接入力するようにしておくこと。</para></listitem>
+                <para>
+                        パスワードをスクリプトに含める場合は注意すること。セキュリティを確保する
+			ため、必要に応じてクライアントにパスワードを要求させることを推奨する。
+                </para>
+        </listitem>
 </varlistentry>
 '>
+
+<!ENTITY cmdline.common.credentials.nopass '
+<varlistentry>
+        <term>-N|--no-pass</term>
+        <listitem>
+                <para>
+                        このオプションを指定すると、クライアントはユーザーへの
+			パスワード入力要求をしなくなる。パスワードが必要ないサービスに
+			アクセスするときに有用である。
+                </para>
+
+                <para>
+                        コマンドラインにパスワードが指定されておらず、このオプションも指定
+			されていないと、クライアントはパスワードを要求する。
+                </para>
+
+                <para>
+                        もしも、パスワードがコマンドライン上で指定され、このオプションも
+			定義されていた場合、コマンドライン上のパスワードは無視され、
+			パスワードは使われない。
+                </para>
+        </listitem>
+</varlistentry>
+'>
+
+==================================================================================
 
 <!ENTITY stdarg.authfile '
 <varlistentry>
