@@ -1,0 +1,82 @@
+<samba:parameter name="interfaces"
+                 context="G"
+		 type="cmdlist"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>このオプションにより、Samba がブラウジング、名前の登録その他のNBTの通信に
+  利用する既定のネットワークインタフェースリストを設定することが可能となる。
+  既定値では、Samba はカーネルに対して有効なインタフェースのリストを問い合わせ、
+  127.0.0.1以外のブロードキャスト可能なインタフェースをすべて利用する。
+	</para>
+
+    <para>このオプションはインタフェースを示す文字列のリストとなる。 各文字列は以下の形式のいずれで指定してもよい。</para>
+
+	<itemizedlist>
+		<listitem><para>ネットワークインタフェース名( eth0 など)。 シェルのようなワイルドカード指定も可能である。 例えばeth*は「eth」から始まるすべてのインタフェースを指定したことになる。</para></listitem>
+			
+		<listitem><para>IP アドレス。 この場合、ネットマスクの値は、カーネルから取得されたインタフェースのリストにより設定される。 </para></listitem>
+			
+		<listitem><para>IP/mask のペア。</para></listitem>
+			
+		<listitem><para>ブロードキャスト/mask のペア。</para></listitem>
+	</itemizedlist>
+
+	<para>「mask」パラメーターはビット長(例えば24はクラスCネットワーク)で指定しても、 ドット区切り10進数表記で指定してもよい。</para>
+
+	<para>上記の「IP」パラメーターは、ドット区切り10進法で指定しても、 OSの標準的なホスト名解決機構で解決可能なホスト名で指定してもよい。 </para>
+
+    <para>
+    デフォルトで、Samba はループバックインタフェース (IPアドレス 127.0.0.1)
+    を除くブロードキャスト可能なすべての有効なインタフェースを使用する。
+    </para>
+	
+	<para>
+	  SMB3 マルチチャネルの設定をサポートするため、smbd は、以下の拡張文法を
+	  実際のインタフェースの後に追加した、いくつかの拡張パラメータを受け付ける
+	  (; と , 文字を扱うために引用することは重要であることに注意):
+	</para>
+
+	<para>
+	interface[;key1=value1[,key2=value2[...]]]
+	&quot;interface[;key1=value1[,key2=value2[...]]]&quot;  
+	</para>
+
+	<para>
+	  指定出来るキーは、speed, capability, と if_index である。Speed は
+	  秒単位のビット数で指定する。指定出来る capability は、RSS とRDMAである。
+	  if_index は、注意して使うべきである: 値は、kernel によって使われる
+	  インデックスと一致してはならない。
+	  これらのオプションは、実際に運用で使うというよりは、テストと開発用
+	  であることに注意。少なくとも、Linux システム上では、これらの値は
+	  自動的に検出されるべきであるが、設定は自動認識が動かないあるいは
+	  無効の時に、最後の手段として使える。
+	  指定された値は、自動検出した値を上書きする。
+	</para>
+
+	<para>
+    以下の最初の2つの例では、eth0 デバイスと 192.168.2.10 および 192.168.3.10 の
+    IP アドレスに対応する 3 つのネットワークインタフェースが指定されている。 
+    後者のインタフェース 2 つに対するネットマスクは 255.255.255.0 に設定されている。 
+	</para>
+<!--Samba-4.13.0
+	<para>
+       The other examples show how per interface extra parameters can be specified.
+       Notice the possible usage of &quot;,&quot; and &quot;;&quot;, which makes
+       the double quoting necessary.
+       </para>
+-->
+	<para>
+       他の例は、インタフェース毎の拡張パラメータをどのように指定するかを示している。
+       二重引用符が必要な、&quot;,&quot; と &quot;;&quot; の使い方に注意。
+       </para>
+</description>
+<related>bind interfaces only</related>
+
+<value type="example">eth0 192.168.2.10/24 192.168.3.10/255.255.255.0</value>
+<value type="example">eth0, 192.168.2.10/24; 192.168.3.10/255.255.255.0</value>
+<value type="example">&quot;eth0;if_index=65,speed=1000000000,capability=RSS&quot;</value>
+<value type="example">&quot;lo;speed=1000000000&quot; &quot;eth0;capability=RSS&quot;</value>
+<value type="example">&quot;lo;speed=1000000000&quot; , &quot;eth0;capability=RSS&quot;</value>
+<value type="example">&quot;eth0;capability=RSS&quot; , &quot;rdma1;capability=RDMA&quot; ; &quot;rdma2;capability=RSS,capability=RDMA&quot;</value>
+<value type="default"/>
+</samba:parameter>

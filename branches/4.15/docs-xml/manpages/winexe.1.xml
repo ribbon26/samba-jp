@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="winexe.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>winexe</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>winexe</refname>
+	<refpurpose>リモートでWindowsのコマンドを実行するツール Winexe</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+                <arg choice="opt">--uninstall</arg>
+                <arg choice="opt">--reinstall</arg>
+                <arg choice="opt">--runas [DOMAIN/]USERNAME[%PASSWORD]</arg>
+                <arg choice="opt">--runas-file FILE</arg>
+                <arg choice="opt">--interactive [0|1]</arg>
+                <arg choice="opt">--ostype [0|1]</arg>
+                <arg choice="opt">-d|--debuglevel=DEBUGLEVEL</arg>
+                <arg choice="opt">--debug-stdout</arg>
+                <arg choice="opt">--configfile=CONFIGFILE</arg>
+                <arg choice="opt">--option=name=value</arg>
+                <arg choice="opt">-l|--log-basename=LOGFILEBASE</arg>
+                <arg choice="opt">--leak-report</arg>
+                <arg choice="opt">--leak-report-full</arg>
+                <arg choice="opt">-R|--name-resolve=NAME-RESOLVE-ORDER</arg>
+                <arg choice="opt">-O|--socket-options=SOCKETOPTIONS</arg>
+                <arg choice="opt">-m|--maxprotocol=MAXPROTOCOL</arg>
+                <arg choice="opt">-n|--netbiosname=NETBIOSNAME</arg>
+                <arg choice="opt">--netbios-scope=SCOPE</arg>
+                <arg choice="opt">-W|--workgroup=WORKGROUP</arg>
+                <arg choice="opt">--realm=REALM</arg>
+                <arg choice="opt">-U|--user=[DOMAIN/]USERNAME%[PASSWORD]</arg>
+                <arg choice="opt">-N|--no-pass</arg>
+                <arg choice="opt">--password=STRING</arg>
+                <arg choice="opt">--pw-nt-hash</arg>
+                <arg choice="opt">-A|--authentication-file=FILE</arg>
+                <arg choice="opt">-P|--machine-pass</arg>
+                <arg choice="opt">--simple-bind-dn=DN</arg>
+                <arg choice="opt">--use-kerberos=desired|required|off</arg>
+                <arg choice="opt">--use-krb5-ccache=CCACHE</arg>
+                <arg choice="opt">--use-winbind-ccache</arg>
+                <arg choice="opt">--client-protection=sign|encrypt|off</arg>
+                <arg choice="opt">-V|--version</arg>
+                <arg choice="opt">-?|--help</arg>
+                <arg choice="opt">--usage</arg>
+
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このプログラムは、<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para><command>winexe</command>は、リモートにある実際の Windows OS 上でコマンドを
+	実行させる。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>--uninstall</term>
+		<listitem>
+			<para>
+				リモート実行後に winexe サービスをアンインストールする。
+			</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--reinstall</term>
+		<listitem>
+			<para>
+				リモート実行前に  winexe サービスを再インストールする。
+			</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--runas <replaceable>[DOMAIN/]USERNAME[%PASSWORD]]</replaceable></term>
+		<listitem>
+			<para>
+			  指定されたユーザで実行する(注意:ネットワーク越しに平文でパスワードが送られる!)
+			</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--runas-file <replaceable>FILE</replaceable></term>
+		<listitem>
+			<para>
+				ファイル中で定義されたユーザオプションで実行する。
+			</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--interactive <replaceable>[0|1]</replaceable></term>
+		<listitem>
+		<para>
+			デスクトップ操作。
+		</para>
+
+			<para>2つのオプションがある:</para>
+			<itemizedlist>
+				<listitem>
+				<para>
+					0 - 無効
+				</para>
+				</listitem>
+
+				<listitem>
+				<para>
+					1 - 有効。有効の場合、--system スイッチも使う(Windows の要求)。Vistaはこのオプションをサポートしない。
+				</para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+			<term>--ostype <replaceable>[0|1|2]</replaceable></term>
+			<listitem>
+			<para>
+				インストールされるサービスのバージョン (32-bit 又は 64-bit) を指定する。
+			</para>
+
+			<para>3つのオプションがある:</para>
+			<itemizedlist>
+				<listitem>
+				<para>
+					0 - 32-bit
+				</para>
+				</listitem>
+
+				<listitem>
+				<para>
+					1 - 64-bit
+				</para>
+				</listitem>
+
+				<listitem>
+				<para>
+					2 - winexe が決定
+				</para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+                &cmdline.common.samba.client;
+                &cmdline.common.connection;
+                &cmdline.common.credentials;
+                &popt.autohelp;
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+	<title>終了ステータス</title>
+
+	<para>winexe プログラムは動作が正常に終了したときに 0 を返し、
+	動作が失敗したときには  1 を返す。 </para>
+</refsect1>
+
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
+
+	<para><command>winexe</command> とネイティブな Windows 対応部分は Andrzej Hajda によって作成された。
+	Samba クライアントツール winexe はのちに Volker Lendecke によって書き直された。</para>
+
+	<para>このマニュアルページは Guenther Deschner によって書かれた。</para>
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.15.0 - 4.15.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.13.0 - 4.15.3 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+</refsect1>
+</refentry>

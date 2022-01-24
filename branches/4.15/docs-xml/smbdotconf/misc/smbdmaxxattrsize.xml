@@ -1,0 +1,49 @@
+<samba:parameter name="smbd max xattr size"
+                 context="S"
+                 type="integer"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.15.0
+	<para>
+	  This parameter controls the maximum size of extended attributes
+	  that may be written to the server as EAs or as alternate data
+	  streams if vfs_streams_xattr is enabled. The maximum size of
+	  extended attributes depends on the Samba server's operating system
+	  and the underlying filesystem. The Linux VFS currently sets an
+	  upper boundary of 64 KiB per extended attribute. FreeBSD does not
+	  set a practical upper limit, but since pread() and pwrite() are not
+	  possible via the extattr on FreeBSD, it is not recommended to
+	  increase this value above a few MiB.
+
+	  If a client attempts to write an overly-large alternate datastream,
+	  the Samba server will return STATUS_FILESYSTEM_LIMITATION.
+	  If this error is encountered, users may try increasing the maximum
+	  size supported for xattr writes. If this is not possible, and
+	  writes are from a MacOS client and to an AFP_Resource extended
+	  attribute, the user may enable the vfs_fruit module and configure
+	  to allow stream writes for AFP_Resource to an alternative storage
+	  location. See vfs_fruit documentation for further details.
+	</para>
+-->
+	<para>
+	  このパラメータは、vfs_streams_xattr が使用可能な場合に、EA または
+	  代替データストリームとしてサーバに書き込まれる拡張属性の最大サイズを
+	  制御しする。拡張属性の最大サイズは、Samba サーバ のオペレーティング
+	  システムおよび基礎となるファイルシステムによって異なる。Linux VFSは
+	  現在拡張属性ごとに 64KiB の上限を設定している。FreeBSD では実用的な
+	  上限は設定されていないが、pread() と pwrite() は FreeBSD のextattr 
+	  経由ては使用できないので、この値を数 MiB より大きくすることは推奨
+	  できない。
+
+	  クライアントが過度に大きな代替データストリームを書き込もうとすると、
+	  Samba サーバ はSTATUS_FILESYSTEM_LIMITATION を返す。このエラーが
+	  発生した場合、ユーザは xattr書き込みでサポートされる最大サイズを
+	  増やしてみてもよい。そのことが不可能で、書き込みが MacOS クライアント
+	  および AFP_Resource 拡張属性から行われる場合、ユーザは vfs_fruit
+	  モジュールを有効にして、AFP_Resource のストリーム書き込みを、別の
+	  格納場所に対して許可するように構成できる。詳細については、vfs_fruit の
+	  ドキュメントを参照のこと。
+	</para>
+</description>
+<value type="default">65536</value>
+</samba:parameter>

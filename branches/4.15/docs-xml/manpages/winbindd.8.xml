@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="winbindd.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>winbindd</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>winbindd</refname>
+	<refpurpose>NT サーバーからの名前解決を行う Name Service Switch (NSS)デーモン</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+                <arg choice="opt">-D|--daemon</arg>
+                <arg choice="opt">-i|--interactive</arg>
+                <arg choice="opt">-F|--foreground</arg>
+                <arg choice="opt">--no-process-group</arg>
+                <arg choice="opt">-n|--no-caching</arg>
+                <arg choice="opt">-d &lt;debug level&gt;</arg>
+                <arg choice="opt">--debug-stdout</arg>
+                <arg choice="opt">--configfile=&lt;configuration file&gt;</arg>
+                <arg choice="opt">--option=&lt;name&gt;=&lt;value&gt;</arg>
+                <arg choice="opt">-l|--log-basename &lt;log directory&gt;</arg>
+                <arg choice="opt">--leak-report</arg>
+                <arg choice="opt">--leak-report-full</arg>
+                <arg choice="opt">-V|--version</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このプログラムは、<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para><command>winbindd</command> は、
+	はデーモンであり、
+	現在 C ライブラリの大半に実装されている NSS (ネームサービススイッチ) 機能、
+	PAM を利用する任意のアプリケーション、
+	<command>ntlm_auth</command> および Samba 自身に対する各種サービスを提供する。</para>
+
+	<para> NSS 機能を使用しない場合でも、
+	winbindd はドメインコントローラーとの通信を行い、
+	<command>smbd</command> 、<command>ntlm_auth</command> 、
+	PAM モジュールの <command>pam_winbind.so</command> に対するサービスを提供する。
+	この場合、
+        <smbconfoption name="idmap config * : range"/>
+	パラメーターは不要である(これは「netlogon proxy only mode」と呼ばれる)。
+	</para>
+
+	<para>
+	NSS 機能は、ユーザーやシステムの情報を
+	NIS や DNS などの様々なデータベースサービスから取得することを可能とする。
+	実際の動作は、
+	<filename>/etc/nsswitch.conf</filename>
+	ファイルにて設定する。
+	各ユーザーやグループに対しては、
+	Samba サーバーの管理者が指定したユーザー ID とグループ ID の範囲から
+	ID が割り当てられる。
+	</para>
+
+	<para> <command>winbindd</command> によって提供されるサービスは「winbind」と呼ばれ、
+	Windows NT サーバーからユーザーとグループの情報を取得するために用いられる。
+	このサービスは関連する PAM モジュールを通じて、
+	認証サービスを提供することも可能である。</para>
+
+	<para>
+	<filename>pam_winbind</filename>
+	モジュールは、
+	<parameter>auth</parameter> 、 <parameter>account</parameter> 、 <parameter>password</parameter>
+	の各モジュールタイプをサポートしている。
+        <parameter>account</parameter> モジュールについては、システムによるユーザーの UID の取得可否を確認するために getpwnam() を実行するだけの機能しかない。
+	これは、ドメインコントローラーにより既にアクセス制御が行われているためである。
+	<filename>libnss_winbind</filename> もしくはシステムに応じた名称のライブラリが適切にインストールされていれば、このモジュールは必ず成功するはずである。
+	</para>
+
+	<para>winbind サービスは、以下の NSS データベースを実装している:
+ 	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>hosts</term>
+		<listitem><para>
+		これは、 IRIX でのみ有効である。
+		ユーザー情報(訳注: ホスト情報だと思われる)は、伝統的に
+		<filename>hosts(5)</filename> ファイルに格納され、
+		<command>gethostbyname(3)</command> 関数によって取得される。
+		名前解決は WINS サーバー経由か、ブロードキャストによって行われる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>passwd</term>
+		<listitem><para>
+		ユーザー情報は、伝統的に
+		<filename>passwd(5)</filename> ファイルに格納され、
+		<command>getpwent(3)</command> 関数によって取得される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>group</term>
+		<listitem><para>
+		グループ情報は、伝統的に
+		<filename>group(5)</filename> ファイルに格納され、
+		<command>getgrent(3)</command> 関数によって取得される。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>一例として、
+	以下のような簡単な設定を
+	<filename>/etc/nsswitch.conf</filename>
+	ファイルに記述することで、
+	ユーザー情報やグループ情報は、最初に
+	<filename>/etc/passwd</filename> や <filename>/etc/group</filename> ファイルから、ついで Windows NT サーバーから取得される。
+<programlisting>
+passwd:         files winbind
+group:          files winbind
+## IRIX においてのみ有効。hostを解決するためにwinbindを使う:
+hosts:          files dns winbind
+## その他のNSSが有効のシステムでは、以下のように libnss_wins.soを使う:
+hosts:          files dns wins
+</programlisting></para>
+
+	<para>
+	以下のような簡単な設定を
+	<filename>/etc/nsswitch.conf</filename>
+	ファイルに記述することで、
+	ホスト名は、最初に
+	<filename>/etc/hosts</filename> ファイルから、ついで WINS サーバーから取得される。
+	</para>
+<programlisting>
+hosts:		files wins
+</programlisting>
+
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>-D|--daemon</term>
+		<listitem><para>もしも指定されたならば、このパラメーターは、サーバーをデーモンとして動かす。
+		すなわち、それ自身をデタッチして、適合したポート上でバックグラウンドとして動く。
+		このスイッチは、もしも、<command>winbindd</command> がシェルのコマンド行上で実行された事を仮定する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-i|--interactive</term>
+		<listitem><para>
+		<command>winbindd</command>
+		にデーモンとしての動作と端末からの切り離しを行なわないように指示する。
+		このオプションは、
+		<command>winbindd</command>
+		の対話的なデバッグが必要な開発者のためのものである。
+		この際、<command>-S</command>
+		パラメーターが指定されたときと同じく、ログは標準出力に出力される。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-F|--foreground</term>
+		<listitem><para>
+		このパラメーターを指定すると、
+		<command>winbindd</command>
+		のメインプロセスがデーモンとして動作しなくなる。
+		つまり、
+		2 回の <command>fork(2)</command> と端末からの切り離しを行なわない。
+		接続要求を処理するための子プロセスは通常どおり生成されるが、
+		メインプロセスは終了しない。
+		この動作モードは、
+		Daniel J. Bernstein 作の <command>daemontools</command>
+		パッケージに含まれる
+		<command>supervise</command> と <command>svscan</command>
+		や、
+		AIX のプロセスモニターなどのプロセス監視機構配下で
+		<command>winbindd</command>
+		を動作させるためのものである。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--no-process-group</term>
+		<listitem><para>winbinddのために、新しいプロセスグループを作成しない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-n|--no-caching</term>
+		<listitem><para>いくつかのキャッシュを無効にする。これにより、
+		<command>winbindd</command> は、
+		クライアントに応答する前にドメインコントローラーからの応答を時々待たなければならず動作が遅くなるが、
+		キャッシュを使用しなくなるため、より厳密な結果を得られるようになる。
+		なお、ドメインコントローラーが応答するまで
+		<command>winbindd</command> は処理を停止してしまう。
+		これは、信頼関係にある環境(trusted environments)で、グループメンバーシップの
+		トラックのために必要とされるsamlogon キャッシュを無効にはしない。
+		</para></listitem>
+		</varlistentry>
+
+                &cmdline.common.debug.server;
+                &cmdline.common.config.server;
+                &cmdline.common.option;
+
+<!-- Samba 4.15.1
+                <varlistentry>
+                        <term>-l|- -log-basename=logdirectory</term>
+                        <listitem>
+                                <para>
+                                        Base directory name for log/debug files. The parent process
+                                        uses filename log.winbindd, the child process uses filename
+                                        log.wb-&lt;name>. The log file is never removed by winbindd.
+                                </para>
+                        </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                        <term>-l|--log-basename=logdirectory</term>
+                        <listitem>
+                                <para>
+                                        log/debug ファイルのベースディレクトリ名。親プロセスは
+                                        ファイル名 log.winbindd を使い、子プロセスはファイル名
+                                        log.wb-&lt;name> を使う。ログファイルは winbindd によって
+					削除されることは決してない。
+                                </para>
+                        </listitem>
+                </varlistentry>
+
+                &cmdline.common.samba.leakreport;
+                &cmdline.common.samba.leakreportfull;
+		&cmdline.version;
+
+                &popt.autohelp;
+
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+	<title>名前と ID の解決</title>
+
+	<para>
+	Windows NT サーバー上のユーザーとグループが作成された際には、全世界で一意な SID (セキュリティ識別子) が割り当てられる。
+	Windows NT のユーザーとグループを UNIX のユーザーとグループに変換するには、
+	SID とユーザー ID およびグループ ID 間のマッピングが必要となる。
+	これは <command>winbindd</command> が行なう作業の一つである。
+	</para>
+
+	<para>
+	winbindd のユーザーとグループが解決される際に、
+	ユーザー ID とグループ ID が指定された範囲から割り当てられる。
+	ID は解決された順に順番に割り当てられるが、
+	クライアントがユーザーやグループの列挙コマンドを実行すれば、存在するすべてのユーザーとグループのマッピングが行われる。
+	割り当てられた UNIX 側の ID は、
+	Samba のロックディレクトリ配下のデータベースファイルに格納され、記憶される。
+	</para>
+
+	<para><emphasis>警告:</emphasis>
+	SID と UNIX の ID を変換するデータベース以外に
+	winbindd がユーザーとグループのマッピング情報を格納している場所はない。
+	このファイルが削除されたり壊れたりしてしまうと
+	winbindd が、ユーザー ID やグループ ID と
+	Windows NT のユーザーあるいはグループの RID (訳注: SID) との対応を確認する手段はない。
+	</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>設定</title>
+	<para>
+	<command>winbindd</command> デーモンの設定は、
+	<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+	ファイルのパラメーターで行う。
+	すべてのパラメーターは、
+	smb.conf の [global] セクション内に記述しなければならない。
+	</para>
+
+	<itemizedlist>
+		<listitem><para>
+		<smbconfoption name="winbind separator"/></para></listitem>
+		<listitem><para>
+                <smbconfoption name="idmap config * : range"/></para></listitem>
+		<listitem><para>
+                <smbconfoption name="idmap config * : backend"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind cache time"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind enum users"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind enum groups"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="template homedir"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="template shell"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind use default domain"/></para></listitem>
+		<listitem><para>
+		<smbconfoption name="winbind: rpc only"/>
+		このパラメーターを設定すると、ドメインコントローラーから情報を
+		検索するため、LDAPの変わりにwinbindがRPCを使うことを強制
+		する。
+		</para></listitem>
+	</itemizedlist>
+</refsect1>
+
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>
+	ユーザーとグループ名の解決と認証をドメインコントローラーで行うには、
+	winbindd を以下のように設定する。
+	この設定例は、古いバージョンの Red Hat Linux で動作を確認した。
+	</para>
+
+	<para><filename>/etc/nsswitch.conf</filename> に以下の記述を行なう:
+<programlisting>
+passwd: files winbind
+group:  files winbind
+</programlisting>
+	</para>  
+
+	<para><filename>/etc/pam.d/*</filename> 内の
+	<parameter>auth</parameter> 行を以下のような設定に置き換える:
+<programlisting>
+auth  required    /lib/security/pam_securetty.so
+auth  required	  /lib/security/pam_nologin.so
+auth  sufficient  /lib/security/pam_winbind.so
+auth  required    /lib/security/pam_unix.so \
+                  use_first_pass shadow nullok
+</programlisting>
+	</para>
+  
+	<note><para>
+	pam_unix PAM モジュールは、近年 pam_pwdb モジュールの代わりに用いられている。
+	Linux システムによっては、pam_unix の代わりに pam_unix2 モジュールが用いられている。
+	</para></note>
+
+	<para><parameter>sufficient</parameter> キーワードと
+	<parameter>use_first_pass</parameter> キーワードを使用している点に注意すること。
+	</para>
+
+	<para>ここで <parameter>account</parameter> 行を以下の設定に置き換える:</para> 
+	
+	<para><command>account    required	/lib/security/pam_winbind.so
+	</command></para>
+ 
+  	<para>次はドメインへの参加である。
+	<command>net</command> プログラムを以下のように実行する:
+	</para>
+
+	<para><command>net join -S PDC -U Administrator</command></para>
+ 
+	<para>
+	<parameter>-U</parameter> に続くユーザー名は、
+	PDC 上で administrator 権限を持つドメインのユーザーであれば誰でもよい。
+	「PDC」の部分は、実際の PDC の IP もしくは名前に置き換えること。
+	</para>
+	
+	<para>引き続き <filename>libnss_winbind.so</filename> を
+	<filename>/lib</filename> に、
+	<filename>pam_winbind.so</filename> を
+	<filename>/lib/security</filename> にコピーする。
+	<filename>/lib/libnss_winbind.so</filename> から
+	<filename>/lib/libnss_winbind.so.2</filename>
+	へのシンボリックリンクも用意する必要がある。
+	ただし古いバージョンの glibc を使用しているなら、
+	シンボリックリンク先は
+	<filename>/lib/libnss_winbind.so.1</filename>
+	にしなければならない。
+	</para>
+
+	<para>最後に、
+	<citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+	に以下のような設定を記述する:
+<programlisting>
+[global]
+	winbind separator = +
+        winbind cache time = 10
+        template shell = /bin/bash
+        template homedir = /home/%D/%U
+        idmap config * : range = 10000-20000
+        workgroup = DOMAIN
+        security = domain
+        password server = *
+</programlisting></para>
+  
+	<para>
+	ここで winbindd を起動すると、ユーザーおよびグループの対応を行うデータベースが
+	Windows NT のユーザーとグループの情報を取り込むに従い、大きくなっていくのが確認できる。
+	また、「ドメイン名+ユーザー名」という形式でユーザー名を指定することで、
+	ドメインのユーザーが UNIX にログインできることも確認できるだろう。
+
+	<command>getent passwd</command> と <command>getent group</command>
+	コマンドを実行すれば、
+	winbindd が正常に稼働していることを確認できる。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>注意</title>
+
+	<para>以下の注意点は、
+	<command>winbindd</command> の設定や実行の際に有用である:
+	</para>
+
+	<para>
+	PAM は非常に設定ミスを犯しやすい。
+	PAM の設定ファイルを変更する際は、
+	何を行なっているかをきちんと確認すること。
+	PAM の設定を誤ることで、
+	誰もシステムにログインできなくなってしまうこともあり得る。
+	</para>
+
+	<para>
+	複数の UNIX マシンで <command>winbindd</command>
+	を実行した場合、一般的に
+	winbindd によって割り当てられるユーザー ID とグループ ID はマシン毎に異なる。
+	<smbconfoption name="idmap config * : backend"/>パラメーターで、情報を共有する設定を行わない限り、
+	ユーザー ID とグループ ID はローカルマシン内でのみ有効である。
+	</para>
+
+	<para>
+	Windows NT の SID と
+	UNIX のユーザー ID とグループ ID 間のマッピングファイルが壊れたりなくなったりすると、
+	マッピング情報は失われてしまう。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>シグナル</title>
+
+	<para>
+	以下のシグナルによって
+	<command>winbindd</command> デーモンを操作することが
+	可能である。
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>SIGHUP</term>
+		<listitem><para><citerefentry><refentrytitle>smb.conf</refentrytitle>
+		<manvolnum>5</manvolnum></citerefentry>
+		ファイルを再読み込みさせ、
+		実行中の <command>winbindd</command> にパラメーターの変更を反映させる。
+		このシグナルにより、
+		ユーザー情報とグループ情報のキャッシュもクリアされる。
+		また、winbindd が信頼するドメインの一覧も再取得される。
+	      </para>
+<!-- Samba-4.13.2
+        <para>Instead of sending a SIGHUP signal, a request to reload configuration
+        file may be sent using <citerefentry><refentrytitle>smbcontrol</refentrytitle>
+        <manvolnum>1</manvolnum></citerefentry> program.
+        </para>
+-->
+	<para>SIGHUP シグナルを送る代わりに、
+	<citerefentry><refentrytitle>smbcontrol</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry> プログラムを使う事で、
+	設定ファイルの再読み込み要求を送ることが出来る。
+	</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SIGUSR2</term>
+		<listitem><para>
+		ステータス情報を <command>winbindd</command> のログファイルに書き込ませる。
+		</para>
+
+		<para>
+		ログファイルは、
+		log file パラメーターで指定したファイルである。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>ファイル</title>
+
+	<variablelist>
+		<varlistentry>
+		<term><filename>/etc/nsswitch.conf(5)</filename></term>
+		<listitem><para>ネームサービススイッチの設定ファイル。</para>
+		</listitem>
+		</varlistentry>
+	
+		<varlistentry>
+		<term>/tmp/.winbindd/pipe</term>
+		<listitem><para>
+		クライアントが
+		<command>winbindd</command>
+		と通信するための UNIX パイプ。
+		セキュリティ上の理由で、
+		<filename>/tmp/.winbindd</filename> ディレクトリと
+		<filename>/tmp/.winbindd/pipe</filename>
+		ファイルの両方の所有者が root 以外の場合、クライアントは
+		winbindd デーモンとの接続を行なわない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>$LOCKDIR/winbindd_privileged/pipe</term>
+	        <listitem><para>
+		winbind の「特権」クライアントが
+		<command>winbindd</command>
+		と通信するための UNIX パイプ。
+		セキュリティ上の理由で、
+		winbindd のいくつかの機能
+		(<command>ntlm_auth</command> ユーティリティが必要とする機能など)
+		へのアクセスは制限されており、
+		デフォルトでは、
+		「root」グループに属するユーザーだけがアクセスできる。
+		管理者が $LOCKDIR/winbindd_privileged
+		のグループパーミッションを変更することで、
+		「squid」などのプログラムが ntlm_auth を利用できるようにすることなどが可能である。
+		<filename>$LOCKDIR/winbindd_privileged</filename> ディレクトリと
+		<filename>$LOCKDIR/winbindd_privileged/pipe</filename>
+		ファイルの両方の所有者が root 以外の場合、winbindクライアントは
+		winbindd デーモンとの接続を行なわない事に注意。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>/lib/libnss_winbind.so.X</term>
+		<listitem><para>ネームサービススイッチライブラリの実体。
+		</para></listitem>
+		</varlistentry>
+	
+		<varlistentry>
+		<term>$LOCKDIR/winbindd_idmap.tdb</term>
+		<listitem><para>
+		Windows NT の RID から
+		UNIX の ユーザー/グループ ID へのマッピング情報の保管場所。
+		ロックディレクトリは、Samba のコンパイル時に
+		<parameter>--with-lockdir</parameter>
+		オプションを用いて指定する。
+		このディレクトリの既定値は
+		<filename>/usr/local/samba/var/locks</filename>
+		である。
+		</para></listitem>
+		</varlistentry>
+	
+		<varlistentry>
+		<term>$LOCKDIR/winbindd_cache.tdb</term>
+		<listitem><para>キャッシュされたユーザー/グループ情報の保管場所。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>参照</title>
+	
+	<para><filename>nsswitch.conf(5)</filename>, <citerefentry>
+	<refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>wbinfo</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>ntlm_auth</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>smb.conf</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>pam_winbind</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry></para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
+
+	<para><command>wbinfo</command> および <command>winbindd</command> コマンドは Tim Potter によって作成された。</para>
+	
+	<para>
+	Samba 2.2 のための DocBook 形式への変換は Gerald Carter が行った。 
+	Samba 3.0 のための DocBook XML 4.2 形式の変換は Alexander Bokovoy によって行われた。
+	</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.15.1 - 4.15.1 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.24 対応の翻訳は
+	<itemizedlist>
+	<para>たかはしもとのぶ (monyo@samba.gr.jp)</para>
+	<para>さとうふみやす</para>
+	</itemizedlist>
+        によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.15.1 対応の翻訳は
+	太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="testparm.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>testparm</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>testparm</refname>
+	<refpurpose>smb.conf ファイル内部の設定の正当性を検証</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>testparm</command>
+                <arg choice="opt">-s|--suppress-prompt</arg>
+                <arg choice="opt">-v|--verbose</arg>
+                <arg choice="opt">-?|--help</arg>
+                <arg choice="opt">--usage</arg>
+                <arg choice="opt">-d|--debuglevel=DEBUGLEVEL</arg>
+                <arg choice="opt">--debug-stdout</arg>
+                <arg choice="req">config filename</arg>
+                <arg choice="opt">hostname hostIP</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このプログラムは <citerefentry><refentrytitle>Samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para><command>testparm</command> は <citerefentry><refentrytitle>smbd
+	</refentrytitle><manvolnum>8</manvolnum></citerefentry> 設定ファイル内部の
+	正当性を検査するための非常に簡単なテストプログラムである。
+	このプログラムが問題なしと報告した場合、<command>smbd</command>
+	による設定ファイルのロードが成功することが確実な形で、
+	設定ファイルを使用することができる。</para>
+
+
+	<para>ただし、設定ファイルに指定されたサービスが期待通りに動作するか、
+	有効になるかということは保証<emphasis>されない</emphasis>ことに注意されたい。</para>
+
+	<para> コマンドラインのオプションでホスト名と IP アドレスが指定されると、
+	テストプログラムはサービスエントリーに対して動作し、
+	指定したホストが各サービスを利用する権利を持つかどうかを報告する。
+	</para>
+
+	<para><command>testparm</command> は <filename>smb.conf</filename>
+	にエラーを見つけると呼び出したプログラムに 1 を、エラーがなければ 0
+	の終了コードを返す。これにより、シェル・スクリプトは <command>testparm
+	</command> からの出力をテストできる。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>-s|--suppress-prompt</term>
+		<listitem><para>このオプションが指定されない場合、<command>testparm
+		</command> はサービス名を表示した後でプロンプトを表示し、
+		リターンキーが押されると、サービスの定義をダンプする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-v|--verbose</term>
+		<listitem><para>このオプションが指定されると、<citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry> の中で指定されていないパラメーターのデフォルト値を
+ 		表示する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--parameter-name parametername</term>
+		<listitem><para>
+		指定されたパラメーターをダンプする。セクション名がしていされない場合、表示は
+		既定値で、グローバルセクションに制限される。
+		パラメーターオプションをダンプすることも可能である。それゆえ、パラメーター名から、
+		コロンによって、オプションは分離しなければならない。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--section-name sectionname</term>
+		<listitem><para>
+		指定されたセクションをダンプする。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--show-all-parameters</term>
+		<listitem><para>
+		  パラメータ、タイプ、設定可能な値を表示する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-l|--skip-logic-checks</term>
+		<listitem><para>
+		  グローバルでのチェックを行わない
+		</para></listitem>
+		</varlistentry>
+
+                &popt.autohelp;
+                &cmdline.common.debug.client;
+                &cmdline.common.config.client;
+                &cmdline.common.option;
+                &cmdline.version;
+
+		<varlistentry>
+		<term>configfilename</term>
+		<listitem><para>これはチェックする設定ファイルの名前である。
+		このパラメーターを指定しないと、デフォルトの <citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry>	ファイルがチェックされる。
+		</para></listitem>
+		</varlistentry>
+
+
+		<varlistentry>
+		<term>hostname</term>
+		<listitem><para>このパラメーターとそれに続くパラメーターが指定されると、
+		<command>testparm</command> は <citerefentry><refentrytitle>smb.conf
+		</refentrytitle><manvolnum>5</manvolnum></citerefentry> 中の
+		<parameter>hosts allow</parameter> と <parameter>hosts deny</parameter>
+		パタメータを使って、指定された IP アドレス の hostname が <command>
+		smbd</command> サーバーにアクセス可能を許可されているかを判断する。
+		このパラメーターを指定した場合、次の hostIP パラメーターも指定すること。
+		</para></listitem>
+		</varlistentry>
+
+
+		<varlistentry>
+		<term>hostIP</term>
+		<listitem><para>これは前のパラメーターで指定したホストの IP
+		アドレスである。このアドレスは、hostname パラメーターを指定した場合
+		必ず指定すること。</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>関連ファイル</title>
+
+	<variablelist>
+		<varlistentry>
+		<term><citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry></term>
+		<listitem><para>これは通常 <citerefentry><refentrytitle>smbd
+		</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+		が使用する設定ファイルの名前である。 
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>診断</title>
+
+	<para>このプログラムは設定ファイルのロードが正常に完了したか否かを報告する。
+	ファイルがロードされなかった場合、エラーと警告の出力が優先される。
+	ファイルのロードが完了したら、プログラムは設定されているすべてのサービスの
+	詳細を標準出力に出力する。</para>
+
+<!-- Samba-4.14.0
+        <para>For certain use cases, SMB protocol requires use of
+        cryptographic algorithms which are known to be weak and already
+        broken. DES and ARCFOUR (RC4) ciphers and the SHA1 and MD5 hash
+        algorithms are considered weak but they are required for backward
+        compatibility. The testparm utility shows whether the Samba tools
+        will fall back to these weak crypto algorithms if it is not possible
+        to use strong cryptography by default.
+        In FIPS mode weak crypto cannot be enabled.</para>
+-->
+        <para>特定のユースケースにおいて、SMB プロトコルは弱いことが分かっているか、
+	すでに破られている暗号化アルゴリズムを要求する。DES と ARCFOUR (RC4) 暗号
+	と SHA1 と MD5 ハッシュアルゴリズムは弱いと考えられるが、過去の互換のために
+	必要とされる。testparm ユーティリティは、Samba ツールが、既定で、強力な暗号を
+	使う事が出来ない場合に、そのような弱い暗号にフォールバックすることを表示する。
+	FIPS モードでは、弱い暗号は有効に出来ない。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>関連項目</title>
+	<para><citerefentry>
+		<refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum>
+		</citerefentry>, <citerefentry>
+		<refentrytitle>smbd</refentrytitle><manvolnum>8</manvolnum>
+		</citerefentry></para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+	カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+	</para>
+	
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.15.0 - 4.15.0 に対応する。</para>
+        <para>このドキュメントの Samba 3.0.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>はせがわようすけ</para></listitem>
+		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>佐藤 文優</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+	によって行なわれた。</para>
+        <para>このドキュメントの Samba 3.2.4 - 4.15.0 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+</refsect1>
+
+</refentry>
+

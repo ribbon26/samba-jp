@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_io_uring.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_io_uring</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+	<refname>vfs_io_uring</refname>
+<!-- Samba-4.12.0
+         <refpurpose>Implement async io in Samba vfs using io_uring of Linux (>= 5.1).</refpurpose>
+-->
+         <refpurpose>Linux (>= 5.1) の io_uring を使用した、 Samba vfs における非同期 I/O の実装</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = io_uring</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- Samba-4.12.0
+	<para>The <command>io_uring</command> VFS module enables asynchronous
+	pread, pwrite and fsync using the io_uring infrastructure of Linux (>= 5.1).
+	This provides much less overhead compared to the usage of the pthreadpool for
+	async io.</para>
+
+	<para>This module SHOULD be listed last in any module stack as
+	it requires real kernel file descriptors.</para>
+-->
+        <para>The <command>io_uring</command> VFS モジュールは、Linux (>= 5.1) の io_uring 機構を
+	使う、非同期 pread, pwrite と fsync を有効にする。これは、非同期 I/O 用の
+	pthreadpool を使うのと比べ、よりオーバヘッドが少ない。</para>
+
+	<para>このモジュールは、実際のカーネルファイルディスクリプタを必要とするため、
+	モジュールスタックの最後に置かなければならない。</para>
+
+</refsect1>
+
+
+<refsect1>
+	<title>例</title>
+
+	<para>簡単な使用法:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="vfs objects">io_uring</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>io_uring:num_entries = NUMBER_OF_QUEUE_ENTRIES</term>
+		<listitem>
+<!-- Samba-4.12.0
+		<para>The number of entries in the submission queue.
+		The maximum allowed value depends on the kernel version
+		and the kernel will roundup the value to a power of 2.
+		</para>
+		<para>The default is '128'.</para>
+-->
+		<para>submission キュー中のエントリ数。
+		指定できる最大値はカーネルバージョンに依存し、カーネルはこnの値を2の累乗に
+		切り上げる。
+		</para>
+		<para>既定値は '128' である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>io_uring:sqpoll = BOOL</term>
+		<listitem>
+<!-- Samba-4.12.0
+		<para>Use the IORING_SETUP_SQPOLL feature.
+-->
+		<para>IORING_SETUP_SQPOLL 機能を使用する。
+		</para>
+		<para>既定値は 'no' である。</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>参照</title>
+	<para>
+	<citerefentry><refentrytitle>io_uring_setup</refentrytitle><manvolnum>2</manvolnum></citerefentry>.
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+<!-- Samba-4.12.0
+	<para>This man page is part of version &doc.version; of the Samba suite.
+-->
+	<para>このマニュアルページは、Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。
+	Samba は現在 Linux カーネルが 開発されているような方法での
+	オープンソースプロジェクトである Samba Team によって開発されている。
+	</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.12.0 - 4.15.3 に対応する。</para>
+	<para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

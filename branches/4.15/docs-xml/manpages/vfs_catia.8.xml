@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_catia.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_catia</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_catia</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>translate illegal characters in Catia filenames</refpurpose>
+-->
+	<refpurpose>Catia ファイル名で無効な文字を変換する</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = catia</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This VFS module is part of the
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The Catia CAD package commonly creates filenames that
+	use characters that are illegal in CIFS filenames. The
+	<command>vfs_catia</command> VFS module implements a character
+	mapping so that these files can be shared with CIFS clients.
+	</para>
+-->
+	<para>
+	Catia CAD パッケージは、 CIFS ファイルシステムで使用できない文字を
+	使用したファイル名を頻繁に作成する。
+	<command>vfs_catia</command> VFS モジュールは、これを CIFS 
+	クライアントからアクセスできるように文字マッピングを行う。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>This module is stackable.</para>
+-->
+	<para>このモジュールはスタック可能である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>The parameter "catia:mappings" specifies the mapping on a
+	per-character basis, see below.
+	</para>
+-->
+	<para>
+	catia:mappings パラメーターは、以下で説明するように、文字単位の
+	マッピングを指定する。
+	</para>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+        <title>OPTIONS</title>
+-->
+        <title>オプション</title>
+        <variablelist>
+               <varlistentry>
+               <term>catia:mappings = SERVER_HEX_CHAR:CLIENT_HEX_CHAR
+               </term>
+               <listitem>
+<!-- 原文 samba-4.7.0
+		<para>SERVER_HEX_CHAR specifies a 0x prefixed hexedecimal
+		character code that, when included in a Samba server-side
+		filename, will be mapped to CLIENT_HEX_CHAR for the CIFS
+		client.</para>
+-->
+		<para>
+		SERVER_HEX_CHAR は、 0x というプレフィックスを付加した 16 進数の
+		文字コードであり、これが Samba サーバー上のファイル名に含まれている
+		場合、 CIFS クライアントに対しては、CLIENT_HEX_CHAR にマッピングされる。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>The same mapping occurs in the opposite direction.
+		Multiple character mappings are separated by a comma.</para>
+-->
+		<para>
+		同様のマッピングが反対方向に対しても行われる。
+		複数の文字のマッピングはカンマ区切りで指定する。
+		</para>
+               </listitem>
+               </varlistentry>
+       </variablelist>
+</refsect1>
+
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>EXAMPLES</title>
+-->
+	<title>使用例</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Map server-side quotation-marks (") to client-side diaeresis
+	(&#x00a8;) on filenames in the [CAD] share:</para>
+-->
+	<para>
+	[CAD] 共有内のファイル名にある、クォーテーションマーク（"）を、
+	クライアントに対しては diaeresis 文字（&#x00a8;）にマッピングする。
+	</para>
+
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8</smbconfoption>
+</programlisting>
+
+<!-- 原文 samba-4.7.0
+        <para>Perform comprehensive mapping of common Catia filename characters:</para>
+-->
+	<para>
+	通常使用される Catia ファイル名に含まれる文字を包括的にマッピングする。
+	</para>
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x22:0xa8,0x2a:0xa4,0x2f:0xf8,0x3a:0xf7,0x3c:0xab,0x3e:0xbb,0x3f:0xbf,0x5c:0xff,0x7c:0xa6</smbconfoption>
+</programlisting>
+
+<!-- 原文 samba-4.7.0
+        <para>Server-side filename to be translated (Note that the path delimiter "/" is not used here):
+	</para>
+-->
+	<para>
+	マッピングされるサーバー上のファイル名（パスを意味する / は使われて
+	いない点に注意）
+	</para>
+	<para>a\a:a*a?a"a&lt;a&gt;a|a</para>
+
+<!-- 原文 samba-4.7.0
+	<para>Resulting filename, as seen by the client:</para>
+-->
+	<para>最終的にクライアント上で表示されるファイル名:</para>
+
+	<para>a&#x00ff;a&#x00f7;a&#x00a4;a&#x00bf;a&#x00a8;a&#x00ab;a&#x00bb;a&#x00a6;a
+	</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>CAVEATS</title>
+-->
+	<title>注意</title>
+
+<!-- 原文 samba-4.7.0
+	<para>Character mapping must work in BOTH directions (server -&gt;
+	client and client -&gt; server) to get unique and existing file names!
+	</para>
+-->
+	<para>
+	文字のマッピングは、ファイル名に対応するファイルの存在と一意性を担保する
+	ために、双方向（サーバーからクライアント、クライアントからサーバー）に
+	機能する必要がある。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>A NOT working example:</para>
+-->
+	<para>機能しない例を以下に示す。</para>
+
+<programlisting>
+        <smbconfsection name="[CAD]"/>
+	<smbconfoption name="path">/data/cad</smbconfoption>
+	<smbconfoption name="vfs objects">catia</smbconfoption>
+	<smbconfoption name="catia:mappings">0x3a:0x5f</smbconfoption>
+</programlisting>
+
+<!-- 原文 samba-4.7.0
+	<para>Here the colon ":" is mapped to the underscore "_".</para>
+-->
+	<para>
+	この場合、コロン（:）が下線（_）にマッピングされる。
+	</para>
+<!-- 原文 samba-4.7.0
+	<para>Assuming a server-side filename "a:should_work", which is
+	translated to "a_should_work" for the client.</para>
+-->
+	<para>
+	サーバー上で a:should_work というファイル名のファイルは、クライアント上
+	では、 a_should_work にマッピングされる。
+	</para>
+<!-- 原文 samba-4.7.0
+	<para>BUT the reverse mapping from client "a_should_work" to server
+	will result in "a:should:work" - something like "file not found"
+	will be returned.
+	</para>
+-->
+	<para>
+	しかし、クライアント上の a_should_work というファイル名を逆方向に
+	マッピングすると、結果は a:should:work となってしまう。このため、
+	サーバーからは file not found といたエラーが返却されてしまうことになる。
+	</para>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.8.0
+        <para>This man page is part of Samba versions from 3.5.0 to 4.0.6.
+        </para>
+-->
+	<para>このマニュアルは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+	<para>New version written by Guenter Kukkukk kukks@samba.org</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+	<para>新しいバージョンは、Guenter Kukkukk kukks@samba.org によって書かれた。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 4.1.0 - 4.15.3 に対応する。</para>
+	<para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>平田祥司 (shouji@microft.co.jp)</para></listitem>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
