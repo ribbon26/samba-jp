@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="samba-dcerpcd.8">
+
+<refmeta>
+	<refentrytitle>samba-dcerpcd</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>samba-dcerpcd</refname>
+	<refpurpose>これは、Samba の DCERPC サーバプロセスの1つで、
+	RPC サービスが提供されているソケットをリッスンすることができ、
+	Samba が呼び出す DCERPC サービスの親プロセスである。別個に呼び出され
+	ない限り、要求に応じて <command>smbd</command> または
+	<command>winbind</command> から呼び出され、名前付きパイプ (np) 上で
+	だけヘルパープロセスとして DCERPC 機能を提供する。起動スクリプトを
+	変更しない限り、ほとんどのインストール(スタンドアロン/メンバーサーバ/
+	AD サーバ)では、これが標準設定になる。Samba が Active Directory ドメイン
+	コントローラとして設定されている場合は <command>smbd</command> を起動する
+	<command>samba</command> プロセスは、通常の DCERPC サービスを提供するが、
+	<command>samba-dcerpcd</command> ではないことに注意。システム起動
+	スクリプトまたはデーモンによって個別に呼び出される場合は、global の
+	smb.conf オプション
+	<smbconfoption name="rpc start on demand helpers">false</smbconfoption> は
+	<command>samba-dcerpcd</command> がスタンドアロンで起動することを許可する
+	ように設定する必要がある。
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>samba-dcerpcd</command>
+		<arg choice="opt">-D|--daemon</arg>
+		<arg choice="opt">-i|--interactive</arg>
+		<arg choice="opt">-F|--foreground</arg>
+		<arg choice="opt">--no-process-group</arg>
+		<arg choice="opt">-d &lt;debug level&gt;</arg>
+		<arg choice="opt">--debug-stdout</arg>
+		<arg choice="opt">--configfile=&lt;configuration file&gt;</arg>
+		<arg choice="opt">--option=&lt;name&gt;=&lt;value&gt;</arg>
+		<arg choice="opt">--leak-report</arg>
+		<arg choice="opt">--leak-report-full</arg>
+		<arg choice="opt">-V|--version</arg>
+		<arg choice="opt">--libexec-rpcds</arg>
+		<arg choice="opt">--np-helper</arg>
+		<arg choice="opt">--ready-signal-fd=&lt;fd&gt;</arg>
+		<arg choice="opt">&lt;SERVICE_1&gt;</arg>
+		<arg choice="opt">&lt;SERVICE_2&gt;</arg>
+		<arg choice="opt">&lt;...&gt;</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para>
+	samba-dcerpcd は2つの方法で使用できる。起動スクリプトの変更および
+	 global smb.conf オプションを指定しない通常の場合と、
+	 <smbconfoption name="rpc start on demand    helpers">true</smbconfoption> が
+	設定されている(デフォルト設定)場合は、<command>smbd</command> 
+	または <command>winbind</command> --np-helper を含むコマンドラインを
+	使用して、名前付きパイプ (np) 上でDCERPC 機能を提供する。また、
+	スタンドアロンモードでも使用できる。スタンドアロンモードでは
+	<command>smbd</command> または <command>winbind</command> とは別に、
+	システム起動スクリプトを使用して起動する。スタンドアロンデーモンと
+	して起動した場合、またはシステム起動スクリプトから起動した場合は、
+	global smb.confオプション
+	<smbconfoption name="rpc start on demand helpers">false</smbconfoption> を
+	falseに設定する必要がある。global smb.confオプション
+	<smbconfoption name="rpc start on demand helpers">true</smbconfoption> は
+	trueに設定されるか、既定のままの場合は
+	<command>samba-dcerpcd</command> は起動に失敗し、エラーメッセージが
+	記録される。
+	</para>
+	<para>
+	Samba が Active Directory ドメインコントローラモードで実行されている場合は、
+	<command>samba</command> AD コードは通常の DCERPC サービスを提供するが、
+	samba-dcerpcd は <command>smbd</command> がこの構成では使用していたのと
+	同等の、SRVSVC のようなサービスを提供できることに注意。
+	</para>
+	<para>
+	スタンドアロンモードは、Samba フレームワーク以外で使用する場合にも
+	便利である。たとえば、Linux カーネルの SMB2 サーバ ksmbd や、
+	場合によってはその他の SMB2 サーバ実装での使用などである。
+	このモードでは、inetd のように振る舞い、RPC サーバー実装の代わりに
+	ソケットをリッスンする。
+	</para>
+	<para>
+	クライアントが接続すると <command>samba-dcerpcd</command> は、
+	必要に応じて関連する RPC サービスバイナリを起動し、そのサービスへ
+	接続を渡す。RPC サービスがしばらくアイドル状態の場合は、
+	<command>samba-dcerpcd</command> 再びシャットダウンするように要求する。
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>-D|--daemon</term>
+		<listitem><para>このパラメーターを指定すると、サーバーは
+		デーモンとして動作する。つまり、それ自身を切り離して
+		バックグラウンドで実行し、適切なポートで要求を処理する。
+		サーバをデーモンとして動作させることは
+		<command>samba-dcerpcd</command> Sambaフレームワーク以外の
+		ものである。しかし、システム起動スクリプトを使用して起動する
+		ように構成されている場合は、メンバーサーバー用の Samba 内で
+		この方法で使用することもできる。このスイッチは、
+		<command>samba-dcerpcd</command> がシェルのコマンド行で実行
+		されることを念頭に置いている。 </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-i|--interactive</term>
+		<listitem><para>このパラメーターを指定すると、サーバーが
+		シェルのコマンド行で実行される場合でも、サーバーはデーモンと
+		してではなく「対話的に」実行される。このパラメータを設定すると、
+		コマンドラインから実行したときに暗黙的なデーモンモードが無効になる。
+		<command>samba-dcerpcd</command> は1つの接続だけを受け入れて終了する。
+		また、<command>-S</command> パラメータが与えられた場合には
+		標準出力にも記録される。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-F|--foreground</term>
+		<listitem><para>指定した場合、このパラメータはメインの
+		<command>samba-dcerpcd</command>プロセスの デーモン化を行わない。
+		すなわち二重フォークと端末との関連付けを解除するプロセスをしない。
+		子プロセスは、各接続要求を処理するために通常どおり生成されるが、
+		メインプロセスは終了しない。この動作モードは、
+		Daniel J. Bernstein による <command>daemontools</command> 
+		パッケージの <command>supervise</command> および
+		<command>svscan</command> あるいは AIX プロセス・モニタのような、
+		プロセス監視ツール配下で、<command>samba-dcerpcd</command>を
+		動かすのに適している。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--no-process-group</term>
+		<listitem><para>samba-dcerpcd 用に新しいプロセスグループを
+		作成しない。 </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--libexec-rpcds</term>
+		<listitem><para>Samba の LIBEXECDIR にあるすべてのデーモンに
+		RPC サービスを提供する。&quot;rpcd_&quot;で始まるすべての
+		プログラムは、RPCサービスを提供するものと見なす。
+		<command>--libexec-rpcds</command> オプションを使用しない場合、
+		コマンドラインで明示的にすべての RPC サービスヘルパーを
+		一覧表示できる。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--np-helper</term>
+		<listitem><para><command>samba-dcerpcd</command> を、
+		<command>smbd</command> または
+		<command>winbind</command> 用に名前付きパイプソケットを
+		ヘルパーとして開くためにオンデマンドで実行する。
+		このモードで実行するには、global smb.confオプション 
+		<smbconfoption name="rpc start on demand   helpers">true</smbconfoption> を
+		trueに設定する必要がある(これは既定の設定)。 </para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>--ready-signal-fd=&lt;fd&gt;</term>
+		<listitem><para>このfdを使用して、サービスの準備状況を
+		<command>smbd</command>に報告する。内部使用のみ。 </para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+</refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このドキュメントは、Samba 4.16.0 - 4.16.0 に対応する。</para>
+    <para>このドキュメントの翻訳は
+        <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+        </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>
