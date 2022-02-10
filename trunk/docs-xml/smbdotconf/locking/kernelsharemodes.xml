@@ -4,15 +4,15 @@
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
 	<para>
-        このパラメーターは、SMB 共有モードを UNIX の flock に変換するか
-        どうかを制御する。
+        このパラメーターは、SMB 共有モードを ファイルシステム固有の sharemode
+	呼び出しにに変換するかどうかを制御する。
 	</para>
 
 	<para>
-        このパラメーターは、SMB 共有モードに対応して flock を用いたアクセス
-        制御を行うことで、ローカルの UNIX プロセスと NFS による操作との
-        間での、最低限の相互運用性を提供する。
-        一般的に、このパラメーターは有効のままにしておくことが望ましい。
+        kernel share モードは、SMB 共有モードに対応するアクセスを防止する
+	ことにより、ローカルの UNIX プロセスと NFS による操作との
+        間での、最低限の相互運用性を提供する。これには、適切なサポートを
+        備えたファイルシステム固有の VS モジュールを要求する。
 	</para>
 
 	<para>
@@ -21,11 +21,12 @@
 	</para>
 
 	<para>
-	このパラメーターの既定値は<constant>yes</constant>だが、動作に必要な
-        カーネルレベルの flock をサポートしていないシステム上では、自動的に
-        無効化される。
+	このパラメーターの既定値は<constant>no</constant>である。
+	<constant>yes</constant> に設定する場合は、ファイルシステムの
+	share modes をサポートするシステムモジュールが必要であり、
+	そうでない場合、ファイルへのアクセスは共有違反で失敗する。
 	</para>
 </description>
 
-<value type="default">yes</value>
+<value type="default">no</value>
 </samba:parameter>
