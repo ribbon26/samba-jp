@@ -8,7 +8,37 @@
     <emphasis>パラノイド的</emphasis>設定である。
     </para>
 		
-    <para> 「@」で始まる名前は、UNIX のグループとして解釈される。</para>
+<!-- Samba-4.16.2
+    <para>A name starting with a '@' is interpreted as an NIS
+    netgroup first (if your system supports NIS), and then as a UNIX
+    group if the name was not found in the NIS netgroup database.</para>
+
+    <para>A name starting with '+' is interpreted only
+    by looking in the UNIX group database via the NSS getgrnam() interface. A name starting with
+    '&amp;' is interpreted only by looking in the NIS netgroup database
+    (this requires NIS to be working on your system). The characters
+    '+' and '&amp;' may be used at the start of the name in either order
+    so the value <parameter moreinfo="none">+&amp;group</parameter> means check the
+    UNIX group database, followed by the NIS netgroup database, and
+    the value <parameter moreinfo="none">&amp;+group</parameter> means check the NIS
+    netgroup database, followed by the UNIX group database (the
+    same as the '@' prefix).</para>
+-->
+    <para>「@」で始まる名前は、(使用しているシステムが NIS をサポートしている場合)
+    最初にUNIX のグループとして解釈され、次に、NIS ネットグループデータベースに
+    名前がない場合、UNIX グループとして解釈される。</para>
+
+    <para> 「+」 で始まる名前は、NSS getgrnam() インタフェース経由で
+    UNIX グループデータベースを検索するときのみ解釈される。「&amp;」で始まる
+    名前は、NIS ネットグループデータベース中を検索する時のみ解釈される
+    (これは、使用しているシステム上でNISが動作していることが前提である)。
+    「+」と「&amp;」文字はこの順で使用できる。そのため、
+    <parameter moreinfo="none">+&amp;group</parameter> の値は、UNIX グループ
+    データベースを検査し、その後で NIS ネットグループデータベースを検査する
+    ことを意味する。そして、
+    <parameter moreinfo="none">&amp;+group</parameter> の値は、NIS ネットグループ
+    データベースを検査し、その後で UNIX グループデータベースを検査することを意味する
+    (これは「@」接頭辞と同じ)。</para>
    
     <para><parameter moreinfo="none">%S</parameter>は、
     現在のサービス名に置換される。これは [homes] セクションで有効である。</para>
