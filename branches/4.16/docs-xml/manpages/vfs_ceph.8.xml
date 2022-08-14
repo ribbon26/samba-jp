@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_ceph.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_ceph</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_ceph</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>
+		Utilize features provided by CephFS
+	</refpurpose>
+-->
+	<refpurpose>
+		CephFS によって提供される機能を利用
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = ceph</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+-->
+	<title>説明</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This VFS module is part of the
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> suite.</para>
+-->
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> システムの一部である。</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+		The <command>vfs_ceph</command> VFS module exposes
+		CephFS specific features for use by Samba.
+	</para>
+-->
+	<para>
+		<command>vfs_ceph</command> VFS モジュールは、
+		Samba によって使われる CephFS 固有の機能を提供する。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+		Ceph is a distributed network file system designed to provide
+		excellent performance, reliability, and scalability. This is a
+		shared library allowing applications to access a Ceph
+		distributed file system via a POSIX-like interface.
+	</para>
+-->
+	<para>
+		Ceph は、優れた性能、信頼性、スケーラビリティを提供するように設計された、
+		分散ネットワークファイルシステムである。これは、アプリケーションが、
+		POSIX 風のインタフェース経由で、Ceph 分散ファイルシステムへのアクセスを行うための、
+		共有ライブラリである。
+	</para>
+
+<!-- 原文 samba-4.7.0
+	<para>
+		This module can be combined with other modules, but it
+		should be the last module in the <command>vfs objects</command>
+		list. Modules added to this list to the right of the ceph
+		entry may not have any effect at all.
+	</para>
+-->
+	<para>
+		このモジュールは、他のモジュールといっしょに使えるが、<command>vfs objects</command>
+		リスト中では、最後に位置するモジュールでなければならない。このリストの、
+		ceph エントリより右にあるモジュールは無意味である。
+	</para>
+
+<!-- Samba 4.10.4
+        <para>
+                <command>vfs_ceph</command> performs mapping between Windows and
+                POSIX Access Control Lists (ACLs). To ensure correct processing
+                and enforcement of POSIX ACLs, the following Ceph configuration
+                parameters are automatically applied:
+        </para>
+        <programlisting>
+                <command>client acl type = posix_acl</command>
+                <command>fuse default permissions = false</command>
+        </programlisting>
+-->
+        <para>
+	        <command>vfs_ceph</command> は、 Windows と POSIX ACL 間の
+		マッピングを行う。 POSIX ACL を正しく処理させるために、
+		以下の Ceph 設定パラメータが自動的に設定される:
+        </para>
+        <programlisting>
+                <command>client acl type = posix_acl</command>
+                <command>fuse default permissions = false</command>
+        </programlisting>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>CONFIGURATION</title>
+-->
+	<title>設定</title>
+
+<!-- 原文 samba-4.7.0
+	<para>
+		<command>vfs_ceph</command> requires that the underlying share
+		path is a Ceph filesystem.
+	</para>
+-->
+	<para>
+		<command>vfs_ceph</command> は、ベースとなる共有パスが Ceph ファイルシステム
+		であることを要求する。
+	</para>
+
+	<programlisting>
+		<smbconfsection name="[share]"/>
+		<smbconfoption name="vfs objects">ceph</smbconfoption>
+	</programlisting>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>ceph:config_file = path</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+			Allows one to define a ceph configfile to use. Empty by default.
+		</para>
+-->
+		<para>
+			ceph 構成ファイル（configfile）を使う。既定値は空である。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+			Example: ceph:config_file =
+			/etc/ceph/ceph.conf
+		</para>
+-->
+		<para>
+			例: ceph:config_file =
+			/etc/ceph/ceph.conf
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>ceph:user_id = name</term>
+		<listitem>
+<!-- 原文 samba-4.7.0
+		<para>
+			Allows one to explicitly set the client ID used for the
+			CephFS mount handle. Empty by default (CephFS uses the
+			process id).
+		</para>
+-->
+		<para>
+			CephFS マウントハンドルに用いられるクライアント ID を
+			明示的に設定する。既定値は空である（このとき CephFS は
+			プロセス ID を用いる）。
+		</para>
+<!-- 原文 samba-4.7.0
+		<para>
+			Example: ceph:user_id = samba
+		</para>
+-->
+		<para>
+			例: ceph:user_id = samba
+		</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.7.0
+	<para>
+		This man page is correct for version 4.2.0 of the Samba suite.
+	</para>
+-->
+	<para>
+		このマニュアルページは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.10.4 - 4.16.0 に対応する。</para>
+	<para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

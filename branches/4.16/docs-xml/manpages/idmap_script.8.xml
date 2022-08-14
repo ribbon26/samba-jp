@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_script.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_script</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>idmap_script</refname>
+	<refpurpose>Windows 向け Samba idmap_script バックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+
+	<para>
+	  idmap_script プラグインは、Samba とCTDB を使う、クラスタ環境中において、
+	  SID/uid/gid マッピングテーブルを格納するために winbindd によって使われる、
+	  idmap_tdb2 バックエンド用の代替である。これはマッピングを実行するための
+	  スクリプトとして使う、リードオンリのバックエンドである。
+	</para>
+
+	<para>
+	  これは、idmap_tdb2 バックエンドとは別に開発され、TDB 中に
+	  SID/uid/gid マッピングを格納しないので、 winbind_cache tdb は
+	  それらが提供されると、マッピングを格納する。
+	</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+		<term>range = low - high</term>
+		<listitem><para>
+		  バックエンドが権限を持つ、利用可能な uid と gid のマッチング範囲
+		  を定義する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>script</term>
+		<listitem><para>
+		  このオプションは、id マッピングを実行するための外部プログラムを
+		  設定するために使う事ができる。
+		</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>IDMAP スクリプト</title>
+
+	<para>
+	  tdb2 idmap バックエンドは、smb.conf のオプション
+	  <parameter>idmap config * : script</parameter>または、廃止予定の古い形式
+	  <parameter>idmap : script</parameter>を使って、id マッピングを実行するための
+	  外部プログラムをサポートする。
+	</para>
+
+	<para>
+	  スクリプトで得られたマッピングは、次に、id カウンタを増加させる事により作成された
+	  マッピングの代わりである idmap tdb2 データベース中に格納する。そのため、
+	  スクリプトが、SID から Unix ID マッピングに渡せる、SID の完全な範囲をカバーする
+	  ことは重要であり、そうで無い場合、スクリプトによってマップされない SID は、
+	  以前にスクリプトによってマップされた IDにマップされるかもしれない。
+	</para>
+
+	<para>
+	  スクリプトは以下のコマンドラインオプションを受け取れなければならない。
+	</para>
+
+	<programlisting>
+	SIDTOID S-1-xxxx
+	IDTOSID UID xxxx
+	IDTOSID GID xxxx
+	IDTOSID XID xxxx
+	</programlisting>
+
+	<para>
+	  さらに、1行のテキストとして、以下のレスポンスのどれかを返さねばならない。
+	</para>
+
+	<programlisting>
+	UID:yyyy
+	GID:yyyy
+	XID:yyyy
+	SID:ssss
+	ERR:yyyy
+	</programlisting>
+
+	<para>
+	  XID は UID と GID 両方の ID であることを示す。すなわち、これは、
+	  ID_TYPE_BOTH を必要とするが、それは最終的に、その要求が信頼出来るか
+	  についてはスクリプトに任されている。それは、UID または GID マッピングのみを
+	  返すことも選べる。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+	<para>
+	  これは、スクリプトパラメータ経由で、外部プログラムを使う既定値の idmap バックエンドが、
+	  どのようにスクリプトが使われるかを示している。
+	</para>
+
+	<programlisting>
+	[global]
+	idmap config * : backend = script
+	idmap config * : range = 1000000-2000000
+	idmap config * : script = /usr/local/samba/bin/idmap_script.sh
+	</programlisting>
+
+	<para>
+	  これはタスクの一部を実行する簡単なスクリプトである:
+	</para>
+
+	<programlisting>
+	#!/bin/sh
+	#
+	# Uncomment this if you want some logging
+	#echo $@ >> /tmp/idmap.sh.log
+	if [ "$1" == "SIDTOID" ]
+	then
+		# Note. The number returned has to be within the range defined
+		#echo "Sending UID:1000005" >> /tmp/idmap.sh.log
+		echo "UID:1000005"
+		exit 0
+	else
+		#echo "Sending ERR: No idea what to do" >> /tmp/idmap.sh.log
+		echo "ERR: No idea what to do"
+		exit 1
+	fi
+	</programlisting>
+
+	<para>
+	  はっきりとしていることは、
+	  もしも、入ってきた SID がユーザかグループ SID かを決めるため、
+	  wbinfo をおそらく使い、テーブル中でマッピングを検索するか、
+	  SID から UID へのマッピングなどのための、他のいくつかのメカニズムを使う
+	  ので、このスクリプトは、完全ではない。
+	</para>
+
+	<para>
+	  スクリプトは _NO_WINBINDD 環境変数を 1 に設定された状態で呼び出される
+	  ことに留意すること。これにより、スクリプトから、明示的な wbinfo の呼び出しと、
+	  暗黙の nss_winbind 経由による呼び出し両方において、winbind の
+	  再帰呼び出しを抑制する。
+	  たとえば、 <command>ls -l</command> を実行すると、無限の再帰
+	  を引き起こしてしまう。
+	</para>
+
+	<para>
+	  idmap script 内で <command>wbinfo -n</command> と、 
+	  <command>wbinfo -s</command> を呼び出すことは安全である。
+	  これを行う場合、再帰を防ぐために、スクリプトは <command>wbinfo</command>
+	  を呼び出す直前に、_NO_WINBINDD 環境変数を 設定解除し、
+	  <command>wbinfo</command>から戻ってきた直後に、
+	  再度値を 1 にしなければならない。
+	</para>
+	
+</refsect1>
+
+<refsect1>
+  <title>著者</title>
+
+  <para>
+    オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+    Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+    同様の方法で、Samba Team によりオープンソースプロジェクトとして
+    開発されている。
+  </para>
+</refsect1>
+
+<refsect1>
+  <title>日本語訳</title>
+  <para>このマニュアルページは Samba 4.3.0 - 4.16.0 に対応する。</para>
+  <para>このドキュメントの Samba 4.3.0 - 4.16.0 対応の翻訳は
+  <itemizedlist>
+    <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+  </itemizedlist>
+  によって行なわれた。</para>
+</refsect1>
+
+
+</refentry>

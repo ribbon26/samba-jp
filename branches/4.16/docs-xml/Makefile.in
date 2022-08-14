@@ -1,0 +1,101 @@
+## makefile for building samba-ja documentation
+## ======================================================================
+
+TARFILE= 4.13.0
+
+SAMBA_DIR=@SAMBADIR@
+SAMBA_DOCS_XML_DIR=$(SAMBA_DIR)/docs-xml
+SAMBA_VERSION_MAJOR=@SAMBA_VERSION_MAJOR@
+SAMBA_VERSION_MINOR=@SAMBA_VERSION_MINOR@
+SAMBA_VERSION_RELEASE=@SAMBA_VERSION_RELEASE@
+
+SAMBA_DOCS_XML_HTML_COMMON_XSL=	xslt/html-common.xsl
+
+SAMBA_DOCS_XML_BUILD_FILES= \
+	htmldocs.html \
+	xslt/docbook2pearson.xsl \
+	xslt/generate-attributions.xsl \
+	xslt/generate-dependencies.xsl \
+	xslt/html \
+	xslt/html-chunk.xsl \
+	xslt/html.xsl \
+	xslt/latex \
+	xslt/latex.xsl \
+	xslt/latex.overrides.xml \
+	xslt/manpage-summary.xsl \
+	xslt/sambadoc2pearson.xsl \
+	xslt/smb.conf-html.xsl \
+	xslt/strip-references.xsl \
+	smbdotconf/generate-context.xsl \
+	smbdotconf/generate-file-list.sh \
+	templates
+
+# FIXME: Remove?
+#	xslt/sambadoc2pearson.xsl \
+#	xslt/smb.conf-html.xsl \
+#	xslt/yodl.xsl \
+#	xslt/extract-examples.xsl \
+
+## ======================================================================
+
+default: help
+
+all: html html-single htmlman3 manpages3
+
+tar::
+	tar -cvzf samba-ja-docs-manpages-$(TARFILE).tar.gz output/manpages COPYING README
+	tar -cvzf samba-ja-docs-$(TARFILE).tar.gz build manpages output Samba3-Developers-Guide Samba3-HOWTO smbdotconf xslt COPYING Makefile.in README \
+	  aclocal.m4 configure configure.ac Makefile.settings.in
+
+help: config.stamp
+	@echo "Supported make targets:"
+	@echo " release - Build the docs needed for a Samba release"
+	@echo " all - Build all docs that can be build using the utilities found by configure"
+	@echo " everything - Build all of the above"
+#	@echo " pdf,tex,ps,manpages,txt,pearson,htmlhelp - Build specific output format"
+	@echo " pdf,tex,ps,manpages,txt,htmlhelp - Build specific output format"
+	@echo " html - Build multi-file HTML versions"
+	@echo " html-single - Build single-file HTML versions"
+	@echo " htmlman - Build HTML version of manpages"
+#	@echo " samples - Extract examples"
+
+html html-single htmlhelp htmlman manpages pdf ps tex texiinfo txt:: config.stamp build/catalog.xml $(SAMBA_DOCS_XML_BUILD_FILES)
+	XML_CATALOG_FILES="file:///etc/xml/catalog file://`pwd`/build/catalog.xml" \
+	 $(MAKE) -f Makefile.orig $@
+
+config.stamp: Makefile.orig $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl
+	touch $@
+
+Makefile.orig: $(SAMBA_DOCS_XML_DIR)/Makefile
+	cp -p $< $@
+	sed -i "/^DBLATEX_OPTIONS/s/$$/ -b xetex/" $@
+	sed -i "s/xslt\/latex\.xsl/xslt\/sj.latex.xsl/g" $@
+	sed -i "s/^\thttp:[a-z\./]*htmlhelp\.xsl /\txslt\/sj.htmlhelp.xsl /" $@
+	sed -i "s/\(\$$(DB2TEXI)\).*$$/\1 --encoding 'UTF-8' --to-stdout $$\(shell pwd\)\/$$\< \>..\/..\/$$\@/" $@
+
+$(SAMBA_DOCS_XML_BUILD_FILES):
+	cp -rp $(SAMBA_DOCS_XML_DIR)/$@ $@
+
+$(SAMBA_DOCS_XML_CONFIGURED_FILES): $(SAMBA_DOCS_XML_CONFIGURE_FILES)
+	rm -f $(SAMBA_DOCS_XML_CONFIGURED_FILES)
+	$(MAKE) -f Makefile.orig Makefile.settings
+#	echo 'XSLTPROC += --stringparam chunker.output.encoding UTF-8' >>Makefile.settings
+
+$(SAMBA_DOCS_XML_HTML_COMMON_XSL): $(SAMBA_DOCS_XML_DIR)/$(SAMBA_DOCS_XML_HTML_COMMON_XSL)
+	sed -e "/base\.dir/i   <xsl:import href=\"sj.html-common.xsl\"\/>" $< > $@
+
+xslt/man.xsl: $(SAMBA_DOCS_XML_DIR)/xslt/man.xsl
+	sed -e "/xsl:import/a   <xsl:import href=\"sj.man.xsl\"\/>" $< > $@
+
+clean::
+	rm -f *-attributions.xml *.d
+	rm -f *.aux *.cb *.glo *.idx *.log *.out.ps *.toc
+
+distclean:: clean
+	rm -rf $(SAMBA_DOCS_XML_BUILD_FILES) $(SAMBA_DOCS_XML_HTML_COMMON_XSL) xslt/man.xsl */*.tmp
+	rm -fr Makefile Makefile.orig Makefile.settings smbdotconf/parameters.all.xml
+	rm -rf $(SAMBA_DOCS_XML_CONFIGURED_FILES)
+	rm -fr Samba3-*.tex Samba3-*.dvi Samba3-*.ps Samba3-*.pdf
+	rm -rf autom4te.cache
+	rm -rf config.log config.stamp output
+

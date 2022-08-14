@@ -1,0 +1,30 @@
+<samba:parameter name="kernel oplocks"
+		 type="boolean"
+                 context="S"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>カーネルベースの
+	<smbconfoption name="oplocks"/>
+	をサポートしている UNIX (現在は と Linux のみ) の場合、
+	このパラメーターにより oplock の利用を制御できる。しかし、これは
+	Linux カーネルがそれらを適切にサポートしないので、クライアントに
+	対してレベルII oplock を無効にする。</para>
+
+	<para>カーネル oplocks のサポートにより、
+	<citerefentry><refentrytitle>smbd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry> が oplock を行ったファイルに対して、
+	ローカルな UNIX プロセスや NFS 経由でのアクセスがあった際に、
+	Sambaが <parameter moreinfo="none">oplocks</parameter> を破棄することが可能となる。
+	これにより、 SMB/CIFS と NFS やローカルファイルアクセスとの間の完全な一貫性が確保される
+	(これは<emphasis>非常に</emphasis>素晴らしいことである :-)。</para>
+	<para>もしもこの相互作用が不要なら、レベルII oplockと、それに関連して性能向上
+	が得られるように、Linux 上でパラメーターを無効にすべきである。</para>
+
+	<para>このパラメーターの既定値は、 <constant>no</constant> であるが、
+	カーネルがこの機能をサポートしていないシステムでは、自動的に無効にされる。</para>
+</description>
+<related>oplocks</related>
+<related>level2 oplocks</related>
+<related>smb2 leases</related>
+<value type="default">no</value>
+</samba:parameter>

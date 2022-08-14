@@ -1,0 +1,68 @@
+<samba:parameter name="smb2 disable oplock break retry"
+                 context="G"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.13.0
+    <para>This boolean parameter controls whether
+    <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will trigger
+    smb2 oplock break notification retries when using
+    <smbconfoption name="server multi channel support">yes</smbconfoption>.
+    </para>
+ -->
+    <para>この真偽値パラメータは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が、
+    <smbconfoption name="server multi channel support">yes</smbconfoption>
+    を使う時、smb2 oplock break notification のリトライのトリガを制御する。
+    </para>
+
+<!-- Samba-4.13.0
+    <para>The [MS-SMB2] specification documents that a server should
+    send smb2 oplock break notification retries on all available channel
+    to the given client.</para>
+
+    <para>But Windows Server versions (at least up to 2019) do not send
+    smb2 oplock break notification retries on channel failures.
+    That means they do not implement the behavior specified
+    in [MS-SMB2].</para>
+ -->
+    <para>The [MS-SMB2] の仕様ドキュメントでは、指定されたクライアントに対して、
+    サーバは、すべての有効なチャンネル上で smb2 oplock break notification リトライを
+    送るべきであるとしている。</para>
+
+    <para>しかし、Windows サーバの(少なくとも 2019 までの)バージョンでは、
+    チャンネルの障害時に smb2 oplock break notification リトライを送らない。
+    これは、[MS-SMB2] で定義された動作を実装していないかとを意味する。</para>
+
+<!-- Samba-4.13.0
+    <para>By default Samba behaves according to the specification
+    and send smb2 oplock break notification retries.</para>
+
+    <para>Warning: Only enable this option if existing clients can't
+    handle possible retries and it turns out that the Windows Server
+    behavior is required.</para>
+
+    <para>Note: it's likely that this option gets removed again
+    if future Windows versions change their behavior.</para>
+
+    <para>Note: this only applies to oplocks and not SMB2 leases.</para>
+ -->
+    <para>既定で、Samba は、仕様に従って動作し、smb2 oplock ブレーク通知リトライを
+    送信する。</para>
+
+    <para>警告: 既存のクライアントが可能なリトライを扱えない場合にのみ、
+    このオプションを有効にする。そして、
+    Windows サーバの動作が必要な場合には OFF にする。</para>
+
+    <para>注意: 将来の Windows バージョンがその動作を変更した場合、
+    このオプションは再度削除される可能性がある。</para>
+
+    <para>注意: これは、oplocks のみに適用され、SMB2 leases には適用されない</para>
+</description>
+
+<related>server multi channel support</related>
+
+<value type="default">no</value>
+<value type="example">yes</value>
+</samba:parameter>

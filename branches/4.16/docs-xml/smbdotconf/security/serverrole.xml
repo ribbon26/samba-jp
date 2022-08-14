@@ -1,0 +1,111 @@
+<samba:parameter name="server role"
+                 context="G"
+		 type="enum"
+		 function="_server_role"
+		 enumlist="enum_server_role"
+		 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このオプションはSambaサーバーの基本的な動作モードを決定し、
+    <filename moreinfo="none"> smb.conf</filename>ファイル中で最も重要な
+    設定の1つである。</para>
+
+    <para>既定値は<command moreinfo="none">server role = auto</command>で、これは
+    Samba に<smbconfoption name="security"/>の設定に従って動作するようにさせ、
+    また、もしも設定されていない場合は、どのドメインにも接続しない、単純ファイルサーバー
+    として動作するようにさせる。</para>
+
+    <para>そのほかの設定としては、<command moreinfo="none">server role = standalone</command>
+    または<command moreinfo="none">server role = member server</command>があり、これは、
+    Windows ドメインに Samba を参加させることをサポートし、そのほかには、
+     <command moreinfo="none">server role = domain controller</command>があり、
+    これは、Samba を Windows ドメインコントローラーとして動かす。</para>
+
+    <para>もしも、主に、パスワードなしで(ゲスト共有)を設定する場合には、
+    <command moreinfo="none">server role = standalone</command>と
+    <smbconfoption name="map to guest"/>を使うべきである。これは、主に共有プリントサーバーで
+    使われる。 </para>
+		
+    <para><anchor id="AUTO"/><emphasis>SERVER ROLE = AUTO</emphasis></para>
+
+    <para>これは、Samba における既定値の server role であり、Samba が、server role を
+    決める<smbconfoption name="security"/>パラメーター(もしも設定されていれば)を確認する
+    ようにさせ、結果として、以前のSambaバージョンと互換のある動作をさせる。</para>
+
+    <para><anchor id="STANDALONE"/><emphasis>SERVER ROLE = STANDALONE</emphasis></para>
+
+    <para>もしも、<smbconfoption name="security"/>が設定されていない場合、これは、
+    Samba セキュリティ設定の既定値である。スタンドアロン動作において、クライアントは最初に
+    このマシンに保持されている正しいユーザー名とパスワード(<smbconfoption name="username map"/>
+    パラメーターを使ってマッピングしたものでもよい)で、&quot;ログオン&quot;を行なう必要がある。
+    暗号化パスワード(<smbconfoption name="encrypted passwords"/>パラメーターを参照のこと)の使用は、
+    このセキュリティモードでは既定値である。もしも設定されていた場合、<smbconfoption name="user"/>と
+    <smbconfoption name="guest only"/>のようなパラメーターは、次に適用され、この接続上で使われる
+    UNIX ユーザーを変更するかもしれないが、それは、ユーザー認証が正常に終わった後である。</para>
+
+    <para><anchor id="MEMBER SERVER"/><emphasis>SERVER ROLE = MEMBER SERVER</emphasis></para>
+
+    <para>このモードは、<citerefentry><refentrytitle>net</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry>によってこのマシンをWindowsドメインに
+    追加するために使われた時にのみ正常に動作する。これは、
+    <smbconfoption name="encrypted passwords"/>が<constant>yes</constant>
+    であることを前提としている。このモードでは、Samba は、Windows または Samba ドメイン
+    コントローラーに、Windows サーバーが行うのと全く同じ方法で、ユーザー名/パスワードを
+    渡すことによって認証をしようとする。</para>
+
+    <para>有効なUNIXユーザーは、Samba が、ファイルへのアクセスをマップするための、有効な UNIX
+    アカウントを使えるようにするため、ドメインコントローラー上のアカウントと
+    同じように、引き続き存在する必要があることに<emphasis>注意</emphasis>。
+    Winbind はこれを提供する事ができる。</para>
+
+    <para><anchor id="PDC"/><emphasis>SERVER ROLE = CLASSIC PRIMARY DOMAIN CONTROLLER</emphasis></para>
+
+    <para>このモードの動作は、旧来の Samba プライマリドメインコントローラーであり、
+    NT-4風のドメインとして、Windows と Samba クライアントに対して、ドメインログオン
+    サービスを提供する。クライアントはネットワーク越しに、セキュアで信頼された
+    パスを作成するため、ドメインに参加しなければならない。そこには、NetBIOS
+    スコープ(通常、ブロードキャストネットワークまたは単一の WINS サーバーによって
+    取り扱われるクライアント群)ごとに単一の PDC が存在しなければならない。
+    </para>
+
+    <para><anchor id="BDC"/><emphasis>SERVER ROLE = CLASSIC BACKUP DOMAIN CONTROLLER</emphasis></para>
+
+    <para>このモードの動作は、旧来の Samba バックアップドメインコントローラーであり、
+    NT-4風のドメインとして、Windows と Samba クライアントに対して、ドメインログオン
+    サービスを提供する。BDC として、単一の NetBIOS スコープに対し、冗長なログオン
+    サービスを提供するため、複数の Samba サーバーを立てることができるようになる。
+    </para>
+
+    <para><anchor id="AD-DC"/><emphasis>SERVER ROLE = ACTIVE DIRECTORY DOMAIN CONTROLLER</emphasis></para>
+
+    <para>このモードの動作は、Samba を Active Directory ドメインコントローラーと
+    するものであり、ドメインの Windows と Samba クライアントにドメインログオン
+    サービスを提供する。このロールは特別な設定を必要とするので、
+    <ulink url="http://wiki.samba.org/index.php/Samba4/HOWTO">Samba4 HOWTO</ulink>
+    を参照のこと。</para>
+
+<!-- Samba-4.15.3
+    <para><anchor id="IPA-DC"/><emphasis>SERVER ROLE = IPA DOMAIN CONTROLLER</emphasis></para>
+
+    <para>This mode of operation runs Samba in a hybrid mode for IPA
+    domain controller, providing forest trust to Active Directory.
+    This role requires special configuration performed by IPA installers
+    and should not be used manually by any administrator.
+    </para>
+-->
+    <para><anchor id="IPA-DC"/><emphasis>SERVER ROLE = IPA DOMAIN CONTROLLER</emphasis></para>
+
+    <para>このモードの動作は、IPA ドメインコントローラ向けのハイブリッドモードで
+    Samba を動作させ、Active Directory に対してフォレストに対する信頼を提供する。
+    このロールは、IPA インストーラの実行による特別な設定を必要とし、
+    administrator による手動設定は行うべきでない。
+    </para>
+
+</description>
+
+<related>security</related>
+<related>realm</related>
+<related>encrypt passwords</related>
+
+<value type="default">AUTO</value>
+<value type="example">ACTIVE DIRECTORY DOMAIN CONTROLLER</value>
+</samba:parameter>

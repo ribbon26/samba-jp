@@ -1,0 +1,133 @@
+<samba:parameter name="username map"
+                 context="G"
+		 type="string"
+		 substitution="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+    <para>このオプションにより、クライアント上とサーバー上でのユーザー名のマッピング
+    情報を格納したファイルが指定される。これは幾つかの目的で利用される。
+    通常は DOS や Windows マシンでユーザーが利用しているユーザー名を UNIX マシン上でのユーザー名にマッピングする為に用いられるが、
+    複数のユーザーを特定のユーザー名にマッピングすることで、
+    ユーザー間でのファイル共有を簡単に行なえるようにするために用いることも可能である。</para>
+
+    <para>
+    security パラメーターが user の場合、username map パラメーターは
+    ユーザーの資格情報が検証されるたびに適用されることに注意。
+    ドメインのメンバーサーバー(domain もしくは ads)の場合、ドメインコントローラーから認証を受けた後で username map パラメーターが適用され、マッピングの際には、完全ユーザー名(例えば biddle = DOMAIN\foo) で記述する必要がある。
+    </para>
+    
+    <para>ファイルは各行ごとに評価される。各々の行は、左端に UNIX ユーザー名が
+    あり、'=' を挟んでその右側にユーザー名のリストが続く形式をとる。
+    右側のユーザー名のリストには、グループ内のすべての UNIX ユーザー名に一致させる
+    @group という形式を含めることもできる。
+    '*' はワイルドカードであり、任意の名前と一致する。
+    ファイルの各行は最大 1023 文字まで記述可能である。</para>
+
+    <para>ファイルの評価は、
+    提供されたユーザー名と '=' の右側の各ユーザー名とを各行毎に比較することにより行なわれる。
+    提供されたユーザー名が右側のどれかに一致すると、
+    提供されたユーザー名が一致したユーザー名に置き換わり、
+    引続き以降の行の処理が行なわれていくことになる。</para>
+
+    <para>'#' や ';' で始まる行は無視される。</para>
+
+    <para>'!' ではじまる行があると、
+    以降の行でユーザー名が一致した時点で比較処理は中止される。
+    それ以外の場合、この比較処理はすべての行に対して継続される。
+    ファイルの最後でワイルドカードによるマッピングを行なっている場合には、
+     '!' を使うとかなり便利である。</para>
+
+    <para>たとえば、<constant>admin</constant> や
+    <constant>administrator</constant> といった名前から UNIX の <constant>root</constant>
+    へのマッピングを行ないたい場合は、以下のように記述する:
+<programlisting>
+<command moreinfo="none">root = admin administrator</command>
+</programlisting>
+    また、UNIX の <constant>system</constant> グループに所属するユーザーを
+    <constant>sys</constant> という UNIX ユーザーに置き換えるには、以下のように記述する:
+<programlisting>
+<command moreinfo="none">sys = @system</command>
+</programlisting>
+    </para>
+
+    <para>username map のファイル中には幾つのマッピングの設定を行なっても構わない。</para>
+
+<!-- Samba 4.16.2
+     <para>
+       If your system supports the NIS NETGROUP option then the netgroup database is checked before the <filename
+       moreinfo="none">/etc/group </filename> database for matching groups.
+       </para>
+
+    <para>
+-->
+     <para>
+       使用するシステムが NIS NETGROUP オプションをサポートしている場合は、グループが
+       一致しているかを調べるため、netgroup データベースは
+       <filename moreinfo="none">/etc/group </filename> データベースを検査する前に検査される。
+       </para>
+
+    <para>
+
+
+    <para>空白を含む Windows のユーザー名は、
+    ダブルクォートで両側を括って記述する。たとえば、
+<programlisting>
+<command moreinfo="none">tridge = &quot;Andrew Tridgell&quot;</command>
+</programlisting>
+    は、Windows のユーザー名 &quot;Andrew Tridgell&quot; を
+    UNIX のユーザー名 &quot;tridge&quot; に置き換える。</para>
+
+    <para> 以下の例は、 mary と fred を UNIX ユーザー sys に置き換え、
+    そのほかのユーザーを guest に置き換える。
+    '!'を利用することで、一致した行以降の処理を抑止していることに注意。
+<programlisting format="linespecific">
+!sys = mary fred
+guest = *
+</programlisting>
+    </para>
+
+    <para>ユーザー名が現われる箇所全てに置き換えの結果が適用されることに注意。
+    例えば、\\server\fred に接続する場合、<constant>
+    fred</constant> が <constant>mary</constant> に置き換えられる場合は、
+    実際に接続する先は \\server\mary であり、パスワードも
+    <constant>fred</constant> ではなく、<constant>mary</constant>
+    のものを入力することが必要になる。この唯一の例外は、(設定している場合に)
+    ドメインコントローラーに対してユーザー名を送出するときである。
+    ドメインコントローラーは、
+    クライアントが提供したユーザー名を置換なしでそのまま受け取る。</para>
+
+    <para>逆のマッピングは行われないことにも注意。この影響が現われるのは印刷時である。
+    Windows for Workgroup におけるプリントマネージャは、
+    置き換えが行われたユーザーが印刷ジョブを所有していないと判断するため、
+    印刷ジョブ削除時にトラブルが発生する。</para>
+
+    <para>
+    Samba 3.0.8 より前のバージョンでは、Kerberos ログインが行なわれる場合にのみ、
+    完全ユーザー名(たとえば: <literal>DOMAIN\user</literal>)がサポートされていた。
+    しかし、NTLM[SSP] によるユーザー認証の際には、ユーザー名部分のみがマッチングの対象と
+    なっていた。このため、同一のサーバーに対するアクセスで、結果が一致しないという事態
+    が発生していた。
+   </para>
+
+   <para>
+    以下の機能は、Samba 3.0.8 以降のものである。
+   </para>
+
+   <para>
+    ローカル認証の場合、username map パラメーターは、コネクションに対する認証が行なわれる際のユーザー名に対して適用される。
+    </para>
+
+    <para>
+    認証を外部のドメインコントローラーに依存している場合、
+    smbd は username map パラメーターを、ユーザー認証が成功した場合にのみ、認証された完全ユーザー名(例: DOMAIN\user) に対して適用する。
+    </para>
+
+    <para>
+    以下に設定例を示す:
+<programlisting>
+username map = /usr/local/samba/lib/users.map
+</programlisting>
+    </para>
+</description>
+<value type="default"><comment>no username map</comment></value>
+</samba:parameter>

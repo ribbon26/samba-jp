@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="idmap_rfc2307.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>idmap_rfc2307</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+	<refname>idmap_rfc2307</refname>
+	<refpurpose>Samba Winbindの idmap_rfc2307 バックエンド</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<title>説明</title>
+
+	<para>idmap_rfc2307 プラグインは、RFC 2307で定義されたLDAPサーバ中の
+	レコードからidマッピングを、winbindが読み取るための機能を提供する
+	プラグインである。LDAPサーバ中サーバはスタンドアロンでも、ADサーバによって
+	提供されるものでもよい。ADサーバは常時名前とSID間でのマッピングを
+	提供するために必要とされ、LDAPサーバは名前とuid/gid間でのマッピングのために
+	問合せされる。このモジュールは、&quot;idmap&quot; APIのみを実装し、
+	読み取り機能のみを提供する。</para>
+
+	<para>マッピングはActive Directoryサーバ中にユーザアカウントと、
+	posixAccount と、 posixGroup オブジェクトをLDAPサーバ中に作成する事を、
+	Administratorによって事前に準備しておくことが必要である。
+	Active Directoryサーバ中とLDAPサーバ中の名前は、同じでなければならない。</para>
+
+	<para>この id マッピングアプローチでは、RFC 2307 形式でレコードを格納している
+	既存の LDAP 認証サーバを再利用することが出来るようになる。</para>
+
+	<para>AD によって提供された LDAP サーバへ接続する時、パラメータ
+	<smbconfoption name="ldap ssl ads"/>はSSLを使うかを決める。
+	スタンドアロンの LDAP サーバを使うときは、 <smbconfoption name="ldap ssl"/>
+	を適用する。</para>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>IDMAP オプション</title>
+
+	<variablelist>
+		<varlistentry>
+			<term>range = low - high</term>
+			<listitem><para>バックエンドが権限を持っている
+			マッチングが有効なUIDとGIDを定義する。レンジが
+			フィルタとして動作する事に注意。もしも、AD中に
+			格納されている任意のUIDとGIDの範囲外の値を指定した
+			場合、レンジは無視され、対応するマップは破棄される。
+			これは、ローカルと、リモートで定義されたID間で、
+			UID/GIDのオーバラップによるアクシデントを
+			防ぐという事を意図している。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>ldap_server = &lt;ad | stand-alone &gt;</term>
+			<listitem><para>使用するLDAPサーバのタイプを定義する。
+			これは、Active Directoryサーバ(ad)によって提供される
+			LDAPサーバか、スタンドアロンのLDAPサーバかを指定する。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>bind_path_user</term>
+			<listitem><para>LDAPサーバ中にある
+			ユーザオブジェクトの検索ベースを指定する。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>bind_path_group</term>
+			<listitem><para>
+			  LDAPサーバ中にある
+			  グループオブジェクトの検索ベースを指定する。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>user_cn = &lt;yes | no&gt;</term>
+			<listitem><para>LDAP中のユーザ名に対して、
+			uidの代わりにcn属性を問い合わせる。このオプションは
+			必須ではないので、既定値は no である。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>realm</term>
+			<listitem><para>LDAP クエリ中のグループ
+			(と、もしも user_cnが設定された場合はusersも)
+			のために、 cn に@realm を追加する。このオプションは
+			必須ではないので、既定では realm にはなにも追加されない。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>ldap_domain</term>
+			<listitem><para>Active Directory サーバ中の
+			LDAPサーバを使う時、これは、Active Directory
+			サーバにアクセスするためのドメインを指定出来るようにする。
+			これはまた、一箇所で、すべてのRFC 2307レコードを
+			保持している間、信頼関係を使えるようにする。
+			このパラメータはオプションであり、既定値は、LDAP
+			レコードを問い合わせるために、現在のドメイン中の
+			ADサーバにアクセスする。</para>
+<!--			
+			<para>When using the LDAP server in
+			the Active Directory server, this allows to
+			specify the domain where to access the Active
+			Directory server. This allows using trust
+			relationships while keeping all RFC 2307
+			records in one place. This parameter is
+			optional, the default is to access the AD
+			server in the current domain to query LDAP
+			records.</para>
+-->
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>ldap_url</term>
+			<listitem><para>スタンドアロンのLDAPサーバを使う時、
+			このパラメータは、LDAPサーバにアクセスするための
+			ldap URLを指定する。
+			</para></listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>ldap_user_dn</term>
+			<listitem><para>認証に使うためのユーザDNを
+			定義する。このユーザにおける認証のためのシークレットは、
+			net idmap secret で格納される(
+			<citerefentry><refentrytitle>net</refentrytitle>
+			<manvolnum>8</manvolnum></citerefentry>を参照)。
+			もしも存在しない場合、匿名バインドが実行される。
+			</para></listitem>
+		</varlistentry>
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>以下の例は、スタンドアロン LDAP サーバから id マッピングを
+	どのように検索するかを示す例である。この例は又、どのように、
+	BUILTIN のような、内部バックエンド中で使用されうる
+	ローカル id 割り当てにとは競合しない、小さなレンジを確保することも
+	示す。</para>
+
+	<programlisting>
+	[global]
+	idmap config * : backend = tdb
+	idmap config * : range = 1000000-1999999
+
+	idmap config DOMAIN : backend = rfc2307
+	idmap config DOMAIN : range = 2000000-2999999
+	idmap config DOMAIN : ldap_server = stand-alone
+	idmap config DOMAIN : ldap_url = ldap://ldap1.example.com
+	idmap config DOMAIN : ldap_user_dn = cn=ldapmanager,dc=example,dc=com
+	idmap config DOMAIN : bind_path_user = ou=People,dc=example,dc=com
+	idmap config DOMAIN : bind_path_group = ou=Group,dc=example,dc=com
+	</programlisting>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>
+	オリジナルの Samba ソフトウェアとそれに関連するユーティリティーは、
+	Andrew Tridgell によって作られた。Samba は現在、Linux カーネル開発と
+	同様の方法で、Samba Team によりオープンソースプロジェクトとして
+	開発されている。
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.7.0 - 4.16.0 に対応する。</para>
+		<para>このドキュメントの Samba 4.1.0 - 4.16.0 対応の翻訳は
+	<itemizedlist>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>
+		によって行なわれた。</para>
+</refsect1>
+
+</refentry>
