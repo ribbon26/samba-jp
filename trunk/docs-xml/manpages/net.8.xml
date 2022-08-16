@@ -3247,9 +3247,9 @@ Samba 3.0.23 より、root 以外のユーザーが "net usershare" コマンド
 定義共有を公開する機能が追加された。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
-To set this up, first set up your smb.conf by adding to the [global] section:
+To set this up, first set up your &smb.conf; by adding to the [global] section:
 
 usershare path = /usr/local/samba/lib/usershares
 
@@ -3264,7 +3264,7 @@ which means that a file in that directory can be renamed or deleted only
 by the owner of the file).
 
 Finally, tell smbd how many usershares you will allow by adding to the [global]
-section of smb.conf a line such as :
+section of &smb.conf; a line such as :
 
 usershare max shares = 100.
 
@@ -3273,7 +3273,7 @@ can create user defined shares on demand using the commands below.
 </para>
 -->
 <para>
-これを行なうには、まず smb.conf の [global] セクションに以下を追加する必要がある:
+これを行なうには、まず &smb.conf; の [global] セクションに以下を追加する必要がある:
 
 usershare path = /usr/local/samba/lib/usershares
 
@@ -3286,7 +3286,7 @@ usershare path = /usr/local/samba/lib/usershares
 さらにスティッキービットにより、ディレクトリ中のファイルについて、名前の変更や削除
 が行なえるのはファイルの所有者のみとなる）
 
-最後に、smb.conf の [global] セクションに以下のような行を追加することで、
+最後に、&smb.conf; の [global] セクションに以下のような行を追加することで、
 作成可能なユーザー定義共有の最大数を smbd に設定する:
 
 usershare max shares = 100
@@ -3328,10 +3328,10 @@ Add or replace a new user defined share, with name "sharename".
 sharename というユーザー定義共有の新規作成または修正（上書き）を行なう。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 "path" specifies the absolute pathname on the system to be exported.
-Restrictions may be put on this, see the global smb.conf parameters:
+Restrictions may be put on this, see the global &smb.conf; parameters:
 "usershare owner only", "usershare prefix allow list", and
 "usershare prefix deny list".
 </para>
@@ -3339,7 +3339,8 @@ Restrictions may be put on this, see the global smb.conf parameters:
 <para>
 "path" には、公開するディレクトリのシステム上での絶対パス名を指定する。
 公開可能なディレクトリには幾つかの制約がある。
-グローバルな smb.conf のパラメーターである "usershare owner only"、"usershare prefix allow list"、"usershare prefix deny list" を参照のこと。
+グローバルな &smb.conf; のパラメーターである "usershare owner only" ,
+"usershare prefix allow list", "usershare prefix deny list" を参照のこと。
 </para>
 
 <!-- 原文 samba-4.6.7
@@ -3352,10 +3353,10 @@ on the share when browsed to by a client.
 オプションの "comment" パラメーターは、クライアントから共有を参照した際に表示されるコメント文字列を指定する。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>The optional "acl" field
 specifies which users have read and write access to the entire share.
-Note that guest connections are not allowed unless the smb.conf parameter
+Note that guest connections are not allowed unless the &smb.conf; parameter
 "usershare allow guests" has been set. The definition of a user
 defined share acl is: "user:permission", where user is a valid
 username on the system and permission can be "F", "R", or "D".
@@ -3368,7 +3369,7 @@ share (no creation of new files or directories or writing to files).
 -->
 <para>
 オプションの "acl" フィールドは、共有単位でどのユーザーに読み取りや書き
-込みのアクセス許可を与えるかを指定する。ゲストアクセスは、 smb.conf の
+込みのアクセス許可を与えるかを指定する。ゲストアクセスは、 &smb.conf; の
 "usershare allow guests" パラメーターを有効にしない限り行なえない。
 ユーザー定義共有の ACL の指定は "user:permission" という形式で行なわれる。
 user はシステムで有効なユーザー名であり、permission は "F"、"R"、"D" の
@@ -3388,12 +3389,12 @@ authenticated user has read-only access.
 "acl" オプションが指定されなかった場合のデフォルトは "Everyone:R" である。これは、認証されたすべてのユーザーが読み取り専用のアクセス権を有することを意味する。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 The optional "guest_ok" has the same effect as the parameter of the
-same name in smb.conf, in that it allows guest access to this user
+same name in &smb.conf;, in that it allows guest access to this user
 defined share. This parameter is only allowed if the global parameter
-"usershare allow guests" has been set to true in the smb.conf.
+"usershare allow guests" has been set to true in the &smb.conf;.
 </para>
 
 There is no separate command to modify an existing user defined share,
@@ -3404,8 +3405,10 @@ at connect time so will see the change immediately, there is no need
 to restart smbd on adding, deleting or changing a user defined share.
 -->
 <para>
-オプションの "guest_ok" パラメーターは、smb.conf 中の同名のパラメーターと同じ意味を持ち、該当のユーザー定義共有に対するゲストアクセスを許可する。
-このパラメーターは、 smb.conf 中でグローバルパラメーターの "usershare allow guests" が有効になっている時のみ設定できる。
+オプションの "guest_ok" パラメーターは、&smb.conf; 中の同名のパラメーターと
+同じ意味を持ち、該当のユーザー定義共有に対するゲストアクセスを許可する。
+このパラメーターは、 &smb.conf; 中でグローバルパラメーターの "usershare allow guests" が
+有効になっている時のみ設定できる。
 </para>
 <para>
 既存のユーザー定義共有を修正するコマンドは個別に用意されておらず、
@@ -3526,10 +3529,10 @@ by enabling the RPC conf mode and specifying the address of the remote server.
 リモートのSambaサーバーを設定することもできる。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 The deployment of this configuration data can be activated in two levels from the
-<emphasis>smb.conf</emphasis> file: Share definitions from registry are
+<emphasis>&smb.conf;</emphasis> file: Share definitions from registry are
 activated by setting <parameter>registry shares</parameter> to
 <quote>yes</quote> in the [global] section and global configuration options are
 activated by setting <smbconfoption name="include">registry</smbconfoption> in
@@ -3542,7 +3545,7 @@ See the <citerefentry><refentrytitle>smb.conf</refentrytitle>
 -->
 <para>
 この設定データの配布は
-<emphasis>smb.conf</emphasis>ファイルから2つのレベルで有効にできる。
+<emphasis>&smb.conf;</emphasis>ファイルから2つのレベルで有効にできる。
 レジストリからの共有定義は[global]セクション中で<parameter>registry shares</parameter>を<quote>yes</quote>にすることで有効にでき、
 グローバルオプションは、複合設定の場合、[global]セクション中で<smbconfoption name="include">registry</smbconfoption>を設定することで、
 レジストリのみの設定の場合は、[global]セクション中で、<smbconfoption name="config backend">registry</smbconfoption>を設定することで有効になる。
@@ -4323,15 +4326,15 @@ win32 eventlog files (usually *.evt). evt files are used by the native Windows e
 evt ファイルはネイティブな Windows のイベントビューワツールによって使われる。
 </para>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 The import and export of evt files can only succeed when <parameter>eventlog list</parameter> is used in
-<emphasis>smb.conf</emphasis> file.
+<emphasis>&smb.conf;</emphasis> file.
 See the <citerefentry><refentrytitle>smb.conf</refentrytitle> <manvolnum>5</manvolnum></citerefentry> manpage for details.
 </para>
 -->
 <para>
-evtファイルのインポートとエクスポートは、<emphasis>smb.conf</emphasis>
+evtファイルのインポートとエクスポートは、<emphasis>&smb.conf;</emphasis>
 ファイル中で<parameter>eventlog list</parameter>が定義されている時のみ
 行える。詳細は <citerefentry><refentrytitle>smb.conf</refentrytitle>
 <manvolnum>5</manvolnum></citerefentry> マニュアルページを参照のこと。
@@ -4372,12 +4375,12 @@ Prints a eventlog *.evt file to standard output.
 <refsect3>
 <title>EVENTLOG IMPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 Imports a eventlog *.evt file defined by <replaceable>filename</replaceable> into the
 samba internal tdb representation of eventlog defined by <replaceable>eventlog</replaceable>.
 <replaceable>eventlog</replaceable> needs to part of the <parameter>eventlog list</parameter>
-defined in smb.conf.
+defined in &smb.conf;.
 See the <citerefentry><refentrytitle>smb.conf</refentrytitle> <manvolnum>5</manvolnum></citerefentry> manpage for details.
 </para>
 -->
@@ -4385,7 +4388,7 @@ See the <citerefentry><refentrytitle>smb.conf</refentrytitle> <manvolnum>5</manv
 <replaceable>filename</replaceable>によって定義されたイベントログファイル *.evt 
 を、<replaceable>eventlog</replaceable>で定義した Samba 内部の tdb 形式によるイベン
 トログファイルにインポートする。
-<replaceable>eventlog</replaceable> には smb.conf 中で定義されている
+<replaceable>eventlog</replaceable> には &smb.conf; 中で定義されている
 <parameter>eventlog list</parameter> が一部必要となる。詳細は、
 <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
 マニュアルページを参照のこと。
@@ -4396,19 +4399,19 @@ See the <citerefentry><refentrytitle>smb.conf</refentrytitle> <manvolnum>5</manv
 <refsect3>
 <title>EVENTLOG EXPORT <replaceable>filename</replaceable> <replaceable>eventlog</replaceable></title>
 
-<!-- 原文 samba-4.6.7
+<!-- 原文 samba-4.17.0
 <para>
 Exports the samba internal tdb representation of eventlog defined by <replaceable>eventlog</replaceable>
 to a eventlog *.evt file defined by <replaceable>filename</replaceable>.
 <replaceable>eventlog</replaceable> needs to part of the <parameter>eventlog list</parameter>
-defined in smb.conf.
+defined in &smb.conf;.
 See the <citerefentry><refentrytitle>smb.conf</refentrytitle> <manvolnum>5</manvolnum></citerefentry> manpage for details.
 </para>
 -->
 <para>
 <replaceable>eventlog</replaceable>で定義されている、Samba内部のtdb形式によるイベントログを
 <replaceable>filename</replaceable>で定義されているイベントログファイル *.evt にエクスポートする。
-<replaceable>eventlog</replaceable>はsmb.conf中で定義されている
+<replaceable>eventlog</replaceable>は &smb.conf; 中で定義されている
 <parameter>eventlog list</parameter>の一部を必要とする。詳細は、
 <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
 マニュアルページを参照のこと。
@@ -5047,7 +5050,7 @@ Requests an offline domain join by providing file-based provisioning data. This 
 </refsect1>
 <refsect1>
 	<title>日本語訳</title>
-	<para>このマニュアルページは Samba 4.15.0 - 4.16.0 に対応する。</para>
+	<para>このマニュアルページは Samba 4.17.0 - 4.17.0 に対応する。</para>
 
         <para>このドキュメントの Samba 3.0.0 対応の翻訳は
 	<itemizedlist>
@@ -5057,7 +5060,7 @@ Requests an offline domain join by providing file-based provisioning data. This 
        によって行なわれた。</para>
 
 	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
-	<para>Samba 3.2.4 - 4.16.0 対応の翻訳は、
+	<para>Samba 3.2.4 - 4.17.0 対応の翻訳は、
 	  <itemizedlist>
 	    <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
 	    <listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
