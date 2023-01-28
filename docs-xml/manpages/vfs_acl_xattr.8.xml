@@ -29,18 +29,41 @@
 	<citerefentry><refentrytitle>samba</refentrytitle>
 	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
 
+<!-- Samba 4.18.0
+        <para>This module is made for systems which do not support
+        standardized NFS4 ACLs but only a deprecated POSIX ACL
+        draft implementation. This is usually the case on Linux systems.
+        Systems that do support just use NFSv4 ACLs directly instead
+        of this module. Such support is usually provided by the filesystem
+        VFS module specific to the underlying filesystem that supports
+        NFS4 ACLs
+        </para>
+-->
+        <para>このモジュールは、標準化された NFS4 ACL をサポートしていないが、
+	非推奨の POSIX ACL ドラフト実装のみをサポートしているシステム用に
+	作成されている。これは、通常 Linux システムの場合である。
+	ちゃんとサポートしているシステムでは、このモジュールの代わりに、
+	NFSv4 ACL を直接使用すれば良い。そのようなサポートは、NFS4 ACLを
+	サポートする基本ファイルシステムに固有の VFS モジュールによって
+	提供される。
+        </para>
+
 	<para><command>vfs_acl_xattr</command> VFSモジュールは、
 	拡張属性 (EA) に NTFS のアクセス許可 (ACL) を格納する。
-	これにより、 Samba サーバーで NTFS のアクセス許可を
-	完全に実装することが可能となる。
+	これにより、 ACL 実装が それを行うことが出来なくとも、
+	Samba サーバーで NTFS のアクセス許可を完全に実装することが
+	可能となる。
 	</para>
 
 	<para>
-    アクセス許可は、ファイルやディレクトリの
-    <parameter>security.NTACL</parameter> 拡張属性に格納される。
-    この属性は、
-    <command>getfattr -d <filename>filename</filename></command> で
-    表示 <emphasis>できない。</emphasis>
+	NTACL は、AC L内のユーザとグループを表現する Windows SID を含む形式で、
+	ファイルとディレクトリの <parameter>security.NTACL</parameter> 拡張
+	属性に格納される。これは、ローカルファイルシステムの ACL に格納されて
+	いる uid と gid とは異なり、さらに、格納されている NT ACL の意味を
+	維持するため、ユーザとグループから Windows SID へのマッピングは一貫して
+	いる必要がある。この拡張属性は、Linux コマンド
+	<command>getfattr -d <filename>filename</filename></command>.
+	では<emphasis>表示されない</emphasis>。
 	現在の値を表示するためには、EA 名を指定する必要がある (たとえば、
 	<command>getfattr -n security.NTACL <filename>filename</filename>
 	</command>) 。
@@ -107,9 +130,9 @@
                <listitem>
                <para>
     このパラメーターを <emphasis>yes</emphasis> に設定した場合、
-    このモジュールは、可能な範囲で実施しているシステムの ACL とのマッピング
-    処理を<emphasis>無効化</emphasis>する。デフォルトの <emphasis>no
-    </emphasis> の場合、 Samba はシステムの ACL と NTFS のアクセス許可の
+    このモジュールは、ベストエフォートで行う、POSIX draft ACL レイヤとのマッピング
+    処理を<emphasis>行わない</emphasis>。既定は <emphasis>no
+    </emphasis> で、この場合、 Samba はシステムの ACL と NT ACL の
     両方に対して設定を行い、またアクセス可否の確認を実施する。
     ローカルまたは NFS 経由でのファイルアクセスのために、システムの ACL も
     設定しておく必要がある場合は、この設定が望ましいであろう。
@@ -179,7 +202,7 @@
 
 <refsect1>
         <title>日本語訳</title>
-        <para>このドキュメントは、Samba 4.17.0 - 4.17.0 に対応する。</para>
+        <para>このドキュメントは、Samba 4.18.0 - 4.18.0 に対応する。</para>
     <para>このドキュメントの翻訳は
         <itemizedlist>
         <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
