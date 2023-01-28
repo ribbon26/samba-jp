@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_preopen.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_preopen</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+	<refname>vfs_preopen</refname>
+	<refpurpose>番号付けられたファイルを読むアプリケーションのために読み込み遅延を隠す</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = preopen</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFSモジュールは、
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+	<para>このモジュールは、とても厳しいレイテンシ要求下で番号付け
+	  られた複数のファイルを読むアプリケーションを支援する。これが
+	  発生する1つの領域は、フレーム毎に1つのファイルを読むビデオ
+	  ストリーミングアプリケーションである。</para>
+
+	<para>このモジュールを使う場合、ファイルをオープンし、一定のバイト
+	  数のデータを読みシステムキャッシュに入れるヘルパプロセスが複数
+	  起動され、そのため、その後、実際のアプリケーションからの要求が
+	  来ても、ディスクアクセスが不要になる。</para>
+
+	<para>このモジュールはスタック可能である。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:posix-basic-regex = BOOL (default: no)</term>
+                <listitem>
+                <para>
+                <command>preopen:posix-basic-regex = yes</command> changes
+                the meaning of the <command>preopen:names</command> option.
+                Further details are described there.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:posix-basic-regex = BOOL (既定値: no)</term>
+                <listitem>
+                <para>
+                <command>preopen:posix-basic-regex = yes</command> は、
+                <command>preopen:names</command> オプションの意味を変更する。
+                詳細については以下を参照。
+                </para>
+                </listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>preopen:names = /pattern1/pattern2/</term>
+		<listitem>
+		<para>
+		  preopen:names はプレオープンヘルパがその仕事を行うための
+		  トリガとなるファイル名パターンを指定する。ファイルは番号の
+		  昇順であることを仮定している。そのため、もしも、読みたい
+		  ファイルの名前が、FRAME00000.frm FRAME00001.frm と番号
+		  づけられているならば、これらをリストするために、
+		  <command>preopen:names=/FRAME*.frm/ </command>と記述する。
+		  既定のアルゴリズムは、次のフレームの名前を計算するため、
+		  最初の(少なくとも 3桁の)数字を使う。
+		  </para>
+
+ <!-- Samba-4.15.0
+                <para><command>preopen:posix-basic-regex = yes</command> changes
+                the meaning of the <command>preopen:names</command> option.
+                It means 'POSIX Basic Regular Expression' strings are used
+                as patterns. The key is each pattern requires exactly one
+                'subexpression' starting with '\(' and ending with '\)' in
+                order to specify the position of the digits representing
+                the incrementing frame numbers. Given a file names like
+                Movie7599Frame0v1234.txt, Movie7599Frame1v1234.txt, Movie7599Frame2v1234.txt
+                up to Movie7599Frame9v1234.txt you can use <command>preopen:names = /.*Frame\([0-9]\).*\.txt/</command>
+                in order to match just a single digits, this might not be a real world example,
+                but it shows the flexiblity that is possible here.
+                </para>
+ -->
+                <para><command>preopen:posix-basic-regex = yes</command> は、
+                <command>preopen:names</command> オプションの意味を変更する。
+		すなわち、POSIX Basic Regular Expression' 文字列がパターンとして
+		使われることを意味する。フレーム番号の増分を表す数字の位置を指定する
+		ために、'\('で始まり'\)'で終わる 'subexpression' が、各パターンで
+		1つだけ必要であるということである。
+                Movie7599Frame0v1234.txt, Movie7599Frame1v1234.txt, Movie7599Frame2v1234.txt
+		から Movie7599Frame9v1234.txt というようなファイル名を得るには、
+		1桁の数字にちょうど一致するために、
+		<command>preopen:names = /.*Frame\([0-9]\).*\.txt/</command>
+		を使うが、これは実際の例とは異なり、ここでできうる可能性を示している。
+                </para>
+
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>preopen:num_bytes = BYTES</term>
+		<listitem>
+		<para>
+		  ヘルパが呼び出すバイトを指定する。既定値は1である。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>preopen:helpers = NUM-PROCS</term>
+		<listitem>
+		<para>
+		  フォークされるヘルパプロセス数を指定する。既定値は1である。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>preopen:queuelen = NUM-FILES</term>
+		<listitem>
+		<para>
+		  事前にオープンしておくファイル数を指定する。既定値は、次の
+		  ファイルから連続して10ファイルである。
+		</para>
+		</listitem>
+		</varlistentry>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:match_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                In order to debug or audit the usage of the preopen logic
+                you can use this option to specify at what log level details
+                about filenames actually matching a pattern from '<command>preopen:names</command>'
+                are logged.
+                </para>
+                <para>
+                See also '<command>preopen:founddigits_log_level</command>' and '<command>preopen:push_log_level</command>'.
+                </para>
+                <para>
+                Defaults to the log level 5.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:match_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                ロジックの使用をデバッグ又は監査するため、このオプションを使用して、
+                '<command>preopen:names</command>' のパターンに実際に一致するファイル名の
+		詳細をログレベルで指定し、ログに記録することができる。
+                </para>
+                <para>
+                '<command>preopen:founddigits_log_level</command>' and '<command>preopen:push_log_level</command>' も参照のこと。
+                </para>
+                <para>
+                既定値は log level 5 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+		
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+		中の、'<smbconfoption name="log level"/>' セクションも参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:nodigits_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                In order to debug or audit problems with the preopen configuration
+                you can use this option to specify at what log level details
+                about filenames actually matching a pattern from '<command>preopen:names</command>',
+                but at the same time don't contain the expected digits, are logged.
+                This is typically something the administrator wants to notice and
+                adjust the configuration in order to define more precisely where to
+                find the digits in the filename.
+                </para>
+                <para>
+                Defaults to the log level 1.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:nodigits_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+		preopen の設定をデバッグ又は監査するため、このオプションを指定して、
+                '<command>preopen:names</command>' のパターンに実際に一致するファイル名の
+                詳細をログレベルで指定するが、同時に予期される数字を含まないものを、
+		ログに記録することができる。
+		これは通常、ファイル名中の数字の位置をより正確に定義するため、
+		設定を調整、注意するため、管理者が使うものである。
+                </para>
+                <para>
+                既定値は、log level 1 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                中の '<smbconfoption name="log level"/>' 節も参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:founddigits_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                In order to debug or audit the usage of the preopen logic
+                you can use this option to specify at what log level details
+                about filenames actually matching a pattern from '<command>preopen:names</command>',
+                and at the same time having valid expected digits, are logged. This means enough information is available
+                in order to queue preopens.
+                </para>
+                <para>
+                Defaults to the log level 3.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:founddigits_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+		preopen の設定をデバッグ又は監査するため、このオプションを指定して、
+                '<command>preopen:names</command>' のパターンに実際に一致するファイル名の
+                詳細をログレベルで指定し、同時に有効な予期される数字を含むものを
+		ログに記録することができる。これは、preopen をキューイングするために、
+		十分な情報が含まれていることを意味する。
+                </para>
+                <para>
+                既定値は log level 3 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                中の '<smbconfoption name="log level"/>' 節も参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:reset_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                If a matching filename belongs to a different pattern from '<command>preopen:names</command>',
+                a different parent directory or differs in a significant way from the last filename
+                that was found before, the module needs to reset it's internal queue state.
+                This means that no more preopens will be pushed to helper processes belonging to the
+                former queue state. In order to debug or audit such queue resets you can use this option to specify at what
+                log level details are logged.
+                </para>
+                <para>
+                Defaults to the log level 5.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:reset_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                一致したファイル名が '<command>preopen:names</command>' とは異なるパターンに
+		属している場合、異なった親ディレクトリ、あるいは最後に見つかったファイル名とは
+		大きく異なる場合、モジュールは、内部キュー状態をリセットする必要がある。
+		これは、以前のキュー状態に属するヘルパプロセスが、preopen をこれ以上プッシュしない
+		ことを意味する。このようなキューリセットをデバッグあるいは監査するためには、
+		このオプションを使用してログレベルの詳細を指定し、ログを取る。
+                </para>
+                <para>
+                既定値は log level 5 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                中の '<smbconfoption name="log level"/>' 節も参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.15.0
+               <varlistentry>
+                <term>preopen:push_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                In order to debug or audit the usage of the preopen logic
+                you can use this option to specify at what log level details
+                about filenames actually pushed to preopen helper processes are logged.
+                This means they will actually be preopened soon.
+                </para>
+                <para>
+                Defaults to the log level 3.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+               <varlistentry>
+                <term>preopen:push_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+		preopen の設定をデバッグ又は監査するため、このオプションを指定して、
+		実際に preopen ヘルパプロセスにプッシュされるファイル名について、
+                詳細をログレベルで指定し、ログに記録することができる。
+		これは、それらがまもなく実際に preopen されることを意味する。
+                </para>
+                <para>
+                既定値は log level 3 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                中の '<smbconfoption name="log level"/>' 節も参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.15.0
+                <varlistentry>
+                <term>preopen:queue_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                In order to debug details about internal queue processing
+                you can use this option to specify at what log level the details are logged.
+                </para>
+                <para>
+                Defaults to the log level 10.
+                See also <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                in the '<smbconfoption name="log level"/>' section
+                for special handling of the 'preopen' debug class.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>preopen:queue_log_level = LOGLEVEL</term>
+                <listitem>
+                <para>
+                内部キュー処理の詳細をデバッグするため、
+		このオプションを使ってログレベルの詳細を指定し、ログできる。 
+                </para>
+                <para>
+                既定値は log level 10 である。
+		'preopen' デバッグクラスの特別な扱いのため、
+                <citerefentry><refentrytitle>smb.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+                中の '<smbconfoption name="log level"/>' 節も参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>		
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+
+	<para>The PREOPEN VFSモジュールは、
+	Volker LendeckeとIBMの開発者にによって作成され、寄贈された。</para>
+</refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このドキュメントは、Samba 4.15.0 - 4.17.0 に対応する。</para>
+    <para>このドキュメントの翻訳は
+        <itemizedlist>
+        <listitem><para>太田俊哉 (ribbon@samba.grjp)</para></listitem>
+        </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

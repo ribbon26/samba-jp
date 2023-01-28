@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_fileid.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_fileid</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_fileid</refname>
+	<refpurpose>クラスター構成時で使えるように、
+	ユニークなデバイス ID 値で file_id 構造体を生成
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = fileid</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>
+	システムの一部である。</para>
+
+	<para>
+    ファイルロックの際、Samba は file_id 構造体を使ってファイルを一意に
+    特定する。デフォルトでは、file_id には <command>stat()</command>
+    システムコールで返されたデバイスおよび inode 番号が格納されている。
+    file_id はファイルの一意な識別子であるため、これはある特定のクラスター
+    構成のの中では、すべてのノードで同じ値である必要がある。
+    このモジュールは <command>SMB_VFS_FILE_ID_CREATE()</command> の動作を
+    オーバーライドし、設定されたアルゴリズム（ "fileid:algorithm"
+    オプションを参照のこと）に従ってデバイス番号を生成する。
+	</para>
+<!--	Samba 4.8.0
+        <para>When using the fsname or fsid algorithm a
+        <command>stat()</command> and <command>statfs()</command> call is
+        required for all mounted file systems to generate the file_id. If e.g.
+        an NFS file system is unresponsive such a call might block and the smbd
+        process will become unresponsive. Use the "fileid:fstype deny",
+        "fileid:fstype allow", "fileid:mntdir deny", or "fileid:mntdir allow"
+        options to ignore potentially unresponsive file systems.
+        </para>
+-->
+        <para>fsname 又は fsid アルゴリズムを使う場合、file_id を生成するために、
+	すべてのマウントされたファイルシステムにおいて、
+        <command>stat()</command> と <command>statfs() </command>呼び出しが必要である。
+	たとえば、NFS ファイルシステムが応答しなくなると、そのような呼び出しは
+	ブロックされ、smbd プロセスが応答しなくなる。
+	"fileid:fstype deny"、"fileid:fstype allow"、"fileid:mntdir deny"、
+	または "fileid:mntdir allow" オプションを使うことで、潜在的に応答しない
+	ファイルシステムを無視する。
+        </para>
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>fileid:algorithm = ALGORITHM</term>
+		<listitem>
+		<para>指定できるアルゴリズムは<command>fsname</command>、
+                <command>fsid</command>, <command>next_module</command>である。既定値は
+                <command>fsname</command>である。また、以下は古いアルゴリズムである:
+                <command>fsname_nodirs</command>, <command>fsname_norootdir</command>,
+                <command>fsname_norootdir_ext</command> と <command>hostname</command>。
+		</para>
+
+		<para><command>fsname</command> アルゴリズムでは、
+		デバイス ID を カーネルのデバイス名から生成する。
+		</para>
+
+		<para><command>fsid</command> アルゴリズムは、デバイス ID を
+		<command>statfs()</command>システムコールで返された
+		<command>f_fsid</command>から生成する。
+		</para>
+
+<!-- Samba-4.17.0
+                <para>The <command>next_module</command> algorithm lets the next vfs module
+                in the module chain generate the id. This is mainly used in combination
+                with the various 'nolock' features the fileid module provides.
+                </para>
+
+                <para>The legacy <command>hostname</command> algorithm generates unique
+                devid by hashing the hostname and low level device id.
+                It also implies <command>fileid:nolock_all_inodes=yes</command>.
+                This can be used to deliberately break lock coherency in a cluster
+                and with <command>fileid:nolock_max_slots</command> also between local processes
+                within a node. NOTE: Do not use this without knowing what you are doing!
+                It breaks SMB semantics and it can lead to data corruption!
+                This implies <command>fileid:nolock_all_inodes=yes</command>.
+                </para>
+
+                <para>The legacy <command>fsname_nodirs</command> algorithm is an alias
+                for using the <command>fsname</command> algorithm together with
+                <command>fileid:nolock_all_dirs=yes</command>.
+                NOTE: Do not use this without knowing what you are doing!
+                It breaks SMB semantics!
+                See <command>fileid:nolock_paths</command> for a more fine grained
+                approach.
+                </para>
+
+                <para>The legacy <command>fsname_norootdir_ext</command> algorithm is an alias
+                for using the <command>fsname</command> algorithm together with
+                <command>fileid:nolock_paths= <quote>.</quote></command> and
+                <command>fileid:nolock_max_slots = 18446744073709551615</command>.
+                It means this can be used to deliberately break lock coherency
+                completely for the root directory of a share. Even local processes
+                are no longer lock coherent.
+                </para>
+-->
+                <para><command>next_module</command> アルゴリズムは、モジュールチェイン
+		内の次の vfs モジュールに id を生成させる。これは主に、fileid
+		モジュールが提供する、さまざまな 'nolock' 機能と結合して使われる。
+                </para>
+
+                <para>古い<command>hostname</command>アルゴリズムは、ホスト名を
+		ハッシュして一意のデバイス ID と低レベルの デバイス id を生成する。
+		また、<command>fileid:nolock_all_inodes=yes</command> も設定されて
+		いるものとする。これは、意図的に、クラスタ中のディレクトリの
+		一貫性を破るために使用でき、<command>fileid:nolock_max_slots</command>
+		では、ノード内のローカルプロセス間でも同じことができる。注意:
+		これが何をするかが分かっていない限り、これを使わないこと!
+		これは、<command>fileid:nolock_all_inodes=yes</command> を
+		前提とする。
+                </para>
+
+                <para>古い<command>fsname_nodirs</command>アルゴリズムは、
+		<command>fileid:nolock_all_dirs=yes</command>と共に
+		<command>fsname</command> を使うための別名である。
+		注意:これが何をするかが分かっていない限り、これを使わないこと!
+		よりきめ細かなアプローチについては、
+		<command>fileid:nolock_paths</command> を参照のこと。
+                </para>
+		
+                <para>古い<command>fsname_norootdir</command> アルゴリズムは、
+		<command>fileid:nolock_paths= <quote>.</quote> </command> と
+		同時に <command>fsname</command> アルゴリズムを使うための
+		別名である。これは、意図的に、共有のルートディレクトリに対する
+		クラスタ内のロック一貫性を破るために使用できることを意味する。
+                </para>
+
+		<para>古い<command>fsname_norootdir_ext</command> アルゴリズムは、
+		<command>fileid:nolock_paths= <quote>.</quote></command> と
+		<command>fileid:nolock_max_slots = 18446744073709551615</command>
+		と共に <command>fsname</command> を使うための別名である。
+		これは、意図的に、共有のルートディレクトリに対するロックの一貫性を
+		完全に破るために使用できることを意味する。ローカルプロセスですら
+		もはやロックの一貫性はない。
+                </para>
+
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>fileid:mapping = ALGORITHM</term>
+		<listitem>
+        <para>このオプションは<command>fileid:algorithm</command>オプションの
+        レガシーな（古い）バージョンである。これは Samba 3.0 のカスタム
+        バージョンにおいて、フィールドマッピング機能に関する以前のバージョンで
+        使われていた。
+		</para>
+		</listitem>
+		</varlistentry>
+<!-- Samba-4.8.0
+                <varlistentry>
+                <term>fileid:fstype deny = LIST</term>
+                <listitem>
+                <para>List of file system types to be ignored for file_id
+                generation.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:fstype allow = LIST</term>
+                <listitem>
+                <para>List of file system types to be allowed for file_id
+                generation. If this option is set, file system types not listed
+                here are ignored.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>fileid:fstype deny = LIST</term>
+                <listitem>
+                <para>file_id 生成時に無視されるファイルシステムタイプの一覧。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:fstype allow = LIST</term>
+                <listitem>
+                <para>file_id 生成時に有効となるファイルシステムタイプの一覧。
+		このオプションが設定された場合、ここで指定されたファイルシステムタイプ
+		以外は無視される。
+                </para>
+                </listitem>
+                </varlistentry>
+
+<!-- Samba-4.8.0
+                <varlistentry>
+                <term>fileid:mntdir deny = LIST</term>
+                <listitem>
+                <para>List of file system mount points to be ignored for
+                file_id generation.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:mntdir allow = LIST</term>
+                <listitem>
+                <para>List of file system mount points to be allowed for file_id
+                generation. If this option is set, file system mount points
+                not listed here are ignored.
+                </para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>fileid:mntdir deny = LIST</term>
+                <listitem>
+                <para>file_id 生成時に無視される、ファイルシステムマウントポイント
+		の一覧。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:mntdir allow = LIST</term>
+                <listitem>
+                <para>file_id 生成時に有効となる、ファイルシステムマウントポイントの
+		一覧。このオプションが設定された場合、ここで指定されたファイルシステム
+		マウントポイント以外は無視される。
+                </para>
+                </listitem>
+                </varlistentry>
+<!-- Samba-4.17.0
+               <varlistentry>
+                <term>fileid:nolock_max_slots = NUMBER(1-18446744073709551615)</term>
+                <listitem>
+                <para>This option alters the behavior of the <command>nolock</command> algorithm
+                in a ways that it also breaks the lock coherency between individual processes
+                on the same host. The default is to have just 1 concurrent slot available per host.
+                By incressing the number of slots you can specify how many concurrent processes
+                can work on a given inode without contention, the number should typically be larger
+                than the a number of logical cpus, maybe 2 times of num_cpus.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_all_dirs = BOOL</term>
+                <listitem>
+                <para>This option triggers the use of the fileid nolock behavior
+                for all directory inodes, which can be used to deliberately break
+                the lock coherency for all directories.
+                NOTE: Do not use this without knowing what you are doing!
+                It breaks SMB semantics!
+                See <command>fileid:nolock_paths</command> for a more fine grained
+                approach.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_all_inodes = BOOL</term>
+                <listitem>
+                <para>This option triggers the use of the fileid nolock algorithm
+                for all directoriy inode, which can be used to deliberately break
+                the lock coherency for all directories.
+                NOTE: Do not use this without knowing what you are doing!
+                It breaks SMB semantics and it can lead to data corruption!
+                See <command>fileid:nolock_paths</command> for a more fine grained
+                approach.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_paths = LIST</term>
+                <listitem>
+                <para>This option specifies a path list referring to files and/or directories,
+                which should use fileid nolock algorithm in order to deliberately break
+                the lock coherency for them. The specified paths can be relative to
+                the share root directory or absolute. The names are case sensitive unix pathnames!
+                Note all paths are only evaluated at tree connect time, when the share is being connected, from there on
+                only the related device and inode numbers from the stat() syscall are compared.
+                Non existing paths will generate a log level 0 message.
+                NOTE: This option should be used with care as it breaks SMB semantics!
+                But it may help in situation where a specific (commonly read-only) inode is highly contended.
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolockinode = NUMBER</term>
+                <listitem>
+                <para>This legacy option triggers use of the fileid nolock behavior
+                for the configured inode, while ignoring and device id. This can be used to deliberately break
+                lock coherency for the corresponding file or directory in a
+                cluster. Using the <command>fileid:nolock_paths</command> option is much more flexible and simpler to use.
+                </para>
+                </listitem>
+                </varlistentry>
+
+-->
+               <varlistentry>
+                <term>fileid:nolock_max_slots = NUMBER(1-18446744073709551615)</term>
+                <listitem>
+                <para>このオプションは <command>nolock</command> アルゴリズムの動作を
+		変更して、同一ホスト上の個々のプロセス間のロックの一貫性を破る。
+		既定では、ホストごとに有効な同時スロットは1つだけである。スロット数を
+		増やすことで、ある i ノード上で競合なしに動作する並列プロセスの数を
+		指定できる。その数は、通常論理 CPU 数よりも大きく、num_cpus の2倍に
+		なる。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_all_dirs = BOOL</term>
+                <listitem>
+                <para>このオプションは、すべてのの ディレクトリ i ノードに対して、
+		fileid nolock の動作の作用をトリガする。これは、すべてのディレクトリの
+		ロック一貫性を意図的に破るために使用できる。
+                注意: これが何をするかが分からない限り、これを使用しないこと!
+		これは、 SMB 文法を壊す!
+		より詳細なアプローチについては、<command>fileid:nolock_paths</command>を
+		参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_all_inodes = BOOL</term>
+                <listitem>
+                <para>このオプションは、すべてのディレクトリ i ノードに対して、
+		fileid nolock アルゴリズムの仕様をトリガする。
+		注意:これが何をするかが分からない限り、これを使用しないこと!
+		これは SMB 文法を壊し、データの破壊につながる!
+                より詳細なアプローチについては、<command>fileid:nolock_paths</command>を
+                参照のこと。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolock_paths = LIST</term>
+                <listitem>
+                <para>このオプションは、ファイルやディレクトリを参照するパスリストを
+		指定する。意図的にロックの一貫性を破るために、fileid nolock アルゴリズムを
+		使用する必要がある。指定するパスは、共有ディレクトリからの相対パスでも、
+		絶対パスでもよい。名前は大文字小文字を区別する unix パス名である!
+		すべてのパスは、共有が接続されている tree connect 時に評価され、
+		そこから関連するデバイスと、stat() syscallからの i ノード番号だけが
+		比較されることとに注意。
+		注意: これは SMB 文法を壊すため、注意して使う必要がある!
+		しかし、特定の (一般的には読み取り専用の) i ノードが強く競合するような
+		状況では役に立つ。
+                </para>
+                </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                <term>fileid:nolockinode = NUMBER</term>
+                <listitem>
+                <para>この古いオプションは、デバイス id を無視しながら設定された
+		i ノードに対して fileid nolock の動作の使用をトリガする。
+		これは、意図的に、クラスタ内での対応するファイル又はディレクトリの
+		ロック一貫性を破るために使用できる。
+		n<command>fileid:nolock_paths</command>オプションを使う方が、
+		より自由度が高く、柔軟で簡単に使用できる。
+                </para>
+                </listitem>
+                </varlistentry>
+		
+        </variablelist>
+</refsect1>
+
+<refsect1>
+	<title>設定例</title>
+
+	<para>
+    <command>fsid</command> アルゴリズムを使って
+    <command>fileid</command> モジュールを使う場合の例
+	</para>
+
+<programlisting>
+        <smbconfsection name="[global]"/>
+	<smbconfoption name="vfs objects">fileid</smbconfoption>
+	<smbconfoption name="fileid:algorithm">fsid</smbconfoption>
+</programlisting>
+
+<!-- Samba-4.17.0
+        <para>Usage of the <command>fileid</command> module in order
+        avoid load on heavily contended (most likely read-only) inodes.</para>
+
+<programlisting>
+        <smbconfsection name="[global]"/>
+        <smbconfoption name="vfs objects">fileid</smbconfoption>
+        <smbconfoption name="fileid:algorithm">next_module</smbconfoption>
+        <smbconfoption name="fileid:nolock_paths">. ContendedFolder1 /path/to/contended.exe</smbconfoption>
+        <smbconfoption name="fileid:nolock_max_slots">256</smbconfoption>
+</programlisting>
+-->
+
+        <para>競合の激しい (おそらくは読み取り専用の) i ノードへの負荷を避けるために、
+        <command>fileid</command> モジュールを使用する。</para>
+
+<programlisting>
+        <smbconfsection name="[global]"/>
+        <smbconfoption name="vfs objects">fileid</smbconfoption>
+        <smbconfoption name="fileid:algorithm">next_module</smbconfoption>
+        <smbconfoption name="fileid:nolock_paths">. ContendedFolder1 /path/to/contended.exe</smbconfoption>
+        <smbconfoption name="fileid:nolock_max_slots">256</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version;  用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>
+    オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+    Tridgell によって作成された。現在 Samba は Samba Team に
+    よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+    として開発が行なわれている。
+	</para>
+
+</refsect1>
+<refsect1>
+    <title>日本語訳</title>
+    <para>このマニュアルページは Samba 4.17.0 - 4.17.0 に対応する。</para>
+    <para>このドキュメントの Samba 3.2.8 - 4.7.6 対応の翻訳は
+    <itemizedlist>
+        <listitem><para>堀田 倫英(hotta@net-newbie.com)</para></listitem>
+    </itemizedlist>
+    によって行なわれた。</para>
+    <para>このドキュメントの Samba 4.8.0 - 4.17.0 対応の翻訳は
+    <itemizedlist>
+        <listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+    </itemizedlist>
+    によって行なわれた。</para>
+</refsect1>
+
+</refentry>

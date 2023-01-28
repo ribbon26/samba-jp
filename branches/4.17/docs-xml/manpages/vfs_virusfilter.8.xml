@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_virusfilter.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_virusfilter</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">4.8</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_virusfilter</refname>
+	<refpurpose>オンアクセスウィルススキャナ</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = virusfilter</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>virusfilter:scanner</term>
+		<listitem>
+		<para>アンチウィルススキャンエンジン</para>
+		<itemizedlist>
+		  <listitem><para><emphasis>sophos</emphasis>, the Sophos AV
+		  scanner</para></listitem>
+		  <listitem><para><emphasis>fsav</emphasis>, the F-Secure AV
+		  scanner</para></listitem>
+		  <listitem><para><emphasis>clamav</emphasis>, the ClamAV
+		  scanner</para></listitem>
+<!-- Samba-4.16.0
+                  <listitem><para><emphasis>dummy</emphasis>, dummy scanner used in
+                  tests. Checks against the <emphasis>infected files</emphasis>
+                  parameter and flags any name that matches as infected.
+                  </para></listitem>
+-->
+		  <listitem><para><emphasis>dummy</emphasis>テスト用のダミー
+		  スキャナ。<emphasis>infected files</emphasis> パラメータを
+		  現指し、感染したとされる任意の名前にフラグを立てる。
+		  </para></listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:socket path = PATH</term>
+		<listitem>
+<!-- Samba 4.14.0
+		<para>Path of local socket for the virus scanner.
+		</para>
+		<para>If this option is not set, the default path depends on the
+		configured AV scanning engine.
+		</para>
+		<para>For the <emphasis>sophos</emphasis>backend the default is
+		<emphasis>/var/run/savdi/sssp.sock</emphasis>.</para>
+		<para>For the <emphasis>fsav</emphasis> backend the default is
+		<emphasis>/tmp/.fsav-0</emphasis>.</para>
+		<para>For the <emphasis>clamav</emphasis> backend the default is
+		<emphasis>/var/run/clamav/clamd.ctl</emphasis>.</para>
+-->
+		<para>ウィルススキャナ用のローカルソケットパス。
+		</para>
+		<para>このオプションが設定されていない場合、既定値のパスは、
+		AV スキャンエンジンの設定に依存する。
+		</para>
+		<para><emphasis>sophos</emphasis>用バックエンドの既定値は
+		<emphasis>/var/run/savdi/sssp.sock</emphasis>である。</para>
+		<para><emphasis>fsav</emphasis>用バックエンドの既定値は
+		<emphasis>/tmp/.fsav-0</emphasis>である。</para>
+		<para><emphasis>clamav</emphasis>用バックエンドの既定値は
+		<emphasis>/var/run/clamav/clamd.ctl</emphasis>である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:connect timeout = 30000</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Controls how long to wait on connecting to the virus
+		scanning process before timing out. Value is in milliseconds.
+		</para>
+		<para>If this option is not set, the default is 30000.</para>
+-->
+		<para>ウィルススキャンプロセスとの接続時にタイムアウトするまでの
+		時間を指定する。値はミリ秒単位である。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 30000 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:io timeout = 60000</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Controls how long to wait on communications with the virus
+		scanning process before timing out. Value is in milliseconds.
+		</para>
+		<para>If this option is not set, the default is 60000.</para>
+-->
+		<para>ウィルススキャンプロセスとの通信時にタイムアウトするまでの
+		時間を指定する。値はミリ秒である。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 60000 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan on open = yes</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This option controls whether files are scanned on open.
+		</para>
+		<para>If this option is not set, the default is yes.</para>
+-->
+		<para>このオプションは、ファイルのオープン時にスキャンするかを制御する。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は yes である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan on close = no</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This option controls whether files are scanned on close.
+		</para>
+		<para>If this option is not set, the default is no.</para>
+-->
+		<para>このオプションは、ファイルのクローズ時にスキャンするかを制御する。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は no である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:max file size = 100000000</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This is the largest sized file, in bytes, which will be scanned.
+		</para>
+		<para>If this option is not set, the default is 100MB.</para>
+-->
+		<para>スキャン対象となるファイルの最大値をバイト単位で指定する。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 100MB である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:min file size = 10</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This is the smallest sized file, in bytes, which will be scanned.
+		</para>
+		<para>If this option is not set, the default is 10.</para>
+-->
+		<para>スキャン対象となるファイルの最小値をバイト単位で指定する。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 10 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:infected file action = nothing</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>What to do with an infected file. The options are
+		nothing, quarantine, rename, delete.</para>
+		<para>If this option is not set, the default is nothing.</para>
+-->
+		<para>感染したファイルの処理方法を指定する。オプションは
+		nothing, quarantine, rename, delete のどれかである。</para>
+		<para>このオプションが指定されていない場合、既定値は nothing である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:infected file errno on open = EACCES</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>What errno to return on open if the file is infected.
+		</para>
+		<para>If this option is not set, the default is EACCES.</para>
+-->
+		<para>感染したファイルをオープンするときに返る errno。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は EACCES である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:infected file errno on close = 0</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>What errno to return on close if the file is infected.
+		</para>
+		<para>If this option is not set, the default is 0.</para>
+-->
+		<para>感染したファイルをクローズしたときに返る errno。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 0 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine directory = PATH</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Where to move infected files. This path must be an
+		absolute path.</para>
+		<para>If this option is not set, the default is ".quarantine"
+		relative to the share path. </para>
+-->
+		<para>感染したファイルの移動先。このパスは絶対パスでなければならない。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は share のパス
+		からの相対位置で ".quarantine" である。 </para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine prefix = virusfilter.</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Prefix for quarantined files.</para>
+		<para>If this option is not set, the default is "virusfilter.".</para>
+-->
+		<para>隔離されたファイルに対する接頭辞。</para>
+		<para>このオプションが指定されていない場合、既定値は "virusfilter." である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine suffix = .infected</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Suffix for quarantined files.
+		This option is only used if keep name is true. Otherwise it is ignored.</para>
+		<para>If this option is not set, the default is ".infected".</para>
+-->
+		<para>隔離されたファイルに対する接尾辞。
+		このオプションは、 keep name が真の時にのみ使われる。それ以外では無視される。</para>
+		<para>このオプションが指定されていない場合、既定値は ".infected" である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:rename prefix = virusfilter.</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Prefix for infected files.</para>
+		<para>If this option is not set, the default is "virusfilter.".</para>
+-->
+		<para>感染したファイルに対する接頭辞。</para>
+		<para>このオプションが指定されていない場合、既定値は "virusfilter." である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:rename suffix = .infected</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Suffix for infected files.</para>
+		<para>If this option is not set, the default is ".infected".</para>
+-->
+		<para>感染したファイルに対する接尾辞。</para>
+		<para>このオプションが指定されていない場合、既定値は ".infected" である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine keep tree = yes</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>If keep tree is set, the directory structure relative
+		to the share is maintained in the quarantine directory.
+		</para>
+		<para>If this option is not set, the default is yes.</para>
+-->
+		<para>keep tree が設定されている場合、共有からの相対ディレクトリ構造
+		は、隔離されたディレクトリでも保持される。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は yes である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine keep name = yes</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Should the file name be left unmodified other than adding a suffix
+		and/or prefix and a random suffix name as defined in virusfilter:rename prefix
+		and virusfilter:rename suffix.</para>
+		<para>If this option is not set, the default is yes.</para>
+-->
+                <para> virusfilter:rename prefix と virusfilter:rename suffix で定義による
+		接頭辞や接尾辞とランダムな接尾辞の付加以外にファイル名を変更しないでそのままに
+		する。</para>
+		<para>このオプションが指定されていない場合、既定値は yes である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:infected file command = @SAMBA_DATADIR@/bin/virusfilter-notify --mail-to virusmaster@example.com --cc "%U@example.com" --from samba@example.com --subject-prefix "Samba: Infected File: "</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>External command to run on an infected file is found.</para>
+		<para>If this option is not set, the default is none.</para>
+-->
+		<para>感染したファイルが見つかったときに起動する外部コマンド。</para>
+		<para>このオプションが指定されていない場合、既定値は none である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan archive = true</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This defines whether or not to scan archives.</para>
+		<para>Sophos and F-Secure support this and it defaults to false.</para>
+-->
+		<para>アーカイブをスキャンするか否かを指定する。</para>
+		<para>Sophos と F-Secure はこれをサポートする。既定値は false である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:max nested scan archive = 1</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This defines the maximum depth to search nested archives.</para>
+		<para>The Sophos and F-Secure support this and it defaults to 1.</para>
+-->
+		<para>ネストされたアーカイブで、どのレベルまでサーチするかを指定する。</para>
+		<para>Sophos と F-Secure はこれをサポートする。、既定値は 1 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan mime = true</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This defines whether or not to scan mime files.</para>
+		<para>Only the <emphasis>fsav</emphasis>scanner supports this
+		option and defaults to false.</para>
+-->
+		<para>MIMEファイルをスキャンするか否かを指定する。</para>
+		<para><emphasis>fsav</emphasis>スキャナのみがこのオプションをサポート
+		する。既定値は false である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan error command = @SAMBA_DATADIR@/bin/virusfilter-notify --mail-to virusmaster@example.com --from samba@example.com --subject-prefix "Samba: Scan Error: "</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>External command to run on scan error.</para>
+		<para>If this option is not set, the default is none.</para>
+-->
+		<para>スキャンエラーの時に起動する外部コマンド。</para>
+		<para>このオプションが指定されていない場合、既定値は none である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:exclude files = empty</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Files to exclude from scanning.</para>
+		<para>If this option is not set, the default is empty.</para>
+-->
+		<para>スキャン対象から外すファイル。</para>
+		<para>このオプションが指定されていない場合、既定値は empty である。</para>
+		</listitem>
+		</varlistentry>
+<!-- Samba-4.16.0
+                <varlistentry>
+                <term>virusfilter:infected files = empty</term>
+                <listitem>
+                <para>Files that virusfilter <emphasis>dummy</emphasis> flags as infected.</para>
+                <para>If this option is not set, the default is empty.</para>
+                </listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+                <term>virusfilter:infected files = empty</term>
+                <listitem>
+                <para>virusfilter <emphasis>dummy</emphasis> が感染したとしてフラグを立てたファイル。</para>
+                <para>このオプションが指定されていない場合、既定値は empty である。</para>
+                </listitem>
+                </varlistentry>
+
+		
+		<varlistentry>
+		<term>virusfilter:block access on error = false</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>Controls whether or not access should be blocked on
+		a scanning error.</para>
+		<para>If this option is not set, the default is false.</para>
+-->
+		<para>スキャンエラーでアクセスをブロックするか否かを指定する。</para>
+		<para>このオプションが指定されていない場合、既定値は false である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan error errno on open = EACCES</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>What errno to return on open if there is an error in
+		scanning the file and block access on error is true.
+		</para>
+		<para>If this option is not set, the default is EACCES.</para>
+-->
+		<para>ファイルスキャン時にエラーが発生し、 block access on error が
+		true の時、オープン時に返る errno の指定。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は EACCES である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:scan error errno on close = 0</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>What errno to return on close if there is an error in
+		scanning the file and block access on error is true.
+		</para>
+		<para>If this option is not set, the default is 0.</para>
+-->
+		<para>ファイルスキャン時にエラーが発生し、 block access on error が
+		true の時、クローズ時に返る errno の指定。
+		</para>
+		<para>このオプションが指定されていない場合、既定値は 0 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:cache entry limit = 100</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>The maximum number of entries in the scanning results
+		cache. Due to how Samba's memcache works, this is approximate.</para>
+		<para>If this option is not set, the default is 100.</para>
+-->
+		<para>スキャン結果キャッシュの最大エントリ数。Samba の memcache 動作に
+		よるので、これはおおよその値である。</para>
+		<para>このオプションが指定されていない場合、既定値は 100 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:cache time limit = 10</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>The maximum number of seconds that a scanning result
+		will stay in the results cache. -1 disables the limit.
+		0 disables caching.</para>
+		<para>If this option is not set, the default is 10.</para>
+-->
+		<para>結果キャッシュ中にスキャン結果が保持される最大秒数。
+		-1 は、無制限である。0 はキャッシュをしない。</para>
+		<para>このオプションが指定されていない場合、既定値は 10 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:quarantine directory mode = 0755</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>This is the octet mode for the quarantine directory and
+		its sub-directories as they are created.</para>
+		<para>If this option is not set, the default is 0755 or
+		S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH |
+		S_IXOTH.</para>
+		<para>Permissions must be such that all users can read and
+		search. I.E. don't mess with this unless you really know what
+		you are doing.</para>
+-->
+		<para>隔離ディレクトリとサブディレクトリ作成時に割り当てる
+		モード(訳注:パーミッション)を8進数で指定する。</para>
+		<para>このオプションが指定されていない場合、既定値は 0755 か
+		S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH |
+		S_IXOTH である。</para>
+		<para>このパーミッションは、すべてのユーザが読み取りと検索が出来る
+		値でなければならない。すなわち、自分が何をしているかを
+		真に分かっていない限り、むやみに変更しないほうがよい。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>virusfilter:block suspected file = false</term>
+		<listitem>
+<!-- Samba 4.8.0
+		<para>With this option on, suspected malware will be blocked as
+		well. Only the <emphasis>fsav</emphasis>scanner supports this
+		option.</para>
+		<para>If this option is not set, the default is false.</para>
+-->
+		<para>このオプションを使うと、マルウェアの疑いがあるものも
+		ブロックされる。<emphasis>fsav</emphasis>scanner のみこのオプションを
+		サポートする。.</para>
+		<para>このオプションを指定しない場合、既定値は false である。</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>参考</title>
+
+<!-- Samba 4.8.0
+	<para>This module can scan other than default streams, if the
+	alternative datastreams are each backed as separate files, such as with
+	the vfs module streams_depot.</para>
+
+	<para>For proper operation the streams support module must be before
+	the virusfilter module in your vfs objects list (i.e. streams_depot
+	must be called before virusfilter module).</para>
+
+	<para>This module is intended for security in depth by providing
+	virus scanning capability on the server. It is not intended to be used
+	in lieu of proper client based security. Other modules for security may
+	exist and may be desirable for security in depth on the server.</para>
+-->
+	<para>このモジュールは、vfs モジュール streams_depot の場合のように、
+	個々の代替ストリームが別のファイルとして格納されている場合は、デフォルトストリーム
+	以外もスキャンできる。</para>
+
+	<para>適切なサポートを行うために、streams サポートモジュールは、
+	vfs オブジェクト リスト中で、 virusfilter モジュールよりも前になければ
+	ならない(すなわち、 streams_depot は virusfilter モジュールよりも前に
+	呼ばれなければならない)。</para>
+
+	<para>このモジュールは、サーバ上で、ウィルススキャン機能を提供することに
+	より、セキュリティを深化させるためのものである。適切なクライアントベースの
+	セキュリティの代わりに使われる物ではない。セキュリティ用の他のモジュールは
+	ほかにもあり、サーバ上のセキュリティを深化させるために好ましい場合もある。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linux カーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.16.0 - 4.17.0 に対応する。</para>
+	<para>このドキュメントの翻訳は
+		<itemizedlist>
+		  <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

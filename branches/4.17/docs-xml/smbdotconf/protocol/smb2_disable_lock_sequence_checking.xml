@@ -1,0 +1,73 @@
+<samba:parameter name="smb2 disable lock sequence checking"
+                 context="G"
+                 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.13.0
+    <para>This boolean parameter controls whether
+    <citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will disable
+    lock sequence checking even for multi-channel connections
+    as well as durable handles.
+    </para>
+ -->
+    <para>この真偽値パラメータは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が、永続的なハンドルと同じような、
+    マルチチャンネル接続に対して、ロックシーケンスのチェックを有効にするか
+    どうかを制御する。
+    </para>
+
+<!--Samba-4.13.0
+    <para>The [MS-SMB2] specification (under 3.3.5.14 Receiving an SMB2 LOCK Request)
+    documents that a server should do lock sequence if Open.IsResilient or Open.IsDurable
+    or Open.IsPersistent is TRUE or if Connection.Dialect belongs to the SMB 3.x dialect
+    family and Connection.ServerCapabilities includes SMB2_GLOBAL_CAP_MULTI_CHANNEL.
+    </para>
+
+    <para>But Windows Server (at least up to v2004) only does these checks
+    for the Open.IsResilient and Open.IsPersistent.
+    That means they do not implement the behavior specified
+    in [MS-SMB2].</para>
+-->
+    <para>[MS-SMB2] の仕様(3.3.5.14 配下の Receiving an SMB2 LOCK Request) ドキュメントでは、
+    Open.IsResilient 又は Open.IsDurable 又は Open.IsPersistent が TRUE か、
+    Connection.Dialect が SMB 3.x ダイアレクトに属し、Connection.ServerCapabilities が
+    SMB2_GLOBAL_CAP_MULTI_CHANNEL を含んでいる場合に、サーバはロックシーケンスを行う
+    べき、となっている。
+    </para>
+
+    <para>しかし、Windows サーバ (少なくとも v2004 まで)は、これらのチェックを
+    Open.IsResilient と Open.IsPersistent に対してのみに行う。これは、
+    [MS-SMB2] で定義された動作を実装していないかとを意味する。</para>
+
+<!-- Samba-4.15.0
+    <para>By default Samba behaves according to the specification
+    and implements lock sequence checking when multi-channel is used.</para>
+
+    <para>Warning: Only enable this option if existing clients can't
+    handle lock sequence checking for handles without Open.IsResilient and Open.IsPersistent.
+    And it turns out that the Windows Server behavior is required.</para>
+
+    <para>Note: it's likely that this option will be removed again
+    if future Windows versions change their behavior.</para>
+
+    <para>Note: Samba does not implement Open.IsResilient and Open.IsPersistent yet.</para>
+-->
+    <para>既定で、 Samba は 仕様に従って動作し、マルチチャネルが使われている場合、
+    ロックシーケンスチェックを実装する。</para>
+
+    <para>警告: Open.IsResilient と Open.IsPersistent がないハンドルでロックシーケンスを
+    扱えないクライアントが存在するときにのみ、このオプションを有効にする。そして、
+    Windows サーバの動作が必要な場合には OFF にする。</para>
+
+    <para>注意: 将来の Windows バージョンがその動作を変更した場合、
+    このオプションは再度削除される可能性がある。</para>
+
+    <para>注意: Samba はOpen.IsResilient と Open.IsPersistentdoes をまだ実装していない。</para>
+</description>
+
+<related>server multi channel support</related>
+
+<value type="default">no</value>
+<value type="example">yes</value>
+</samba:parameter>

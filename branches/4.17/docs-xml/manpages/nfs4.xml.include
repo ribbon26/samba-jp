@@ -1,0 +1,58 @@
+<variablelist>
+
+<varlistentry>
+	<term>nfs4:mode = [ simple | special ]</term>
+	<listitem>
+	<para>
+	NFS4 ACL 上の特別な ID (OWNER@ と GROUP@) の置き換えを制御する。
+	モード simple の使用を推奨する。
+	このモードでは、ファイル所有者とグループの非継承 ACL エントリ
+	のみが、特別な ID にマップされる。
+	</para>
+
+	<para>以下の MODE はモジュールによって解釈される:</para>
+	<itemizedlist>
+	<listitem><para><command>simple(default)</command> - 非継承 ACE 専用の、 OWNER@ と GROUP@ という特別な ID を使用する。</para></listitem>
+	<listitem><para><command>special(deprecated)</command> - すべてのファイル所有者とグループ ACE 用に、ACE 中で、 OWNER@ と GROUP@ という特別な ID を使用する。</para></listitem>
+	</itemizedlist>
+	</listitem>
+
+</varlistentry>
+
+<varlistentry>
+	<term>nfs4:acedup = [dontcare|reject|ignore|merge]</term>
+	<listitem>
+	<para>
+	このパラメータは、NFS4 ACL で検出された重複 ACE を、Samba が処理する方法を設定する。
+	これらは、同じ ID に対して異なるビットを持つ重複した ACE を作成することができるので、Windows クライアントを混乱させる可能性がある。
+	</para>
+
+	<para>以下は、異なった値に対する Samba の挙動である :</para>
+	<itemizedlist>
+	<listitem><para><command>dontcare</command> - 送られてきたとおりに ACE をコピーする</para></listitem>
+	<listitem><para><command>reject (deprecated)</command> - 操作を停止し、ACL 設定操作でエラーが発生した旨を添えて終了する</para></listitem>
+	<listitem><para><command>ignore (deprecated)</command> - 2番目に一致するACEを含めない</para></listitem>
+	<listitem><para><command>merge (default)</command> - 2つの重複 ACE の、2つの ace.flag と 2つの ace.mask フィールドの、ビット単位の OR を取り、1つの ACE にする</para></listitem>
+	</itemizedlist>
+	</listitem>
+</varlistentry>
+
+
+<varlistentry>
+	<term>nfs4:chown = [yes|no]</term>
+	<listitem>
+	<para>このパラメータは、基礎となるファイルシステムでサポートされている chown を
+	有効または無効にすることを許可する。このパラメータは注意して有効にする必要がある。
+	システムのセキュリティが低下する可能性があるからである。</para>
+	<para>ファイルシステムによっては a) 所有権を与えること b) 所有権を取得すること
+	(訳注: a) giving b) stealing) として chown を許可しているものもある。
+	後者はリスクと考えられている。</para>
+	<para>以下は、異なる値に対する Samba の動作である: </para>
+	<itemizedlist>
+	<listitem><para><command>yes</command> - ファイルシステムでサポートされている場合は、chown を有効にする</para></listitem>
+	<listitem><para><command>no (default)</command> - chown を無効にする</para></listitem>
+	</itemizedlist>
+	</listitem>
+</varlistentry>
+
+</variablelist>

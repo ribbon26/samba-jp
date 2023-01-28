@@ -1,0 +1,3234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="samba-tool.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>samba-tool</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+<!-- 原文 samba-4.7.0
+	<refmiscinfo class="manual">System Administration tools</refmiscinfo>
+-->
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>samba-tool</refname>
+<!-- 原文 samba-4.7.0
+	<refpurpose>Main Samba administration tool.
+-->
+	<refpurpose>Samba 管理のためのメインツール
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>samba-tool</command>
+		<arg choice="opt">-h</arg>
+		<arg choice="opt">-W myworkgroup</arg>
+		<arg choice="opt">-U user</arg>
+		<arg choice="opt">-d debuglevel</arg>
+		<arg choice="opt">--v</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>DESCRIPTION</title>
+	<para>This tool is part of the <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> suite.</para>
+-->
+	<title>説明</title>
+	<para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>OPTIONS</title>
+-->
+	<title>オプション</title>
+
+	<variablelist>
+
+	<varlistentry>
+	<term>-h|--help</term>
+	<listitem><para>
+<!-- 原文 samba-4.7.0
+	Show this help message and exit
+-->
+	このヘルプメッセージを表示して終了する。
+	</para></listitem>
+	</varlistentry>
+
+	&cmdline.common.connection.realm;
+
+	&cmdline.common.credentials.simplebinddn;
+
+	&cmdline.common.credentials.password;
+
+	&cmdline.common.credentials.user;
+
+	&cmdline.common.connection.workgroup;
+
+	&cmdline.common.credentials.nopass;
+
+	&cmdline.common.credentials.usekerberos;
+
+	&cmdline.common.credentials.usekrb5ccache;
+
+	<varlistentry>
+	<term>--ipaddress=IPADDRESS</term>
+	<listitem><para>
+<!-- 原文 samba-4.7.0
+	IP address of the server
+-->
+	サーバーの IP アドレス。
+	</para></listitem>
+	</varlistentry>
+
+	&cmdline.common.debug.client;
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+<title>COMMANDS</title>
+-->
+<title>コマンド</title>
+
+<!-- Samba-4.11.0
+<refsect2>
+	<title>computer</title>
+	<para>Manage computer accounts.</para>
+</refsect2>
+-->
+<refsect2>
+	<title>computer</title>
+	<para>コンピュータアカウントの管理。</para>
+</refsect2>
+
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>computer add <replaceable>computername</replaceable> [options]</title>
+        <para>Add a new computer to the Active Directory Domain.</para>
+        <para>The new computer name specified on the command is the
+        sAMAccountName, with or without the trailing dollar sign.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -computerou=COMPUTEROU</term>
+	<listitem><para>
+	DN of alternative location (with or without domainDN counterpart) to
+	default CN=Computers in which new computer object will be created.
+	E.g. 'OU=OUname'.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -description=DESCRIPTION</term>
+	<listitem><para>
+	The new computers's description.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -ip-address=IP_ADDRESS_LIST</term>
+	<listitem><para>
+	IPv4 address for the computer's A record, or IPv6 address for AAAA record,
+	can be provided multiple times.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -service-principal-name=SERVICE_PRINCIPAL_NAME_LIST</term>
+	<listitem><para>
+	Computer's Service Principal Name, can be provided multiple times.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -prepare-oldjoin</term>
+	<listitem><para>
+	Prepare enabled machine account for oldjoin mechanism.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+        <title>computer add <replaceable>computername</replaceable> [options]</title>
+	<para>Active Directory ドメイン中に新しいコンピュータを追加する。</para>
+	<para>コマンドで指定された新しいコンピュータ名は sAMAccountName で、
+	末尾にドル記号がある場合も無い場合もある。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--computerou=COMPUTEROU</term>
+	<listitem><para>
+	新しいコンピュータオブジェクトが作成されるときの、既定値の CN=Computers に対する
+	代替ロケーションの DN (domainDN のコンピュータ部分がある場合も無い場合もある) 。
+	たとえば  'OU=OUname'.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--description=DESCRIPTION</term>
+	<listitem><para>
+	新しいコンピュータの説明。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--ip-address=IP_ADDRESS_LIST</term>
+	<listitem><para>
+	コンピュータの A レコードに割り当てる IPv4 アドレスか AAAA レコードに割り当てる IPv6 アドレス
+	で、複数回指定できる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--service-principal-name=SERVICE_PRINCIPAL_NAME_LIST</term>
+	<listitem><para>
+	コンピュータのサービスプリンシパル名で、複数回指定できる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--prepare-oldjoin</term>
+	<listitem><para>
+	oldjoin メカニズムに対して、有効化したマシンアカウントを準備する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>computer create <replaceable>computername</replaceable> [options]</title>
+        <para>Add a new computer. This is a synonym for the
+        <command>samba-tool computer add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool computer add</command> instead.</para>
+</refsect3>
+-->
+<refsect3>
+        <title>computer create <replaceable>computername</replaceable> [options]</title>
+        <para>新しいコンピュータを追加する。これは
+        <command>samba-tool computer add</command> コマンドの別名であり、互換のためのみで
+        提供されている。かわりに
+        <command>samba-tool computer add</command> を使用して欲しい。</para>
+</refsect3>
+<!-- Samba-4.9.0
+<refsect3>
+	<title>computer delete <replaceable>computername</replaceable> [options]</title>
+	<para>Delete an existing computer account.</para>
+	<para>The computer name specified on the command is the
+	sAMAccountName, with or without the trailing dollar sign.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>computer delete <replaceable>computername</replaceable> [options]</title>
+	<para>存在しているコンピュータアカウントを削除する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName で、ドル記号がついている場合も無い場合もある。</para>
+</refsect3>
+
+<!-- Samba-4.11.0
+<refsect3>
+	<title>computer edit <replaceable>computername</replaceable></title>
+	<para>Edit a computer AD object.</para>
+	<para>The computer name specified on the command is the
+	sAMAccountName, with or without the trailing dollar sign.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+	<title>computer edit <replaceable>computername</replaceable></title>
+	<para>コンピュータの AD オブジェクトを編集する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName であり、
+	末尾にはドル記号が付く場合と付かない場合がある。.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+
+<!-- Samba-4.9.0
+<refsect3>
+	<title>computer list</title>
+	<para>List all computers.</para>
+</refsect3>
+
+<refsect3>
+	<title>computer move <replaceable>computername</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a computer account into the specified
+	organizational unit or container.</para>
+	<para>The computername specified on the command is the
+	sAMAccountName, with or without the trailing dollar sign.</para>
+	<para>The name of the organizational unit or container can be
+	specified as a full DN or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>computer show <replaceable>computername</replaceable> [options]</title>
+	<para>Display a computer AD object.</para>
+	<para>The computer name specified on the command is the
+	sAMAccountName, with or without the trailing dollar sign.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -attributes=USER_ATTRS</term>
+	<listitem><para>
+	Comma separated list of attributes, which will be printed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+	<title>computer list</title>
+	<para>コンピュータの一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>computer move <replaceable>computername</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>このコマンドは、コンピュータアカウントを指定された
+	organizational unit または container に移動する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName で、ドル記号がついている場合も無い場合もある。</para>
+	<para> organizational unit 又は container の名前は、
+	完全な DN 又は without the domainDN コンポーネントなしで指定することが出来る。</para>
+</refsect3>
+
+<refsect3>
+	<title>computer show <replaceable>computername</replaceable> [options]</title>
+	<para>コンピュータの AD オブジェクトを表示する。</para>
+	<para>コマンドで指定されたコンピュータ名は sAMAccountName で、ドル記号がついている場合も無い場合もある。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--attributes=USER_ATTRS</term>
+	<listitem><para>
+	CSV形式の、表示可能な形式による、属性の一覧。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<!-- Samba-4.11.0
+<refsect2>
+	<title>contact</title>
+	<para>Manage contacts.</para>
+</refsect2>
+-->
+<refsect2>
+	<title>contact</title>
+	<para>contact の管理</para>
+</refsect2>
+
+<!-- Samba-4.14.0
+
+<refsect3>
+	<title>contact add [<replaceable>contactname</replaceable>] [options]</title>
+	<para>Add a new contact in the Active Directory Domain.</para>
+	<para>The name of the new contact can be specified by the first
+	argument 'contactname' or the - -given-name, - -initial and - -surname
+	arguments. If no 'contactname' is given, contact's name will be made
+	up of the given arguments by combining the given-name, initials and
+	surname. Each argument is optional. A dot ('.') will be appended to
+	the initials automatically.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -ou=OU</term>
+	<listitem><para>
+	DN of alternative location (with or without domainDN counterpart) in
+	which the new contact will be created.
+	E.g. 'OU=OUname'.
+	Default is the domain base.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -description=DESCRIPTION</term>
+	<listitem><para>
+	The new contacts's description.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -surname=SURNAME</term>
+	<listitem><para>
+	Contact's surname.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -given-name=GIVEN_NAME</term>
+	<listitem><para>
+	Contact's given name.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -initials=INITIALS</term>
+	<listitem><para>
+	Contact's initials.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -display-name=DISPLAY_NAME</term>
+	<listitem><para>
+	Contact's display name.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -job-title=JOB_TITLE</term>
+	<listitem><para>
+	Contact's job title.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -department=DEPARTMENT</term>
+	<listitem><para>
+	Contact's department.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -company=COMPANY</term>
+	<listitem><para>
+	Contact's company.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -mail-address=MAIL_ADDRESS</term>
+	<listitem><para>
+	Contact's email address.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -internet-address=INTERNET_ADDRESS</term>
+	<listitem><para>
+	Contact's home page.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -telephone-number=TELEPHONE_NUMBER</term>
+	<listitem><para>
+	Contact's phone number.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -mobile-number=MOBILE_NUMBER</term>
+	<listitem><para>
+	Contact's mobile phone number.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -physical-delivery-office=PHYSICAL_DELIVERY_OFFICE</term>
+	<listitem><para>
+	Contact's office location.
+	</para></listitem>
+	</varlistentry>
+
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+	<title>contact add [<replaceable>contactname</replaceable>] [options]</title>
+	<para>Active Directory ドメイン内で新しい contact を追加する。</para>
+	<para>新しい contact の新しい名前は最初の引数 'contactname' か、
+	--given-name 、 --initial 、 --surname 引数で指定できる。
+	'contactname' が指定されなかった場合、contact の名前は given-name、initials と
+	surname を合成することによって作成される。各引数の指定は任意である。ピリオド ('.') 
+	は initials に自動的に追加される。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--ou=OU</term>
+	<listitem><para>
+	新しく作成された contact の alternative location
+	のDN(domainDN counterpartの有無にかかわらず)。
+	例 'OU=OUname'.
+	既定値はドメインベース。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--description=DESCRIPTION</term>
+	<listitem><para>
+	新しい contacts の説明。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--surname=SURNAME</term>
+	<listitem><para>
+	contact の surname。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--given-name=GIVEN_NAME</term>
+	<listitem><para>
+	contact のgiven name。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--initials=INITIALS</term>
+	<listitem><para>
+	contact の initials。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--display-name=DISPLAY_NAME</term>
+	<listitem><para>
+	contact の display name。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--job-title=JOB_TITLE</term>
+	<listitem><para>
+	contact の job title。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--department=DEPARTMENT</term>
+	<listitem><para>
+	contact の department。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--company=COMPANY</term>
+	<listitem><para>
+	contact の company。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--mail-address=MAIL_ADDRESS</term>
+	<listitem><para>
+	contact の メールアドレス。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--internet-address=INTERNET_ADDRESS</term>
+	<listitem><para>
+	contact のホームページ。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--telephone-number=TELEPHONE_NUMBER</term>
+	<listitem><para>
+	contact の電話番号。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--mobile-number=MOBILE_NUMBER</term>
+	<listitem><para>
+	contact の 携帯電話番号。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--physical-delivery-office=PHYSICAL_DELIVERY_OFFICE</term>
+	<listitem><para>
+	contact のオフィス住所。
+	</para></listitem>
+	</varlistentry>
+
+	</variablelist>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>contact create [<replaceable>contactname</replaceable>] [options]</title>
+        <para>Add a new contact. This is a synonym for the
+        <command>samba-tool contact add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool contact add</command> instead.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact delete <replaceable>contactname</replaceable> [options]</title>
+	<para>Delete an existing contact.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact edit <replaceable>contactname</replaceable></title>
+	<para>Modify a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact list [options]</title>
+	<para>List all contacts.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -full-dn</term>
+	<listitem><para>
+	Display contact's full DN instead of the name.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact move <replaceable>contactname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a contact into the specified organizational
+	unit or container.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>contact show <replaceable>contactname</replaceable> [options]</title>
+	<para>Display a contact AD object.</para>
+	<para>The contactname specified on the command is the common name or the
+        distinguished name of the contact object. The distinguished name of the
+        contact can be specified with or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -attributes=CONTACT_ATTRS</term>
+	<listitem><para>
+	Comma separated list of attributes, which will be printed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+-->
+<refsect3>
+        <title>contact create [<replaceable>contactname</replaceable>] [options]</title>
+        <para>新しい contact を追加する。これは
+        <command>samba-tool contact add</command> コマンドの別名であり、互換のためのみで
+        用意されている。代わりに
+        <command>samba-tool contact add</command> を使って欲しい。</para>
+</refsect3>
+
+<refsect3>
+	<title>contact delete <replaceable>contactname</replaceable> [options]</title>
+	<para>既存の contact を削除する。</para>
+	<para>コマンドで指定した contactname は common name か
+        contact オブジェクトの distinguished name である。contact の distinguished name における
+        domainDN コンポーネント指定の有無は任意である。</para>
+</refsect3>
+
+<refsect3>
+	<title>contact edit <replaceable>contactname</replaceable></title>
+	<para>contact AD オブジェクトを修正する。</para>
+	<para>コマンドで指定した contactname は common name か
+        contact オブジェクトの distinguished name である。contact の distinguished name における
+        domainDN コンポーネント指定の有無は任意である。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact list [options]</title>
+	<para>contact 一覧を表示する。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--full-dn</term>
+	<listitem><para>
+	名前の代わりに  contact の完全な DN を表示する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>contact move <replaceable>contactname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>このコマンドは、 contact を指定された organizational unit
+	またはコンテナに移動する。</para>
+	<para>コマンドで指定した contactname は common name か
+        contact オブジェクトの distinguished name である。contact の distinguished name における
+        domainDN コンポーネント指定の有無は任意である。</para>
+</refsect3>
+
+<refsect3>
+	<title>contact show <replaceable>contactname</replaceable> [options]</title>
+	<para>contact の AD オブジェクトを表示する。</para>
+	<para>コマンドで指定した contactname は common name か
+        contact オブジェクトの distinguished name である。contact の distinguished name における
+        domainDN コンポーネント指定の有無は任意である。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--attributes=CONTACT_ATTRS</term>
+	<listitem><para>
+	コンマで分けられた印刷可能な属性の一覧ある。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>contact rename <replaceable>contactname</replaceable> [options]</title>
+        <para>Rename a contact and related attributes.</para>
+        <para>This command allows to set the contact's name related attributes. The contact's
+        CN will be renamed automatically.
+        The contact's new CN will be made up by combining the given-name, initials
+        and surname. A dot ('.') will be appended to the initials automatically,
+        if required.
+        Use the - -force-new-cn option to specify the new CN manually and - -reset-cn
+        to reset this change.</para>
+        <para>Use an empty attribute value to remove the specified attribute.</para>
+        <para>The contact name specified on the command is the CN.</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>- -surname=SURNAME</term>
+        <listitem><para>
+        New surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -given-name=GIVEN_NAME</term>
+        <listitem><para>
+        New given name.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -initials=INITIALS</term>
+        <listitem><para>
+        New initials.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify a new CN (RDN) instead of using a combination
+        of the given name, initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -reset-cn</term>
+        <listitem><para>
+        Set the CN to the default combination of given name,
+        initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        New display name.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        New email address.
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+
+<refsect3>
+        <title>contact rename <replaceable>contactname</replaceable> [options]</title>
+        <para>contact と関連する属性を改名する。</para>
+        <para>このコマンドは、contact の名前に関連する属性を設定することを許可する。contact の
+	CN は自動的に改名される。
+	contact の新しい CN は、given-name、イニシャル、と surname を結合することにより
+	作成される。ドット ('.') は、必要であれば、イニシャルに自動的に追加される。
+	新しい CN を手動で指定するときには --force-new-cn を、
+	この変更をリセットするときには --reset-cn オプションを使用する。</para>
+        <para>指定された属性を削除するには、空の属性値を使用する。</para>
+        <para>コマンド上では contact 名は CN で指定する。</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>--surname=SURNAME</term>
+        <listitem><para>
+        新しい surname。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--given-name=GIVEN_NAME</term>
+        <listitem><para>
+        新しい given name。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--initials=INITIALS</term>
+        <listitem><para>
+        新しい initials。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--force-new-cn=NEW_CN</term>
+        <listitem><para>
+        given name, initials と surname の組み合わせを使う代わりに、
+        新しい CN (RDN) を指定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--reset-cn</term>
+        <listitem><para>
+        given name, initials と surname の既定の組み合わせで
+        CN を設定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        新しい display name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        新しい email address。
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+<refsect2>
+	<title>dbcheck</title>
+<!-- 原文 samba-4.7.0
+	<para>Check the local AD database for errors.</para>
+-->
+	<para>ローカルの AD データベースでエラーを検査する。</para>
+</refsect2>
+
+<refsect2>
+<!-- 原文 samba-4.7.0
+	<title>delegation</title>
+	<para>Manage Delegations.</para>
+-->
+	<title>delegation</title>
+	<para>委任（delegation）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>delegation add-service <replaceable>accountname</replaceable> <replaceable>principal</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Add a service principal as msDS-AllowedToDelegateTo.</para>
+-->
+	<para>msDS-AllowedToDelegateTo としてサービスプリンシパルを追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation del-service <replaceable>accountname</replaceable> <replaceable>principal</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete a service principal as msDS-AllowedToDelegateTo.</para>
+-->
+	<para>msDS-AllowedToDelegateTo としてサービスプリンシパルを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation for-any-protocol <replaceable>accountname</replaceable> [(on|off)] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Set/unset UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION (S4U2Proxy)
+	for an account.</para>
+-->
+	<para>アカウントに対して UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION (S4U2Proxy) を設定/解除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation for-any-service <replaceable>accountname</replaceable> [(on|off)] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Set/unset UF_TRUSTED_FOR_DELEGATION for an account.</para>
+-->
+	<para>アカウントに対して UF_TRUSTED_FOR_DELEGATION を設定/解除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>delegation show <replaceable>accountname</replaceable> [options]	</title>
+<!-- 原文 samba-4.7.0
+	<para>Show the delegation setting of an account.</para>
+-->
+	<para>アカウントの委任設定を表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>dns</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Domain Name Service (DNS).</para>
+-->
+	<para>ドメインネームシステム（DNS）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>dns add <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>data</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Add a DNS record.</para>
+-->
+	<para>DNS レコードを追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns delete <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>data</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Delete a DNS record.</para>
+-->
+	<para>DNS レコードを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns query <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT|ALL</replaceable> [options] <replaceable>data</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Query a name.</para>
+-->
+	<para>名前を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns roothints <replaceable>server</replaceable> [<replaceable>name</replaceable>] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Query root hints.</para>
+-->
+	<para>ルートヒント（root hint）を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns serverinfo <replaceable>server</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Query server information.</para>
+-->
+	<para>サーバー情報を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns update <replaceable>server</replaceable> <replaceable>zone</replaceable> <replaceable>name</replaceable> <replaceable>A|AAAA|PTR|CNAME|NS|MX|SRV|TXT</replaceable> <replaceable>olddata</replaceable> <replaceable>newdata</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Update a DNS record.</para>
+-->
+	<para>DNS レコードを更新する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonecreate <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create a zone.</para>
+-->
+	<para>DNS ゾーンを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonedelete <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete a zone.</para>
+-->
+	<para>DNS ゾーンを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zoneinfo <replaceable>server</replaceable> <replaceable>zone</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Query zone information.</para>
+-->
+	<para>DNS ゾーン情報を問い合わせる。</para>
+</refsect3>
+
+<refsect3>
+	<title>dns zonelist <replaceable>server</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List zones.</para>
+-->
+	<para>DNS ゾーンを一覧表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>domain</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Domain.</para>
+-->
+	<para>ドメインを管理する。</para>
+</refsect2>
+
+<!-- Samba 4.9.0
+<refsect3>
+	<title>domain backup</title>
+	<para>Create or restore a backup of the domain.</para>
+</refsect3>
+-->
+
+<!-- Samba 4.10.0
+<refsect3>
+	<title>domain backup offline</title>
+	<para>Backup (with proper locking) local domain directories into a tar file.</para>
+</refsect3>
+-->
+
+<!-- Samba 4.9.0
+<refsect3>
+	<title>domain backup online</title>
+	<para>Copy a running DC's current DB into a backup tar file.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup rename</title>
+	<para>Copy a running DC's DB to backup file, renaming the domain in the process.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup restore</title>
+	<para>Restore the domain's DB from a backup-file.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>domain backup</title>
+	<para>ドメインのバックアップを作成/リストアする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup offline</title>
+	<para>(適切なロックを行って) ローカルドメインディレクトリを tar ファイルにバックアップする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup online</title>
+	<para>現在動作中の DC の、現在の DB を、バックアップ tar ファイルにコピーする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup rename</title>
+	<para>現在動作中の DC の DB をバックアップファイルにコピーし、プロセスのドメイン名を変更する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain backup restore</title>
+	<para>ドメイン DB をバックアップファイルからリストアする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain classicupgrade [options] <replaceable>classic_smb_conf</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Upgrade from Samba classic (NT4-like) database to Samba AD DC
+	database.</para>
+-->
+	<para>旧形式（NT4 風）の Samba データベースから Samba AD DC データベースにアップグレードする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain dcpromo <replaceable>dnsdomain</replaceable> [DC|RODC] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Promote an existing domain member or NT4 PDC to an AD DC.</para>
+-->
+	<para>既存のドメインメンバーまたは NT4 PDC を AD DC に昇格（promote）する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain demote</title>
+<!-- 原文 samba-4.7.0
+	<para>Demote ourselves from the role of domain controller.</para>
+-->
+	<para>ドメインコントローラーの降格（demote）を行う。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain exportkeytab <replaceable>keytab</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Dumps Kerberos keys of the domain into a keytab.</para>
+-->
+	<para>ドメインの Kerberos キーを keytab ファイルにダンプする。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain info <replaceable>ip_address</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Print basic info about a domain and the specified DC.
+-->
+	<para>ドメインと特定の DC についての基本情報を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain join <replaceable>dnsdomain</replaceable> [DC|RODC|MEMBER|SUBDOMAIN] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Join a domain as either member or backup domain controller.</para>
+-->
+	<para>メンバーまたはバックアップドメインコントローラーのどちらかとしてドメインに参加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain level <replaceable>show|raise</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Show/raise domain and forest function levels.</para>
+-->
+	<para>ドメインやフォレストの機能レベルの参照/上昇を行う。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings <replaceable>show|set</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Show/set password settings.</para>
+-->
+	<para>パスワード設定を表示、設定する。</para>
+</refsect3>
+
+<!--
+<refsect3>
+	<title>domain passwordsettings pso</title>
+	<para>Manage fine-grained Password Settings Objects (PSOs).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso apply <replaceable>pso-name</replaceable> <replaceable>user-or-group-name</replaceable> [options]</title>
+	<para>Applies a PSO's password policy to a user or group.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso create <replaceable>pso-name</replaceable> <replaceable>precedence</replaceable> [options]</title>
+	<para>Creates a new Password Settings Object (PSO).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso delete <replaceable>pso-name</replaceable> [options]</title>
+	<para>Deletes a Password Settings Object (PSO).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso list [options]</title>
+	<para>Lists all Password Settings Objects (PSOs).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso set <replaceable>pso-name</replaceable> [options]</title>
+	<para>Modifies a Password Settings Object (PSO).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso show <replaceable>user-name</replaceable> [options]</title>
+	<para>Displays a Password Settings Object (PSO).</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso show-user <replaceable>pso-name</replaceable> [options]</title>
+	<para>Displays the Password Settings that apply to a user.</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso unapply <replaceable>pso-name</replaceable> <replaceable>user-or-group-name</replaceable> [options]</title>
+	<para>Updates a PSO to no longer apply to a user or group.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>domain passwordsettings pso</title>
+	<para>Manage fine-grained Password 設定オブジェクト (PSOs) を管理する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso apply <replaceable>pso-name</replaceable> <replaceable>user-or-group-name</replaceable> [options]</title>
+	<para>ユーザまたはグループに対して、Applies a PSO のパスワードポリシーを適用する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso create <replaceable>pso-name</replaceable> <replaceable>precedence</replaceable> [options]</title>
+	<para>新しい Password 設定オブジェクト (PSO) を作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso delete <replaceable>pso-name</replaceable> [options]</title>
+	<para>Password 設定オブジェクト (PSO) を削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso list [options]</title>
+	<para>すべての Password 設定オブジェクト (PSOs) を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso set <replaceable>pso-name</replaceable> [options]</title>
+	<para>Password 設定オブジェクト (PSO) を変更する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso show <replaceable>user-name</replaceable> [options]</title>
+	<para>Password 設定オブジェクト (PSO) を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso show-user <replaceable>pso-name</replaceable> [options]</title>
+	<para>ユーザに適用されている Password 設定を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain passwordsettings pso unapply <replaceable>pso-name</replaceable> <replaceable>user-or-group-name</replaceable> [options]</title>
+	<para>ユーザ又はグループに対して適用されなくなった PSO を更新する。</para>
+</refsect3>
+
+<refsect3>
+	<title>domain provision</title>
+<!-- 原文 samba-4.7.0
+	<para>Promote an existing domain member or NT4 PDC to an AD DC.</para>
+-->
+	<para>既存のドメインメンバーまたは NT4 PDC を AD DC に昇格（promote）する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust</title>
+<!-- 原文 samba-4.7.0
+	<para>Domain and forest trust management.</para>
+-->
+       <para>ドメインおよびフォレストの信頼管理を行う。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust create <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create a domain or forest trust.</para>
+-->
+       <para>ドメインまたはフォレストの信頼関係を作成する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust delete <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete a domain trust.</para>
+-->
+       <para>ドメインの信頼関係を削除する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust list <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List domain trusts.</para>
+-->
+       <para>ドメイン信頼関係の一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust namespaces [<replaceable>DOMAIN</replaceable>] <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage forest trust namespaces.</para>
+-->
+       <para>フォレスト信頼関係名前空間を管理する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust show <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Show trusted domain details.</para>
+-->
+       <para>信頼されているドメインの詳細情報を表示する。</para>
+</refsect3>
+
+<refsect3>
+       <title>domain trust validate <replaceable>DOMAIN</replaceable> <replaceable>options</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Validate a domain trust.</para>
+-->
+       <para>ドメイン信頼関係を検査する。</para>
+</refsect3>
+
+<refsect2>
+	<title>drs</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Directory Replication Services (DRS).</para>
+-->
+	<para>ディレクトリ複製サービス（Directory Replication Services; DRS）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>drs bind</title>
+<!-- 原文 samba-4.7.0
+	<para>Show DRS capabilities of a server.</para>
+-->
+	<para>サーバーの DRS 性能を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>drs kcc</title>
+<!-- 原文 samba-4.7.0
+	<para>Trigger knowledge consistency center run.</para>
+-->
+	<para>knowledge consistency checker（kcc）を起動する。</para>
+</refsect3>
+
+<refsect3>
+	<title>drs options</title>
+<!-- 原文 samba-4.7.0
+	<para>Query or change <replaceable>options</replaceable> for NTDS Settings
+	object of a domain controller.</para>
+-->
+	<para>ドメインコントローラーの NTDS Settings オブジェクトに対して
+	<replaceable>options</replaceable> を問い合わせまたは変更する。</para>
+</refsect3>
+
+<refsect3>
+	<title>drs replicate <replaceable>destination_DC</replaceable> <replaceable>source_DC</replaceable> <replaceable>NC</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Replicate a naming context between two DCs.</para>
+-->
+	<para>2 つの DC 間で名前付けコンテキスト（naming context）を複製する。</para>
+</refsect3>
+
+<refsect3>
+	<title>drs showrepl</title>
+<!-- 原文 samba-4.9.0
+	<para>Show replication status. The <arg
+	choice="opt">- -json</arg> option results in JSON output, and
+	with the <arg choice="opt">- -summary</arg> option produces
+	very little output when the replication status seems healthy.
+	</para>
+-->
+        <para>複製ステータスを表示する。<arg choice="opt">--json</arg>
+	オプションは、JSON 形式で結果を返し、<arg choice="opt">--summary</arg>
+	オプションは、レプリケーションのステータスが問題無い場合には、
+	非常に小さな出力を生成する。
+	</para>
+</refsect3>
+
+<refsect2>
+	<title>dsacl</title>
+<!-- 原文 samba-4.7.0
+	<para>Administer DS ACLs</para>
+-->
+	<para>DS ACL を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>dsacl set</title>
+<!-- 原文 samba-4.7.0
+	<para>Modify access list on a directory object.</para>
+-->
+	<para>ディレクトリオブジェクトのアクセスリストを修正する。</para>
+</refsect3>
+
+<!-- Samba 4.9.0
+<refsect2>
+	<title>forest</title>
+	<para>Manage Forest configuration.</para>
+</refsect2>
+
+<refsect3>
+	<title>forest directory_service</title>
+	<para>Manage directory_service behaviour for the forest.</para>
+</refsect3>
+
+<refsect3>
+	<title>forest directory_service dsheuristics <replaceable>VALUE</replaceable></title>
+	<para>Modify dsheuristics directory_service configuration for the forest.</para>
+</refsect3>
+
+<refsect3>
+	<title>forest directory_service show</title>
+	<para>Show current directory_service configuration for the forest.</para>
+</refsect3>
+-->
+<refsect2>
+	<title>forest</title>
+	<para>フォレストの構成を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>forest directory_service</title>
+	<para>フォレストの、directory_service の振る舞いを管理する。</para>
+</refsect3>
+
+<refsect3>
+	<title>forest directory_service dsheuristics <replaceable>VALUE</replaceable></title>
+	<para>フォレストの、 dsheuristics directory_service の構成を変更する。</para>
+</refsect3>
+
+<refsect3>
+	<title>forest directory_service show</title>
+	<para>フォレストの、現在の directory_service 構成を表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>fsmo</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Flexible Single Master Operations (FSMO).</para>
+-->
+	<para>Flexible Single Master Operations（FSMO）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>fsmo seize [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Seize the role.</para>
+-->
+	<para>ロール（role）を取得する。</para>
+</refsect3>
+
+<refsect3>
+	<title>fsmo show</title>
+<!-- 原文 samba-4.7.0
+	<para>Show the roles.</para>
+-->
+	<para>ロールを表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>fsmo transfer [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Transfer the role.</para>
+-->
+	<para>ロールを移動する。</para>
+</refsect3>
+
+<refsect2>
+	<title>gpo</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Group Policy Objects (GPO).</para>
+-->
+	<para>グループポリシーオブジェクト（Group Policy Object; GPO）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>gpo create <replaceable>displayname</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create an empty GPO.</para>
+-->
+	<para>空の GPO を作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo del <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete GPO.</para>
+-->
+	<para>GPO を削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo dellink <replaceable>container_dn</replaceable> <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete GPO link from a container.</para>
+-->
+	<para>コンテナーから GPO リンクを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo fetch <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Download a GPO.</para>
+-->
+	<para>GPO をダウンロードする。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo getinheritance <replaceable>container_dn</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Get inheritance flag for a container.</para>
+-->
+	<para>コンテナーの継承フラグ（inheritance flag）を取得する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo getlink <replaceable>container_dn</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List GPO Links for a container.</para>
+-->
+	<para>コンテナーにおける GPO リンクを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo list <replaceable>username</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List GPOs for an account.</para>
+-->
+	<para>アカウントにおける GPO を一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo listall</title>
+<!-- 原文 samba-4.7.0
+	<para>List all GPOs.</para>
+-->
+	<para>すべての GPO を一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo listcontainers <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List all linked containers for a GPO.</para>
+-->
+	<para>GPO に対してリンクされたコンテナーを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo setinheritance <replaceable>container_dn</replaceable> <replaceable>block|inherit</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Set inheritance flag on a container.</para>
+-->
+	<para>コンテナーに対して継承フラグを設定する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo setlink <replaceable>container_dn</replaceable> <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Add or Update a GPO link to a container.</para>
+-->
+	<para>コンテナーに対して GPO を追加または更新する。</para>
+</refsect3>
+
+<refsect3>
+	<title>gpo show <replaceable>gpo</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Show information for a GPO.</para>
+-->
+	<para>GPO に対する情報を表示する。</para>
+</refsect3>
+
+<!-- Samba-4.15.0
+<refsect3>
+        <title>gpo manage symlink list</title>
+        <para>List VGP Symbolic Link Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage symlink add</title>
+        <para>Adds a VGP Symbolic Link Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage symlink remove</title>
+        <para>Removes a VGP Symbolic Link Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files list</title>
+        <para>List VGP Files Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files add</title>
+        <para>Add VGP Files Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files remove</title>
+        <para>Remove VGP Files Group Policy from the sysvol</para>
+</refsect3>
+-->
+
+<refsect3>
+        <title>gpo manage symlink list</title>
+        <para>sysvol から、VGP シンボリックリンクグループポリシー一覧を表示する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage symlink add</title>
+        <para>sysvol に、VGP シンボリックリンクグループポリシーを追加する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage symlink remove</title>
+        <para>sysvol から、VGP シンボリックリンクグループポリシーを削除するl</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files list</title>
+        <para>sysvol から VGP ファイルグループポリシー一覧を表示する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files add</title>
+        <para>sysvol に GP ファイルグループポリシーを追加する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage files remove</title>
+        <para>sysvol から VGP ファイルグループポリシーを削除する</para>
+</refsect3>
+
+<!-- Samba-4.15.0
+<refsect3>
+        <title>gpo manage openssh list</title>
+        <para>List VGP OpenSSH Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage openssh set</title>
+        <para>Sets a VGP OpenSSH Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers add</title>
+        <para>Adds a Samba Sudoers Group Policy to the sysvol.</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers list</title>
+        <para>List Samba Sudoers Group Policy from the sysvol.</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers remove</title>
+        <para>Removes a Samba Sudoers Group Policy from the sysvol.</para>
+</refsect3>
+-->
+<refsect3>
+        <title>gpo manage openssh list</title>
+        <para>sysvol から VGP OpenSSH グループポリシー一覧を表示する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage openssh set</title>
+        <para>sysvol に  VGP OpenSSH グループポリシーを設定する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers add</title>
+        <para>sysvol に VGP OpenSSH グループポリシーを追加する。</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers list</title>
+        <para>sysvol から Samba Sudoers グループポリシー一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage sudoers remove</title>
+        <para>sysvol から、Samba Sudoers グループポリシーを削除する。</para>
+</refsect3>
+
+<!-- Samba-4.15.0
+<refsect3>
+        <title>gpo manage scripts startup list</title>
+        <para>List VGP Startup Script Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage scripts startup add</title>
+        <para>Adds VGP Startup Script Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage scripts startup remove</title>
+        <para>Removes VGP Startup Script Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage motd list</title>
+        <para>List VGP MOTD Group Policy from the sysvol.</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage motd set</title>
+        <para>Sets a VGP MOTD Group Policy to the sysvol</para>
+</refsect3>
+-->
+<refsect3>
+        <title>gpo manage scripts startup list</title>
+        <para>sysvol から VGP スタートアップグループポリシー一覧を表示する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage scripts startup add</title>
+        <para>sysvol に VGP スタートアップグループポリシーを追加する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage scripts startup remove</title>
+        <para>sysvol から VGP スタートアップグループポリシーを削除する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage motd list</title>
+        <para>sysvol から VGP MOTD グループポリシー一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage motd set</title>
+        <para>sysvol に VGP MOTD グループポリシーを設定する</para>
+</refsect3>
+
+<!-- Samba-4.15.0
+<refsect3>
+        <title>gpo manage issue list</title>
+        <para>List VGP Issue Group Policy from the sysvol.</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage issue set</title>
+        <para>Sets a VGP Issue Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access add</title>
+        <para>Adds a VGP Host Access Group Policy to the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access list</title>
+        <para>List VGP Host Access Group Policy from the sysvol</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access remove</title>
+        <para>Remove a VGP Host Access Group Policy from the sysvol</para>
+</refsect3>
+-->
+<refsect3>
+        <title>gpo manage issue list</title>
+        <para>sysvol から VGP Issue グループポリシー一覧を表示する。</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage issue set</title>
+        <para>sysvol に VGP Issue グループポリシーを設定する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access add</title>
+        <para>sysvol に VGP Host Access グループポリシーを追加する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access list</title>
+        <para>sysvol から VGP Host Access グループポリシー一覧を表示する</para>
+</refsect3>
+
+<refsect3>
+        <title>gpo manage access remove</title>
+        <para>sysvol から VGP Host Access グループポリシーを削除する</para>
+</refsect3>
+
+<refsect2>
+	<title>group</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage groups.</para>
+-->
+	<para>グループを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>group add <replaceable>groupname</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create a new AD group.</para>
+-->
+	<para>新しい AD グループを作成する。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>group create <replaceable>groupname</replaceable> [options]</title>
+        <para>Add a new AD group. This is a synonym for the
+        <command>samba-tool group add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool group add</command> instead.</para>
+</refsect3>
+-->
+
+<refsect3>
+        <title>group create <replaceable>groupname</replaceable> [options]</title>
+        <para>新しい AD group を追加する。これは
+        <command>samba-tool group add</command> コマンドの別名であり、
+	互換のためのみで提供されている。代わりに、
+        <command>samba-tool group add</command> を使って欲しい。</para>
+</refsect3>
+
+<refsect3>
+	<title>group addmembers <replaceable>groupname</replaceable> <replaceable>members</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Add members to an AD group.</para>
+-->
+	<para>AD グループにメンバーを追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group delete <replaceable>groupname</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete an AD group.</para>
+-->
+	<para>AD グループを削除する。</para>
+</refsect3>
+
+<!-- Samba-4.11.0
+<refsect3>
+	<title>group edit <replaceable>groupname</replaceable></title>
+	<para>Edit a group AD object.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+
+<refsect3>
+	<title>group edit <replaceable>groupname</replaceable></title>
+	<para>グループ AD オブジェクトを編集する。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>group list</title>
+<!-- 原文 samba-4.7.0
+	<para>List all groups.</para>
+-->
+	<para>すべてのグループを一覧表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>group listmembers <replaceable>groupname</replaceable> [options]</title>
+<!-- 原文 samba-4.14.0
+        <para>List all members of the specified AD group.</para>
+        <para>By default the sAMAccountNames are listed. If no sAMAccountName
+        is available, the CN will be used instead.</para>
+        <variablelist>
+        <varlistentry>
+        <term>- -full-dn</term>
+        <listitem><para>
+        List the distinguished names instead of the sAMAccountNames.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-expired</term>
+        <listitem><para>
+        Do not list expired group members.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-disabled</term>
+        <listitem><para>
+        Do not list disabled group members.
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+-->
+	<para>指定された AD グループのメンバーを一覧表示する。</para>
+        <para>既定では、sAMAccountNames は一覧表示される。sAMAccountName が
+	1つもなければ、代わりに CN が使われる。</para>
+        <variablelist>
+        <varlistentry>
+        <term>--full-dn</term>
+        <listitem><para>
+        sAMAccountNames の代わりに distinguished names を一覧表示する。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-expired</term>
+        <listitem><para>
+        満了した group members を一覧表示しない。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-disabled</term>
+        <listitem><para>
+        無効の disabled group members を表示しない。
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+<!-- Samba 4.9.0
+<refsect3>
+	<title>group move <replaceable>groupname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a group into the specified organizational unit
+	or container.</para>
+	<para>The groupname specified on the command is the sAMAccountName.
+	</para>
+	<para>The name of the organizational unit or container can be
+	specified as a full DN or without the domainDN component.</para>
+	<para></para>
+</refsect3>
+-->
+<refsect3>
+	<title>group move <replaceable>groupname</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>このコマンドは、グループを、指定された organizational unit か
+	コンテナ中に移動する。</para>
+	<para>このコマンドで指定されたグループ名は sAMAccountName である。
+	</para>
+	<para>organizational unit 又は container の名前は
+	完全な DN かドメインDNコンポーネントなしで指定できる。</para>
+	<para></para>
+</refsect3>
+
+<refsect3>
+	<title>group removemembers <replaceable>groupname</replaceable> <replaceable>members</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Remove members from the specified AD group.</para>
+-->
+	<para>指定された AD グループからメンバーを削除する。</para>
+</refsect3>
+
+<!-- Samba 4.9.0
+<refsect3>
+	<title>group show <replaceable>groupname</replaceable> [options]</title>
+	<para>Show group object and it's attributes.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>group show <replaceable>groupname</replaceable> [options]</title>
+	<para>グループオブジェクトとその属性を表示する。</para>
+</refsect3>
+
+<!-- Samba 4.10.0
+<refsect3>
+	<title>group stats [options]</title>
+	<para>Show statistics for overall groups and group memberships.</para>
+</refsect3>
+-->
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>group rename <replaceable>groupname</replaceable> [options]</title>
+        <para>Rename a group and related attributes.</para>
+        <para>This command allows to set the group's name related attributes. The
+        group's CN will be renamed automatically.
+        The group's CN will be the sAMAccountName.
+        Use the - -force-new-cn option to specify the new CN manually and the
+        - -reset-cn to reset this change.</para>
+        <para>Use an empty attribute value to remove the specified attribute.</para>
+        <para>The groupname specified on the command is the sAMAccountName.</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>- -force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify a new CN (RDN) instead of using the sAMAccountName.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -reset-cn</term>
+        <listitem><para>
+        Set the CN to the sAMAccountName.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        New mail address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        New account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+
+<refsect3>
+	<title>group stats [options]</title>
+	<para>グループ全体とグループメンバの統計を表示する。</para>
+</refsect3>
+
+<refsect3>
+        <title>group rename <replaceable>groupname</replaceable> [options]</title>
+        <para>グループと関連する属性を改名する。</para>
+        <para>このコマンドはグループ名に関連する属性の設定を許可する。
+	グループの CN は自動的に改名される。
+	グループの CN は sAMAccountName になる。
+        新しい CN を手動で設定する場合は --force-new-cn を、この変更をリセットする場合は、
+	 --reset-cn オプションを使用する。</para>
+        <para>指定された属性を削除する場合は、空の属性値を使用する。</para>
+        <para>コマンド上で groupname を指定する場合は sAMAccountName である。</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>--force-new-cn=NEW_CN</term>
+        <listitem><para>
+        sAMAccountName を使う代わりに 新しい CN (RDN) を指定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--reset-cn</term>
+        <listitem><para>
+        sAMAccountName で CN を設定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        新しい email address。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        新しい account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+<refsect2>
+	<title>ldapcmp <replaceable>URL1</replaceable> <replaceable>URL2</replaceable> <replaceable>domain|configuration|schema|dnsdomain|dnsforest</replaceable> [options] </title>
+<!-- 原文 samba-4.7.0
+	<para>Compare two LDAP databases.</para>
+-->
+	<para>2 つの LDAP データベースを比較する。</para>
+</refsect2>
+
+<refsect2>
+	<title>ntacl</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage NT ACLs.</para>
+-->
+	<para>NT ACL を管理する。</para>
+</refsect2>
+
+<!-- Samba-4.11.0
+<refsect3>
+	<title>ntacl changedomsid <replaceable>original-domain-SID</replaceable> <replaceable>new-domain-SID</replaceable> <replaceable>file</replaceable> [options]</title>
+	<para>Change the domain SID for ACLs.
+	Can be used to change all entries in acl_xattr when the machine's SID
+	has accidentially changed or the data set has been copied
+	to another machine either via backup/restore or rsync.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -use-ntvfs</term>
+	<listitem><para>
+	Set the ACLs directly to the TDB or xattr. The POSIX permissions will
+	NOT be changed, only the NT ACL will be stored.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -service=SERVICE</term>
+	<listitem><para>
+	Specify the name of the smb.conf service to use. This option is
+	required in combination with the - -use-s3fs option.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -use-s3fs</term>
+	<listitem><para>
+	Set the ACLs for use with the default s3fs file server via the VFS
+	layer. This option requires a smb.conf service, specified by the
+	- -service=SERVICE option.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -xattr-backend=[native|tdb]</term>
+	<listitem><para>
+	Specify the xattr backend type (native fs or tdb).
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -eadb-file=EADB_FILE</term>
+	<listitem><para>
+	Name of the tdb file where attributes are stored.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -recursive</term>
+	<listitem><para>
+	Set the ACLs for directories and their contents recursively.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -follow-symlinks</term>
+	<listitem><para>
+	Follow symlinks when - -recursive is specified.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>- -verbose</term>
+	<listitem><para>
+	Verbosely list files and ACLs which are being processed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+-->
+
+<refsect3>
+	<title>ntacl changedomsid <replaceable>original-domain-SID</replaceable> <replaceable>new-domain-SID</replaceable> <replaceable>file</replaceable> [options]</title>
+	<para>ACL のドメイン SID を変更する。
+	マシンの SID が間違って変更されたときや、バックアップ/リストアあるいは rsyncで
+	データセットが他のマシンにコピーされた時などに、acl_xattr 中のすべてのエントリを
+	変更するのに使える。.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--use-ntvfs</term>
+	<listitem><para>
+	TDB や xattr に対して ACL を直接設定する。POSIX パーミッションは
+	変更されず、NT ACL のみ格納される。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--service=SERVICE</term>
+	<listitem><para>
+	使用する smb.conf サービスの名前を指定する。このオプションは
+	--use-s3fs オプションと同時に使用する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--use-s3fs</term>
+	<listitem><para>
+	VFS レイヤ経由で 既定の s3fs ファイルサーバで使用するACLを設定する。
+	このオプションは --service=SERVICE オプションで指定する smb.conf serviceと
+	同時に使用する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--xattr-backend=[native|tdb]</term>
+	<listitem><para>
+	xattr バックエンドタイプを指定する(ネイティブな fs または tdb)。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--eadb-file=EADB_FILE</term>
+	<listitem><para>
+	属性が格納されている tdb ファイルの名前。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--recursive</term>
+	<listitem><para>
+	ディレクトリとその配下に対して ACL を設定する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--follow-symlinks</term>
+	<listitem><para>
+	--recursive が指定されたときに、シンボリックリンクもたどる。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>--verbose</term>
+	<listitem><para>
+	処理されたファイルと ACL の一覧を表示する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ntacl get <replaceable>file</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Get ACLs on a file.</para>
+-->
+	<para>ファイルの ACL を表示する。</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl set <replaceable>acl</replaceable> <replaceable>file</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Set ACLs on a file.</para>
+-->
+	<para>ファイルに ACL を設定する。</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl sysvolcheck</title>
+<!-- 原文 samba-4.7.0
+	<para>Check sysvol ACLs match defaults (including correct ACLs on GPOs).</para>
+-->
+	<para>sysvol ACL がデフォルトであるかどうかを検査する。（GPO 上の適正な ACL を含む）</para>
+</refsect3>
+
+<refsect3>
+	<title>ntacl sysvolreset</title>
+<!-- 原文 samba-4.7.0
+	<para>Reset sysvol ACLs to defaults (including correct ACLs on GPOs).</para>
+-->
+	<para>sysvol ACL をリセットしてデフォルトにする。（GPO 上の適正な ACL を含む）</para>
+</refsect3>
+
+<!-- Samba-4.11.0
+<refsect2>
+	<title>ou</title>
+	<para>Manage organizational units (OUs).</para>
+</refsect2>
+-->
+<refsect2>
+	<title>ou</title>
+	<para>organizational unit (OU) の管理</para>
+</refsect2>
+
+<!-- Samba 4.14.0
+<refsect3>
+	<title>ou add <replaceable>ou_dn</replaceable> [options]</title>
+	<para>Add an organizational unit.</para>
+	<para>The name of the organizational unit can be specified as a full DN
+	or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -description=DESCRIPTION</term>
+	<listitem><para>
+	Specify OU's description.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+        <title>ou create <replaceable>ou_dn</replaceable> [options]</title>
+        <para>Add a new organizational unit. This is a synonym for the
+        <command>samba-tool ou add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool ou add</command> instead.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>ou add <replaceable>ou_dn</replaceable> [options]</title>
+	<para>organizational unit を追加する。</para>
+	<para>organizational unit の名前は完全なDNか
+	ドメインDNコンポーネントなしで指定できる。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--description=DESCRIPTION</term>
+	<listitem><para>
+	OU の説明を指定する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+        <title>ou create <replaceable>ou_dn</replaceable> [options]</title>
+        <para>新しい organizational unit を作成する。これは
+        <command>samba-tool ou add</command> コマンドの別名であり、
+        互換のためにのみある。代わりに
+        <command>samba-tool ou add</command> を使って欲しい。</para>
+</refsect3>
+
+<!-- Samba-4.9.0
+<refsect3>
+	<title>ou delete <replaceable>ou_dn</replaceable> [options]</title>
+	<para>Delete an organizational unit.</para>
+	<para>The name of the organizational unit can be specified as a full DN
+	or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -force-subtree-delete</term>
+	<listitem><para>
+	Delete organizational unit and all children reclusively.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou list [options]</title>
+	<para>List all organizational units.</para>
+	<variablelist>
+	<varlistentry>
+	<term>- -full-dn</term>
+	<listitem><para>
+	Display DNs including the base DN.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou listobjects <replaceable>ou_dn</replaceable> [options]</title>
+	<para>List all objects in an organizational unit.</para>
+	<para>The name of the organizational unit can be specified as a full DN
+	or without the domainDN component.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -full-dn</term>
+	<listitem><para>
+	Display DNs including the base DN.
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-r|- -recursive</term>
+	<listitem><para>
+	List objects recursively.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou move <replaceable>old_ou_dn</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>Move an organizational unit.</para>
+	<para>The name of the organizational units can be specified as a full DN
+	or without the domainDN component.</para>
+</refsect3>
+
+<refsect3>
+	<title>ou rename <replaceable>old_ou_dn</replaceable> <replaceable>new_ou_dn</replaceable> [options]</title>
+	<para>Rename an organizational unit.</para>
+	<para>The name of the organizational units can be specified as a full DN
+	or without the domainDN component.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>ou delete <replaceable>ou_dn</replaceable> [options]</title>
+	<para>organizational unitを削除する。</para>
+	<para>organizational unit の名前は、完全なDNか、
+	ドメインDNコンポーネントなしで指定できる。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--force-subtree-delete</term>
+	<listitem><para>
+	organizational unit とその配下すべてを再帰的に削除する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou list [options]</title>
+	<para>すべての organizational units を表示する。</para>
+	<variablelist>
+	<varlistentry>
+	<term>--full-dn</term>
+	<listitem><para>
+	base DN を含めて DN を表示する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou listobjects <replaceable>ou_dn</replaceable> [options]</title>
+	<para>organizational unit 中のすべてのオブジェクトを表示する。</para>
+	<para>organizational unit の名前は、完全なDNか、
+	ドメインDNコンポーネントなしで指定できる。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--full-dn</term>
+	<listitem><para>
+	base DN を含めて DN を表示する。
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+	<term>-r|--recursive</term>
+	<listitem><para>
+	オブジェクトを再帰的に表示する。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>ou move <replaceable>old_ou_dn</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>organizational unit を移動する。</para>
+	<para>organizational units の名前は、完全なDNか、
+	ドメインDNコンポーネントなしで指定できる。</para>
+</refsect3>
+
+<refsect3>
+	<title>ou rename <replaceable>old_ou_dn</replaceable> <replaceable>new_ou_dn</replaceable> [options]</title>
+	<para>organizational unit の名前を変更する。</para>
+	<para>organizational units の名前は、完全なDNか、
+	ドメインDNコンポーネントなしで指定できる。</para>
+</refsect3>
+
+
+<refsect2>
+	<title>rodc</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Read-Only Domain Controller (RODC).</para>
+-->
+	<para>読み取り専用ドメインコントローラー（Read-Only Domain Controller; RODC）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>rodc preload <replaceable>SID</replaceable>|<replaceable>DN</replaceable>|<replaceable>accountname</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Preload one account for an RODC.</para>
+-->
+	<para>RODC における 1 つのアカウントを事前ロードする。</para>
+</refsect3>
+
+<!-- Samba 4.9.0
+<refsect2>
+	<title>schema</title>
+	<para>Manage and query schema.</para>
+</refsect2>
+
+<refsect3>
+	<title>schema attribute modify <replaceable>attribute</replaceable> [options]</title>
+	<para>Modify the behaviour of an attribute in schema.</para>
+</refsect3>
+
+<refsect3>
+	<title>schema attribute show <replaceable>attribute</replaceable> [options]</title>
+	<para>Display an attribute schema definition.</para>
+</refsect3>
+
+<refsect3>
+	<title>schema attribute show_oc <replaceable>attribute</replaceable> [options]</title>
+	<para>Show objectclasses that MAY or MUST contain this attribute.</para>
+</refsect3>
+
+<refsect3>
+	<title>schema objectclass show <replaceable>objectclass</replaceable> [options]</title>
+	<para>Display an objectclass schema definition.</para>
+</refsect3>
+-->
+<refsect2>
+	<title>schema</title>
+	<para>スキーマの管理と問合せ。</para>
+</refsect2>
+
+<refsect3>
+	<title>schema attribute modify <replaceable>attribute</replaceable> [options]</title>
+	<para>スキーマ中の属性の動作を変更。</para>
+</refsect3>
+
+<refsect3>
+	<title>schema attribute show <replaceable>attribute</replaceable> [options]</title>
+	<para>属性スキーマ定義の表示。</para>
+</refsect3>
+
+<refsect3>
+	<title>schema attribute show_oc <replaceable>attribute</replaceable> [options]</title>
+	<para>この属性に含まれる MAY または MUST なオブジェクトクラスを表示。</para>
+</refsect3>
+
+<refsect3>
+	<title>schema objectclass show <replaceable>objectclass</replaceable> [options]</title>
+	<para>オブジェクトクラススキーマ定義の表示。</para>
+</refsect3>
+
+
+
+
+<refsect2>
+	<title>sites</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage sites.</para>
+-->
+	<para>サイトを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>sites create <replaceable>site</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create a new site.</para>
+-->
+	<para>新しいサイトを作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>sites remove <replaceable>site</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete an existing site.</para>
+-->
+	<para>存在するサイトを削除する。</para>
+</refsect3>
+
+<refsect2>
+	<title>spn</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage Service Principal Names (SPN).</para>
+-->
+	<para>サービスプリンシパル名（Service Principal Names; SPN）を管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>spn add <replaceable>name</replaceable> <replaceable>user</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Create a new SPN.</para>
+-->
+	<para>新しい SPN を作成する。</para>
+</refsect3>
+
+<refsect3>
+	<title>spn delete <replaceable>name</replaceable> [<replaceable>user</replaceable>] [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete an existing SPN.</para>
+-->
+	<para>存在する SPN を削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>spn list <replaceable>user</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>List SPNs of a given user.</para>
+-->
+	<para>指定されたユーザーの SPN を一覧表示する。</para>
+</refsect3>
+
+<refsect2>
+	<title>testparm</title>
+<!-- 原文 samba-4.7.0
+	<para>Check the syntax of the configuration file.</para>
+-->
+	<para>設定ファイルの文法を検査する。</para>
+</refsect2>
+
+<refsect2>
+	<title>time</title>
+<!-- 原文 samba-4.7.0
+	<para>Retrieve the time on a server.</para>
+-->
+	<para>サーバー上の時刻を調べる。</para>
+</refsect2>
+
+<refsect2>
+	<title>user</title>
+<!-- 原文 samba-4.7.0
+	<para>Manage users.</para>
+-->
+	<para>ユーザーを管理する。</para>
+</refsect2>
+
+<refsect3>
+	<title>user add <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
+<!-- 原文 samba-4.14.0
+	<para>Add a new user to the Active Directory Domain.</para>
+-->
+	<para>新しいユーザーを AD ドメインに追加する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user create <replaceable>username</replaceable> [<replaceable>password</replaceable>]</title>
+<!-- 原文 samba-4.14.0
+        <para>Add a new user. This is a synonym for the
+        <command>samba-tool user add</command> command and is available
+        for compatibility reasons only. Please use
+        <command>samba-tool user add</command> instead.</para>
+-->
+         <para>新しいユーザを追加する。これは<command>samba-tool user add</command>
+	 コマンドの別名であり、互換のためのみにある。代わりに、
+	 <command>samba-tool user add</command> を使って欲しい。</para>
+</refsect3>
+
+<refsect3>
+	<title>user delete <replaceable>username</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Delete an existing user account.</para>
+-->
+	<para>存在するユーザーアカウントを削除する。</para>
+</refsect3>
+
+<refsect3>
+	<title>user disable <replaceable>username</replaceable></title>
+<!-- 原文 samba-4.11.0
+	<para>Disable a user account.</para>
+-->
+	<para>ユーザーアカウントを無効にする。</para>
+</refsect3>
+
+<!-- Samba-4.11.0
+<refsect3>
+	<title>user edit <replaceable>username</replaceable></title>
+	<para>Edit a user account AD object.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -editor=EDITOR</term>
+	<listitem><para>
+	Specifies the editor to use instead of the system default, or 'vi' if no
+	system default is set.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+-->
+<refsect3>
+	<title>user edit <replaceable>username</replaceable></title>
+	<para>ユーザアカウント AD オブジェクトを編集する。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--editor=EDITOR</term>
+	<listitem><para>
+	システムの既定値の代わりにエディタを指定するか、システムの既定値が設定されていない
+	場合は  'vi' を使う。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+
+<refsect3>
+	<title>user enable <replaceable>username</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Enable an user account.</para>
+-->
+	<para>ユーザーアカウントを有効にする。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user list</title>
+        <para>List all users.</para>
+        <para>By default the user's sAMAccountNames are listed.</para>
+        <variablelist>
+        <varlistentry>
+        <term>- -full-dn</term>
+        <listitem><para>
+        List user's distinguished names instead of the sAMAccountNames.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>-b BASE_DN|- -base-dn=BASE_DN</term>
+        <listitem><para>
+        Specify base DN to use. Only users under the specified base DN will be
+        listed.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-expired</term>
+        <listitem><para>
+        Do not list expired user accounts.
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>- -hide-disabled</term>
+        <listitem><para>
+        Do not list disabled user accounts.
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+<refsect3>
+        <title>user list</title>
+        <para>ユーザ一覧を表示する。</para>
+        <para>既定では、ユーザの sAMAccountNames が表示される。</para>
+        <variablelist>
+        <varlistentry>
+        <term>--full-dn</term>
+        <listitem><para>
+        ユーザの distinguished names を sAMAccountNames の代わりに表示する。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>-b BASE_DN|--base-dn=BASE_DN</term>
+        <listitem><para>
+        base DN を指定する。指定された base DN 配下のもののみ表示される。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-expired</term>
+        <listitem><para>
+        満了したユーザアカウントを表示しなう。
+        </para></listitem>
+        </varlistentry>
+        <varlistentry>
+        <term>--hide-disabled</term>
+        <listitem><para>
+        無効のユーザアカウントを表示しない。
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+<refsect3>
+	<title>user list</title>
+<!-- 原文 samba-4.7.0
+	<para>List all users.</para>
+-->
+	<para>すべてのユーザーを一覧表示する。</para>
+</refsect3>
+
+<!-- Samba-4.12.0
+ <refsect3>
+       <title>user setprimarygroup <replaceable>username</replaceable> <replaceable>primarygroupname</replaceable></title>
+       <para>Set the primary group a user account.</para>
+</refsect3>
+
+<refsect3>
+       <title>user getgroups <replaceable>username</replaceable></title>
+       <para>Get the direct group memberships of a user account.</para>
+</refsect3>
+-->
+ <refsect3>
+       <title>user setprimarygroup <replaceable>username</replaceable> <replaceable>primarygroupname</replaceable></title>
+       <para>ユーザアカウントのプライマリグループを設定する。</para>
+</refsect3>
+
+<refsect3>
+       <title>user getgroups <replaceable>username</replaceable></title>
+       <para>ユーザアカウントのダイレクトグループを取得する。</para>
+</refsect3>
+
+
+<!-- Samba 4.9.0
+<refsect3>
+	<title>user show <replaceable>username</replaceable> [options]</title>
+	<para>Display a user AD object.</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>- -attributes=USER_ATTRS</term>
+	<listitem><para>
+	Comma separated list of attributes, which will be printed.
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>user move <replaceable>username</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>This command moves a user account into the specified
+	organizational unit or container.</para>
+	<para>The username specified on the command is the
+	sAMAccountName.</para>
+	<para>The name of the organizational unit or container can be
+	specified as a full DN or without the domainDN component.</para>
+</refsect3>
+-->
+<refsect3>
+	<title>user show <replaceable>username</replaceable> [options]</title>
+	<para>ユーザの AD オブジェクトを表示する。</para>
+
+	<variablelist>
+	<varlistentry>
+	<term>--attributes=USER_ATTRS</term>
+	<listitem><para>
+	表示可能な、コンマで分離された属性の一覧。
+	</para></listitem>
+	</varlistentry>
+	</variablelist>
+</refsect3>
+
+<refsect3>
+	<title>user move <replaceable>username</replaceable> <replaceable>new_parent_dn</replaceable> [options]</title>
+	<para>このコマンドは、ユーザアカウントを指定された organizational unit
+	又はコンテナに移動する。</para>
+	<para>コマンドラインで指定された username は
+	sAMAccountName である。</para>
+	<para>organizational unit 又は コンテナ の名前は 完全な DN または
+	domainDN コンポーネントなしで指定できる。</para>
+</refsect3>
+
+<refsect3>
+	<title>user password [options]</title>
+<!-- 原文 samba-4.11.0
+	<para>Change password for a user account (the one provided in
+	authentication).</para>
+-->
+	<para>ユーザーアカウントのパスワードを変更する（認証されたものに限る）。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user rename <replaceable>username</replaceable> [options]</title>
+        <para>Rename a user and related attributes.</para>
+        <para>This command allows to set the user's name related attributes. The user's
+        CN will be renamed automatically.
+        The user's new CN will be made up by combining the given-name, initials
+        and surname. A dot ('.') will be appended to the initials automatically,
+        if required.
+        Use the - -force-new-cn option to specify the new CN manually and - -reset-cn
+        to reset this change.</para>
+        <para>Use an empty attribute value to remove the specified attribute.</para>
+        <para>The username specified on the command is the sAMAccountName.</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>- -surname=SURNAME</term>
+        <listitem><para>
+        New surname
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -given-name=GIVEN_NAME</term>
+        <listitem><para>
+        New given name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -initials=INITIALS</term>
+        <listitem><para>
+        New initials
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify a new CN (RDN) instead of using a combination
+        of the given name, initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -reset-cn</term>
+        <listitem><para>
+        Set the CN to the default combination of given name,
+        initials and surname.
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        New display name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        New email address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        New account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>- -upn=UPN</term>
+        <listitem><para>
+        New user principal name
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+-->
+
+<refsect3>
+        <title>user rename <replaceable>username</replaceable> [options]</title>
+        <para>ユーザと関連する属性を改名する。</para>
+        <para>このコマンドはユーザの名前に関連する属性の設定を許可する。ユーザの
+        CN は自動的に改名される。
+	ユーザの新しい CN は、given-name, initials と surname を組み合わせることで
+	作成される。ドット ('.') は、必要であれば自動的に initials に追加される。
+	新しい CN を手動で指定する際には --force-new-cn を、この変更をリセットする
+	場合は、--reset-cn オプションを使用する。</para>
+        <para>指定された属性を削除するには、空の属性値を使用する。</para>
+        <para>コマンド上で username の指定は sAMAccountName である。</para>
+
+        <variablelist>
+        <varlistentry>
+        <term>--surname=SURNAME</term>
+        <listitem><para>
+        新しい surname
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--given-name=GIVEN_NAME</term>
+        <listitem><para>
+        新しい given name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--initials=INITIALS</term>
+        <listitem><para>
+        新しい initials
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--force-new-cn=NEW_CN</term>
+        <listitem><para>
+        Specify 新しい CN (RDN) を given name, initials と surname の
+	組み合わせを使う代わりに指定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--reset-cn</term>
+        <listitem><para>
+        既定の given name, initials と surname の組み合わせを CN に設定する。
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--display-name=DISPLAY_NAME</term>
+        <listitem><para>
+        新しい display name
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--mail-address=MAIL_ADDRESS</term>
+        <listitem><para>
+        新しい email address
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--samaccountname=SAMACCOUNTNAME</term>
+        <listitem><para>
+        新しい account name (sAMAccountName/logon name)
+        </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+        <term>--upn=UPN</term>
+        <listitem><para>
+        新しい user principal name
+        </para></listitem>
+        </varlistentry>
+        </variablelist>
+</refsect3>
+
+
+<refsect3>
+	<title>user setexpiry <replaceable>username</replaceable> [options]</title>
+<!-- 原文 samba-4.11.0
+	<para>Set the expiration of a user account.</para>
+-->
+	<para>ユーザーアカウントの満了日を設定する。</para>
+</refsect3>
+
+<!-- Samba-4.14.0
+<refsect3>
+        <title>user unlock <replaceable>username</replaceable> [options]</title>
+        <para>This command unlocks a user account in the Active Directory
+        domain.</para>
+</refsect3>
+-->
+
+<refsect3>
+        <title>user unlock <replaceable>username</replaceable> [options]</title>
+        <para>このコマンドは AD ドメイン中のユーザアカウントをアンロックする。
+        </para>
+</refsect3>
+
+<refsect3>
+	<title>user setpassword <replaceable>username</replaceable> [options]</title>
+<!-- 原文 samba-4.11.0
+	<para>Sets or resets the password of a user account.</para>
+-->
+	<para>ユーザーアカウントのパスワードを設定または初期化する。</para>
+</refsect3>
+
+<refsect3>
+        <title>user getpassword <replaceable>username</replaceable> [options]</title>
+<!-- 原文 samba-4.11.0
+	<para>Gets the password of a user account.</para>
+-->
+        <para>ユーザアカウントのパスワードを取得する。</para>
+</refsect3>
+
+<refsect3>
+        <title>user syncpasswords <replaceable>--cache-ldb-initialize</replaceable> [options]</title>
+<!-- 原文 samba-4.7.0
+	<para>Syncs the passwords of all user accounts, using an optional script.</para>
+	<para>Note that this command should run on a single domain controller only
+	(typically the PDC-emulator).</para>
+-->
+        <para>オプションのスクリプトを試用してすべてのユーザーアカウントのパスワードを同期する。</para>
+        <para>このコマンドは、単一のドメインコントローラー上でのみ動かすこと（通常は PDC エミュレーター）。</para>
+</refsect3>
+
+<refsect2>
+	<title>vampire [options] <replaceable>domain</replaceable></title>
+<!-- 原文 samba-4.7.0
+	<para>Join and synchronise a remote AD domain to the local server.
+	Please note that <command>samba-tool vampire</command> is deprecated,
+	please use <command>samba-tool domain join</command> instead.</para>
+-->
+	<para>リモートの AD ドメインに参加し、ローカルサーバーへ同期する。
+	<command>samba-tool vampire</command> は古い形式であることに注意。
+	代わりに <command>samba-tool domain join</command> を使うこと。</para>
+</refsect2>
+
+<refsect2>
+        <title>visualize [options] <replaceable>subcommand</replaceable></title>
+<!-- 原文 samba-4.8.0
+        <para>Produce graphical representations of Samba network state.
+        To work out what is happening in a replication graph, it is sometimes
+        helpful to use visualisations.</para>
+-->
+        <para>Samba のネットワーク状態をグラフィカルに表示する。
+        レプリケーショングラフで何が起こっているかを知るには、可視化を使うことが
+        役に立つ場合がある。</para>
+
+<!-- 原文 samba-4.8.0
+        <para>
+        There are two subcommands, two graphical modes, and (roughly) two modes
+        of operation with respect to the location of authority.</para>
+-->
+        <para>
+        これには2つのサブコマンド、2つのグラフィックモード、(大まかに言って)
+        権限の位置に関する2つの操作モードがある。</para>
+
+<!-- 原文 samba-4.8.0
+        <refsect3><title>MODES OF OPERATION</title>
+        <varlistentry>
+                <term>samba-tool visualize ntdsconn</term>
+                <listitem><para>Looks at NTDS connections.
+                </para></listitem>
+                </varlistentry>
+
+        <varlistentry>
+                <term>samba-tool visualize reps</term>
+                <listitem><para>Looks at repsTo and repsFrom objects.
+                </para></listitem>
+                </varlistentry>
+        </refsect3>
+-->
+        <refsect3><title>操作モード</title>
+        <varlistentry>
+                <term>samba-tool visualize ntdsconn</term>
+                <listitem><para>NTDS 接続を探す。
+                </para></listitem>
+                </varlistentry>
+
+        <varlistentry>
+                <term>samba-tool visualize reps</term>
+                <listitem><para>repsTo と repsFrom オブジェクトを探す。
+                </para></listitem>
+                </varlistentry>
+        </refsect3>
+
+<!-- Samba 4.9.0
+	<varlistentry>
+		<term>samba-tool visualize uptodateness</term>
+		<listitem><para>Looks at replication lag as shown by the
+                uptodateness vectors.
+		</para></listitem>
+		</varlistentry>
+-->
+	<varlistentry>
+		<term>samba-tool visualize uptodateness</term>
+		<listitem><para>uptodateness ベクタとして表示されているような、
+                レプリケーションの遅延を探す。
+		</para></listitem>
+		</varlistentry>
+
+<!-- Samba 4.8.0
+            <refsect3><title>GRAPHICAL MODES</title>
+        <varlistentry>
+                <term>- -distance</term>
+                <listitem><para>Distances between DCs are shown in a matrix in
+                 the terminal.
+                </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+                <term>- -dot</term>
+                <listitem>
+		  <para>Generate Graphviz dot output. When viewed using
+                dot or xdot, this shows the network as a graph with DCs as
+                vertices and connections edges. Certain types of degenerate
+                edges are shown in different colours or line-styles.
+                </para>
+		</listitem>
+                </varlistentry>
+		</refsect3>
+-->
+		<refsect3><title>グラフィカルモード</title>
+        <varlistentry>
+                <term>--distance</term>
+                <listitem><para>ターミナル中に、マトリクス形式で、DC間の
+                 距離を表示する。
+                </para></listitem>
+        </varlistentry>
+
+        <varlistentry>
+                <term>--dot</term>
+                <listitem><para>Graphviz dot 形式のファイルを出力する(ntdsconn と reps モード用)。
+		dot または xdot を用いることによって、ネットワークをグラフ化
+		して参照することができる。その際には、DC が頂点として、また
+		ネットワーク接続が辺によって表現される。特定のネットワーク
+		接続は、異なった色や線のスタイルによって表現される。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+<!-- Samba 4.9.0
+                <term>- -xdot</term>
+                <listitem><para>Generate Graphviz dot output as with
+                <arg choice="opt">- -dot</arg> and attempt to view it
+                immediately using <command>/usr/bin/xdot</command>.
+                </para></listitem>
+                </varlistentry>
+		<varlistentry>
+-->		
+                <term>--xdot</term>
+                <listitem><para><arg choice="opt">--dot</arg> と同じように
+                dot を出力し、さらに、<command>/usr/bin/xdot</command> を使って
+                すぐに結果を表示する。
+                </para></listitem>
+                </varlistentry>
+        </refsect3>
+
+        <varlistentry>
+                <term>-r</term>
+<!-- Samba 4.9.0
+		<listitem><para>Normally,
+		<command>samba-tool</command> talks to one database;
+		with the <arg choice="opt">-r</arg> option attempts
+		are made to contact all the DCs known to the first
+		database. This is necessary for <command>samba-tool
+		visualize uptodateness</command> and for
+		<command>samba-tool visualize reps</command> because
+		the repsFrom/To objects are not replicated, and it can
+		reveal replication issues in other modes.
+		</para></listitem>
+ -->
+                <listitem><para>通常<command>samba-tool</command> は1つの
+                データベースを使う; <arg choice="opt">-r</arg> オプションを指定すると、
+		最初のデータベースが知っている、すべてのDCに対して接続を試みる。
+		これは、<command>samba-tool visualize uptodateness</command> と、
+		repsFrom/To オブジェクトが複製(レプリケーション)されないため、
+		<command>samba-tool visualize reps</command> から
+		賢明な結果を得るために必要である。また、これにより、
+		他のモードにおけるレプリケーションの問題を明確にすることができる。
+                </para></listitem>
+                </varlistentry>
+</refsect2>
+
+<refsect2>
+<!-- 原文 samba-4.7.0
+<title>help</title>
+<para>Gives usage information.</para>
+-->
+<title>ヘルプ</title>
+<para>使用方法を提示する。</para>
+</refsect2>
+
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>VERSION</title>
+-->
+	<title>バージョン</title>
+
+<!-- 原文 samba-4.7.0
+	<para>This man page is complete for version 4 of the Samba
+	suite.</para>
+-->
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+<!-- 原文 samba-4.7.0
+	<title>AUTHOR</title>
+-->
+	<title>著者</title>
+
+<!-- 原文 samba-4.7.0
+	<para>The original Samba software and related utilities
+	were created by Andrew Tridgell. Samba is now developed
+	by the Samba Team as an Open Source project similar
+	to the way the Linux kernel is developed.</para>
+-->
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、
+	Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が
+	行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.15.0 - 4.17.0 に対応する。</para>
+
+	<para>Samba 4.0.0 - 4.17.0  対応の翻訳は、
+	<itemizedlist>
+	<listitem><para>太田俊哉(ribbon@samba.gr.jp)</para></listitem>
+	<listitem><para>matsuand(michio_matsuyama@yahoo.co.jp)</para></listitem>
+	</itemizedlist>
+	によって行われた。</para>
+
+</refsect1>
+
+</refentry>

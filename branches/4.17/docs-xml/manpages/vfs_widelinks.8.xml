@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_widelinks.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_widelinks</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_widelinks</refname>
+	<refpurpose>共有内で、Sambaの共有がファイルシステムのシンボリックリンクを無視</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = widelinks</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このVFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+<!-- Samba-4.13.0
+	<para>The <command>vfs_widelinks</command> VFS module
+	hides the existence of symbolic links in the filesystem
+	inside a share. It is used in Samba verson 4.13 and above
+	to implement the <filename>smb.conf</filename>"wide links = yes"
+	functionality that used to be inside the core smbd code.
+	The module should not be loaded explicitly by smb.conf
+	as part of the "vfs objects =" parameter, but is loaded
+	implicitly when "wide links = yes" is enabled. This is
+	to prevent existing smb.conf files from having to be
+	modified to keep the existing insecure "wide links"
+	functionality on a share.
+	</para>
+-->
+        <para><command>vfs_widelinks</command> VFS モジュールは共有の内側の
+	ファイルシステム中のシンボリックリンクの存在を隠す。これは Samba の
+	バージョン 4.13 以降で、中核の smbd コード内で使われる、
+	<filename>smb.conf</filename> の "wide links = yes"
+	機能を実装するために使われる。モジュールは "vfs objects ="
+	パラメータの一部として、smb.conf によって明示的にロードされないが、
+	"wide links = yes" が有効になったときに暗黙でロードされる。
+	これは、共有上で既存の安全でない "wide links"
+	機能を保持するため、既存の smb.conf ファイルの修正をしなくても
+	すむようにする。
+	</para>
+<!-- Samba-4.13.0
+	<para>Please note that "wide links = yes" functionality
+	is a deliberately insecure option, and should never be
+	used in Samba installations. On Linux, bind mounts can
+	be used instead to implement anything "wide links = yes"
+	can enable. This module has been created to provide
+	backwards compatibility with existing users of
+	"wide links = yes" installations, but this use cannot be
+	recommended and is not endorsed by the Samba developers.
+	</para>
+ -->
+	<para>"wide links = yes" 機能は意図的な安全でないオプションで、
+	Samba の インストールでは使用しないで欲しいということに注意して
+	ほしい。Linux 上では、bind マウントが "wide links = yes"
+	が有効に出来る所で代わりに使って実装できる。このモジュールは
+	"wide links = yes" をインストールしている既存のユーザへの、
+	後方互換機能を提供するために作成されたが、
+	これを使うことは推奨されず、Samba 開発者はそういうことを
+	認めていない。
+	</para>
+<!-- Samba-4.13.0
+	<para>Note that this implicit loading may become explicit
+	in a later Samba release, and administrators wishing to
+	keep the insecure "wide links" functionality may have
+	to add this module into their "vfs objects =" module
+	list. The Samba project release notes and this manpage
+	will be updated to reflect this when this change is made.
+	</para>
+-->
+        <para>この、暗黙のローディングはこの後のSamba リリースでは、明示的なものに
+	なり、管理者は、安全でない "wide links" 機能が、このモジュールを
+	"vfs objects =" リストに付け加えるようになることを考えていることに
+	注意してほしい。Samba プロジェクトのリリースノートとこのマニュアルページは
+	この変更が終わったときにこのことが反映されて更新される。
+	</para>
+
+	<para>このモジュールはスタック可能である。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+	<para>例は存在しない。このモジュールは smbd によって必要なときに自動的にロードされる。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+        <title>著者</title>
+
+        <para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+        <title>日本語訳</title>
+        <para>このマニュアルページは、Samba 4.13.0 - 4.17.0 に対応する。</para>
+    <para>このドキュメントの翻訳は
+                <itemizedlist>
+                        <listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+                </itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,99 @@
+<samba:parameter name="nt hash store"
+                 context="G"
+                 type="enum"
+                 enumlist="enum_nt_hash_store"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- Samba-4.17.0
+     <para>This parameter determines whether or not <citerefentry><refentrytitle>samba</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> will, as an AD DC, attempt to
+    store the NT password hash used in NTLM and NTLMv2 authentication for
+    users in this domain. </para>
+
+    <para>If so configured, the Samba Active Directory Domain Controller,
+    will, except for trust accounts (computers, domain
+    controllers and inter-domain trusts) the
+    <emphasis>NOT store the NT hash</emphasis>
+    for new and changed accounts in the sam.ldb database.</para>
+
+    <para>This avoids the storage of an unsalted hash for these
+    user-created passwords.  As a consequence the
+    <constant>arcfour-hmac-md5</constant> Kerberos key type is
+    also unavailable in the KDC for these users - thankfully
+    <emphasis>modern clients will select an AES based key
+    instead.</emphasis></para>
+
+    <para>NOTE: As the password history in Active Directory is
+    stored as an NT hash (and thus unavailable), a workaround is
+    used, relying instead on Kerberos password hash values.
+    This stores three passwords, the current, previous and second previous
+    password.  This allows some checking against reuse. </para>
+
+    <para>However as these values are salted, changing the
+    sAMAccountName, userAccountControl or userPrincipalName of
+    an account will cause the salt to change.  After the rare
+    combination of both a rename and a password change only the
+    current password will be recognised for password history
+    purposes.
+    </para>
+    <para>The available settings are:</para>
+-->
+    <para>このパラメータは、<citerefentry><refentrytitle>samba</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> が、このドメイン中の、ユーザの
+    NTLM と NTLMv2 認証で使われる NT パスワードハッシュを AD DCとして
+    格納するかどうかを決める。</para>
+
+    <para>そのように設定されている場合、Samba Active Directory ドメイン
+    コントローラは、信頼するアカウント (コンピュータ、ドメインコントローラと
+    ドメイン間の信頼)を除き、新しい、または変更されたアカウントの
+    <emphasis> NT ハッシュを sam.ldb データベースに格納しない</emphasis>
+    。</para>
+
+    <para>これにより、これらのユーザ作成パスワード用の、salt がない
+    ハッシュの保存を回避する。その結果、<constant>arcfour-hmac-md5</constant>
+    Kerberos キータイプもこれらのユーザに対して KDC は無効となる。
+    ありがたいことに、<emphasis>最近のクライアントは代替として、AES ベースの
+    キーを使用する。</emphasis></para>
+
+    <para>注意: Active Directory 中のパスワード履歴は、NT ハッシュ
+    (なので利用不可)として保存されるため、代替として、Kerberos ハッシュ値に
+    依存する回避策が使用される。これは現在、過去、その前という3つのパスワードが
+    保存される。これにより、再利用をチェックできる。</para>
+
+    <para>しかしながら、これらの値は salt が付いているため、アカウントの
+    sAMAccountName、 userAccountControl または userPrincipalName を
+    変更すると、salt も変更される。改名とパスワード変更の希な組み合わせの後、
+    現在のパスワードだけが、パスワード履歴の目的で認識される。
+    </para>
+    <para>有効な値は以下の通り:</para>
+    <itemizedlist>
+        <listitem>
+          <para><constant>always</constant> - 常時 NT ハッシュを保存する
+	  (マシンアカウントも常時 NTハッシュを保存する)。</para>
+
+	  <para>これは、<parameter  moreinfo="none">ntlm auth</parameter>が
+	  試用期間で <constant>無効</constant>にされている場合に便利である。
+	  </para>
+
+        </listitem>
+
+        <listitem>
+          <para><constant>never</constant> - ユーザアカウントの NT ハッシュを
+	  格納しない。マシンアカウントのみ格納する。</para>
+        </listitem>
+
+        <listitem>
+          <para><constant>auto</constant> - <parameter
+	  moreinfo="none">ntlm auth</parameter>が <constant>無効</constant>
+	  になっていない場合に、NT ハッシュを格納する。
+	  </para>
+
+        </listitem>
+
+    </itemizedlist>
+
+</description>
+
+<related>ntlm auth</related>
+<value type="default">always</value>
+</samba:parameter>

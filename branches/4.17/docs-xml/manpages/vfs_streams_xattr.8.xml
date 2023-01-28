@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_streams_xattr.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_streams_xattr</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_streams_xattr</refname>
+	<refpurpose>代替データストリームを POSIX の拡張属性に格納</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = streams_xattr</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは 
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para> <command>vfs_streams_xattr</command> により NTFS の代替データストリームをファイルシステムに格納することが可能となる。
+	一般的な POSIX ファイルシステムは複数のデータストリームをファイルに付与する機能をサポートしていないため、
+	streams_xattr モジュールは、このデータを POSIX の拡張属性 (xattrs) に格納する。
+	この属性の名称は、user.DosStream."代替データストリーム名" である。プレフィックス
+	"user.DosStream." は、モジュールオプション <command>streams_xattr:prefix</command>
+	で変更可能だが、これは、SMB 拡張属性インタフェース上で代替ストリームも公開する
+	ことに留意。</para>
+
+	<para>このモジュールを有効にして共有を行なうファイルシステムでは、拡張属性をサポートしている必要がある。
+	</para>
+
+	<para>
+	ほとんどのファイルシステムには、拡張属性のサイズに制約がある。
+	そのため、このモジュールは 、小さいゾーン情報のデータをストリームに格納する
+	Internet Explorer のようなアプリケーションでは機能するが、
+	大量のデータを代替データストリームに格納するアプリケーションでは機能しないかもしれない。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>streams_xattr:prefix = STRING</term>
+	    <listitem>
+	      <para>xattr に代替データストリームを格納する時に使われるプレフィックス名
+	      で、<command>user.DosStream.</command>の既定値。これを変更すると、
+	      SMB拡張属性インタフェース上の代替ストリームも公開することになる。</para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>streams_xattr:store_stream_type = [yes|no]</term>
+	    <listitem>
+	      <para>タイプ "$DATA" の代替ストリーム用のxattr名が、
+	      データストリームタイプ文字列 ":$DATA" が後ろにつくかどうか。
+	      既定値は<command>yes</command>である。</para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+<programlisting>
+        <smbconfsection name="[share]"/>
+	<smbconfoption name="vfs objects">streams_xattr</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.8.0 - 4.17.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.2.0 - 4.17.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

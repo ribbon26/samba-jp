@@ -1,0 +1,919 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="rpcclient.1" lang="ja">
+
+<refmeta>
+	<refentrytitle>rpcclient</refentrytitle>
+	<manvolnum>1</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">ユーザーコマンド</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>rpcclient</refname>
+	<refpurpose>クライアント側の MS-RPC 関数を発行するツール
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>rpcclient</command>
+                <arg choice="opt">-c|--command=COMMANDS</arg>
+                <arg choice="opt">-I|--dest-ip=IP</arg>
+                <arg choice="opt">-p|--port=PORT</arg>
+                <arg choice="opt">-?|--help</arg>
+                <arg choice="opt">--usage</arg>
+                <arg choice="opt">-d|--debuglevel=DEBUGLEVEL</arg>
+                <arg choice="opt">--debug-stdout</arg>
+                <arg choice="opt">--configfile=CONFIGFILE</arg>
+                <arg choice="opt">--option=name=value</arg>
+                <arg choice="opt">-l|--log-basename=LOGFILEBASE</arg>
+                <arg choice="opt">--leak-report</arg>
+                <arg choice="opt">--leak-report-full</arg>
+                <arg choice="opt">-R|--name-resolve=NAME-RESOLVE-ORDER</arg>
+                <arg choice="opt">-O|--socket-options=SOCKETOPTIONS</arg>
+                <arg choice="opt">-m|--maxprotocol=MAXPROTOCOL</arg>
+                <arg choice="opt">-n|--netbiosname=NETBIOSNAME</arg>
+                <arg choice="opt">--netbios-scope=SCOPE</arg>
+                <arg choice="opt">-W|--workgroup=WORKGROUP</arg>
+                <arg choice="opt">--realm=REALM</arg>
+                <arg choice="opt">-U|--user=[DOMAIN/]USERNAME[%PASSWORD]</arg>
+                <arg choice="opt">-N|--no-pass</arg>
+                <arg choice="opt">--password=STRING</arg>
+                <arg choice="opt">--pw-nt-hash</arg>
+                <arg choice="opt">-A|--authentication-file=FILE</arg>
+                <arg choice="opt">-P|--machine-pass</arg>
+                <arg choice="opt">--simple-bind-dn=DN</arg>
+                <arg choice="opt">--use-kerberos=desired|required|off</arg>
+                <arg choice="opt">--use-krb5-ccache=CCACHE</arg>
+                <arg choice="opt">--use-winbind-ccache</arg>
+                <arg choice="opt">--client-protection=sign|encrypt|off</arg>
+                <arg choice="opt">-V|--version</arg>
+                <arg choice="req">BINDING-STRING|HOST</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは <citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para><command>rpcclient</command> は Samba の MS-RPC
+	機能をテストするために開発されたユーティリティであり、
+	開発と安定を何度か繰り返している。
+	多数のシステム管理者がこのツールを用いて UNIX ワークステーションから
+	Windows NT クライアントを管理するスクリプトを作成している。</para>
+</refsect1>
+
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+		<varlistentry>
+<!-- Samba-4.10.6
+		<term>BINDING-STRING|HOST</term>
+		<listitem>
+			<para>When connecting to a dcerpc service you need to
+			specify a binding string.</para>
+
+			<para>The format is:</para>
+
+			<para>TRANSPORT:host[options]</para>
+
+			<para>where TRANSPORT is either ncacn_np (named pipes) for SMB or
+			ncacn_ip_tcp for DCERPC over TCP/IP.</para>
+
+			<para>"host" is an IP or hostname or netbios name. If the binding
+			string identifies the server side of an endpoint, "host" may be
+			an empty string. See below for more details.</para>
+
+			<para>"options" can include a SMB pipe name if using the ncacn_np
+			transport or a TCP port number if using the ncacn_ip_tcp transport,
+			otherwise they will be auto-determined.</para>
+
+			<para>Examples:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[1024]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,seal,krb5]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,spnego]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr,sign,print]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc:/path/to/unix/socket</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">//SAMBA</parameter></para></listitem>
+			</itemizedlist>
+
+			<para>The supported transports are:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_np</parameter> - Connect using named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp</parameter> - Connect over TCP/IP</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc</parameter> - Connect over local RPC (unix sockets)</para></listitem>
+			</itemizedlist>
+
+			<para>The supported options are:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">sign</parameter> - Use RPC integrity authentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">seal</parameter> - Enable RPC privacy (encryption) authentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">connect</parameter> - Use RPC connect level authentication (auth, but no sign or seal)</para></listitem>
+			<listitem><para><parameter moreinfo="none">packet</parameter> - Use RPC packet authentication level</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">spnego</parameter> - Use SPNEGO instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">ntlm</parameter> - Use plain NTLM instead of SPNEGO or NTLMSSP</para></listitem>
+			<listitem><para><parameter moreinfo="none">krb5</parameter> - Use Kerberos instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">schannel</parameter> - Create a schannel connection</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">smb1</parameter> - Use SMB1 for named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">smb2</parameter> - Use SMB2/3 for named pipes</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">validate</parameter> - Enable the NDR validator</para></listitem>
+			<listitem><para><parameter moreinfo="none">print</parameter> - Enable debug output of packets</para></listitem>
+			<listitem><para><parameter moreinfo="none">padcheck</parameter> - Check reply data for non-zero pad bytes</para></listitem>
+			<listitem><para><parameter moreinfo="none">bigendian</parameter> - Use big endian for RPC</para></listitem>
+			<listitem><para><parameter moreinfo="none">ndr64</parameter> - Use NDR64 for RPC</para></listitem>
+			</itemizedlist>
+
+		</listitem>
+-->
+		<term>BINDING-STRING|HOST</term>
+		<listitem>
+		        <para>dcerpc サービスへの接続時にバインド文字列を
+			指定する。</para>
+
+			<para>書式は以下の通り:</para>
+
+			<para>TRANSPORT:host[options]</para>
+
+			<para>ここで TRANSPORT は、SMB に対する ncacn_np (名前付きパイプ) か
+			TCP/IP 上の DCERPC に対する ncacn_ip_tcp である。</para>
+
+			<para>"host" は、IP か ホスト名か netbios名 である。バインド文字列が
+			サーバサイドのエンドポイントを識別する場合、  "host" は
+			空の文字列でもよい。詳細は以下を参照のこと。</para>
+
+			<para>"options" は、ncacn_np トランスポートを使う場合は、SMB パイプ名を
+			含んでもよく、ncacn_ip_tcp トランスポートを使う場合は TCP ポート番号を
+			含んでもよく、その他の場合は、自動的に決定される。</para>
+
+			<para>例:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[1024]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,seal,krb5]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp:samba.example.com[sign,spnego]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_np:samba.example.com[samr,sign,print]</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc:/path/to/unix/socket</parameter></para></listitem>
+			<listitem><para><parameter moreinfo="none">//SAMBA</parameter></para></listitem>
+			</itemizedlist>
+
+			<para>サポートされるトランスポートは以下の通り:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">ncacn_np</parameter> - Connect using named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncacn_ip_tcp</parameter> - Connect over TCP/IP</para></listitem>
+			<listitem><para><parameter moreinfo="none">ncalrpc</parameter> - Connect over local RPC (unix sockets)</para></listitem>
+			</itemizedlist>
+
+			<para>サポートされるオプションは以下の通り:</para>
+
+			<itemizedlist>
+			<listitem><para><parameter moreinfo="none">sign</parameter> - Use RPC integrity authentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">seal</parameter> - Enable RPC privacy (encryption) authentication level</para></listitem>
+			<listitem><para><parameter moreinfo="none">connect</parameter> - Use RPC connect level authentication (auth, but no sign or seal)</para></listitem>
+			<listitem><para><parameter moreinfo="none">packet</parameter> - Use RPC packet authentication level</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">spnego</parameter> - Use SPNEGO instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">ntlm</parameter> - Use plain NTLM instead of SPNEGO or NTLMSSP</para></listitem>
+			<listitem><para><parameter moreinfo="none">krb5</parameter> - Use Kerberos instead of NTLMSSP authentication</para></listitem>
+			<listitem><para><parameter moreinfo="none">schannel</parameter> - Create a schannel connection</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">smb1</parameter> - Use SMB1 for named pipes</para></listitem>
+			<listitem><para><parameter moreinfo="none">smb2</parameter> - Use SMB2/3 for named pipes</para></listitem>
+
+			<listitem><para><parameter moreinfo="none">validate</parameter> - Enable the NDR validator</para></listitem>
+			<listitem><para><parameter moreinfo="none">print</parameter> - Enable debug output of packets</para></listitem>
+			<listitem><para><parameter moreinfo="none">padcheck</parameter> - Check reply data for non-zero pad bytes</para></listitem>
+			<listitem><para><parameter moreinfo="none">bigendian</parameter> - Use big endian for RPC</para></listitem>
+			<listitem><para><parameter moreinfo="none">ndr64</parameter> - Use NDR64 for RPC</para></listitem>
+			</itemizedlist>
+
+		</listitem>
+                </varlistentry>
+
+
+		<varlistentry>
+		<term>-c|--command=&lt;'command string'&gt;</term>
+		<listitem><para>実行するコマンド (以下で記述) 
+		をセミコロンで区切って指定する。</para></listitem>
+		</varlistentry>
+
+		
+		<varlistentry>
+		<term>-I IP-address</term>
+		<listitem><para><replaceable>IP address</replaceable> は接続先の
+		サーバーのアドレスを指定する。記述方法は、標準的な "a.b.c.d"
+		のフォーマットで指定する。</para>
+
+		<para>通常、クライアントは上記の <parameter>name resolve order
+		</parameter> パラメーターで指定された名前解決の機能を使用して
+		NetBIOS 名を検索し、SMB/CIFS サーバーを特定する。
+		このパラメーターを使用することで、クライアントに対し強制的に
+		指定された IP Address にサーバーがあると認識させ、接続しようとしているリソースの
+		NetBIOS 名を無視させることができる。</para>
+
+		<para>このパラメーターにデフォルトの値はない。
+		もしこの値が指定されていないのなら、上で述べたようにクライアントが
+		自動的に判別する。</para></listitem>
+		</varlistentry>
+
+		&popt.autohelp;
+                &cmdline.common.samba.client;
+                &cmdline.common.connection;
+                &cmdline.common.credentials;
+	      </variablelist>
+</refsect1>
+
+
+<refsect1>
+	<title>コマンド</title>
+
+	<refsect2>
+	<title>LSARPC</title>
+
+	<variablelist>
+
+                <varlistentry><term>lsaquery</term><listitem><para>info policy を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>lookupsids</term><listitem><para>SID から名前への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>lookupsids3</term><listitem><para>SID から名前への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>lookupsids_level</term><listitem><para>SID から名前への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>lookupnames</term><listitem><para>名前から SID への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>lookupnames4</term><listitem><para>名前から SID への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>lookupnames_level</term><listitem><para>名前から SID への変換を行う。</para></listitem></varlistentry>
+                <varlistentry><term>enumtrust</term><listitem><para>信頼するドメインの一覧を表示する。</para></listitem></varlistentry>
+                <varlistentry><term>enumprivs</term><listitem><para>ユーザー権利の一覧を表示する。</para></listitem></varlistentry>
+                <varlistentry><term>getdispname</term><listitem><para>ユーザー権利の名前を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaenumsid</term><listitem><para>LSA SID の一覧を表示する。</para></listitem></varlistentry>
+                <varlistentry><term>lsacreateaccount</term><listitem><para>新しい lsa アカウントを作成する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaenumprivsaccount</term><listitem><para>指定した SID の持つユーザー権利を一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaenumacctrights</term><listitem><para>指定されたユーザー権利を持つ SID を一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaaddpriv</term><listitem><para>SID に ユーザー権利を割り当てる。</para></listitem></varlistentry>
+                <varlistentry><term>lsadelpriv</term><listitem><para>SID から らユーザー権利を取り除く。</para></listitem></varlistentry>
+                <varlistentry><term>lsaaddacctrights</term><listitem><para>アカウントにユーザー権利を追加する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaremoveacctrights</term><listitem><para>アカウントからユーザー権利を取り除く。</para></listitem></varlistentry>
+                <varlistentry><term>lsalookupprivvalue</term><listitem><para>ユーザー権利の名前から値を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>lsaquerysecobj</term><listitem><para>LSA セキュリティオブジェクトを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>lsaquerytrustdominfo</term><listitem><para>(与えられた SID で) LSA 信頼ドメイン情報を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>lsaquerytrustdominfobyname</term><listitem><para>(与えられた名前で)  LSA 信頼ドメイン情報を問い合わせる。Windows が 2k より大きい場合のみ動作する。k</para></listitem></varlistentry>
+                <varlistentry><term>lsaquerytrustdominfobysid</term><listitem><para>(与えられた SID で) LSA 信頼ドメイン情報を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>lsasettrustdominfo</term><listitem><para>LSA 信頼ドメイン情報を設定する。</para></listitem></varlistentry>
+                <varlistentry><term>getusername</term><listitem><para>ユーザ名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>createsecret</term><listitem><para>Secret を作成する。</para></listitem></varlistentry>
+                <varlistentry><term>deletesecret</term><listitem><para>Secret を削除する。</para></listitem></varlistentry>
+                <varlistentry><term>querysecret</term><listitem><para>Secret を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>setsecret</term><listitem><para>Secret を設定する。</para></listitem></varlistentry>
+                <varlistentry><term>retrieveprivatedata</term><listitem><para>プライベートデータを検索する。</para></listitem></varlistentry>
+                <varlistentry><term>storeprivatedata</term><listitem><para>プライベートデータを格納する。</para></listitem></varlistentry>
+                <varlistentry><term>createtrustdom</term><listitem><para>信頼するドメインを作成する。</para></listitem></varlistentry>
+                <varlistentry><term>deletetrustdom</term><listitem><para>信頼するドメインを削除する。</para></listitem></varlistentry>
+	  
+	</variablelist>	
+	</refsect2>
+	
+	<refsect2>
+	<title>LSARPC-DS</title>
+	<variablelist>
+		<varlistentry><term>dsroledominfo</term><listitem><para>
+		プライマリドメインの情報を取得する。</para></listitem></varlistentry>
+	</variablelist>
+        </refsect2>
+
+
+        <refsect2>
+
+	<title>DFS</title>
+	<variablelist>
+		<varlistentry><term>dfsversion</term><listitem><para>
+		DFS をサポートしているか問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>dfsadd</term><listitem><para>
+		DFS の共有を追加する。</para></listitem></varlistentry>
+		<varlistentry><term>dfsremove</term><listitem><para>
+		DFS の共有を削除する。</para></listitem></varlistentry>
+		<varlistentry><term>dfsgetinfo</term><listitem><para>
+		DFS の共有の情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>dfsenum</term><listitem><para>
+		DFS の共有の一覧を表示する。</para></listitem></varlistentry>
+		<varlistentry><term>dfsenumex</term><listitem><para>dfs の共有一覧を表示する。</para></listitem></varlistentry>
+	</variablelist>
+	</refsect2>
+
+
+	<refsect2>
+	<title>SHUTDOWN</title>
+	<variablelist>
+                <varlistentry><term>shutdowninit</term><listitem><para>syntax: shutdown [-m message] </para></listitem></varlistentry>
+                <varlistentry><term>shutdownabort</term><listitem><para>syntax: shutdownabort</para></listitem></varlistentry>
+	</variablelist>
+
+	</refsect2>
+
+
+	<refsect2>
+	<title>SRVSVC</title>
+	<variablelist>
+		<varlistentry><term>srvinfo</term><listitem><para>
+		サーバー情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>netshareenum</term><listitem><para>
+		共有を一覧表示する。</para></listitem></varlistentry>
+		<varlistentry><term>netshareenumall</term><listitem><para>
+		すべての共有を列挙する</para></listitem></varlistentry>
+		<varlistentry><term>netsharegetinfo</term><listitem><para>
+		共有の情報を表示する</para></listitem></varlistentry>
+		<varlistentry><term>netsharesetinfo</term><listitem><para>
+		共有の情報を設定する</para></listitem></varlistentry>
+		<varlistentry><term>netsharesetdfsflags</term><listitem><para>
+		DFS フラグを設定する</para></listitem></varlistentry>
+		<varlistentry><term>netfileenum</term><listitem><para>
+		開いているファイルを一覧表示する。</para></listitem></varlistentry>
+		<varlistentry><term>netremotetod</term><listitem><para>
+		リモートサーバーの時間を取得する。</para></listitem></varlistentry>
+		<varlistentry><term>netnamevalidate</term><listitem><para>
+		共有名を検証する</para></listitem></varlistentry>
+		<varlistentry><term>netfilegetsec</term><listitem><para>
+		ファイルのセキュリティ情報を得る</para></listitem></varlistentry>
+		<varlistentry><term>netsessdel</term><listitem><para>
+		セッションを削除する</para></listitem></varlistentry>
+		<varlistentry><term>netsessenum</term><listitem><para>
+		セッション一覧を表示する</para></listitem></varlistentry>
+		<varlistentry><term>netdiskenum</term><listitem><para>
+		ディスク一覧を表示する</para></listitem></varlistentry>
+		<varlistentry><term>netconnenum</term><listitem><para>
+		接続の一覧を表示する</para></listitem></varlistentry>
+		<varlistentry><term>netshareadd</term><listitem><para>
+		共有を追加する</para></listitem></varlistentry>
+		<varlistentry><term>netsharedel</term><listitem><para>
+		共有を削除する</para></listitem></varlistentry>
+	</variablelist>
+	</refsect2>
+
+	<refsect2>
+	<title>SAMR</title>
+
+	<variablelist>
+		<varlistentry><term>queryuser</term><listitem><para>
+		ユーザー情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>querygroup</term><listitem><para>
+		グループ情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>queryusergroups</term><listitem><para>
+		ユーザーが所属するグループを問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>queryuseraliases</term><listitem><para>ユーザの別名を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>querygroupmem</term><listitem><para>
+		グループに所属するメンバーを問い合わせる。
+		</para></listitem></varlistentry>
+		<varlistentry><term>queryaliasmem</term><listitem><para>
+		エイリアスに所属するメンバーを問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>queryaliasinfo</term><listitem><para>別名情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>deletealias</term><listitem><para>別名を削除する。</para></listitem></varlistentry>
+		<varlistentry><term>querydispinfo</term><listitem><para>
+		ユーザー情報の一覧を表示する。</para></listitem></varlistentry>
+		<varlistentry><term>querydispinfo2</term><listitem><para>ユーザー情報の一覧を表示する。</para></listitem></varlistentry>
+		<varlistentry><term>querydispinfo3</term><listitem><para>ユーザー情報の一覧を表示する。</para></listitem></varlistentry>
+		<varlistentry><term>querydominfo</term><listitem><para>
+		ドメイン情報を問い合わせる。</para></listitem></varlistentry>
+		<varlistentry><term>enumdomusers</term><listitem><para>
+		ドメインユーザーを一覧表示する。</para></listitem></varlistentry>
+		<varlistentry><term>enumdomgroups</term><listitem><para>
+		ドメイングループを一覧表示する。</para></listitem></varlistentry>
+		<varlistentry><term>enumalsgroups</term><listitem><para>
+		エイリアスグループ(ローカルグループ)を一覧表示する。</para></listitem></varlistentry>
+		<varlistentry><term>enumdomains</term><listitem><para>ドメインの一覧を表示する。</para></listitem></varlistentry>
+		<varlistentry><term>createdomuser</term><listitem><para>
+		ドメインユーザーを作成する。</para></listitem></varlistentry>
+		<varlistentry><term>createdomgroup</term><listitem><para>ドメイングループを作成する。</para></listitem></varlistentry>
+		<varlistentry><term>createdomalias</term><listitem><para>ドメインの別名を作成する。</para></listitem></varlistentry>
+		<varlistentry><term>samlookupnames</term><listitem><para>
+		名前を検索する。</para></listitem></varlistentry>
+		<varlistentry><term>samlookuprids</term><listitem><para>
+		rid を検索する。</para></listitem></varlistentry>
+		<varlistentry><term>deletedomgroup</term><listitem><para>ドメイングループを削除する。</para></listitem></varlistentry>
+		<varlistentry><term>deletedomuser</term><listitem><para>
+		ドメインユーザーを削除する。</para></listitem></varlistentry>
+		<varlistentry><term>samquerysecobj</term><listitem><para>
+		SAMR セキュリティオブジェクトを問い合わせる。
+		</para></listitem></varlistentry>
+		<varlistentry><term>getdompwinfo</term><listitem><para>ドメインパスワード情報を取得する</para></listitem></varlistentry>
+		<varlistentry><term>getusrdompwinfo</term><listitem><para>ユーザのドメインパスワード情報を検索する。</para></listitem></varlistentry>
+		<varlistentry><term>lookupdomain</term><listitem><para>ドメイン名を検索する</para></listitem></varlistentry>
+		<varlistentry><term>chgpasswd</term><listitem><para>ユーザのパスワードを変更する。</para></listitem></varlistentry>
+		<varlistentry><term>chgpasswd2</term><listitem><para>ユーザのパスワードを変更する。</para></listitem></varlistentry>
+		<varlistentry><term>chgpasswd3</term><listitem><para>ユーザのパスワード (RC4 暗号化) を変更する。</para></listitem></varlistentry>
+		<varlistentry><term>chgpasswd4</term><listitem><para>ユーザのパスワード (AES 暗号化) を変更する。</para></listitem></varlistentry>
+		<varlistentry><term>getdispinfoidx</term><listitem><para>表示情報索引を取得する。</para></listitem></varlistentry>
+		<varlistentry><term>setuserinfo</term><listitem><para>ユーザ情報を設定する。</para></listitem></varlistentry>
+		<varlistentry><term>setuserinfo2</term><listitem><para>ユーザ情報2を設定する。</para></listitem></varlistentry>
+	</variablelist>
+	</refsect2>
+
+	<refsect2>
+	<title>SPOOLSS</title>
+
+	<variablelist>
+		<varlistentry><term>adddriver &lt;arch&gt; &lt;config&gt; [&lt;version&gt;]</term> 
+		<listitem><para>
+		プリンタードライバー情報をサーバーに登録するために AddPrinterDriver() RPC
+		の呼び出しを行なう。ドライバーファイルは <command>getdriverdir
+		</command> コマンドが返却するディレクトリ中に予め存在している必要が
+		ある。<parameter>arch</parameter> に設定できる値は <command>
+		getdriverdir</command> コマンドで取得できる値と同じである。
+		<parameter>config</parameter> パラメーターでは以下の形式のファイルを
+		指定する。</para>
+		
+<para><programlisting>
+Long Driver Name:\
+Driver File Name:\
+Data File Name:\
+Config File Name:\
+Help File Name:\
+Language Monitor Name:\
+Default Data Type:\
+Comma Separated list of Files
+</programlisting></para>
+
+		<para>空のフィールドには、"NULL" という文字列を指定しておくこと。</para>
+		
+		<para>Samba は Print Monitor 機能をサポートする必要がない。
+		これは、この機能が双方向通信を利用するドライバーを使うローカルプリンター
+		にしか関係しないためである。このフィールドは必ず「NULL」にしておくこと。
+		遠隔の NT プリントサーバーにコマンドを発行する場合、
+		ドライバーの Print Monitor 機能をドライバーの追加前にインストールしていないと、
+		RPC に失敗する。 </para>
+
+		<para><parameter>version</parameter> パラメーターにより、プリンタードライバーの
+		バージョン番号が指定される。省略した場合、アーキテクチャに応じたバージョンが用いられる。
+		このオプションは Windows 2000 (バージョン 3)のプリンタードライバーの
+		アップロードに用いることができる。
+		</para></listitem></varlistentry>
+	
+		<varlistentry><term>addprinter &lt;printername&gt; 
+		&lt;sharename&gt; &lt;drivername&gt; &lt;port&gt;</term>
+		<listitem><para>
+		遠隔のサーバー上にプリンターを追加する。このプリンターは自動的に共有される。
+		このコマンドを実行する前に、プリンタードライバーをサーバー上にインストール
+		して (<command>adddriver</command> を参照のこと)、<parameter>port
+		</parameter> を有効なポート名にしておく (<command>enumports</command>
+		を参照) 必要があることに注意。</para>
+		</listitem></varlistentry>
+
+		<varlistentry><term>deldriver &lt;driver&gt;</term><listitem><para>
+		指定されたプリンタードライバーについて、すべてのアーキテクチャ用のものを削除する。これは、
+		ドライバーのファイル自体をサーバーから削除するわけではなく、
+		サーバーのドライバーのリストからエントリーだけを削除するものである。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>deldriverex &lt;driver&gt; [architecture] [version] [flags]
+		</term><listitem><para>
+		指定されたプリンタードライバーについて、ドライバーファイルも含めて削除する。
+		削除対象のバージョンやアーキテクチャを指定することも可能である。
+		アーキテクチャが指定されなかった場合、すべてのドライバーファイルが削除される。
+                <parameter>flags</parameter> は、数値の DPD_*値に関連づけられ、
+		すなわち、3つのリクエストの値である
+		(DPD_DELETE_UNUSED_FILES | DPD_DELETE_SPECIFIC_VERSION)。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>enumdata</term><listitem><para>サーバー上に格納されているプリンターの設定情報を一覧表示する。Windows NT クライアントの場合、
+		これらの情報はレジストリに格納されているが、Samba サーバーの場合、
+		プリンター用の TDB ファイル中に格納されている。このコマンドは、
+		Microsoft Platform SDK 中にある GetPrinterData() 関数に相当する。
+		(このコマンドは現在実装されていない)</para></listitem></varlistentry>
+
+		<varlistentry><term>enumdataex</term><listitem><para>キーに基づいたプリンターの情報を表示する。</para></listitem></varlistentry>
+
+		<varlistentry><term>enumkey</term><listitem><para>プリンターキーを
+		一覧表示する。</para></listitem></varlistentry>
+
+		<varlistentry><term>enumjobs &lt;printer&gt;</term>
+		<listitem><para>指定されたプリンターのジョブおよびその状況を表示する。
+		このコマンドは、Microsoft Platform SDK 中の EnumJobs() 関数に相当する。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>getjob</term><listitem><para>プリントジョブを取得する。</para></listitem></varlistentry>
+		<varlistentry><term>setjob</term><listitem><para>プリントジョブを設定する。</para></listitem></varlistentry>
+
+
+		<varlistentry><term>enumports [level]</term>
+		<listitem><para>
+		指定された info level でEnumPorts() 関数を呼び出す。現在、info level
+		1 と 2 のみがサポートされている。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>enumdrivers [level]</term> 
+		<listitem><para>
+		EnumPrinterDrivers() を実行する。これは全てのアーキテクチャ用の
+		インストールされたドライバーの一覧を表示する。フラグとオプションの
+		詳細については、Microsoft Platform SDK のドキュメントを参照のこと。
+		現在、info level 1, 2, 3 のみがサポートされている。 
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>enumprinters [level]</term>
+		<listitem><para>EnumPrinters() を実行する。これは共有されている
+		インストール済プリンターの一覧を表示する。フラグとオプションの詳細に
+		ついては、Microsoft Platform SDK のドキュメントを参照のこと。
+		現在、info level 1, 2, 5 のみがサポートされている。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>getdata &lt;printername&gt; &lt;valuename;&gt;</term> 
+		<listitem><para>指定されたプリンターの設定情報を取得する。
+		詳細な情報に付いては、<command>enumdata</command> コマンドを参照のこと。
+		このコマンドは Microsoft Platform SDK 中の GetPrinterData()
+		に相当するものである。</para></listitem></varlistentry>
+
+		<varlistentry><term>getdataex</term><listitem><para>キー名に基づいた
+		プリンタードライバーのデータを取得する。</para></listitem></varlistentry>
+		
+		<varlistentry><term>getdriver &lt;printername&gt;</term>
+		<listitem><para>
+		指定されたプリンターのプリンタードライバーの情報 (ドライバーファイル、
+		設定ファイル、関連するファイルなど) を取得する。このコマンドは
+		Microsoft Platform SDK 中の GetPrinterDriver() に相当するものである。
+		現在、info level 1, 2, 3 のみがサポートされている。 
+		</para></listitem></varlistentry>
+	
+		<varlistentry><term>getdriverdir &lt;arch&gt;</term>
+		<listitem><para>
+		GetPrinterDriverDirectory() RPC を発行して、SMB 共有名と指定された
+		アーキテクチャ用のプリンタードライバーの格納されているサブディレクトリを
+		取得する。<parameter>arch</parameter> に指定できる値は、 "Windows 4.0"
+		(for Windows 95/98), "Windows NT x86", "Windows NT PowerPC",
+		"Windows Alpha_AXP", "Windows NT R4000" である。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>getdriverpackagepath</term>
+		<listitem><para>プリンタドライバパッケージダウンロードディレクトリを取得する。</para></listitem></varlistentry>
+
+		<varlistentry><term>getprinter &lt;printername&gt;</term> 
+		<listitem><para>現在のプリンター情報を取得する。このコマンドは Microsoft
+		Platform SDK の GetPrinter() に相当する。 
+		</para></listitem></varlistentry>
+
+		
+		<varlistentry><term>openprinter &lt;printername&gt;</term> 
+		<listitem><para>指定したプリンターに対して、OpenPrinterEx() と
+		ClosePrinter() RPC を実行する。</para></listitem></varlistentry>
+
+                <varlistentry><term>openprinter_ex &lt;printername&gt;</term>
+                <listitem><para>プリンタハンドルを開く。</para></listitem></varlistentry>
+
+		<varlistentry><term>setdriver &lt;printername&gt;
+		&lt;drivername&gt;</term>
+		<listitem><para>SetPrinter() コマンドを実行して、既にインストール
+		されているプリンター用のプリンタードライバーを更新する。
+		更新されるプリンタードライバーは、プリントサーバー上に適切にインストール
+		されている必要がある。</para>
+
+		<para>インストールされているプリンターやドライバーの一覧を取得する方法に
+		ついては <command>enumprinters</command> や <command>enumdrivers
+		</command> コマンドも参照のこと。</para></listitem></varlistentry>
+
+		<varlistentry><term>addform</term><listitem><para>フォームを追加する。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>setform</term><listitem><para>フォームを設定する。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>getform</term><listitem><para>フォームを取得する。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>deleteform</term><listitem><para>フォームを削除する。
+		</para></listitem></varlistentry>
+
+		<varlistentry><term>enumforms</term><listitem><para>フォームを
+		一覧表示する。</para></listitem></varlistentry>
+
+		<varlistentry><term>setprinter</term><listitem><para>プリンターのコメントを
+		設定する。</para></listitem></varlistentry>
+
+		<varlistentry><term>setprinterdata</term><listitem><para>REG_SZ
+		プリンターデータを設定する。</para></listitem></varlistentry>
+
+
+		<varlistentry><term>setprintername &lt;printername&gt;
+		&lt;newprintername&gt;</term>
+		<listitem><para>プリンター名を設定する。</para></listitem></varlistentry>
+
+		<varlistentry><term>rffpcnex</term><listitem><para>Rffpcnex
+		テストを実行する。</para></listitem></varlistentry>
+                <varlistentry><term>printercmp</term><listitem><para>プリンタの比較テスト</para></listitem></varlistentry>
+                <varlistentry><term>enumprocs</term><listitem><para>プリントプロセッサの一覧表示</para></listitem></varlistentry>
+                <varlistentry><term>enumprocdatatypes</term><listitem><para>プリントプロセッサデータタイプの一覧表示</para></listitem></varlistentry>
+                <varlistentry><term>enummonitors</term><listitem><para>プリントモニタの一覧表示</para></listitem></varlistentry>
+                <varlistentry><term>createprinteric</term><listitem><para>プリンタ IC の作成</para></listitem></varlistentry>
+                <varlistentry><term>playgdiscriptonprinteric</term><listitem><para>プリンタ IC の作成</para></listitem></varlistentry>
+                <varlistentry><term>getcoreprinterdrivers</term><listitem><para>コアプリンタドライバの取得</para></listitem></varlistentry>
+                <varlistentry><term>enumpermachineconnections</term><listitem><para>マシン接続毎に一覧表示</para></listitem></varlistentry>
+                <varlistentry><term>addpermachineconnection</term><listitem><para>マシン接続毎に追加</para></listitem></varlistentry>
+                <varlistentry><term>delpermachineconnection</term><listitem><para>マシン接続毎に削除</para></listitem></varlistentry>
+
+	</variablelist>
+
+	</refsect2>
+
+	<refsect2>
+	<title>NETLOGON</title>
+	<variablelist>
+                <varlistentry><term>logonctrl2</term><listitem><para>Logon Control 2 に変更する。</para></listitem></varlistentry>
+                <varlistentry><term>getanydcname</term><listitem><para>信頼する DC 名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>getdcname</term><listitem><para>信頼する PDC 名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_getdcname</term><listitem><para>信頼する DC 名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_getdcnameex</term><listitem><para>信頼する DC 名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_getdcnameex2</term><listitem><para>信頼する DC 名を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_getsitename</term><listitem><para>sitename を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_getforesttrustinfo</term><listitem><para>フォレスト信頼情報を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>logonctrl</term><listitem><para>Logon Control に変更する。</para></listitem></varlistentry>
+                <varlistentry><term>samlogon</term><listitem><para>ドメインユーザーでログオンする。</para></listitem></varlistentry>
+                <varlistentry><term>change_trust_pw</term><listitem><para>信頼するアカウントパスワードを変更する。</para></listitem></varlistentry>
+                <varlistentry><term>gettrustrid</term><listitem><para>信頼する rid を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsr_enumtrustdom</term><listitem><para>信頼するドメインの一覧情報を表示する。</para></listitem></varlistentry>
+                <varlistentry><term>dsenumdomtrusts</term><listitem><para>AD フォレスト内のすべての信頼するドメインを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>deregisterdnsrecords</term><listitem><para>DNS レコードを登録解除する。</para></listitem></varlistentry>
+                <varlistentry><term>netrenumtrusteddomains</term><listitem><para>信頼するドメインを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>netrenumtrusteddomainsex</term><listitem><para>信頼するドメインを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>getdcsitecoverage</term><listitem><para>DC からサイトカバレッジを取得する。</para></listitem></varlistentry>
+                <varlistentry><term>capabilities</term><listitem><para>ケーパビリティを返す。</para></listitem></varlistentry>
+                <varlistentry><term>logongetdomaininfo</term><listitem><para>LogonGetDomainInfo を返す。</para></listitem></varlistentry>
+
+	</variablelist>
+	</refsect2>
+
+	<refsect2>
+	<title>FSRVP</title>
+	<variablelist>
+
+	<varlistentry><term>fss_is_path_sup &lt;share&gt;</term>
+		<listitem>
+		<para>共有がシャドーコピー要求をサポートするかを検査する。</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_get_sup_version</term>
+		<listitem>
+		<para>サーバーからサポートしているFSRVPバージョンを得る。</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_create_expose</term>
+		<listitem>
+		<para>新しい共有としてシャドーコピーの作成と公開を要求する</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_delete</term>
+		<listitem>
+		<para>シャドーコピー共有の削除を要求する</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_has_shadow_copy</term>
+		<listitem>
+		<para>関連づけられている共有のシャドーコピーを検査する</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_get_mapping</term>
+		<listitem>
+		<para>シャドーコピー共有マッピング情報を得る</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry><term>fss_recovery_complete</term>
+		<listitem>
+			<para>読み書き可能なシャドーコピーをリカバリ完了にマークし、
+			それ以降のシャドーコピー要求を許可する</para>
+		</listitem>
+	</varlistentry>
+
+	</variablelist>
+	</refsect2>
+
+        <refsect2>
+        <title>CLUSAPI</title>
+        <variablelist>
+                <varlistentry><term>clusapi_open_cluster</term><listitem><para>クラスタをオープンする。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_get_cluster_name</term><listitem><para>クラスタ名をを取得する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_get_cluster_version</term><listitem><para>クラスタのバージョンを取得する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_get_quorum_resource</term><listitem><para>quorum リソースを取得する。resource</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_create_enum</term><listitem><para>enum クエリを作成する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_create_enumex</term><listitem><para>enumex クエリを作成する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_open_resource</term><listitem><para>クラスタリソースを開く。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_online_resource</term><listitem><para>クラスタリソースをオンラインに設定する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_offline_resource</term><listitem><para>クラスタリソースをオフラインに設定する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_get_resource_state</term><listitem><para>クラスタリソースの状態を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_get_cluster_version2</term><listitem><para>クラスタ version2 を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_pause_node</term><listitem><para>クラスタノードを一時停止する。</para></listitem></varlistentry>
+                <varlistentry><term>clusapi_resume_node</term><listitem><para>クラスタノードを再開する。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>DRSUAPI</title>
+        <variablelist>
+                <varlistentry><term>dscracknames</term><listitem><para>名前をクラックする。</para></listitem></varlistentry>
+                <varlistentry><term>dsgetdcinfo</term><listitem><para>ドメインコントローラ情報を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dsgetncchanges</term><listitem><para>NC の変更を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>dswriteaccountspn</term><listitem><para>アカウント SPN を書き込む。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>ECHO</title>
+        <variablelist>
+                <varlistentry><term>echoaddone</term><listitem><para>Add one to a number</para></listitem></varlistentry>
+                <varlistentry><term>echodata</term><listitem><para>Echo data</para></listitem></varlistentry>
+                <varlistentry><term>sinkdata</term><listitem><para>Sink data</para></listitem></varlistentry>
+                <varlistentry><term>sourcedata</term><listitem><para>Source data</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>EPMAPPER</title>
+        <variablelist>
+                <varlistentry><term>epmmap</term><listitem><para>バインディングをマップする。</para></listitem></varlistentry>
+                <varlistentry><term>epmlookup</term><listitem><para>バインディングを検索する。Lookup bindings</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>EVENTLOG</title>
+        <variablelist>
+                <varlistentry><term>eventlog_readlog</term><listitem><para>イベントログを読み取る。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_numrecord</term><listitem><para>レコード数を取得する。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_oldestrecord</term><listitem><para>一番古いレコードを取得する。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_reportevent</term><listitem><para>イベントをレポートする。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_reporteventsource</term><listitem><para>イベントとソースをレポートする。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_registerevsource</term><listitem><para>イベントソースを登録する。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_backuplog</term><listitem><para>イベントログファイルをバックアップする。</para></listitem></varlistentry>
+                <varlistentry><term>eventlog_loginfo</term><listitem><para>イベントログ情報を取得する。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+       <refsect2>
+        <title>IRemoteWinspool</title>
+        <variablelist>
+                <varlistentry><term>winspool_AsyncOpenPrinter</term><listitem><para>プリンタハンドルを開く。</para></listitem></varlistentry>
+                <varlistentry><term>winspool_AsyncCorePrinterDriverInstalled</term><listitem><para>インストールされたコアプリンタドライバを問い合わせる。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>NTSVCS</title>
+        <variablelist>
+                <varlistentry><term>ntsvcs_getversion</term><listitem><para>NTSVCS バージョンを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_validatedevinst</term><listitem><para>NTSVCS デバイスインスタンスを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_hwprofflags</term><listitem><para>NTSVCS HW prof フラグを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_hwprofinfo</term><listitem><para>NTSVCS HW prof 情報を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_getdevregprop</term><listitem><para>NTSVCS デバイスレジストリプロパティを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_getdevlistsize</term><listitem><para>NTSVCS デバイスリストサイズを問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>ntsvcs_getdevlist</term><listitem><para>NTSVCS デバイスリストを問い合わせる。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>MDSSVC</title>
+        <variablelist>
+                <varlistentry><term>fetch_properties</term><listitem><para>コネクションプロパティをフェッチする。</para></listitem></varlistentry>
+                <varlistentry><term>fetch_attributes</term><listitem><para>CNID の属性をフェッチする。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>WINREG</title>
+        <variablelist>
+                <varlistentry><term>winreg_enumkey</term><listitem><para>キーを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>querymultiplevalues</term><listitem><para>複数の値を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>querymultiplevalues2</term><listitem><para>複数の値を問い合わせる。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>WITNESS</title>
+        <variablelist>
+                <varlistentry><term>GetInterfaceList</term><listitem><para>witness クライアント接続が可能なインタフェースを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>Register</term><listitem><para>NetName と IP アドレス のリソース状態変更通知を登録する。</para></listitem></varlistentry>
+                <varlistentry><term>UnRegister</term><listitem><para>サーバから通知を登録解除する。</para></listitem></varlistentry>
+                <varlistentry><term>AsyncNotify</term><listitem><para>サーバから、登録されたリソース変更通知を要求する。</para></listitem></varlistentry>
+                <varlistentry><term>RegisterEx</term><listitem><para>NetName 、ShareName と複数の IP アドレスのリソース状態変更通知を登録する。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+        <refsect2>
+        <title>WKSSVC</title>
+        <variablelist>
+                <varlistentry><term>wkssvc_wkstagetinfo</term><listitem><para>WKSSVC ワークステーション情報を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>wkssvc_getjoininformation</term><listitem><para>WKSSVC Join 情報を問い合わせる。</para></listitem></varlistentry>
+                <varlistentry><term>wkssvc_messagebuffersend</term><listitem><para>WKSSVC メッセージを送信する。</para></listitem></varlistentry>
+                <varlistentry><term>wkssvc_enumeratecomputernames</term><listitem><para>WKSSVC コンピュータ名を一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>wkssvc_enumerateusers</term><listitem><para>WKSSVC ユーザを一覧表示する。</para></listitem></varlistentry>
+        </variablelist>
+        </refsect2>
+
+
+	<refsect2>
+	<title>共通コマンド</title>
+
+	<variablelist>
+                <varlistentry><term>help</term><listitem><para>コマンドのヘルプを表示する。</para></listitem></varlistentry>
+                <varlistentry><term>?</term><listitem><para>コマンドのヘルプを表示する。</para></listitem></varlistentry>
+                <varlistentry><term>debuglevel</term><listitem><para>デバッグレベルを設定する。</para></listitem></varlistentry>
+                <varlistentry><term>debug</term><listitem><para>デバッグレベルを設定する。</para></listitem></varlistentry>
+                <varlistentry><term>list</term><listitem><para>パイプ上での有効なコマンドを一覧表示する。</para></listitem></varlistentry>
+                <varlistentry><term>exit</term><listitem><para>プログラムを終了する。</para></listitem></varlistentry>
+                <varlistentry><term>quit</term><listitem><para>プログラムを終了する。</para></listitem></varlistentry>
+                <varlistentry><term>sign</term><listitem><para>RPC パイプ接続を強制的に署名する。</para></listitem></varlistentry>
+                <varlistentry><term>seal</term><listitem><para>RPC パイプ接続を強制的に暗号化(seal)する。</para></listitem></varlistentry>
+                <varlistentry><term>packet</term><listitem><para>RPC パイプ接続を強制的にパケット認証レベルにする。</para></listitem></varlistentry>
+                <varlistentry><term>schannel</term><listitem><para>RPC パイプ接続を強制的に 'schannel' で暗号化(seal) する。このドメインコントローラに対して有効なマシンアカウントと仮定する。</para></listitem></varlistentry>
+                <varlistentry><term>schannelsign</term><listitem><para>RPC パイプ接続を 'schannel' で強制的に署名する(が、暗号化しない)。このドメインコントローラに対して有効なマシンアカウントと仮定する。</para></listitem></varlistentry>
+                <varlistentry><term>timeout</term><listitem><para>RPC 操作のタイムアウトを設定する(ミリ秒単位)。</para></listitem></varlistentry>
+                <varlistentry><term>transport</term><listitem><para>RPC 操作用の ncacn トランスポートを選択する。</para></listitem></varlistentry>
+                <varlistentry><term>none</term><listitem><para>RPC パイプ接続が特別なプロパティを持たないように強制する。</para></listitem></varlistentry>
+	</variablelist>
+	</refsect2>
+
+</refsect1>
+
+<refsect1>
+	<title>バグ</title>
+	
+	<para><command>rpcclient</command> は開発者のテストツールとしての利用を
+	念頭に置いているため、あまり動作が安定していない部分
+	(コマンドラインの解析など) もある。無効なパラメーターを解析しようとすると、
+	失敗してコアダンプするのは既知の不具合である。</para>
+
+	<para>Luke Leighton のオリジナルの rpcclient マニュアルページより:</para>
+	
+	<para><emphasis>警告!</emphasis> SMB 上の MSRPC コードは
+	ネットワークトレースを行なうことで開発されている。オリジナルの開発者
+	(Microsoft) からは、SMB 上で MSRPC がどのように動作するか、
+	個々の MSRPC サービスがどのように動作するかについての情報は提供されていない。
+	これらのサービスに関する Microsoft の実装も、場所によってはかなり風変わりで
+	あることが明らかになっている。</para>
+
+	<para>同様に Samba への実装も場あたり的な面がある。
+	多くのサービスの実装が解明されるにつれて、<citerefentry><refentrytitle>smbd
+	</refentrytitle><manvolnum>8</manvolnum></citerefentry> や <citerefentry>
+	<refentrytitle>rpcclient</refentrytitle><manvolnum>1</manvolnum>
+	</citerefentry> は、幾つかのコマンドやサービスにおいてバージョン間の互換性が
+	なくなることもありうる。なお、開発者達は発見した問題を Microsoft
+	に対してレポートしており、報告された問題はサービスパックで修正されているが、
+	その結果互換性が損なわれることがあるかもしれない。</para>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+	
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作成された。現在 Samba は Samba Team によって、
+	Linux カーネルの開発と同様のオープンソースプロジェクトとして開発が
+	行なわれている。</para>
+
+	<para>オリジナルの rpcclient マニュアルページは Matthew Geddes と
+	Luke Keneth Casson Leighton によって作成され、
+	Gerald Carter によって書き直された。
+	Samba 2.2 における DocBook 形式への変換は、Gerald Carter
+	によって行なわれた。Samba 3.0 における DocBook XML 4.2 形式への変換は
+	Alexander Bokovoy によって行われた。</para>
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.17.0 - 4.17.0 に対応する。</para>
+
+        <para>このドキュメントの Samba 3.0.0 対応の翻訳は
+	<itemizedlist>
+		<listitem><para>高橋 基信 (monyo@samba.gr.jp)</para></listitem>
+		<listitem><para>はせがわ ようすけ</para></listitem>
+		<listitem><para>山田 史朗 (shiro@miraclelinux.com)</para></listitem>
+	</itemizedlist>	
+        によって行なわれた。</para>
+
+	<para>Samba 3.0.23 - 3.6.9 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 4.0.0 - 4.17.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+
+</refsect1>
+
+</refentry>

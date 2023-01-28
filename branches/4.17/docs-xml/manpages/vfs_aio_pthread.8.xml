@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_aio_pthread.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_aio_pthread</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_aio_pthread</refname>
+	<refpurpose>pthread pool を使って 非同期のオープン処理を実装</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = aio_pthread</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry>システムの一部である。</para>
+
+<!-- Samba 4.9.0
+	<para>The <command>aio_pthread</command> VFS module enables asynchronous
+	opens (for new files) with <smbconfoption name="aio_pthread:aio open">yes</smbconfoption>
+	on platforms which have the pthreads API available,
+	support the openat() syscall and support per thread credentials (modern Linux kernels).
+	</para>
+-->
+        <para><command>aio_pthread</command> VFS モジュールは、 pthread API が
+	有効なプラットフォーム上で、<smbconfoption name="aio_pthread:aio open">yes</smbconfoption>
+	を指定したときに、(新しいファイルの)非同期オープンを有効にし、
+	openat() syscall と、(最新の Linux カーネルにおいて)スレッド毎の資格情報
+	をサポートする。
+	</para>
+
+<!-- Samba 4.9.0
+	<para>The module makes use of the global thread pool which uses the
+	<smbconfoption name="aio max threads"/> option.</para>
+-->
+	<para>このモジュールは、<smbconfoption name="aio max threads"/>オプション
+	を使うグローバルスレッドプールを使用する。</para>
+	
+	<para>
+    このモジュールは、 Samba VFS open インターフェイスが
+    スレッドセーフでないため、モジュールスタックの最後に配置すること。
+    このモジュールは、 openat() システムコールを直接呼び出し、
+    Samba VFS の open インターフェイスは使用しない。
+  </para>
+</refsect1>
+
+<refsect1>
+	<title>使用例</title>
+
+	<para>簡単な使い方:</para>
+
+<programlisting>
+        <smbconfsection name="[cooldata]"/>
+	<smbconfoption name="path">/data/ice</smbconfoption>
+	<smbconfoption name="vfs objects">aio_pthread</smbconfoption>
+	<smbconfoption name="aio_pthread:aio open">yes</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>aio_pthread:aio open = BOOL</term>
+		<listitem>
+		<para>新しいファイルの作成時に非同期オープンを試みる。
+		</para>
+		<para>デフォルト値は 'no' である。</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は Samba Team に
+        よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+        として開発が行なわれている。</para>
+
+</refsect1>
+
+<refsect1>
+	<title>日本語訳</title>
+	<para>このドキュメントは、Samba 4.9.0 - 4.17.0 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+			<listitem><para>たかはしもとのぶ (monyo@samba.gr.jp)</para></listitem>
+		</itemizedlist>
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

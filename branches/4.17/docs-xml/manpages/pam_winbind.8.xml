@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="pam_winbind.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>pam_winbind</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">8</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>pam_winbind</refname>
+	<refpurpose>Winbind 機構の PAM モジュール</refpurpose>
+</refnamediv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>このツールは、<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para>
+	pam_winbind は Winbind デーモンと通信を行なうことで、
+	ローカルドメインによるユーザー認証を実現する PAM モジュールである。
+	</para>
+
+</refsect1>
+
+<refsect1>
+        <title>概要</title>
+
+        <para>
+	        PAMシステム設定ファイル/etc/pam.d/serviceを以下の例のように編集する:
+                <programlisting>
+                            ...
+                            auth      required        pam_env.so
+                            auth      sufficient      pam_unix2.so
+                        +++ auth      required        pam_winbind.so  use_first_pass
+                            account   requisite       pam_unix2.so
+                        +++ account   required        pam_winbind.so  use_first_pass
+                        +++ password  sufficient      pam_winbind.so
+                            password  requisite       pam_pwcheck.so  cracklib
+                            password  required        pam_unix2.so    use_authtok
+                            session   required        pam_unix2.so
+                        +++ session   required        pam_winbind.so
+                            ...
+                </programlisting>
+
+		pam_winbind はセッション部分の最初のモジュールとする。その他のモジュール
+		で必要とされるkerberosチケットを検索しても良い。
+        </para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+	<para>
+	pam_winbind では PAM の設定ファイルや	
+	pam_winbind の設定ファイルである 
+	<filename>/etc/security/pam_winbind.conf</filename> 
+	で設定可能な幾つかのオプションがサポートされている。
+	PAM 設定ファイルのオプションは、設定ファイル中のオプションに優先する。
+
+		<variablelist>
+
+		<varlistentry>
+		<term>debug</term>
+		<listitem><para>syslog にデバッグ出力を行なう。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>debug_state</term>
+		<listitem><para>syslogに詳細なPAMの状態のデバッグ情報を出力する。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>require_membership_of=[SID もしくは NAME]</term>
+		<listitem><para>
+		このオプションが設定されると、 pam_winbind
+		は、認証するユーザーが指定された SID もしくは NAME に所属する時のみ認証を成功させる。
+		SID にはグループの SID か alias の SID 、もしくはユーザーの SID を指定することも可能である。
+		SID の代わり名前で指定することも可能である。
+		この名前は、
+		<parameter>MYDOMAIN\\mygroup</parameter> 形式か、
+		<parameter>MYDOMAIN\\myuser</parameter> 形式である必要がある
+		(ここで、文字 '\' は <parameter>winbind separator</parameter>
+		パラメータの値に対応する)。また、
+		<parameter>user@REALM</parameter> 又は <parameter>group@REALM</parameter>
+		形式中で、UPN を使う事も可能である。この場合、pam_winbind は
+		内部的に SID を検索する。
+		名前には空白文字を含めることができないため、SID で指定することが推奨される。
+		<command>wbinfo --user-sids=SID</command> により、あるユーザーが所属するグループの SID 一覧を表示できる。
+   	        </para>
+		<para>
+		  これだけでパスワード認証と連携して動作するよう、
+		  このオプションは、認証モジュール定義上でのみ指定しなければならない。
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>use_first_pass</term>
+		<listitem><para>
+		pam_winbind のデフォルト設定では、前のモジュールから引き渡される認証トークンを使用する。
+		トークンが使用できない場合、ユーザーに対してパスワードを問い合わせるが、このオプションを
+		使用することで、pam_winbind は前のモジュールから認証トークンが引き渡されなかった場合に、
+		エラー終了するようになる。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>try_first_pass</term>
+		<listitem><para>
+		(前述の)use_first_passと、最初のパスワードが有効でなかった場合、PAMがパスワード要求の
+		プロンプトを出すことを除いて同じ。</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>use_authtok</term>
+		<listitem><para>
+		その前の、スタックされたpasswordモジュールによって、
+		提供された、新しいパスワードを設定する。このオプションが
+		設定されていない場合、pam_winbindは新しいパスワードを
+		問い合わせる。
+		</para></listitem>
+		</varlistentry>
+
+<!-- Samba-4.10.0
+                <varlistentry>
+		<term>try_authtok</term>
+                <listitem><para>
+                Same as the use_authtok option (previous item), except that if the new password is not
+                valid, PAM will prompt for a password.
+                </para></listitem>
+                </varlistentry>
+-->
+                <varlistentry>
+		<term>try_authtok</term>
+                <listitem><para>
+                use_authtok (1つ前の項目) オプションと同様だが、新しいパスワードが無効だった場合、
+                PAM は新しいパスワードを問い合わせる所が異なる。
+                </para></listitem>
+                </varlistentry>
+
+		<varlistentry>
+		<term>krb5_auth</term>
+		<listitem><para>
+		Active Directory のドメインコントローラーと通信可能な場合、
+		pam_winbind は Kerberos 認証を用いて認証することが可能である。
+		このパラメーターを指定することで、Kerberos 認証が有効になる。
+		(時刻が同期されていない場合など) Kerberos 認証に失敗した場合、
+		winbindd は MSRPC を用いた samlogon 認証を試行する。
+		このパラメーターと共に、
+		<parameter>winbind refresh tickets</parameter> が指定された場合、
+		Winbind 機構は、必要な時に TGT を更新することで、TGT を保持し続ける。
+		</para></listitem>
+		</varlistentry>
+
+<!-- Samba-4.14.0
+		<varlistentry>
+		<term>krb5_ccache_type=[type]</term>
+		<listitem><para>
+
+                When pam_winbind is configured to try kerberos authentication
+                by enabling the <parameter>krb5_auth</parameter> option, it can
+                store the retrieved Ticket Granting Ticket (TGT) in a
+                credential cache. The type of credential cache can be
+                controlled with this option.  The supported values are:
+                <parameter>KCM</parameter> or <parameter>KEYRING</parameter>
+                (when supported by the system's Kerberos library and
+                operating system),
+                <parameter>FILE</parameter> and <parameter>DIR</parameter>
+                (when the DIR type is supported by the system's Kerberos
+                library). In case of FILE a credential cache in the form of
+                /tmp/krb5cc_UID will be created -  in case of DIR you NEED
+                to specify a directory which must exist, the UID directory
+                will be created in the specified directory.
+                In all cases UID is replaced with the numeric user id.
+                Check the details of the Kerberos implementation.</para>
+
+                <para>When using the KEYRING type, the supported mechanism is
+                <quote>KEYRING:persistent:UID</quote>, which uses the Linux
+                kernel keyring to store credentials on a per-UID basis.
+                KEYRING has limitations. For example, it is secure kernel memory,
+                so bulk storage of credentials is not possible.</para>
+
+                <para>When using the KCM type, the supported mechanism is
+                <quote>KCM:UID</quote>, which uses a Kerberos credential
+                manager to store credentials on a per-UID basis similar to
+                KEYRING. This is the recommended choice on latest Linux
+                distributions that offer a Kerberos Credential Manager. If not,
+                we suggest to use KEYRING, as those are the most secure and
+                predictable method.</para>
+
+		<para>It is also possible to define custom filepaths and use the "%u"
+		pattern in order to substitute the numeric user id.
+		Examples:</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>krb5_ccache_type = DIR:/run/user/%u/krb5cc</term>
+					<listitem><para>This will create a credential cache file in the specified directory.</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>krb5_ccache_type = FILE:/tmp/krb5cc_%u</term>
+					<listitem><para>This will create a credential cache file.</para></listitem>
+			</varlistentry>
+		</variablelist>
+
+		<para>Leave empty to just do kerberos authentication without
+		having a ticket cache after the logon has succeeded.
+		This setting is empty by default.</para>
+		</listitem>
+		</varlistentry>
+-->
+		<varlistentry>
+		<term>krb5_ccache_type=[type]</term>
+		<listitem><para>
+
+		<parameter>krb5_auth</parameter> オプションを有効にして、pam_winbind が
+		kerberos 認証を行うように設定された場合、Winbindd は TGT (Ticket Granting Ticket)
+		を資格情報キャッシュ中に保持する。資格情報キャッシュのタイプは
+		このオプションで制御できる。サポートされている値は
+		<parameter>KCM</parameter> と <parameter>KEYRING</parameter>
+		(システムの Kerberos ライブラリと OS によってサポートされている場合)、
+		<parameter>FILE</parameter> と <parameter>DIR</parameter>
+		(DIR タイプがシステムの Kerberos ライブラリでサポートされている場合)である。
+		FILE の場合、/tmp/krb5cc_UID 形式の認証情報キャッシュが作成される。
+		DIR の場合、必ず存在するディレクトリを指定する必要があり、指定した
+		ディレクトリ中に UID ディレクトリが作成される。すべての場合において、
+		UID は 数字のユーザ id に置き換えられる。詳細は Kerberos の
+		実装を参照のこと。</para>
+
+		<para>KEYRING タイプを使用する場合、サポートされている方式は
+		<quote>KEYRING:persistent:UID</quote>で、これは、UID 毎の
+		認証情報を格納するために、Linux のカーネル keyring を使用する。
+		KEYRING には固有の制限がある。たとえば、安全なカーネルメモリであれば、
+		大半の認可情報領域を安全にする事はできない。</para>
+
+		<para>KCM タイプを使用する場合、サポートされる方式は
+		<quote>KCM:UID</quote>で、これは、KEYRING と同様、UID 毎の
+		認証情報を格納する、Kerberos 認証情報マネージャを使用する。
+		これは Kereberos 認証情報マネージャが提供されている
+		最新の Linux ディストリビューションで推奨される方式である。
+		そうでない場合、もっともセキュアで一般的なな方法である
+		KEYRING を使う事を推奨する。</para>
+
+		<para>また、カスタムファイルパスの定義と、数字のユーザ ID に置換するために、
+		"%u" を使う事も可能である。
+		以下は例である:</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>krb5_ccache_type = DIR:/run/user/%u/krb5cc</term>
+					<listitem><para>これは、指定されたディレクトリ中に認証情報キャッシュファイルを作成する。</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>krb5_ccache_type = FILE:/tmp/krb5cc_%u</term>
+					<listitem><para>これは、認証情報キャッシュファイルを作成する。</para></listitem>
+			</varlistentry>
+		</variablelist>
+
+		<para>空にした場合、ログオン成功後に、チケットキャッシュなしで Kerberos 認証を行う。
+		この設定は既定値で 空 である。</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>krb5_ccache_type=[type]</term>
+		<listitem><para>
+		<parameter>krb5_auth</parameter> オプションにより、pam_winbind
+		が Kerberos 認証を行なうように構成されていた場合、
+		Winbindd は TGT を資格情報キャッシュ中に保持する。
+		このオプションにより資格情報キャッシュの形式を指定することが可能である。
+		現在のところ、サポートされている唯一の値は <parameter>FILE</parameter> である。
+		この場合、資格情報キャッシュは /tmp/krb5cc_UID ファイル中に作成される。UID はユーザーの UID の数値である。
+		このオプションを空に設定した場合は、ログオン成功後にチケットキャッシュを用いた Kerberos 認証が行なわれない。
+		</para></listitem>
+		</varlistentry>
+	
+		<varlistentry>
+		<term>cached_login</term>
+		<listitem><para>
+		<parameter>winbind offline logon</parameter> が有効な場合、Winbind 機構によるキャッシュされた
+		資格情報を用いたログオンが可能となる。
+		PAM モジュールからこの機能を用いたい場合は、このオプションを設定すること。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>silent</term>
+		<listitem><para>
+		出力をすべて抑止する。
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>mkhomedir</term>
+		<listitem><para>
+		ユーザーのホームディレクトリを動的に作成し、このオプションは、
+		PAMセッションブロック内で有効である。
+		</para></listitem>
+		</varlistentry>
+
+                <varlistentry>
+                <term>warn_pwd_expire</term>
+                <listitem><para>
+		満了になるパスワードについての警告を、pam_winbindが開始し始める日数。
+		既定値は14日。
+                </para></listitem>
+                </varlistentry>
+
+		</variablelist>
+
+
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>PAM DATA EXPORTS</title>
+
+	<para>この節では、他のPAMモジュールで使うことが出来るPAMスタック中での
+	データエクスポートについて説明する。</para>
+
+	<varlistentry>
+		<term>PAM_WINBIND_HOMEDIR</term>
+		<listitem>
+			<para>
+			これはActive Directoryサーバー上でのユーザー設定中の、
+			プロファイルタブ中で設定されたWindowsのホームディレクトリ
+			である。これは、ドライブにマップされた共有上のディレクトリか、
+			ローカルパスである。
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>PAM_WINBIND_LOGONSCRIPT</term>
+		<listitem>
+			<para>
+			ユーザーのログオン時に実行されるログオンスクリプトのパス。これは
+			通常サーバー上に格納されるスクリプトへの相対パスである。
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>PAM_WINBIND_LOGONSERVER</term>
+		<listitem>
+			<para>
+			これは認証に対して使うActive Directoryサーバーをエクスポートする。
+			これは後で変数として使うことが出来る。
+			</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>PAM_WINBIND_PROFILEPATH</term>
+		<listitem>
+			<para>
+			これはユーザー設定中のプロファイルタブ中のプロファイルパス設定である。
+			通常、共有上のこのディレクトリとホームディレクトリは同期している。
+			</para>
+		</listitem>
+	</varlistentry>
+</refsect1>
+
+<refsect1>
+	<title>関連項目</title>
+	<para><citerefentry>
+	<refentrytitle>wbinfo</refentrytitle>
+	<manvolnum>1</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>winbindd</refentrytitle>
+	<manvolnum>8</manvolnum></citerefentry>, <citerefentry>
+	<refentrytitle>smb.conf</refentrytitle>
+	<manvolnum>5</manvolnum></citerefentry></para>
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは、Samba バージョン &doc.version; 用である。</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、
+	Andrew Tridgell によって作られた。 Samba は現在、Linux
+	カーネルが開発されているような方法でのオープンソースプロジェクトである
+	Samba Team によって開発されている。</para>
+
+	<para>このマニュアルページは Jelmer Vernooij と Guenther Deschner によって作られた。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは Samba 4.14.0 - 4.17.0 に対応する。</para>
+	<para>Samba 3.0.23 - Samba 3.0.24 対応の翻訳は、たかはしもとのぶ (monyo@samba.gr.jp) によって行なわれた。</para>
+	<para>Samba 3.2.4 - 4.17.0 対応の翻訳は、太田俊哉 (ribbon@samba.gr.jp) によって行なわれた。</para>
+</refsect1>
+
+</refentry>

@@ -1,0 +1,65 @@
+<samba:parameter name="ea support"
+                 context="S"
+		 type="boolean"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+<!-- 原文 samba-4.7.0
+    <para>This boolean parameter controls whether <citerefentry><refentrytitle>smbd</refentrytitle>                                       
+    <manvolnum>8</manvolnum></citerefentry> will allow clients to attempt to access extended
+    attributes on a share. In order to enable this parameter on a setup with default VFS modules:
+    </para>
+-->
+    <para>この真偽値パラメーターは、<citerefentry><refentrytitle>smbd</refentrytitle>
+    <manvolnum>8</manvolnum></citerefentry> のクライアントが、共有上の拡張属性へ
+    のアクセスを行ってよいかどうかを定める。既定の VFS モジュールを用いてこのパラ
+    メーターを有効にするためには、以下のことが必要である。
+    </para>
+<!-- 原文 samba-4.7.0
+    <itemizedlist>
+	<listitem><para>Samba must have been built with extended attributes support.
+	</para></listitem>
+	<listitem><para>The underlying filesystem exposed by the share must support extended
+	attributes (e.g. the getfattr<manvolnum>1</manvolnum> / setfattr<manvolnum>1</manvolnum>
+	utilities must work).
+	</para></listitem>
+    </itemizedlist>
+-->
+    <itemizedlist>
+	<listitem><para>Samba は拡張属性サポートを有効にしてビルドされていること
+	が必要である。</para></listitem>
+	<listitem><para>共有により用いられるファイルシステムは、拡張属性をサポート
+	している必要がある。（例えば getfattr<manvolnum>1</manvolnum>、
+	setfattr<manvolnum>1</manvolnum> といったユーティリティが動作しなければ
+	ならない。）</para></listitem>
+    </itemizedlist>
+<!-- 原文 samba-4.9.0
+    <para>
+    Note that the SMB protocol allows setting attributes whose value is 64K bytes long,
+    and that on NTFS, the maximum storage space for extended attributes per file is 64K.
+    On most UNIX systems (Solaris and ZFS file system being the exception), the limits
+    are much lower - typically 4K. Worse, the same 4K space is often used to store
+    system metadata such as POSIX ACLs, or Samba's NT ACLs. Giving clients
+    access to this tight space via extended attribute support could consume all
+    of it by unsuspecting client applications, which would prevent changing
+    system metadata due to lack of space.
+    
+    The default has changed to yes in Samba release 4.9.0 and above to allow better Windows
+    fileserver compatibility in a default install.
+    </para>
+-->
+    <para>
+    SMB プロトコルでは、属性値が 64K におよぶ長さであっても設定できる。
+    そして NTFS 上では、各ファイルごとの拡張属性の保存容量は、最大 64K である。
+    UNIX システム（Solaris や ZFS ファイルシステムは除く）はたいてい、その制限は
+    もっと小さく通常は 4K である。さらに厳しいことに、その同じ 4K の保存領域は、
+    POSIX ACL や Samba の NT ACL といったシステムメタデータの保持にも利用されて
+    いる。このためクライアントアプリケーションが拡張属性サポートを通じてアクセス
+    すると、その保存領域すべてを使い果たしてしまうことになり、それが正しい処理で
+    あっても、容量不足によりシステムメタデータの変更ができなくなることもある。
+
+    Samba 4.9.0 とそれ以降、既定値は yes に変更となり、既定の状態でインストール
+    する場合、Windows ファイルサーバとの互換が向上する。
+    </para>
+</description>
+<value type="default">yes</value>
+</samba:parameter>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="vfs_worm.8" lang="ja">
+
+<refmeta>
+	<refentrytitle>vfs_worm</refentrytitle>
+	<manvolnum>8</manvolnum>
+	<refmiscinfo class="source">Samba</refmiscinfo>
+	<refmiscinfo class="manual">システム管理ツール</refmiscinfo>
+	<refmiscinfo class="version">&doc.version;</refmiscinfo>
+</refmeta>
+
+
+<refnamediv>
+	<refname>vfs_worm</refname>
+	<refpurpose>古いファイルへの書き込みを禁止</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>vfs objects = worm</command>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+	<title>説明</title>
+
+	<para>この VFS モジュールは
+	<citerefentry><refentrytitle>samba</refentrytitle>
+	<manvolnum>7</manvolnum></citerefentry> システムの一部である。</para>
+
+	<para><command>vfs_worm</command>モジュールは、ファイルとフォルダの、
+	その変更時刻と調整可能な猶予期間に依存した、書き込み制御を行う。</para>
+
+	<para>もしも、ファイル又はディレクトリの変更時刻が、指定された猶予期間
+	よりも古ければ、他のアクセス制御(ファイルシステムによるもの)とは
+	独立して、書き込みアクセスは禁止される。</para>
+
+	<para>猶予期間に到達していない場合、 worm モジュールは他のアクセス制御
+	には何ら影響を与えない。</para>
+</refsect1>
+
+<refsect1>
+	<title>オプション</title>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>worm:grace_period = SECONDS</term>
+		<listitem>
+		  <para>猶予期間は、秒数であり、これは、通常のアクセス制御
+		  によって書き込みが出来る期間を定義する。この猶予期間を
+		  過ぎると、ファイル又はディレクトリは書き込み不可になる。
+		  </para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+</refsect1>
+
+<refsect1>
+	<title>例</title>
+
+	<para>5分(300秒)経過後に、ファイルとフォルダへの書き込み禁止:
+	</para>
+
+<programlisting>
+	<smbconfsection name="[wormshare]"/>
+	<smbconfoption name="vfs objects">worm</smbconfoption>
+	<smbconfoption name="worm:grace_period">300</smbconfoption>
+</programlisting>
+
+</refsect1>
+
+<refsect1>
+	<title>バージョン</title>
+
+	<para>このマニュアルページは Samba バージョン &doc.version; 用である。
+	</para>
+</refsect1>
+
+<refsect1>
+	<title>著者</title>
+
+	<para>オリジナルの Samba ソフトウェアと関連するユーティリティは、Andrew
+	Tridgell によって作成された。現在 Samba は Samba Team に
+	よって、Linuxカーネルの開発と同様のオープンソースプロジェクト
+	として開発が行なわれている。</para>
+
+</refsect1>
+<refsect1>
+	<title>日本語訳</title>
+	<para>このマニュアルページは、Samba 4.2.0 - 4.17.0 に対応する。</para>
+    <para>このドキュメントの翻訳は
+		<itemizedlist>
+			<listitem><para>太田俊哉 (ribbon@samba.gr.jp)</para></listitem>
+		</itemizedlist>	
+        によって行なわれた。</para>
+</refsect1>
+
+</refentry>

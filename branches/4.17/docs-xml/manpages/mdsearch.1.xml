@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE refentry PUBLIC "-//Samba-Team//DTD DocBook V4.2-Based Variant V1.0//EN" "http://www.samba.org/samba/DTD/samba-doc">
+<refentry id="mdsearch.1" lang="ja">
+
+  <refmeta>
+    <refentrytitle>mdsearch</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo class="source">Samba</refmiscinfo>
+    <refmiscinfo class="manual">ユーザコマンド</refmiscinfo>
+    <refmiscinfo class="version">&doc.version;</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>mdsearch</refname>
+    <refpurpose>SMB サーバに対して Spotlight 検索を実行</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>mdfine</command>
+      <arg choice="req">server</arg>
+      <arg choice="req">sharename</arg>
+      <arg choice="req">query</arg>
+      <arg choice="opt">-p, --path=STRING</arg>
+      <arg choice="opt">-L, --live</arg>
+      <arg choice="opt">-?|--help</arg>
+      <arg choice="opt">--usage</arg>
+      <arg choice="opt">-d|--debuglevel=DEBUGLEVEL</arg>
+      <arg choice="opt">--debug-stdout</arg>
+      <arg choice="opt">--configfile=CONFIGFILE</arg>
+      <arg choice="opt">--option=name=value</arg>
+      <arg choice="opt">-l|--log-basename=LOGFILEBASE</arg>
+      <arg choice="opt">--leak-report</arg>
+      <arg choice="opt">--leak-report-full</arg>
+      <arg choice="opt">-R|--name-resolve=NAME-RESOLVE-ORDER</arg>
+      <arg choice="opt">-O|--socket-options=SOCKETOPTIONS</arg>
+      <arg choice="opt">-m|--maxprotocol=MAXPROTOCOL</arg>
+      <arg choice="opt">-n|--netbiosname=NETBIOSNAME</arg>
+      <arg choice="opt">--netbios-scope=SCOPE</arg>
+      <arg choice="opt">-W|--workgroup=WORKGROUP</arg>
+      <arg choice="opt">--realm=REALM</arg>
+      <arg choice="opt">-U|--user=[DOMAIN/]USERNAME[%PASSWORD]</arg>
+      <arg choice="opt">-N|--no-pass</arg>
+      <arg choice="opt">--password=STRING</arg>
+      <arg choice="opt">--pw-nt-hash</arg>
+      <arg choice="opt">-A|--authentication-file=FILE</arg>
+      <arg choice="opt">-P|--machine-pass</arg>
+      <arg choice="opt">--simple-bind-dn=DN</arg>
+      <arg choice="opt">--use-kerberos=desired|required|off</arg>
+      <arg choice="opt">--use-krb5-ccache=CCACHE</arg>
+      <arg choice="opt">--use-winbind-ccache</arg>
+      <arg choice="opt">--client-protection=sign|encrypt|off</arg>
+      <arg choice="opt">-V|--version</arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>説明</title>
+
+    <para>このツールは<citerefentry><refentrytitle>samba</refentrytitle>
+    <manvolnum>1</manvolnum></citerefentry>システムの一部である。</para>
+
+<!-- Samba-4.15.0
+    <para>mdsearch is a simple utility to run Spotlight searches against an SMB server
+    that runs the Spotlight <emphasis>mdssvc</emphasis> RPC service.</para>
+-->
+    <para>mdsearch は、Spotlight <emphasis>mdssvc</emphasis> RPC サービスが動いている
+    SMBサーバに対して、Spotlight 検索を動かすための簡単なユーティリティである。</para>
+</refsect1>
+
+  <refsect1>
+    <title>オプション</title>
+
+    <variablelist>
+      <varlistentry>
+	<term>server</term>
+	<listitem>
+	  <para>接続先の SMB サーバ名又は IP アドレス。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>sharename</term>
+	<listitem>
+	  <para>サーバ上の共有名。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>query</term>
+	<listitem>
+<!-- Samba-4.15.0
+	  <para>The query expression syntax is a simplified form of filename
+	  globbing familiar to shell users. Queries have the following
+	  format:</para>
+-->
+          <para>問い合わせ書式の構文は、シェルユーザになじみのあるファイル名の
+	  グロビングを単純化した形式である。問合せフォーマットは以下の通り:
+	  </para>
+
+	  <para>attribute=="value"</para>
+
+<!-- Samba-4.15.0
+	  <para>For queries against a Samba server with Spotlight enabled using
+	  the Elasticsearch backend, the list of supported metadata attributes
+	  is given by the JSON attribute mapping file, typically installed at
+	  <filename>/usr/share/samba/mdssvc/elasticsearch_mappings.json</filename>
+	  </para>
+-->
+	  <para>Elasticsearch バックエンドを使った Spotlight が有効になっている
+	  Samba サーバに対する問い合わせに対して、サポートされているメタデータ
+	  属性の一覧は、JSON 属性マッピングファイルによって提供され、それは
+	  通常
+	  <filename>/usr/share/samba/mdssvc/elasticsearch_mappings.json</filename>
+	  にインストールされる。
+	  </para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>-p PATH, --path=PATH</term>
+	<listitem>
+	  <para>サーバサイドの検索用パスで、既定値は
+	  <emphasis>"/"</emphasis>である。</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>-L, --live</term>
+	<listitem><para>問い合わせを実行したままとする。</para></listitem>
+      </varlistentry>
+
+      &popt.autohelp;
+      &cmdline.common.samba.client;
+      &cmdline.common.credentials;
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>使用例</title>
+
+    <para>すべての索引が付いたメタデータ属性を検索、完全一致:</para>
+    <programlisting>
+      '*=="Samba"'
+    </programlisting>
+
+    <para>すべての索引が付いたメタデータ属性を検索、接頭辞一致:</para>
+    <programlisting>
+      '*=="Samba*"'
+    </programlisting>
+
+    <para>ファイル名で検索:</para>
+    <programlisting>
+      'kMDItemFSName=="Samba*"'
+    </programlisting>
+
+    <para>日付で検索:</para>
+    <programlisting>
+      'kMDItemFSContentChangeDate&lt;$time.iso(2018-10-01T10:00:00Z)'
+    </programlisting>
+
+    <para>ファイルの内容で検索:</para>
+    <programlisting>
+      'kMDItemTextContent=="Samba*"'
+    </programlisting>
+
+    <para>式:</para>
+    <programlisting>
+      kMDItemFSName=="Samba*"||kMDItemTextContent=="Tango*"'
+    </programlisting>
+  </refsect1>
+
+  <refsect1>
+    <title>参照</title>
+
+    <para>File Metadata Search Programming Guide
+    <ulink url="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/SpotlightQuery/Concepts/Introduction.html">
+    https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/SpotlightQuery/Concepts/Introduction.html</ulink>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>バージョン</title>
+
+    <para>このマニュアルページは Samba バージョン &doc.version; 用である。</para>
+  </refsect1>
+
+  <refsect1>
+    <title>著者</title>
+
+        <para>オリジナルの Samba ソフトウェアと関連ユーティリティは、Andrew
+        Tridgell によって作成された。現在 Samba は、Samba Team によって Linux
+        カーネルの開発と同様に、オープンソースプロジェクトとして開発されている。
+        </para>
+
+    <para>mdsearch マニュアルページは、 Ralph Boehme によって書かれた。</para>
+  </refsect1>
+
+<refsect1>
+        <title>日本語訳</title>
+        <para>このマニュアルページは Samba 4.15.0 - 4.17.0 に対応する。</para>
+        <para>このドキュメントの Samba 4.15.0 - 4.17.0 対応の翻訳は 太田俊哉(ribbon@samba.gr.jp)によって行われた。</para>
+</refsect1>
+</refentry>
