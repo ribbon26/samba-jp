@@ -14,7 +14,7 @@
     のアクセスを行ってよいかどうかを定める。既定の VFS モジュールを用いてこのパラ
     メーターを有効にするためには、以下のことが必要である。
     </para>
-<!-- 原文 samba-4.7.0
+<!-- 原文 samba-4.18.0
     <itemizedlist>
 	<listitem><para>Samba must have been built with extended attributes support.
 	</para></listitem>
@@ -22,6 +22,9 @@
 	attributes (e.g. the getfattr<manvolnum>1</manvolnum> / setfattr<manvolnum>1</manvolnum>
 	utilities must work).
 	</para></listitem>
+        <listitem><para>Access to extended user attributes must be allowed by the underlying
+        filesystem (e.g. when mounted with a system-dependent option like user_xattr on Linux).
+        </para></listitem>
     </itemizedlist>
 -->
     <itemizedlist>
@@ -31,31 +34,41 @@
 	している必要がある。（例えば getfattr<manvolnum>1</manvolnum>、
 	setfattr<manvolnum>1</manvolnum> といったユーティリティが動作しなければ
 	ならない。）</para></listitem>
+        <listitem><para>拡張ユーザ属性へのアクセスは、ベースとなるファイルシステムで
+	許可されている必要がある(すなわち、Linux 上での user_xattr システム依存オプション
+	のようなものを付けてマウント)。
+        </para></listitem>
     </itemizedlist>
-<!-- 原文 samba-4.9.0
+<!-- 原文 samba-4.18.0
+    <para>
+    This option exposes the "user" attribute namespace from the underlying filesystem to
+    clients. In order to match Windows conventions, the namespace prefix ("user.") is
+    stripped from the attribute name on the client side. The handling of further attribute
+    namespaces (like "security", "system", or "trusted") is not affected by this option.
+    </para>
     <para>
     Note that the SMB protocol allows setting attributes whose value is 64K bytes long,
     and that on NTFS, the maximum storage space for extended attributes per file is 64K.
-    On most UNIX systems (Solaris and ZFS file system being the exception), the limits
-    are much lower - typically 4K. Worse, the same 4K space is often used to store
-    system metadata such as POSIX ACLs, or Samba's NT ACLs. Giving clients
-    access to this tight space via extended attribute support could consume all
-    of it by unsuspecting client applications, which would prevent changing
-    system metadata due to lack of space.
-    
+    On some filesystem the limits may be lower. Filesystems with too limited EA
+    space may experience unexpected weird effects.
+
+
     The default has changed to yes in Samba release 4.9.0 and above to allow better Windows
     fileserver compatibility in a default install.
     </para>
 -->
     <para>
+    このオプションは、ファイルシステム上の "user" 属性名前空間をクライアントに対して公開する。
+    Windows の規則に適合するため、名前空間のプレフィックス ("user.") は
+    クライアント上においては、属性の名前から取り去られる。他の属性の名前空間
+    (たとえば "security", "system", や "trusted" など) の取り扱いは、このオプションでは
+    影響しない。
+    </para>
+    <para>
     SMB プロトコルでは、属性値が 64K におよぶ長さであっても設定できる。
     そして NTFS 上では、各ファイルごとの拡張属性の保存容量は、最大 64K である。
-    UNIX システム（Solaris や ZFS ファイルシステムは除く）はたいてい、その制限は
-    もっと小さく通常は 4K である。さらに厳しいことに、その同じ 4K の保存領域は、
-    POSIX ACL や Samba の NT ACL といったシステムメタデータの保持にも利用されて
-    いる。このためクライアントアプリケーションが拡張属性サポートを通じてアクセス
-    すると、その保存領域すべてを使い果たしてしまうことになり、それが正しい処理で
-    あっても、容量不足によりシステムメタデータの変更ができなくなることもある。
+    ある種のファイルシステムでは、制限が小さすぎるかもしれない。EA 空間 の制限が小さすぎる
+    ファイルシステムでは予期しない異常な結果が発生する場合がある。
 
     Samba 4.9.0 とそれ以降、既定値は yes に変更となり、既定の状態でインストール
     する場合、Windows ファイルサーバとの互換が向上する。
