@@ -1,17 +1,118 @@
 <samba:parameter name="reject md5 clients"
                  context="G"
                  type="boolean"
+		 deprecated="1"
                  xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 <description>
+        <para>
+         このオプションは、"yes" に設定しないことで、セキュリティ問題を生じるため、廃止予定で
+         あり、将来削除される(将来はハードコードされる予定)。
+        </para>
+	
   <para>このオプションは、netlogon サーバ(現在 'active directory
   ドメインコントローラ' モード中のみ)が、NETLOGON_NEG_SUPPORTS_AES
    をサポートしないクライアントを拒否するかどうかを制御する。</para>
 
-   <para>すべとのドメインメンバが aes をサポートする場合に、
-   これを yes に設定できる。そうすると、ダウングレード攻撃を防止できる。</para>
+        <para>NETLOGON_NEG_SUPPORTS_AES に対するサポートは、 Windows
+        の Server 2008R2 と Windows 7 で追加された。これは、Samba 4.0 から
+        有効になっているが、NetApp ONTAP のようなサードパーティドメインメンバ
+	は引き続き  RC4 (HMAC-MD5) を使っている。詳細は、
+        <ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">https://www.samba.org/samba/security/CVE-2022-38023.html</ulink>
+        を参照のこと。
+        </para>
 
-	<para>このオプションは、 'allow nt4 crypto' オプション に優先する。</para>
+	 <para>既定値は
+         <ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">CVE-2022-38023</ulink>
+	 というパッチとともに、'no' から 'yes' に変えられた。
+         <ulink url="https://bugzilla.samba.org/show_bug.cgi?id=15240">https://bugzilla.samba.org/show_bug.cgi?id=15240</ulink> を参照のこと。
+	</para>
+
+	<para><emphasis>このオプションの使用は避けること!</emphasis>代わりに
+	マシンアカウント毎に、明示的に
+        '<smbconfoption name="server reject md5 schannel:COMPUTERACCOUNT"/>'
+	を使うこと。これは
+        <ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">CVE-2022-38023</ulink>
+	以下のパッチに含まれている。
+        <ulink url="https://bugzilla.samba.org/show_bug.cgi?id=15240">https://bugzilla.samba.org/show_bug.cgi?id=15240</ulink>を参照のこと。
+        </para>
+
+	<para>
+	Samba は ログレベル 0 で、クライアントに対して、旧来の(レガシーの)クライアントが
+	拒否されたか、明示的に
+	'<smbconfoption name="server reject md5 schannel:COMPUTERACCOUNT">no</smbconfoption>'
+	オプションなしで許可された場合、ログファイルにエラーを記録する。メッセージは
+	旧来の(レガシーの)クライアントソフトウェアがそれを必要とする場合、
+	明示的に
+	'<smbconfoption name="server reject md5 schannel:COMPUTERACCOUNT">no</smbconfoption>'
+	行が追加されることを示す。(ログレベルは
+	'<smbconfoption name="CVE_2022_38023:error_debug_level">1</smbconfoption>'
+	オプションで、より高いレベルだけで表示するように調整することが可能である。)
+	</para>
+
+	<para>これにより、明示的な
+        '<smbconfoption name="server reject md5 schannel:COMPUTERACCOUNT">no</smbconfoption>'
+        オプションを収集するために、管理者は短い猶予期間にのみ「no」を使うことが
+        できる。</para>
+
+	<para>このオプションを 'yes' に設定すると、
+        '<smbconfoption name="allow nt4 crypto:COMPUTERACCOUNT"/>' と
+        '<smbconfoption name="allow nt4 crypto"/>' オプションを上書きし、
+        '<smbconfoption name="allow nt4 crypto:COMPUTERACCOUNT">no</smbconfoption>'
+	が設定されたと見なす。
+        </para>
 </description>
 
-<value type="default">no</value>
+<value type="default">yes</value>
+</samba:parameter>
+
+<samba:parameter name="server reject md5 schannel:COMPUTERACCOUNT"
+                 context="G"
+                 type="string"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+
+ <description>
+
+   <para>もしも、以前に 'reject md5 clients = no' を必要とする旧来の(レガシー)
+        ドメインメンバか信頼するドメインが依然として存在するならば、
+        'server reject md5 schannel:COMPUTERACCOUNT = no' を
+	コンピュータアカウント単位で明示的に例外を指定することが可能である。
+	COMPUTERACCOUNT は コンピュータアカウント(末尾の '$' 記号を含む)
+	の、sAMAccountName 値でなければならないことに注意。
+    </para>
+
+     <para>
+        オプションが "no" に設定されていても、関連するコンピュータが
+	それを必要としない場合、Samba はログレベル 0 で、
+        セキュリティ問題についての情報を記録する。
+	(ログレベルは
+	'<smbconfoption name="CVE_2022_38023:warn_about_unused_debug_level">1</smbconfoption>'
+	オプションで、より高いレベルだけで表示するように調整することが可能である。)
+    </para>
+
+    <para>
+        Samba は、設定が引き続き特定のコンピュータアカウントに対して必要な場合、
+        ログレベル 5 でログファイル中に警告を記録する。
+    </para>
+
+    <para>
+	<ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">CVE-2022-38023</ulink>,
+	<ulink url="https://bugzilla.samba.org/show_bug.cgi?id=15240">https://bugzilla.samba.org/show_bug.cgi?id=15240</ulink>を参照のこと。
+    </para>
+
+    <para>このオプションは <smbconfoption name="reject md5 clients"/> オプションを上書きする。</para>
+
+    <para>'yes' に設定すると、このオプションは
+    '<smbconfoption name="allow nt4 crypto:COMPUTERACCOUNT"/>' と
+    '<smbconfoption name="allow nt4 crypto"/>' オプションを上書きし、
+    '<smbconfoption name="allow nt4 crypto:COMPUTERACCOUNT">no</smbconfoption>'
+    が設定されたと見なす。
+    </para>
+
+    <programlisting>
+        server reject md5 schannel:LEGACYCOMPUTER1$ = no
+        server reject md5 schannel:NASBOX$ = no
+        server reject md5 schannel:LEGACYCOMPUTER2$ = no
+    </programlisting>
+</description>
+
 </samba:parameter>
