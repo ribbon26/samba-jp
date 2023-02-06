@@ -1,0 +1,46 @@
+<samba:parameter name="kdc default domain supported enctypes"
+                 type="integer"
+                 context="G"
+                 handler="handle_kdc_default_domain_supported_enctypes"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>
+    <constant>msDS-SupportedEncryptionTypes</constant> の既定値を、この値がないか、
+    <constant>msDS-SupportedEncryptionTypes</constant> が 0 に設定されている
+    Active Directory 中のサービスアカウント用に設定する。
+  </para>
+
+  <para>
+    これにより、Samba 管理者は、Windows 上の、
+    <constant>HKEY_LOCAL_MACHINE\System\CurrentControlSet\services\KDC\DefaultDomainSupportedEncTypes</constant>
+    レジストリ値によって提供される設定の柔軟性に合わせることができる。
+  </para>
+  <para>
+    指定された値はビット単位で OR が取られ、現在サポートされている値は以下の通り:
+    </para><itemizedlist>
+   <listitem>
+       <para><constant>arcfour-hmac-md5</constant>, <constant>rc4-hmac</constant>, <constant>0x4</constant>, or <constant>4</constant></para>
+       <para>Windows では Kerberos RC4 暗号化と呼ばれる</para>
+   </listitem>
+   <listitem>
+       <para><constant>aes128-cts-hmac-sha1-96</constant>, <constant>aes128-cts</constant>, <constant>0x8</constant>, or <constant>8</constant></para>
+       <para>Windows では Kerberos AES 128 bit 暗号化と呼ばれる</para>
+   </listitem>
+   <listitem>
+       <para><constant>aes256-cts-hmac-sha1-96</constant>, <constant>aes256-cts</constant>, <constant>0x10</constant>, or <constant>16</constant></para>
+       <para>Windows では Kerberos AES 256 bit 暗号化と呼ばれる</para>
+   </listitem>
+   <listitem>
+       <para><constant>aes256-cts-hmac-sha1-96-sk</constant>, <constant>aes256-cts-sk</constant>, <constant>0x20</constant>, 又は <constant>32</constant></para>
+       <para>AES セッションキーを許可する。これが設定された場合、
+       たとえ<constant>aes256-cts</constant> と <constant>aes128-cts</constant>が
+       設定されていなくても、AES セッションキーが使えることを KDC に示す。これにより、
+       ホストに対して AES キーが使えるようになり、それ以外は、 RC4 のみでチケットキーを
+       設定する(それが既定値)。</para>
+   </listitem>
+</itemizedlist>
+
+</description>
+
+<value type="default">0<comment>現在ソフトウェアがサポートしている物に対応: arcfour-hmac-md5 aes256-cts-hmac-sha1-96-sk</comment></value>
+</samba:parameter>
