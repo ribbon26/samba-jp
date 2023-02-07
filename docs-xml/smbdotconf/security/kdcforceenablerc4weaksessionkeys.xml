@@ -1,0 +1,25 @@
+<samba:parameter name="kdc force enable rc4 weak session keys"
+                 type="boolean"
+                 context="G"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+	<para>
+	  <constant>RFC8429</constant> は
+	  <constant>rc4-hmac</constant> Kerberos 暗号化が脆弱で、
+	  この暗号化の仕組みを使用する Active Directory への
+	  既知の攻撃方法があると言うこととを言っている。
+	</para>
+	<para>
+	  しかしながら、Microsoft Windows との互換性のために、
+	  このオプションは、
+	  古い可能性があるクライアントが要求してきた場合、
+	  (service keytab にある ticket キーとは異なる)
+	  <constant>rc4-hmac</constant> Kerberos セッションキーを、
+	  サービスアカウントの
+	  <constant>msDS-SupportedEncryptionTypes</constant> 属性
+	  の値に関係なく、KDC が使用できると仮定する。
+	</para>
+</description>
+
+<value type="default">no</value>
+</samba:parameter>
