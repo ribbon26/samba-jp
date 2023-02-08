@@ -1,0 +1,44 @@
+<samba:parameter name="kdc supported enctypes"
+                 type="integer"
+                 context="G"
+                 handler="handle_kdc_supported_enctypes"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+  <para>
+    Active Direcory ドメインコントローラ上で、これは、ローカルで実行している
+    kdc がサポートしている暗号化タイプの一覧である。
+  </para>
+
+  <para>
+    これにより、Samba 管理者は、
+    <constant>Network security: Configure encryption types allowed for Kerberos</constant>
+    GPO/ローカルポリシー/セキュリティオプションの値によって提供される設定の柔軟性と同様の、
+    弱い/未使用の暗号化タイプを取り去れるようになり、その結果は、Windows 上での 
+    <constant>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters\SupportedEncryptionTypes</constant>
+    レジストリ値中に格納される。
+  </para>
+  <para>
+    Windows レジストリキー(10進数のみを使う)とは異なり、Samba ではこの値は16進
+    あるいは Kerberos 暗号化タイプ名の一覧でで表現される。
+  </para>
+  <para>
+    指定された値はビットごとに OR が取られ、現在サポートされている物は以下の通り:
+    </para><itemizedlist>
+   <listitem>
+       <para><constant>arcfour-hmac-md5</constant>, <constant>rc4-hmac</constant>, <constant>0x4</constant>, or <constant>4</constant></para>
+       <para>Windows では Kerberos RC4 暗号化と呼ばれる</para>
+   </listitem>
+   <listitem>
+       <para><constant>aes128-cts-hmac-sha1-96</constant>, <constant>aes128-cts</constant>, <constant>0x8</constant>, or <constant>8</constant></para>
+       <para>Windows では Kerberos AES 128 bit 暗号化と呼ばれる</para>
+   </listitem>
+   <listitem>
+       <para><constant>aes256-cts-hmac-sha1-96</constant>, <constant>aes256-cts</constant>, <constant>0x10</constant>, or <constant>16</constant></para>
+       <para>Windows では Kerberos AES 256 bit 暗号化と呼ばれる</para>
+   </listitem>
+</itemizedlist>
+
+</description>
+
+<value type="default">0<comment>現在ソフトウェアがサポートしている物に対応: arcfour-hmac-md5 aes128-cts-hmac-sha1-96 aes256-cts-hmac-sha1-96</comment></value>
+</samba:parameter>
