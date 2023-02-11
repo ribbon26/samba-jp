@@ -1,0 +1,120 @@
+<samba:parameter name="server schannel require seal"
+                 context="G"
+                 type="boolean"
+                 deprecated="1"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+    <para>
+       このオプションは非推奨で将来廃止される予定であり、
+       (将来ハードコードされた動作となる) "yes" に設定しない場合、
+       セキュリティ上の問題が存在する。
+    </para>
+
+	<para>
+	このオプションは、netlogon サーバが、プライバシー/暗号化なしで、
+	netlogon secure channel の使用を拒否するかどうかを制御する。
+	</para>
+        <para>
+	  このオプションは、Windows 上で有効なレジストリキーをモデルにしている。
+	</para>
+
+	<programlisting>
+	HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters\RequireSeal=2
+	</programlisting>
+
+    <para>
+      <emphasis>このオプションを使わないこと!</emphasis> そのかわりに明示的に
+      '<smbconfoption name="server schannel require seal:COMPUTERACCOUNT"/>'
+      を使うこと!これは、
+	<ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">CVE-2022-38023</ulink>
+	see <ulink url="https://bugzilla.samba.org/show_bug.cgi?id=15240">https://bugzilla.samba.org/show_bug.cgi?id=15240</ulink> というパッチにある。
+      
+    </para>
+    <para>
+        Samba は ログレベル 0 で、クライアントに対して、旧来の(レガシーの)クライアントが
+        拒否されたか、明示的に
+        '<smbconfoption name="server schannel require seal:COMPUTERACCOUNT">no</smbconfoption>'
+        オプションなしで許可された場合、ログファイルにエラーを記録する。メッセージは
+        旧来の(レガシーの)クライアントソフトウェアがそれを必要とする場合、
+        明示的に
+        '<smbconfoption name="server schannel require seal:COMPUTERACCOUNT">no</smbconfoption>'
+        行が追加されることを示す。(ログレベルは
+        '<smbconfoption name="CVE_2020_38023:error_debug_level">1</smbconfoption>'
+        オプションで、より高いレベルだけで表示するように調整することが可能である。)
+    </para>
+	<para>This allows admins to use "no" only for a short grace period,
+	in order to collect the explicit
+	'<smbconfoption name="server schannel require seal:COMPUTERACCOUNT">no</smbconfoption>' options.</para>
+
+	<para>
+	'yes' に設定した場合、このオプションは、
+	'<smbconfoption name="server require schannel:COMPUTERACCOUNT"/>' と
+	'<smbconfoption name="server schannel"/>' を上書きし、
+	'<smbconfoption name="server require schannel:COMPUTERACCOUNT">yes</smbconfoption>'
+	を仮定する。
+	</para>
+
+	<para>
+	このオプションは、<smbconfoption name="server schannel require seal:COMPUTERACCOUNT"/> オプションによって上書きされる。
+	</para>
+
+</description>
+
+<value type="default">yes</value>
+</samba:parameter>
+
+<samba:parameter name="server schannel require seal:COMPUTERACCOUNT"
+                 context="G"
+                 type="string"
+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
+<description>
+
+        <para>
+        まだ、以前に "server schannel require seal = no" を必要としていた
+	旧来のドメインメンバがある場合、オプションとして、
+	'server schannel require seal:COMPUTERACCOUNT = no' を使うことにより、
+	コンピュータアカウント毎に明示的な例外を指定できる。
+	COMPUTERACCOUNT は、(末尾の '$' 記号を含む)コンピュータアカウントの
+	sAMAccountName 値でなければならないことに注意。
+	</para>
+
+        <para>
+        オプションが "no" に設定されていない場合に、セキュリティ上の
+        問題があることについて、Samba はログレベル 0 で、ログファイルに
+        警告を記録するが、関連するコンピュータはそれを必要としない。
+        (ログレベルは
+        '<smbconfoption name="CVE_2020_38023:warn_about_unused_debug_level">1</smbconfoption>'
+        オプションで、より高いレベルだけで表示するように調整することが可能である。)
+        </para>
+    
+        <para>
+        指定されたコンピュータアカウントで引き続き設定が必要な場合、
+        Samba はログレベル 5 でログファイルに警告を記録する。
+        </para>
+
+	<para>
+	<ulink url="https://www.samba.org/samba/security/CVE-2022-38023.html">CVE-2022-38023</ulink> と
+	<ulink url="https://bugzilla.samba.org/show_bug.cgi?id=15240">https://bugzilla.samba.org/show_bug.cgi?id=15240</ulink> を参照のこと。
+	</para>
+
+	<para>
+	このオプションは '<smbconfoption name="server schannel require seal"/>' オプションを上書きする。
+	</para>
+
+	<para>
+	'yes' に設定するとこのオプションは
+	'<smbconfoption name="server require schannel:COMPUTERACCOUNT"/>' と
+	'<smbconfoption name="server schannel"/>' オプションを上書きし、
+	'<smbconfoption name="server require schannel:COMPUTERACCOUNT">yes</smbconfoption>'
+	を仮定する。
+	</para>
+
+	<programlisting>
+	server require schannel seal:LEGACYCOMPUTER1$ = no
+	server require schannel seal:NASBOX$ = no
+	server require schannel seal:LEGACYCOMPUTER2$ = no
+	</programlisting>
+</description>
+
+</samba:parameter>
